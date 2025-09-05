@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Stores events to a MySQL Database.
 
----
+***
 
 ## Required input
 
 This sink does not have any requirements and works with any incoming event type.
 
----
+***
 
 ## Configuration
 
@@ -65,3 +65,5 @@ The password for the MySQL Server.
 ## Output
 
 (not applicable for data sinks)
+
+      

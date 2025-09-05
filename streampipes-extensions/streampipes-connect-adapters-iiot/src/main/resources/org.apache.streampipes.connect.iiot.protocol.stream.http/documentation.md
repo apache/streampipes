@@ -22,10 +22,11 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Continuously fetched events from an HTTP REST endpoint.
 
----
+***
+

@@ -22,31 +22,29 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The Datetime From String processor converts string timestamps into millisecond timestamps. It supports:
-
-- ISO 8601 format parsing
-- Timezone handling
-- String to millisecond conversion
-- Automatic timezone application
+* ISO 8601 format parsing
+* Timezone handling
+* String to millisecond conversion
+* Automatic timezone application
 
 This processor is essential for:
+* Converting timestamps to milliseconds
+* Standardizing date formats
+* Handling timezone conversions
+* Processing ISO 8601 dates
 
-- Converting timestamps to milliseconds
-- Standardizing date formats
-- Handling timezone conversions
-- Processing ISO 8601 dates
-
----
+***
 
 ## Required input
 
 The processor requires a data stream containing at least one string field with a timestamp in ISO 8601 format.
 
----
+***
 
 ## Configuration
 
@@ -61,15 +59,13 @@ Select the timezone for the input timestamp. This is used when the timestamp str
 ## Output
 
 The processor creates a new event containing:
-
-- All original fields from the input event
-- A new field named "timestringInMillis" containing the timestamp in milliseconds since epoch
-- A new field named "timeZone" containing the selected timezone
+* All original fields from the input event
+* A new field named "timestringInMillis" containing the timestamp in milliseconds since epoch
+* A new field named "timeZone" containing the selected timezone
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -79,12 +75,10 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-
-- DateTime String: timestamp
-- Time Zone: UTC
+* DateTime String: timestamp
+* Time Zone: UTC
 
 #### Output Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -98,21 +92,21 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **Data Standardization**
-   - Convert timestamps to milliseconds
-   - Standardize date formats
-   - Handle timezone conversions
-   - Process ISO 8601 dates
+   * Convert timestamps to milliseconds
+   * Standardize date formats
+   * Handle timezone conversions
+   * Process ISO 8601 dates
 
 2. **System Integration**
-   - Map timestamps to milliseconds
-   - Convert between timezones
-   - Standardize date formats
-   - Process time-based data
+   * Map timestamps to milliseconds
+   * Convert between timezones
+   * Standardize date formats
+   * Process time-based data
 
 ## Notes
 
-- Input must be in ISO 8601 format
-- Timezone in input string takes precedence over selected timezone
-- Invalid formats will cause processing errors
-- Processing is stateless
-- Output is always in milliseconds since epoch
+* Input must be in ISO 8601 format
+* Timezone in input string takes precedence over selected timezone
+* Invalid formats will cause processing errors
+* Processing is stateless
+* Output is always in milliseconds since epoch

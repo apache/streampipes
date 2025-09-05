@@ -22,21 +22,21 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The Quality Control Limits Enrichment processor appends user-defined control and warning limits to incoming events.
 These limits can be used in quality control charts to monitor sensor values.
 
----
+***
 
 ## Required Input
 
 This processor works with any event stream. It adds predefined limit values to the events, which are later used for
 quality control purposes.
 
----
+***
 
 ## Configuration
 
@@ -60,26 +60,24 @@ the lower control limit.
 Specify the lower control limit for the quality control process. This value defines the minimum threshold for acceptable
 process behavior.
 
----
+***
 
 ## Output
 
 The processor appends the specified control and warning limits to each input event. These enriched events can be used in
 downstream processing to create quality control charts or other monitoring tools.
 
----
+***
 
 ## Example
 
 ### User Configuration
-
 - **Upper Control Limit**: `80.0`
 - **Upper Warning Limit**: `70.0`
 - **Lower Warning Limit**: `30.0`
 - **Lower Control Limit**: `20.0`
 
 ### Input Event
-
 ```
 {
   "timestamp": 1627891234000,
@@ -88,7 +86,6 @@ downstream processing to create quality control charts or other monitoring tools
 ```
 
 ### Output Event
-
 ```
 {
   "timestamp": 1627891234000,

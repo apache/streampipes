@@ -33,20 +33,17 @@ Thanks for contributing! Here are some tips you can follow to help us incorporat
 -->
 
 ### Purpose
-
 <!--
 Please clarify what changes you are proposing and describe how those changes will address the issue.
 Furthermore, describe potential consequences the changes might have.
 -->
 
 ### Remarks
-
 <!--
 Is there anything left we need to pay attention on?
 Are there some references that might be important? E.g. links to Confluence, or discussions
 on the mailing list or GitHub.
 -->
-
 PR introduces (a) breaking change(s): <yes/no>
 
 PR introduces (a) deprecation(s): <yes/no>

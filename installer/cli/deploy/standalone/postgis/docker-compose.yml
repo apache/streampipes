@@ -19,8 +19,8 @@ services:
     volumes:
       - postgis:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: geo_streampipes
-      POSTGRES_PASSWORD: bQgu"FUR_VH6z>~j
+       POSTGRES_USER: geo_streampipes
+       POSTGRES_PASSWORD: bQgu"FUR_VH6z>~j
     logging:
       driver: "json-file"
       options:

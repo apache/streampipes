@@ -22,13 +22,13 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The adapter allows to connect with a Siemens S7 PLC.
 
----
+***
 
 ## Configuration
 
@@ -40,11 +40,11 @@ This field requires the PLC address in form of the IP without the prefixed proto
 
 In addition to the pure IP, other parameters supported by Apache PLC4X can be provided as an URL parameter:
 
-- `local-rack`
-- `local-slot`
-- `local-tsap`
-- `remote-rack`
-- `remote-slot`
+* `local-rack`
+* `local-slot`
+* `local-tsap`
+* `remote-rack`
+* `remote-slot`
 
 Additional configs are separated by `&`.
 
@@ -63,12 +63,12 @@ the PLC every second.
 In the Nodes section, the PLC nodes that should be gathered are defined.
 There are two options to define the nodes:
 
-- Manual configuration: The address must be assigned manually by providing a runtime name, the node name and the
+* Manual configuration: The address must be assigned manually by providing a runtime name, the node name and the
   datatype. The `Runtime Name` will be the StreamPipes-internal name of the field, which will also show up in the data
   explorer and pipeline editor. The `Node Name` refers to the node address of the PLC, e.g., `%Q0.4`. Finally, the data
   type can be selected from the available selection. Currently available data types
   are `Bool`, `Byte`, `Int`, `Word`, `Real`, `Char`, `String`, `Date`, `Time of Day` and `Date and Time`.
-- Instead of providing the node information manually, a CSV file can be uploaded. The CSV file can, for instance, be
+* Instead of providing the node information manually, a CSV file can be uploaded. The CSV file can, for instance, be
   exported from TIA and then be enriched with the appropriate runtime names. This is especially useful when many fields
   should be added as nodes. Here is an example export enriched with the runtime name:
 

@@ -62,11 +62,12 @@ github:
       required_status_checks:
         strict: true
 
+
 notifications:
   jobs: issues@streampipes.apache.org
   commits: commits@streampipes.apache.org
   issues: issues@streampipes.apache.org
   discussions: dev@streampipes.apache.org
-  pullrequests_status: dev@streampipes.apache.org
+  pullrequests_status:  dev@streampipes.apache.org
   pullrequests_comment: dev@streampipes.apache.org
   pullrequests_bot_dependabot: commits@streampipes.apache.org

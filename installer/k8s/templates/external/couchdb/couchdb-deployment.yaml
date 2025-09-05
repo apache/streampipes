@@ -16,57 +16,57 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: { { .Values.external.couchdb.appName } }
+  name: {{ .Values.external.couchdb.appName }}
 spec:
   selector:
     matchLabels:
-      app: { { .Values.external.couchdb.appName } }
+      app: {{ .Values.external.couchdb.appName }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: { { .Values.external.couchdb.appName } }
+        app: {{ .Values.external.couchdb.appName }}
     spec:
-      restartPolicy: { { .Values.restartPolicy } }
+      restartPolicy: {{ .Values.restartPolicy }}
       volumes:
-        - name: { { .Values.external.couchdb.persistence.pvName } }
+        - name: {{ .Values.external.couchdb.persistence.pvName }}
           persistentVolumeClaim:
-            claimName: { { .Values.external.couchdb.persistence.claimName } }
+            claimName: {{ .Values.external.couchdb.persistence.claimName }}
       containers:
-        - name: { { .Values.external.couchdb.appName } }
+        - name: {{ .Values.external.couchdb.appName }}
           image: couchdb:{{ .Values.external.couchdb.version }}
-          imagePullPolicy: { { .Values.pullPolicy } }
+          imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: COUCHDB_USER
-              value: { { .Values.external.couchdb.user } }
+              value: {{ .Values.external.couchdb.user }}
             - name: COUCHDB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: { { .Values.streampipes.auth.secretName } }
+                  name: {{ .Values.streampipes.auth.secretName }}
                   key: sp-couchdb-password
           ports:
-            - containerPort: { { .Values.external.couchdb.port } }
+            - containerPort: {{ .Values.external.couchdb.port }}
           volumeMounts:
             - mountPath: "/opt/couchdb/data"
-              name: { { .Values.external.couchdb.persistence.pvName } }
+              name: {{ .Values.external.couchdb.persistence.pvName }}
           livenessProbe:
             httpGet:
               path: /
-              port: { { .Values.external.couchdb.port } }
-            initialDelaySeconds: { { .Values.initialDelaySeconds } }
-            periodSeconds: { { .Values.periodSeconds } }
-            failureThreshold: { { .Values.failureThreshold } }
+              port: {{ .Values.external.couchdb.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /
-              port: { { .Values.external.couchdb.port } }
-            initialDelaySeconds: { { .Values.initialDelaySeconds } }
-            periodSeconds: { { .Values.periodSeconds } }
-            failureThreshold: { { .Values.failureThreshold } }
+              port: {{ .Values.external.couchdb.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
           startupProbe:
             httpGet:
               path: /
-              port: { { .Values.external.couchdb.port } }
-            initialDelaySeconds: { { .Values.initialDelaySeconds } }
-            periodSeconds: { { .Values.periodSeconds } }
-            failureThreshold: { { .Values.failureThreshold } }
+              port: {{ .Values.external.couchdb.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}

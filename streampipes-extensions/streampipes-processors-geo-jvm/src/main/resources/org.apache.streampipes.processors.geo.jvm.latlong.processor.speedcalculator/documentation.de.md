@@ -22,20 +22,20 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
 Berechnet die Geschwindigkeit (in km/h) basierend auf Breiten-/Längengradwerten in einem Datenstrom. Dafür werden die GPS- und Zeitstempelwerte aufeinanderfolgender Nachrichten verwendet.
 Er berechnet die Entfernung zwischen zwei Punkten (Nachrichten) und wie viel Zeit vergangen ist. Basierend auf diesen Werten wird die Geschwindigkeit berechnet.
 
----
+***
 
 ## Erforderliche Eingabe
 
 Benötigt einen Datenstrom, der Breiten- und Längengradwerte sowie einen Zeitstempel bereitstellt.
 
----
+***
 
 ## Konfiguration
 
@@ -46,10 +46,8 @@ Benötigt einen Datenstrom, der Breiten- und Längengradwerte sowie einen Zeitst
 ### Längengradfeld
 
 ### Zählfenster
-
 Beschreibt die Anzahl der gespeicherten Nachrichten, die für die Berechnung verwendet werden.
 Z.B. bedeutet ein Wert von 5, dass die aktuelle Nachricht und die Nachricht (t-5) für die Geschwindigkeitsberechnung verwendet werden.
 
 ## Ausgabe
-
-Fügt die berechnete Geschwindigkeit in km/h hinzu.
+Fügt die berechnete Geschwindigkeit in km/h hinzu. 

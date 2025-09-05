@@ -71,9 +71,9 @@ mvn streampipes:extract-docs -DinitClass=org.apache.streampipes.extensions.all.j
 </plugin>
 ```
 
-- Replace the `version` with the current development version.
-- Replace the `initClass` with the module's init class.
-- The dependency to RocketMQ is only needed for modules containing the RocketMQ sink and can be omitted otherwise.
+* Replace the `version` with the current development version.
+* Replace the `initClass` with the module's init class.
+* The dependency to RocketMQ is only needed for modules containing the RocketMQ sink and can be omitted otherwise.
 
 ## Output
 
@@ -81,8 +81,8 @@ The plugin creates a new folder `docs` in the module's `target` directory.
 
 The folder includes:
 
-- An `img` folder which has a subdirectory for each extension (named by the `appId`) containing the icon.
-- A `pe` folder which has a subdirectory for each extension (named by the `appId`) containing the `documentation.md`
+* An `img` folder which has a subdirectory for each extension (named by the `appId`) containing the icon.
+* A `pe` folder which has a subdirectory for each extension (named by the `appId`) containing the `documentation.md`
   file, which has been rewritten to match the requirements of the Docusaurus Markdown parser.
-- An updated `sidebar.json` file containing the sidebar, which is downloaded from the `streampipes-website` repo on
+* An updated `sidebar.json` file containing the sidebar, which is downloaded from the `streampipes-website` repo on
   branch `dev` and updated with the current set of extensions.

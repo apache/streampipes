@@ -22,38 +22,36 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The Timestamp Extractor processor breaks down a timestamp into its individual time components. It supports:
-
-- Year extraction
-- Month extraction
-- Day extraction
-- Hour extraction
-- Minute extraction
-- Second extraction
-- Weekday extraction
-- Custom field selection
-- Component isolation
+* Year extraction
+* Month extraction
+* Day extraction
+* Hour extraction
+* Minute extraction
+* Second extraction
+* Weekday extraction
+* Custom field selection
+* Component isolation
 
 This processor is essential for:
+* Time analysis
+* Date processing
+* Time component extraction
+* Temporal analysis
+* Time-based grouping
+* Time series analysis
 
-- Time analysis
-- Date processing
-- Time component extraction
-- Temporal analysis
-- Time-based grouping
-- Time series analysis
-
----
+***
 
 ## Required input
 
 The processor requires a data stream containing at least one timestamp field to extract components from.
 
----
+***
 
 ## Configuration
 
@@ -64,27 +62,24 @@ Select the field containing the timestamp to extract components from. This shoul
 ### Extract Fields
 
 Select which time components to extract:
-
-- Year (numeric)
-- Month (numeric, 1-12)
-- Day (numeric, 1-31)
-- Hour (numeric, 0-23)
-- Minute (numeric, 0-59)
-- Second (numeric, 0-59)
-- Weekday (string: Monday-Sunday)
+* Year (numeric)
+* Month (numeric, 1-12)
+* Day (numeric, 1-31)
+* Hour (numeric, 0-23)
+* Minute (numeric, 0-59)
+* Second (numeric, 0-59)
+* Weekday (string: Monday-Sunday)
 
 ## Output
 
 The processor creates a new event containing:
-
-- All original fields from the input event
-- New fields for each extracted time component with prefix "timestamp"
-- Original timestamp preserved
+* All original fields from the input event
+* New fields for each extracted time component with prefix "timestamp"
+* Original timestamp preserved
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -94,12 +89,10 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-
-- Timestamp Field: timestamp
-- Extract Fields: year, month, day, hour, minute, weekday
+* Timestamp Field: timestamp
+* Extract Fields: year, month, day, hour, minute, weekday
 
 #### Output Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -117,43 +110,43 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **Time Analysis**
-   - Extract time components
-   - Analyze patterns
-   - Group by time
-   - Track changes
-   - Build time series
+   * Extract time components
+   * Analyze patterns
+   * Group by time
+   * Track changes
+   * Build time series
 
 2. **Data Processing**
-   - Process timestamps
-   - Extract components
-   - Analyze patterns
-   - Group data
-   - Build metrics
+   * Process timestamps
+   * Extract components
+   * Analyze patterns
+   * Group data
+   * Build metrics
 
 3. **Reporting**
-   - Generate time reports
-   - Extract components
-   - Analyze patterns
-   - Group data
-   - Build summaries
+   * Generate time reports
+   * Extract components
+   * Analyze patterns
+   * Group data
+   * Build summaries
 
 4. **Monitoring**
-   - Monitor time patterns
-   - Extract components
-   - Analyze trends
-   - Track changes
-   - Build alerts
+   * Monitor time patterns
+   * Extract components
+   * Analyze trends
+   * Track changes
+   * Build alerts
 
 ## Notes
 
-- Timestamp must be valid
-- Components are optional
-- Processing is stateless
-- Multiple components supported
-- Extraction is immediate
-- No delay in processing
-- Original timestamp preserved
-- Components are standardized
-- Weekday is returned as string
-- Month is 1-based (1-12)
-- Hour is 24-hour format (0-23)
+* Timestamp must be valid
+* Components are optional
+* Processing is stateless
+* Multiple components supported
+* Extraction is immediate
+* No delay in processing
+* Original timestamp preserved
+* Components are standardized
+* Weekday is returned as string
+* Month is 1-based (1-12)
+* Hour is 24-hour format (0-23)

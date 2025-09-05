@@ -4,7 +4,6 @@ description: Tutorials to StreamPipes Go.
 date: 2024-06-26
 weight: 8
 ---
-
 <!--
   // Licensed to the Apache Software Foundation (ASF) under one or more
   // contributor license agreements.  See the NOTICE file distributed with
@@ -23,6 +22,8 @@ weight: 8
   //
   -->
 
-{{% pageinfo %}} Tutorials to StreamPipes Go. {{% /pageinfo %}}
+{{% pageinfo %}}
+Tutorials to StreamPipes Go.
+{{% /pageinfo %}}
 
 Tutorials to StreamPipes Go.

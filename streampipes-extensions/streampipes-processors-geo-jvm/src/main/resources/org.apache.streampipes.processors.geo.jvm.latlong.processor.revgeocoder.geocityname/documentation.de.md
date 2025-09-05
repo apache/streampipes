@@ -22,7 +22,7 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
@@ -30,13 +30,13 @@ Dieser Prozessor berechnet den Stadtnamen basierend auf gegebenen Breiten- und L
 Der Prozessor lädt automatisch die Datei cities1000.zip von <a href="http://download.geonames.org/export/dump/cities1000.zip)" target="_blank">Geonames</a> herunter
 (diese Datei wird unter der <a href="https://creativecommons.org/licenses/by/4.0/)" target="_blank">CC BY 4.0 Lizenz</a> bereitgestellt).
 
----
+***
 
 ## Erforderliche Eingabe
 
 Die Eingabe-Nachricht muss Breiten- und Längengradwerte enthalten.
 
----
+***
 
 ## Konfiguration
 
@@ -56,4 +56,4 @@ Gibt eine ähnliche Nachricht wie unten aus.
 {
   'geoname': 'Colombo'
 }
-```
+``` 

@@ -22,31 +22,29 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
 Der Dauer-berechnen-Prozessor berechnet die Zeitdifferenz zwischen zwei Zeitstempeln. Er unterstützt:
-
-- Zeitdifferenzberechnung
-- Mehrere Zeiteinheiten
-- Start-/End-Zeitstempelauswahl
-- Dauerermittlung
+* Zeitdifferenzberechnung
+* Mehrere Zeiteinheiten
+* Start-/End-Zeitstempelauswahl
+* Dauerermittlung
 
 Dieser Prozessor ist essentiell für:
+* Messung von Zeiträumen
+* Berechnung von Dauern
+* Analyse von Intervallen
+* Verfolgung von Zeitspannen
 
-- Messung von Zeiträumen
-- Berechnung von Dauern
-- Analyse von Intervallen
-- Verfolgung von Zeitspannen
-
----
+***
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der mindestens zwei Zeitstempelfelder zur Berechnung der Dauer zwischen ihnen enthält.
 
----
+***
 
 ## Konfiguration
 
@@ -61,22 +59,19 @@ Wähle das Feld mit dem End-Zeitstempel aus. Dieser Zeitstempel markiert das End
 ### Zeiteinheit
 
 Wähle die Einheit für die berechnete Dauer:
-
-- Millisekunden (Standard)
-- Sekunden
-- Minuten
+* Millisekunden (Standard)
+* Sekunden
+* Minuten
 
 ## Ausgabe
 
 Der Prozessor erstellt eine neue Nachricht, die enthält:
-
-- Alle ursprünglichen Felder aus der Eingabe-Nachricht
-- Ein neues Feld namens "duration" mit der berechneten Zeitdifferenz in der ausgewählten Einheit
+* Alle ursprünglichen Felder aus der Eingabe-Nachricht
+* Ein neues Feld namens "duration" mit der berechneten Zeitdifferenz in der ausgewählten Einheit
 
 ### Beispiel
 
 #### Eingabe-Nachricht
-
 ```json
 {
   "deviceId": "machine01",
@@ -87,13 +82,11 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration
-
-- Start-Zeitstempel: startTime
-- End-Zeitstempel: endTime
-- Zeiteinheit: Sekunden
+* Start-Zeitstempel: startTime
+* End-Zeitstempel: endTime
+* Zeiteinheit: Sekunden
 
 #### Ausgabe-Nachricht
-
 ```json
 {
   "deviceId": "machine01",
@@ -107,22 +100,22 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ## Anwendungsfälle
 
 1. **Prozessüberwachung**
-   - Messung der Prozessdauer
-   - Verfolgung von Operationszeiten
-   - Überwachung von Zykluszeiten
-   - Berechnung von Zeiträumen
+   * Messung der Prozessdauer
+   * Verfolgung von Operationszeiten
+   * Überwachung von Zykluszeiten
+   * Berechnung von Zeiträumen
 
 2. **Leistungsanalyse**
-   - Messung von Antwortzeiten
-   - Verfolgung von Ausführungszeiten
-   - Überwachung von Dauern
-   - Berechnung von Intervallen
+   * Messung von Antwortzeiten
+   * Verfolgung von Ausführungszeiten
+   * Überwachung von Dauern
+   * Berechnung von Intervallen
 
 ## Hinweise
 
-- Beide Zeitstempel müssen vorhanden sein
-- Zeitstempel müssen gültig sein
-- Endzeit muss nach Startzeit liegen
-- Verarbeitung ist zustandslos
-- Mehrere Dauern erfordern Verkettung
-- Negative Dauern werden nicht unterstützt
+* Beide Zeitstempel müssen vorhanden sein
+* Zeitstempel müssen gültig sein
+* Endzeit muss nach Startzeit liegen
+* Verarbeitung ist zustandslos
+* Mehrere Dauern erfordern Verkettung
+* Negative Dauern werden nicht unterstützt 

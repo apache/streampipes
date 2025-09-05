@@ -14,8 +14,8 @@
  limitations under the License. */
 
 :root > * {
-  --md-primary-fg-color: #39b54a;
-  --md-primary-fg-color--light: #3bcd4a;
-  --md-accent-fg-color: #1b1464;
-  --md-accent-fg-color--light: #9f9c9c;
+  --md-primary-fg-color:        #39B54A;
+  --md-primary-fg-color--light: #3BCD4A;
+  --md-accent-fg-color:         #1B1464;
+  --md-accent-fg-color--light:  #9F9C9C;
 }

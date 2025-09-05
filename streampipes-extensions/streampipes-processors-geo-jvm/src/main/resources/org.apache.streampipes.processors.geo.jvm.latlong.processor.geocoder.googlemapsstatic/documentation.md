@@ -22,7 +22,7 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
@@ -30,13 +30,13 @@ This processor computes the latitude and longitude values from a fixed location 
 , Germany
 ") and adds the result to the event.
 
----
+***
 
 ## Required inputs
 
 Input event requires to have a field which contains the name of a place.
 
----
+***
 
 ## Configuration
 
@@ -51,6 +51,6 @@ Outputs a similar event like below.
 ```
 {
   'latitude': 6.927079,
-  'longitude': 79.861244
+  'longitude': 79.861244  
 }
 ```

@@ -22,58 +22,50 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
-
 The Numerical Text Filter processor combines numerical and text-based filtering in a single processor. It forwards events only when both the numerical and text conditions are satisfied. This processor is ideal for:
+* Complex event filtering
+* Multi-criteria event selection
+* Data validation
+* Event routing based on multiple conditions
 
-- Complex event filtering
-- Multi-criteria event selection
-- Data validation
-- Event routing based on multiple conditions
-
----
+***
 
 ## Required Input
-
 The processor requires an input event stream containing:
+* At least one numerical field for numerical comparison
+* At least one text field for string matching
 
-- At least one numerical field for numerical comparison
-- At least one text field for string matching
-
----
+***
 
 ## Configuration
 
 ### Numerical Filter
-
-- **Field**: Select the numerical field to apply the filter operation on
-- **Operation**: Choose from the following comparison operators:
-  - **<** (Less than)
-  - **<=** (Less than or equal)
-  - **>** (Greater than)
-  - **>=** (Greater than or equal)
-  - **==** (Equal)
-  - **!=** (Not equal)
-- **Threshold**: Specify the numerical value to compare against
+* **Field**: Select the numerical field to apply the filter operation on
+* **Operation**: Choose from the following comparison operators:
+  * **<** (Less than)
+  * **<=** (Less than or equal)
+  * **>** (Greater than)
+  * **>=** (Greater than or equal)
+  * **==** (Equal)
+  * **!=** (Not equal)
+* **Threshold**: Specify the numerical value to compare against
 
 ### Text Filter
-
-- **Field**: Select the text field to apply the filter operation on
-- **Operation**: Choose from:
-  - **MATCHES**: Exact string match
-  - **CONTAINS**: Substring match
-- **Keyword**: Specify the text to match against
+* **Field**: Select the text field to apply the filter operation on
+* **Operation**: Choose from:
+  * **MATCHES**: Exact string match
+  * **CONTAINS**: Substring match
+* **Keyword**: Specify the text to match against
 
 ## Output
-
 The processor forwards the input event only if both the numerical and text conditions evaluate to true.
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "temperature": 25.5,
@@ -83,21 +75,17 @@ The processor forwards the input event only if both the numerical and text condi
 ```
 
 #### Configuration
-
 Numerical Filter:
-
-- Field: temperature
-- Operation: >
-- Threshold: 20.0
+* Field: temperature
+* Operation: >
+* Threshold: 20.0
 
 Text Filter:
-
-- Field: status
-- Operation: MATCHES
-- Keyword: active
+* Field: status
+* Operation: MATCHES
+* Keyword: active
 
 #### Output Event
-
 ```json
 {
   "temperature": 25.5,
@@ -109,24 +97,24 @@ Text Filter:
 ## Use Cases
 
 1. **Sensor Data Filtering**
-   - Filter sensor readings based on value ranges and status
-   - Monitor specific conditions in sensor data
-   - Validate sensor readings against expected patterns
+   * Filter sensor readings based on value ranges and status
+   * Monitor specific conditions in sensor data
+   * Validate sensor readings against expected patterns
 
 2. **Event Validation**
-   - Ensure events meet both numerical and categorical criteria
-   - Validate business rules with multiple conditions
-   - Filter events based on complex criteria
+   * Ensure events meet both numerical and categorical criteria
+   * Validate business rules with multiple conditions
+   * Filter events based on complex criteria
 
 3. **Data Quality Control**
-   - Filter out invalid or unexpected data combinations
-   - Ensure data meets quality thresholds
-   - Validate data against business rules
+   * Filter out invalid or unexpected data combinations
+   * Ensure data meets quality thresholds
+   * Validate data against business rules
 
 ## Notes
 
-- Both numerical and text conditions must be satisfied for an event to be forwarded
-- Numerical comparisons use floating-point precision (0.000001 tolerance for equality)
-- Text matching is case-sensitive
-- The processor preserves the original event structure
-- All fields from the input event are included in the output
+* Both numerical and text conditions must be satisfied for an event to be forwarded
+* Numerical comparisons use floating-point precision (0.000001 tolerance for equality)
+* Text matching is case-sensitive
+* The processor preserves the original event structure
+* All fields from the input event are included in the output

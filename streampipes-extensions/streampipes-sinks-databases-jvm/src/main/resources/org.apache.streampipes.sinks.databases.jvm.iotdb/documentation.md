@@ -22,7 +22,7 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
@@ -32,13 +32,13 @@ Events will be stored in timeseries `root.${Database Name}.${Device (Entity) Nam
 
 Please reference to [https://iotdb.apache.org/](https://iotdb.apache.org/) for more information.
 
----
+***
 
 ## Required input
 
 This sink does not have any requirements and works with any incoming event type.
 
----
+***
 
 ## Configuration
 

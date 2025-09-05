@@ -22,13 +22,13 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The Modbus adapter allows to connect to a PLC using the Modbus specification.
 
----
+***
 
 ## Configuration
 
@@ -53,10 +53,10 @@ Nodes can be either imported from a comma-separated CSV file, or can be directly
 
 The following fields must be provided for each node:
 
-- Runtime Name: Refers to the field to internally identify the node, e.g., in the data explorer or pipeline editor.
-- Node Address: Refers to the address of the Node in Modbus, e.g., 1
-- Object Type: Can be selected from the available options `DiscreteInput`, `Coil`, `InputRegister`,
-  or `HoldingRegister`.
+* Runtime Name: Refers to the field to internally identify the node, e.g., in the data explorer or pipeline editor.
+* Node Address: Refers to the address of the Node in Modbus, e.g., 1
+* Object Type: Can be selected from the available options `DiscreteInput`, `Coil`, `InputRegister`,
+  or `HoldingRegister`. 
 
 An example CSV file looks as follows:
 

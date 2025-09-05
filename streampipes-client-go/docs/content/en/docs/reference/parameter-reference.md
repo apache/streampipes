@@ -4,7 +4,6 @@ description: >
   Implementation of the StreamPipes GO Client.
 date: 2024-06-26
 ---
-
 <!--
   // Licensed to the Apache Software Foundation (ASF) under one or more
   // contributor license agreements.  See the NOTICE file distributed with
@@ -23,8 +22,9 @@ date: 2024-06-26
   //
   -->
 
-{{% pageinfo %}} A short lead description about the reference of the StreamPipes
-GO Client. {{% /pageinfo %}}
+{{% pageinfo %}}
+A short lead description about the reference of the StreamPipes GO Client.
+{{% /pageinfo %}}
 
 ## StreamPipesClientConfig
 

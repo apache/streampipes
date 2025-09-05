@@ -22,3 +22,4 @@ services:
       - SP_ICON_HOST=${SP_ICON_HOST}
     networks:
       spnet:
+

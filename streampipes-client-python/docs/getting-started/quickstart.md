@@ -44,13 +44,10 @@ measures = client.dataLakeMeasureApi.all()
 # get amount of retrieved measures
 len(measures)
 ```
-
 Output:
-
 ```
 1
 ```
-
 <br>
 
 ```
@@ -59,13 +56,11 @@ measures.to_pandas()
 ```
 
 Output:
-
 ```
 measure_name timestamp_field ... pipeline_is_running num_event_properties
 0 test s0::timestamp ... False 2
 [1 rows x 6 columns]
 ```
-
 <br>
 Alternatively, you can provide your credentials via environment variables.
 Simply define your credential provider as follows:
@@ -75,7 +70,6 @@ from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
 StreamPipesApiKeyCredentials()
 ```
-
 This requires to set the following environment variables: `SP_API_KEY` and `SP_USERNAME`
 <br>
 

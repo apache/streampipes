@@ -22,30 +22,27 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
-Converts a string value to a number data type.
+Converts a string value to a number data type. 
 
----
+
+***
 
 ## Required input
-
 This processor requires an event that contains at least one string valued field.
 
----
+***
 
 ## Configuration
 
 ### Field
-
 Specifies the string field that is converted.
 
 ### Datatype
-
 Specifies the target datatype depending on the previously specified string field.
 
 ## Output
-
 Output event in the specified target datatype.

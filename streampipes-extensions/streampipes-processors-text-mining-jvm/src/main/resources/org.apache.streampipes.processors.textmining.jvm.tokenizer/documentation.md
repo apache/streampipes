@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Segments a given text into Tokens (usually words, numbers, punctuations, ...). Works best with english text.
 
----
+***
 
 ## Required input
 
 A stream with a string property which contains a text.
 
----
+***
 
 ## Configuration
 

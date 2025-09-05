@@ -22,53 +22,44 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
-
 The Moving Average processor smooths numerical data streams by calculating either the mean or median of the last n values. This processor is essential for:
+* Reducing noise in sensor data
+* Smoothing out fluctuations
+* Identifying trends
+* Improving data quality
 
-- Reducing noise in sensor data
-- Smoothing out fluctuations
-- Identifying trends
-- Improving data quality
-
----
+***
 
 ## Required Input
-
 A numerical field is required in the input stream.
 
----
+***
 
 ## Configuration
 
 ### Numerical Field
-
-- Select the numerical field to be smoothed
-- The field must contain numeric values
+* Select the numerical field to be smoothed
+* The field must contain numeric values
 
 ### N Value
-
-- Specifies the window size (number of previous values to consider)
-- Larger values create smoother output but increase latency
-- Smaller values are more responsive but may show more noise
+* Specifies the window size (number of previous values to consider)
+* Larger values create smoother output but increase latency
+* Smaller values are more responsive but may show more noise
 
 ### Method
-
 Choose between two smoothing methods:
-
-- **Mean**: Calculates the arithmetic average of the last n values
-- **Median**: Uses the middle value of the last n values (better for handling outliers)
+* **Mean**: Calculates the arithmetic average of the last n values
+* **Median**: Uses the middle value of the last n values (better for handling outliers)
 
 ## Output
-
 The processor appends a new field named "filterResult" containing the smoothed value.
 
 ### Example
 
 #### Input Events
-
 ```json
 {
   "temperature": 25.5,
@@ -85,13 +76,11 @@ The processor appends a new field named "filterResult" containing the smoothed v
 ```
 
 #### Configuration
-
-- Numerical Field: temperature
-- N Value: 3
-- Method: Mean
+* Numerical Field: temperature
+* N Value: 3
+* Method: Mean
 
 #### Output Events
-
 ```json
 {
   "temperature": 25.5,
@@ -113,22 +102,22 @@ The processor appends a new field named "filterResult" containing the smoothed v
 ## Use Cases
 
 1. **Sensor Data Processing**
-   - Smooth temperature readings
-   - Filter noise from measurements
-   - Stabilize sensor outputs
-   - Improve data quality
+   * Smooth temperature readings
+   * Filter noise from measurements
+   * Stabilize sensor outputs
+   * Improve data quality
 
 2. **Trend Analysis**
-   - Identify long-term patterns
-   - Reduce short-term fluctuations
-   - Highlight significant changes
-   - Monitor system behavior
+   * Identify long-term patterns
+   * Reduce short-term fluctuations
+   * Highlight significant changes
+   * Monitor system behavior
 
 ## Notes
 
-- The processor maintains a sliding window of the last n values
-- Mean method is more sensitive to outliers
-- Median method is more robust against outliers
-- Window size affects smoothing intensity
-- Original values are preserved in the output
-- First n-1 events will have partial windows
+* The processor maintains a sliding window of the last n values
+* Mean method is more sensitive to outliers
+* Median method is more robust against outliers
+* Window size affects smoothing intensity
+* Original values are preserved in the output
+* First n-1 events will have partial windows

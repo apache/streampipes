@@ -22,25 +22,25 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The Field Mapper processor combines multiple fields into a single field by computing an MD5 hash value of their combined contents. This processor is particularly useful for:
 
-- Creating unique identifiers from multiple fields
-- Data anonymization and privacy protection
-- Reducing data dimensionality
-- Generating consistent keys for data grouping
-- Combining related fields into a single reference
+* Creating unique identifiers from multiple fields
+* Data anonymization and privacy protection
+* Reducing data dimensionality
+* Generating consistent keys for data grouping
+* Combining related fields into a single reference
 
----
+***
 
 ## Required input
 
 The processor can work with any event that contains at least one field. The fields to be mapped can be of any data type, as they will be converted to their string representation before hashing.
 
----
+***
 
 ## Configuration
 
@@ -55,15 +55,13 @@ Specify the name of the new field that will contain the MD5 hash value of the co
 ## Output
 
 The processor creates a new event that:
-
-- Retains all fields from the input event that were not selected for mapping
-- Adds a new field with the specified name containing the MD5 hash of the combined selected fields
-- Removes the original fields that were mapped
+* Retains all fields from the input event that were not selected for mapping
+* Adds a new field with the specified name containing the MD5 hash of the combined selected fields
+* Removes the original fields that were mapped
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "timestamp": 1586380104915,
@@ -75,12 +73,10 @@ The processor creates a new event that:
 ```
 
 #### Configuration
-
-- Fields: mass_flow, temperature
-- New Field Name: combined_measurement
+* Fields: mass_flow, temperature
+* New Field Name: combined_measurement
 
 #### Output Event
-
 ```json
 {
   "timestamp": 1586380104915,
@@ -93,30 +89,30 @@ The processor creates a new event that:
 ## Use Cases
 
 1. **Data Privacy**
-   - Combine personally identifiable information (PII) into anonymized identifiers
-   - Create privacy-preserving keys for data linkage
-   - Generate pseudonyms for sensitive data
+   * Combine personally identifiable information (PII) into anonymized identifiers
+   * Create privacy-preserving keys for data linkage
+   * Generate pseudonyms for sensitive data
 
 2. **Data Integration**
-   - Create composite keys for data joining
-   - Generate unique identifiers across systems
-   - Standardize multi-field references
+   * Create composite keys for data joining
+   * Generate unique identifiers across systems
+   * Standardize multi-field references
 
 3. **Data Quality**
-   - Track changes across multiple fields
-   - Create checksums for data validation
-   - Monitor data integrity
+   * Track changes across multiple fields
+   * Create checksums for data validation
+   * Monitor data integrity
 
 4. **Performance Optimization**
-   - Reduce storage requirements by combining fields
-   - Optimize indexing with combined keys
-   - Improve query performance with single-field lookups
+   * Reduce storage requirements by combining fields
+   * Optimize indexing with combined keys
+   * Improve query performance with single-field lookups
 
 ## Notes
 
-- The hash value is deterministic - the same input fields will always produce the same hash
-- The hash is irreversible - you cannot recover the original field values from the hash
-- Field order matters - changing the order of fields will produce a different hash
-- All field values are converted to strings before hashing
-- The output hash is always a 32-character hexadecimal string
-- Null or empty field values are handled gracefully but will affect the resulting hash
+* The hash value is deterministic - the same input fields will always produce the same hash
+* The hash is irreversible - you cannot recover the original field values from the hash
+* Field order matters - changing the order of fields will produce a different hash
+* All field values are converted to strings before hashing
+* The output hash is always a 32-character hexadecimal string
+* Null or empty field values are handled gracefully but will affect the resulting hash

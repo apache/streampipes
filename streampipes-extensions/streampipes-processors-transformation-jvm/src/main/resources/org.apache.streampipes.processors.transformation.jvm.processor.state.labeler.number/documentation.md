@@ -22,35 +22,32 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The Number Labeler processor adds labels to numerical values based on user-defined rules. It supports:
-
-- Value-based labeling
-- Custom rule definition
-- Multiple conditions
-- Default labels
-- Value comparison
+* Value-based labeling
+* Custom rule definition
+* Multiple conditions
+* Default labels
+* Value comparison
 
 This processor is essential for:
+* Classifying measurements
+* Adding context to data
+* Identifying patterns
+* Marking conditions
 
-- Classifying measurements
-- Adding context to data
-- Identifying patterns
-- Marking conditions
-
----
+***
 
 ## Required input
 
 The processor requires a data stream containing:
+* A numerical value field to evaluate
+* Timestamp information
 
-- A numerical value field to evaluate
-- Timestamp information
-
----
+***
 
 ## Configuration
 
@@ -65,22 +62,19 @@ Specify the name of the label field in the output event.
 ### Condition
 
 Add conditions in the format:
-
-- `<;5;low` - Label as "low" if value is less than 5
-- `<;10;medium` - Label as "medium" if value is less than 10
-- `*;high` - Default label "high" for all other cases
+* `<;5;low` - Label as "low" if value is less than 5
+* `<;10;medium` - Label as "medium" if value is less than 10
+* `*;high` - Default label "high" for all other cases
 
 ## Output
 
 The processor creates a new event containing:
-
-- All original fields from the input event
-- A new label field based on the conditions
+* All original fields from the input event
+* A new label field based on the conditions
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -90,13 +84,11 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-
-- Sensor Value: temperature
-- Label Name: temperature_status
-- Condition: "<;20;cold", "<;30;warm", "\*;hot"
+* Sensor Value: temperature
+* Label Name: temperature_status
+* Condition: "<;20;cold", "<;30;warm", "*;hot"
 
 #### Output Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -109,20 +101,20 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **Data Classification**
-   - Classify measurements
-   - Add context to data
-   - Identify patterns
-   - Mark conditions
+   * Classify measurements
+   * Add context to data
+   * Identify patterns
+   * Mark conditions
 
 2. **Quality Control**
-   - Label quality levels
-   - Mark thresholds
-   - Identify issues
-   - Track conditions
+   * Label quality levels
+   * Mark thresholds
+   * Identify issues
+   * Track conditions
 
 ## Notes
 
-- Conditions are evaluated in order
-- Default label is required
-- Processing is stateless
-- Multiple conditions supported
+* Conditions are evaluated in order
+* Default label is required
+* Processing is stateless
+* Multiple conditions supported

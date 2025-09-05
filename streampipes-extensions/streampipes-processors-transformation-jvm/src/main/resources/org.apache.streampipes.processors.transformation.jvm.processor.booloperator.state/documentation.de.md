@@ -22,35 +22,33 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
 Der Boolescher-zu-Zustand-Prozessor wandelt boolesche Felder in einen beschreibenden Zustandsstring um. Er unterstützt:
-
-- Mehrere boolesche Eingaben
-- Benutzerdefinierte Zustandsabbildung
-- Standardzustandsbehandlung
-- Laufzeitnamen-Abbildung
-- JSON-Konfiguration
-- Zustandspriorisierung
+* Mehrere boolesche Eingaben
+* Benutzerdefinierte Zustandsabbildung
+* Standardzustandsbehandlung
+* Laufzeitnamen-Abbildung
+* JSON-Konfiguration
+* Zustandspriorisierung
 
 Dieser Prozessor ist essentiell für:
+* Umwandlung boolescher Zustände
+* Erstellung beschreibender Zustände
+* Abbildung boolescher Werte
+* Behandlung mehrerer Zustände
+* Aufbau von Zustandsautomaten
+* Erstellung menschenlesbarer Zustände
 
-- Umwandlung boolescher Zustände
-- Erstellung beschreibender Zustände
-- Abbildung boolescher Werte
-- Behandlung mehrerer Zustände
-- Aufbau von Zustandsautomaten
-- Erstellung menschenlesbarer Zustände
-
----
+***
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der mindestens ein boolesches Feld zur Umwandlung in einen Zustand enthält.
 
----
+***
 
 ## Konfiguration
 
@@ -68,22 +66,20 @@ Definiere benutzerdefinierte Zuordnungen, um die Laufzeitnamen durch eigene Zust
 
 ```json
 {
-  "runtimeName1": "Benutzerdefinierter Zustand 1",
-  "runtimeName2": "Benutzerdefinierter Zustand 2"
+    "runtimeName1": "Benutzerdefinierter Zustand 1",
+    "runtimeName2": "Benutzerdefinierter Zustand 2"
 }
 ```
 
 ## Ausgabe
 
 Der Prozessor erstellt eine neue Nachricht, die enthält:
-
-- Alle ursprünglichen Felder aus der Eingabe-Nachricht
-- Ein neues Feld namens "current_state" mit dem Zustandsstring
+* Alle ursprünglichen Felder aus der Eingabe-Nachricht
+* Ein neues Feld namens "current_state" mit dem Zustandsstring
 
 ### Beispiel
 
 #### Eingabe-Nachricht
-
 ```json
 {
   "deviceId": "machine01",
@@ -95,21 +91,18 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration
-
-- Aktueller Zustand: isRunning, isError, isMaintenance
-- Standardzustand: "IDLE"
-- Zuordnungs-Konfiguration:
-
+* Aktueller Zustand: isRunning, isError, isMaintenance
+* Standardzustand: "IDLE"
+* Zuordnungs-Konfiguration:
 ```json
 {
-  "isRunning": "OPERATIONAL",
-  "isError": "ERROR",
-  "isMaintenance": "MAINTENANCE"
+    "isRunning": "OPERATIONAL",
+    "isError": "ERROR",
+    "isMaintenance": "MAINTENANCE"
 }
 ```
 
 #### Ausgabe-Nachricht
-
 ```json
 {
   "deviceId": "machine01",
@@ -124,42 +117,42 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ## Anwendungsfälle
 
 1. **Geräteüberwachung**
-   - Umwandlung von Gerätezuständen
-   - Abbildung von Statusflags
-   - Erstellung von Zustandsautomaten
-   - Überwachung von Bedingungen
-   - Verfolgung von Operationen
+   * Umwandlung von Gerätezuständen
+   * Abbildung von Statusflags
+   * Erstellung von Zustandsautomaten
+   * Überwachung von Bedingungen
+   * Verfolgung von Operationen
 
 2. **Prozesssteuerung**
-   - Abbildung von Prozesszuständen
-   - Umwandlung von Bedingungen
-   - Erstellung von Arbeitsabläufen
-   - Überwachung von Phasen
-   - Verfolgung des Fortschritts
+   * Abbildung von Prozesszuständen
+   * Umwandlung von Bedingungen
+   * Erstellung von Arbeitsabläufen
+   * Überwachung von Phasen
+   * Verfolgung des Fortschritts
 
 3. **Systemintegration**
-   - Abbildung von Systemzuständen
-   - Umwandlung von Signalen
-   - Erstellung von Schnittstellen
-   - Überwachung des Status
-   - Verfolgung von Bedingungen
+   * Abbildung von Systemzuständen
+   * Umwandlung von Signalen
+   * Erstellung von Schnittstellen
+   * Überwachung des Status
+   * Verfolgung von Bedingungen
 
 4. **Qualitätskontrolle**
-   - Abbildung von Qualitätszuständen
-   - Umwandlung von Prüfungen
-   - Erstellung von Berichten
-   - Überwachung von Tests
-   - Verfolgung von Ergebnissen
+   * Abbildung von Qualitätszuständen
+   * Umwandlung von Prüfungen
+   * Erstellung von Berichten
+   * Überwachung von Tests
+   * Verfolgung von Ergebnissen
 
 ## Hinweise
 
-- Nur boolesche Felder können umgewandelt werden
-- Zustandsabbildung ist case-sensitive
-- Standardzustand ist erforderlich
-- JSON-Konfiguration ist optional
-- Verarbeitung ist zustandslos
-- Mehrere Zustände erfordern Priorisierung
-- Zustandsbenennung beachten
-- Abbildung erfolgt sofort
-- Keine Verzögerung bei der Verarbeitung
-- Zustand ist immer vorhanden
+* Nur boolesche Felder können umgewandelt werden
+* Zustandsabbildung ist case-sensitive
+* Standardzustand ist erforderlich
+* JSON-Konfiguration ist optional
+* Verarbeitung ist zustandslos
+* Mehrere Zustände erfordern Priorisierung
+* Zustandsbenennung beachten
+* Abbildung erfolgt sofort
+* Keine Verzögerung bei der Verarbeitung
+* Zustand ist immer vorhanden 

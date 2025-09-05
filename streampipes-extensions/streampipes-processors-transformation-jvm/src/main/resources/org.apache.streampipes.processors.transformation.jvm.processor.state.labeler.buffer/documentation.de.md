@@ -22,35 +22,32 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
 Der Zustands-Puffer-Beschriftungs-Prozessor fügt Beschriftungen zu Sensor-Zeitreihendaten basierend auf statistischen Operationen und benutzerdefinierten Regeln hinzu. Er unterstützt:
-
-- Zustandsbasierte Beschriftung
-- Statistische Operationen (Minimum, Maximum, Durchschnitt)
-- Benutzerdefinierte Regeldefinition
-- Mehrere Bedingungen
-- Standardbeschriftungen
+* Zustandsbasierte Beschriftung
+* Statistische Operationen (Minimum, Maximum, Durchschnitt)
+* Benutzerdefinierte Regeldefinition
+* Mehrere Bedingungen
+* Standardbeschriftungen
 
 Dieser Prozessor ist essentiell für:
+* Kontext zu Daten hinzufügen
+* Messungen klassifizieren
+* Muster identifizieren
+* Bedingungen markieren
 
-- Kontext zu Daten hinzufügen
-- Messungen klassifizieren
-- Muster identifizieren
-- Bedingungen markieren
-
----
+***
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der enthält:
+* Ein Zustandsfeld (Array von Strings)
+* Ein Sensorwertfeld (Array von Zahlen)
 
-- Ein Zustandsfeld (Array von Strings)
-- Ein Sensorwertfeld (Array von Zahlen)
-
----
+***
 
 ## Konfiguration
 
@@ -60,7 +57,7 @@ Wähle das Feld aus, das die Zustandsinformationen enthält. Dies bestimmt, wann
 
 ### Wähle einen bestimmten Zustand
 
-Füge einen Filter hinzu, um zu definieren, welche Zustände ausgewertet werden sollen. Verwende '\*' um alle Zustände auszuwählen.
+Füge einen Filter hinzu, um zu definieren, welche Zustände ausgewertet werden sollen. Verwende '*' um alle Zustände auszuwählen.
 
 ### Sensorwerte
 
@@ -69,30 +66,26 @@ Wähle das Array aus, das die zu bewertenden Sensorwerte enthält.
 ### Operation
 
 Definiere die statistische Operation, die auf die Sensorwerte angewendet werden soll:
-
-- Minimum: Niedrigsten Wert ermitteln
-- Maximum: Höchsten Wert ermitteln
-- Durchschnitt: Mittelwert berechnen
+* Minimum: Niedrigsten Wert ermitteln
+* Maximum: Höchsten Wert ermitteln
+* Durchschnitt: Mittelwert berechnen
 
 ### Bedingung
 
 Füge Bedingungen im Format hinzu:
-
-- `<;5;ok` - Als "ok" beschriften, wenn der Wert kleiner als 5 ist
-- `<;10;ok` - Als "ok" beschriften, wenn der Wert kleiner als 10 ist
-- `*;nok` - Standardbeschriftung "nok" für alle anderen Fälle
+* `<;5;ok` - Als "ok" beschriften, wenn der Wert kleiner als 5 ist
+* `<;10;ok` - Als "ok" beschriften, wenn der Wert kleiner als 10 ist
+* `*;nok` - Standardbeschriftung "nok" für alle anderen Fälle
 
 ## Ausgabe
 
 Der Prozessor erstellt eine neue Nachricht, die enthält:
-
-- Alle ursprünglichen Felder aus der Eingabe-Nachricht
-- Ein neues Beschriftungsfeld basierend auf den Bedingungen
+* Alle ursprünglichen Felder aus der Eingabe-Nachricht
+* Ein neues Beschriftungsfeld basierend auf den Bedingungen
 
 ### Beispiel
 
 #### Eingabe-Nachricht
-
 ```json
 {
   "deviceId": "sensor01",
@@ -103,15 +96,13 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration
-
-- Zustandsfeld: state
-- Wähle einen bestimmten Zustand: active
-- Sensorwerte: values
-- Operation: Durchschnitt
-- Bedingung: "<;20;kalt", "<;30;warm", "\*;heiß"
+* Zustandsfeld: state
+* Wähle einen bestimmten Zustand: active
+* Sensorwerte: values
+* Operation: Durchschnitt
+* Bedingung: "<;20;kalt", "<;30;warm", "*;heiß"
 
 #### Ausgabe-Nachricht
-
 ```json
 {
   "deviceId": "sensor01",
@@ -125,24 +116,24 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ## Anwendungsfälle
 
 1. **Datenklassifizierung**
-   - Kontext zu Daten hinzufügen
-   - Messungen klassifizieren
-   - Muster identifizieren
-   - Bedingungen markieren
+   * Kontext zu Daten hinzufügen
+   * Messungen klassifizieren
+   * Muster identifizieren
+   * Bedingungen markieren
 
 2. **Qualitätskontrolle**
-   - Qualitätsstufen beschriften
-   - Schwellenwerte markieren
-   - Probleme identifizieren
-   - Bedingungen verfolgen
+   * Qualitätsstufen beschriften
+   * Schwellenwerte markieren
+   * Probleme identifizieren
+   * Bedingungen verfolgen
 
 ## Hinweise
 
-- Bedingungen werden in Reihenfolge ausgewertet
-- Standardbeschriftung ist erforderlich
-- Zustandsfilterung ist optional
-- Verarbeitung ist zustandslos
-- Mehrere Bedingungen werden unterstützt
-- Statistische Operation wird vor der Bedingungsauswertung angewendet
-- Eingabe-Arrays müssen numerische Werte enthalten
-- Zustandsfeld muss ein Array von Strings sein
+* Bedingungen werden in Reihenfolge ausgewertet
+* Standardbeschriftung ist erforderlich
+* Zustandsfilterung ist optional
+* Verarbeitung ist zustandslos
+* Mehrere Bedingungen werden unterstützt
+* Statistische Operation wird vor der Bedingungsauswertung angewendet
+* Eingabe-Arrays müssen numerische Werte enthalten
+* Zustandsfeld muss ein Array von Strings sein 

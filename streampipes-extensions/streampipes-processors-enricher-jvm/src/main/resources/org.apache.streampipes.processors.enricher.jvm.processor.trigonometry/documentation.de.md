@@ -22,47 +22,39 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
-
 Der Trigonometrische Funktionen-Prozessor führt trigonometrische Berechnungen an numerischen Werten durch. Er:
+* Unterstützt grundlegende trigonometrische Funktionen (sin, cos, tan)
+* Funktioniert mit jedem numerischen Feldtyp
+* Behält die ursprünglichen Ereignisdaten bei
+* Fügt Berechnungsergebnisse als neue Felder hinzu
 
-- Unterstützt grundlegende trigonometrische Funktionen (sin, cos, tan)
-- Funktioniert mit jedem numerischen Feldtyp
-- Behält die ursprünglichen Ereignisdaten bei
-- Fügt Berechnungsergebnisse als neue Felder hinzu
-
----
+***
 
 ## Erforderliche Eingabe
-
 Der Prozessor benötigt einen Eingabe-Ereignisstrom, der mindestens ein numerisches Feld für die Durchführung trigonometrischer Berechnungen enthält.
 
----
+***
 
 ## Konfiguration
 
 ### Alpha
-
 Wählen Sie das Feld aus dem Eingabe-Ereignis aus, das als Winkel (in Radiant) für die trigonometrische Berechnung verwendet werden soll.
 
 ### Operation
-
 Wählen Sie eine der folgenden trigonometrischen Funktionen:
-
-- **sin**: Berechnet den Sinus des Winkels
-- **cos**: Berechnet den Kosinus des Winkels
-- **tan**: Berechnet den Tangens des Winkels
+* **sin**: Berechnet den Sinus des Winkels
+* **cos**: Berechnet den Kosinus des Winkels
+* **tan**: Berechnet den Tangens des Winkels
 
 ## Ausgabe
-
 Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen Feld namens `trigonometryResult` weiter, das das Ergebnis der trigonometrischen Berechnung enthält.
 
 ### Beispiel
 
 #### Eingabe-Ereignis
-
 ```json
 {
   "angle": 1.57,
@@ -71,12 +63,10 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen Feld namens `t
 ```
 
 #### Konfiguration
-
-- Alpha: `angle`
-- Operation: `sin`
+* Alpha: `angle`
+* Operation: `sin`
 
 #### Ausgabe-Ereignis
-
 ```json
 {
   "angle": 1.57,
@@ -88,27 +78,27 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen Feld namens `t
 ## Anwendungsfälle
 
 1. **Signalverarbeitung**
-   - Wellenformanalyse
-   - Signalfilterung
-   - Phasenberechnungen
-   - Frequenzanalyse
+   * Wellenformanalyse
+   * Signalfilterung
+   * Phasenberechnungen
+   * Frequenzanalyse
 
 2. **Geometrische Berechnungen**
-   - Winkelumrechnungen
-   - Entfernungsberechnungen
-   - Positionsverfolgung
-   - Navigationssysteme
+   * Winkelumrechnungen
+   * Entfernungsberechnungen
+   * Positionsverfolgung
+   * Navigationssysteme
 
 3. **Wissenschaftliche Berechnungen**
-   - Physiksimulationen
-   - Ingenieurberechnungen
-   - Mathematische Modellierung
-   - Datenanalyse
+   * Physiksimulationen
+   * Ingenieurberechnungen
+   * Mathematische Modellierung
+   * Datenanalyse
 
 ## Hinweise
 
-- Eingabewinkel müssen in Radiant angegeben werden
-- Ergebnisse werden als doppelt genaue Fließkommazahlen gespeichert
-- Die ursprüngliche Ereignisstruktur bleibt erhalten
-- Die Berechnung wird für jedes eingehende Ereignis durchgeführt
-- Das Ergebnisfeld heißt immer `trigonometryResult`
+* Eingabewinkel müssen in Radiant angegeben werden
+* Ergebnisse werden als doppelt genaue Fließkommazahlen gespeichert
+* Die ursprüngliche Ereignisstruktur bleibt erhalten
+* Die Berechnung wird für jedes eingehende Ereignis durchgeführt
+* Das Ergebnisfeld heißt immer `trigonometryResult` 

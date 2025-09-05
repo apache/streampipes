@@ -22,54 +22,45 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
-
 The Threshold Detector processor monitors numerical values and detects when they cross specified thresholds. It:
+* Compares numerical values against a threshold
+* Appends a boolean flag indicating threshold status
+* Supports various comparison operations
+* Preserves all input data while adding threshold information
 
-- Compares numerical values against a threshold
-- Appends a boolean flag indicating threshold status
-- Supports various comparison operations
-- Preserves all input data while adding threshold information
-
----
+***
 
 ## Required Input
-
 The processor requires an input event stream containing at least one numerical field to monitor.
 
----
+***
 
 ## Configuration
 
 ### Field
-
 Select the numerical field to monitor for threshold crossing.
 
 ### Operation
-
 Choose from six comparison operations:
-
-- **<** (Less than)
-- **<=** (Less than or equal)
-- **>** (Greater than)
-- **>=** (Greater than or equal)
-- **==** (Equal)
-- **!=** (Not equal)
+* **<** (Less than)
+* **<=** (Less than or equal)
+* **>** (Greater than)
+* **>=** (Greater than or equal)
+* **==** (Equal)
+* **!=** (Not equal)
 
 ### Threshold Value
-
 Specify the numerical threshold value to compare against.
 
 ## Output
-
 The processor forwards the input event with an additional boolean field `thresholdDetected` indicating whether the threshold condition was met.
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "temperature": 25.5,
@@ -79,13 +70,11 @@ The processor forwards the input event with an additional boolean field `thresho
 ```
 
 #### Configuration
-
-- Field: `temperature`
-- Operation: `>`
-- Threshold Value: `25.0`
+* Field: `temperature`
+* Operation: `>`
+* Threshold Value: `25.0`
 
 #### Output Event
-
 ```json
 {
   "temperature": 25.5,
@@ -98,27 +87,27 @@ The processor forwards the input event with an additional boolean field `thresho
 ## Use Cases
 
 1. **Monitoring & Alerting**
-   - Monitor sensor readings
-   - Detect threshold crossings
-   - Trigger alerts
-   - Track value ranges
+   * Monitor sensor readings
+   * Detect threshold crossings
+   * Trigger alerts
+   * Track value ranges
 
 2. **Quality Control**
-   - Monitor process parameters
-   - Detect out-of-range values
-   - Ensure quality standards
-   - Track compliance
+   * Monitor process parameters
+   * Detect out-of-range values
+   * Ensure quality standards
+   * Track compliance
 
 3. **Data Analysis**
-   - Analyze value distributions
-   - Track threshold events
-   - Monitor trends
-   - Identify patterns
+   * Analyze value distributions
+   * Track threshold events
+   * Monitor trends
+   * Identify patterns
 
 ## Notes
 
-- The processor preserves all input fields
-- The `thresholdDetected` field is always appended
-- Floating-point comparisons use a small epsilon (0.000001) for equality
-- All events are forwarded, regardless of threshold status
-- The threshold check is performed on the exact numerical value
+* The processor preserves all input fields
+* The `thresholdDetected` field is always appended
+* Floating-point comparisons use a small epsilon (0.000001) for equality
+* All events are forwarded, regardless of threshold status
+* The threshold check is performed on the exact numerical value

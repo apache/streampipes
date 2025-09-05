@@ -22,31 +22,29 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
 Der Feld-Umbenenner-Prozessor ändert die Namen von Feldern in Ereignissen. Er unterstützt:
-
-- Einzelfeld-Umbenennung
-- Benutzerdefinierte Feldnamen
-- Laufzeitnamen-Modifikation
-- Feldnamen-Standardisierung
+* Einzelfeld-Umbenennung
+* Benutzerdefinierte Feldnamen
+* Laufzeitnamen-Modifikation
+* Feldnamen-Standardisierung
 
 Dieser Prozessor ist essentiell für:
+* Standardisierung von Feldnamen
+* Erstellung konsistenter Benennung
+* Abbildung von Feldidentifikatoren
+* Verbesserung der Lesbarkeit
 
-- Standardisierung von Feldnamen
-- Erstellung konsistenter Benennung
-- Abbildung von Feldidentifikatoren
-- Verbesserung der Lesbarkeit
-
----
+***
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der mindestens ein umzubenennendes Feld enthält.
 
----
+***
 
 ## Konfiguration
 
@@ -61,15 +59,13 @@ Gib den neuen Namen für das ausgewählte Feld ein. Dieser Name ersetzt den ursp
 ## Ausgabe
 
 Der Prozessor erstellt ein neues Ereignis, das enthält:
-
-- Alle ursprünglichen Felder aus dem Eingabe-Ereignis
-- Das ausgewählte Feld mit seinem neuen Namen
-- Alle Feldwerte bleiben unverändert
+* Alle ursprünglichen Felder aus dem Eingabe-Ereignis
+* Das ausgewählte Feld mit seinem neuen Namen
+* Alle Feldwerte bleiben unverändert
 
 ### Beispiel
 
 #### Eingabe-Ereignis
-
 ```json
 {
   "deviceId": "sensor01",
@@ -80,12 +76,10 @@ Der Prozessor erstellt ein neues Ereignis, das enthält:
 ```
 
 #### Konfiguration
-
-- Feld: temp
-- Neuer Feldname: temperature
+* Feld: temp
+* Neuer Feldname: temperature
 
 #### Ausgabe-Ereignis
-
 ```json
 {
   "deviceId": "sensor01",
@@ -98,21 +92,21 @@ Der Prozessor erstellt ein neues Ereignis, das enthält:
 ## Anwendungsfälle
 
 1. **Datenstandardisierung**
-   - Standardisierung von Feldnamen
-   - Erstellung von Benennungskonventionen
-   - Abbildung von Feldidentifikatoren
-   - Verbesserung der Konsistenz
+   * Standardisierung von Feldnamen
+   * Erstellung von Benennungskonventionen
+   * Abbildung von Feldidentifikatoren
+   * Verbesserung der Konsistenz
 
 2. **Systemintegration**
-   - Abbildung von Feldnamen
-   - Standardisierung von Schnittstellen
-   - Erstellung von Konsistenz
-   - Aufbau von Abbildungen
+   * Abbildung von Feldnamen
+   * Standardisierung von Schnittstellen
+   * Erstellung von Konsistenz
+   * Aufbau von Abbildungen
 
 ## Hinweise
 
-- Nur Feldnamen werden geändert
-- Feldwerte bleiben unverändert
-- Ursprüngliche Feldreihenfolge wird beibehalten
-- Verarbeitung ist zustandslos
-- Mehrere Umbenennungen erfordern Verkettung
+* Nur Feldnamen werden geändert
+* Feldwerte bleiben unverändert
+* Ursprüngliche Feldreihenfolge wird beibehalten
+* Verarbeitung ist zustandslos
+* Mehrere Umbenennungen erfordern Verkettung 

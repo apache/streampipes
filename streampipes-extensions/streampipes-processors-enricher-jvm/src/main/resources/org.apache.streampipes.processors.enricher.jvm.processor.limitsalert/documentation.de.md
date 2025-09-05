@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
 Der Sensor-Grenzwert-Alarm-Prozessor überwacht Sensorwerte in Echtzeit und löst Alarme aus, wenn diese Werte benutzerdefinierte Regel- oder Warnlimiten überschreiten. Dieser Prozessor ist nützlich in Szenarien, in denen eine kontinuierliche Überwachung kritischer Parameter erforderlich ist und sofortige Maßnahmen erforderlich sind, wenn Werte außerhalb akzeptabler Bereiche liegen.
 
----
+***
 
 ## Erforderliche Eingabe
 
 Dieser Prozessor akzeptiert jeden Ereignisstrom, der Sensordaten enthält. Die Ereignisse müssen Felder für Sensorwerte und die entsprechenden oberen und unteren Grenzen enthalten.
 
----
+***
 
 ## Konfiguration
 
@@ -58,23 +58,21 @@ Geben Sie die untere Warnlinie für den Sensor an. Dieser Wert zeigt an, wenn si
 
 Geben Sie die untere Regelgrenze für den Sensor an. Dieser Wert definiert den minimalen Schwellenwert, bei dessen Unterschreitung ein Alarm ausgelöst wird.
 
----
+***
 
 ## Ausgabe
 
 Der Prozessor gibt Ereignisse nur aus, wenn der Sensorwert die angegebenen Grenzen überschreitet. Das Ausgabe-Ereignis enthält die ursprünglichen Sensordaten zusammen mit zusätzlichen Feldern, die angeben:
-
 - **Alarmstatus**: Ob der Sensorwert eine WARNUNG oder Regelgrenze überschritten hat.
 - **Überschrittene Grenze**: Welche spezifische Grenze überschritten wurde (z.B. "OBERE_REGELGRENZE" oder "UNTERE_WARNLINIE").
 
 Diese Ausgabe-Ereignisse können für die Auslösung von Benachrichtigungen oder anderen Aktionen in der nachgelagerten Verarbeitung verwendet werden.
 
----
+***
 
 ## Beispiel
 
 ### Benutzerkonfiguration
-
 - Feldzuordnung für:
   - **Sensorwert**
   - **Obere Regelgrenze**
@@ -83,7 +81,6 @@ Diese Ausgabe-Ereignisse können für die Auslösung von Benachrichtigungen oder
   - **Untere Regelgrenze**
 
 ### Eingabe-Ereignis
-
 ```json
 {
   "timestamp": 1627891234000,
@@ -96,7 +93,6 @@ Diese Ausgabe-Ereignisse können für die Auslösung von Benachrichtigungen oder
 ```
 
 ### Ausgabe-Ereignis
-
 ```json
 {
   "timestamp": 1627891234000,
@@ -108,4 +104,4 @@ Diese Ausgabe-Ereignisse können für die Auslösung von Benachrichtigungen oder
   "alertStatus": "ALERT",
   "limitBreached": "UPPER_CONTROL_LIMIT"
 }
-```
+``` 

@@ -22,7 +22,7 @@ alerting:
   alertmanagers:
     - static_configs:
         - targets:
-            - prometheus-alertmanager:9093
+           - prometheus-alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
@@ -32,16 +32,16 @@ rule_files:
 scrape_configs:
   - job_name: "prometheus"
     static_configs:
-      - targets: ["localhost:9090"]
+      - targets: [ "localhost:9090" ]
 
   - job_name: "backend"
     metrics_path: "/streampipes-backend/actuator/prometheus"
     static_configs:
-      - targets: ["backend:8030"]
+      - targets: [ "backend:8030" ]
     #bearer_token: ""
     #bearer_token_file: ""
 
   - job_name: "extensions-all-iiot"
     metrics_path: "/actuator/prometheus"
     static_configs:
-      - targets: ["extensions-all-jvm:8090"]
+      - targets: [ "extensions-all-jvm:8090" ]

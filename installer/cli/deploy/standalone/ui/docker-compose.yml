@@ -31,7 +31,7 @@ services:
         max-file: "1"
     networks:
       spnet:
-
+      
 volumes:
   nginx:
 

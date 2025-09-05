@@ -22,35 +22,33 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The Boolean Inverter processor inverts the value of a boolean field in a data stream. It supports:
-
-- Single field inversion
-- TRUE to FALSE conversion
-- FALSE to TRUE conversion
-- In-place value modification
-- Simple boolean logic
-- Direct value negation
+* Single field inversion
+* TRUE to FALSE conversion
+* FALSE to TRUE conversion
+* In-place value modification
+* Simple boolean logic
+* Direct value negation
 
 This processor is essential for:
+* Negating boolean conditions
+* Inverting control signals
+* Complementing state values
+* Reversing logic gates
+* Creating opposite states
+* Implementing NOT operations
 
-- Negating boolean conditions
-- Inverting control signals
-- Complementing state values
-- Reversing logic gates
-- Creating opposite states
-- Implementing NOT operations
-
----
+***
 
 ## Required input
 
 The processor requires a data stream containing at least one boolean field to invert.
 
----
+***
 
 ## Configuration
 
@@ -61,14 +59,12 @@ Select the boolean field to invert. This field's value will be negated (TRUE bec
 ## Output
 
 The processor creates a new event containing:
-
-- All original fields from the input event
-- The selected field with its value inverted
+* All original fields from the input event
+* The selected field with its value inverted
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -78,11 +74,9 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-
-- Invert Field: isActive
+* Invert Field: isActive
 
 #### Output Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -94,42 +88,42 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **Control Systems**
-   - Invert control signals
-   - Negate status flags
-   - Reverse logic gates
-   - Complement states
-   - Create opposite conditions
+   * Invert control signals
+   * Negate status flags
+   * Reverse logic gates
+   * Complement states
+   * Create opposite conditions
 
 2. **State Management**
-   - Invert state values
-   - Negate status indicators
-   - Reverse boolean flags
-   - Complement conditions
-   - Create inverse states
+   * Invert state values
+   * Negate status indicators
+   * Reverse boolean flags
+   * Complement conditions
+   * Create inverse states
 
 3. **Logic Operations**
-   - Implement NOT gates
-   - Negate conditions
-   - Reverse boolean logic
-   - Complement expressions
-   - Create opposite states
+   * Implement NOT gates
+   * Negate conditions
+   * Reverse boolean logic
+   * Complement expressions
+   * Create opposite states
 
 4. **Signal Processing**
-   - Invert digital signals
-   - Negate binary values
-   - Reverse boolean states
-   - Complement conditions
-   - Create inverse signals
+   * Invert digital signals
+   * Negate binary values
+   * Reverse boolean states
+   * Complement conditions
+   * Create inverse signals
 
 ## Notes
 
-- Only boolean fields can be inverted
-- Inversion is in-place
-- Original value is replaced
-- Processing is stateless
-- Multiple inversions require chaining
-- Consider logic implications
-- Inversion is immediate
-- No delay in processing
-- No additional fields created
-- Simple boolean negation
+* Only boolean fields can be inverted
+* Inversion is in-place
+* Original value is replaced
+* Processing is stateless
+* Multiple inversions require chaining
+* Consider logic implications
+* Inversion is immediate
+* No delay in processing
+* No additional fields created
+* Simple boolean negation

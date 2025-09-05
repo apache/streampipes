@@ -22,46 +22,41 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is required.
 
----
+
+***
 
 ## Required input
-
 There is no specific input required.
 
----
+***
 
 ## Configuration
 
-### Field
-
+### Field   
 Specifies the field to rename.
 
 ### NewFieldName
-
 Specifies the new runtime name of the field.
 
 ## Output
-
 Example:
 
 Old Output:
-
 ```
 {
-  'timestamp': 16003000,
+  'timestamp': 16003000, 
 }
 ```
 
 New Ouput:
-
 ```
 {
-  'time': 16003000,
+  'time': 16003000, 
 }
 ```

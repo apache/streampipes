@@ -30,63 +30,64 @@ repos:
 
   - repo: local
     hooks:
+
       - id: print_statement
         name: Check that print is not in the source code
-        types: [python]
+        types: [ python ]
         entry: 'print\(.*\)'
         language: pygrep
 
       - id: interrogate
         name: interrogate
         language: python
-        types: [python]
-        entry: interrogate
+        types: [ python ]
+        entry:  interrogate
 
       - id: pyupgrade
         name: pyupgrade
         language: python
-        types: [python]
+        types: [ python ]
         entry: pyupgrade --py38-plus --keep-runtime-typing
         verbose: true
 
       - id: autoflake
         name: autoflake
         language: python
-        types: [python]
+        types: [ python ]
         entry: autoflake
         verbose: true
 
       - id: isort
         name: isort
         language: python
-        types: [python]
+        types: [ python ]
         entry: isort
         verbose: true
 
       - id: black
         name: black
         language: python
-        types: [python]
+        types: [ python ]
         entry: black
         verbose: true
 
       - id: blacken-docks
         name: blacken-docs
         language: python
-        types: [python]
+        types: [ python ]
         entry: black
         verbose: true
 
       - id: mypy
         name: mypy
         language: python
-        types: [python]
+        types: [ python ]
         entry: mypy
         verbose: true
 
       - id: flake8
         name: flake8
         language: python
-        types: [python]
+        types: [ python ]
         entry: flake8 --max-line-length 120
         verbose: true

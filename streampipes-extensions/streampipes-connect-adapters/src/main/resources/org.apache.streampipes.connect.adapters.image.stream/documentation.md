@@ -22,10 +22,11 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Upload a zip file of images and create an event per image
 
----
+***
+

@@ -22,31 +22,29 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The Count Array processor counts the number of elements in array/list fields. It supports:
-
-- Array size counting
-- List length measurement
-- Collection size tracking
-- Dynamic array handling
+* Array size counting
+* List length measurement
+* Collection size tracking
+* Dynamic array handling
 
 This processor is essential for:
+* Measuring array sizes
+* Tracking list lengths
+* Monitoring collection growth
+* Analyzing data volumes
 
-- Measuring array sizes
-- Tracking list lengths
-- Monitoring collection growth
-- Analyzing data volumes
-
----
+***
 
 ## Required input
 
 The processor requires a data stream containing at least one array or list field to count its elements.
 
----
+***
 
 ## Configuration
 
@@ -57,14 +55,12 @@ Select the array or list field to count its elements. This field will be used to
 ## Output
 
 The processor creates a new event containing:
-
-- All original fields from the input event
-- A new field named "countValue" containing the number of elements in the selected array/list
+* All original fields from the input event
+* A new field named "countValue" containing the number of elements in the selected array/list
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -74,11 +70,9 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-
-- List Field: measurements
+* List Field: measurements
 
 #### Output Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -91,21 +85,21 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **Data Analysis**
-   - Count array elements
-   - Track list sizes
-   - Monitor collection growth
-   - Measure data volumes
+   * Count array elements
+   * Track list sizes
+   * Monitor collection growth
+   * Measure data volumes
 
 2. **Resource Management**
-   - Monitor buffer sizes
-   - Track queue lengths
-   - Measure storage usage
-   - Analyze capacity needs
+   * Monitor buffer sizes
+   * Track queue lengths
+   * Measure storage usage
+   * Analyze capacity needs
 
 ## Notes
 
-- Only array/list fields can be counted
-- Count is calculated per event
-- Processing is stateless
-- Empty arrays return 0
-- Null arrays are not supported
+* Only array/list fields can be counted
+* Count is calculated per event
+* Processing is stateless
+* Empty arrays return 0
+* Null arrays are not supported

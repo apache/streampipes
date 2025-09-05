@@ -22,7 +22,7 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
@@ -30,9 +30,9 @@ This adapter publishes simulated machine sensor data at a configurable time inte
 capabilities of StreamPipes without needing your own data or for testing purposes. Three different sensor scenarios are
 available:
 
-- Flowrate
-- Pressure
-- Water Level
+* Flowrate
+* Pressure
+* Water Level
 
 All scenarios include an error or anomaly condition, making them suitable for trend detection, anomaly detection, and
 similar applications.
@@ -83,4 +83,4 @@ When creating the adapter, the following parameters can be configured:
 - **Wait Time**: The time in milliseconds between two sensor events. Defaults to 1000 (1 second).
 - **Sensor**: Select one of the sensor scenarios described above: `flowrate`, `pressure`, `waterlevel`.
 
----
+***

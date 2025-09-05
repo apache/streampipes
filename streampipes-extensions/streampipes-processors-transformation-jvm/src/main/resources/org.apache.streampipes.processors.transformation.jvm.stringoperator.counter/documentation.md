@@ -22,31 +22,29 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The String Counter processor counts changes in string field values. It supports:
-
-- Value change detection
-- Change pair tracking
-- Incremental counting
-- State transition monitoring
+* Value change detection
+* Change pair tracking
+* Incremental counting
+* State transition monitoring
 
 This processor is essential for:
+* Counting value changes
+* Tracking state transitions
+* Monitoring string patterns
+* Measuring change frequency
 
-- Counting value changes
-- Tracking state transitions
-- Monitoring string patterns
-- Measuring change frequency
-
----
+***
 
 ## Required input
 
 The processor requires a data stream containing at least one string field to monitor for value changes.
 
----
+***
 
 ## Configuration
 
@@ -57,30 +55,26 @@ Select the string field to monitor for value changes. This field will be used to
 ## Output
 
 The processor creates a new event containing:
-
-- All original fields from the input event
-- A new field named "counter" containing the current count of value changes
-- A new field named "change_from" containing the previous value
-- A new field named "change_to" containing the new value
+* All original fields from the input event
+* A new field named "counter" containing the current count of value changes
+* A new field named "change_from" containing the previous value
+* A new field named "change_to" containing the new value
 
 ### Example
 
 #### Input Event Stream
-
 ```json
 {
   "deviceId": "sensor01",
   "status": "idle"
 }
 ```
-
 ```json
 {
   "deviceId": "sensor01",
   "status": "running"
 }
 ```
-
 ```json
 {
   "deviceId": "sensor01",
@@ -89,11 +83,9 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-
-- String Field: status
+* String Field: status
 
 #### Output Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -103,7 +95,6 @@ The processor creates a new event containing:
   "counter": 1
 }
 ```
-
 ```json
 {
   "deviceId": "sensor01",
@@ -117,24 +108,25 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **State Monitoring**
-   - Track state changes
-   - Count transitions
-   - Monitor patterns
-   - Measure frequency
+   * Track state changes
+   * Count transitions
+   * Monitor patterns
+   * Measure frequency
 
 2. **Process Analysis**
-   - Analyze workflows
-   - Track sequences
-   - Count cycles
-   - Monitor operations
+   * Analyze workflows
+   * Track sequences
+   * Count cycles
+   * Monitor operations
 
 ## Notes
 
-- Only counts actual value changes
-- Ignores consecutive identical values
-- Processing is stateful
-- Counter is incremental
-- Events are only emitted on value changes
-- Original event fields are preserved
-- Change pairs are tracked (from -> to)
-- Counter starts at 1 for first change
+* Only counts actual value changes
+* Ignores consecutive identical values
+* Processing is stateful
+* Counter is incremental
+* Events are only emitted on value changes
+* Original event fields are preserved
+* Change pairs are tracked (from -> to)
+* Counter starts at 1 for first change
+

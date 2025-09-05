@@ -22,7 +22,7 @@ changelog:
   categories:
     - title: StreamPipes Connect 🔌
       labels:
-        - connect
+          - connect
     - title: StreamPipes Core 🥑
       labels:
         - backend

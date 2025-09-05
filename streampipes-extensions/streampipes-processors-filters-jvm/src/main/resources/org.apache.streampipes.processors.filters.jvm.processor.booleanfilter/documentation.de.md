@@ -22,53 +22,44 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
-
 Der Boolean-Filter-Prozessor filtert Ereignisse basierend auf einem Boolean-Feldwert. Er unterstützt:
-
-- Exakte Boolean-Wert-Übereinstimmung
-- Ereignisweiterleitung bei Übereinstimmung
-- Einfache true/false-Filterung
-- Zustandsbasierte Ereignisfilterung
+* Exakte Boolean-Wert-Übereinstimmung
+* Ereignisweiterleitung bei Übereinstimmung
+* Einfache true/false-Filterung
+* Zustandsbasierte Ereignisfilterung
 
 Dieser Prozessor ist wichtig für:
+* Filterung von Ereignissen nach Boolean-Zustand
+* Implementierung bedingter Ereignisweiterleitung
+* Zustandsbasierte Ereignisverarbeitung
+* Boolean-Bedingungsfilterung
 
-- Filterung von Ereignissen nach Boolean-Zustand
-- Implementierung bedingter Ereignisweiterleitung
-- Zustandsbasierte Ereignisverarbeitung
-- Boolean-Bedingungsfilterung
-
----
+***
 
 ## Erforderliche Eingabe
-
 Der Prozessor benötigt einen Datenstrom, der mindestens ein zu filterndes Boolean-Feld enthält.
 
----
+***
 
 ## Konfiguration
 
 ### Feld
-
 Wählen Sie das zu filternde Boolean-Feld aus. Der Prozessor prüft den Wert dieses Feldes gegen den ausgewählten Filterwert.
 
 ### Feldwert
-
 Wählen Sie, ob Ereignisse behalten werden sollen, bei denen der Feldwert ist:
-
-- True - Nur Ereignisse mit true-Werten werden weitergeleitet
-- False - Nur Ereignisse mit false-Werten werden weitergeleitet
+* True - Nur Ereignisse mit true-Werten werden weitergeleitet
+* False - Nur Ereignisse mit false-Werten werden weitergeleitet
 
 ## Ausgabe
-
 Der Prozessor erstellt ein neues Ereignis, das alle ursprünglichen Felder aus dem Eingabeereignis enthält, aber nur wenn das ausgewählte Boolean-Feld dem konfigurierten Wert entspricht.
 
 ### Beispiel
 
 #### Eingabeereignisstrom
-
 ```json
 {
   "deviceId": "sensor01",
@@ -77,7 +68,6 @@ Der Prozessor erstellt ein neues Ereignis, das alle ursprünglichen Felder aus d
   "timestamp": 1586380104915
 }
 ```
-
 ```json
 {
   "deviceId": "sensor01",
@@ -88,12 +78,10 @@ Der Prozessor erstellt ein neues Ereignis, das alle ursprünglichen Felder aus d
 ```
 
 #### Konfiguration
-
-- Feld: isActive
-- Feldwert: True
+* Feld: isActive
+* Feldwert: True
 
 #### Ausgabeereignis
-
 ```json
 {
   "deviceId": "sensor01",
@@ -106,21 +94,21 @@ Der Prozessor erstellt ein neues Ereignis, das alle ursprünglichen Felder aus d
 ## Anwendungsfälle
 
 1. **Zustandsfilterung**
-   - Filterung aktiver/inaktiver Zustände
-   - Verarbeitung nur aktivierter Geräte
-   - Behandlung von Betriebszuständen
-   - Filterung nach Statusflags
+   * Filterung aktiver/inaktiver Zustände
+   * Verarbeitung nur aktivierter Geräte
+   * Behandlung von Betriebszuständen
+   * Filterung nach Statusflags
 
 2. **Bedingte Verarbeitung**
-   - Weiterleitung von Ereignissen nach Bedingung
-   - Filterung nach Boolean-Flags
-   - Verarbeitung basierend auf Zustand
-   - Behandlung von Boolean-Triggern
+   * Weiterleitung von Ereignissen nach Bedingung
+   * Filterung nach Boolean-Flags
+   * Verarbeitung basierend auf Zustand
+   * Behandlung von Boolean-Triggern
 
 ## Hinweise
 
-- Nur exakte Boolean-Übereinstimmungen werden unterstützt
-- Ereignisse werden unverändert weitergeleitet
-- Keine Transformation von Werten
-- Einfache true/false-Filterung
-- Ursprüngliche Ereignisstruktur wird beibehalten
+* Nur exakte Boolean-Übereinstimmungen werden unterstützt
+* Ereignisse werden unverändert weitergeleitet
+* Keine Transformation von Werten
+* Einfache true/false-Filterung
+* Ursprüngliche Ereignisstruktur wird beibehalten 

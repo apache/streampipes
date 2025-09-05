@@ -16,6 +16,7 @@
   ~
 -->
 
+
 <h1 align="center">
   <br>
    <img src="https://raw.githubusercontent.com/apache/streampipes/dev/streampipes-client-python/docs/img/streampipes-python.png"
@@ -69,8 +70,8 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 <br>
 
-## 📚 Documentation
 
+## 📚 Documentation
 Please visit our [documentation](https://streampipes.apache.org/docs/docs/python/latest/).
 There you can find information about how to [get started](https://streampipes.apache.org/docs/docs/python/latest/getting-started/first-steps/),
 follow some [tutorials](https://streampipes.apache.org/docs/docs/python/latest/tutorials/1-introduction-to-streampipes-python-client/),
@@ -88,7 +89,6 @@ In case you want to access the documentation of the current development state, y
 As a quick example, we demonstrate how to set up and configure a StreamPipes client.
 
 You can simply install the StreamPipes library by running the following command
-
 ```bash
 pip install streampipes
 
@@ -116,7 +116,6 @@ client.describe()
 ```
 
 Output:
-
 ```
 Hi there!
 You are connected to a StreamPipes instance running at http://localhost:80.

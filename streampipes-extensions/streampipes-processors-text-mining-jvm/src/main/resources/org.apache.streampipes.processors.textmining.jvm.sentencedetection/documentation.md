@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Detects sentences in a text and splits the text accordingly. Only works with english sentences.
 
----
+***
 
 ## Required input
 
 A stream with a string property which contains a text.
 
----
+***
 
 ## Configuration
 

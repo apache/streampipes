@@ -22,53 +22,44 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
-
 The Math Operation processor performs arithmetic calculations between two numerical fields in an event. It:
+* Supports basic arithmetic operations (+, -, *, /, %)
+* Works with any numerical field type
+* Preserves original event data
+* Adds calculation results as new fields
 
-- Supports basic arithmetic operations (+, -, \*, /, %)
-- Works with any numerical field type
-- Preserves original event data
-- Adds calculation results as new fields
-
----
+***
 
 ## Required Input
-
 The processor requires an input event stream containing at least two numerical fields to perform calculations on.
 
----
+***
 
 ## Configuration
 
 ### Left Operand
-
 Select the field from the input event that should be used as the left operand in the calculation.
 
 ### Right Operand
-
 Select the field from the input event that should be used as the right operand in the calculation.
 
 ### Operation
-
 Choose one of the following arithmetic operations:
-
-- Addition (+)
-- Subtraction (-)
-- Multiplication (\*)
-- Division (/)
-- Modulo (%)
+* Addition (+)
+* Subtraction (-)
+* Multiplication (*)
+* Division (/)
+* Modulo (%)
 
 ## Output
-
 The processor forwards the input event with an additional field named `calculationResult` containing the result of the arithmetic operation.
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "temperature": 25.5,
@@ -78,13 +69,11 @@ The processor forwards the input event with an additional field named `calculati
 ```
 
 #### Configuration
-
-- Left Operand: `temperature`
-- Right Operand: `humidity`
-- Operation: `*`
+* Left Operand: `temperature`
+* Right Operand: `humidity`
+* Operation: `*`
 
 #### Output Event
-
 ```json
 {
   "temperature": 25.5,
@@ -97,28 +86,28 @@ The processor forwards the input event with an additional field named `calculati
 ## Use Cases
 
 1. **Data Transformation**
-   - Calculate derived metrics
-   - Convert units
-   - Scale measurements
-   - Normalize values
+   * Calculate derived metrics
+   * Convert units
+   * Scale measurements
+   * Normalize values
 
 2. **Business Logic**
-   - Compute costs
-   - Calculate performance metrics
-   - Evaluate business rules
-   - Generate derived values
+   * Compute costs
+   * Calculate performance metrics
+   * Evaluate business rules
+   * Generate derived values
 
 3. **Sensor Data Processing**
-   - Combine sensor readings
-   - Calculate averages
-   - Normalize measurements
-   - Scale sensor values
+   * Combine sensor readings
+   * Calculate averages
+   * Normalize measurements
+   * Scale sensor values
 
 ## Notes
 
-- Both operands must be numerical values
-- Division by zero will result in an error
-- Results are stored as double-precision floating-point numbers
-- The original event structure is preserved
-- The calculation is performed for each incoming event
-- The result field is always named `calculationResult`
+* Both operands must be numerical values
+* Division by zero will result in an error
+* Results are stored as double-precision floating-point numbers
+* The original event structure is preserved
+* The calculation is performed for each incoming event
+* The result field is always named `calculationResult`

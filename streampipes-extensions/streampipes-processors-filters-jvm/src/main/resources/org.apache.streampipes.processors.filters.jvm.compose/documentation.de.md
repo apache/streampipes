@@ -22,57 +22,47 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
-
 Der Zusammenführen-Prozessor führt zwei Ereignisströme durch Kombination ihrer Eigenschaften zusammen. Er unterstützt:
-
-- Echtzeit-Zusammenführung von Ereignisströmen
-- Verfolgung des letzten Ereigniszustands
-- Benutzerdefinierte Ausgabefeldauswahl
-- Dynamische Ereigniszusammensetzung
-- Zustandsbehaftete Ereignisverarbeitung
+* Echtzeit-Zusammenführung von Ereignisströmen
+* Verfolgung des letzten Ereigniszustands
+* Benutzerdefinierte Ausgabefeldauswahl
+* Dynamische Ereigniszusammensetzung
+* Zustandsbehaftete Ereignisverarbeitung
 
 Dieser Prozessor ist wichtig für:
+* Kombinieren von Daten aus mehreren Quellen
+* Erstellen einheitlicher Ereignisansichten
+* Zusammenführen verwandter Ereignisströme
+* Aufbau zusammengesetzter Ereignisstrukturen
 
-- Kombinieren von Daten aus mehreren Quellen
-- Erstellen einheitlicher Ereignisansichten
-- Zusammenführen verwandter Ereignisströme
-- Aufbau zusammengesetzter Ereignisstrukturen
-
----
+***
 
 ## Erforderliche Eingabe
-
 Der Prozessor benötigt zwei Eingabeströme:
+* Erster Strom: Jeder Ereignisstrom mit mindestens einer Eigenschaft
+* Zweiter Strom: Jeder Ereignisstrom mit mindestens einer Eigenschaft
 
-- Erster Strom: Jeder Ereignisstrom mit mindestens einer Eigenschaft
-- Zweiter Strom: Jeder Ereignisstrom mit mindestens einer Eigenschaft
-
----
+***
 
 ## Konfiguration
 
 ### Ausgabewahl
-
 Während der Pipeline-Modellierung können Sie auswählen, welche Felder aus jedem Strom in das Ausgabeereignis aufgenommen werden sollen. Der Prozessor wird:
-
-- Das letzte Ereignis aus jedem Strom im Speicher behalten
-- Ausgewählte Felder bei Ankunft neuer Ereignisse zusammenführen
-- Das kombinierte Ereignis mit den ausgewählten Feldern weiterleiten
+* Das letzte Ereignis aus jedem Strom im Speicher behalten
+* Ausgewählte Felder bei Ankunft neuer Ereignisse zusammenführen
+* Das kombinierte Ereignis mit den ausgewählten Feldern weiterleiten
 
 ## Ausgabe
-
 Der Prozessor erstellt ein neues Ereignis, das die ausgewählten Felder aus beiden Eingabeströmen enthält. Die Ausgabe wird generiert, wenn:
-
-- Ein neues Ereignis aus einem der Ströme eintrifft
-- Das letzte Ereignis aus dem anderen Strom verfügbar ist
+* Ein neues Ereignis aus einem der Ströme eintrifft
+* Das letzte Ereignis aus dem anderen Strom verfügbar ist
 
 ### Beispiel
 
 #### Eingabeereignisstrom 1
-
 ```json
 {
   "deviceId": "sensor01",
@@ -82,7 +72,6 @@ Der Prozessor erstellt ein neues Ereignis, das die ausgewählten Felder aus beid
 ```
 
 #### Eingabeereignisstrom 2
-
 ```json
 {
   "location": "room1",
@@ -92,11 +81,9 @@ Der Prozessor erstellt ein neues Ereignis, das die ausgewählten Felder aus beid
 ```
 
 #### Konfiguration
-
-- Ausgabefelder: deviceId, temperature, location, humidity
+* Ausgabefelder: deviceId, temperature, location, humidity
 
 #### Ausgabeereignis
-
 ```json
 {
   "deviceId": "sensor01",
@@ -109,22 +96,22 @@ Der Prozessor erstellt ein neues Ereignis, das die ausgewählten Felder aus beid
 ## Anwendungsfälle
 
 1. **Datenintegration**
-   - Kombinieren von Sensorablesungen
-   - Zusammenführen verwandter Metriken
-   - Erstellen einheitlicher Ansichten
-   - Verbinden von Ereignisströmen
+   * Kombinieren von Sensorablesungen
+   * Zusammenführen verwandter Metriken
+   * Erstellen einheitlicher Ansichten
+   * Verbinden von Ereignisströmen
 
 2. **Ereignisanreicherung**
-   - Hinzufügen von Kontext zu Ereignissen
-   - Kombinieren verwandter Daten
-   - Erstellen zusammengesetzter Ereignisse
-   - Aufbau reicher Ereignisstrukturen
+   * Hinzufügen von Kontext zu Ereignissen
+   * Kombinieren verwandter Daten
+   * Erstellen zusammengesetzter Ereignisse
+   * Aufbau reicher Ereignisstrukturen
 
 ## Hinweise
 
-- Ereignisse werden in Echtzeit zusammengeführt
-- Der letzte Ereigniszustand wird aufrechterhalten
-- Ausgabefelder sind konfigurierbar
-- Die ursprüngliche Ereignisstruktur wird beibehalten
-- Ereignisse werden bei jeder neuen Eingabe weitergeleitet
-- Der Zustand wird beim Stoppen der Pipeline gelöscht
+* Ereignisse werden in Echtzeit zusammengeführt
+* Der letzte Ereigniszustand wird aufrechterhalten
+* Ausgabefelder sind konfigurierbar
+* Die ursprüngliche Ereignisstruktur wird beibehalten
+* Ereignisse werden bei jeder neuen Eingabe weitergeleitet
+* Der Zustand wird beim Stoppen der Pipeline gelöscht 

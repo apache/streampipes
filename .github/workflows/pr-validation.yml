@@ -28,9 +28,9 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
-          distribution: "temurin"
-          java-version: "17"
-          cache: "maven"
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
 
       - name: Validate java code
         run: mvn clean verify
@@ -40,12 +40,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+      
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "22.x"
-          cache: "npm"
+          node-version: '22.x'
+          cache: 'npm'
           cache-dependency-path: ui/package-lock.json
 
       - name: Install dependencies
@@ -69,15 +69,15 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
-          distribution: "temurin"
-          java-version: "17"
-          cache: "maven"
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "22.x"
-          cache: "npm"
+          node-version: '22.x'
+          cache: 'npm'
           cache-dependency-path: ui/package-lock.json
 
       - name: Install NPM dependencies
@@ -101,7 +101,7 @@ jobs:
         working-directory: ./installer/compose
         run: sleep 80
 
-      - name: "UI Tests"
+      - name: 'UI Tests'
         working-directory: ./ui
         run: npx cypress run --spec "cypress/tests/**/*.smoke.spec.ts"
 

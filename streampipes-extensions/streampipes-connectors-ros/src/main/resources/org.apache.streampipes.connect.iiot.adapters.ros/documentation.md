@@ -22,17 +22,20 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Connect Robots running on ROS
 
----
+
+***
 
 ## Required input
 
----
+
+
+***
 
 ## Configuration
 
@@ -50,4 +53,6 @@ The port of the ROS instance.
 
 Example: /battery (Starts with /)
 
+
 ## Output
+

@@ -22,13 +22,14 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 This data sinks can publish events to ROS over websocket.
 
----
+
+***
 
 ## Required input
 
@@ -49,3 +50,5 @@ The port of the ROS instance.
 ### Topic
 
 Example: /battery (Starts with /)
+
+

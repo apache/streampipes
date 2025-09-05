@@ -22,31 +22,29 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
 Der String-Zähler-Prozessor zählt Änderungen in String-Feldwerten. Er unterstützt:
-
-- Wertänderungserkennung
-- Änderungspaar-Verfolgung
-- Inkrementelles Zählen
-- Zustandsübergangsüberwachung
+* Wertänderungserkennung
+* Änderungspaar-Verfolgung
+* Inkrementelles Zählen
+* Zustandsübergangsüberwachung
 
 Dieser Prozessor ist essentiell für:
+* Zählen von Wertänderungen
+* Verfolgen von Zustandsübergängen
+* Überwachen von String-Mustern
+* Messen der Änderungshäufigkeit
 
-- Zählen von Wertänderungen
-- Verfolgen von Zustandsübergängen
-- Überwachen von String-Mustern
-- Messen der Änderungshäufigkeit
-
----
+***
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der mindestens ein String-Feld enthält, das auf Wertänderungen überwacht werden soll.
 
----
+***
 
 ## Konfiguration
 
@@ -57,30 +55,26 @@ Wähle das String-Feld aus, das auf Wertänderungen überwacht werden soll. Dies
 ## Ausgabe
 
 Der Prozessor erstellt eine neue Nachricht, die enthält:
-
-- Alle ursprünglichen Felder aus der Eingabe-Nachricht
-- Ein neues Feld namens "counter" mit der aktuellen Anzahl der Wertänderungen
-- Ein neues Feld namens "change_from" mit dem vorherigen Wert
-- Ein neues Feld namens "change_to" mit dem neuen Wert
+* Alle ursprünglichen Felder aus der Eingabe-Nachricht
+* Ein neues Feld namens "counter" mit der aktuellen Anzahl der Wertänderungen
+* Ein neues Feld namens "change_from" mit dem vorherigen Wert
+* Ein neues Feld namens "change_to" mit dem neuen Wert
 
 ### Beispiel
 
 #### Eingabe-Nachrichtenstrom
-
 ```json
 {
   "deviceId": "sensor01",
   "status": "idle"
 }
 ```
-
 ```json
 {
   "deviceId": "sensor01",
   "status": "running"
 }
 ```
-
 ```json
 {
   "deviceId": "sensor01",
@@ -89,11 +83,9 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration
-
-- String-Feld: status
+* String-Feld: status
 
 #### Ausgabe-Nachricht
-
 ```json
 {
   "deviceId": "sensor01",
@@ -103,7 +95,6 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
   "counter": 1
 }
 ```
-
 ```json
 {
   "deviceId": "sensor01",
@@ -117,24 +108,24 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ## Anwendungsfälle
 
 1. **Zustandsüberwachung**
-   - Verfolgen von Zustandsänderungen
-   - Zählen von Übergängen
-   - Überwachen von Mustern
-   - Messen der Häufigkeit
+   * Verfolgen von Zustandsänderungen
+   * Zählen von Übergängen
+   * Überwachen von Mustern
+   * Messen der Häufigkeit
 
 2. **Prozessanalyse**
-   - Analysieren von Arbeitsabläufen
-   - Verfolgen von Sequenzen
-   - Zählen von Zyklen
-   - Überwachen von Operationen
+   * Analysieren von Arbeitsabläufen
+   * Verfolgen von Sequenzen
+   * Zählen von Zyklen
+   * Überwachen von Operationen
 
 ## Hinweise
 
-- Zählt nur tatsächliche Wertänderungen
-- Ignoriert aufeinanderfolgende identische Werte
-- Verarbeitung ist zustandsbehaftet
-- Zähler ist inkrementell
-- Nachrichten werden nur bei Wertänderungen ausgegeben
-- Ursprüngliche Nachrichtfelder werden beibehalten
-- Änderungspaare werden verfolgt (von -> zu)
-- Zähler beginnt bei 1 für die erste Änderung
+* Zählt nur tatsächliche Wertänderungen
+* Ignoriert aufeinanderfolgende identische Werte
+* Verarbeitung ist zustandsbehaftet
+* Zähler ist inkrementell
+* Nachrichten werden nur bei Wertänderungen ausgegeben
+* Ursprüngliche Nachrichtfelder werden beibehalten
+* Änderungspaare werden verfolgt (von -> zu)
+* Zähler beginnt bei 1 für die erste Änderung 

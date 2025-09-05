@@ -3,7 +3,6 @@ title: Manage Adapter
 description: >
   Manage Adapter.
 ---
-
 <!--
   // Licensed to the Apache Software Foundation (ASF) under one or more
   // contributor license agreements.  See the NOTICE file distributed with
@@ -22,12 +21,9 @@ description: >
   //
   -->
 
-# Manage StreamPipes Adapter
-
+#  Manage StreamPipes Adapter
 ---
-
 ## Initialize Go-Client
-
 ```go
 import (
 	"log"

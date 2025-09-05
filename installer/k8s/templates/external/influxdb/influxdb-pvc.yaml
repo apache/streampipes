@@ -17,13 +17,12 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: { { .Values.external.influxdb.appName } }
-  name: { { .Values.external.influxdb.persistence.claimNameV1 } }
+    app: {{ .Values.external.influxdb.appName }}
+  name: {{ .Values.external.influxdb.persistence.claimNameV1 }}
 spec:
-  storageClassName:
-    { { .Values.external.influxdb.persistence.storageClassName } }
+  storageClassName: {{ .Values.external.influxdb.persistence.storageClassName }}
   accessModes:
-    - { { .Values.persistentVolumeAccessModes } }
+    - {{ .Values.persistentVolumeAccessModes }}
   resources:
     requests:
-      storage: { { .Values.external.influxdb.persistence.storageSizeV1 } }
+      storage: {{ .Values.external.influxdb.persistence.storageSizeV1 }}

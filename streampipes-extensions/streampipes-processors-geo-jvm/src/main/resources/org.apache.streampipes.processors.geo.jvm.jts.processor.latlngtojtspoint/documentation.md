@@ -22,21 +22,22 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
-This processor creates a JTS Point geometry from latitude and longitude value.
+This processor creates a JTS Point geometry from  latitude and longitude value.
 
----
+***
 
 ## Required inputs
 
-- Ontology Vocabulary Latitude
-- Ontology Vocabulary Longitude
-- Integer value representing EPSG Code
+*  Ontology Vocabulary Latitude
+*  Ontology Vocabulary Longitude
+*  Integer value representing EPSG Code
 
----
+
+***
 
 ## Configuration
 
@@ -44,27 +45,23 @@ Creates a JTS Geometry Point from Longitude (x) and Latitude (y) values in the c
 An empty point geometry is created if latitude or longitude value is missing in the event (e.g. null value) or values are out of range. Allowed values for Longitude are between -180.00 and 180.00; Latitude values between -90.00 and 90.00.
 
 ### 1st parameter
-
 Latitude value
 
 ### 2nd parameter
-
 Longitude value
 
 ### 3rd parameter
-
 EPSG code value
 
----
+***
 
 ## Output
 
-Adds a point geometry in the Well Known Text notation and in Longitude (x) Latitude (y) axis order to the stream.
+Adds a point geometry in the Well Known Text notation and in Longitude (x)  Latitude (y) axis order to the stream.
 
 ### Example
-
-- Input stream: <br/>
+* Input stream: <br/>
   `{latitude=48.5622, longitude=-76.3501, EPSG=4326}`
 
-- Output Stream <br/>
+* Output Stream <br/>
   `{latitude=48.5622, longitude=-76.3501, EPSG=4326, geom_wkt=POINT (-76.3501 48.5622)}`

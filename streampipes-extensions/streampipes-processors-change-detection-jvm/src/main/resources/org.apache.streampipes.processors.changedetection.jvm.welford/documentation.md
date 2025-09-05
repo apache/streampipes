@@ -19,12 +19,12 @@
 ## Welford Change Detection
 
 <!--
-<p align="center">
+<p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 -->
 
----
+***
 
 ## Description
 
@@ -32,13 +32,13 @@ Performs change detection on a single dimension of the incoming data stream. Thi
 standard deviation using Welford's algorithm, which is well suited for data streams. A change is detected if the
 cumulative deviation from the mean exceeds a certain threshold.
 
----
+***
 
 ## Required input
 
 The welford change dectection processor requires a data stream that has at least one field containing a numerical value.
 
----
+***
 
 ## Configuration
 

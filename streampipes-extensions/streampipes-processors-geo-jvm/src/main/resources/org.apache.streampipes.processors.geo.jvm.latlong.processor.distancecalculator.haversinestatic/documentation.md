@@ -22,20 +22,20 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Calculates the distance with the <a href="https://en.wikipedia.org/wiki/Haversine_formula" target="_blank">Haversine formula</a> between a fixed location (e.g., a place) and a latitude/longitude pair of an input
-event.
+ event.
 
----
+***
 
 ## Required inputs
 
 Requires a data stream that provides latitude and longitude values.
 
----
+***
 
 ## Configuration
 

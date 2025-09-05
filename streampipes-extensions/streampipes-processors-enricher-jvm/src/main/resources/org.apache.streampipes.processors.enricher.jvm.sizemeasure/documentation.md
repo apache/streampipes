@@ -22,43 +22,36 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
-
 The Size Measure processor calculates and appends the size of incoming events. It:
+* Measures event size through serialization
+* Supports multiple size units (Bytes, Kilobytes, Megabytes)
+* Preserves original event data
+* Adds size information as a new field
 
-- Measures event size through serialization
-- Supports multiple size units (Bytes, Kilobytes, Megabytes)
-- Preserves original event data
-- Adds size information as a new field
-
----
+***
 
 ## Required Input
-
 The processor works with any input event stream, as it measures the size of the entire event structure.
 
----
+***
 
 ## Configuration
 
 ### Size Unit
-
 Select the unit in which the event size should be measured:
-
-- **Bytes**: Raw size in bytes
-- **Kilobytes**: Size divided by 1024 (1 KB = 1024 bytes)
-- **Megabytes**: Size divided by 1048576 (1 MB = 1024 KB)
+* **Bytes**: Raw size in bytes
+* **Kilobytes**: Size divided by 1024 (1 KB = 1024 bytes)
+* **Megabytes**: Size divided by 1048576 (1 MB = 1024 KB)
 
 ## Output
-
 The processor forwards the input event with an additional field named `eventSize` containing the size of the event in the selected unit.
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "temperature": 25.5,
@@ -68,11 +61,9 @@ The processor forwards the input event with an additional field named `eventSize
 ```
 
 #### Configuration
-
-- Size Unit: `Kilobytes`
+* Size Unit: `Kilobytes`
 
 #### Output Event
-
 ```json
 {
   "temperature": 25.5,
@@ -85,29 +76,29 @@ The processor forwards the input event with an additional field named `eventSize
 ## Use Cases
 
 1. **Performance Monitoring**
-   - Track event sizes over time
-   - Monitor data volume
-   - Identify large events
-   - Optimize data transfer
+   * Track event sizes over time
+   * Monitor data volume
+   * Identify large events
+   * Optimize data transfer
 
 2. **Resource Planning**
-   - Estimate storage requirements
-   - Plan network capacity
-   - Optimize buffer sizes
-   - Scale infrastructure
+   * Estimate storage requirements
+   * Plan network capacity
+   * Optimize buffer sizes
+   * Scale infrastructure
 
 3. **Debugging**
-   - Identify oversized events
-   - Track data growth
-   - Monitor serialization overhead
-   - Troubleshoot performance issues
+   * Identify oversized events
+   * Track data growth
+   * Monitor serialization overhead
+   * Troubleshoot performance issues
 
 ## Notes
 
-- Size measurement includes all event fields and metadata
-- The size is calculated through Java serialization
-- Results are stored as double-precision floating-point numbers
-- The original event structure is preserved
-- The size is measured for each incoming event
-- The result field is always named `eventSize`
-- Size measurement adds some processing overhead
+* Size measurement includes all event fields and metadata
+* The size is calculated through Java serialization
+* Results are stored as double-precision floating-point numbers
+* The original event structure is preserved
+* The size is measured for each incoming event
+* The result field is always named `eventSize`
+* Size measurement adds some processing overhead

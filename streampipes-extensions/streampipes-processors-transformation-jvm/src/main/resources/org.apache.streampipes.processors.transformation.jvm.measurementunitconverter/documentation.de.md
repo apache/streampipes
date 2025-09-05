@@ -22,41 +22,39 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
 Der Maßeinheiten-Umrechner-Prozessor wandelt Werte automatisch zwischen verschiedenen Maßeinheiten um. Er unterstützt alle Einheitentypen, die mit der Maßeinheit des Eingabefelds kompatibel sind, einschließlich:
 
-- Länge (Meter, Fuß, Zoll, etc.)
-- Masse (Kilogramm, Pfund, Unzen, etc.)
-- Temperatur (Celsius, Fahrenheit, Kelvin)
-- Volumen (Liter, Gallonen, Kubikmeter, etc.)
-- Druck (Pascal, Bar, PSI, etc.)
-- Geschwindigkeit (m/s, km/h, mph, etc.)
-- Fläche (Quadratmeter, Hektar, etc.)
-- Zeit (Sekunden, Minuten, Stunden, etc.)
-- Energie (Joule, Kilowattstunden, etc.)
-- Leistung (Watt, Pferdestärken, etc.)
+* Länge (Meter, Fuß, Zoll, etc.)
+* Masse (Kilogramm, Pfund, Unzen, etc.)
+* Temperatur (Celsius, Fahrenheit, Kelvin)
+* Volumen (Liter, Gallonen, Kubikmeter, etc.)
+* Druck (Pascal, Bar, PSI, etc.)
+* Geschwindigkeit (m/s, km/h, mph, etc.)
+* Fläche (Quadratmeter, Hektar, etc.)
+* Zeit (Sekunden, Minuten, Stunden, etc.)
+* Energie (Joule, Kilowattstunden, etc.)
+* Leistung (Watt, Pferdestärken, etc.)
 
 Dieser Prozessor ist essentiell für:
+* Standardisierung von Messungen über Systeme hinweg
+* Umrechnung zwischen internationalen und US-Einheiten
+* Sicherstellung konsistenter Datenrepräsentation
+* Unterstützung mehrerer Regionen
+* Ermöglichung von Systeminteroperabilität
 
-- Standardisierung von Messungen über Systeme hinweg
-- Umrechnung zwischen internationalen und US-Einheiten
-- Sicherstellung konsistenter Datenrepräsentation
-- Unterstützung mehrerer Regionen
-- Ermöglichung von Systeminteroperabilität
-
----
+***
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt:
-
 1. Ein numerisches Feld mit definierter Maßeinheit
 2. Das Feld muss vom Typ Messgröße sein
 
----
+***
 
 ## Konfiguration
 
@@ -71,14 +69,12 @@ Wähle die gewünschte Maßeinheit für den Ausgabewert. Die verfügbaren Einhei
 ## Ausgabe
 
 Der Prozessor erstellt eine neue Nachricht, die enthält:
-
-- Alle ursprünglichen Felder aus der Eingabe-Nachricht
-- Das ausgewählte Feld wird mit dem umgerechneten Wert aktualisiert
+* Alle ursprünglichen Felder aus der Eingabe-Nachricht
+* Das ausgewählte Feld wird mit dem umgerechneten Wert aktualisiert
 
 ### Beispiel
 
 #### Eingabe-Nachricht
-
 ```json
 {
   "sensorId": "temp01",
@@ -89,12 +85,10 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration
-
-- Feld: temperature (mit Einheit Celsius)
-- Ausgabeeinheit: Fahrenheit
+* Feld: temperature (mit Einheit Celsius)
+* Ausgabeeinheit: Fahrenheit
 
 #### Ausgabe-Nachricht
-
 ```json
 {
   "sensorId": "temp01",
@@ -107,39 +101,39 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ## Anwendungsfälle
 
 1. **Internationale Operationen**
-   - Umrechnung zwischen metrischen und imperialen Einheiten
-   - Standardisierung von Messungen über Regionen hinweg
-   - Unterstützung globaler Datenanalyse
-   - Ermöglichung von Multi-Markt-Compliance
+   * Umrechnung zwischen metrischen und imperialen Einheiten
+   * Standardisierung von Messungen über Regionen hinweg
+   * Unterstützung globaler Datenanalyse
+   * Ermöglichung von Multi-Markt-Compliance
 
 2. **Systemintegration**
-   - Umrechnung zwischen verschiedenen Systemstandards
-   - Normalisierung von Daten aus mehreren Quellen
-   - Ermöglichung plattformübergreifender Kompatibilität
-   - Unterstützung der Integration von Altsystemen
+   * Umrechnung zwischen verschiedenen Systemstandards
+   * Normalisierung von Daten aus mehreren Quellen
+   * Ermöglichung plattformübergreifender Kompatibilität
+   * Unterstützung der Integration von Altsystemen
 
 3. **Wissenschaftliche Anwendungen**
-   - Umrechnung zwischen wissenschaftlichen Einheiten
-   - Unterstützung experimenteller Datenanalyse
-   - Ermöglichung disziplinübergreifender Zusammenarbeit
-   - Aufrechterhaltung der Messgenauigkeit
+   * Umrechnung zwischen wissenschaftlichen Einheiten
+   * Unterstützung experimenteller Datenanalyse
+   * Ermöglichung disziplinübergreifender Zusammenarbeit
+   * Aufrechterhaltung der Messgenauigkeit
 
 4. **Industrielle Prozesse**
-   - Umrechnung von Prozessmessungen
-   - Standardisierung von Steuerungsparametern
-   - Unterstützung der Geräteinteroperabilität
-   - Ermöglichung herstellerübergreifender Integration
+   * Umrechnung von Prozessmessungen
+   * Standardisierung von Steuerungsparametern
+   * Unterstützung der Geräteinteroperabilität
+   * Ermöglichung herstellerübergreifender Integration
 
 ## Hinweise
 
-- Das Eingabefeld muss eine definierte Maßeinheit haben
-- Nur kompatible Einheiten sind zur Auswahl verfügbar
-- Die Umrechnung erfolgt direkt
-- Der ursprüngliche Wert wird durch den umgerechneten Wert ersetzt
-- Alle Umrechnungen behalten die numerische Genauigkeit bei
-- Umrechnungsformeln folgen internationalen Standards
-- Ungültige Einheitskombinationen werden abgelehnt
-- Nullwerte werden in der Ausgabe beibehalten
-- Die Umrechnung ist zustandslos
-- Die Umrechnungsgenauigkeit hängt von der Eingabegenauigkeit ab
-- Temperaturumrechnungen berücksichtigen sowohl relative als auch absolute Skalen
+* Das Eingabefeld muss eine definierte Maßeinheit haben
+* Nur kompatible Einheiten sind zur Auswahl verfügbar
+* Die Umrechnung erfolgt direkt
+* Der ursprüngliche Wert wird durch den umgerechneten Wert ersetzt
+* Alle Umrechnungen behalten die numerische Genauigkeit bei
+* Umrechnungsformeln folgen internationalen Standards
+* Ungültige Einheitskombinationen werden abgelehnt
+* Nullwerte werden in der Ausgabe beibehalten
+* Die Umrechnung ist zustandslos
+* Die Umrechnungsgenauigkeit hängt von der Eingabegenauigkeit ab
+* Temperaturumrechnungen berücksichtigen sowohl relative als auch absolute Skalen 

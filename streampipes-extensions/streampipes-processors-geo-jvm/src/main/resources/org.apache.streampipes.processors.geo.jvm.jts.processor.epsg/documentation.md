@@ -22,21 +22,23 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+
+***
 
 ## Description
 
 This processor adds an integer value to the event. This integer value represents
-an <a href="https://en.wikipedia.org/wiki/EPSG_Geodetic_Parameter_Dataset" target="_blank">EPSG Code</a> as an Spatial Reference System Identifier
-an <a href="https://en.wikipedia.org/wiki/Spatial_reference_system#Identifier" target="_blank">(SRID)</a>.
+an  <a href="https://en.wikipedia.org/wiki/EPSG_Geodetic_Parameter_Dataset" target="_blank">EPSG Code</a> as an Spatial Reference System Identifier
+an  <a href="https://en.wikipedia.org/wiki/Spatial_reference_system#Identifier" target="_blank">(SRID)</a>.
 
----
+
+***
 
 ## Required inputs
 
 None
 
----
+***
 
 ## Configuration
 
@@ -50,8 +52,7 @@ Other possible values can be looked up via
 4- to 5-digit key integer number. Default value is 4326 representing the World Geodetic System
 <a href="https://en.wikipedia.org/wiki/World_Geodetic_System#WGS84" target="_blank">(WGS84)</a>.
 
----
-
+***
 ## Output
 
 Adds the epsg number to the event.

@@ -22,36 +22,33 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 The CSV Metadata Enricher processor adds additional fields to events by looking up values in a CSV file. It supports:
-
-- CSV file integration
-- Field mapping
-- ID-based lookups
-- Multiple field enrichment
-- Static metadata
+* CSV file integration
+* Field mapping
+* ID-based lookups
+* Multiple field enrichment
+* Static metadata
 
 This processor is essential for:
+* Adding static metadata
+* Enriching event data
+* Mapping reference data
+* Creating data relationships
 
-- Adding static metadata
-- Enriching event data
-- Mapping reference data
-- Creating data relationships
-
----
+***
 
 ## Required input
 
 The processor requires:
+* A data stream containing an ID field for lookups
+* A CSV file containing the metadata to be added
+* A field in the CSV file that matches the ID field
 
-- A data stream containing an ID field for lookups
-- A CSV file containing the metadata to be added
-- A field in the CSV file that matches the ID field
-
----
+***
 
 ## Configuration
 
@@ -62,9 +59,8 @@ Select the field from the input event that will be used to look up matching reco
 ### CSV File
 
 Upload the CSV file containing the metadata to be added to the events. The file should contain:
-
-- A column that matches the ID field
-- Additional columns with the metadata to be added
+* A column that matches the ID field
+* Additional columns with the metadata to be added
 
 ### Field to Match
 
@@ -77,14 +73,12 @@ Select one or more columns from the CSV file that should be added to the events.
 ## Output
 
 The processor creates a new event containing:
-
-- All original fields from the input event
-- The selected fields from the CSV file for matching records
+* All original fields from the input event
+* The selected fields from the CSV file for matching records
 
 ### Example
 
 #### Input Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -94,7 +88,6 @@ The processor creates a new event containing:
 ```
 
 #### CSV File Content
-
 ```csv
 device_id,location,manufacturer,model
 sensor01,Building A,Acme Corp,TempPro 2000
@@ -102,13 +95,11 @@ sensor02,Building B,Acme Corp,TempPro 2000
 ```
 
 #### Configuration
-
-- ID Field: deviceId
-- Field to Match: device_id
-- Fields to Append: location, manufacturer, model
+* ID Field: deviceId
+* Field to Match: device_id
+* Fields to Append: location, manufacturer, model
 
 #### Output Event
-
 ```json
 {
   "deviceId": "sensor01",
@@ -123,23 +114,23 @@ sensor02,Building B,Acme Corp,TempPro 2000
 ## Use Cases
 
 1. **Device Management**
-   - Add device metadata
-   - Map locations
-   - Track equipment info
-   - Monitor assets
+   * Add device metadata
+   * Map locations
+   * Track equipment info
+   * Monitor assets
 
 2. **Data Enrichment**
-   - Add reference data
-   - Map relationships
-   - Create context
-   - Build hierarchies
+   * Add reference data
+   * Map relationships
+   * Create context
+   * Build hierarchies
 
 ## Notes
 
-- CSV file must be uploaded
-- ID field must exist in both event and CSV
-- Field names are case-sensitive
-- CSV must have a header row
-- No matches return empty values
-- Processing is stateless
-- CSV is loaded at startup
+* CSV file must be uploaded
+* ID field must exist in both event and CSV
+* Field names are case-sensitive
+* CSV must have a header row
+* No matches return empty values
+* Processing is stateless
+* CSV is loaded at startup

@@ -22,20 +22,20 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Stores events in an InfluxDB.
 
----
+***
 
 ## Required input
 
-This sink requires an event that provides a timestamp value (a field that is marked to be of type `http://schema
-.org/DateTime`.
+This sink requires an event that provides a timestamp value (a field that is marked to be of type ``http://schema
+.org/DateTime``.
 
----
+***
 
 ## Configuration
 
@@ -74,7 +74,6 @@ Indicates how many events are written into a buffer, before they are written to 
 ### Maximum Flush
 
 The maximum waiting time for the buffer to fill the Buffer size before it will be written to the database in ms.
-
 ## Output
 
 (not applicable for data sinks)

@@ -1,5 +1,4 @@
-{
-  "__inputs": [
+{  "__inputs": [
     {
       "name": "DS_default",
       "label": "default",
@@ -26,7 +25,7 @@
         "type": "dashboard"
       },
       {
-        "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
         "enable": false,
         "expr": "resets(process_uptime_seconds{application=\"$application\", instance=\"$instance\", job=\"backend\"}[1m]) > 0",
         "iconColor": "rgba(255, 96, 96, 1)",
@@ -61,7 +60,7 @@
       "panels": [],
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -119,7 +118,9 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -128,7 +129,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "process_uptime_seconds{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
@@ -197,7 +198,9 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -206,7 +209,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "process_start_time_seconds{application=\"$application\", instance=\"$instance\", job=\"backend\"} * 1000",
@@ -280,7 +283,9 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -289,7 +294,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "(sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\", job=\"backend\"}) * 100) / sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\"})",
@@ -327,7 +332,7 @@
             },
             {
               "options": {
-                "from": -1e32,
+                "from": -1e+32,
                 "result": {
                   "text": "N/A"
                 },
@@ -372,7 +377,9 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -381,7 +388,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "(sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\", job=\"backend\"}) * 100) / sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\", job=\"backend\"})",
@@ -491,7 +498,9 @@
         },
         "pieType": "pie",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -503,7 +512,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "healthy_pipelines{instance=\"$instance\", application=\"$application\", job=\"backend\"}",
@@ -516,7 +525,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "attention_required_pipelines{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
@@ -530,7 +539,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "failed_pipelines{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
@@ -584,7 +593,9 @@
         "minVizWidth": 0,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -594,7 +605,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "all_pipelines{instance=\"$instance\", application=\"$application\", job=\"backend\"}",
@@ -607,7 +618,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "running_pipelines{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
@@ -621,7 +632,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "stopped_pipelines{instance=\"$instance\", application=\"$application\", job=\"backend\"}",
@@ -675,7 +686,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -684,7 +697,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "element_count{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
@@ -737,7 +750,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -746,7 +761,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "received_total_data{instance=\"$instance\", application=\"$application\", job=\"backend\"}",
@@ -799,7 +814,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -808,7 +825,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "processed_data{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
@@ -861,7 +878,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -870,7 +889,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "element_input_total_data{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
@@ -923,7 +942,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -932,7 +953,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "element_output_total_data{instance=\"$instance\", application=\"$application\", job=\"backend\"}",
@@ -961,7 +982,7 @@
       "panels": [],
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -1017,7 +1038,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\", job=\"backend\"})",
@@ -1033,7 +1054,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "sum(jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\", job=\"backend\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -1042,7 +1063,7 @@
           "step": 2400
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\", job=\"backend\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -1068,7 +1089,10 @@
         "values": []
       },
       "y-axis": true,
-      "y_formats": ["mbytes", "short"],
+      "y_formats": [
+        "mbytes",
+        "short"
+      ],
       "yaxes": [
         {
           "format": "bytes",
@@ -1136,7 +1160,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", job=\"backend\"})",
@@ -1152,7 +1176,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "sum(jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", job=\"backend\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -1161,7 +1185,7 @@
           "step": 2400
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", job=\"backend\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -1187,7 +1211,10 @@
         "values": []
       },
       "y-axis": true,
-      "y_formats": ["mbytes", "short"],
+      "y_formats": [
+        "mbytes",
+        "short"
+      ],
       "yaxes": [
         {
           "format": "bytes",
@@ -1219,7 +1246,7 @@
       "panels": [],
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -1275,7 +1302,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "system_cpu_usage{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
@@ -1292,7 +1319,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "process_cpu_usage{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
           "format": "time_series",
           "hide": false,
@@ -1301,7 +1328,7 @@
           "refId": "B"
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "avg_over_time(process_cpu_usage{application=\"$application\", instance=\"$instance\", job=\"backend\"}[15m])",
           "format": "time_series",
           "hide": false,
@@ -1327,7 +1354,10 @@
         "values": []
       },
       "y-axis": true,
-      "y_formats": ["short", "short"],
+      "y_formats": [
+        "short",
+        "short"
+      ],
       "yaxes": [
         {
           "decimals": 1,
@@ -1392,7 +1422,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "sum by(application, instance) (rate(jvm_gc_pause_seconds_sum{application=\"$application\", instance=\"$instance\", job=\"backend\"}[1m])) / on(application, instance) system_cpu_count",
@@ -1488,7 +1518,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "jvm_threads_live_threads{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
@@ -1504,7 +1534,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "jvm_threads_daemon_threads{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
           "format": "time_series",
           "intervalFactor": 2,
@@ -1514,7 +1544,7 @@
           "step": 2400
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "jvm_threads_peak_threads{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
           "format": "time_series",
           "intervalFactor": 2,
@@ -1523,7 +1553,7 @@
           "step": 2400
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "process_threads{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
           "format": "time_series",
           "interval": "",
@@ -1550,7 +1580,10 @@
         "values": []
       },
       "y-axis": true,
-      "y_formats": ["short", "short"],
+      "y_formats": [
+        "short",
+        "short"
+      ],
       "yaxes": [
         {
           "decimals": 0,
@@ -1621,7 +1654,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "jvm_threads_states_threads{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
@@ -1678,7 +1711,7 @@
       "panels": [],
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -1730,7 +1763,7 @@
       "targets": [
         {
           "alias": "",
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(logback_events_total{instance=\"$instance\", application=\"$application\", level=\"info\", job=\"backend\"}[5m])",
@@ -1820,7 +1853,7 @@
       "targets": [
         {
           "alias": "",
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(logback_events_total{instance=\"$instance\", application=\"$application\", level=\"error\", job=\"backend\"}[5m])",
@@ -1910,7 +1943,7 @@
       "targets": [
         {
           "alias": "",
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(logback_events_total{instance=\"$instance\", application=\"$application\", level=\"warn\", job=\"backend\"}[5m])",
@@ -2000,7 +2033,7 @@
       "targets": [
         {
           "alias": "",
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(logback_events_total{instance=\"$instance\", application=\"$application\", level=\"debug\", job=\"backend\"}[5m])",
@@ -2090,7 +2123,7 @@
       "targets": [
         {
           "alias": "",
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(logback_events_total{instance=\"$instance\", application=\"$application\", level=\"trace\", job=\"backend\"}[5m])",
@@ -2149,7 +2182,7 @@
       "repeat": "persistence_counts",
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -2209,7 +2242,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\", job=\"backend\"}",
@@ -2227,7 +2260,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\", job=\"backend\"}",
           "format": "time_series",
           "hide": false,
@@ -2239,7 +2272,7 @@
           "step": 1800
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\", job=\"backend\"}",
           "format": "time_series",
           "hide": false,
@@ -2268,7 +2301,10 @@
         "values": []
       },
       "y-axis": true,
-      "y_formats": ["mbytes", "short"],
+      "y_formats": [
+        "mbytes",
+        "short"
+      ],
       "yaxes": [
         {
           "format": "bytes",
@@ -2299,7 +2335,7 @@
       "panels": [],
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -2349,7 +2385,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "rate(jvm_gc_pause_seconds_count{application=\"$application\", instance=\"$instance\", job=\"backend\"}[1m])",
@@ -2439,7 +2475,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "rate(jvm_gc_pause_seconds_sum{application=\"$application\", instance=\"$instance\", job=\"backend\"}[1m]) / rate(jvm_gc_pause_seconds_count{application=\"$application\", instance=\"$instance\"}[1m])",
@@ -2454,7 +2490,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "jvm_gc_pause_seconds_max{application=\"$application\", instance=\"$instance\", job=\"backend\"}",
           "format": "time_series",
           "hide": false,
@@ -2539,7 +2575,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "rate(jvm_gc_memory_allocated_bytes_total{application=\"$application\", instance=\"$instance\", job=\"backend\"}[1m])",
@@ -2554,7 +2590,7 @@
           "useBackend": false
         },
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "expr": "rate(jvm_gc_memory_promoted_bytes_total{application=\"$application\", instance=\"$instance\", job=\"backend\"}[1m])",
           "format": "time_series",
           "interval": "",
@@ -2607,7 +2643,7 @@
       "panels": [],
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -2659,7 +2695,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(http_server_requests_seconds_count{instance=\"$instance\", application=\"$application\", uri!~\".*actuator.*\", job=\"backend\"}[5m])",
@@ -2748,7 +2784,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(http_server_requests_seconds_sum{instance=\"$instance\", application=\"$application\", exception=\"None\", uri!~\".*actuator.*\", job=\"backend\"}[5m]) / irate(http_server_requests_seconds_count{instance=\"$instance\", application=\"$application\", exception=\"None\", uri!~\".*actuator.*\"}[5m])",
@@ -2807,7 +2843,7 @@
           "text": "None",
           "value": ""
         },
-        "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
         "definition": "",
         "hide": 0,
         "includeAll": false,
@@ -2832,7 +2868,7 @@
           "text": "localhost:8030",
           "value": "localhost:8030"
         },
-        "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
         "definition": "",
         "hide": 0,
         "includeAll": false,
@@ -2858,7 +2894,7 @@
           "text": "All",
           "value": "$__all"
         },
-        "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
         "definition": "",
         "hide": 2,
         "includeAll": true,
@@ -2884,7 +2920,7 @@
           "text": "All",
           "value": "$__all"
         },
-        "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
         "definition": "",
         "hide": 2,
         "includeAll": true,
@@ -2910,7 +2946,7 @@
           "text": "All",
           "value": "$__all"
         },
-        "datasource": "${DS_default}",
+      "datasource": "${DS_default}",
         "definition": "",
         "hide": 2,
         "includeAll": true,
@@ -2949,7 +2985,17 @@
       "2h",
       "1d"
     ],
-    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
   },
   "timezone": "browser",
   "title": "StreamPipes Backend",

@@ -22,24 +22,22 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Removes boilerplate tags from HTML and extracts fulltext
 
----
+***
 
 ## Required input
-
 Requires a Text field containing the HTML
 
----
+***
 
 ## Configuration
 
 Select the extractor type and output mode
 
 ## Output
-
 Appends a new text field containing the content of the html page without the boilerplate

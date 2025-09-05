@@ -19,7 +19,6 @@
 # Activate EPSG Database Service
 
 ## CLI
-
 If using the CLI add 'epsg' in StreamPipes environment file (.spenv)
 Running the `pipeline-element` environment, your environment file should look like this
 
@@ -51,13 +50,17 @@ epsg
 
 ```
 
+
 ## Docker installer
 
 Coming soon
 
+
 ## K8s Helm
 
 Coming soon
+
+
 
 # Prepare EPSG Database
 
@@ -65,34 +68,33 @@ The database, in which the epsg data will be imported, is already included as a 
 
 Therefore, the following empty scripts must be replaced in the `streampipes/installer/scripts/epsg` folder
 
-- PostgreSQL_Table_Script.sql
-- PostgreSQL_Data_Script.sql
-- PostgreSQL_FKey_Script.sql
-- EPSG_FINISH.sql
+* PostgreSQL_Table_Script.sql
+* PostgreSQL_Data_Script.sql
+* PostgreSQL_FKey_Script.sql
+* EPSG_FINISH.sql
 
 Due to license agreement, you have to create an <a href="https://epsg.org/user/register/" target="_blank">account</a>
+
 
 to accept the <a href="https://epsg.org/terms-of-use.html" target="_blank">term of use</a> of the 'EPSG Dataset'.
 
 With an account, you can download the EPSG Dataset <a href="https://epsg.org/archives.html" target="_blank">here</a>
 
 .
-Make sure you download the EPSG-v9_9_1-PostgreSQL.zip, which supports the 2007 data model release. Higher versions are not
+Make sure you download the EPSG-v9_9_1-PostgreSQL.zip, which supports the 2007 data model release. Higher versions are not 
 yet supported by the <a href="https://sis.apache.org/" target="_blank">Apache SIS </a>, which is used in StreamPipes to handle Geometry reprojections.
 
 Unzip the folder and replace files
-
-- PostgreSQL_Table_Script.sql
-- PostgreSQL_Data_Script.sql
-- PostgreSQL_FKey_Script.sql
+* PostgreSQL_Table_Script.sql
+* PostgreSQL_Data_Script.sql
+* PostgreSQL_FKey_Script.sql
 
 in the `streampipes/installer/scripts/epsg` folder.
 
-For indexing the imported data and get better performance, go to
+For indexing the imported data and get better performance, go to 
 <a href="https://github.com/apache/sis/blob/master/core/sis-referencing/src/main/resources/org/apache/sis/referencing/factory/sql/EPSG_Finish.sql" target="_blank">this file</a>
 and replace it with the
-
-- EPSG_FINISH.sql
+* EPSG_FINISH.sql
 
 in the `streampipes/installer/scripts/epsg` folder.
 
@@ -100,24 +102,37 @@ in the `streampipes/installer/scripts/epsg` folder.
 
 ## CLI
 
-1. Restart StreamPipes with `streampipes up -d`
+1) Restart StreamPipes with `streampipes up -d`
 
-2. Now check if the database scripts were executed with
+2) Now check if the database scripts were executed with
    `streampipes logs --follow epsg`
 
 If you already started StreamPipes before, the import was done with the empty scripts! You have to delete the corresponding docker volume. The scripts are only imported during the first start!
 
 Therefore, make sure that StreamPipes is not running with `streampipes down`.
 
-Now execute `docker volume rm streampipes_epsg`
+Now execute  `docker volume rm streampipes_epsg`
 Then you can repeat Step 1) and 2)
+
 
 ## Docker
 
 Coming soon
 
+
 ## k8s Helm
 
 Coming soon
 
+
 # Check Data Import
+
+
+
+
+
+
+
+
+
+

@@ -5,15 +5,22 @@
   "description": "",
   "dom": null,
   "elementId": "sp:org.apache.streampipes.connect.iiot.adapters.simulator.machine",
-  "includedAssets": ["documentation.md", "icon.png"],
-  "includedLocales": ["strings.en"],
+  "includedAssets": [
+    "documentation.md",
+    "icon.png"
+  ],
+  "includedLocales": [
+    "strings.en"
+  ],
   "includesAssets": true,
   "includesLocales": true,
   "internallyManaged": false,
   "name": "test1",
   "rev": "1-73ca816b2ed82d8232b864556c7f2d64",
   "version": 0,
-  "category": ["Debugging"],
+  "category": [
+    "Debugging"
+  ],
   "config": [
     {
       "@class": "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty",

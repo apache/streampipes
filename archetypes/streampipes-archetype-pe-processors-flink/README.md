@@ -30,8 +30,9 @@ mvn archetype:generate \
  -DartifactId=my-processor-flink \
  -Dversion=<VERSION>
 ```
-
+			
 ### Variables
 
-- classNamePrefix: Will be used as a prefix to name your controller & parameter classes
-- packageName: Will be used as the package name
+* classNamePrefix: Will be used as a prefix to name your controller & parameter classes
+* packageName: Will be used as the package name
+

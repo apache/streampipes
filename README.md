@@ -43,24 +43,25 @@
     <img src="https://raw.githubusercontent.com/apache/streampipes/dev/images/streampipes-overview.png" alt="StreamPipes Overview"/>
 </p>
 
----
+
+***
 
 ## Table of contents
 
-- [About Apache StreamPipes](#about-apache-streampipes)
-- [User interface](#userinterface)
-- [Installation](#installation)
-- [Documentation](#documentation)
-- [Building StreamPipes](#building-streampipes)
-- [Pipeline Elements](#pipeline-elements)
-- [Extending StreamPipes](#extending-streampipes)
-- [Bugs and Feature Requests](#bugs-and-feature-requests)
-- [Get help](#get-help)
-- [Contribute](#contribute)
-- [Feedback](#feedback)
-- [License](#license)
+  * [About Apache StreamPipes](#about-apache-streampipes)
+  * [User interface](#userinterface)
+  * [Installation](#installation)
+  * [Documentation](#documentation)
+  * [Building StreamPipes](#building-streampipes)
+  * [Pipeline Elements](#pipeline-elements)
+  * [Extending StreamPipes](#extending-streampipes)
+  * [Bugs and Feature Requests](#bugs-and-feature-requests)
+  * [Get help](#get-help)
+  * [Contribute](#contribute)
+  * [Feedback](#feedback)
+  * [License](#license)
 
----
+***
 
 ## About Apache StreamPipes
 
@@ -69,10 +70,12 @@ Apache StreamPipes makes industrial data analytics easy!
 StreamPipes is an end-to-end toolbox for the industrial IoT.
 It comes with a rich graphical user interface targeted at non-technical users and provides the following features:
 
-- Quickly connect >20 industrial protocols such as OPC-UA, PLCs, MQTT, REST, Pulsar, Kafka and others.
-- Create data harmonization and analytics pipelines using > 100 algorithms and data sinks to forward data to third-party systems.
-- Use the data explorer to visually explore historical data with many widgets tailored for time-series data.
-- A live dashboard to display real-time data from data sources and pipelines, e.g., for shopfloor monitoring.
+
+* Quickly connect >20 industrial protocols such as OPC-UA, PLCs, MQTT, REST, Pulsar, Kafka and others.
+* Create data harmonization and analytics pipelines using > 100 algorithms and data sinks to forward data to third-party systems.
+* Use the data explorer to visually explore historical data with many widgets tailored for time-series data.
+* A live dashboard to display real-time data from data sources and pipelines, e.g., for shopfloor monitoring.
+
 
 StreamPipes is highly extensible and includes a Java SDK to create new
 pipeline elements and adapters. Python support is available in an early development stage - stay tuned!
@@ -83,32 +86,33 @@ Just write your own data processor and make it reusable as a pipeline element.
 
 Besides that, StreamPipes includes features for production deployments:
 
-- Assign resources such as pipelines, data streams and dashboards to assets for better organization
-- Monitoring & metrics of pipelines and adapters
-- Built-in user and access rights management
-- Export and import resources
+* Assign resources such as pipelines, data streams and dashboards to assets for better organization
+* Monitoring & metrics of pipelines and adapters
+* Built-in user and access rights management
+* Export and import resources
 
 ## User interface
 
-- Connect data from an OPC-UA server following a three-step configuration process:
+* Connect data from an OPC-UA server following a three-step configuration process:
 
 ![StreamPipes Connect](https://raw.githubusercontent.com/apache/streampipes/dev/images/streampipes-connect.gif)
 
-- Create a pipeline to detect a continuous decrease using a trend detection data processor and a `Notification`sink:
+* Create a pipeline to detect a continuous decrease using a trend detection data processor and a ``Notification``sink:
 
 ![StreamPipes Pipeline Editor](https://raw.githubusercontent.com/apache/streampipes/dev/images/streampipes-pipelines.gif)
 
-- Visually analyze data using the data explorer:
+* Visually analyze data using the data explorer:
 
 ![StreamPipes Data Explorer](https://raw.githubusercontent.com/apache/streampipes/dev/images/streampipes-data-explorer.gif)
+
 
 ## Installation
 
 The quickest way to run StreamPipes including the latest extensions (adapters, pipeline elements) is by using our Docker-based [installation & operation options](installer), namely:
 
-- **[StreamPipes Compose](installer/compose)** - The User's Choice
-- **[StreamPipes CLI](installer/cli)** - The Developer's Favorite
-- **[StreamPipes k8s](installer/k8s)** - The Operator's Dream
+* **[StreamPipes Compose](installer/compose)** - The User's Choice
+* **[StreamPipes CLI](installer/cli)** - The Developer's Favorite
+* **[StreamPipes k8s](installer/k8s)** - The Operator's Dream
 
 > [!IMPORTANT]
 > StreamPipes CLI & k8s are highly recommended for developers or operators. Standard users should stick to StreamPipes Compose.
@@ -118,7 +122,7 @@ Please follow the instructions provided in the corresponding `README.md` to get 
 For a more in-depth manual, read the [installation guide](https://streampipes.apache.org/docs/try-installation.html).
 
 > [!NOTE]
-> TL;DR: Download the latest release, switch to the `installer/compose` directory and run `docker-compose up -d`.
+> TL;DR: Download the latest release, switch to the ``installer/compose`` directory and run ``docker-compose up -d``.
 
 ## Documentation
 
@@ -126,21 +130,20 @@ The full documentation is available [here](https://streampipes.apache.org/docs/u
 
 Quick Links:
 
-- [Installation](https://streampipes.apache.org/docs/try-installation.html)
-- [Create adapters](https://streampipes.apache.org/docs/use-connect.html)
-- [Create pipelines](https://streampipes.apache.org/docs/use-pipeline-editor.html)
-- [Write your own pipeline elements](https://streampipes.apache.org/docs/extend-archetypes.html)
+* [Installation](https://streampipes.apache.org/docs/try-installation.html)
+* [Create adapters](https://streampipes.apache.org/docs/use-connect.html)
+* [Create pipelines](https://streampipes.apache.org/docs/use-pipeline-editor.html)
+* [Write your own pipeline elements](https://streampipes.apache.org/docs/extend-archetypes.html)
 
 ## Building StreamPipes
 
 To properly build the StreamPipes core, the following tools should be installed:
 
 ### Prerequisites
-
-- Java 17 JDK (We officially only support Java 17, JDKs above 17 might work as well, but we don't provide any guarantee)
-- Maven (tested with 3.8)
-- NodeJS + NPM (tested with v12+/ v6+)
-- Docker + Docker-Compose
+* Java 17 JDK (We officially only support Java 17, JDKs above 17 might work as well, but we don't provide any guarantee)
+* Maven (tested with 3.8)
+* NodeJS + NPM (tested with v12+/ v6+)
+* Docker + Docker-Compose
 
 ### Building
 
@@ -150,7 +153,7 @@ To build the core project, do the following:
     mvn clean package
 ```
 
-To build the ui, switch to the `ui` folder and perform the following steps:
+To build the ui, switch to the ``ui`` folder and perform the following steps:
 
 ```
     npm install
@@ -159,16 +162,14 @@ To build the ui, switch to the `ui` folder and perform the following steps:
 
 ### Starting
 
-To start StreamPipes, run `docker-compose up --build -d` from the root directory.
+To start StreamPipes, run ``docker-compose up --build -d`` from the root directory.
 
-You can also use the installer or CLI as described in the `Installation` section.
+You can also use the installer or CLI as described in the ``Installation`` section.
 
 ## Pipeline Elements
-
 StreamPipes includes a repository of extensions for adapters and pipeline elements:
-
-- **Connect adapters** for a variety of IoT data sources as well as
-- **Data Processors** and **Data Sinks** as ready-to-use pipeline elements.
+* **Connect adapters** for a variety of IoT data sources as well as
+* **Data Processors** and **Data Sinks** as ready-to-use pipeline elements.
 
 The source code of all included pipeline elements and adapters can be found [here](https://github.com/apache/streampipes/tree/dev/streampipes-extensions).
 
@@ -200,15 +201,14 @@ Or directly subscribe to [users-subscribe@streampipes.apache.org](mailto:users-s
 ## Contribute
 
 We welcome all kinds of contributions to StreamPipes. If you are interested in contributing, let us know! You'll
-get to know an open-minded and motivated team working together to build the next IIoT analytics toolbox.
+ get to know an open-minded and motivated team working together to build the next IIoT analytics toolbox.
 
 Here are some first steps in case you want to contribute:
-
-- Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](mailto:dev-subscribe@streampipes.apache.org)
-- Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or UI)!
-- Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
-- Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ label
-- Have a look at our developer [wiki](https://cwiki.apache.org/confluence/display/STREAMPIPES) to learn more about StreamPipes development.
+* Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](mailto:dev-subscribe@streampipes.apache.org)
+* Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or UI)!
+* Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
+* Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ label
+* Have a look at our developer [wiki](https://cwiki.apache.org/confluence/display/STREAMPIPES) to learn more about StreamPipes development.
 
 Have fun!
 

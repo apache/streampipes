@@ -37,7 +37,7 @@ scrape_configs:
   - job_name: "backend"
     metrics_path: "/streampipes-backend/actuator/prometheus"
     static_configs:
-      - targets: ["localhost:8030"]
+      - targets: [ "localhost:8030" ]
     bearer_token: "" # Write the value of the token
     #bearer_token_file: ""
 
@@ -45,3 +45,4 @@ scrape_configs:
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: ["localhost:7023"]
+

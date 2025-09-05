@@ -22,25 +22,24 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
 Der Wertänderungs-Prozessor erkennt spezifische Übergänge in numerischen Werten. Er:
+* Überwacht ein ausgewähltes numerisches Feld
+* Erkennt, wenn sich der Wert von einem bestimmten Wert zu einem anderen ändert
+* Fügt ein boolesches Flag hinzu, das die erkannte Änderung anzeigt
+* Behält alle ursprünglichen Ereignisdaten bei
+* Funktioniert mit jedem numerischen Feldtyp
 
-- Überwacht ein ausgewähltes numerisches Feld
-- Erkennt, wenn sich der Wert von einem bestimmten Wert zu einem anderen ändert
-- Fügt ein boolesches Flag hinzu, das die erkannte Änderung anzeigt
-- Behält alle ursprünglichen Ereignisdaten bei
-- Funktioniert mit jedem numerischen Feldtyp
-
----
+***
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Eingabe-Ereignisstrom, der mindestens ein numerisches Feld zur Überwachung spezifischer Wertübergänge enthält.
 
----
+***
 
 ## Konfiguration
 
@@ -63,7 +62,6 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen booleschen Fel
 ### Beispiel
 
 #### Eingabe-Ereignis
-
 ```json
 {
   "temperature": 25.5,
@@ -79,13 +77,11 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen booleschen Fel
 ```
 
 #### Konfiguration
-
-- Zu überwachende Eigenschaft: `temperature`
-- Von Wert: `25.5`
-- Zu Wert: `26.0`
+* Zu überwachende Eigenschaft: `temperature`
+* Von Wert: `25.5`
+* Zu Wert: `26.0`
 
 #### Ausgabe-Ereignis
-
 ```json
 {
   "temperature": 26.0,
@@ -97,28 +93,28 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen booleschen Fel
 ## Anwendungsfälle
 
 1. **Zustandsübergangs-Erkennung**
-   - Überwachung von Systemzuständen
-   - Erkennung von Modusänderungen
-   - Verfolgung von Statusübergängen
-   - Identifizierung von Phasenänderungen
+   * Überwachung von Systemzuständen
+   * Erkennung von Modusänderungen
+   * Verfolgung von Statusübergängen
+   * Identifizierung von Phasenänderungen
 
 2. **Schwellenwert-Überwachung**
-   - Erkennung des Überschreitens spezifischer Schwellenwerte
-   - Überwachung von Wertebereichen
-   - Verfolgung von Grenzbedingungen
-   - Identifizierung kritischer Übergänge
+   * Erkennung des Überschreitens spezifischer Schwellenwerte
+   * Überwachung von Wertebereichen
+   * Verfolgung von Grenzbedingungen
+   * Identifizierung kritischer Übergänge
 
 3. **Prozesssteuerung**
-   - Überwachung von Steuerungssystemzuständen
-   - Erkennung von Prozessübergängen
-   - Verfolgung von Betriebsmodi
-   - Identifizierung von Zustandsänderungen
+   * Überwachung von Steuerungssystemzuständen
+   * Erkennung von Prozessübergängen
+   * Verfolgung von Betriebsmodi
+   * Identifizierung von Zustandsänderungen
 
 ## Hinweise
 
-- Der Prozessor erkennt nur exakte Übereinstimmungen für die spezifizierten Werte
-- Die Änderungserkennung ist sequentiell (muss von "Von Wert" zu "Zu Wert" gehen)
-- Die ursprüngliche Ereignisstruktur wird beibehalten
-- Das boolesche Flag wird jedem Ereignis hinzugefügt
-- Der Prozessor behält den Zustand zwischen Ereignissen bei
-- Werte werden mit exakter Gleichheit verglichen
+* Der Prozessor erkennt nur exakte Übereinstimmungen für die spezifizierten Werte
+* Die Änderungserkennung ist sequentiell (muss von "Von Wert" zu "Zu Wert" gehen)
+* Die ursprüngliche Ereignisstruktur wird beibehalten
+* Das boolesche Flag wird jedem Ereignis hinzugefügt
+* Der Prozessor behält den Zustand zwischen Ereignissen bei
+* Werte werden mit exakter Gleichheit verglichen 

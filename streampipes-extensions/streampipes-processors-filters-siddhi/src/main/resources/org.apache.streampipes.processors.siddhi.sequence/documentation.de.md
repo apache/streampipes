@@ -22,8 +22,8 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
 
-Führt Ereignisse aus zwei Ereignisströmen zusammen, wenn zuerst das obere Ereignis und dann das untere Ereignis eintrifft.
+Führt Ereignisse aus zwei Ereignisströmen zusammen, wenn zuerst das obere Ereignis und dann das untere Ereignis eintrifft. 

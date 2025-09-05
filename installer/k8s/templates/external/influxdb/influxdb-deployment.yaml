@@ -16,33 +16,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: { { .Values.external.influxdb.appName } }
+  name: {{ .Values.external.influxdb.appName }}
 spec:
   selector:
     matchLabels:
-      app: { { .Values.external.influxdb.appName } }
+      app: {{ .Values.external.influxdb.appName }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: { { .Values.external.influxdb.appName } }
+        app: {{ .Values.external.influxdb.appName }}
     spec:
-      restartPolicy: { { .Values.restartPolicy } }
+      restartPolicy: {{ .Values.restartPolicy }}
       volumes:
-        - name: { { .Values.external.influxdb.persistence.pvNameV1 } }
+        - name: {{ .Values.external.influxdb.persistence.pvNameV1 }}
           persistentVolumeClaim:
-            claimName: { { .Values.external.influxdb.persistence.claimNameV1 } }
-        - name: { { .Values.external.influxdb.persistence.pvName } }
+            claimName: {{ .Values.external.influxdb.persistence.claimNameV1 }}
+        - name: {{ .Values.external.influxdb.persistence.pvName }}
           persistentVolumeClaim:
-            claimName: { { .Values.external.influxdb.persistence.claimName } }
+            claimName: {{ .Values.external.influxdb.persistence.claimName }}
       containers:
-        - name: { { .Values.external.influxdb.appName } }
+        - name: {{ .Values.external.influxdb.appName }}
           image: influxdb:{{ .Values.external.influxdb.version }}
-          imagePullPolicy: { { .Values.pullPolicy } }
+          imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: { { .Values.external.influxdb.apiPort } }
-            - containerPort: { { .Values.external.influxdb.httpPort } }
-            - containerPort: { { .Values.external.influxdb.grpcPort } }
+            - containerPort: {{ .Values.external.influxdb.apiPort }}
+            - containerPort: {{ .Values.external.influxdb.httpPort }}
+            - containerPort: {{ .Values.external.influxdb.grpcPort }}
           env:
             - name: INFLUXDB_DATA_ENGINE
               value: "tsm1"
@@ -51,46 +51,46 @@ spec:
             - name: INFLUXDB_ADMIN_ENABLED
               value: "true"
             - name: DOCKER_INFLUXDB_INIT_USERNAME
-              value: { { .Values.external.influxdb.username } }
+              value: {{ .Values.external.influxdb.username }}
             - name: DOCKER_INFLUXDB_INIT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: { { .Values.streampipes.auth.secretName } }
+                  name: {{ .Values.streampipes.auth.secretName }}
                   key: sp-ts-storage-password
             - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: { { .Values.streampipes.auth.secretName } }
+                  name: {{ .Values.streampipes.auth.secretName }}
                   key: sp-ts-storage-token
             - name: DOCKER_INFLUXDB_INIT_ORG
-              value: { { .Values.external.influxdb.initOrg } }
+              value: {{ .Values.external.influxdb.initOrg }}
             - name: DOCKER_INFLUXDB_INIT_BUCKET
-              value: { { .Values.external.influxdb.initBucket } }
+              value: {{ .Values.external.influxdb.initBucket }}
             - name: DOCKER_INFLUXDB_INIT_MODE
-              value: { { .Values.external.influxdb.initMode } }
+              value: {{ .Values.external.influxdb.initMode }}
           volumeMounts:
             - mountPath: "/var/lib/influxdb"
-              name: { { .Values.external.influxdb.persistence.pvNameV1 } }
+              name: {{ .Values.external.influxdb.persistence.pvNameV1 }}
             - mountPath: "/var/lib/influxdb2"
-              name: { { .Values.external.influxdb.persistence.pvName } }
+              name: {{ .Values.external.influxdb.persistence.pvName }}
           livenessProbe:
             httpGet:
               path: /ping
-              port: { { .Values.external.influxdb.httpPort } }
-            initialDelaySeconds: { { .Values.initialDelaySeconds } }
-            periodSeconds: { { .Values.periodSeconds } }
-            failureThreshold: { { .Values.failureThreshold } }
+              port: {{ .Values.external.influxdb.httpPort }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /ping
-              port: { { .Values.external.influxdb.httpPort } }
-            initialDelaySeconds: { { .Values.initialDelaySeconds } }
-            periodSeconds: { { .Values.periodSeconds } }
-            failureThreshold: { { .Values.failureThreshold } }
+              port: {{ .Values.external.influxdb.httpPort }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
           startupProbe:
             httpGet:
               path: /ping
-              port: { { .Values.external.influxdb.httpPort } }
-            initialDelaySeconds: { { .Values.initialDelaySeconds } }
-            periodSeconds: { { .Values.periodSeconds } }
-            failureThreshold: { { .Values.failureThreshold } }
+              port: {{ .Values.external.influxdb.httpPort }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}

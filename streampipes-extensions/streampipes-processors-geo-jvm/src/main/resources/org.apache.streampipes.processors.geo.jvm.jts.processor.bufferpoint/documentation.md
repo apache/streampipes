@@ -22,58 +22,50 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Creates a buffer polygon geometry from a point geometry
-
----
+***
 
 ## Required inputs
 
-- JTS Geometry
-- EPSG Code
-- Distance
-- Cap Style
-- Simplify Factor
-- Quadrant Segments
-
----
+* JTS Geometry
+* EPSG Code
+* Distance
+* Cap Style
+* Simplify Factor
+* Quadrant Segments
+***
 
 ## Configuration
 
 ### Geometry Field
-
 Input Point Geometry
 
 ### EPSG field
-
 Integer value representing EPSG code
 
 ### Distance
-
 The buffer distance around the geometry in meter
 
 ### Cap Style
-
 Defines the endcap style of the buffer.
 CAP_ROUND - the usual round end caps
 CAP_SQUARE - end caps are squared off at the buffer distance beyond the line ends
 
-### Simplify Factor
 
+### Simplify Factor
 The default simplify factor provides an accuracy of about 1%, which matches the accuracy of the
 default Quadrant Segments parameter.
 
 ### Quadrant Segments
-
 The default number of facets into which to divide a fillet of 90 degrees.
 
----
+***
 
 ## Output
-
 A polygon geometry with EPSG code. Shape is defined by input parameters.
 
 <p align="center">
@@ -81,3 +73,4 @@ A polygon geometry with EPSG code. Shape is defined by input parameters.
 </p>
 
 ### Example
+

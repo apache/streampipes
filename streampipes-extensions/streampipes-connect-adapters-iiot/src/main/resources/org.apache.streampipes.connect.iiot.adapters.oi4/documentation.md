@@ -69,14 +69,14 @@ The output consists of all values from the selected sensor type. Below is an exa
 
 ```json
 {
-  "a-Rms": 1.8,
-  "OUT2": true,
-  "SensorID": "000008740649",
-  "Temperature": 22,
-  "Crest": 3.7,
-  "v-Rms": 0.0023,
-  "OUT1": true,
-  "Device status": 0,
-  "timestamp": 1685525380729
+    "a-Rms": 1.8,
+    "OUT2": true,
+    "SensorID": "000008740649",
+    "Temperature": 22,
+    "Crest": 3.7,
+    "v-Rms": 0.0023,
+    "OUT1": true,
+    "Device status": 0,
+    "timestamp": 1685525380729
 }
 ```

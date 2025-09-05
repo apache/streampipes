@@ -22,50 +22,42 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Beschreibung
-
 Der Durchsatz-Monitor-Prozessor berechnet und meldet Durchsatzstatistiken für die Ereignisverarbeitung. Er:
+* Misst Ereignisverarbeitungsraten
+* Verfolgt Stapelverarbeitungsfenster
+* Berechnet Ereignisse pro Sekunde
+* Liefert detaillierte Zeitinformationen
 
-- Misst Ereignisverarbeitungsraten
-- Verfolgt Stapelverarbeitungsfenster
-- Berechnet Ereignisse pro Sekunde
-- Liefert detaillierte Zeitinformationen
-
----
+***
 
 ## Erforderliche Eingabe
-
 Der Prozessor funktioniert mit jedem Eingabe-Ereignisstrom, da er sich auf die Messung des Ereignisflusses und nicht auf den Ereignisinhalt konzentriert.
 
----
+***
 
 ## Konfiguration
 
 ### Stapelgröße
-
 Gibt die Anzahl der Ereignisse an, die gesammelt werden sollen, bevor die Durchsatzstatistiken berechnet werden. Dies bestimmt:
-
-- Wie häufig der Durchsatz berechnet wird
-- Die Granularität der Messungen
-- Den Kompromiss zwischen Genauigkeit und Berichtshäufigkeit
+* Wie häufig der Durchsatz berechnet wird
+* Die Granularität der Messungen
+* Den Kompromiss zwischen Genauigkeit und Berichtshäufigkeit
 
 ## Ausgabe
-
 Der Prozessor gibt ein neues Ereignis aus, das enthält:
-
-- `timestamp`: Aktueller Systemzeitstempel
-- `starttime`: Startzeit des Stapelfensters
-- `endtime`: Endzeit des Stapelfensters
-- `duration`: Dauer des Stapelfensters in Millisekunden
-- `eventcount`: Anzahl der im Fenster verarbeiteten Ereignisse
-- `throughput`: Ereignisse pro Sekunde (berechnet als eventcount / (duration/1000))
+* `timestamp`: Aktueller Systemzeitstempel
+* `starttime`: Startzeit des Stapelfensters
+* `endtime`: Endzeit des Stapelfensters
+* `duration`: Dauer des Stapelfensters in Millisekunden
+* `eventcount`: Anzahl der im Fenster verarbeiteten Ereignisse
+* `throughput`: Ereignisse pro Sekunde (berechnet als eventcount / (duration/1000))
 
 ### Beispiel
 
 #### Eingabe-Ereignisse (3 Ereignisse mit Stapelgröße 3)
-
 ```json
 {
   "sensorValue": 42,
@@ -82,11 +74,9 @@ Der Prozessor gibt ein neues Ereignis aus, das enthält:
 ```
 
 #### Konfiguration
-
-- Stapelgröße: `3`
+* Stapelgröße: `3`
 
 #### Ausgabe-Ereignis
-
 ```json
 {
   "timestamp": 1586380105115,
@@ -101,28 +91,28 @@ Der Prozessor gibt ein neues Ereignis aus, das enthält:
 ## Anwendungsfälle
 
 1. **Leistungsüberwachung**
-   - Überwachung des Pipeline-Durchsatzes
-   - Verfolgung von Verarbeitungsraten
-   - Identifizierung von Engpässen
-   - Messung der Systemleistung
+   * Überwachung des Pipeline-Durchsatzes
+   * Verfolgung von Verarbeitungsraten
+   * Identifizierung von Engpässen
+   * Messung der Systemleistung
 
 2. **Lasttest**
-   - Messung der Verarbeitungskapazität
-   - Testen von Systemgrenzen
-   - Validierung der Leistung
-   - Benchmarking von Verbesserungen
+   * Messung der Verarbeitungskapazität
+   * Testen von Systemgrenzen
+   * Validierung der Leistung
+   * Benchmarking von Verbesserungen
 
 3. **Ressourcenplanung**
-   - Schätzung des Ressourcenbedarfs
-   - Kapazitätsplanung
-   - Optimierung von Konfigurationen
-   - Skalierung der Infrastruktur
+   * Schätzung des Ressourcenbedarfs
+   * Kapazitätsplanung
+   * Optimierung von Konfigurationen
+   * Skalierung der Infrastruktur
 
 ## Hinweise
 
-- Der Prozessor verwendet einen gleitenden Fensteransatz
-- Der Durchsatz wird als Ereignisse pro Sekunde berechnet
-- Alle Zeitangaben sind in Millisekunden
-- Die Stapelgröße beeinflusst die Messgranularität
-- Ereignisse werden beim Eintreffen gezählt
-- Der Prozessor setzt nach jedem Stapelfenster zurück
+* Der Prozessor verwendet einen gleitenden Fensteransatz
+* Der Durchsatz wird als Ereignisse pro Sekunde berechnet
+* Alle Zeitangaben sind in Millisekunden
+* Die Stapelgröße beeinflusst die Messgranularität
+* Ereignisse werden beim Eintreffen gezählt
+* Der Prozessor setzt nach jedem Stapelfenster zurück 

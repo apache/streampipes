@@ -22,70 +22,58 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Stores events in a Redis key-value store.
 
----
+***
 
 ## Required input
 
 This sink does not have any requirements and works with any incoming event type.
 
----
+***
 
 ## Configuration
 
 Describe the configuration parameters here
 
 ### Hostname
-
 The hostname of the Redis instance
 
 ### Port
-
 The port of the Redis instance (default 6379)
 
 ### Key Field
-
 Runtime field to be used as the key when storing the event. If auto-increment is enabled, this setting will be ignored.
 
 ### Auto Increment
-
 Enabling this will generate a sequential numeric key for every record inserted. (note: enabling this will ignore Key Field)
 
 ### Expiration Time (Optional)
-
 The expiration time for a persisted event.
 
 ### Password (Optional)
-
 The password for the Redis instance.
 
 ### Connection Name (Optional)
-
 A connection name to assign for the current connection.
 
 ### DB Index (Optional)
-
 Zero-based numeric index for Redis database.
 
 ### Max Active (Redis Pool) (Optional)
-
 The maximum number of connections that can be allocated from the pool.
 
 ### Max Idle (Redis Pool) (Optional)
-
 The maximum number of connections that can remain idle in the pool.
 
 ### Max Wait (Redis Pool) (Optional)
-
 The maximum number of milliseconds that the caller needs to wait when no connection is available.
 
 ### Max Timeout (Redis Pool) (Optional)
-
 The maximum time for connection timeout and read/write timeout.
 
 ## Output

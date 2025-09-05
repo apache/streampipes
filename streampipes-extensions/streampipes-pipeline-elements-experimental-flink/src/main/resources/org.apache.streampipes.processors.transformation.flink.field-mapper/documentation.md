@@ -22,27 +22,24 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
----
+***
 
 ## Description
 
 Replaces one or more fields with a new field and computes a hash value of these fields
 
----
+***
 
 ## Configuration
 
-- Fields: Fields that will be mapped into a property
-- Name of the new field
+* Fields: Fields that will be mapped into a property
+* Name of the new field
 
----
+***
 
 ## Example
-
 Merge two fields into a hash value
-
-### Input event
-
+### Input  event
 ```
 {
   "timestamp":1586380104915,
@@ -53,12 +50,10 @@ Merge two fields into a hash value
 ```
 
 ### Configuration
+* Fields: mass_flow, temperature
+* Name of new field: demo
 
-- Fields: mass_flow, temperature
-- Name of new field: demo
-
-### Output event
-
+### Output event 
 ```
 {
   "timestamp":1586380104915,

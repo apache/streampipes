@@ -14,13 +14,15 @@
 # limitations under the License.
 
 # global logging
-x-logging: &default-logging
+x-logging:
+  &default-logging
   options:
-    max-size: "12m"
-    max-file: "5"
+    max-size: '12m'
+    max-file: '5'
   driver: json-file
 
 services:
+
   # StreamPipes services
   backend:
     image: "${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}"
@@ -111,6 +113,7 @@ services:
     networks:
       spnet:
 
+
 volumes:
   backend:
   connect:
@@ -120,6 +123,8 @@ volumes:
   influxdb2:
   nginx:
 
+
 networks:
   spnet:
     driver: bridge
+
