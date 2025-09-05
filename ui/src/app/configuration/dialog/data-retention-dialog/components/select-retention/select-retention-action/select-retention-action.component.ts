@@ -28,7 +28,6 @@ import { DataRetentionConfig } from '../../../model/data-retention-config.model'
     templateUrl: './select-retention-action.component.html',
     styleUrls: [
         './select-retention-action.component.scss',
-        // '../select-data.component.scss',
     ],
     standalone: false,
 })
