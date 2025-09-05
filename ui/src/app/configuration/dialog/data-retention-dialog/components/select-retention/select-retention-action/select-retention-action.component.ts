@@ -32,22 +32,7 @@ import { DataRetentionConfig } from '../../../model/data-retention-config.model'
     ],
     standalone: false,
 })
-export class SelectRetentionActionComponent implements OnInit {
+export class SelectRetentionActionComponent {
     @Input() dataExplorerDataConfig: DataExplorerDataConfig;
     @Input() dataRetentionConfig: DataRetentionConfig;
-
-    ngOnInit(): void {
-        //TODO
-        console.log('TESTLOG');
-        //if (!this.dataExportConfig.dateRange) {
-        //    this.initDateSelection();
-        //}
-    }
-
-    initDateSelection() {
-        //TODO
-        //const startDate = new Date();
-        //startDate.setDate(startDate.getDate() - 5);
-        //this.dataExportConfig.dateRange = new DateRange(startDate, new Date());
-    }
 }

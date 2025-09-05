@@ -49,8 +49,6 @@ export class DataRetentionDialogComponent implements OnInit {
             .getMeasurement(this.measurementIndex)
             .subscribe({
                 next: measure => {
-                    console.log('measure received:', measure);
-
                     if (measure.retentionTime != null) {
                         this.retentionConfig ??= measure.retentionTime;
                     } else {
