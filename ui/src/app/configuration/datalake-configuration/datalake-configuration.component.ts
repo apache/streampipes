@@ -98,6 +98,9 @@ export class DatalakeConfigurationComponent implements OnInit {
                             entry.elementId = measurement.elementId;
                             entry.name = measurement.measureName;
                             entry.events = -1;
+                            if (measurement?.retentionTime != null) {
+                                entry.retention = measurement.retentionTime;
+                            }
                             inUseMeasurements.forEach(inUseMeasurement => {
                                 if (
                                     inUseMeasurement.measureName ===
@@ -179,8 +182,6 @@ export class DatalakeConfigurationComponent implements OnInit {
     }
 
     openRetentionDialog(measurementId: string) {
-        console.log('OPEN DATA DIALOG');
-        console.log(measurementId);
         this.dialogService.open(DataRetentionDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: 'Set Data Retention',

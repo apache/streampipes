@@ -226,7 +226,13 @@
                                                 )
                                             "
                                         >
-                                            <i class="material-icons"
+                                            <i
+                                                class="material-icons"
+                                                [ngStyle]="{
+                                                    color: configurationEntry?.retention
+                                                        ? 'green'
+                                                        : 'red'
+                                                }"
                                                 >history</i
                                             >
                                         </button>
