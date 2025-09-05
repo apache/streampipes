@@ -16,7 +16,6 @@
  *
  */
 import { DataRetentionConfig } from './data-retention-config.model';
-//import { FormatExportConfig } from './format-export-config.model';
 
 export interface RetentionConfig {
     dataRetentionConfig: DataRetentionConfig;
