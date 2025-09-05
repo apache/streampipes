@@ -418,9 +418,6 @@ public class DataLakeResource extends AbstractRestResource {
       @PathVariable String elementId,
       @RequestBody RetentionTimeConfig retention){
         var measure = this.dataExplorerSchemaManagement.getById(elementId);
-        if (measure.getRetentionTime() != null) {
-  
-        }
         measure.setRetentionTime(retention);
       try {
         this.dataExplorerSchemaManagement.updateMeasurement(measure);
