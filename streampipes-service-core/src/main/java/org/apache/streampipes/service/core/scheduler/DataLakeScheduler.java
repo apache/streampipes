@@ -40,7 +40,6 @@ public class DataLakeScheduler {
         log.info("Current time in millis to delete: " + endDate);
 
         this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
-
     }
 
 
