@@ -402,8 +402,6 @@ public class DataLakeResource extends AbstractRestResource {
     return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
   }
 
-
-    //TODO Currently working on API ENdpoint 
     @PostMapping(
       path = "/{elementId}/cleanup",
       produces = MediaType.APPLICATION_JSON_VALUE,
