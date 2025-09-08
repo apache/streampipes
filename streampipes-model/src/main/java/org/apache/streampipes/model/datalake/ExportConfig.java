@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.datalake;
 
-public record RetentionExportConfig(
-    ExportConfig exportConfig, 
-    //TODO Set as I DataExport‚
-    ExportProviderSettings exportProviderSettings
-) {}
+public record ExportConfig(  
+    String format,
+    String csvDelimiter,
+    String missingValueBehaviour
+
+    ) {
+} 
