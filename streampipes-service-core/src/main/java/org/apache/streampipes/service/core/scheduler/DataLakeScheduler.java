@@ -30,8 +30,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import net.minidev.json.JSONObject;
-
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -56,22 +59,37 @@ public class DataLakeScheduler {
         // Method body is empty; add functionality as needed
         //Prepare Data for export 
 
-        var outputFormat = OutputFormat.fromString("csv");//m.getRetentionTime().exportConfig().exportConfig().format());
+        var outputFormat = OutputFormat.fromString(m.getRetentionTime().exportConfig().exportConfig().format());
         Map<String, String> params = new HashMap<>();
         
-        params.put("delimiter", "comma");
-        params.put("format", "csv");
+        params.put("delimiter", m.getRetentionTime().exportConfig().exportConfig().csvDelimiter());
+        params.put("format", m.getRetentionTime().exportConfig().exportConfig().format());
         params.put("headerColumnName", "key");
-        params.put("missingValueBehaviour", "ignore");
+        params.put("missingValueBehaviour", m.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour());
         params.put("endDate",  Long.toString(endDate));
 
         ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(m.getMeasureName(), params);//populate(m.getMeasureName(), params);
         
-        StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
-          sanitizedParams,
-          outputFormat,
-          "ignore".equals(m.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour()),
-          output);
+        // File path where you want to save the CSV
+        Path filePath = Paths.get("output.csv");
+        
+        // Create the file output stream
+        try (OutputStream fileOutputStream = new FileOutputStream(filePath.toFile())) {
+            // Use the StreamingResponseBody to stream data into the file
+            StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
+                sanitizedParams,
+                outputFormat,
+                "ignore".equals(m.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour()),
+                output
+            );
+
+            // Write the data to the file
+            streamingOutput.writeTo(fileOutputStream);
+            System.out.println("CSV saved to " + filePath.toString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         // Export Data to specified bucket 
