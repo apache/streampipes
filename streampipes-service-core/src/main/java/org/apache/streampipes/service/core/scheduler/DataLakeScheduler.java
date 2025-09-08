@@ -20,6 +20,7 @@ package org.apache.streampipes.service.core.scheduler;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
+import org.apache.streampipes.dataexplorer.export.ObjectStorge.LocalFolder;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.RetentionAction;
@@ -71,25 +72,31 @@ public class DataLakeScheduler {
         ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(m.getMeasureName(), params);//populate(m.getMeasureName(), params);
         
         // File path where you want to save the CSV
-        Path filePath = Paths.get("output.csv");
+        //Path filePath = Paths.get("output.csv");
         
         // Create the file output stream
-        try (OutputStream fileOutputStream = new FileOutputStream(filePath.toFile())) {
+        //try (OutputStream fileOutputStream = new FileOutputStream(filePath.toFile())) {
             // Use the StreamingResponseBody to stream data into the file
-            StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
+        StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
                 sanitizedParams,
                 outputFormat,
                 "ignore".equals(m.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour()),
                 output
-            );
-
-            // Write the data to the file
-            streamingOutput.writeTo(fileOutputStream);
-            System.out.println("CSV saved to " + filePath.toString());
-
-        } catch (IOException e) {
+         );
+         try {
+            new LocalFolder(streamingOutput,"output.csv").store();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+            // Write the data to the file
+            //streamingOutput.writeTo(fileOutputStream);
+            //System.out.println("CSV saved to " + filePath.toString());
+
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+       // }
 
 
         // Export Data to specified bucket 
@@ -104,12 +111,14 @@ public class DataLakeScheduler {
         this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
     }
 
-    @Scheduled(cron = "0 */5 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
+    @Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");
         for (DataLakeMeasure m : allMeasurements) {
+            LOG.info("Measurement " + m.getMeasureName());
             if (m.getRetentionTime() != null) {
+               
                 Instant now = Instant.now();
                 Instant daysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
 

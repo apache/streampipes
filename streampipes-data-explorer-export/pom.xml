@@ -73,6 +73,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>5.3.32</version> 
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
