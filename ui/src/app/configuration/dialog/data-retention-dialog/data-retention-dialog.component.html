@@ -33,7 +33,13 @@
                 </sp-select-data>
             </div>
 
-            <div *ngIf="retentionConfig?.exportConfig">
+            <div
+                *ngIf="
+                    retentionConfig?.dataRetentionConfig?.action?.includes(
+                        'SAVE'
+                    )
+                "
+            >
                 <sp-data-export
                     [dataExplorerDataConfig]="
                         dataRetentionDialogModel.dataExplorerDataConfig

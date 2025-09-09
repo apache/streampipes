@@ -17,6 +17,38 @@
   -->
 
 <sp-configuration-box [title]="'Export Settings' | translate">
+    <div>
+        <sp-configuration-box [title]="'Download Format' | translate">
+            <mat-radio-group
+                class="sp-radio-group"
+                [(ngModel)]="
+                    dataRetentionConfig.exportConfig.exportConfig.format
+                "
+            >
+                <mat-radio-button
+                    value="json"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-json"
+                >
+                    JSON
+                </mat-radio-button>
+                <mat-radio-button
+                    value="csv"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-csv"
+                >
+                    CSV
+                </mat-radio-button>
+                <mat-radio-button
+                    value="xlsx"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-xlsx"
+                >
+                    EXCEL (XLSX)
+                </mat-radio-button>
+            </mat-radio-group>
+        </sp-configuration-box>
+    </div>
     <mat-form-field appearance="fill" class="sp-select-field">
         <mat-label>{{ 'Select Provider' | translate }}</mat-label>
         <mat-select
