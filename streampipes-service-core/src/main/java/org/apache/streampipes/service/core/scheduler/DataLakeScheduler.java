@@ -71,12 +71,6 @@ public class DataLakeScheduler {
 
         ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(m.getMeasureName(), params);//populate(m.getMeasureName(), params);
         
-        // File path where you want to save the CSV
-        //Path filePath = Paths.get("output.csv");
-        
-        // Create the file output stream
-        //try (OutputStream fileOutputStream = new FileOutputStream(filePath.toFile())) {
-            // Use the StreamingResponseBody to stream data into the file
         StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
                 sanitizedParams,
                 outputFormat,
@@ -84,22 +78,10 @@ public class DataLakeScheduler {
                 output
          );
          try {
-            new LocalFolder(streamingOutput,"output.csv").store();
+            new LocalFolder(streamingOutput,"./output").store();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-            // Write the data to the file
-            //streamingOutput.writeTo(fileOutputStream);
-            //System.out.println("CSV saved to " + filePath.toString());
-
-        //} catch (IOException e) {
-        //    e.printStackTrace();
-       // }
-
-
-        // Export Data to specified bucket 
     }
 
     public void deleteMeasurements(DataLakeMeasure m, Instant now, long endDate) {
@@ -111,7 +93,7 @@ public class DataLakeScheduler {
         this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
     }
 
-    @Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
+    @Scheduled(cron = "0 1 0 * * 6")//@Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");

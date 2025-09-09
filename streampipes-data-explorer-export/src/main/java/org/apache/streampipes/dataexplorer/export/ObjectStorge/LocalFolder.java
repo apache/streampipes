@@ -23,15 +23,15 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.Files;
+import java.time.Instant;
 
 public class LocalFolder extends IObjectStorage{
     
  private final Path filePath;
 
-    public LocalFolder(StreamingResponseBody datastream, String filePath) throws Exception {
+    public LocalFolder(StreamingResponseBody datastream, String folderPath) throws Exception {
         super(datastream);
-        this.filePath = Paths.get(filePath);
+        this.filePath = Paths.get(folderPath+"/dump_"+Instant.now().toString());
 
     }
 
