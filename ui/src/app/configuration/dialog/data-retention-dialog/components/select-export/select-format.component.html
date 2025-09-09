@@ -89,4 +89,12 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
+
+    <div
+        *ngIf="
+            dataRetentionConfig.exportConfig.exportProviderSettings
+                .providerType === 'local'
+        "
+        class="mt-10"
+    ></div>
 </sp-configuration-box>
