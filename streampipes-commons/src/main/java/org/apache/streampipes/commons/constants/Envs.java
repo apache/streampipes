@@ -139,6 +139,9 @@ public enum Envs {
   SP_PLC4X_CONN_MAX_WAIT_TIME_MS("SP_PLC4X_CONN_MAX_WAIT_TIME_MS", "20000"),
   SP_PLC4X_CONN_MAX_LEASE_TIME_MS("SP_PLC4X_CONN_MAX_LEASE_TIME_MS", "4000"),
 
+  // Retention Local File 
+  SP_RETENTION_LOCAL_DIR("SP_RETENTION_LOCAL_DIR", "./output"),
+
   // Logging
   SP_LOGGING_FILE_ENABLED("SP_LOGGING_FILE_ENABLED", "false"),
   SP_LOGGING_CONSOLE_ENABLED("SP_LOGGING_CONSOLE_ENABLED", "true"),
@@ -148,6 +151,8 @@ public enum Envs {
       "SP_LOGGING_FILE_PATTERN",
       "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
   );
+
+
 
 
   private final String envVariableName;
