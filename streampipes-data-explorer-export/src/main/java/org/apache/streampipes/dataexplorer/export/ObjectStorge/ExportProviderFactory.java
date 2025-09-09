@@ -24,11 +24,11 @@ import org.apache.streampipes.model.datalake.ExportProviderSettings;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 public class ExportProviderFactory {
-    public static IObjectStorage createExportProvider(String providerType, StreamingResponseBody streamingOutput, ExportProviderSettings settings) throws Exception {
+    public static IObjectStorage createExportProvider(String providerType, String measurementName, StreamingResponseBody streamingOutput, ExportProviderSettings settings) throws Exception {
         switch (providerType) {
             case "local":
                 String localPath = settings.path();
-                return new LocalFolder(streamingOutput, localPath);
+                return new LocalFolder(streamingOutput, measurementName);
 
             //case "s3":
             //    String s3Bucket = settings.get("bucketName");

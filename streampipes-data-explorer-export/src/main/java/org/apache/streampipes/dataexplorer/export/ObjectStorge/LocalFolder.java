@@ -23,15 +23,20 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.time.Instant;
 
 public class LocalFolder extends IObjectStorage{
     
  private final Path filePath;
 
-    public LocalFolder(StreamingResponseBody datastream, String folderPath) throws Exception {
+    public LocalFolder(StreamingResponseBody datastream, String measurementName) throws Exception {
         super(datastream);
-        this.filePath = Paths.get(folderPath+"/dump_"+Instant.now().toString());
+
+        Files.createDirectories(Paths.get(System.getProperty("SP_RETENTION_LOCAL_DIR")+"/"+measurementName));
+
+        this.filePath = Paths.get(System.getProperty("SP_RETENTION_LOCAL_DIR")+"/"+measurementName+"/dump_"+Instant.now().toString());
+
 
     }
 

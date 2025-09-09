@@ -81,7 +81,7 @@ public class DataLakeScheduler {
             String providerType =  exportProviderSettings.providerType();
         
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
-                providerType, streamingOutput, exportProviderSettings);
+                providerType, m.getMeasureName(), streamingOutput, exportProviderSettings);
             exportProvider.store();
 
         } catch (Exception e) {
