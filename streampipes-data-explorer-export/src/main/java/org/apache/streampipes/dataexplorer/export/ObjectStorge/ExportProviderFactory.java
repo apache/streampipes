@@ -27,7 +27,6 @@ public class ExportProviderFactory {
     public static IObjectStorage createExportProvider(String providerType, String measurementName, StreamingResponseBody streamingOutput, ExportProviderSettings settings) throws Exception {
         switch (providerType) {
             case "local":
-                String localPath = settings.path();
                 return new LocalFolder(streamingOutput, measurementName);
 
             //case "s3":
