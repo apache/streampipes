@@ -164,4 +164,6 @@ public interface Environment {
   StringEnvironmentVariable getFileLoggingPrefix();
   StringEnvironmentVariable getFileLoggingDir();
   StringEnvironmentVariable getFileLoggingPattern();
+
+  StringEnvironmentVariable getRetentionLocalDir();
 }

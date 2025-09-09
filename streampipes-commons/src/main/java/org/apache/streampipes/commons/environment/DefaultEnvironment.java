@@ -432,4 +432,9 @@ public class DefaultEnvironment implements Environment {
   public BooleanEnvironmentVariable getConsoleLoggingEnabled() {
     return new BooleanEnvironmentVariable(Envs.SP_LOGGING_CONSOLE_ENABLED);
   }
+
+  @Override
+  public StringEnvironmentVariable getRetentionLocalDir() {
+    return new StringEnvironmentVariable(Envs.SP_RETENTION_LOCAL_DIR);
+  }
 }

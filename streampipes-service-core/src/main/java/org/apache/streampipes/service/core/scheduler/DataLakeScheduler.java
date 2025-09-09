@@ -58,6 +58,10 @@ public class DataLakeScheduler {
         // Method body is empty; add functionality as needed
         //Prepare Data for export 
 
+        if (System.getenv("SP_RETENTION_LOCAL_DIR") == null || System.getenv("SP_RETENTION_LOCAL_DIR").isEmpty()) {
+        LOG.error("For Local Retention Storage, please configure the environment variable SP_RETENTION_LOCAL_DIR");
+    }
+
         var outputFormat = OutputFormat.fromString(m.getRetentionTime().exportConfig().exportConfig().format());
         Map<String, String> params = new HashMap<>();
         
@@ -79,6 +83,9 @@ public class DataLakeScheduler {
             ExportProviderSettings exportProviderSettings = m.getRetentionTime().exportConfig().exportProviderSettings();
 
             String providerType =  exportProviderSettings.providerType();
+
+            LOG.info("Write to " +System.getenv("SP_RETENTION_LOCAL_DIR"));
+
         
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
                 providerType, m.getMeasureName(), streamingOutput, exportProviderSettings);
@@ -98,7 +105,7 @@ public class DataLakeScheduler {
         this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
     }
 
-    @Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6")//@Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
+   @Scheduled(cron = "0 1 0 * * 6")//@Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");

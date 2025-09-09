@@ -33,9 +33,9 @@ public class LocalFolder extends IObjectStorage{
     public LocalFolder(StreamingResponseBody datastream, String measurementName) throws Exception {
         super(datastream);
 
-        Files.createDirectories(Paths.get(System.getProperty("SP_RETENTION_LOCAL_DIR")+"/"+measurementName));
+        Files.createDirectories(Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR")+"/"+measurementName));
 
-        this.filePath = Paths.get(System.getProperty("SP_RETENTION_LOCAL_DIR")+"/"+measurementName+"/dump_"+Instant.now().toString());
+        this.filePath = Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR")+"/"+measurementName+"/dump_"+Instant.now().toString());
 
 
     }
