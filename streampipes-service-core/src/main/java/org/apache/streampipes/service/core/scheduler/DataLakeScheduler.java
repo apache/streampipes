@@ -20,9 +20,12 @@ package org.apache.streampipes.service.core.scheduler;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
+import org.apache.streampipes.dataexplorer.export.ObjectStorge.ExportProviderFactory;
+import org.apache.streampipes.dataexplorer.export.ObjectStorge.IObjectStorage;
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.LocalFolder;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.ExportProviderSettings;
 import org.apache.streampipes.model.datalake.RetentionAction;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.slf4j.Logger;
@@ -78,7 +81,14 @@ public class DataLakeScheduler {
                 output
          );
          try {
-            new LocalFolder(streamingOutput,"./output").store();
+            ExportProviderSettings exportProviderSettings = m.getRetentionTime().exportConfig().exportProviderSettings();
+
+            String providerType =  exportProviderSettings.providerType();
+        
+            IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
+                providerType, streamingOutput, exportProviderSettings);
+            exportProvider.store();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,7 +103,7 @@ public class DataLakeScheduler {
         this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
     }
 
-    @Scheduled(cron = "0 1 0 * * 6")//@Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
+    @Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6")//@Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");

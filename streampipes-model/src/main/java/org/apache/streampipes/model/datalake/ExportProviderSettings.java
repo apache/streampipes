@@ -17,5 +17,7 @@
  */
 package org.apache.streampipes.model.datalake;
 
-public record ExportProviderSettings() {
-}
+public record ExportProviderSettings(
+      String providerType,
+      String path
+) {}
