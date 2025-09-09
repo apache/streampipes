@@ -34,26 +34,23 @@
             </div>
         </div>
     </div>
-
-    <div class="sp-dialog-actions actions-align-right">
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions" fxLayoutGap="10px">
         <button
-            mat-button
-            mat-raised-button
-            class="mat-basic"
-            style="margin-right: 10px"
-            (click)="exitDialog()"
-        >
-            {{ 'Close' | translate }}
-        </button>
-
-        <button
-            mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             data-cy="download-configuration-download-btn"
             (click)="setCleanUp()"
         >
             {{ 'Start Sync' | translate }}
+        </button>
+        <button
+            mat-flat-button
+            class="mat-basic"
+            style="margin-right: 10px"
+            (click)="exitDialog()"
+        >
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

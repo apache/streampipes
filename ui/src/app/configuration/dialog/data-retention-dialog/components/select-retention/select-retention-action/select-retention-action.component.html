@@ -17,31 +17,34 @@
   -->
 
 <sp-configuration-box [title]="'Data Retention Action' | translate">
-    <mat-form-field appearance="fill" class="sp-select-field">
-        <mat-label>{{ 'Select Action' | translate }}</mat-label>
-        <mat-select
+    <div class="p-10">
+        <mat-radio-group
             [(ngModel)]="dataRetentionConfig.action"
             data-cy="retention-action-select"
+            fxLayout="column"
         >
-            <mat-option value="DELETE" data-cy="action-configuration-delete">
+            <mat-radio-button
+                value="DELETE"
+                data-cy="action-configuration-delete"
+            >
                 {{ 'delete' | translate }}
-            </mat-option>
+            </mat-radio-button>
 
-            <mat-option
+            <mat-radio-button
+                [disabled]="true"
                 value="SAVE"
-                disabled
                 data-cy="retention-configuration-save"
             >
                 {{ 'save' | translate }}
-            </mat-option>
+            </mat-radio-button>
 
-            <mat-option
+            <mat-radio-button
+                [disabled]="true"
                 value="SAVEDELETE"
-                disabled
                 data-cy="retention-configuration-save-delete"
             >
                 {{ 'save and delete' | translate }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
 </sp-configuration-box>
