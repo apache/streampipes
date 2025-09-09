@@ -65,6 +65,7 @@ export class DataRetentionDialogComponent implements OnInit {
                                     format: 'csv',
                                     csvDelimiter: 'comma',
                                     missingValueBehaviour: 'ignore',
+                                    headerColumnName: 'key',
                                 },
                                 exportProviderSettings: {
                                     providerType: 'local',

@@ -17,17 +17,15 @@
  */
 package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
-import java.io.OutputStream;
-import java.util.Map;
-
 import org.apache.streampipes.model.datalake.ExportProviderSettings;
+
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 public class ExportProviderFactory {
-    public static IObjectStorage createExportProvider(String providerType, String measurementName, StreamingResponseBody streamingOutput, ExportProviderSettings settings) throws Exception {
+    public static IObjectStorage createExportProvider(String providerType, String measurementName, StreamingResponseBody streamingOutput, ExportProviderSettings settings, String format) throws Exception {
         switch (providerType) {
             case "local":
-                return new LocalFolder(streamingOutput, measurementName);
+                return new LocalFolder(streamingOutput, measurementName, format);
 
             //case "s3":
             //    String s3Bucket = settings.get("bucketName");

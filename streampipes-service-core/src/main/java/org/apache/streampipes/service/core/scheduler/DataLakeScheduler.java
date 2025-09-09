@@ -67,7 +67,7 @@ public class DataLakeScheduler {
         
         params.put("delimiter", m.getRetentionTime().exportConfig().exportConfig().csvDelimiter());
         params.put("format", m.getRetentionTime().exportConfig().exportConfig().format());
-        params.put("headerColumnName", "key");
+        params.put("headerColumnName", m.getRetentionTime().exportConfig().exportConfig().headerColumnName());
         params.put("missingValueBehaviour", m.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour());
         params.put("endDate",  Long.toString(endDate));
 
@@ -88,7 +88,7 @@ public class DataLakeScheduler {
 
         
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
-                providerType, m.getMeasureName(), streamingOutput, exportProviderSettings);
+                providerType, m.getMeasureName(), streamingOutput, exportProviderSettings, m.getRetentionTime().exportConfig().exportConfig().format());
             exportProvider.store();
 
         } catch (Exception e) {
@@ -105,7 +105,7 @@ public class DataLakeScheduler {
         this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
     }
 
-   @Scheduled(cron = "0 1 0 * * 6")//@Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
+    @Scheduled(cron = "0 1 0 * * 6")//@Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");

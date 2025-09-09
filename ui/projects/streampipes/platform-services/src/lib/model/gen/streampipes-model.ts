@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-09-09 14:40:01.
+// Generated using typescript-generator version 3.2.1263 on 2025-09-09 16:10:11.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1822,6 +1822,7 @@ export class EventSchema {
 export class ExportConfig {
     csvDelimiter: string;
     format: string;
+    headerColumnName: string;
     missingValueBehaviour: string;
 
     static fromData(data: ExportConfig, target?: ExportConfig): ExportConfig {
@@ -1831,6 +1832,7 @@ export class ExportConfig {
         const instance = target || new ExportConfig();
         instance.csvDelimiter = data.csvDelimiter;
         instance.format = data.format;
+        instance.headerColumnName = data.headerColumnName;
         instance.missingValueBehaviour = data.missingValueBehaviour;
         return instance;
     }

@@ -20,5 +20,6 @@ package org.apache.streampipes.model.datalake;
 public record ExportConfig(
     String format,
     String csvDelimiter,
-    String missingValueBehaviour
+    String missingValueBehaviour,
+    String headerColumnName
     ) {} 

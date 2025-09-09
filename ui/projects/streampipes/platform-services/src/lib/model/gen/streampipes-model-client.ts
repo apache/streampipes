@@ -19,9 +19,9 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-09-09 14:40:02.
+// Generated using typescript-generator version 3.2.1263 on 2025-09-09 16:10:12.
 
-import { Storable } from './platform-services';
+import { Storable } from '.streampipes-model';
 
 export class Group implements Storable {
     alternateIds: string[];

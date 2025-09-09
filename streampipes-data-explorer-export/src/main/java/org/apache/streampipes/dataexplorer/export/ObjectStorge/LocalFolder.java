@@ -21,21 +21,21 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.Files;
 import java.time.Instant;
 
 public class LocalFolder extends IObjectStorage{
     
  private final Path filePath;
 
-    public LocalFolder(StreamingResponseBody datastream, String measurementName) throws Exception {
+    public LocalFolder(StreamingResponseBody datastream, String measurementName, String format) throws Exception {
         super(datastream);
 
-        Files.createDirectories(Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR")+"/"+measurementName));
+        Files.createDirectories(Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName));
 
-        this.filePath = Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR")+"/"+measurementName+"/dump_"+Instant.now().toString());
+        this.filePath = Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName + "/dump_" + Instant.now().toString() + "." + format);
 
 
     }
