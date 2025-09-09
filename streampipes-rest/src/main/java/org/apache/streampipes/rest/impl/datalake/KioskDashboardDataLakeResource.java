@@ -113,13 +113,13 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     }
   }
 
-  public boolean hasReadAuthority() {
-    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE);
-  }
-
   public boolean hasReadAuthorityOrAnonymous(String dashboardId) {
     return hasReadAuthority()
         || hasAnonymousAccessAuthority(dashboardId);
+  }
+
+  private boolean hasReadAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE);
   }
 
   private boolean hasAnonymousAccessAuthority(String dashboardId) {
@@ -127,3 +127,4 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     return !perms.isEmpty() && perms.get(0).isReadAnonymous();
   }
 }
+
