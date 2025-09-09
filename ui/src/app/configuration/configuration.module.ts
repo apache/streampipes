@@ -105,7 +105,11 @@ import { CertificateDetailsDialogComponent } from './dialog/certificate-details/
 import { AlternateIdConfigurationComponent } from './security-configuration/alternate-id-configuration/alternate-id-configuration.component';
 import { UserAcknowledgmentComponent } from './general-configuration/user-acknowledgement/user-acknowledgment.component';
 import { QuillEditorComponent } from 'ngx-quill';
-
+import { MatStepperModule } from '@angular/material/stepper';
+import { DataRetentionDialogComponent } from './dialog/data-retention-dialog/data-retention-dialog.component';
+import { SelectDataComponent } from './dialog/data-retention-dialog/components/select-retention/select-data.component';
+import { SelectDataRetentionComponent } from './dialog/data-retention-dialog/components/select-retention/select-data-retention/select-data-retention.component';
+import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/components/select-retention/select-retention-action/select-retention-action.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -204,6 +208,7 @@ import { QuillEditorComponent } from 'ngx-quill';
         MatSort,
         MatListModule,
         MatDialogModule,
+        MatStepperModule,
         TranslateModule.forChild({}),
         QuillEditorComponent,
     ],
@@ -253,7 +258,7 @@ import { QuillEditorComponent } from 'ngx-quill';
         SpMessagingBrokerConfigComponent,
         SpRegisteredExtensionsServiceComponent,
         SpExtensionsServiceConfigurationComponent,
-
+        DataRetentionDialogComponent,
         SpExtensionsInstallationComponent,
         SpExtensionsInstallationDialogComponent,
         EndpointItemComponent,
@@ -265,6 +270,9 @@ import { QuillEditorComponent } from 'ngx-quill';
         CertificateDetailsDialogComponent,
         AlternateIdConfigurationComponent,
         UserAcknowledgmentComponent,
+        SelectDataComponent,
+        SelectDataRetentionComponent,
+        SelectRetentionActionComponent,
     ],
     providers: [
         OrderByPipe,

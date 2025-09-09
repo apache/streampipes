@@ -115,6 +115,7 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
     return badRequest();
   }
 
+
   @DeleteMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deleteDataLakeMeasure(@PathVariable("id") String elementId) {
     try {

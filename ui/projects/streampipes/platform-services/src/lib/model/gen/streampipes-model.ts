@@ -21,7 +21,6 @@
 /* eslint-disable */
 // @ts-nocheck
 // Generated using typescript-generator version 3.2.1263 on 2025-08-27 21:55:36.
-
 export class NamedStreamPipesEntity implements Storable {
     '@class':
         | 'org.apache.streampipes.model.SpDataStream'
@@ -1243,6 +1242,7 @@ export class DataLakeMeasure implements Storable {
     'pipelineId': string;
     'pipelineIsRunning': boolean;
     'pipelineName': string;
+    'retentionTime': RetentionTimeConfig;
     'rev': string;
     'schemaUpdateStrategy': DataLakeMeasureSchemaUpdateStrategy;
     'schemaVersion': string;
@@ -1263,6 +1263,9 @@ export class DataLakeMeasure implements Storable {
         instance.pipelineId = data.pipelineId;
         instance.pipelineIsRunning = data.pipelineIsRunning;
         instance.pipelineName = data.pipelineName;
+        instance.retentionTime = RetentionTimeConfig.fromData(
+            data.retentionTime,
+        );
         instance.rev = data.rev;
         instance.schemaUpdateStrategy = data.schemaUpdateStrategy;
         instance.schemaVersion = data.schemaVersion;
@@ -1367,6 +1370,26 @@ export class DataProcessorType {
         instance.code = data.code;
         instance.description = data.description;
         instance.label = data.label;
+        return instance;
+    }
+}
+
+export class DataRetentionConfig {
+    action: RetentionAction;
+    interval: RetentionInterval;
+    olderThanDays: number;
+
+    static fromData(
+        data: DataRetentionConfig,
+        target?: DataRetentionConfig,
+    ): DataRetentionConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new DataRetentionConfig();
+        instance.action = data.action;
+        instance.interval = data.interval;
+        instance.olderThanDays = data.olderThanDays;
         return instance;
     }
 }
@@ -3295,6 +3318,24 @@ export class ResourceMetadata {
     }
 }
 
+export class RetentionTimeConfig {
+    dataRetentionConfig: DataRetentionConfig;
+
+    static fromData(
+        data: RetentionTimeConfig,
+        target?: RetentionTimeConfig,
+    ): RetentionTimeConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RetentionTimeConfig();
+        instance.dataRetentionConfig = DataRetentionConfig.fromData(
+            data.dataRetentionConfig,
+        );
+        return instance;
+    }
+}
+
 export class RuntimeOptionsRequest {
     '@class':
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsRequest'
@@ -4199,6 +4240,10 @@ export type PropertyScope =
     | 'DIMENSION_PROPERTY'
     | 'MEASUREMENT_PROPERTY'
     | 'NONE';
+
+export type RetentionAction = 'DELETE' | 'SAVE' | 'SAVEDELETE';
+
+export type RetentionInterval = 'DAILY' | 'MONTHLY' | 'WEEKLY';
 
 export type SelectionStaticPropertyUnion =
     | AnyStaticProperty

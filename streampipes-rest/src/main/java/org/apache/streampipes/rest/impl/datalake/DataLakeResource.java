@@ -25,6 +25,7 @@ import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
+import org.apache.streampipes.model.datalake.RetentionTimeConfig;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
@@ -398,6 +399,32 @@ public class DataLakeResource extends AbstractRestResource {
 
   private boolean checkProvidedQueryParams(Map<String, String> providedParams) {
     return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
+  }
+
+    @PostMapping(
+      path = "/{elementId}/cleanup",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Sets the retention mechanism for a certain measurement", tags = {"Data Lake"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "Can't store the given data to this data lake"),
+          @ApiResponse(
+              responseCode = "200",
+              description = "Successfully stored data")})
+  public ResponseEntity<?> setDataLakeRetention(
+      @PathVariable String elementId,
+      @RequestBody RetentionTimeConfig retention){
+        var measure = this.dataExplorerSchemaManagement.getById(elementId);
+        measure.setRetentionTime(retention);
+      try {
+        this.dataExplorerSchemaManagement.updateMeasurement(measure);
+      } catch (IllegalArgumentException e) {
+        return badRequest(e.getMessage());
+    }
+  
+    return ok();
   }
 
   private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {

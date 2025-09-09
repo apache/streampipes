@@ -36,7 +36,7 @@ import {
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
-
+import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/data-retention-dialog.component';
 @Component({
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
@@ -60,6 +60,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         'download',
         'truncate',
         'remove',
+        'retention',
     ];
 
     pageSize = 15;
@@ -94,8 +95,12 @@ export class DatalakeConfigurationComponent implements OnInit {
                     .subscribe(inUseMeasurements => {
                         allMeasurements.forEach(measurement => {
                             const entry = new DataLakeConfigurationEntry();
+                            entry.elementId = measurement.elementId;
                             entry.name = measurement.measureName;
                             entry.events = -1;
+                            if (measurement?.retentionTime != null) {
+                                entry.retention = measurement.retentionTime;
+                            }
                             inUseMeasurements.forEach(inUseMeasurement => {
                                 if (
                                     inUseMeasurement.measureName ===
@@ -172,6 +177,20 @@ export class DatalakeConfigurationComponent implements OnInit {
                 dataDownloadDialogModel: {
                     measureName: measurementName,
                 },
+            },
+        });
+    }
+
+    openRetentionDialog(measurementId: string) {
+        this.dialogService.open(DataRetentionDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Set Data Retention',
+            width: '50vw',
+            data: {
+                dataRetentionDialogModel: {
+                    measureName: measurementId,
+                },
+                measurementIndex: measurementId,
             },
         });
     }

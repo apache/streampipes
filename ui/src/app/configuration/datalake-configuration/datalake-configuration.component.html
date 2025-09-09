@@ -202,6 +202,45 @@
                             </td>
                         </ng-container>
 
+                        <ng-container matColumnDef="retention">
+                            <th mat-header-cell *matHeaderCellDef>
+                                Retention Rate
+                            </th>
+                            <td mat-cell *matCellDef="let configurationEntry">
+                                <div fxLayout="row">
+                                    <span
+                                        fxFlex
+                                        fxFlexOrder="3"
+                                        fxLayout="row"
+                                        fxLayoutAlign="start center"
+                                    >
+                                        <button
+                                            color="accent"
+                                            mat-icon-button
+                                            matTooltip="Set retention rate"
+                                            data-cy="datalake-retention-btn"
+                                            matTooltipPosition="above"
+                                            (click)="
+                                                openRetentionDialog(
+                                                    configurationEntry.elementId
+                                                )
+                                            "
+                                        >
+                                            <i
+                                                class="material-icons"
+                                                [ngStyle]="{
+                                                    color: configurationEntry?.retention
+                                                        ? 'green'
+                                                        : 'red'
+                                                }"
+                                                >history</i
+                                            >
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+
                         <tr
                             mat-header-row
                             *matHeaderRowDef="displayedColumns"
