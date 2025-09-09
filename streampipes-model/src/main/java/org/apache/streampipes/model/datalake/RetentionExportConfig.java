@@ -20,6 +20,5 @@ package org.apache.streampipes.model.datalake;
 
 public record RetentionExportConfig(
     ExportConfig exportConfig, 
-    //TODO Set as I DataExport‚
     ExportProviderSettings exportProviderSettings
 ) {}

@@ -16,13 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-08-27 16:31:50.
+// Generated using typescript-generator version 3.2.1263 on 2025-09-09 09:59:57.
 
-import { Storable } from './streampipes-model';
+import { Storable } from './platform-services';
 
 export class Group implements Storable {
     alternateIds: string[];
@@ -251,7 +250,6 @@ export class UserAccount extends Principal {
     preferredDataSinks: string[];
     preferredDataStreams: string[];
     provider: string;
-    shouldAcknowledge: boolean;
     userApiTokens: UserApiToken[];
 
     static fromData(data: UserAccount, target?: UserAccount): UserAccount {
@@ -276,7 +274,6 @@ export class UserAccount extends Principal {
             data.preferredDataStreams,
         );
         instance.provider = data.provider;
-        instance.shouldAcknowledge = data.shouldAcknowledge;
         instance.userApiTokens = __getCopyArrayFn(UserApiToken.fromData)(
             data.userApiTokens,
         );

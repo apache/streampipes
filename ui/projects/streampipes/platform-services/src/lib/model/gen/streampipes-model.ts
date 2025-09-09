@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-08-27 21:55:36.
+// Generated using typescript-generator version 3.2.1263 on 2025-09-09 09:59:56.
+
 export class NamedStreamPipesEntity implements Storable {
     '@class':
         | 'org.apache.streampipes.model.SpDataStream'
@@ -1819,6 +1819,23 @@ export class EventSchema {
     }
 }
 
+export class ExportConfig {
+    csvDelimiter: string;
+    format: string;
+    missingValueBehaviour: string;
+
+    static fromData(data: ExportConfig, target?: ExportConfig): ExportConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExportConfig();
+        instance.csvDelimiter = data.csvDelimiter;
+        instance.format = data.format;
+        instance.missingValueBehaviour = data.missingValueBehaviour;
+        return instance;
+    }
+}
+
 export class ExportConfiguration {
     assetExportConfiguration: AssetExportConfiguration[];
 
@@ -1850,6 +1867,24 @@ export class ExportItem {
         instance.label = data.label;
         instance.resourceId = data.resourceId;
         instance.selected = data.selected;
+        return instance;
+    }
+}
+
+export class ExportProviderSettings {
+    path: string;
+    providerType: string;
+
+    static fromData(
+        data: ExportProviderSettings,
+        target?: ExportProviderSettings,
+    ): ExportProviderSettings {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExportProviderSettings();
+        instance.path = data.path;
+        instance.providerType = data.providerType;
         return instance;
     }
 }
@@ -3318,8 +3353,29 @@ export class ResourceMetadata {
     }
 }
 
+export class RetentionExportConfig {
+    exportConfig: ExportConfig;
+    exportProviderSettings: ExportProviderSettings;
+
+    static fromData(
+        data: RetentionExportConfig,
+        target?: RetentionExportConfig,
+    ): RetentionExportConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RetentionExportConfig();
+        instance.exportConfig = ExportConfig.fromData(data.exportConfig);
+        instance.exportProviderSettings = ExportProviderSettings.fromData(
+            data.exportProviderSettings,
+        );
+        return instance;
+    }
+}
+
 export class RetentionTimeConfig {
     dataRetentionConfig: DataRetentionConfig;
+    exportConfig: RetentionExportConfig;
 
     static fromData(
         data: RetentionTimeConfig,
@@ -3331,6 +3387,9 @@ export class RetentionTimeConfig {
         const instance = target || new RetentionTimeConfig();
         instance.dataRetentionConfig = DataRetentionConfig.fromData(
             data.dataRetentionConfig,
+        );
+        instance.exportConfig = RetentionExportConfig.fromData(
+            data.exportConfig,
         );
         return instance;
     }
