@@ -52,8 +52,6 @@ export class DataRetentionDialogComponent implements OnInit {
                         measure?.retentionTime ||
                         measure.retentionTime != null
                     ) {
-                        console.log('FIRST');
-                        console.log(measure.retentionTime);
                         this.retentionConfig ??= measure.retentionTime;
                     } else {
                         this.retentionConfig ??= RetentionTimeConfig.fromData({
@@ -75,7 +73,6 @@ export class DataRetentionDialogComponent implements OnInit {
                             },
                         } as RetentionTimeConfig);
                     }
-                    console.log(this.retentionConfig);
                 },
                 error: err => {
                     console.error('Error loading measurement:', err);
