@@ -49,6 +49,32 @@
             </mat-radio-group>
         </sp-configuration-box>
     </div>
+    <div
+        *ngIf="dataRetentionConfig.exportConfig.exportConfig.format === 'csv'"
+        class="mt-10"
+    >
+        <sp-configuration-box [title]="'Delimiter' | translate">
+            <mat-radio-group
+                [(ngModel)]="
+                    dataRetentionConfig.exportConfig.exportConfig.delimiter
+                "
+                class="sp-radio-group"
+            >
+                <mat-radio-button
+                    value="comma"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-delimiter-comma"
+                    >&nbsp;,
+                </mat-radio-button>
+                <mat-radio-button
+                    value="semicolon"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-delimiter-semicolon"
+                    >&nbsp;;
+                </mat-radio-button>
+            </mat-radio-group>
+        </sp-configuration-box>
+    </div>
     <mat-form-field appearance="fill" class="sp-select-field">
         <mat-label>{{ 'Select Provider' | translate }}</mat-label>
         <mat-select
