@@ -28,9 +28,19 @@
                     [dataExplorerDataConfig]="
                         dataRetentionDialogModel.dataExplorerDataConfig
                     "
-                    [dataRetentionConfig]="retentionConfig.dataRetentionConfig"
+                    [dataRetentionConfig]="retentionConfig"
                 >
                 </sp-select-data>
+            </div>
+
+            <div *ngIf="retentionConfig?.exportConfig">
+                <sp-data-export
+                    [dataExplorerDataConfig]="
+                        dataRetentionDialogModel.dataExplorerDataConfig
+                    "
+                    [dataRetentionConfig]="retentionConfig"
+                >
+                </sp-data-export>
             </div>
         </div>
     </div>

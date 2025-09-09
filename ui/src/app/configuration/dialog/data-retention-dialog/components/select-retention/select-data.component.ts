@@ -18,7 +18,8 @@
 
 import { Component, Input } from '@angular/core';
 
-import { DataRetentionConfig } from '../../model/data-retention-config.model';
+//import { DataRetentionConfig } from '../../model/data-retention-config.model';
+import { RetentionTimeConfig } from '@streampipes/platform-services';
 import { DataExplorerDataConfig } from '@streampipes/platform-services';
 
 @Component({
@@ -37,5 +38,5 @@ export class SelectDataComponent {
     /**
      * Represents the user configurations for the download
      */
-    @Input() dataRetentionConfig: DataRetentionConfig;
+    @Input() dataRetentionConfig: RetentionTimeConfig;
 }

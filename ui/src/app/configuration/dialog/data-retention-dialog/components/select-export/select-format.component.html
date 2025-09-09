@@ -16,5 +16,19 @@
   ~
   -->
 
-<ng-template matStepLabel>{{ 'Set Backup Options' | translate }}</ng-template>
-<div>BACKUP Steps</div>
+<sp-configuration-box [title]="'Export Settings' | translate">
+    <mat-form-field appearance="fill" class="sp-select-field">
+        <mat-label>{{ 'Select Provider' | translate }}</mat-label>
+        <mat-select
+            [(ngModel)]="
+                dataRetentionConfig.exportConfig.exportProviderSettings
+                    .providerType
+            "
+            data-cy="exportProvider-select"
+        >
+            <mat-option value="local" data-cy="exportProvider-local">
+                {{ 'local' | translate }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</sp-configuration-box>

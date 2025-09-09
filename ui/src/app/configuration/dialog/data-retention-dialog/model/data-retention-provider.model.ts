@@ -16,24 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import {
-    DataExplorerDataConfig,
-    DateRange,
-    RetentionTimeConfig,
-} from '@streampipes/platform-services';
-import { DataRetentionConfig } from '../../../model/data-retention-config.model';
-
-@Component({
-    selector: 'sp-select-data-retention',
-    templateUrl: './select-data-retention.component.html',
-    styleUrls: [
-        './select-data-retention.component.scss',
-        // '../select-data.component.scss',
-    ],
-    standalone: false,
-})
-export class SelectDataRetentionComponent {
-    @Input() dataExplorerDataConfig: DataExplorerDataConfig;
-    @Input() dataRetentionConfig: RetentionTimeConfig;
+export interface DataRetentionProvider {
+    path: string;
+    providerType?: string;
 }

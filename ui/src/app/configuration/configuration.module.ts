@@ -110,6 +110,7 @@ import { DataRetentionDialogComponent } from './dialog/data-retention-dialog/dat
 import { SelectDataComponent } from './dialog/data-retention-dialog/components/select-retention/select-data.component';
 import { SelectDataRetentionComponent } from './dialog/data-retention-dialog/components/select-retention/select-data-retention/select-data-retention.component';
 import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/components/select-retention/select-retention-action/select-retention-action.component';
+import { SelectDataExportComponent } from './dialog/data-retention-dialog/components/select-export/select-format.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -273,6 +274,7 @@ import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/c
         SelectDataComponent,
         SelectDataRetentionComponent,
         SelectRetentionActionComponent,
+        SelectDataExportComponent,
     ],
     providers: [
         OrderByPipe,

@@ -20,7 +20,7 @@
     <mat-form-field appearance="fill" class="sp-select-field">
         <mat-label>{{ 'Select Action' | translate }}</mat-label>
         <mat-select
-            [(ngModel)]="dataRetentionConfig.action"
+            [(ngModel)]="dataRetentionConfig.dataRetentionConfig.action"
             data-cy="retention-action-select"
         >
             <mat-option value="DELETE" data-cy="action-configuration-delete">

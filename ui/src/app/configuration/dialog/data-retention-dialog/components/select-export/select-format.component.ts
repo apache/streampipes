@@ -16,41 +16,17 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { FormatExportConfig } from '../../model/format-export-config.model';
-import { FileMetadata, FilesService } from '@streampipes/platform-services';
-import { CurrentUserService } from '../../../../services/current-user.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { DataExplorerDataConfig } from '@streampipes/platform-services';
+import { RetentionTimeConfig } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-select-format',
+    selector: 'sp-data-export',
     templateUrl: './select-format.component.html',
-    styleUrls: [
-        './select-format.component.scss',
-        '../../data-download-dialog.component.scss',
-    ],
+    styleUrls: ['./select-format.component.scss'],
     standalone: false,
 })
-export class SelectFormatComponent implements OnInit {
-    @Input() formatExportConfig: FormatExportConfig;
-
-    hasReadFilePrivilege = false;
-    excelTemplates: FileMetadata[] = [];
-
-    private fileService = inject(FilesService);
-    private currentUserService = inject(CurrentUserService);
-
-    constructor() {}
-
-    ngOnInit() {
-        this.hasReadFilePrivilege = this.currentUserService.hasRole(
-            'PRIVILEGE_READ_FILES',
-        );
-        if (this.hasReadFilePrivilege) {
-            this.fileService
-                .getFileMetadata(['xlsx'])
-                .subscribe(excelTemplates => {
-                    this.excelTemplates = excelTemplates;
-                });
-        }
-    }
+export class SelectDataExportComponent {
+    @Input() dataExplorerDataConfig: DataExplorerDataConfig;
+    @Input() dataRetentionConfig: RetentionTimeConfig;
 }

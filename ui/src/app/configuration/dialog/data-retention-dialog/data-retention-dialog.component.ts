@@ -33,7 +33,6 @@ import {
 export class DataRetentionDialogComponent implements OnInit {
     @Input() dataRetentionDialogModel: DataRetentionDialogModel;
 
-    @Input()
     retentionConfig: RetentionTimeConfig;
 
     @Input()
@@ -49,16 +48,34 @@ export class DataRetentionDialogComponent implements OnInit {
             .getMeasurement(this.measurementIndex)
             .subscribe({
                 next: measure => {
-                    if (measure.retentionTime != null) {
+                    if (
+                        measure?.retentionTime ||
+                        measure.retentionTime != null
+                    ) {
+                        console.log('FIRST');
+                        console.log(measure.retentionTime);
                         this.retentionConfig ??= measure.retentionTime;
                     } else {
                         this.retentionConfig ??= RetentionTimeConfig.fromData({
                             dataRetentionConfig: {
                                 olderThanDays: 30,
                                 interval: 'DAILY',
+                                action: 'DELETE',
+                            },
+                            exportConfig: {
+                                exportConfig: {
+                                    format: 'csv',
+                                    csvDelimiter: 'comma',
+                                    missingValueBehaviour: 'ignore',
+                                },
+                                exportProviderSettings: {
+                                    providerType: 'local',
+                                    path: './output',
+                                },
                             },
                         } as RetentionTimeConfig);
                     }
+                    console.log(this.retentionConfig);
                 },
                 error: err => {
                     console.error('Error loading measurement:', err);
