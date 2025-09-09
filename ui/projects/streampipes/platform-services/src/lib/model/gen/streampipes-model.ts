@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-09-09 09:59:56.
+// Generated using typescript-generator version 3.2.1263 on 2025-09-09 14:40:01.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1872,7 +1872,6 @@ export class ExportItem {
 }
 
 export class ExportProviderSettings {
-    path: string;
     providerType: string;
 
     static fromData(
@@ -1883,7 +1882,6 @@ export class ExportProviderSettings {
             return data;
         }
         const instance = target || new ExportProviderSettings();
-        instance.path = data.path;
         instance.providerType = data.providerType;
         return instance;
     }
