@@ -19,26 +19,21 @@ package org.apache.streampipes.service.core.scheduler;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.ExportProviderFactory;
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.IObjectStorage;
-import org.apache.streampipes.dataexplorer.export.ObjectStorge.LocalFolder;
+import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.ExportProviderSettings;
 import org.apache.streampipes.model.datalake.RetentionAction;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -116,17 +111,16 @@ public class DataLakeScheduler {
 
                 long endDate = daysAgo.toEpochMilli();
 
-                if (m.getRetentionTime().dataRetentionConfig().action() != RetentionAction.DELETE )
-                {
+                if (m.getRetentionTime().dataRetentionConfig().action() != RetentionAction.DELETE){
                 LOG.info("Start saving Measurement " + m.getMeasureName());
                 exportMeasurements(m, now,endDate);
                 LOG.info("Measurements " + m.getMeasureName() + " successfully saved");
                 }
-                if (m.getRetentionTime().dataRetentionConfig().action() != RetentionAction.SAVE )
-                {
+                if (m.getRetentionTime().dataRetentionConfig().action() != RetentionAction.SAVE){
                 LOG.info("Start delete Measurement " + m.getMeasureName());
                 deleteMeasurements(m,now, endDate);
-                LOG.info("Measurements " + m.getMeasureName() + " successfully deleted");}
+                LOG.info("Measurements " + m.getMeasureName() + " successfully deleted");
+            }
             }
         }
     }
