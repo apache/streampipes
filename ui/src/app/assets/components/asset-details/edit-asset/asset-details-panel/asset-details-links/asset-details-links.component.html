@@ -25,7 +25,7 @@
         <div fxLayoutAlign="end center" fxLayout="row" fxFlex="100">
             <button
                 [disabled]="!assetLinksLoaded"
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 *ngIf="editMode"
                 (click)="openManageAssetLinksDialog()"
@@ -35,7 +35,7 @@
             </button>
             <button
                 [disabled]="!assetLinksLoaded"
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 *ngIf="editMode"
                 (click)="openCreateAssetLinkDialog()"

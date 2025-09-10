@@ -83,8 +83,8 @@
         >
             <div fxLayout="row" fxLayoutGap="10px">
                 <button
-                    color="accent"
-                    mat-button
+                    mat-flat-button
+                    class="mat-basic"
                     matTooltip="Certificate Details"
                     matTooltipPosition="above"
                     [attr.data-cy]="
@@ -96,9 +96,7 @@
                     <span>&nbsp;Details</span>
                 </button>
                 <button
-                    color="accent"
-                    mat-button
-                    mat-raised-button
+                    mat-flat-button
                     (click)="
                         certificate.state === 'TRUSTED'
                             ? onStateChange(certificate, 'REJECTED')
@@ -116,9 +114,8 @@
                     >
                 </button>
                 <button
-                    color="warn"
-                    mat-button
-                    mat-raised-button
+                    mat-flat-button
+                    class="btn-warn"
                     matTooltip="Delete certificate"
                     matTooltipPosition="above"
                     [attr.data-cy]="

@@ -29,6 +29,7 @@ import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
@@ -52,6 +53,7 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
   private final CRUDStorage<DashboardModel> dashboardStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage();
   private final CRUDStorage<DataExplorerWidgetModel> dataExplorerWidgetStorage;
+  private final IPermissionStorage permissionStorage;
 
   public KioskDashboardDataLakeResource() {
     this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
@@ -63,12 +65,13 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     this.dataExplorerWidgetStorage = StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getDataExplorerWidgetStorage();
+    this.permissionStorage = getNoSqlStorage().getPermissionStorage();
   }
 
   @PostMapping(path = "/{dashboardId}/{widgetId}/data",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and hasPermission(#dashboardId, 'READ')")
+  @PreAuthorize("this.hasReadAuthorityOrAnonymous(#dashboardId) and hasPermission(#dashboardId, 'READ')")
   public ResponseEntity<?> getData(@PathVariable("dashboardId") String dashboardId,
                                    @PathVariable("widgetId") String widgetId,
                                    @RequestBody Map<String, String> queryParams) {
@@ -110,7 +113,18 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     }
   }
 
-  public boolean hasReadAuthority() {
+  public boolean hasReadAuthorityOrAnonymous(String dashboardId) {
+    return hasReadAuthority()
+        || hasAnonymousAccessAuthority(dashboardId);
+  }
+
+  private boolean hasReadAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE);
   }
+
+  private boolean hasAnonymousAccessAuthority(String dashboardId) {
+    var perms = permissionStorage.getUserPermissionsForObject(dashboardId);
+    return !perms.isEmpty() && perms.get(0).isReadAnonymous();
+  }
 }
+

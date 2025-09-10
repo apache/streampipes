@@ -18,12 +18,11 @@
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
         <h5 style="margin-right: 10px">
-            {{ selectedElement.inputStreams[0].name }}
+            {{ selectedElement.inputStreams[0].name || '' }}
         </h5>
         <button
             mat-button
-            mat-raised-button
-            color="accent"
+            mat-flat-button
             class="small-button"
             (click)="selectAll(collectedPropertiesFirstStream)"
             style="margin-right: 10px; margin-left: 10px"
@@ -32,8 +31,7 @@
             Select all
         </button>
         <button
-            mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic small-button"
             (click)="deselectAll(collectedPropertiesFirstStream)"
             [disabled]="restrictedEditMode"
@@ -62,7 +60,7 @@
             </h5>
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 class="small-button"
                 (click)="selectAll(collectedPropertiesSecondStream)"
@@ -73,7 +71,7 @@
             </button>
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 class="mat-basic small-button"
                 (click)="deselectAll(collectedPropertiesSecondStream)"
                 [disabled]="restrictedEditMode"

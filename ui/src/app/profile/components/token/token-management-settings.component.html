@@ -57,7 +57,7 @@
                     <button
                         class="mt-5"
                         mat-button
-                        mat-raised-button
+                        mat-flat-button
                         color="accent"
                         [disabled]="!tokenNameFormControl.valid"
                         (click)="requestNewKey()"
@@ -90,7 +90,7 @@
                     </div>
                     <button
                         mat-button
-                        mat-raised-button
+                        mat-flat-button
                         color="accent"
                         [cdkCopyToClipboard]="newlyCreatedToken.rawToken"
                     >
@@ -124,8 +124,8 @@
                             <div fxLayout="end end">
                                 <button
                                     mat-button
-                                    mat-raised-button
-                                    color="warn"
+                                    mat-flat-button
+                                    class="btn-warn"
                                     (click)="revokeApiKey(element)"
                                 >
                                     Revoke
@@ -152,7 +152,7 @@
                 <div>
                     <button
                         mat-button
-                        mat-raised-button
+                        mat-flat-button
                         color="accent"
                         routerLink="/apidocs"
                     >

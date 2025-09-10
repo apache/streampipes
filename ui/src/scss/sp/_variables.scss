@@ -16,16 +16,7 @@
  *
  */
 
-$sp-color-primary: rgb(57, 181, 74);
-$sp-color-primary-600: #06c12a;
-
-$sp-color-accent: #1b1464;
-
-$sp-color-accent-light-blue: rgb(59, 92, 149);
-$sp-color-accent-light: rgb(156, 156, 156);
-$sp-color-accent-light-transparent: rgba(156, 156, 156, 0.4);
-
-$sp-color-accent-dark: #83a3de;
+// variables maintained by StreamPipes committers
 
 $sp-color-adapter: #7f007f;
 $sp-color-stream: #ffeb3b;
@@ -34,7 +25,9 @@ $sp-color-sink: #3f51b5;
 
 $sp-color-error: #b71c1c;
 
-body {
+:root {
+    --mat-sys-body-medium-size: 10pt;
+
     --color-data-view: rgb(122, 206, 227);
     --color-dashboard: rgb(76, 115, 164);
     --color-adapter: rgb(182, 140, 97);
@@ -47,66 +40,81 @@ body {
     --iconbar-width: 35px;
     --navbar-icon-border-radius: 0;
     --navbar-icon-padding: 0;
-}
 
-:root {
-    --color-loading-bar: #{$sp-color-accent};
+    --color-bg-0: var(--mat-sys-surface);
+    --color-bg-1: var(--mat-sys-surface-container-low);
+    --color-bg-2: var(--mat-sys-surface-container-high);
+    --color-bg-3: var(--mat-sys-surface-container-highest);
+    --color-bg-4: var(--mat-sys-surface-container-highest);
+
+    --mat-filled-button-horizontal-padding: 16px;
+    --mdc-icon-button-icon-color: var(--mat-sys-primary);
+    --mat-option-selected-state-layer-color: var(--mat-sys-surface-container);
+
+    --mat-divider-color: var(--mat-sys-surface-container-high);
+    --mat-table-row-item-outline-color: var(--mat-sys-surface-container-high);
+    --mat-autocomplete-background-color: var(
+        --mat-sys-surface-container-lowest
+    );
+
+    --mat-standard-button-toggle-selected-state-background-color: var(
+        --mat-sys-primary-container
+    );
+    --mat-standard-button-toggle-selected-state-text-color: var(
+        --mat-sys-primary
+    );
+
+    --mat-tree-node-text-size: var(--mat-sys-body-medium-size);
+    --mat-expansion-container-text-size: var(--mat-sys-body-medium-size);
+
+    --mdc-secondary-navigation-tab-container-height: 42px;
+    --mdc-switch-track-height: 20px;
+    --mdc-switch-track-width: 44px;
+    --mat-switch-with-icon-handle-size: 20px;
+    --mdc-switch-state-layer-size: 20px;
+    --mat-switch-unselected-with-icon-handle-horizontal-margin: 0;
+    --mdc-switch-handle-surface-color: var(--color-primary);
+    --mdc-switch-unselected-icon-size: 12px;
+    --mdc-switch-selected-icon-size: 12px;
+
+    --mat-menu-container-color: var(--color-bg-0);
 }
 
 .dark-mode {
-    --color-primary: #{$sp-color-primary};
-    --color-accent: #{$sp-color-accent-dark};
     --color-bg-outer: var(--color-bg-1);
     --color-bg-page-container: var(--color-bg-0);
     --color-bg-main-panel-header: var(--color-bg-0);
     --color-bg-main-panel-content: var(--color-bg-0);
     --color-bg-navbar-icon: inherit;
     --color-bg-navbar-icon-selected: inherit;
-    --color-bg-0: #121212;
-    --color-bg-1: #282828;
-    --color-bg-2: #404040;
-    --color-bg-3: #424242;
-    --color-bg-4: #5f5f5f;
     --color-bg-dialog: rgb(66, 66, 66);
     --color-shadow: #c4c4c4;
-    --color-pe: #404040;
+    --color-pe: #686868;
     --color-default-text: rgba(255, 255, 255, 0.87);
     --color-secondary-text: #aaa;
     --color-warn: #b36161;
 
     --color-tab-border: #cccccc;
 
-    --color-navigation-bg: var(--color-primary);
-    --color-navigation-link-text: var(--color-bg-0);
-    --color-navigation-text: #121212;
-    --color-navigation-selected: #{$sp-color-primary};
-    --color-navigation-hover: #{$sp-color-primary-600};
-    --color-navigation-bg-selected: var(--color-bg-1);
-    --color-navigation-divider: #{$sp-color-primary};
-
-    --content-box-color: #404040;
     --canvas-color: linear-gradient(
             90deg,
             rgba(50, 50, 50, 0.5) 10%,
             transparent 0%
         ),
         linear-gradient(rgba(50, 50, 50, 0.5) 10%, transparent 0%);
+
+    .pipeline-element-image {
+        filter: brightness(0.9) contrast(1.8) saturate(1.7);
+    }
 }
 
 .light-mode {
-    --color-primary: #{$sp-color-primary};
-    --color-accent: #{$sp-color-accent};
     --color-bg-outer: var(--color-bg-1);
     --color-bg-page-container: var(--color-bg-0);
     --color-bg-main-panel-header: var(--color-bg-0);
     --color-bg-main-panel-content: var(--color-bg-0);
     --color-bg-navbar-icon: inherit;
     --color-bg-navbar-icon-selected: inherit;
-    --color-bg-0: #ffffff;
-    --color-bg-1: #fafafa;
-    --color-bg-2: #f1f1f1;
-    --color-bg-3: rgb(224, 224, 224);
-    --color-bg-4: rgb(212, 212, 212);
     --color-bg-dialog: #ffffff;
     --color-shadow: #555;
     --color-pe: #ffffff;
@@ -116,15 +124,6 @@ body {
 
     --color-tab-border: #cccccc;
 
-    --color-navigation-bg: var(--color-primary);
-    --color-navigation-link-text: var(--color-bg-0);
-    --color-navigation-text: #ffffff;
-    --color-navigation-selected: #{$sp-color-primary};
-    --color-navigation-hover: #{$sp-color-primary-600};
-    --color-navigation-bg-selected: var(--color-bg-1);
-    --color-navigation-divider: var(--color-primary);
-
-    --content-box-color: rgb(156, 156, 156);
     --canvas-color: linear-gradient(
             90deg,
             rgba(208, 208, 208, 0.5) 10%,

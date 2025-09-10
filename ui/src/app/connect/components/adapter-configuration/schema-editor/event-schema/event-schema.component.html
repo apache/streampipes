@@ -127,14 +127,10 @@
 </div>
 
 <div fxLayoutAlign="end" class="mt-10">
-    <button class="mat-basic" mat-raised-button (click)="removeSelection()">
+    <button class="mat-basic" mat-flat-button (click)="removeSelection()">
         Cancel
     </button>
-    <button
-        class="mat-basic stepper-button"
-        mat-raised-button
-        (click)="goBack()"
-    >
+    <button class="mat-basic stepper-button" mat-flat-button (click)="goBack()">
         Back
     </button>
     <button
@@ -142,7 +138,7 @@
         id="event-schema-next-button"
         data-cy="sp-event-schema-next-button"
         color="accent"
-        mat-raised-button
+        mat-flat-button
         (click)="clickNext()"
         [disabled]="!validEventSchema"
     >

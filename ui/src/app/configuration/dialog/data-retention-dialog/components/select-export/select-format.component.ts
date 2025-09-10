@@ -27,8 +27,8 @@ import { RetentionTimeConfig } from '@streampipes/platform-services';
     standalone: false,
 })
 export class SelectDataExportComponent {
-    @Input() 
+    @Input()
     dataExplorerDataConfig: DataExplorerDataConfig;
-    @Input() 
+    @Input()
     dataRetentionConfig: RetentionTimeConfig;
 }

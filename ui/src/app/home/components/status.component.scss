@@ -19,12 +19,12 @@
 .status-container {
     height: 150px;
     width: 100%;
-    color: var(--color-primary);
+    color: var(--color-secondary);
     border-radius: 5px;
     margin-bottom: 20px;
     border: 2px solid var(--color-bg-2);
     background: var(--color-bg-2);
-    border-bottom: 5px solid var(--color-accent);
+    border-bottom: 5px solid var(--color-primary);
 }
 
 .status-container-number {
@@ -43,7 +43,7 @@
 
 .status-container-create-link {
     font-size: 12pt;
-    color: var(--color-accent);
+    color: var(--color-primary);
 }
 
 .status-container-create-link:hover {
@@ -52,5 +52,5 @@
 
 .status-container-icon {
     font-size: 50pt;
-    color: var(--color-bg-3);
+    color: var(--mat-sys-outline-variant);
 }

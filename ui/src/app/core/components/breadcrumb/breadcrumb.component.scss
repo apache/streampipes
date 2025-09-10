@@ -21,7 +21,7 @@
     max-height: 20px;
     height: 20px;
     font-size: 10pt;
-    color: var(--color-accent);
+    color: var(--color-primary);
 }
 
 .divider {
@@ -31,6 +31,6 @@
 }
 
 .bc-item:hover {
-    color: var(--color-primary);
+    color: var(--color-secondary);
     cursor: pointer;
 }

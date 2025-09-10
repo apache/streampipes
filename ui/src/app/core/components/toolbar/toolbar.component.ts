@@ -31,7 +31,7 @@ import { LoginService } from '../../../login/services/login.service';
 @Component({
     selector: 'sp-toolbar',
     templateUrl: './toolbar.component.html',
-    styleUrls: ['./toolbar.component.scss'],
+    styleUrls: ['./toolbar.component.scss', '../bars.scss'],
     standalone: false,
 })
 export class ToolbarComponent

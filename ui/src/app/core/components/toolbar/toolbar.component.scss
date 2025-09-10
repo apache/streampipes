@@ -20,6 +20,10 @@
     min-width: 500px;
 }
 
+.mat-mdc-icon-button {
+    height: 41px;
+}
+
 .current-user {
     color: var(--color-default-text);
     display: block;
@@ -64,4 +68,9 @@
 
 .user-email {
     font-size: 11pt;
+}
+
+::ng-deep .toolbar-menu {
+    background-color: var(--mat-sys-surface);
+    --mat-menu-item-icon-color: var(--mat-sys-on-surface);
 }

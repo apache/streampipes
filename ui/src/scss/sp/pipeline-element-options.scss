@@ -16,17 +16,15 @@
  *
  */
 
-@use '../_variables' as sp;
-
 .help-button-icon-stand {
     display: block;
     cursor: pointer;
     height: 20px;
     width: 20px;
     border-radius: 50%;
-    background-color: sp.$sp-color-accent;
+    background-color: var(--color-primary);
     color: rgba(255, 255, 255, 0.75);
-    box-shadow: 0 0 2px sp.$sp-color-accent;
+    box-shadow: 0 0 2px var(--color-primary);
     line-height: 1.2;
     text-align: center;
 }
@@ -60,16 +58,16 @@
 }
 
 .pe-info-action {
-    background: sp.$sp-color-sink;
+    background: var(--color-sink);
     color: white;
 }
 
 .pe-info-sepa {
-    background: sp.$sp-color-processor;
+    background: var(--color-processor);
     color: white;
 }
 
 .pe-info-stream {
-    background: sp.$sp-color-stream;
+    background: var(--color-stream);
     color: #343434;
 }

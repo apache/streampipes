@@ -18,13 +18,7 @@
 
 <div fxLayout="column">
     <div>
-        <button
-            mat-button
-            mat-raised-button
-            color="accent"
-            data-cy="add-new-user"
-            (click)="createUser()"
-        >
+        <button mat-flat-button data-cy="add-new-user" (click)="createUser()">
             <i class="material-icons">add</i><span>&nbsp;New User</span>
         </button>
     </div>
@@ -83,9 +77,8 @@
                         >
                             <div class="mr-15">
                                 <button
-                                    color="accent"
-                                    mat-button
-                                    mat-raised-button
+                                    mat-flat-button
+                                    class="mat-basic"
                                     matTooltip="Edit user"
                                     matTooltipPosition="above"
                                     data-cy="user-edit-btn"
@@ -96,9 +89,8 @@
                                 </button>
                             </div>
                             <button
-                                color="warn"
-                                mat-button
-                                mat-raised-button
+                                class="btn-warn"
+                                mat-flat-button
                                 matTooltip="Delete user"
                                 matTooltipPosition="above"
                                 [attr.data-cy]="

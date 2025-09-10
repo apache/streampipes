@@ -33,7 +33,7 @@
                         you need to store these values once.
                     </div>
                     <div class="subsection-title">App Name</div>
-                    <mat-form-field color="accent">
+                    <mat-form-field appearance="outline">
                         <input
                             formControlName="appName"
                             fxFlex
@@ -59,7 +59,11 @@
                                     </mat-button-toggle>
                                 </mat-button-toggle-group>
                             </div>
-                            <mat-form-field color="accent" class="ml-10">
+                            <mat-form-field
+                                color="accent"
+                                class="ml-10"
+                                subscriptSizing="dynamic"
+                            >
                                 <mat-label>Host</mat-label>
                                 <input
                                     formControlName="hostname"
@@ -69,7 +73,11 @@
                                     data-cy="general-config-hostname"
                                 />
                             </mat-form-field>
-                            <mat-form-field color="accent" class="ml-10">
+                            <mat-form-field
+                                color="accent"
+                                class="ml-10"
+                                subscriptSizing="dynamic"
+                            >
                                 <mat-label>Port</mat-label>
                                 <input
                                     formControlName="port"
@@ -139,9 +147,7 @@
                 <sp-split-section>
                     <div class="mt-10">
                         <button
-                            mat-button
-                            mat-raised-button
-                            color="accent"
+                            mat-flat-button
                             (click)="updateConfig()"
                             style="margin-right: 10px"
                             [disabled]="parentForm.invalid"

@@ -59,8 +59,8 @@
             >
                 <button
                     mat-button
-                    mat-raised-button
-                    color="warn"
+                    mat-flat-button
+                    class="btn-warn"
                     (click)="deleteAdapter(true)"
                     data-cy="delete-adapter-and-associated-pipelines-confirmation"
                 >
@@ -101,7 +101,7 @@
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     (click)="deleteAdapter(false)"
                     data-cy="delete-adapter-confirmation"
@@ -133,7 +133,7 @@
     <div class="sp-dialog-actions actions-align-right">
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             (click)="close(false)"
         >

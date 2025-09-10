@@ -97,7 +97,7 @@
         >
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 data-cy="data-explorer-select-data-set-next-btn"
                 [disabled]="
@@ -116,7 +116,7 @@
             <button
                 *ngIf="newWidgetMode && selectedIndex === 1"
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 class="mat-basic mr-10"
                 (click)="selectedIndex = 0"
                 style="margin-right: 10px"
@@ -125,7 +125,7 @@
             </button>
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 data-cy="data-explorer-select-data-set-create-btn"
                 *ngIf="newWidgetMode && selectedIndex === 1"

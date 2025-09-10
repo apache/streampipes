@@ -87,7 +87,8 @@ ui/src/assets/lib/apps/*
 ui/.angular
 
 # Template file for UI theming variables
-ui/src/scss/_variables.scss
+ui/src/scss/custom-theme/_custom-variables.scss
+ui/src/scss/custom-theme/_theme-colors.scss
 
 # compiled output
 ui/dist

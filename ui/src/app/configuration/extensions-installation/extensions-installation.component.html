@@ -31,7 +31,7 @@
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     [disabled]="selectedEndpointItems.length === 0"
                     (click)="installSelected()"
@@ -42,7 +42,7 @@
                 </button>
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     [disabled]="selectedEndpointItems.length === 0"
                     (click)="uninstallSelected()"

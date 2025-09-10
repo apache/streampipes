@@ -16,10 +16,11 @@
  *
  */
 
-@use '../_variables.scss' as sp;
+@use './variables' as spThemeVars;
+@use '../custom-theme/custom-variables' as customThemeVars;
 
 .shepherd-button {
-    background: sp.$sp-color-accent;
+    background: var(--color-primary);
     border: 0;
     border-radius: 3px;
     color: hsla(0, 0%, 100%, 0.75);
@@ -30,7 +31,7 @@
 }
 
 .shepherd-button:not(:disabled):hover {
-    background: sp.$sp-color-accent-light-blue;
+    background: var(--color-primary-alt);
     color: hsla(0, 0%, 100%, 0.75);
 }
 
@@ -106,7 +107,7 @@
 }
 
 .shepherd-has-title .shepherd-content .shepherd-header {
-    background: sp.$sp-color-accent;
+    background: var(--color-primary);
     padding: 1em;
 }
 

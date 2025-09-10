@@ -16,7 +16,7 @@
  *
  */
 
-@use '../variables';
+@use './variables';
 
 .sp-no-padding-dialog .mat-dialog-container {
     box-shadow:
@@ -49,7 +49,7 @@
 }
 
 .sp-no-padding-dialog .mat-dialog-container .md-dialog .md-toolbar {
-    background: var(--color-primary);
+    background: var(--color-secondary);
     color: white;
 }
 

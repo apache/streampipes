@@ -17,14 +17,13 @@
  */
 
 @use '@angular/material' as mat;
-@use '../_variables' as sp;
+@use './variables' as sp;
+@use '../custom-theme/custom-variables' as customThemeVars;
 @use 'sass:map';
+@use '../custom-theme/theme-colors' as mat3theme;
 
 @include mat.elevation-classes();
 @include mat.app-background();
-
-$dark-primary-text: rgba(black, 0.87);
-$light-primary-text: white;
 
 .nav-input {
     @include mat.input-density(-3);
@@ -34,249 +33,40 @@ $light-primary-text: white;
     @include mat.form-field-density(-2);
 }
 
-$mat-streampipes-primary: (
-    50: #ffebee,
-    100: #ffcdd2,
-    200: #72e879,
-    300: #49e750,
-    400: #49e750,
-    500: sp.$sp-color-primary,
-    600: #06c12a,
-    700: #01a51d,
-    800: #00841b,
-    900: #005818,
-    A100: #ff8a80,
-    A200: #ff5252,
-    A400: #ff1744,
-    A700: #d50000,
-    contrast: (
-        50: $dark-primary-text,
-        100: $dark-primary-text,
-        200: $dark-primary-text,
-        300: $dark-primary-text,
-        400: $dark-primary-text,
-        500: white,
-        600: white,
-        700: white,
-        800: $light-primary-text,
-        900: $light-primary-text,
-        A100: $dark-primary-text,
-        A200: white,
-        A400: white,
-        A700: white,
-    ),
-);
-
-$mat-streampipes-accent: (
-    50: #ffebee,
-    100: #ffcdd2,
-    200: #4e3c93,
-    300: #2a0c9a,
-    400: #395481,
-    500: sp.$sp-color-accent,
-    600: #0303a3,
-    700: #01016a,
-    800: #000039,
-    900: #00002b,
-    A100: #ff8a80,
-    A200: #ff5252,
-    A400: #ff1744,
-    A700: #d50000,
-    contrast: (
-        50: $dark-primary-text,
-        100: $dark-primary-text,
-        200: $dark-primary-text,
-        300: $dark-primary-text,
-        400: $dark-primary-text,
-        500: white,
-        600: white,
-        700: white,
-        800: $light-primary-text,
-        900: $light-primary-text,
-        A100: $dark-primary-text,
-        A200: white,
-        A400: white,
-        A700: white,
-    ),
-);
-
-$mat-streampipes-accent-dark: (
-    50: #ffebee,
-    100: #ffcdd2,
-    200: #4e3c93,
-    300: #2a0c9a,
-    400: #395481,
-    500: sp.$sp-color-accent-dark,
-    600: #0303a3,
-    700: #01016a,
-    800: #000039,
-    900: #00002b,
-    A100: #ff8a80,
-    A200: #ff5252,
-    A400: #ff1744,
-    A700: #d50000,
-    contrast: (
-        50: $dark-primary-text,
-        100: $dark-primary-text,
-        200: $dark-primary-text,
-        300: $dark-primary-text,
-        400: $dark-primary-text,
-        500: white,
-        600: white,
-        700: white,
-        800: $light-primary-text,
-        900: $light-primary-text,
-        A100: $dark-primary-text,
-        A200: white,
-        A400: white,
-        A700: white,
-    ),
-);
-
-$custom-theme-primary: mat.m2-define-palette($mat-streampipes-primary);
-$custom-theme-accent-dark: mat.m2-define-palette($mat-streampipes-accent-dark);
-$custom-theme-accent: mat.m2-define-palette($mat-streampipes-accent);
-$custom-theme-warn: mat.m2-define-palette(mat.$m2-red-palette);
-
-$custom-typography: mat.m2-define-typography-config(
-    $font-family: 'Roboto-Regular, Arial',
-);
-
-$custom-theme-light: mat.m2-define-light-theme(
-    (
-        color: (
-            primary: $custom-theme-primary,
-            accent: $custom-theme-accent,
-            warn: $custom-theme-warn,
+html {
+    color-scheme: light;
+    @include mat.theme(
+        (
+            color: mat3theme.$primary-palette,
+            tertiary: mat3theme.$tertiary-palette,
+            typography: 'Roboto-Regular, Arial',
+            density: -2,
         ),
-        typography: $custom-typography,
-        density: -1,
-    )
-);
+        $overrides: (
+            primary: light-dark(var(--color-primary), var(--color-primary-dark)),
+            secondary:
+                light-dark(var(--color-secondary), var(--color-secondary-dark)),
+            on-primary: light-dark(#ccc, #fff),
+            primary-container:
+                mat.get-theme-color(mat3theme.$palettes, primary, 95),
+            surface: light-dark(#ffffff, #000000),
+            surface-variant: light-dark(#eaeaea, #2a2a2a),
+            surface-container: light-dark(#f5f5f5, #161616),
+            surface-container-low: light-dark(#fafafa, #121212),
+            surface-container-high: light-dark(#eeeeee, #1c1c1c),
+            on-surface: light-dark(#1a1a1a, #e6e6e6),
+            on-surface-variant: light-dark(#5e5e5e, #b5b5b5),
+            surface-tint: transparent
+        )
+    );
 
-$custom-theme-dark: mat.m2-define-light-theme(
-    (
-        color: (
-            primary: $custom-theme-primary,
-            accent: $custom-theme-accent-dark,
-            warn: $custom-theme-warn,
-        ),
-        typography: $custom-typography,
-        density: -1,
-    )
-);
-
-$primary: map.get($custom-theme-light, primary);
-$accent-dark: map.get($custom-theme-dark, accent);
-$accent: map.get($custom-theme-light, accent);
-
-.small .mat-tab-label {
-    height: 24px;
-    padding: 0 12px;
-    cursor: pointer;
-    box-sizing: border-box;
-    opacity: 0.6;
-    min-width: 80px;
-    text-align: center;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
-    position: relative;
-}
-
-.small .mat-tab-label-content {
-    text-transform: none;
-    font-size: 11pt;
-}
-
-@include mat.all-component-themes($custom-theme-light);
-
-.dark-mode {
-    @include mat.all-component-colors($custom-theme-dark);
-
-    .base-style {
-        color: rgba(255, 255, 255, 0.87);
-        background: #121212;
-    }
-
-    .mat-button-toggle-checked {
-        background: var(--color-accent);
-        color: var(--color-bg-0);
-    }
-
-    .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
-        color: var(--color-bg-0);
-    }
-
-    .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-        line-height: 30px;
-    }
-
-    .mat-toolbar.mat-primary {
-        color: #121212;
-    }
-
-    .mat-tooltip.tooltip {
-        background-color: rgba(255, 255, 255, 0.87);
-        font-size: 12px;
-    }
-}
-
-.light-mode {
-    @include mat.all-component-colors($custom-theme-light);
-
-    .small-form-field-density {
-        @include mat.form-field-density(-3);
-    }
-
-    .base-style {
-        color: #121212;
-        background: #ffffff;
-    }
-
-    .mat-button-toggle-checked {
-        background: var(--color-accent);
-        color: var(--color-bg-0);
-    }
-
-    .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
-        color: var(--color-bg-0);
-    }
-
-    .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-        line-height: 30px;
-    }
-
-    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
-        background: var(--color-bg-0);
-        border: 1px solid var(--color-bg-3);
-    }
-
-    .mdc-text-field--filled:not(.mdc-text-field--disabled)
-        .mdc-line-ripple::before {
-        border-bottom-color: var(--color-bg-3);
-    }
-
-    .mat-mdc-form-field-focus-overlay {
-        background: var(--color-bg-3);
-    }
-
-    .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
-        transform: none;
-    }
-
-    .form-field-small {
-        .mdc-list-item__primary-text {
-            font-size: 14px;
-        }
-    }
-
-    .form-field-small-min-width {
-        min-width: 130px;
-
-        .mdc-list-item__primary-text {
-            font-size: 14px;
-        }
+    .dark-mode {
+        color-scheme: dark;
+        @include mat.theme-overrides(
+            $overrides: (
+                primary-container:
+                    mat.get-theme-color(mat3theme.$palettes, primary, 20),
+            )
+        );
     }
 }

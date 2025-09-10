@@ -77,7 +77,7 @@
                 </mat-form-field>
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     class="mat-basic"
                     (click)="removeFilesFromUpload()"
                 >
@@ -118,7 +118,7 @@
         <button
             *ngIf="this.duplicateFileNames.length === 0"
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             (click)="store()"
             [disabled]="fileNames.length === 0"
@@ -131,7 +131,7 @@
         <button
             *ngIf="this.duplicateFileNames.length !== 0"
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             (click)="renameDuplicateFiles()"
             [disabled]="fileNames.length === 0"
@@ -141,7 +141,7 @@
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             (click)="cancel()"
             style="margin-right: 10px"

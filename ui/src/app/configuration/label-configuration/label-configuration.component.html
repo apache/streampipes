@@ -25,7 +25,7 @@
             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     data-cy="new-label-button"
                     (click)="createLabelMode = true"
@@ -76,7 +76,7 @@
                         <button
                             mat-icon-button
                             matTooltip="Delete label"
-                            color="warn"
+                            class="btn-warn"
                             (click)="deleteLabel(label)"
                             data-cy="delete-label-button"
                         >

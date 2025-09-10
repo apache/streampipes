@@ -1,0 +1,49 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+// Custom variables that can be changed by project-external developers
+
+:root {
+    --color-primary: #1b1464;
+    --color-primary-dark: #83a3de;
+    --color-secondary: rgb(57, 181, 74);
+    --color-secondary-dark: #16cc39;
+
+    --color-loading-bar: var(--color-primary);
+    --color-primary-alt: rgb(59, 92, 149);
+
+    --color-navigation-bg: var(--color-secondary);
+    --color-navigation-link-text: var(--color-bg-0);
+
+    --color-navigation-selected: var(--color-secondary);
+    --color-navigation-hover: var(--color-secondary-dark);
+    --color-navigation-bg-selected: var(--color-bg-1);
+    --color-navigation-divider: var(--color-secondary);
+}
+
+.dark-mode {
+    --color-primary: var(--color-primary-dark);
+    --color-secondary: var(--color-secondary-dark);
+    --color-navigation-text: #121212;
+    --content-box-color: #404040;
+}
+
+.light-mode {
+    --color-navigation-text: #ffffff;
+    --content-box-color: rgb(156, 156, 156);
+}

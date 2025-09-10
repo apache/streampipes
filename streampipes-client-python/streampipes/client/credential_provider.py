@@ -30,6 +30,7 @@ from typing import Dict, Optional
 __all__ = [
     "CredentialProvider",
     "StreamPipesApiKeyCredentials",
+    "StreamPipesTokenCredentials",
 ]
 
 from typing_extensions import deprecated
@@ -211,3 +212,38 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
             "X-API-User": user,
             "X-API-Key": token,
         }
+
+
+class StreamPipesTokenCredentials(CredentialProvider):
+    """A credential provider that allows authentication via a JSON Web Token (JWT).
+
+    Parameters
+    ----------
+    jwt: str
+        The JSON Web Token to be used for authenticating API requests.
+        This token must include the required claims as issued by StreamPipes.
+    """
+
+    def __init__(self, jwt: str):
+        self.jwt = jwt
+
+    def update_token(self, jwt: str):
+        """Update the stored JWT token.
+
+        Parameters
+        ----------
+        jwt: str
+            The new JSON Web Token to replace the existing one.
+        """
+        self.jwt = jwt
+
+    @property
+    def _authentication_headers(self) -> Dict[str, str]:
+        """Provides the HTTP headers used for authentication with the JWT token.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the `Authorization` header with the JWT.
+        """
+        return {"Authorization": self.jwt}

@@ -16,8 +16,6 @@
  *
  */
 
-@use '../_variables' as sp;
-
 .note {
     float: left;
     display: block;
@@ -36,7 +34,7 @@
 }
 
 p.note h2 {
-    color: sp.$sp-color-accent;
+    color: var(--color-primary);
     font-size: 20px;
 }
 

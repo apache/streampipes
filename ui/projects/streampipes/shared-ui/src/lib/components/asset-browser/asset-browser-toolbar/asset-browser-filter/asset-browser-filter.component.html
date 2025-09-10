@@ -36,14 +36,10 @@
         </sp-asset-browser-filter-labels>
         <mat-divider></mat-divider>
         <div fxLayout="row" fxLayoutAlign="end center">
-            <button
-                mat-raised-button
-                class="mat-basic"
-                (click)="resetFilters()"
-            >
+            <button mat-flat-button class="mat-basic" (click)="resetFilters()">
                 {{ 'Reset filters' | translate }}
             </button>
-            <button mat-raised-button color="accent" (click)="applyFilters()">
+            <button mat-flat-button color="accent" (click)="applyFilters()">
                 {{ 'Apply' | translate }}
             </button>
         </div>

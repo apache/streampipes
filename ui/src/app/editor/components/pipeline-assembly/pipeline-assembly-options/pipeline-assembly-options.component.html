@@ -18,9 +18,7 @@
 
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
     <button
-        mat-button
-        mat-raised-button
-        color="accent"
+        mat-flat-button
         matTooltip="Save Pipeline"
         [matTooltipPosition]="'above'"
         [disabled]="!pipelineValidationService.pipelineValid"
@@ -35,8 +33,8 @@
     </button>
     <span class="assembly-options-divider"></span>
     <button
-        mat-button
-        color="accent"
+        mat-flat-button
+        class="mat-basic"
         matTooltip="Data Preview"
         matTooltipPosition="above"
         (click)="togglePreviewEmitter.emit()"
@@ -50,8 +48,8 @@
     </button>
     <span class="assembly-options-divider"></span>
     <button
-        mat-button
-        color="accent"
+        mat-flat-button
+        class="mat-basic"
         matTooltip="Auto Layout"
         [matTooltipPosition]="'above'"
         (click)="autoLayout()"
@@ -61,9 +59,9 @@
     </button>
     <span class="assembly-options-divider"></span>
     <button
-        color="accent"
-        mat-button
+        mat-flat-button
         matTooltip="Add pipeline element"
+        class="mat-basic mr-10"
         [matTooltipPosition]="'above'"
         (click)="openDiscoverDialog()"
         data-cy="sp-editor-add-pipeline-element"
@@ -72,8 +70,8 @@
         <span>&nbsp;Add element</span>
     </button>
     <button
-        color="accent"
-        mat-button
+        mat-flat-button
+        class="mat-basic"
         matTooltip="Add template"
         [matTooltipPosition]="'above'"
         (click)="openAddTemplateDialog()"
@@ -90,7 +88,6 @@
     </sp-pipeline-assembly-options-pipeline-cache>
     <span fxFlex></span>
     <button
-        color="accent"
         mat-icon-button
         matTooltip="Clear Assembly Area"
         [matTooltipPosition]="'above'"

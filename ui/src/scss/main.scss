@@ -32,7 +32,6 @@
 @use './sp/shepherd-new';
 
 @use './sp/main';
-@use './sp/buttons';
 @use './sp/spinner';
 @use './sp/forms';
 @use './sp/dialog';
@@ -42,7 +41,6 @@
 @use './sp/pipeline-validation';
 @use './sp/mat-tab';
 @use './sp/widgets.scss';
-@use './sp/progress-bar.scss';
 @use './sp/jsplumb';
 @use './sp/sp-dialog';
 @use './sp/status-light';
@@ -59,3 +57,8 @@
 @use 'codemirror/theme/dracula.css';
 @use 'codemirror/addon/hint/show-hint.css';
 @use 'codemirror/addon/lint/lint.css';
+
+// Mat 3 overrides
+
+@use './sp/buttons-mat3';
+@use './sp/forms-mat3';

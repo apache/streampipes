@@ -20,7 +20,7 @@
     <div>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             data-cy="new-user-group-btn"
             (click)="createGroup()"
@@ -68,9 +68,8 @@
                         >
                             <div class="mr-15">
                                 <button
-                                    color="accent"
-                                    mat-button
-                                    mat-raised-button
+                                    mat-flat-button
+                                    class="mat-basic"
                                     matTooltip="Edit user"
                                     matTooltipPosition="above"
                                     data-cy="service-edit-btn"
@@ -81,9 +80,8 @@
                                 </button>
                             </div>
                             <button
-                                color="warn"
-                                mat-button
-                                mat-raised-button
+                                class="btn-warn"
+                                mat-flat-button
                                 matTooltip="Delete service"
                                 matTooltipPosition="above"
                                 data-cy="service-delete-btn"

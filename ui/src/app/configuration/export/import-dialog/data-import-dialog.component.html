@@ -80,7 +80,7 @@
             <div fxLayout="row" fxLayoutAlign="start center">
                 <h4>Select resources to import</h4>
                 <button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     class="small-button ml-5"
                     (click)="toggleSelect(true)"
@@ -88,7 +88,7 @@
                     Select all
                 </button>
                 <button
-                    mat-raised-button
+                    mat-flat-button
                     class="small-button mat-basic"
                     (click)="toggleSelect(false)"
                 >
@@ -173,7 +173,7 @@
             <div fxLayout="row">
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     style="margin-right: 10px"
                     (click)="performPreview()"
@@ -185,7 +185,7 @@
                 </button>
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     style="margin-right: 10px"
                     *ngIf="currentImportStep === 1"
@@ -197,7 +197,7 @@
                 </button>
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     class="mat-basic"
                     style="margin-right: 10px"
                     (click)="back()"
@@ -207,7 +207,7 @@
                 </button>
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     class="mat-basic"
                     (click)="close()"
                 >

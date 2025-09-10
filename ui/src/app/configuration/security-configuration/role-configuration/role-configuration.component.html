@@ -20,7 +20,7 @@
     <div>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             (click)="createRole()"
         >
@@ -73,7 +73,7 @@
                             <div class="mr-15">
                                 <button
                                     color="accent"
-                                    mat-raised-button
+                                    mat-flat-button
                                     matTooltip="Edit user"
                                     matTooltipPosition="above"
                                     data-cy="role-edit-btn"
@@ -84,8 +84,8 @@
                                 </button>
                             </div>
                             <button
-                                color="warn"
-                                mat-raised-button
+                                class="btn-warn"
+                                mat-flat-button
                                 matTooltip="Delete service"
                                 matTooltipPosition="above"
                                 data-cy="role-delete-btn"

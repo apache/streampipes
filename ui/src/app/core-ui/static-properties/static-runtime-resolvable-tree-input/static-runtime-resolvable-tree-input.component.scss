@@ -58,12 +58,12 @@
 }
 
 .color-primary {
-    color: var(--color-primary);
+    color: var(--color-secondary);
 }
 
 .icon-button {
     cursor: pointer;
-    color: var(--color-accent);
+    color: var(--color-primary);
 }
 
 .node-metadata {

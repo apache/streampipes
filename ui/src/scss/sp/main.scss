@@ -16,7 +16,8 @@
  *
  */
 
-@use '../_variables' as sp;
+@use './variables' as spThemeVars;
+@use '../custom-theme/custom-variables' as customThemeVars;
 
 md-progress-linear.md-accent .md-container {
     background-color: rgb(168, 168, 168);
@@ -32,16 +33,16 @@ md-progress-linear.md-accent .md-container {
 
 body {
     overflow: auto;
-    background: #ffffff;
+    background: var(--mat-sys-surface);
 
     font-family: 'Roboto', 'Arial', sans-serif !important;
     height: auto !important;
     width: 100%;
 
-    --color-adapter: #{sp.$sp-color-adapter};
-    --color-stream: #{sp.$sp-color-stream};
-    --color-processor: #{sp.$sp-color-processor};
-    --color-sink: #{sp.$sp-color-sink};
+    --color-adapter: #{spThemeVars.$sp-color-adapter};
+    --color-stream: #{spThemeVars.$sp-color-stream};
+    --color-processor: #{spThemeVars.$sp-color-processor};
+    --color-sink: #{spThemeVars.$sp-color-sink};
     --color-tab-border: var(--color-bg-3);
 }
 
@@ -86,7 +87,7 @@ pre[class*='language-'] {
 }
 
 .mat-step-header .mat-step-icon {
-    background-color: sp.$sp-color-accent;
+    background-color: var(--color-primary);
 }
 
 .opened-nav {
@@ -96,7 +97,7 @@ pre[class*='language-'] {
 }
 
 md-toolbar:not(.md-menu-toolbar) {
-    background: var(--color-primary);
+    background: var(--color-secondary);
 }
 
 .md-list-item-text {
@@ -110,7 +111,7 @@ md-toolbar:not(.md-menu-toolbar) {
 .angular-notifications-icon {
     right: -7px !important;
     top: -7px !important;
-    background: sp.$sp-color-accent !important;
+    background: var(--color-primary) !important;
 }
 
 .speech-bubble {
@@ -191,7 +192,7 @@ md-content {
 
 .top-nav {
     height: 40px !important;
-    border-bottom: 0px solid sp.$sp-color-accent;
+    border-bottom: 0px solid var(--color-primary);
 }
 
 .angular-google-map-container {
@@ -201,7 +202,7 @@ md-content {
 .wizard-preview {
     height: 150px !important;
     width: 150px !important;
-    box-shadow: 0 0 2px sp.$sp-color-accent;
+    box-shadow: 0 0 2px var(--color-primary);
     display: inline-block;
     vertical-align: middle;
     background-color: white;
@@ -216,7 +217,7 @@ md-content {
 }
 
 .wizard-preview-selected {
-    border: 5px solid sp.$sp-color-accent;
+    border: 5px solid var(--color-primary);
 }
 
 .letter-circle {
@@ -285,11 +286,11 @@ md-content {
 .wizard-inactive {
     background-color: white !important;
     color: black !important;
-    border: 2px solid sp.$sp-color-accent !important;
+    border: 2px solid var(--color-primary) !important;
 }
 
 .popover {
-    border: 1px solid sp.$sp-color-accent;
+    border: 1px solid var(--color-primary);
     box-shadow: 0 0px 0px;
     -webkit-bow-shadow: none;
     border-radius: 0px;
@@ -297,11 +298,11 @@ md-content {
 }
 
 .arrow {
-    color: sp.$sp-color-accent;
+    color: var(--color-primary);
 }
 
 .popover-title {
-    background-color: sp.$sp-color-accent;
+    background-color: var(--color-primary);
     color: white;
     border-radius: 0px 0px 0 0;
 }
@@ -375,7 +376,7 @@ md-content {
     right: 16px;
     top: 25px;
     color: #ffffff;
-    background-color: sp.$sp-color-accent;
+    background-color: var(--color-primary);
     vertical-align: middle;
 }
 
@@ -440,39 +441,39 @@ md-content {
 }
 
 .adapter-label {
-    background: sp.$sp-color-adapter;
+    background: spThemeVars.$sp-color-adapter;
     color: white;
 }
 
 .stream-label {
-    background: sp.$sp-color-stream;
+    background: spThemeVars.$sp-color-stream;
     color: black;
 }
 
 .processor-label {
-    background: sp.$sp-color-processor;
+    background: spThemeVars.$sp-color-processor;
 }
 
 .sink-label {
-    background: sp.$sp-color-sink;
+    background: spThemeVars.$sp-color-sink;
 }
 
 .adapter {
     border-radius: 50%;
-    border: 2px solid sp.$sp-color-adapter;
+    border: 2px solid spThemeVars.$sp-color-adapter;
 }
 
 .stream {
     border-radius: 50%;
-    border: 2px solid sp.$sp-color-stream;
+    border: 2px solid spThemeVars.$sp-color-stream;
 }
 
 .action {
-    border: 2px solid sp.$sp-color-sink;
+    border: 2px solid spThemeVars.$sp-color-sink;
 }
 
 .sepa {
-    border: 2px solid sp.$sp-color-processor;
+    border: 2px solid spThemeVars.$sp-color-processor;
 }
 
 .draggable-img {
@@ -594,7 +595,7 @@ md-content {
     cursor: move;
     height: 150px !important;
     width: 150px !important;
-    box-shadow: 0 0 2px sp.$sp-color-accent;
+    box-shadow: 0 0 2px var(--color-primary);
     display: inline-block;
     vertical-align: middle;
     background-color: white;
@@ -764,7 +765,7 @@ textarea {
     margin-top: 3px;
     margin-bottom: 3px;
     background: #dfdfdf5e;
-    border-left: 1px solid sp.$sp-color-accent;
+    border-left: 1px solid var(--color-primary);
 }
 
 label {

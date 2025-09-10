@@ -21,8 +21,15 @@
     [showBackLink]="true"
     *ngIf="dashboardLoaded"
 >
-    <div nav fxFlex="100" class="ml-10">
+    <div
+        nav
+        fxFlex="100"
+        class="ml-10"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+    >
         <sp-dashboard-toolbar
+            fxFlex="100"
             [dashboard]="dashboard"
             [editMode]="editMode"
             [(viewMode)]="viewMode"

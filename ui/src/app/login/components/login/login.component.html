@@ -50,9 +50,7 @@
                 </div>
                 <div class="form-actions">
                     <button
-                        mat-button
-                        mat-raised-button
-                        color="accent"
+                        mat-flat-button
                         data-cy="login-button"
                         (click)="doLogin()"
                         [disabled]="!parentForm.valid || loading"
@@ -62,7 +60,6 @@
                     </button>
                     <mat-spinner
                         [mode]="'indeterminate'"
-                        color="accent"
                         [diameter]="20"
                         *ngIf="loading"
                         style="margin-top: 10px"
@@ -111,9 +108,7 @@
                             class="mt-10"
                         >
                             <button
-                                mat-button
-                                mat-raised-button
-                                color="accent"
+                                mat-flat-button
                                 data-cy="login-button"
                                 (click)="doOAuthLogin(provider.registrationId)"
                             >
