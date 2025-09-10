@@ -54,8 +54,6 @@ public class DataLakeScheduler {
             .getQueryManagement(this.dataExplorerSchemaManagement);
 
     private void exportMeasurement(DataLakeMeasure dataLakeMeasure, Instant now, long endDate) {
-        // Method body is empty; add functionality as needed
-        // Prepare Data for export
 
         if (System.getenv("SP_RETENTION_LOCAL_DIR") == null || System.getenv("SP_RETENTION_LOCAL_DIR").isEmpty()) {
             LOG.error("For Local Retention Storage, please configure the environment variable SP_RETENTION_LOCAL_DIR");
@@ -63,7 +61,7 @@ public class DataLakeScheduler {
 
         var outputFormat = OutputFormat
                 .fromString(dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().format());
-        // TODO auslagern
+
         Map<String, String> params = new HashMap<>();
 
         params.put("delimiter", dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().csvDelimiter());
@@ -73,10 +71,8 @@ public class DataLakeScheduler {
         params.put("missingValueBehaviour",
                 dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour());
         params.put("endDate", Long.toString(endDate));
-        // TODO vars
-        ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(dataLakeMeasure.getMeasureName(), params);// populate(m.getMeasureName(),
-        // params);
 
+        ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(dataLakeMeasure.getMeasureName(), params);
         StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
                 sanitizedParams,
                 outputFormat,
@@ -121,7 +117,8 @@ public class DataLakeScheduler {
         return result;
     }
 
-    @Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (6) 00:01 //@Scheduled(cron = "0 */2 * * * *") //Cron Job in Dev Setting; Running every 2 min
+    @Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (6) 00:01 //@Scheduled(cron = "0 */2 * * *
+                                     // *") //Cron Job in Dev Setting; Running every 2 min
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");
