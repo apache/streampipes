@@ -105,7 +105,7 @@ describe('Test Edit Adapter', () => {
             initialValue = value;
         });
 
-        cy.wait(2000);
+        cy.wait(5000);
 
         DataLakeBtns.refreshDataLakeMeasures().click();
 
