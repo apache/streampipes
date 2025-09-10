@@ -32,14 +32,9 @@
                 >
                 </sp-select-data>
             </div>
-
-            <div
-                *ngIf="
-                    retentionConfig?.dataRetentionConfig?.action?.includes(
-                        'SAVE'
-                    )
-                "
-            >
+            @if (
+                retentionConfig?.dataRetentionConfig?.action?.includes('SAVE')
+            ) {
                 <sp-data-export
                     [dataExplorerDataConfig]="
                         dataRetentionDialogModel.dataExplorerDataConfig
@@ -47,7 +42,7 @@
                     [dataRetentionConfig]="retentionConfig"
                 >
                 </sp-data-export>
-            </div>
+            }
         </div>
     </div>
     <mat-divider></mat-divider>

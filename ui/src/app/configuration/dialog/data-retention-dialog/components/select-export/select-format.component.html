@@ -49,10 +49,8 @@
             </mat-radio-group>
         </sp-configuration-box>
     </div>
-    <div
-        *ngIf="dataRetentionConfig.exportConfig.exportConfig.format === 'csv'"
-        class="mt-10"
-    >
+
+    @if (dataRetentionConfig.exportConfig.exportConfig.format === 'csv') {
         <sp-configuration-box [title]="'Delimiter' | translate">
             <mat-radio-group
                 [(ngModel)]="
@@ -74,7 +72,7 @@
                 </mat-radio-button>
             </mat-radio-group>
         </sp-configuration-box>
-    </div>
+    }
     <mat-form-field appearance="fill" class="sp-select-field">
         <mat-label>{{ 'Select Provider' | translate }}</mat-label>
         <mat-select
@@ -89,12 +87,4 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-
-    <div
-        *ngIf="
-            dataRetentionConfig.exportConfig.exportProviderSettings
-                .providerType === 'local'
-        "
-        class="mt-10"
-    ></div>
 </sp-configuration-box>
