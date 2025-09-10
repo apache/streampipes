@@ -166,7 +166,6 @@ export class DatalakeRestService {
     }
 
     buildDownloadRequest(index: string, queryParams: any) {
-        console.log('Query Params');
         console.log(queryParams);
         const url = this.dataLakeUrl + '/measurements/' + index + '/download';
         const request = new HttpRequest('GET', url, {
