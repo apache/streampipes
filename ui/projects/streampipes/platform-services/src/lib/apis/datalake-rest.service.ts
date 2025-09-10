@@ -140,7 +140,7 @@ export class DatalakeRestService {
                       ...formatConfig,
                       missingValueBehaviour,
                   };
-        console.log(queryParams);
+   
         return this.buildDownloadRequest(index, queryParams);
     }
 
