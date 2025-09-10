@@ -86,7 +86,7 @@ public class DataLakeScheduler {
 
             String providerType = exportProviderSettings.providerType();
 
-            LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR "));
+            LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
 
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
                     providerType, m.getMeasureName(), exportProviderSettings,
