@@ -79,8 +79,6 @@ export class DataExportService {
                 startTime,
                 endTime,
             );
-            console.log('Download Request');
-            console.log(downloadRequest);
         }
 
         downloadRequest.subscribe(event => {
