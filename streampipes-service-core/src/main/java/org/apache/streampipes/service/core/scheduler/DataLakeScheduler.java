@@ -86,7 +86,7 @@ public class DataLakeScheduler {
 
             String providerType = exportProviderSettings.providerType();
 
-            LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
+            LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR "));
 
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
                     providerType, m.getMeasureName(), exportProviderSettings,
@@ -101,7 +101,7 @@ public class DataLakeScheduler {
     public void deleteMeasurements(DataLakeMeasure m, Instant now, long endDate) {
 
         LOG.info("Current time in millis: " + now.toEpochMilli());
-        LOG.info("Current time in millis to delete: " + endDate);
+        LOG.info("Current time in millis to delete: " + endDate); 
 
         this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
     }
