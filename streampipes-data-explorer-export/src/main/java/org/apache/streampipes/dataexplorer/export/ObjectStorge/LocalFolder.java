@@ -20,6 +20,7 @@ package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,7 +41,7 @@ public class LocalFolder implements IObjectStorage {
     }
 
     @Override
-    public void store(StreamingResponseBody datastream) throws Exception {
+    public void store(StreamingResponseBody datastream) throws IOException {
         try (OutputStream outputStream = new FileOutputStream(filePath.toFile())) {
             datastream.writeTo(outputStream);
         }

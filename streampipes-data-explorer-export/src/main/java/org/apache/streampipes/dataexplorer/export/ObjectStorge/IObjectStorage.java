@@ -19,8 +19,8 @@ package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-public interface IObjectStorage {
+import java.io.IOException;
 
-    //TODO what exception
-    void store(StreamingResponseBody datastream) throws Exception;
+public interface IObjectStorage {
+    void store(StreamingResponseBody datastream) throws IOException;
 }
