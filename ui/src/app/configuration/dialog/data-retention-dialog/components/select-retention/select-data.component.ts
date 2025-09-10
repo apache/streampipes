@@ -18,7 +18,6 @@
 
 import { Component, Input } from '@angular/core';
 
-//import { DataRetentionConfig } from '../../model/data-retention-config.model';
 import { RetentionTimeConfig } from '@streampipes/platform-services';
 import { DataExplorerDataConfig } from '@streampipes/platform-services';
 
