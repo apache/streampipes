@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -19,24 +19,12 @@ package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
 import org.apache.streampipes.model.datalake.ExportProviderSettings;
 
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
 public class ExportProviderFactory {
-    public static IObjectStorage createExportProvider(String providerType, String measurementName, StreamingResponseBody streamingOutput, ExportProviderSettings settings, String format) throws Exception {
+    public static IObjectStorage createExportProvider(String providerType, String measurementName, ExportProviderSettings settings, String format) throws Exception {
         switch (providerType) {
             case "local":
-                return new LocalFolder(streamingOutput, measurementName, format);
-
-            //case "s3":
-            //    String s3Bucket = settings.get("bucketName");
-            //    String s3Key = settings.get("objectKey");
-            //    return new S3ExportProvider(streamingOutput, s3Bucket, s3Key);
-
-            //case "azure":
-            //   String azureContainer = settings.get("containerName");
-            //    String azureBlob = settings.get("blobName");
-            //    return new AzureBlobExportProvider(streamingOutput, azureContainer, azureBlob);
-
+                return new LocalFolder(measurementName, format);
+            //Additional Providers can be added here 
             default:
                 throw new IllegalArgumentException("Unsupported provider: " + providerType);
         }

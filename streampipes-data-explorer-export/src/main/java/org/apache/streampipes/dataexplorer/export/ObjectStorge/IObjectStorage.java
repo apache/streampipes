@@ -19,12 +19,8 @@ package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-public abstract class IObjectStorage {
-    protected StreamingResponseBody datastream;
+public interface IObjectStorage {
 
-    public IObjectStorage(StreamingResponseBody datastream) {
-        this.datastream = datastream;
-    }
-
-    public abstract void store() throws Exception;
+    //TODO what exception
+    void store(StreamingResponseBody datastream) throws Exception;
 }

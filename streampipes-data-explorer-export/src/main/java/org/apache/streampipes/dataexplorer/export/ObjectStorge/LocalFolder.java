@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -26,27 +26,24 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 
-public class LocalFolder extends IObjectStorage{
-    
- private final Path filePath;
+public class LocalFolder implements IObjectStorage {
 
-    public LocalFolder(StreamingResponseBody datastream, String measurementName, String format) throws Exception {
-        super(datastream);
+    private final Path filePath;
+
+    public LocalFolder(String measurementName, String format) throws Exception {
 
         Files.createDirectories(Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName));
 
-        this.filePath = Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName + "/dump_" + Instant.now().toString() + "." + format);
-
+        this.filePath = Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName + "/dump_"
+                + Instant.now().toString() + "." + format);
 
     }
 
     @Override
-    public void store() throws Exception {
+    public void store(StreamingResponseBody datastream) throws Exception {
         try (OutputStream outputStream = new FileOutputStream(filePath.toFile())) {
-            this.datastream.writeTo(outputStream);
+            datastream.writeTo(outputStream);
         }
     }
-
-
 
 }

@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Component
 public class DataLakeScheduler {
 
@@ -54,42 +53,45 @@ public class DataLakeScheduler {
             .getDataExplorerManager()
             .getQueryManagement(this.dataExplorerSchemaManagement);
 
+    // TODO Private, measurement, dataLakeMeasure
     public void exportMeasurements(DataLakeMeasure m, Instant now, long endDate) {
         // Method body is empty; add functionality as needed
-        //Prepare Data for export 
+        // Prepare Data for export
 
         if (System.getenv("SP_RETENTION_LOCAL_DIR") == null || System.getenv("SP_RETENTION_LOCAL_DIR").isEmpty()) {
-        LOG.error("For Local Retention Storage, please configure the environment variable SP_RETENTION_LOCAL_DIR");
-    }
+            LOG.error("For Local Retention Storage, please configure the environment variable SP_RETENTION_LOCAL_DIR");
+        }
 
         var outputFormat = OutputFormat.fromString(m.getRetentionTime().exportConfig().exportConfig().format());
+        //TODO auslagern
         Map<String, String> params = new HashMap<>();
-        
+
         params.put("delimiter", m.getRetentionTime().exportConfig().exportConfig().csvDelimiter());
         params.put("format", m.getRetentionTime().exportConfig().exportConfig().format());
         params.put("headerColumnName", m.getRetentionTime().exportConfig().exportConfig().headerColumnName());
         params.put("missingValueBehaviour", m.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour());
-        params.put("endDate",  Long.toString(endDate));
+        params.put("endDate", Long.toString(endDate));
+        //TODO vars 
+        ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(m.getMeasureName(), params);// populate(m.getMeasureName(),
+                                                                                                          // params);
 
-        ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(m.getMeasureName(), params);//populate(m.getMeasureName(), params);
-        
         StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
                 sanitizedParams,
                 outputFormat,
                 "ignore".equals(m.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour()),
-                output
-         );
-         try {
-            ExportProviderSettings exportProviderSettings = m.getRetentionTime().exportConfig().exportProviderSettings();
+                output);
+        try {
+            ExportProviderSettings exportProviderSettings = m.getRetentionTime().exportConfig()
+                    .exportProviderSettings();
 
-            String providerType =  exportProviderSettings.providerType();
+            String providerType = exportProviderSettings.providerType();
 
             LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
 
-        
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
-                providerType, m.getMeasureName(), streamingOutput, exportProviderSettings, m.getRetentionTime().exportConfig().exportConfig().format());
-            exportProvider.store();
+                    providerType, m.getMeasureName(), exportProviderSettings,
+                    m.getRetentionTime().exportConfig().exportConfig().format());
+            exportProvider.store(streamingOutput);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,37 +99,38 @@ public class DataLakeScheduler {
     }
 
     public void deleteMeasurements(DataLakeMeasure m, Instant now, long endDate) {
-       
-     
+
         LOG.info("Current time in millis: " + now.toEpochMilli());
         LOG.info("Current time in millis to delete: " + endDate);
 
         this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
     }
 
-    @Scheduled(cron = "0 1 0 * * 6")//@Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
+    @Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01 //@Scheduled(cron = "0 */2 * * * *") //Cron Job in Dev Setting; Running every 2 min
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");
         for (DataLakeMeasure m : allMeasurements) {
             LOG.info("Measurement " + m.getMeasureName());
             if (m.getRetentionTime() != null) {
-               
+                //TODO get start and end 
+
                 Instant now = Instant.now();
-                Instant daysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
+                Instant daysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(),
+                        ChronoUnit.DAYS);
 
                 long endDate = daysAgo.toEpochMilli();
 
-                if (m.getRetentionTime().dataRetentionConfig().action() != RetentionAction.DELETE){
-                LOG.info("Start saving Measurement " + m.getMeasureName());
-                exportMeasurements(m, now,endDate);
-                LOG.info("Measurements " + m.getMeasureName() + " successfully saved");
+                if (m.getRetentionTime().dataRetentionConfig().action() != RetentionAction.DELETE) {
+                    LOG.info("Start saving Measurement " + m.getMeasureName());
+                    exportMeasurements(m, now, endDate);
+                    LOG.info("Measurements " + m.getMeasureName() + " successfully saved");
                 }
-                if (m.getRetentionTime().dataRetentionConfig().action() != RetentionAction.SAVE){
-                LOG.info("Start delete Measurement " + m.getMeasureName());
-                deleteMeasurements(m,now, endDate);
-                LOG.info("Measurements " + m.getMeasureName() + " successfully deleted");
-            }
+                if (m.getRetentionTime().dataRetentionConfig().action() != RetentionAction.SAVE) {
+                    LOG.info("Start delete Measurement " + m.getMeasureName());
+                    deleteMeasurements(m, now, endDate);
+                    LOG.info("Measurements " + m.getMeasureName() + " successfully deleted");
+                }
             }
         }
     }
