@@ -105,16 +105,14 @@ describe('Test Edit Adapter', () => {
             initialValue = value;
         });
 
+        cy.wait(2000);
+
         DataLakeBtns.refreshDataLakeMeasures().click();
 
         DataLakeUtils.waitForCountingResults();
 
         DataLakeUtils.getDatalakeNumberOfEvents().then(newValue => {
-            // IMPORTANT: Currently we implemented a workaround by showing the user a warning message when the data type is changed.
-            // In the future, we need a migration mechanism to automatically change all the StreamPipes resources that are effected
-            // by the change. Once this is implemented the following line must be changed to .not.equal.
-            // The issue is tracked here: https://github.com/apache/streampipes/issues/2954
-            expect(newValue).equal(initialValue);
+            expect(newValue).not.equal(initialValue);
         });
     });
 });
