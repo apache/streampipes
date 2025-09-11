@@ -199,7 +199,7 @@ export class ConnectUtils {
 
         // Deselect auto start of adapter
         if (!adapterInput.startAdapter) {
-            ConnectBtns.startAdapterNowCheckbox().parent().click();
+            ConnectBtns.startAdapterNowCheckbox().click();
         }
 
         ConnectBtns.adapterSettingsStartAdapter().click();

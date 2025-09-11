@@ -34,7 +34,5 @@ describe('Creates a new adapter without starting it', () => {
         ConnectUtils.testAdapter(adapterInput);
 
         ConnectUtils.startAndValidateAdapter(7);
-
-        //ConnectUtils.deleteAdapter();
     });
 });
