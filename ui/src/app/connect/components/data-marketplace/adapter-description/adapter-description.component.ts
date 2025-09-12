@@ -35,6 +35,9 @@ export class AdapterDescriptionComponent implements OnInit {
     @Input()
     adapter: AdapterDescription;
 
+    @Output()
+    createEmitter = new EventEmitter<string>();
+
     isRunningAdapter = false;
     adapterLabel: string;
     iconUrl: SafeUrl;
