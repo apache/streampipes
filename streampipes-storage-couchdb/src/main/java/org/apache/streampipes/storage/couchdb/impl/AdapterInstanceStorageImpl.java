@@ -55,10 +55,7 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
   }
   @Override
 public List<AdapterDescription> findAll() {
-  LOG.info("GOING INTO FIND ALL ");
     List<AdapterDescription> adapters = findAll("paginator/non_design_docs");
-LOG.info(adapters.toString());
-    // Filter out any malformed or incomplete AdapterDescriptions
     return adapters.stream()
                    .filter(adapter -> adapter.getDescription() != null)
                    .toList();
