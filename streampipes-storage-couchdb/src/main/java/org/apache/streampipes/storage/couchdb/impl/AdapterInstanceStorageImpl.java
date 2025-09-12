@@ -21,11 +21,17 @@ package org.apache.streampipes.storage.couchdb.impl;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+
 public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
+
+   private static final Logger LOG = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class.getCanonicalName());
 
   public AdapterInstanceStorageImpl() {
     super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
@@ -46,5 +52,26 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         .stream()
         .filter(p -> p.getAppId().equals(appId))
         .toList();
+  }
+  @Override
+public List<AdapterDescription> findAll() {
+  LOG.info("GOING INTO FIND ALL ");
+    List<AdapterDescription> adapters = findAll("paginator/non_design_docs");
+LOG.info(adapters.toString());
+    // Filter out any malformed or incomplete AdapterDescriptions
+    return adapters.stream()
+                   .filter(adapter -> adapter.getDescription() != null)
+                   .toList();
+}
+  
+  public List<AdapterDescription> getAdapterPaginator(String startitem, int limit) {
+    //TODO Fix this implementation
+    List<AdapterDescription> pipelinesWithAdapter =
+        couchDbClientSupplier
+            .get()
+            .view("paginator")
+            .key(startitem)
+            .query(AdapterDescription.class);
+    return pipelinesWithAdapter;//.stream().map(p -> p.get("value").getAsString()).collect(Collectors.toList());
   }
 }
