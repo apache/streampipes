@@ -79,6 +79,7 @@ public class CouchDbInstallationStep extends InstallationStep {
     addNotificationView();
     addPipelineView();
     addDataLakeMeasureView();
+    addPaginatorView();
   }
 
   private void addNotificationView() {
@@ -125,7 +126,23 @@ public class CouchDbInstallationStep extends InstallationStep {
       logFailure(PREPARING_NOTIFICATIONS_TEXT, e);
     }
   }
+private void addPaginatorView(){
+  //TODO flexibilise ? 
+  DesignDocument paginatorDocument = prepareDocument("_design/paginator");
+  Map<String, MapReduce> paginatorViews = new HashMap<>();
 
+  MapReduce paginationFunction = new MapReduce();
+  paginationFunction.setMap("function (doc) {\n"
+      + "  if (doc.created_at) {\n"
+      + "    emit(doc.created_at, doc);\n"
+      + "  }\n"
+      + "}");
+
+  paginatorViews.put("by_created_at", paginationFunction);
+  paginatorDocument.setViews(paginatorViews);
+  // Configure here where the views go 
+  Utils.getCouchDbAdapterInstanceClient().design().synchronizeWithDb(paginatorDocument);
+  }
   private void addPipelineView() {
     DesignDocument pipelineDocument = prepareDocument("_design/adapters");
     DesignDocument allPipelinesDocument = prepareDocument("_design/pipelines");

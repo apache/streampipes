@@ -64,10 +64,7 @@ public class CouchDbViewGenerator {
         + "\"views\": {\n"
         + "\"appDocType\": {\n"
         + "\"map\": \"function (doc) {\\nif (doc._id) {\\nemit([doc.appDocType, doc._id], 1)\\n}\\n}\"\n"
-        + "},\n"
-        + "\"by_created_at\": {\n" 
-        + "\"map\": \"function (doc) {\\nif (doc.created_at) {\\nemit(doc.created_at, null);\\n}\\n}\"\n" 
-        + "}\n" 
+        + "}\n"
         + "},\n"
         + "\"language\": \"javascript\"\n"
         + "}";
