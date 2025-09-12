@@ -28,10 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-
 public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
 
-   private static final Logger LOG = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class.getCanonicalName());
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class.getCanonicalName());
 
   public AdapterInstanceStorageImpl() {
     super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
@@ -53,22 +52,24 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         .filter(p -> p.getAppId().equals(appId))
         .toList();
   }
+
   @Override
-public List<AdapterDescription> findAll() {
+  public List<AdapterDescription> findAll() {
     List<AdapterDescription> adapters = findAll("paginator/non_design_docs");
     return adapters.stream()
-                   .filter(adapter -> adapter.getDescription() != null)
-                   .toList();
-}
-  
-  public List<AdapterDescription> getAdapterPaginator(String startitem, int limit) {
-    //TODO Fix this implementation
-    List<AdapterDescription> pipelinesWithAdapter =
-        couchDbClientSupplier
-            .get()
-            .view("paginator")
-            .key(startitem)
-            .query(AdapterDescription.class);
-    return pipelinesWithAdapter;//.stream().map(p -> p.get("value").getAsString()).collect(Collectors.toList());
+        .filter(adapter -> adapter.getDescription() != null)
+        .toList();
+  }
+  @Override
+  public List<AdapterDescription> getAdapterPaginator(String startItem, int limit) {
+
+    return couchDbClientSupplier
+        .get()
+        .view("paginator/by_createdAt")
+        .includeDocs(true)
+        .limit(limit)
+        .startKey(startItem)
+        .descending(false)
+        .query(AdapterDescription.class);
   }
 }

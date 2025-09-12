@@ -126,23 +126,42 @@ public class CouchDbInstallationStep extends InstallationStep {
       logFailure(PREPARING_NOTIFICATIONS_TEXT, e);
     }
   }
-private void addPaginatorView(){
-  //TODO flexibilise ? 
-  DesignDocument paginatorDocument = prepareDocument("_design/paginator");
-  Map<String, MapReduce> paginatorViews = new HashMap<>();
+private void addPaginatorView() {
+    DesignDocument paginatorDocument = prepareDocument("_design/paginator");
 
-  MapReduce paginationFunction = new MapReduce();
-  paginationFunction.setMap("function (doc) {\n"
-      + "  if (doc.properties.createdAt) {\n"
-      + "    emit(doc.properties.createdAt, doc);\n"
-      + "  }\n"
-      + "}");
+    Map<String, MapReduce> paginatorViews = new HashMap<>();
 
-  paginatorViews.put("by_createdAt", paginationFunction);
-  paginatorDocument.setViews(paginatorViews);
-  // Configure here where the views go 
-  Utils.getCouchDbAdapterInstanceClient().design().synchronizeWithDb(paginatorDocument);
-  }
+    // View to paginate documents by creation time
+    MapReduce paginationFunction = new MapReduce();
+    paginationFunction.setMap(
+        "function (doc) {\n" 
+        + "  if (doc.properties && doc.properties.createdAt) {\n" 
+        + "    emit(doc.properties.createdAt, doc);\n" 
+        + "  }\n" 
+        + "}"
+    );
+
+    // View to list all non-design documents
+    MapReduce nonDesignDocsView = new MapReduce();
+    nonDesignDocsView.setMap(
+        "function (doc) {\n" 
+        + "  if (!doc._id.startsWith(\"_design/\")) {\n" 
+        + "    emit(doc._id, null);\n" 
+        + "  }\n" 
+        + "}"
+    );
+
+    // Add views to the document
+    paginatorViews.put("by_createdAt", paginationFunction);
+    paginatorViews.put("non_design_docs", nonDesignDocsView);
+
+    paginatorDocument.setViews(paginatorViews);
+
+    // Push the design document to CouchDB
+    Utils.getCouchDbAdapterInstanceClient()
+         .design()
+         .synchronizeWithDb(paginatorDocument);
+}
   private void addPipelineView() {
     DesignDocument pipelineDocument = prepareDocument("_design/adapters");
     DesignDocument allPipelinesDocument = prepareDocument("_design/pipelines");

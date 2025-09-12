@@ -59,4 +59,10 @@ public class AdapterDescriptionStorageImpl extends DefaultCrudStorage<AdapterDes
   private String getCurrentRev(String elementId) {
     return find(elementId).get().getRev();
   }
+
+  @Override
+  public List<AdapterDescription> getAdapterPaginator(String startitem, int limit) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getAdapterPaginator'");
+  }
 }

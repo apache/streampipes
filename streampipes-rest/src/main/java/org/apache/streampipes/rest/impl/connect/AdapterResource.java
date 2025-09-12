@@ -296,8 +296,20 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PreAuthorize("this.hasReadAuthority()")
   @PostFilter("hasPermission(filterObject.correspondingDataStreamElementId, 'READ')")
   public List<AdapterDescription> getAllAdapters() {
+    LOG.info("GET ALL ADAPTERS");
     return managementService.getAllAdapterInstances();
   }
+
+ @GetMapping(path = "/paginator", produces = MediaType.APPLICATION_JSON_VALUE)
+@PreAuthorize("this.hasReadAuthority()")
+@PostFilter("hasPermission(filterObject.correspondingDataStreamElementId, 'READ')")
+public List<AdapterDescription> getAllAdaptersPaginated(
+        @RequestParam(required = false) String startkey,
+        @RequestParam(defaultValue = "10") int limit) {
+    
+    LOG.info("GET Paginated ADAPTERS: startkey={}, limit={}", startkey, limit);
+    return managementService.getPaginatedAdapterInstances(startkey, limit);
+}
 
   private AdapterDescription getAdapterDescription(String elementId) throws AdapterException {
     return managementService.getAdapter(elementId);

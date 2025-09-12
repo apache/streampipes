@@ -145,6 +145,15 @@ public class AdapterMasterManagement {
     return adapterInstanceStorage.findAll();
   }
 
+  public List<AdapterDescription> getPaginatedAdapterInstances(String startkey, int limit){
+    return adapterInstanceStorage.getAdapterPaginator(startkey, limit);
+  }
+
+  //public List<AdapterDescription> getPagedAdapterInstances(String startKey, int limit) {
+  //  LOG.info("Get Paged");
+    //return adapterInstanceStorage.findAll();
+  //}
+
   public void stopStreamAdapter(String elementId,
                                 boolean forceStop) throws AdapterException {
     AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
