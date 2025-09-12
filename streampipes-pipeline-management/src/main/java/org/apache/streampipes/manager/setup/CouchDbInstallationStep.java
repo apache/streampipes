@@ -133,12 +133,12 @@ private void addPaginatorView(){
 
   MapReduce paginationFunction = new MapReduce();
   paginationFunction.setMap("function (doc) {\n"
-      + "  if (doc.created_at) {\n"
-      + "    emit(doc.created_at, doc);\n"
+      + "  if (doc.properties.createdAt) {\n"
+      + "    emit(doc.properties.createdAt, doc);\n"
       + "  }\n"
       + "}");
 
-  paginatorViews.put("by_created_at", paginationFunction);
+  paginatorViews.put("by_createdAt", paginationFunction);
   paginatorDocument.setViews(paginatorViews);
   // Configure here where the views go 
   Utils.getCouchDbAdapterInstanceClient().design().synchronizeWithDb(paginatorDocument);
