@@ -19,22 +19,21 @@
 .panel-outer {
     margin-top: 15px;
     margin-bottom: 15px;
-    border: 1px solid var(--color-bg-3);
 }
 
 .general-panel {
-    border: 0px solid var(--color-bg-3);
+    border: 1px solid var(--color-bg-2);
 }
 
 .general-panel-header {
     margin-top: -1px;
     background: var(--color-bg-2);
-    border-top: 1px solid var(--color-bg-3);
-    border-bottom: 1px solid var(--color-bg-3);
-    padding-left: 5px;
     height: 40px;
     min-height: 40px;
     max-height: 40px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 10px 12px;
 }
 
 .content-box-title {
