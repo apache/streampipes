@@ -67,9 +67,8 @@ public class AdapterMigration implements Migration {
     findDocsToMigrate(adapterInstanceClient, adapterInstanceUri, adaptersToMigrate);
     findDocsToMigrate(adapterDescriptionClient, adapterDescriptionUri, adapterDescriptionsToRemove);
 
-    return !adaptersToMigrate.isEmpty() || !adapterDescriptionsToRemove.isEmpty();
+   return !adaptersToMigrate.isEmpty() || !adapterDescriptionsToRemove.isEmpty();
   }
-
   private void findDocsToMigrate(CouchDbClient adapterClient,
                                  String uri,
                                  List<JsonObject> collector) {
@@ -78,6 +77,11 @@ public class AdapterMigration implements Migration {
       var rows = existingAdapters.get(ROWS);
       rows.getAsJsonArray().forEach(row -> {
         var doc = row.getAsJsonObject().get("doc").getAsJsonObject();
+         var id = doc.get("_id").getAsString();
+        // Skip design documents
+        if (id.startsWith("_design/")) {
+                return;
+            }
         var docType = doc.get("type").getAsString();
         if (AdapterModels.shouldMigrate(docType)) {
           collector.add(doc);
@@ -135,7 +139,7 @@ public class AdapterMigration implements Migration {
     return "Migrate all adapters to new data model";
   }
 
-  private String getAllDocsUri(CouchDbClient client) {
+   private String getAllDocsUri(CouchDbClient client) {
     return client.getDBUri().toString() + "_all_docs" + "?include_docs=true";
   }
 
