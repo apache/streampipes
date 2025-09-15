@@ -98,7 +98,7 @@ import { InputSchemaPropertyComponent } from './components/input-schema-panel/in
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { SpTablePaginationComponent } from './components/sp-table-pagination/sp-table-pagination.component';
+import { SpTablePaginationModule } from './components/sp-table-pagination/sp-table-pagination.module';
 
 @NgModule({
     declarations: [
@@ -150,7 +150,6 @@ import { SpTablePaginationComponent } from './components/sp-table-pagination/sp-
         InputSchemaPanelComponent,
         InputSchemaPropertyComponent,
         SortByRuntimeNamePipe,
-        SpTablePaginationComponent,
     ],
     imports: [
         CommonModule,
@@ -206,7 +205,6 @@ import { SpTablePaginationComponent } from './components/sp-table-pagination/sp-
         SpExceptionDetailsDialogComponent,
         SpLabelComponent,
         SpTableComponent,
-        SpTablePaginationComponent,
         SplitSectionComponent,
         SpWarningBoxComponent,
         CustomTimeRangeSelectionComponent,
@@ -219,6 +217,7 @@ import { SpTablePaginationComponent } from './components/sp-table-pagination/sp-
         PipelineElementComponent,
         InputSchemaPanelComponent,
         SidebarResizeComponent,
+        SpTablePaginationModule,
     ],
 })
 export class SharedUiModule {}
