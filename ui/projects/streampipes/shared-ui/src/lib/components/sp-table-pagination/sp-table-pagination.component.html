@@ -36,9 +36,11 @@
     <div fxFlex="100" fxLayoutAlign="end end" class="paginator-container">
         <mat-paginator
             #paginator
-            [pageSize]="20"
-            [hidePageSize]="true"
-            [showFirstLastButtons]="true"
-        ></mat-paginator>
+            [length]="totalItems"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 20]"
+            (page)="onPageChange($event)"
+        >
+        </mat-paginator>
     </div>
 </div>

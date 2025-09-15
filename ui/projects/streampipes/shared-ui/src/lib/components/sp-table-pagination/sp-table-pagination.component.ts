@@ -32,7 +32,7 @@ import {
     MatTable,
     MatTableDataSource,
 } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { AdapterService } from '@streampipes/platform-services';
 import { AdapterDescription } from '@streampipes/platform-services';
 
@@ -53,11 +53,16 @@ export class SpTablePaginationComponent implements AfterViewInit {
     @ViewChild(MatTable, { static: true }) table: MatTable<AdapterDescription>;
     @Input() columns: string[] = [];
 
-    //@ViewChild('paginator') paginator: MatPaginator;
+    @ViewChild('paginator') paginator: MatPaginator;
 
     dataSource = new MatTableDataSource<AdapterDescription>([]);
     pageSize = 20;
-    totalItems = 0; // Optional: Use if backend returns total count
+    totalItems = 1000000; // Optional: Use if backend returns total count
+    last_key = undefined;
+    currentPage = 0;
+
+    // Keep track of keys for pagination
+    startKeyMap: Map<number, number | null> = new Map();
 
     constructor(private adapterService: AdapterService) {
         console.log('[SpTablePagination] Constructor');
@@ -70,7 +75,13 @@ export class SpTablePaginationComponent implements AfterViewInit {
     ngAfterViewInit() {
         console.log('INIT');
         //this.paginator.page.subscribe(() => this.loadData());
-        this.loadData(); // Initial load
+        this.loadData(0); // Initial load
+    }
+
+    onPageChange(event: PageEvent) {
+        this.pageSize = event.pageSize;
+        this.currentPage = event.pageIndex;
+        this.loadData(this.currentPage);
     }
 
     ngAfterContentInit() {
@@ -83,25 +94,34 @@ export class SpTablePaginationComponent implements AfterViewInit {
         );
         this.table.setNoDataRow(this.noDataRow);
     }
-    loadData() {
+    loadData(pageIndex: number) {
         console.log('LOAD DATA');
         //const pageSize = this.paginator.pageSize;
         //const pageIndex = this.paginator.pageIndex;
 
         // NOTE: Replace with actual offset logic if needed (e.g., startkey)
-        const offset = undefined;
+        //const offset = undefined;
+        const startkey = this.startKeyMap.get(pageIndex) || null;
 
-        this.adapterService.getAdaptersPaginated(offset, 10).subscribe({
-            next: (data: AdapterDescription[]) => {
-                this.dataSource.data = data;
-                console.log(data);
-                // TODO: If your backend provides total item count, set it here
-                // this.totalItems = response.totalCount;
-                // this.paginator.length = this.totalItems;
-            },
-            error: err => {
-                console.error('Failed to fetch paginated data', err);
-            },
-        });
+        this.adapterService
+            .getAdaptersPaginated(startkey, this.pageSize + 1)
+            .subscribe({
+                next: (data: AdapterDescription[]) => {
+                    this.dataSource.data = data;
+                    console.log(data);
+                    this.last_key = data[data.length - 1].createdAt;
+                    console.log(this.last_key);
+
+                    if (data.length > this.pageSize) {
+                        const nextStartKey = data[this.pageSize - 1].createdAt;
+                        this.startKeyMap.set(pageIndex + 1, nextStartKey);
+                        console.log(this.startKeyMap);
+                        data = data.slice(0, this.pageSize); // Trim the extra item
+                    }
+                },
+                error: err => {
+                    console.error('Failed to fetch paginated data', err);
+                },
+            });
     }
 }
