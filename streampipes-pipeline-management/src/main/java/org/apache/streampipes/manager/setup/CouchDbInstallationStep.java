@@ -132,11 +132,31 @@ private void addPaginatorView() {
     Map<String, MapReduce> paginatorViews = new HashMap<>();
 
     // View to paginate documents by creation time
-    MapReduce paginationFunction = new MapReduce();
-    paginationFunction.setMap(
+    MapReduce paginationFunctionByCreate = new MapReduce();
+    paginationFunctionByCreate.setMap(
         "function (doc) {\n" 
         + "  if (doc.properties && doc.properties.createdAt) {\n" 
         + "    emit(doc.properties.createdAt, doc);\n" 
+        + "  }\n" 
+        + "}"
+    );
+
+    // View to paginate documents by name
+    MapReduce paginationFunctionByName = new MapReduce();
+    paginationFunctionByName.setMap(
+        "function (doc) {\n" 
+        + "  if (doc.properties && doc.properties.name) {\n" 
+        + "    emit(doc.properties.name, doc);\n" 
+        + "  }\n" 
+        + "}"
+    );
+
+    // View to paginate documents by running
+    MapReduce paginationFunctionByRunning = new MapReduce();
+    paginationFunctionByRunning.setMap(
+        "function (doc) {\n" 
+        + "  if (doc.properties && doc.properties.running) {\n" 
+        + "    emit(doc.properties.running, doc);\n" 
         + "  }\n" 
         + "}"
     );
@@ -152,7 +172,9 @@ private void addPaginatorView() {
     );
 
     // Add views to the document
-    paginatorViews.put("by_createdAt", paginationFunction);
+    paginatorViews.put("by_createdAt", paginationFunctionByCreate);
+    paginatorViews.put("by_name", paginationFunctionByName);
+    paginatorViews.put("by_running", paginationFunctionByRunning);
     paginatorViews.put("non_design_docs", nonDesignDocsView);
 
     paginatorDocument.setViews(paginatorViews);

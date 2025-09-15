@@ -77,7 +77,7 @@ public class AdapterMigration implements Migration {
       var rows = existingAdapters.get(ROWS);
       rows.getAsJsonArray().forEach(row -> {
         var doc = row.getAsJsonObject().get("doc").getAsJsonObject();
-         var id = doc.get("_id").getAsString();
+        var id = doc.get("_id").getAsString();
         // Skip design documents
         if (id.startsWith("_design/")) {
                 return;
@@ -139,7 +139,7 @@ public class AdapterMigration implements Migration {
     return "Migrate all adapters to new data model";
   }
 
-   private String getAllDocsUri(CouchDbClient client) {
+private String getAllDocsUri(CouchDbClient client) {
     return client.getDBUri().toString() + "_all_docs" + "?include_docs=true";
   }
 
