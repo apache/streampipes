@@ -18,17 +18,20 @@
 
 .adapter-description-box {
     height: 100%;
-    min-height: 260px;
-    border: 1px solid gray;
-    border-bottom: 5px solid gray;
-    background: var(--color-bg-dialog);
-    padding: 10px;
+    border: 1px solid var(--color-bg-2);
+    background: var(--color-bg-0);
     cursor: pointer;
+    border-radius: 5px;
 }
 
 .adapter-description-box:hover {
-    border-bottom: 5px solid var(--color-primary);
-    border-color: var(--color-primary);
+    border-color: var(--color-bg-3);
+    background: var(--color-bg-1);
+}
+
+.adapter-name {
+    font-size: var(--mat-sys-body-large-size);
+    margin-top: 10px;
 }
 
 .edit {
@@ -38,30 +41,31 @@
 .delete {
     cursor: pointer;
 }
+
 .type p {
     padding: 4px;
     margin: 0;
 }
+
 .iconImg {
     max-height: 50px;
     max-width: 80%;
 }
+
 .real-time {
     cursor: pointer;
     color: #ffeb3b;
 }
 
 .adapter-icon {
-    margin-left: 10px;
-    box-shadow:
-        rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-        rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    background: var(--color-bg-0);
+    border-right: 1px solid var(--color-bg-2);
     text-align: center;
     display: inline-block;
 }
 
 .icon {
-    max-width: 60px;
+    max-width: 70px;
 }
 
 .large-icon {

@@ -55,6 +55,7 @@ export class SpManageAssetLinksDialogComponent
     nameFunction = el => el.name;
     filenameFunction = el => el.filename;
     measureNameFunction = el => el.measureName;
+    widgetNameFunction = el => el.baseAppearanceConfig.widgetTitle;
 
     constructor(
         private dialogRef: DialogRef<SpManageAssetLinksDialogComponent>,
