@@ -20,12 +20,12 @@ import { Component, input } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'sp-basic-view',
-    templateUrl: './basic-view.component.html',
-    styleUrls: ['./basic-view.component.scss'],
+    selector: 'sp-basic-view-pagination',
+    templateUrl: './basic-view-pagination.component.html',
+    styleUrls: ['./basic-view-pagination.component.scss'],
     standalone: false,
 })
-export class SpBasicViewComponent {
+export class SpBasicViewPaginationComponent {
     padding = input<boolean>(false);
 
     showBackLink = input<boolean>(false);
