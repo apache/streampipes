@@ -305,10 +305,13 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
 @PostFilter("hasPermission(filterObject.correspondingDataStreamElementId, 'READ')")
 public List<AdapterDescription> getAllAdaptersPaginated(
         @RequestParam(required = false) String startkey,
-        @RequestParam(defaultValue = "10") int limit) {
+        @RequestParam(defaultValue = "10") int limit,
+        @RequestParam(defaultValue = "createdAt") String view,
+         @RequestParam(defaultValue = "false") boolean descending
+        ) {
     
-    LOG.info("GET Paginated ADAPTERS: startkey={}, limit={}", startkey, limit);
-    return managementService.getPaginatedAdapterInstances(startkey, limit);
+    LOG.info("GET Paginated ADAPTERS: startkey={}, limit={} view={} descending={}", startkey, limit, view, descending);
+    return managementService.getPaginatedAdapterInstances(startkey, limit, view,descending);
 }
 
   private AdapterDescription getAdapterDescription(String elementId) throws AdapterException {

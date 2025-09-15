@@ -28,5 +28,5 @@ public interface IAdapterStorage extends CRUDStorage<AdapterDescription> {
 
   List<AdapterDescription> getAdaptersByAppId(String appId);
 
-  List<AdapterDescription> getAdapterPaginator(String startitem, int limit);
+  List<AdapterDescription> getAdapterPaginator(String startitem, int limit, String view, boolean descending);
 }

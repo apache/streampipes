@@ -61,7 +61,7 @@ public class AdapterDescriptionStorageImpl extends DefaultCrudStorage<AdapterDes
   }
 
   @Override
-  public List<AdapterDescription> getAdapterPaginator(String startitem, int limit) {
+  public List<AdapterDescription> getAdapterPaginator(String startitem, int limit, String view, boolean descending) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'getAdapterPaginator'");
   }

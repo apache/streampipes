@@ -21,10 +21,10 @@ package org.apache.streampipes.storage.couchdb.impl;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -62,28 +62,32 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
   }
 
   @Override
-  public List<AdapterDescription> getAdapterPaginator(String startItem, int limit) {
+  public List<AdapterDescription> getAdapterPaginator(String startItem, int limit, String view, boolean descending) {
     long startItemLong = 0L; // default value
-    try {
-      startItemLong = Long.parseLong(startItem);
+    String uri = "paginator/by_" + view;
 
-    } catch (Exception e) {
-      return couchDbClientSupplier
-          .get()
-          .view("paginator/by_createdAt")
-          .includeDocs(true)
-          .limit(limit)
-          .descending(false)
-          .query(AdapterDescription.class);
+    if ("createdAt".equals(view)) {
+      try {
+        startItemLong = Long.parseLong(startItem);
 
+      } catch (NumberFormatException e) {
+        return couchDbClientSupplier
+            .get()
+            .view(uri)
+            .includeDocs(true)
+            .limit(limit)
+            .descending(descending)
+            .query(AdapterDescription.class);
+
+      }
     }
     return couchDbClientSupplier
         .get()
-        .view("paginator/by_createdAt")
+        .view(uri)
         .includeDocs(true)
         .limit(limit)
         .startKey(startItemLong)
-        .descending(false)
+        .descending(descending)
         .query(AdapterDescription.class);
   }
 }
