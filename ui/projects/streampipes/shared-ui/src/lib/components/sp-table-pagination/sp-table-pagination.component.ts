@@ -35,7 +35,7 @@ import {
 } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { AdapterService } from '@streampipes/platform-services';
-import { AdapterDescription } from '@streampipes/platform-services';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'sp-table-pagination',
@@ -43,24 +43,28 @@ import { AdapterDescription } from '@streampipes/platform-services';
     styleUrls: ['./sp-table-pagination.component.scss'],
     standalone: false,
 })
-export class SpTablePaginationComponent implements AfterViewInit {
+export class SpTablePaginationComponent<T> implements AfterViewInit {
     @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;
-    @ContentChildren(MatRowDef) rowDefs: QueryList<
-        MatRowDef<AdapterDescription>
-    >;
+    @ContentChildren(MatRowDef) rowDefs: QueryList<MatRowDef<T>>;
     @ContentChildren(MatColumnDef) columnDefs: QueryList<MatColumnDef>;
     @ContentChild(MatNoDataRow) noDataRow: MatNoDataRow;
 
-    @ViewChild(MatTable, { static: true }) table: MatTable<AdapterDescription>;
+    @ViewChild(MatTable, { static: true }) table: MatTable<T>;
     @Input() columns: string[] = [];
 
     @ViewChild('paginator') paginator: MatPaginator;
 
-    dataSource = new MatTableDataSource<AdapterDescription>([]);
+    @Input() fetchDataFn: (
+        startKey?: any,
+        pageSize?: number,
+    ) => Observable<T[]>;
+
+    dataSource = new MatTableDataSource<T>([]);
     pageSize = 20;
     totalItems = 1000000; // Optional: Use if backend returns total count
     last_key = undefined;
     currentPage = 0;
+    propertyName = 'createdAt';
 
     // Keep track of keys for pagination
     startKeyMap: Map<number, number | null> = new Map();
@@ -99,30 +103,28 @@ export class SpTablePaginationComponent implements AfterViewInit {
         console.log('LOAD DATA');
         const startkey = this.startKeyMap.get(pageIndex) || null;
 
-        this.adapterService
-            .getAdaptersPaginated(startkey, this.pageSize + 1)
-            .subscribe({
-                next: (data: AdapterDescription[]) => {
-                    if (data.length < this.pageSize) {
-                        this.dataSource.data = data;
-                    } else {
-                        const trimmedData = data.slice(0, this.pageSize);
-                        this.dataSource.data = trimmedData;
-                    }
-                    console.log(data);
-                    this.last_key = data[data.length - 1].createdAt;
-                    console.log(this.last_key);
+        this.fetchDataFn(startkey, this.pageSize + 1).subscribe({
+            next: (data: T[]) => {
+                if (data.length < this.pageSize) {
+                    this.dataSource.data = data;
+                } else {
+                    const trimmedData = data.slice(0, this.pageSize);
+                    this.dataSource.data = trimmedData;
+                }
+                console.log(data);
+                this.last_key = data[data.length - 1][this.propertyName];
+                console.log(this.last_key);
 
-                    if (data.length > this.pageSize) {
-                        const nextStartKey = data[this.pageSize].createdAt;
-                        this.startKeyMap.set(pageIndex + 1, nextStartKey);
-                        console.log(this.startKeyMap);
-                        data = data.slice(0, this.pageSize); // Trim the extra item
-                    }
-                },
-                error: err => {
-                    console.error('Failed to fetch paginated data', err);
-                },
-            });
+                if (data.length > this.pageSize) {
+                    const nextStartKey = data[this.pageSize][this.propertyName];
+                    this.startKeyMap.set(pageIndex + 1, nextStartKey);
+                    console.log(this.startKeyMap);
+                    data = data.slice(0, this.pageSize); // Trim the extra item
+                }
+            },
+            error: err => {
+                console.error('Failed to fetch paginated data', err);
+            },
+        });
     }
 }

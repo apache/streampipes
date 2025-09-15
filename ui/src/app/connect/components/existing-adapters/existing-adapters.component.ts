@@ -26,6 +26,7 @@ import {
     SpMetricsEntry,
 } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
+import { Observable } from 'rxjs';
 import {
     CurrentUserService,
     DialogRef,
@@ -318,4 +319,11 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.userSubscription?.unsubscribe();
         this.tutorialActiveSubscription?.unsubscribe();
     }
+
+    fetchAdapters = (
+        startKey?: number,
+        pageSize?: number,
+    ): Observable<AdapterDescription[]> => {
+        return this.adapterService.getAdaptersPaginated(startKey, pageSize);
+    };
 }
