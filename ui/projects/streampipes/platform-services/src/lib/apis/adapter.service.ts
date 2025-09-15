@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 import { Observable } from 'rxjs';
@@ -48,6 +48,18 @@ export class AdapterService {
         return this.requestAdapterDescriptions('/master/adapters');
     }
 
+    getAdaptersPaginated(
+        path: string,
+        startid: string | null,
+        limit: number,
+    ): Observable<AdapterDescription[]> {
+        return this.requestAdapterDescriptionsPaginated(
+            '/master/adapters/paginator',
+            startid,
+            limit,
+        );
+    }
+
     getAdapter(id: string): Observable<AdapterDescription> {
         return this.http
             .get(this.connectPath + `/master/adapters/${id}`)
@@ -62,6 +74,28 @@ export class AdapterService {
         return this.http.post<CompactAdapter>(
             this.connectPath + `/master/adapters/compact`,
             adapterDescription,
+        );
+    }
+
+    requestAdapterDescriptionsPaginated(
+        path: string,
+        startid: string | null,
+        limit: number,
+    ): Observable<AdapterDescription[]> {
+        let params = new HttpParams().set('limit', limit.toString());
+
+        if (startid) {
+            params = params.set('startkey', startid);
+        }
+
+        const url = `${this.connectPath}${path}`;
+
+        return this.http.get(url, { params }).pipe(
+            map(response => {
+                return (response as any[]).map(p =>
+                    AdapterDescription.fromData(p),
+                );
+            }),
         );
     }
 
