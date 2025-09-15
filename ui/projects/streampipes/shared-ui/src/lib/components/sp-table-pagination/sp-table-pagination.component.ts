@@ -18,6 +18,7 @@
 import {
     AfterViewInit,
     Component,
+    NgModule,
     Input,
     ViewChild,
     ContentChildren,
@@ -96,24 +97,24 @@ export class SpTablePaginationComponent implements AfterViewInit {
     }
     loadData(pageIndex: number) {
         console.log('LOAD DATA');
-        //const pageSize = this.paginator.pageSize;
-        //const pageIndex = this.paginator.pageIndex;
-
-        // NOTE: Replace with actual offset logic if needed (e.g., startkey)
-        //const offset = undefined;
         const startkey = this.startKeyMap.get(pageIndex) || null;
 
         this.adapterService
             .getAdaptersPaginated(startkey, this.pageSize + 1)
             .subscribe({
                 next: (data: AdapterDescription[]) => {
-                    this.dataSource.data = data;
+                    if (data.length < this.pageSize) {
+                        this.dataSource.data = data;
+                    } else {
+                        const trimmedData = data.slice(0, this.pageSize);
+                        this.dataSource.data = trimmedData;
+                    }
                     console.log(data);
                     this.last_key = data[data.length - 1].createdAt;
                     console.log(this.last_key);
 
                     if (data.length > this.pageSize) {
-                        const nextStartKey = data[this.pageSize - 1].createdAt;
+                        const nextStartKey = data[this.pageSize].createdAt;
                         this.startKeyMap.set(pageIndex + 1, nextStartKey);
                         console.log(this.startKeyMap);
                         data = data.slice(0, this.pageSize); // Trim the extra item
