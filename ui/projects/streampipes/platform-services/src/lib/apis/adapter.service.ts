@@ -49,8 +49,7 @@ export class AdapterService {
     }
 
     getAdaptersPaginated(
-        path: string,
-        startid: string | null,
+        startid: string | number | null,
         limit: number,
     ): Observable<AdapterDescription[]> {
         return this.requestAdapterDescriptionsPaginated(
@@ -79,7 +78,7 @@ export class AdapterService {
 
     requestAdapterDescriptionsPaginated(
         path: string,
-        startid: string | null,
+        startid: string | number | null,
         limit: number,
     ): Observable<AdapterDescription[]> {
         let params = new HttpParams().set('limit', limit.toString());

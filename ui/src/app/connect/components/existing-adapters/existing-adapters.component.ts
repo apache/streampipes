@@ -73,8 +73,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         'action',
     ];
 
-    dataSource: MatTableDataSource<AdapterDescription> =
-        new MatTableDataSource();
+    //dataSource: MatTableDataSource<AdapterDescription> =
+    //   new MatTableDataSource();
     isAdmin = false;
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
@@ -274,7 +274,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             this.operationInProgressAdapterId = undefined;
             this.getMonitoringInfos(adapters);
             setTimeout(() => {
-                this.dataSource.sort = this.sort;
+                //    this.dataSource.sort = this.sort;
             });
         });
     }
@@ -290,7 +290,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                     return elementIds.has(a.elementId);
                 }
             });
-        this.dataSource.data = this.filteredAdapters;
+        //this.dataSource.data = this.filteredAdapters;
     }
 
     startAdapterTutorial() {
@@ -305,9 +305,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     applyFilter(filter: AdapterFilterSettingsModel) {
         this.currentFilter = filter;
-        if (this.dataSource) {
-            this.applyAdapterFilters(this.currentFilterIds);
-        }
+        //if (this.dataSource) {
+        //    this.applyAdapterFilters(this.currentFilterIds);
+        //}
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterDescription): void {

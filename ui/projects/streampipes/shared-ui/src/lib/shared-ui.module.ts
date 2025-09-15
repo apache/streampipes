@@ -98,7 +98,7 @@ import { InputSchemaPropertyComponent } from './components/input-schema-panel/in
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { SpBasicViewPaginationComponent } from './components/basic-view-pagination/basic-view-pagination.component';
+import { SpTablePaginationComponent } from './components/sp-table-pagination/sp-table-pagination.component';
 
 @NgModule({
     declarations: [
@@ -122,7 +122,6 @@ import { SpBasicViewPaginationComponent } from './components/basic-view-paginati
         SpBasicInnerPanelComponent,
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
-        SpBasicViewPaginationComponent,
         SpBasicNavTabsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsComponent,
@@ -151,6 +150,7 @@ import { SpBasicViewPaginationComponent } from './components/basic-view-paginati
         InputSchemaPanelComponent,
         InputSchemaPropertyComponent,
         SortByRuntimeNamePipe,
+        SpTablePaginationComponent,
     ],
     imports: [
         CommonModule,
@@ -206,6 +206,7 @@ import { SpBasicViewPaginationComponent } from './components/basic-view-paginati
         SpExceptionDetailsDialogComponent,
         SpLabelComponent,
         SpTableComponent,
+        SpTablePaginationComponent,
         SplitSectionComponent,
         SpWarningBoxComponent,
         CustomTimeRangeSelectionComponent,
