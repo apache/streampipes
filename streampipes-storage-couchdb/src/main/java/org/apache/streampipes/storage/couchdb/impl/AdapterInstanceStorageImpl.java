@@ -60,15 +60,29 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         .filter(adapter -> adapter.getDescription() != null)
         .toList();
   }
+
   @Override
   public List<AdapterDescription> getAdapterPaginator(String startItem, int limit) {
+    long startItemLong = 0L; // default value
+    try {
+      startItemLong = Long.parseLong(startItem);
 
+    } catch (Exception e) {
+      return couchDbClientSupplier
+          .get()
+          .view("paginator/by_createdAt")
+          .includeDocs(true)
+          .limit(limit)
+          .descending(false)
+          .query(AdapterDescription.class);
+
+    }
     return couchDbClientSupplier
         .get()
         .view("paginator/by_createdAt")
         .includeDocs(true)
         .limit(limit)
-        .startKey(startItem)
+        .startKey(startItemLong)
         .descending(false)
         .query(AdapterDescription.class);
   }
