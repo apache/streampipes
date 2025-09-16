@@ -148,6 +148,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                         : nextStartKey;
                     this.startKeyMap.set(pageIndex + 1, nextStartKeyString);
                     data = data.slice(0, this.pageSize);
+                    this.dataSource.data = data;
                 }
             },
             error: err => {
