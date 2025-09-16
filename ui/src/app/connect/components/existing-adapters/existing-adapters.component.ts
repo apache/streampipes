@@ -330,6 +330,16 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.tutorialActiveSubscription?.unsubscribe();
     }
 
+    getViewForSort(sortActive: string | undefined): string {
+        const sortMap: { [key: string]: string } = {
+            lastModified: 'createdAt',
+            status: 'running',
+        };
+
+        // If the sortActive key exists in the map, return its value, otherwise return the original value.
+        return sortMap[sortActive ?? ''] || sortActive || '';
+    }
+
     fetchAdapters = (
         startKey?: number,
         pageSize?: number,

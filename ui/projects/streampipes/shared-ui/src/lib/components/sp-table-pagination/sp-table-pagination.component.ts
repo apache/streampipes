@@ -63,6 +63,8 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         pageSize?: number,
     ) => Observable<T[]>;
 
+    @Input() getViewFn: (sort: string) => string;
+
     dataSource = new MatTableDataSource<T>([]);
     pageSize = 20;
     totalItems = 1000000; // Optional: Use if backend returns total count
@@ -80,9 +82,9 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         if (changes['sort'] && this.sort && !this.sortInitialized) {
             this.sort.sortChange.subscribe((sortChange: Sort) => {
                 console.log('[Sort Changed]', sortChange);
-                this.propertyName = sortChange.active;
+                this.propertyName = this.getViewFn(sortChange.active);
                 this.resetPagination();
-                this.loadData(0);
+                //this.loadData(0);
             });
             this.sortInitialized = true;
         }
@@ -98,18 +100,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
 
     ngAfterViewInit() {
         console.log('INIT');
-
         this.loadData(0); // Initial load
-        console.log('Sorting', this.sort);
-        if (this.sort) {
-            this.sort.sortChange.subscribe((sortChange: Sort) => {
-                console.log('[Sort Changed]', sortChange);
-                this.propertyName = sortChange.active;
-                console.log('[Sort Change ]Property Name', this.propertyName);
-                this.resetPagination();
-                this.loadData(0);
-            });
-        }
     }
     resetPagination() {
         console.log('RESET Pagination');
@@ -117,7 +108,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         console.log(this.startKeyMap);
         this.currentPage = 0;
         this.last_key = null;
-        //this.paginator.firstPage();
+        this.paginator.firstPage();
         this.loadData(this.currentPage);
         this.isNextDisabled = false;
         this.totalItems = 1000000;
@@ -141,15 +132,14 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     loadData(pageIndex: number) {
         console.log('LOAD DATA');
         const startkey = this.startKeyMap.get(pageIndex) || null;
-        console.log(pageIndex);
-        console.log(startkey);
+        console.log('PageIndex', pageIndex);
+        console.log('StartKey', startkey);
 
         this.fetchDataFn(startkey, this.pageSize + 1).subscribe({
             next: (data: T[]) => {
                 console.log('PROPERTY KEY', this.propertyName);
                 if (data.length < this.pageSize) {
                     this.dataSource.data = data;
-                    //this.isNextDisabled=true;
                     this.totalItems = data.length + pageIndex * this.pageSize;
                 } else {
                     const trimmedData = data.slice(0, this.pageSize);

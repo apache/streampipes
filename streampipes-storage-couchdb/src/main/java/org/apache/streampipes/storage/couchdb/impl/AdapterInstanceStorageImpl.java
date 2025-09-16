@@ -66,11 +66,25 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     long startItemLong = 0L; // default value
     String uri = "paginator/by_" + view;
 
+    LOG.info(uri);
+
     if ("createdAt".equals(view)) {
       try {
+          LOG.info("PARSE LONG");
         startItemLong = Long.parseLong(startItem);
 
+        return couchDbClientSupplier
+        .get()
+        .view(uri)
+        .includeDocs(true)
+        .limit(limit)
+        .startKey(startItemLong)
+        .descending(descending)
+        .query(AdapterDescription.class);
+
+
       } catch (NumberFormatException e) {
+  LOG.info("Number format");
         return couchDbClientSupplier
             .get()
             .view(uri)
@@ -86,7 +100,7 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         .view(uri)
         .includeDocs(true)
         .limit(limit)
-        .startKey(startItemLong)
+        .startKey(startItem)
         .descending(descending)
         .query(AdapterDescription.class);
   }
