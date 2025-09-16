@@ -22,6 +22,8 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,35 +72,54 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     LOG.info(startItem);
     LOG.info("Is active: {}", descending);
 
-    if (startItem == null){
+    if (startItem == null) {
 
-       return couchDbClientSupplier
+      return couchDbClientSupplier
+          .get()
+          .view(uri)
+          .includeDocs(true)
+          .limit(limit)
+          .descending(descending)
+          .query(AdapterDescription.class);
+
+    }
+
+    if ("createdAt".equals(view)) {
+
+      LOG.info("PARSE LONG");
+      startItemLong = Long.parseLong(startItem);
+
+      return couchDbClientSupplier
+          .get()
+          .view(uri)
+          .includeDocs(true)
+          .limit(limit)
+          .startKey(startItemLong)
+          .descending(descending)
+          .query(AdapterDescription.class);
+    }
+
+    if (startItem.startsWith("[") && startItem.endsWith("]")) {
+      try {
+        // Assuming the startItem is a JSON array in string form, we will parse it
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object[] startKeyArray = objectMapper.readValue(startItem, Object[].class);
+
+        return couchDbClientSupplier
             .get()
             .view(uri)
             .includeDocs(true)
             .limit(limit)
+            .startKey(startKeyArray)
             .descending(descending)
             .query(AdapterDescription.class);
-
+      } catch (Exception e) {
+        LOG.error("Failed to parse startItem as JSON array", e);
+        throw new IllegalArgumentException("Invalid startItem format for compound key");
       }
-    
+    }
 
-    if ("createdAt".equals(view)) {
-   
-          LOG.info("PARSE LONG");
-        startItemLong = Long.parseLong(startItem);
-
-        return couchDbClientSupplier
-        .get()
-        .view(uri)
-        .includeDocs(true)
-        .limit(limit)
-        .startKey(startItemLong)
-        .descending(descending)
-        .query(AdapterDescription.class);
-      }
-    
-      LOG.info("Default return");
+    LOG.info("Default return");
 
     return couchDbClientSupplier
         .get()
