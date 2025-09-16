@@ -70,8 +70,21 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     LOG.info(startItem);
     LOG.info("Is active: {}", descending);
 
+    if (startItem == null){
+
+       return couchDbClientSupplier
+            .get()
+            .view(uri)
+            .includeDocs(true)
+            .limit(limit)
+            .descending(descending)
+            .query(AdapterDescription.class);
+
+      }
+    
+
     if ("createdAt".equals(view)) {
-      try {
+   
           LOG.info("PARSE LONG");
         startItemLong = Long.parseLong(startItem);
 
@@ -83,34 +96,16 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         .startKey(startItemLong)
         .descending(descending)
         .query(AdapterDescription.class);
-
-
-      } catch (NumberFormatException e) {
-  LOG.info("Number format");
-        return couchDbClientSupplier
-            .get()
-            .view(uri)
-            .includeDocs(true)
-            .limit(limit)
-            .descending(descending)
-            .query(AdapterDescription.class);
-
       }
-    }
+    
       LOG.info("Default return");
 
-    var request = couchDbClientSupplier
+    return couchDbClientSupplier
         .get()
         .view(uri)
         .includeDocs(true)
         .limit(limit)
         .startKey(startItem)
-        .descending(true);
-
-      LOG.info(request.toString());
-        //.query(AdapterDescription.class);
-      
-
-    return request.query(AdapterDescription.class);
+        .descending(descending).query(AdapterDescription.class);
   }
 }
