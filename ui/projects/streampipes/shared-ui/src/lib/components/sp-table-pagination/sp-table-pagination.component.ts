@@ -56,7 +56,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     @Input() columns: string[] = [];
 
     @ViewChild('paginator') paginator: MatPaginator;
-    //@ViewChild(MatSort) sort: MatSort;
+
     @Input() sort: MatSort;
     @Input() fetchDataFn: (
         startKey?: any,
@@ -67,13 +67,12 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
 
     dataSource = new MatTableDataSource<T>([]);
     pageSize = 20;
-    totalItems = 1000000; // Optional: Use if backend returns total count
+    totalItems = 1000000;
     last_key = undefined;
     currentPage = 0;
     propertyName = 'createdAt';
     isNextDisabled: boolean = false;
 
-    // Keep track of keys for pagination
     startKeyMap: Map<number, number | null> = new Map();
 
     private sortInitialized = false;
@@ -81,31 +80,20 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['sort'] && this.sort && !this.sortInitialized) {
             this.sort.sortChange.subscribe((sortChange: Sort) => {
-                console.log('[Sort Changed]', sortChange);
                 this.propertyName = this.getViewFn(sortChange.active);
                 this.resetPagination();
-                //this.loadData(0);
             });
             this.sortInitialized = true;
         }
     }
 
-    constructor(private adapterService: AdapterService) {
-        console.log('[SpTablePagination] Constructor');
-    }
-
-    ngOnInit() {
-        console.log('[SpTablePagination] ngOnInit');
-    }
+    constructor(private adapterService: AdapterService) {}
 
     ngAfterViewInit() {
-        console.log('INIT');
-        this.loadData(0); // Initial load
+        this.loadData(0);
     }
     resetPagination() {
-        console.log('RESET Pagination');
         this.startKeyMap.clear();
-        console.log(this.startKeyMap);
         this.currentPage = 0;
         this.last_key = null;
         this.paginator.firstPage();
@@ -130,16 +118,10 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         this.table.setNoDataRow(this.noDataRow);
     }
     loadData(pageIndex: number) {
-        console.log('LOAD DATA');
         const startkey = this.startKeyMap.get(pageIndex) || null;
-        console.log('PageIndex', pageIndex);
-        console.log('StartKey', startkey);
 
         this.fetchDataFn(startkey, this.pageSize + 1).subscribe({
             next: (data: T[]) => {
-                console.log('PROPERTY KEY', this.propertyName);
-
-                // Handle pagination logic based on the page size
                 if (data.length < this.pageSize) {
                     this.dataSource.data = data;
                     this.totalItems = data.length + pageIndex * this.pageSize;
@@ -149,16 +131,11 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                     this.totalItems = data.length + pageIndex * this.pageSize;
                 }
 
-                console.log(data);
-                // Get the last key for the current page
                 this.last_key = data[data.length - 1][this.propertyName];
-                console.log(this.last_key);
 
                 if (data.length > this.pageSize) {
-                    // Build the next start key for pagination
                     let nextStartKey;
 
-                    // If propertyName is an array, handle as a composite key
                     if (Array.isArray(this.propertyName)) {
                         nextStartKey = this.propertyName.map(
                             prop => data[this.pageSize][prop],
@@ -166,19 +143,10 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                     } else {
                         nextStartKey = data[this.pageSize][this.propertyName];
                     }
-
-                    // Convert the next start key to a string (if it's an array, stringify it)
                     const nextStartKeyString = Array.isArray(nextStartKey)
                         ? JSON.stringify(nextStartKey)
                         : nextStartKey;
-
-                    console.log('NEXT KEY AS ARRAY ?  ', nextStartKeyString);
-
-                    // Update the startKeyMap with the new start key for the next page
                     this.startKeyMap.set(pageIndex + 1, nextStartKeyString);
-                    console.log(this.startKeyMap);
-
-                    // Trim the extra item to maintain consistent page size
                     data = data.slice(0, this.pageSize);
                 }
             },
