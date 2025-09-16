@@ -155,9 +155,7 @@ private void addPaginatorView() {
     MapReduce paginationFunctionByRunning = new MapReduce();
     paginationFunctionByRunning.setMap(
         "function (doc) {\n" 
-        + "  if (doc.properties && doc.properties.running) {\n" 
-        + "    emit(doc.properties.running, doc);\n" 
-        + "  }\n" 
+        + "    emit(doc.properties.running  ? 1 : 0, doc);\n" 
         + "}"
     );
 
