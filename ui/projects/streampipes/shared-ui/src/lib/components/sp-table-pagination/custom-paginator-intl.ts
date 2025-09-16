@@ -30,7 +30,7 @@ export function getCustomPaginatorIntl(): MatPaginatorIntl {
         length: number,
     ) => {
         const start = page * pageSize + 1;
-        const end = Math.min((page + 1) * pageSize, length);
+        const end = Math.min((page + 1) * pageSize);
         return `Showing documents ${start} - ${end}`;
     };
 

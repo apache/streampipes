@@ -342,14 +342,17 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         if (this.sort?.active == 'lastModified') {
             view = 'createdAt';
         } else {
-            view = this.sort?.active;
+            if (this.sort?.active == 'status') {
+                view = 'running';
+            } else {
+                view = this.sort?.active;
+            }
         }
-
         return this.adapterService.getAdaptersPaginated(
             startKey,
             pageSize,
             view,
-            this.sort?.direction == 'desc',
+            this.sort?.direction != 'asc',
         );
     };
 }

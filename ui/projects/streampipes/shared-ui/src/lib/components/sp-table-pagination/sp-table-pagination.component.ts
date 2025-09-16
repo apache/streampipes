@@ -80,6 +80,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         if (changes['sort'] && this.sort && !this.sortInitialized) {
             this.sort.sortChange.subscribe((sortChange: Sort) => {
                 console.log('[Sort Changed]', sortChange);
+                this.propertyName = sortChange.active;
                 this.resetPagination();
                 this.loadData(0);
             });
@@ -103,16 +104,23 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         if (this.sort) {
             this.sort.sortChange.subscribe((sortChange: Sort) => {
                 console.log('[Sort Changed]', sortChange);
+                this.propertyName = sortChange.active;
+                console.log('[Sort Change ]Property Name', this.propertyName);
                 this.resetPagination();
                 this.loadData(0);
             });
         }
     }
     resetPagination() {
+        console.log('RESET Pagination');
         this.startKeyMap.clear();
+        console.log(this.startKeyMap);
         this.currentPage = 0;
         this.last_key = null;
-        this.paginator.firstPage();
+        //this.paginator.firstPage();
+        this.loadData(this.currentPage);
+        this.isNextDisabled = false;
+        this.totalItems = 1000000;
     }
     onPageChange(event: PageEvent) {
         this.pageSize = event.pageSize;
@@ -133,9 +141,12 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     loadData(pageIndex: number) {
         console.log('LOAD DATA');
         const startkey = this.startKeyMap.get(pageIndex) || null;
+        console.log(pageIndex);
+        console.log(startkey);
 
         this.fetchDataFn(startkey, this.pageSize + 1).subscribe({
             next: (data: T[]) => {
+                console.log('PROPERTY KEY', this.propertyName);
                 if (data.length < this.pageSize) {
                     this.dataSource.data = data;
                     //this.isNextDisabled=true;
