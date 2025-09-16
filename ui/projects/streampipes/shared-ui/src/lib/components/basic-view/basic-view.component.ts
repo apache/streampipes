@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -26,17 +26,21 @@ import { Router } from '@angular/router';
     standalone: false,
 })
 export class SpBasicViewComponent {
-    padding = input<boolean>(false);
+    @Input()
+    padding = false;
 
-    showBackLink = input<boolean>(false);
+    @Input()
+    showBackLink = false;
 
-    backLinkTarget = input<string[]>();
+    @Input()
+    backLinkTarget: string[];
 
-    hideNavbar = input<boolean>(false);
+    @Input()
+    hideNavbar = false;
 
     constructor(private router: Router) {}
 
     navigateBack() {
-        this.router.navigate(this.backLinkTarget());
+        this.router.navigate(this.backLinkTarget);
     }
 }
