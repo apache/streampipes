@@ -57,6 +57,7 @@ export class OpcUaUtils {
     }
 
     public static reloadTreeNodeSelection() {
+        cy.dataCy('reloading-nodes', { timeout: 10000 }).should('not.exist');
         cy.dataCy('reload-tree-node-selection-btn').click();
         cy.dataCy('reloading-nodes', { timeout: 10000 }).should('exist');
         cy.dataCy('reloading-nodes', { timeout: 10000 }).should('not.exist');
