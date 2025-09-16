@@ -103,6 +103,14 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
+        if (this.sort) {
+            this.sort.sort({
+                id: 'lastModified',
+                start: 'desc',
+                disableClear: false,
+            }); // default sort
+        }
+
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpConnectRoutes.BASE),
         );

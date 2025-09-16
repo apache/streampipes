@@ -24,6 +24,7 @@ import {
     ContentChildren,
     ContentChild,
     QueryList,
+    SimpleChanges,
 } from '@angular/core';
 import {
     MatColumnDef,
@@ -36,7 +37,7 @@ import {
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { AdapterService } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
-import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
     selector: 'sp-table-pagination',
@@ -51,14 +52,12 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     @ContentChild(MatNoDataRow) noDataRow: MatNoDataRow;
 
     @ViewChild(MatTable, { static: true }) table: MatTable<T>;
-    @ContentChild(MatSort) sort: MatSort;
-
-    @ContentChild(MatSortHeader) sort2: MatSortHeader;
 
     @Input() columns: string[] = [];
 
     @ViewChild('paginator') paginator: MatPaginator;
-
+    //@ViewChild(MatSort) sort: MatSort;
+    @Input() sort: MatSort;
     @Input() fetchDataFn: (
         startKey?: any,
         pageSize?: number,
@@ -74,6 +73,19 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     // Keep track of keys for pagination
     startKeyMap: Map<number, number | null> = new Map();
 
+    private sortInitialized = false;
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['sort'] && this.sort && !this.sortInitialized) {
+            this.sort.sortChange.subscribe((sortChange: Sort) => {
+                console.log('[Sort Changed]', sortChange);
+                this.resetPagination();
+                this.loadData(0);
+            });
+            this.sortInitialized = true;
+        }
+    }
+
     constructor(private adapterService: AdapterService) {
         console.log('[SpTablePagination] Constructor');
     }
@@ -84,27 +96,23 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
 
     ngAfterViewInit() {
         console.log('INIT');
-        //this.paginator.page.subscribe(() => this.loadData());
-        //this.loadData(0); // Initial load
-        //console.log('AFTER DATA LOAD')
+
+        this.loadData(0); // Initial load
+        console.log('Sorting', this.sort);
         if (this.sort) {
-            this.sort.sortChange.subscribe(sortEvent => {
-                console.log('Sort changed:', sortEvent);
-
-                // Set the property name based on the active column
-                this.propertyName = sortEvent.active;
-
-                // Optionally: Handle direction if your backend supports it
-                // You might want to use this.sort.direction somewhere too
-
-                // Reload data when sorting changes
+            this.sort.sortChange.subscribe((sortChange: Sort) => {
+                console.log('[Sort Changed]', sortChange);
+                this.resetPagination();
                 this.loadData(0);
             });
         }
-
-        this.loadData(0); // Initial load
     }
-
+    resetPagination() {
+        this.startKeyMap.clear();
+        this.currentPage = 0;
+        this.last_key = null;
+        this.paginator.firstPage();
+    }
     onPageChange(event: PageEvent) {
         this.pageSize = event.pageSize;
         this.currentPage = event.pageIndex;
@@ -120,9 +128,6 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
             this.table.addHeaderRowDef(headerRowDef),
         );
         this.table.setNoDataRow(this.noDataRow);
-
-        console.log('Sort received:', this.sort);
-        console.log('Sort received:', this.sort2);
     }
     loadData(pageIndex: number) {
         console.log('LOAD DATA');
