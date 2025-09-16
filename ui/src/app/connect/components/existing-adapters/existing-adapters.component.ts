@@ -25,7 +25,7 @@ import {
     SpLogMessage,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSortHeader } from '@angular/material/sort';
 import { Observable } from 'rxjs';
 import {
     CurrentUserService,
@@ -62,6 +62,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     @ViewChild(MatSort)
     sort: MatSort;
+
+    //@ViewChild('sortHeaderName') sortHeaderName: MatSortHeader;
 
     displayedColumns: string[] = [
         'status',
@@ -306,9 +308,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     applyFilter(filter: AdapterFilterSettingsModel) {
         this.currentFilter = filter;
-        //if (this.dataSource) {
-        //    this.applyAdapterFilters(this.currentFilterIds);
-        //}
+        //    if (this.dataSource) {
+        //        this.applyAdapterFilters(this.currentFilterIds);
+        //    }
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
@@ -324,6 +326,22 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         startKey?: number,
         pageSize?: number,
     ): Observable<AdapterDescription[]> => {
-        return this.adapterService.getAdaptersPaginated(startKey, pageSize);
+        console.log('FROM FETCH ADAPTER', this.sort);
+        console.log('FROM FETCH ADAPTER', this.sort?.active);
+        console.log('FROM FETCH ADAPTER', this.sort?.direction);
+        console.log(this.sort?.direction == 'desc');
+        let view = 'createdAt';
+        if (this.sort?.active == 'lastModified') {
+            view = 'createdAt';
+        } else {
+            view = this.sort?.active;
+        }
+
+        return this.adapterService.getAdaptersPaginated(
+            startKey,
+            pageSize,
+            view,
+            this.sort?.direction == 'desc',
+        );
     };
 }

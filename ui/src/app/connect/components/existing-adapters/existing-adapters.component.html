@@ -191,7 +191,9 @@
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="lastModified">
-                        <th mat-header-cell *matHeaderCellDef>Created</th>
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                            Created
+                        </th>
                         <td mat-cell *matCellDef="let adapter">
                             <h5>
                                 {{

@@ -28,6 +28,8 @@ import {
     Message,
     PipelineUpdateInfo,
 } from '../model/gen/streampipes-model';
+import { property } from 'cypress/types/lodash';
+import { descending } from 'd3-array';
 
 @Injectable({ providedIn: 'root' })
 export class AdapterService {
@@ -51,11 +53,15 @@ export class AdapterService {
     getAdaptersPaginated(
         startid: string | number | null,
         limit: number,
+        property: string = 'createdAt',
+        descending: boolean = false,
     ): Observable<AdapterDescription[]> {
         return this.requestAdapterDescriptionsPaginated(
             '/master/adapters/paginator',
             startid,
             limit,
+            property,
+            descending,
         );
     }
 
@@ -80,6 +86,8 @@ export class AdapterService {
         path: string,
         startid: string | number | null,
         limit: number,
+        property: string,
+        descending: boolean,
     ): Observable<AdapterDescription[]> {
         let params = new HttpParams().set('limit', limit.toString());
 
@@ -87,6 +95,9 @@ export class AdapterService {
             params = params.set('startkey', startid);
         }
 
+        params = params.set('view', property);
+        params = params.set('descending', descending);
+        console.log('params', params);
         const url = `${this.connectPath}${path}`;
 
         return this.http.get(url, { params }).pipe(
