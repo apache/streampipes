@@ -67,6 +67,8 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     String uri = "paginator/by_" + view;
 
     LOG.info(uri);
+    LOG.info(startItem);
+    LOG.info("Is active: {}", descending);
 
     if ("createdAt".equals(view)) {
       try {
@@ -95,13 +97,20 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
 
       }
     }
-    return couchDbClientSupplier
+      LOG.info("Default return");
+
+    var request = couchDbClientSupplier
         .get()
         .view(uri)
         .includeDocs(true)
         .limit(limit)
         .startKey(startItem)
-        .descending(descending)
-        .query(AdapterDescription.class);
+        .descending(true);
+
+      LOG.info(request.toString());
+        //.query(AdapterDescription.class);
+      
+
+    return request.query(AdapterDescription.class);
   }
 }
