@@ -343,10 +343,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         startKey?: number,
         pageSize?: number,
     ): Observable<AdapterDescription[]> => {
-        console.log('FROM FETCH ADAPTER', this.sort);
-        console.log('FROM FETCH ADAPTER', this.sort?.active);
-        console.log('FROM FETCH ADAPTER', this.sort?.direction);
-        console.log(this.sort?.direction == 'desc');
         let view = 'createdAt';
         if (this.sort?.active == 'lastModified') {
             view = 'createdAt';

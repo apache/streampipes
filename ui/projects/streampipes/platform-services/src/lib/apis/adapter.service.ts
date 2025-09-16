@@ -97,7 +97,6 @@ export class AdapterService {
 
         params = params.set('view', property);
         params = params.set('descending', descending);
-        console.log('params', params);
         const url = `${this.connectPath}${path}`;
 
         return this.http.get(url, { params }).pipe(
