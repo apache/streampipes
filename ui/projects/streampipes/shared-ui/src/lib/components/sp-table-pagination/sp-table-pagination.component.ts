@@ -69,6 +69,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     last_key = undefined;
     currentPage = 0;
     propertyName = 'createdAt';
+    isNextDisabled: boolean = false;
 
     // Keep track of keys for pagination
     startKeyMap: Map<number, number | null> = new Map();
@@ -137,9 +138,12 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
             next: (data: T[]) => {
                 if (data.length < this.pageSize) {
                     this.dataSource.data = data;
+                    //this.isNextDisabled=true;
+                    this.totalItems = data.length + pageIndex * this.pageSize;
                 } else {
                     const trimmedData = data.slice(0, this.pageSize);
                     this.dataSource.data = trimmedData;
+                    this.totalItems = data.length + pageIndex * this.pageSize;
                 }
                 console.log(data);
                 this.last_key = data[data.length - 1][this.propertyName];

@@ -24,7 +24,15 @@ export function getCustomPaginatorIntl(): MatPaginatorIntl {
     paginatorIntl.nextPageLabel = 'Next';
     paginatorIntl.previousPageLabel = 'Previous';
 
-    paginatorIntl.getRangeLabel = () => '';
+    paginatorIntl.getRangeLabel = (
+        page: number,
+        pageSize: number,
+        length: number,
+    ) => {
+        const start = page * pageSize + 1;
+        const end = Math.min((page + 1) * pageSize, length);
+        return `Showing documents ${start} - ${end}`;
+    };
 
     return paginatorIntl;
 }
