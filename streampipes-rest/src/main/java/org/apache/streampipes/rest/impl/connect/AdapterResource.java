@@ -297,10 +297,11 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PostFilter("hasPermission(filterObject.correspondingDataStreamElementId, 'READ')")
   public List<AdapterDescription> getAllAdaptersPaginated(
       @RequestParam(required = false) String startKey,
+      @RequestParam(required = false) String endKey,
       @RequestParam(defaultValue = "10") int limit,
       @RequestParam(defaultValue = "createdAt") String view,
       @RequestParam(defaultValue = "false") boolean descending) {
-    return managementService.getPaginatedAdapterInstances(startKey, limit, view, descending);
+    return managementService.getPaginatedAdapterInstances(startKey,endKey, limit, view, descending);
   }
 
   private AdapterDescription getAdapterDescription(String elementId) throws AdapterException {

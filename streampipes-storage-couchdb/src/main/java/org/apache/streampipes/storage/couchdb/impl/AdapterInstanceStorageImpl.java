@@ -24,11 +24,17 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class.getCanonicalName());
+
 
   public AdapterInstanceStorageImpl() {
     super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
@@ -60,7 +66,7 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
   }
 
   @Override
-public List<AdapterDescription> getAdapterPaginator(String startItem, int limit, String view, boolean descending) {
+public List<AdapterDescription> getAdapterPaginator(String startItem, String endItem, int limit, String view, boolean descending) {
     long startItemLong = 0L; // default value
     String uri = "paginator/by_" + view;
 
@@ -98,6 +104,13 @@ public List<AdapterDescription> getAdapterPaginator(String startItem, int limit,
         }
     } else {
         buildCall = buildCall.startKey(startItem);
+    }
+
+    if (endItem != null && !endItem.isEmpty()){
+
+      LOG.info("added end key");
+      LOG.info(endItem);
+      buildCall = buildCall.endKey(endItem);
     }
 
     return buildCall
