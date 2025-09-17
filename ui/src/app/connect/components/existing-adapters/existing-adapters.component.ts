@@ -299,6 +299,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {
+        // left in here for usage in Asset Browser
         this.currentFilterIds = elementIds;
         this.filteredAdapters = this.adapterFilter
             .transform(this.existingAdapters, this.currentFilter)
@@ -372,7 +373,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             .pipe(
                 tap(adapters => {
                     this.existingAdapters = adapters;
-                    this.applyAdapterFilters(this.currentFilterIds);
                     this.operationInProgressAdapterId = undefined;
                     this.getMonitoringInfos(adapters);
                 }),
