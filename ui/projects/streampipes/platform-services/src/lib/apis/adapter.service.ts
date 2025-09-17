@@ -92,7 +92,7 @@ export class AdapterService {
         let params = new HttpParams().set('limit', limit.toString());
 
         if (startid) {
-            params = params.set('startkey', startid);
+            params = params.set('startKey', startid);
         }
 
         params = params.set('view', property);
