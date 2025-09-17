@@ -72,11 +72,10 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   public AdapterResource() {
     super(() -> new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getAdapterInstanceStorage(),
+            .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-    ));
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics()));
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -99,7 +98,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return ok(Notifications.success(adapterId));
   }
 
-  @PostMapping(path = "compact", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+  @PostMapping(path = "compact", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
       MediaType.APPLICATION_JSON_VALUE,
       SpMediaType.YAML,
       SpMediaType.YML
@@ -124,36 +123,32 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return ok(Notifications.success(adapterDescription.getElementId()));
   }
 
-  @PutMapping(path = "pipeline-migration-preflight", consumes = MediaType.APPLICATION_JSON_VALUE,
-              produces = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "pipeline-migration-preflight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
-      @RequestBody AdapterDescription adapterDescription
-  ) {
+      @RequestBody AdapterDescription adapterDescription) {
     var updateManager = new AdapterUpdateManagement(managementService);
     var migrations = updateManager.checkPipelineMigrations(adapterDescription);
 
     return ok(migrations);
   }
 
-  @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  @GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML })
   @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getAdapter(
       @PathVariable("id") String elementId,
-      @RequestParam(value = "output",
-                    defaultValue = "full",
-                    required = false) String outputMode
-  ) {
+      @RequestParam(value = "output", defaultValue = "full", required = false) String outputMode) {
 
     try {
       var adapterDescription = getAdapterDescription(elementId);
 
-      // This check is done here because the adapter permission is checked based on the corresponding data stream
+      // This check is done here because the adapter permission is checked based on
+      // the corresponding data stream
       // and not based on the element id
       if (!checkAdapterReadPermission(adapterDescription)) {
         LOG.error("User is not allowed to read adapter {}", elementId);
         return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED)
-                             .build();
+            .build();
       }
 
       if (outputMode.equalsIgnoreCase("compact")) {
@@ -176,18 +171,17 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   private boolean checkAdapterReadPermission(AdapterDescription adapterDescription) {
     var spPermissionEvaluator = new SpPermissionEvaluator();
     var authentication = SecurityContextHolder.getContext()
-                                              .getAuthentication();
+        .getAuthentication();
     return spPermissionEvaluator.hasPermission(
         authentication,
         adapterDescription.getCorrespondingDataStreamElementId(),
-        "READ"
-    );
+        "READ");
   }
 
   @PostMapping(path = "/{id}/stop", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission('#elementId', 'WRITE')")
   public ResponseEntity<?> stopAdapter(@PathVariable("id") String elementId,
-                                       @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
+      @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
     try {
       managementService.stopStreamAdapter(elementId, forceStop);
       return ok(Notifications.success("Adapter stopped"));
@@ -213,12 +207,10 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PreAuthorize("this.hasWriteAuthority() and hasPermission('#elementId', 'WRITE')")
   public ResponseEntity<?> deleteAdapter(
       @PathVariable("id") String elementId,
-      @RequestParam(value = "deleteAssociatedPipelines", defaultValue = "false")
-      boolean deleteAssociatedPipelines
-  ) {
+      @RequestParam(value = "deleteAssociatedPipelines", defaultValue = "false") boolean deleteAssociatedPipelines) {
     List<String> pipelinesUsingAdapter = getPipelinesUsingAdapter(elementId);
     IPipelineStorage pipelineStorageAPI = StorageDispatcher.INSTANCE.getNoSqlStore()
-                                                                    .getPipelineStorageAPI();
+        .getPipelineStorageAPI();
 
     if (pipelinesUsingAdapter.isEmpty()) {
       try {
@@ -232,40 +224,40 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       List<String> namesOfPipelinesUsingAdapter = pipelinesUsingAdapter
           .stream()
           .map(pipelineId -> pipelineStorageAPI.getElementById(
-                                                   pipelineId)
-                                               .getName())
+              pipelineId)
+              .getName())
           .collect(Collectors.toList());
       return ResponseEntity.status(HttpStatus.SC_CONFLICT)
-                           .body(String.join(", ", namesOfPipelinesUsingAdapter));
+          .body(String.join(", ", namesOfPipelinesUsingAdapter));
     } else {
       PermissionResourceManager permissionResourceManager = new PermissionResourceManager();
-      // find out the names of pipelines that have an owner and the owner is not the current user
+      // find out the names of pipelines that have an owner and the owner is not the
+      // current user
       List<String> namesOfPipelinesNotOwnedByUser = pipelinesUsingAdapter
           .stream()
-          .filter(pipelineId ->
-                      !permissionResourceManager.findForObjectId(
-                                                    pipelineId)
-                                                .stream()
-                                                .findFirst()
-                                                .map(
-                                                    Permission::getOwnerSid)
-                                                // if a pipeline has no owner, pretend the owner
-                                                // is the user so the user can delete it
-                                                .orElse(
-                                                    this.getAuthenticatedUserSid())
-                                                .equals(
-                                                    this.getAuthenticatedUserSid()))
+          .filter(pipelineId -> !permissionResourceManager.findForObjectId(
+              pipelineId)
+              .stream()
+              .findFirst()
+              .map(
+                  Permission::getOwnerSid)
+              // if a pipeline has no owner, pretend the owner
+              // is the user so the user can delete it
+              .orElse(
+                  this.getAuthenticatedUserSid())
+              .equals(
+                  this.getAuthenticatedUserSid()))
           .map(pipelineId -> pipelineStorageAPI.getElementById(
-                                                   pipelineId)
-                                               .getName())
+              pipelineId)
+              .getName())
           .collect(Collectors.toList());
       boolean isAdmin = SecurityContextHolder.getContext()
-                                             .getAuthentication()
-                                             .getAuthorities()
-                                             .stream()
-                                             .anyMatch(r -> r.getAuthority()
-                                                             .equals(
-                                                                 DefaultRole.ROLE_ADMIN.name()));
+          .getAuthentication()
+          .getAuthorities()
+          .stream()
+          .anyMatch(r -> r.getAuthority()
+              .equals(
+                  DefaultRole.ROLE_ADMIN.name()));
       // if the user is admin or owns all pipelines using this adapter,
       // the user can delete all associated pipelines and this adapter
       if (isAdmin || namesOfPipelinesNotOwnedByUser.isEmpty()) {
@@ -276,18 +268,19 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
           }
           managementService.deleteAdapter(elementId);
           return ok(Notifications.success("Adapter with id: " + elementId
-                                              + " and all pipelines using the adapter are deleted."));
+              + " and all pipelines using the adapter are deleted."));
         } catch (Exception e) {
           LOG.error(
               "Error while deleting adapter with id "
-                  + elementId + " and all pipelines using the adapter", e
-          );
+                  + elementId + " and all pipelines using the adapter",
+              e);
           return ok(Notifications.error(e.getMessage()));
         }
       } else {
-        // otherwise, hint the user the names of pipelines using the adapter but not owned by the user
+        // otherwise, hint the user the names of pipelines using the adapter but not
+        // owned by the user
         return ResponseEntity.status(HttpStatus.SC_CONFLICT)
-                             .body(String.join(", ", namesOfPipelinesNotOwnedByUser));
+            .body(String.join(", ", namesOfPipelinesNotOwnedByUser));
       }
     }
   }
@@ -296,23 +289,19 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PreAuthorize("this.hasReadAuthority()")
   @PostFilter("hasPermission(filterObject.correspondingDataStreamElementId, 'READ')")
   public List<AdapterDescription> getAllAdapters() {
-    LOG.info("GET ALL ADAPTERS");
     return managementService.getAllAdapterInstances();
   }
 
- @GetMapping(path = "/paginator", produces = MediaType.APPLICATION_JSON_VALUE)
-@PreAuthorize("this.hasReadAuthority()")
-@PostFilter("hasPermission(filterObject.correspondingDataStreamElementId, 'READ')")
-public List<AdapterDescription> getAllAdaptersPaginated(
-        @RequestParam(required = false) String startkey,
-        @RequestParam(defaultValue = "10") int limit,
-        @RequestParam(defaultValue = "createdAt") String view,
-         @RequestParam(defaultValue = "false") boolean descending
-        ) {
-    
-    LOG.info("GET Paginated ADAPTERS: startkey={}, limit={} view={} descending={}", startkey, limit, view, descending);
-    return managementService.getPaginatedAdapterInstances(startkey, limit, view,descending);
-}
+  @GetMapping(path = "/paginator", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  @PostFilter("hasPermission(filterObject.correspondingDataStreamElementId, 'READ')")
+  public List<AdapterDescription> getAllAdaptersPaginated(
+      @RequestParam(required = false) String startKey,
+      @RequestParam(defaultValue = "10") int limit,
+      @RequestParam(defaultValue = "createdAt") String view,
+      @RequestParam(defaultValue = "false") boolean descending) {
+    return managementService.getPaginatedAdapterInstances(startKey, limit, view, descending);
+  }
 
   private AdapterDescription getAdapterDescription(String elementId) throws AdapterException {
     return managementService.getAdapter(elementId);
@@ -324,8 +313,8 @@ public List<AdapterDescription> getAllAdaptersPaginated(
 
   private List<String> getPipelinesUsingAdapter(String adapterId) {
     return StorageDispatcher.INSTANCE.getNoSqlStore()
-                                     .getPipelineStorageAPI()
-                                     .getPipelinesUsingAdapter(adapterId);
+        .getPipelineStorageAPI()
+        .getPipelinesUsingAdapter(adapterId);
   }
 
 }
