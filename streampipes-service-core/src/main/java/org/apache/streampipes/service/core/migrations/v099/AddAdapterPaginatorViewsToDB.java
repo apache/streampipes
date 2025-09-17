@@ -18,19 +18,21 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
+import org.apache.streampipes.service.core.migrations.Migration;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
+
+import org.lightcouch.CouchDbClient;
+import org.lightcouch.CouchDbException;
+import org.lightcouch.DesignDocument;
+import org.lightcouch.DesignDocument.MapReduce;
+import org.lightcouch.Document;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
-import org.lightcouch.DesignDocument;
-import org.lightcouch.DesignDocument.MapReduce;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbProperties;
-import org.lightcouch.CouchDbException;
-import org.lightcouch.Document;
+
 
 import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
 
@@ -38,12 +40,9 @@ public class AddAdapterPaginatorViewsToDB implements Migration {
 
     @Override
     public boolean shouldExecute() {
-        //Check weather Database exists 
-
+  
         CouchDbClient client = Utils.getCouchDbAdapterInstanceClient();
-
-        // Design document ID you want to check for
-        String designDocId = "_design/paginator";  // Design document ID
+        String designDocId = "_design/paginator";  
 
         // Check if the design document exists
         if (doesDesignDocumentExist(client, designDocId)) {
@@ -55,18 +54,15 @@ public class AddAdapterPaginatorViewsToDB implements Migration {
 
      public static boolean doesDesignDocumentExist(CouchDbClient client, String designDocId) {
         try {
-            // Try to fetch the design document
             Document doc = client.find(Document.class, designDocId);
-            return doc != null;  // If found, return true
+            return doc != null;  
         } catch (CouchDbException e) {
-            return false;  // Design document not found
+            return false; 
         }
     }
 
     @Override
     public void executeMigration() throws IOException {
-        // Add View if not exists
-
         //TODO CALL ORIGINAL CODE 
 
                 DesignDocument paginatorDocument = prepareDocument("_design/paginator");
