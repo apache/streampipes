@@ -24,15 +24,10 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
-
-  private static final Logger LOG = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class.getCanonicalName());
 
   public AdapterInstanceStorageImpl() {
     super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
@@ -67,11 +62,6 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
   public List<AdapterDescription> getAdapterPaginator(String startItem, int limit, String view, boolean descending) {
     long startItemLong = 0L; // default value
     String uri = "paginator/by_" + view;
-
-    LOG.info(uri);
-    LOG.info(startItem);
-    LOG.info("Is active: {}", descending);
-
     if (startItem == null) {
 
       return couchDbClientSupplier
@@ -114,12 +104,10 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
             .descending(descending)
             .query(AdapterDescription.class);
       } catch (Exception e) {
-        LOG.error("Failed to parse startItem as JSON array", e);
         throw new IllegalArgumentException("Invalid startItem format for compound key");
       }
     }
 
-    LOG.info("Default return");
 
     return couchDbClientSupplier
         .get()
