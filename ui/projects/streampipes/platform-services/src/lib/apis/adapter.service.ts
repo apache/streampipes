@@ -57,6 +57,10 @@ export class AdapterService {
         property: string = 'createdAt',
         descending: boolean = false,
     ): Observable<AdapterDescription[]> {
+        console.log('getAdaptersPaginated');
+        console.log('1', startid);
+        console.log('2', endid);
+        console.log('3', limit);
         return this.requestAdapterDescriptionsPaginated(
             '/master/adapters/paginator',
             startid,
@@ -87,20 +91,30 @@ export class AdapterService {
     requestAdapterDescriptionsPaginated(
         path: string,
         startid: string | number | null,
+        endid: string | number | null,
         limit: number,
         property: string,
         descending: boolean,
     ): Observable<AdapterDescription[]> {
+        console.log('Start');
+        console.log(limit);
         let params = new HttpParams().set('limit', limit.toString());
+        console.log('Start1');
 
         if (startid) {
             params = params.set('startKey', startid);
         }
-
+        console.log('Start2');
+        if (endid) {
+            params = params.set('endKey', endid);
+        }
+        console.log('Start3');
         params = params.set('view', property);
         params = params.set('descending', descending);
-        const url = `${this.connectPath}${path}`;
 
+        console.log(params);
+        const url = `${this.connectPath}${path}`;
+        console.log('Call');
         return this.http.get(url, { params }).pipe(
             map(response => {
                 return (response as any[]).map(p =>
