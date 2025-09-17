@@ -58,12 +58,15 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     @ViewChild('paginator') paginator: MatPaginator;
 
     @Input() sort: MatSort;
+    //Necessary if other refreshs than based on sort are crucial
     @Input() refresh: BehaviorSubject<boolean>;
+
     @Input() fetchDataFn: (
         startKey?: any,
         pageSize?: number,
     ) => Observable<T[]>;
-
+    // This is necessary in case the element names in the HTML and the keys used for sorting follow different naming conventions or are composite keys. (E.g., created in HTML and the database key is createdAt)
+    // Provide the information as sortmap
     @Input() getViewFn: (sort: string) => string;
 
     dataSource = new MatTableDataSource<T>([]);
@@ -93,8 +96,6 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
             });
         }
     }
-
-    constructor(private adapterService: AdapterService) {}
 
     ngAfterViewInit() {
         this.loadData(0);
