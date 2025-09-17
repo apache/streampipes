@@ -52,6 +52,7 @@ export class AdapterService {
 
     getAdaptersPaginated(
         startid: string | number | null,
+        endid: string | number | null,
         limit: number,
         property: string = 'createdAt',
         descending: boolean = false,
@@ -59,6 +60,7 @@ export class AdapterService {
         return this.requestAdapterDescriptionsPaginated(
             '/master/adapters/paginator',
             startid,
+            endid,
             limit,
             property,
             descending,

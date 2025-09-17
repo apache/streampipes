@@ -346,12 +346,14 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     fetchAdapters = (
         startKey?: number,
+        endKey?: number,
         pageSize?: number,
     ): Observable<AdapterDescription[]> => {
         const sortBy = this.getSortView();
         return this.adapterService
             .getAdaptersPaginated(
                 startKey,
+                endKey,
                 pageSize,
                 sortBy,
                 this.sort?.direction !== 'asc',
