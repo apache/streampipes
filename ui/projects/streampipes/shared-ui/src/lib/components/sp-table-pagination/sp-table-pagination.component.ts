@@ -102,6 +102,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
             this.filter.subscribe(() => {
                 console.log('NEW FIlter Value', this.filter.value);
                 this.filtering = this.filter.value;
+                this.resetPagination();
                 this.loadData(0);
             });
         }

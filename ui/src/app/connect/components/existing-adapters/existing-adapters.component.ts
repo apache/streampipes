@@ -84,7 +84,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     isAdmin = false;
     refreshSwitch = new BehaviorSubject<boolean>(false);
-    filter = new BehaviorSubject<string>('');
+    filter = new BehaviorSubject<{ text: string; category: string }>({
+        text: '',
+        category: '',
+    });
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
     tutorialActive = false;
@@ -324,7 +327,43 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     applyFilter(filtering: AdapterFilterSettingsModel) {
-        this.filter.next(filtering.textFilter);
+        console.log(filtering);
+        if (filtering.textFilter != '') {
+            this.filter.next({ text: filtering.textFilter, category: '' });
+        }
+        if (
+            filtering.selectedCategory != '' &&
+            filtering.selectedCategory != 'All'
+        ) {
+            this.filter.next({
+                text: '',
+                category: filtering.selectedCategory,
+            });
+        }
+
+        if (filtering.selectedCategory == 'All' && filtering.textFilter == '') {
+            this.filter.next({ text: '', category: '' });
+        }
+    }
+
+    getEndKeyFromFilter(): { endKey: string | null; sortby: string } {
+        let endKey: string | null = null;
+        let sortBy: string;
+        if (this.filter.value.text != '') {
+            endKey = this.filter.value.text;
+            sortBy = 'name';
+        } else {
+            if (
+                this.filter.value.category != '' &&
+                this.filter.value.category != 'All'
+            ) {
+                endKey = '[[' + this.filter.value.category + '],';
+                sortBy = 'category';
+            }
+        }
+
+        console.log('FROM FILTERING', endKey);
+        return { endKey: endKey, sortby: sortBy };
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
@@ -351,16 +390,19 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         pageSize?: number,
     ): Observable<AdapterDescription[]> => {
         let sortBy = this.getSortView();
+        const filterkeys = this.getEndKeyFromFilter();
 
-        let endKey: string | null =
-            this.filter.value !== '' ? this.filter.value : null;
-        if (endKey) {
-            startKey = endKey;
-            endKey = endKey + '\ufff0';
-            sortBy = 'name';
+        let endKey: string | null = null;
+
+        if (filterkeys.endKey) {
+            startKey = filterkeys.endKey;
+            endKey = filterkeys.endKey + '\ufff0';
+            sortBy = filterkeys.sortby;
         }
 
         console.log('EndKey Fetch Adapter', endKey);
+        console.log('EndKey Fetch Adapter', startKey);
+        console.log('EndKey Fetch Adapter', sortBy);
 
         return this.adapterService
             .getAdaptersPaginated(
