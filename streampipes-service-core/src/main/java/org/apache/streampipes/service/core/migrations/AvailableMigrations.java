@@ -29,12 +29,14 @@ import org.apache.streampipes.service.core.migrations.v095.MergeFilenamesAndRena
 import org.apache.streampipes.service.core.migrations.v0980.AddDataLakeMeasureViewMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinksMigration;
+import org.apache.streampipes.service.core.migrations.v099.AddAdapterPaginatorViewsToDB;
 import org.apache.streampipes.service.core.migrations.v970.AddDataLakePipelineTemplateMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddLinkSettingsMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddRolesToUserDbMigration;
 import org.apache.streampipes.service.core.migrations.v970.DataExplorerDataViewMigration;
 import org.apache.streampipes.service.core.migrations.v970.ModifyAssetLinkTypeMigration;
 import org.apache.streampipes.service.core.migrations.v970.RemoveNodesFromOpcUaAdaptersMigration;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +45,7 @@ public class AvailableMigrations {
 
   public List<Migration> getAvailableMigrations() {
     return Arrays.asList(
+        new AddAdapterPaginatorViewsToDB(),
         new CreateAssetLinkTypeMigration(),
         new CreateDefaultAssetMigration(),
         new CreateFileAssetTypeMigration(),
