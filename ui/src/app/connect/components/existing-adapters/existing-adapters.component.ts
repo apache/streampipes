@@ -106,13 +106,11 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        //    if (this.sort) {
-        //        this.sort.sort({
-        //            id: 'lastModified',
-        //            start: 'asc',
-        //            disableClear: false,
-        //        }); // default sort
-        //    }
+        //this.sort.sort({
+        //    id: 'lastModified',
+        //    start: 'asc',
+        //    disableClear: false,
+        //   }); // default sort
 
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpConnectRoutes.BASE),
@@ -282,21 +280,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     getAdaptersRunning(): void {
         this.operationInProgressAdapterId = undefined;
-        console.log('Trigger Switch');
-        console.log(this.refreshSwitch.value);
         this.refreshSwitch.next(!this.refreshSwitch.value);
-        console.log(this.refreshSwitch.value);
-        //this.adapterService.getAdapters().subscribe(adapters => {
-        //    this.existingAdapters = adapters;
-        //    this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
-        //    this.applyAdapterFilters(this.currentFilterIds);
-        //    this.operationInProgressAdapterId = undefined;
-        //    this.getMonitoringInfos(adapters);
-        //    setTimeout(() => {
-
-        //        this.dataSource.sort = this.sort;
-        //    });
-        //});
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {

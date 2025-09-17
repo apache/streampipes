@@ -89,7 +89,6 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
 
         if (changes.refresh) {
             this.refresh.subscribe(() => {
-                console.log('Trigger Data Load');
                 this.loadData(this.currentPage);
             });
         }
