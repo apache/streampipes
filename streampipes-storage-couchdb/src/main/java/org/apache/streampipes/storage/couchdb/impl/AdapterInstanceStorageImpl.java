@@ -75,8 +75,6 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     }
 
     if ("createdAt".equals(view)) {
-
-      LOG.info("PARSE LONG");
       startItemLong = Long.parseLong(startItem);
 
       return couchDbClientSupplier
@@ -107,7 +105,6 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         throw new IllegalArgumentException("Invalid startItem format for compound key");
       }
     }
-
 
     return couchDbClientSupplier
         .get()
