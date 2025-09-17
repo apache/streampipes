@@ -31,18 +31,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
-
 import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
 
 public class AddAdapterPaginatorViewsToDB implements Migration {
 
     @Override
     public boolean shouldExecute() {
-  
+
         CouchDbClient client = Utils.getCouchDbAdapterInstanceClient();
-        String designDocId = "_design/paginator";  
+        String designDocId = "_design/paginator";
 
         // Check if the design document exists
         if (doesDesignDocumentExist(client, designDocId)) {
@@ -52,79 +49,83 @@ public class AddAdapterPaginatorViewsToDB implements Migration {
         }
     }
 
-     public static boolean doesDesignDocumentExist(CouchDbClient client, String designDocId) {
+    public static boolean doesDesignDocumentExist(CouchDbClient client, String designDocId) {
         try {
             Document doc = client.find(Document.class, designDocId);
-            return doc != null;  
+            return doc != null;
         } catch (CouchDbException e) {
-            return false; 
+            return false;
         }
     }
 
     @Override
     public void executeMigration() throws IOException {
-        //TODO CALL ORIGINAL CODE 
+        // TODO CALL ORIGINAL CODE
 
-                DesignDocument paginatorDocument = prepareDocument("_design/paginator");
+        DesignDocument paginatorDocument = prepareDocument("_design/paginator");
 
-                Map<String, MapReduce> paginatorViews = new HashMap<>();
+        Map<String, MapReduce> paginatorViews = new HashMap<>();
 
-                // View to paginate documents by creation time
-                MapReduce paginationFunctionByCreate = new MapReduce();
-                paginationFunctionByCreate.setMap(
-                    "function (doc) {\n" 
-                    + "  if (doc.properties && doc.properties.createdAt) {\n" 
-                    + "    emit(doc.properties.createdAt, doc);\n" 
-                    + "  }\n" 
-                    + "}"
-                );
+        // View to paginate documents by creation time
+        MapReduce paginationFunctionByCreate = new MapReduce();
+        paginationFunctionByCreate.setMap(
+                "function (doc) {\n"
+                        + "  if (doc.properties && doc.properties.createdAt) {\n"
+                        + "    emit(doc.properties.createdAt, doc);\n"
+                        + "  }\n"
+                        + "}");
 
-                // View to paginate documents by name
-                MapReduce paginationFunctionByName = new MapReduce();
-                paginationFunctionByName.setMap(
-                    "function (doc) {\n" 
-                    + "  if (doc.properties && doc.properties.name && typeof doc.properties.name === 'string') {\n" 
-                    + "    emit(doc.properties.name, doc);\n" 
-                    + "  }\n" 
-                    + "}"
-                );
+        // View to paginate documents by name
+        MapReduce paginationFunctionByName = new MapReduce();
+        paginationFunctionByName.setMap(
+                "function (doc) {\n"
+                        + "  if (doc.properties && doc.properties.name && typeof doc.properties.name === 'string') {\n"
+                        + "    emit(doc.properties.name, doc);\n"
+                        + "  }\n"
+                        + "}");
 
-                // View to paginate documents by running
-                MapReduce paginationFunctionByRunning = new MapReduce();
-                paginationFunctionByRunning.setMap(
-                    "function (doc) {\n" 
-                    + "    emit([doc.properties.running, doc._id], doc);\n" 
-                    + "}"
-                );
+        // View to paginate documents by running
+        MapReduce paginationFunctionByRunning = new MapReduce();
+        paginationFunctionByRunning.setMap(
+                "function (doc) {\n"
+                        + "    emit([doc.properties.running, doc._id], doc);\n"
+                        + "}");
 
-                // View to list all non-design documents
-                MapReduce nonDesignDocsView = new MapReduce();
-                nonDesignDocsView.setMap(
-                    "function (doc) {\n" 
-                    + "  if (!doc._id.startsWith(\"_design/\")) {\n" 
-                    + "    emit(doc._id, null);\n" 
-                    + "  }\n" 
-                    + "}"
-                );
+        // View to paginate documents by categories
+        MapReduce paginationFunctionByCategory = new MapReduce();
+        paginationFunctionByCategory.setMap(
+                "function (doc) {\n"
+                        + "    emit([doc.properties.category, doc._id], doc);\n"
+                        + "}");
 
-                // Add views to the document
-                paginatorViews.put("by_createdAt", paginationFunctionByCreate);
-                paginatorViews.put("by_name", paginationFunctionByName);
-                paginatorViews.put("by_running", paginationFunctionByRunning);
-                paginatorViews.put("non_design_docs", nonDesignDocsView);
+        // View to list all non-design documents
+        MapReduce nonDesignDocsView = new MapReduce();
+        nonDesignDocsView.setMap(
+                "function (doc) {\n"
+                        + "  if (!doc._id.startsWith(\"_design/\")) {\n"
+                        + "    emit(doc._id, null);\n"
+                        + "  }\n"
+                        + "}");
 
-                paginatorDocument.setViews(paginatorViews);
+        // Add views to the document
+        paginatorViews.put("by_createdAt", paginationFunctionByCreate);
+        paginatorViews.put("by_name", paginationFunctionByName);
+        paginatorViews.put("by_running", paginationFunctionByRunning);
+        paginatorViews.put("by_category", paginationFunctionByCategory);
+        paginatorViews.put("non_design_docs", nonDesignDocsView);
 
+        paginatorDocument.setViews(paginatorViews);
+
+        // Push the design document to CouchDB
         Utils.getCouchDbAdapterInstanceClient()
-         .design()
-         .synchronizeWithDb(paginatorDocument);
-}
-
+                .design()
+                .synchronizeWithDb(paginatorDocument);
+    }
 
     @Override
     public String getDescription() {
         return "Check for Paginator view in AdapterInstances, if it does not exist, add the Paginatorview.";
-        
+
     }
 
 }

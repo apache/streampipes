@@ -159,6 +159,14 @@ private void addPaginatorView() {
         + "}"
     );
 
+    // View to paginate documents by categories
+    MapReduce paginationFunctionByCategory = new MapReduce();
+    paginationFunctionByCategory.setMap(
+        "function (doc) {\n" 
+        + "    emit([doc.properties.category, doc._id], doc);\n" 
+        + "}"
+    );
+
     // View to list all non-design documents
     MapReduce nonDesignDocsView = new MapReduce();
     nonDesignDocsView.setMap(
@@ -173,6 +181,7 @@ private void addPaginatorView() {
     paginatorViews.put("by_createdAt", paginationFunctionByCreate);
     paginatorViews.put("by_name", paginationFunctionByName);
     paginatorViews.put("by_running", paginationFunctionByRunning);
+    paginatorViews.put("by_category", paginationFunctionByCategory);
     paginatorViews.put("non_design_docs", nonDesignDocsView);
 
     paginatorDocument.setViews(paginatorViews);
