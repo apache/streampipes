@@ -60,6 +60,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     @Input() sort: MatSort;
     //Necessary if other refreshs than based on sort are crucial
     @Input() refresh: BehaviorSubject<boolean>;
+    @Input() filter: BehaviorSubject<string>;
 
     @Input() fetchDataFn: (
         startKey?: any,
@@ -76,6 +77,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     currentPage = 0;
     propertyName = 'createdAt';
     isNextDisabled: boolean = false;
+    filtering = '';
 
     startKeyMap: Map<number, number | null> = new Map();
 
@@ -93,6 +95,14 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         if (changes.refresh) {
             this.refresh.subscribe(() => {
                 this.loadData(this.currentPage);
+            });
+        }
+
+        if (changes.filter) {
+            this.filter.subscribe(() => {
+                console.log('NEW FIlter Value', this.filter.value);
+                this.filtering = this.filter.value;
+                this.loadData(0);
             });
         }
     }

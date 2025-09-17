@@ -84,6 +84,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     isAdmin = false;
     refreshSwitch = new BehaviorSubject<boolean>(false);
+    filter = new BehaviorSubject<string>('');
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
     tutorialActive = false;
@@ -321,8 +322,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    applyFilter(filter: AdapterFilterSettingsModel) {
-        this.currentFilter = filter;
+    applyFilter(filtering: AdapterFilterSettingsModel) {
+        this.filter.next(filtering.textFilter);
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
@@ -345,15 +346,20 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     fetchAdapters = (
-        startKey?: number,
+        startKey?: string,
         pageSize?: number,
-        endKey?: number,
     ): Observable<AdapterDescription[]> => {
-        const sortBy = this.getSortView();
-        console.log(sortBy);
-        console.log(startKey);
-        console.log(endKey);
-        console.log(pageSize);
+        let sortBy = this.getSortView();
+
+        let endKey: string | null =
+            this.filter.value !== '' ? this.filter.value : null;
+        if (endKey) {
+            startKey = endKey;
+            endKey = endKey + '\ufff0';
+            sortBy = 'name';
+        }
+
+        console.log('EndKey Fetch Adapter', endKey);
 
         return this.adapterService
             .getAdaptersPaginated(

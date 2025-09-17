@@ -47,6 +47,7 @@ export class SpConnectFilterToolbarComponent implements OnInit {
     }
 
     loadAvailableTypeCategories() {
+        //TODO THIS IS a TODO
         this.dataMarketplaceService.getAdapterCategories().subscribe(res => {
             this.adapterCategories = res;
             this.adapterCategories.unshift({
