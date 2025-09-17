@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ChangeDetectorRef,
+} from '@angular/core';
 import {
     AdapterDescription,
     AdapterMonitoringService,
@@ -94,6 +100,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     stopAdapterErrorText = 'Could not stop adapter';
 
     constructor(
+        private cdRef: ChangeDetectorRef,
         private adapterService: AdapterService,
         private dialogService: DialogService,
         private currentUserService: CurrentUserService,
@@ -125,6 +132,26 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             this.shepherdService.tutorialActive$.subscribe(tutorialActive => {
                 this.tutorialActive = tutorialActive;
             });
+
+        this.setDefaultSort();
+    }
+
+    ngAfterViewInit(): void {
+        // Ensure MatSort is initialized before interacting with it
+        this.setDefaultSort();
+    }
+
+    // Method to set the default sort
+    private setDefaultSort(): void {
+        if (this.sort) {
+            // Set default sort by 'lastModified' (for example) in ascending order
+            this.sort.sort({
+                id: 'lastModified',
+                start: 'asc', // Or 'desc' for descending
+                disableClear: false,
+            });
+        }
+        this.cdRef.detectChanges();
     }
 
     startAdapter(adapter: AdapterDescription) {
