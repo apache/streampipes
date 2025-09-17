@@ -46,6 +46,8 @@ import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription, zip } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -79,6 +81,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     //dataSource: MatTableDataSource<AdapterDescription> =
     //   new MatTableDataSource();
     isAdmin = false;
+    refreshSwitch = new BehaviorSubject<boolean>(false);
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
     tutorialActive = false;
@@ -278,16 +281,22 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     getAdaptersRunning(): void {
-        this.adapterService.getAdapters().subscribe(adapters => {
-            this.existingAdapters = adapters;
-            this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
-            this.applyAdapterFilters(this.currentFilterIds);
-            this.operationInProgressAdapterId = undefined;
-            this.getMonitoringInfos(adapters);
-            setTimeout(() => {
-                //    this.dataSource.sort = this.sort;
-            });
-        });
+        this.operationInProgressAdapterId = undefined;
+        console.log('Trigger Switch');
+        console.log(this.refreshSwitch.value);
+        this.refreshSwitch.next(!this.refreshSwitch.value);
+        console.log(this.refreshSwitch.value);
+        //this.adapterService.getAdapters().subscribe(adapters => {
+        //    this.existingAdapters = adapters;
+        //    this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
+        //    this.applyAdapterFilters(this.currentFilterIds);
+        //    this.operationInProgressAdapterId = undefined;
+        //    this.getMonitoringInfos(adapters);
+        //    setTimeout(() => {
+
+        //        this.dataSource.sort = this.sort;
+        //    });
+        //});
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {
@@ -343,21 +352,32 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         startKey?: number,
         pageSize?: number,
     ): Observable<AdapterDescription[]> => {
-        let view = 'createdAt';
-        if (this.sort?.active == 'lastModified') {
-            view = 'createdAt';
-        } else {
-            if (this.sort?.active == 'status') {
-                view = 'running';
-            } else {
-                view = this.sort?.active;
-            }
-        }
-        return this.adapterService.getAdaptersPaginated(
-            startKey,
-            pageSize,
-            view,
-            this.sort?.direction != 'asc',
-        );
+        const sortBy = this.getSortView(); // Refactor the sorting logic into a separate method.
+
+        return this.adapterService
+            .getAdaptersPaginated(
+                startKey,
+                pageSize,
+                sortBy,
+                this.sort?.direction !== 'asc', // Use strict inequality for clarity
+            )
+            .pipe(
+                tap(adapters => {
+                    this.existingAdapters = adapters;
+                    this.applyAdapterFilters(this.currentFilterIds);
+                    this.operationInProgressAdapterId = undefined;
+                    this.getMonitoringInfos(adapters);
+                }),
+            );
     };
+
+    // Refactor the sorting logic into a separate method.
+    private getSortView(): string {
+        if (this.sort?.active === 'lastModified') {
+            return 'createdAt';
+        } else if (this.sort?.active === 'status') {
+            return 'running';
+        }
+        return this.sort?.active || 'createdAt'; // Default to 'createdAt' if no sort is specified
+    }
 }

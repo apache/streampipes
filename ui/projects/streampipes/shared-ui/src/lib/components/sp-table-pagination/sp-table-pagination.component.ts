@@ -38,7 +38,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { AdapterService } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { MatSort, Sort } from '@angular/material/sort';
-
+import { BehaviorSubject } from 'rxjs';
 @Component({
     selector: 'sp-table-pagination',
     templateUrl: './sp-table-pagination.component.html',
@@ -58,6 +58,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     @ViewChild('paginator') paginator: MatPaginator;
 
     @Input() sort: MatSort;
+    @Input() refresh: BehaviorSubject<boolean>;
     @Input() fetchDataFn: (
         startKey?: any,
         pageSize?: number,
@@ -84,6 +85,13 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                 this.resetPagination();
             });
             this.sortInitialized = true;
+        }
+
+        if (changes.refresh) {
+            this.refresh.subscribe(() => {
+                console.log('Trigger Data Load');
+                this.loadData(this.currentPage);
+            });
         }
     }
 
