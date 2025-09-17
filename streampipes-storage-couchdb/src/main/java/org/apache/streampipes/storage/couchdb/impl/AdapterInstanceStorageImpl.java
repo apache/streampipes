@@ -24,6 +24,7 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -59,59 +60,48 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
   }
 
   @Override
-  public List<AdapterDescription> getAdapterPaginator(String startItem, int limit, String view, boolean descending) {
+public List<AdapterDescription> getAdapterPaginator(String startItem, int limit, String view, boolean descending) {
     long startItemLong = 0L; // default value
     String uri = "paginator/by_" + view;
-    if (startItem == null) {
 
-      return couchDbClientSupplier
-          .get()
-          .view(uri)
-          .includeDocs(true)
-          .limit(limit)
-          .descending(descending)
-          .query(AdapterDescription.class);
-
-    }
-
-    if ("createdAt".equals(view)) {
-      startItemLong = Long.parseLong(startItem);
-
-      return couchDbClientSupplier
-          .get()
-          .view(uri)
-          .includeDocs(true)
-          .limit(limit)
-          .startKey(startItemLong)
-          .descending(descending)
-          .query(AdapterDescription.class);
-    }
-
-    if (startItem.startsWith("[") && startItem.endsWith("]")) {
-      try {
-        // Assuming the startItem is a JSON array in string form, we will parse it
-        ObjectMapper objectMapper = new ObjectMapper();
-        Object[] startKeyArray = objectMapper.readValue(startItem, Object[].class);
-
+    if (startItem == null || startItem.isEmpty()) {
         return couchDbClientSupplier
             .get()
             .view(uri)
             .includeDocs(true)
             .limit(limit)
-            .startKey(startKeyArray)
             .descending(descending)
             .query(AdapterDescription.class);
-      } catch (Exception e) {
-        throw new IllegalArgumentException("Invalid startItem format for compound key");
-      }
     }
 
-    return couchDbClientSupplier
+    var buildCall = couchDbClientSupplier
         .get()
         .view(uri)
         .includeDocs(true)
-        .limit(limit)
-        .startKey(startItem)
-        .descending(descending).query(AdapterDescription.class);
-  }
+        .limit(limit);
+
+    if ("createdAt".equals(view)) {
+        try {
+            startItemLong = Long.parseLong(startItem);
+            buildCall = buildCall.startKey(startItemLong);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid startItem format for 'createdAt'", e);
+        }
+    } else if (startItem.startsWith("[") && startItem.endsWith("]")) {
+        try {
+            // Assuming the startItem is a JSON array in string form
+            ObjectMapper objectMapper = new ObjectMapper();
+            Object[] startKeyArray = objectMapper.readValue(startItem, Object[].class);
+            buildCall = buildCall.startKey(startKeyArray);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Invalid startItem format for compound key", e);
+        }
+    } else {
+        buildCall = buildCall.startKey(startItem);
+    }
+
+    return buildCall
+        .descending(descending)
+        .query(AdapterDescription.class);
+}
 }
