@@ -71,8 +71,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     @ViewChild(MatSort)
     sort: MatSort;
 
-    //@ViewChild('sortHeaderName') sortHeaderName: MatSortHeader;
-
     displayedColumns: string[] = [
         'status',
         'start',
@@ -84,8 +82,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         'action',
     ];
 
-    //dataSource: MatTableDataSource<AdapterDescription> =
-    //   new MatTableDataSource();
     isAdmin = false;
     refreshSwitch = new BehaviorSubject<boolean>(false);
 
@@ -113,12 +109,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        //this.sort.sort({
-        //    id: 'lastModified',
-        //    start: 'asc',
-        //    disableClear: false,
-        //   }); // default sort
-
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpConnectRoutes.BASE),
         );
@@ -137,17 +127,14 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        // Ensure MatSort is initialized before interacting with it
         this.setDefaultSort();
     }
 
-    // Method to set the default sort
     private setDefaultSort(): void {
         if (this.sort) {
-            // Set default sort by 'lastModified' (for example) in ascending order
             this.sort.sort({
                 id: 'lastModified',
-                start: 'asc', // Or 'desc' for descending
+                start: 'asc',
                 disableClear: false,
             });
         }
@@ -336,9 +323,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     applyFilter(filter: AdapterFilterSettingsModel) {
         this.currentFilter = filter;
-        //    if (this.dataSource) {
-        //        this.applyAdapterFilters(this.currentFilterIds);
-        //    }
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
@@ -350,7 +334,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.tutorialActiveSubscription?.unsubscribe();
     }
 
-    getViewForSort(sortActive: string | undefined): string | string[] {
+    getViewKeysForSort(sortActive: string | undefined): string | string[] {
+        // This is necessary in case the element names in the HTML and the keys used for sorting follow different naming conventions or are composite keys. (E.g., created in HTML and the database key is createdAt)
         const sortMap: { [key: string]: string | string[] } = {
             lastModified: 'createdAt',
             status: ['running', 'elementId'],
@@ -363,14 +348,13 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         startKey?: number,
         pageSize?: number,
     ): Observable<AdapterDescription[]> => {
-        const sortBy = this.getSortView(); // Refactor the sorting logic into a separate method.
-
+        const sortBy = this.getSortView();
         return this.adapterService
             .getAdaptersPaginated(
                 startKey,
                 pageSize,
                 sortBy,
-                this.sort?.direction !== 'asc', // Use strict inequality for clarity
+                this.sort?.direction !== 'asc',
             )
             .pipe(
                 tap(adapters => {
@@ -382,13 +366,13 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             );
     };
 
-    // Refactor the sorting logic into a separate method.
     private getSortView(): string {
+        // Parse naming of the view
         if (this.sort?.active === 'lastModified') {
             return 'createdAt';
         } else if (this.sort?.active === 'status') {
             return 'running';
         }
-        return this.sort?.active || 'createdAt'; // Default to 'createdAt' if no sort is specified
+        return this.sort?.active || 'createdAt';
     }
 }
