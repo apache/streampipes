@@ -102,6 +102,9 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
             this.filter.subscribe(() => {
                 console.log('NEW FIlter Value', this.filter.value);
                 this.filtering = this.filter.value;
+                if (this.filter.value['category'] != '') {
+                    this.propertyName = this.getViewFn('category');
+                }
                 this.resetPagination();
                 this.loadData(0);
             });
@@ -138,6 +141,8 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     }
     loadData(pageIndex: number) {
         const startkey = this.startKeyMap.get(pageIndex) || null;
+        console.log('LOAD DARA start key', startkey);
+        console.log(this.propertyName);
 
         this.fetchDataFn(startkey, this.pageSize + 1).subscribe({
             next: (data: T[]) => {
@@ -150,7 +155,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                     this.totalItems = data.length + pageIndex * this.pageSize;
                 }
 
-                this.last_key = data[data.length - 1][this.propertyName];
+                //this.last_key = data[data.length - 1][this.propertyName];
 
                 if (data.length > this.pageSize) {
                     let nextStartKey;
@@ -168,6 +173,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                     this.startKeyMap.set(pageIndex + 1, nextStartKeyString);
                     this.dataSource.data = data.slice(0, this.pageSize);
                 }
+                console.log(this.startKeyMap);
             },
             error: err => {
                 console.error('Failed to fetch paginated data', err);

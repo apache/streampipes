@@ -327,7 +327,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     applyFilter(filtering: AdapterFilterSettingsModel) {
-        console.log(filtering);
+        console.log('Filtering ', filtering);
         if (filtering.textFilter != '') {
             this.filter.next({ text: filtering.textFilter, category: '' });
         }
@@ -353,13 +353,15 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         if (this.filter.value.text != '') {
             endKey = this.filter.value.text;
             sortBy = 'name';
+            this.sort.active = '';
         } else {
             if (
                 this.filter.value.category != '' &&
                 this.filter.value.category != 'All'
             ) {
-                endKey = '["' + this.filter.value.category + '"';
+                //endKey = '["' + this.filter.value.category + '"';
                 sortBy = 'category';
+                this.sort.active = '';
             }
         }
 
@@ -394,6 +396,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         let sortBy = this.getSortView();
         const filterkeys = this.getEndKeyFromFilter();
 
+        console.log('f startkey', startKey);
+
         let endKey: string | null = null;
 
         if (filterkeys.endKey) {
@@ -417,6 +421,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         if (sortBy == 'category') {
             // Unfortunatly needs a different endpoint
             const arr = JSON.parse(startKey);
+            console.log(arr);
             console.log(arr[0]);
             console.log(arr[1]);
 
@@ -447,7 +452,11 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     private getSortView(): string {
         // Parse naming of the view
-        if (this.sort?.active === 'lastModified') {
+
+        console.log(this.sort);
+        if (this.sort?.active === '') {
+            return 'category';
+        } else if (this.sort?.active === 'lastModified') {
             return 'createdAt';
         } else if (this.sort?.active === 'status') {
             return 'running';
