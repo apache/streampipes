@@ -126,7 +126,7 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
                 Object[] startKeyArray = objectMapper.readValue(startItem, Object[].class);
                 LOG.info("Array Start Key");
                  LOG.info("Array Start Key: " + Arrays.toString(startKeyArray));
-                buildCall = buildCall.startKey(startKeyArray[0]);
+                buildCall = buildCall.startKey(startKeyArray);
 
             } catch (IOException e) {
                 throw new IllegalArgumentException("Invalid startItem format for compound key", e);
@@ -187,8 +187,10 @@ public List<AdapterDescription> getItemsByCategoryPaginated(String category, Str
        //Check if startDocId exists 
         String startKey;
        if (startDocId != null && !startDocId.isEmpty()) {
+        LOG.info("WE HABE A STARTSD" + startDocId);
     startKey = "[\"" + category + "\", \"" + startDocId + "\"]";
 } else {
+    LOG.info("OnlyCat" + category);
     startKey = "[\"" + category + "\"]";
 }
         startKey = URLEncoder.encode(startKey);
@@ -250,40 +252,6 @@ public List<AdapterDescription> getItemsByCategoryPaginated(String category, Str
     }
 
     return resultList;
-
-
-
-
-        //String viewName = "paginator/by_category";
-
-        // Construct start key
-        //Object[] startKey = (startDocId != null && !startDocId.isEmpty())
-        //        ? new Object[] { category } // startDocID
-        //        : new Object[] { category };
-
-        // Construct end key
-        //Object[] endKey = new Object[] { category,  "\ufff0" };
-
-        //LOG.info("Category: " + category);
-        //LOG.info("StartDocId: " + startDocId);
-        //LOG.info("StartKey: " + Arrays.toString(startKey));
-        //LOG.info("EndKey: " + Arrays.toString(endKey));
-        //LOG.info("Descending: " + descending);
-
-        //var viewQuery = couchDbClientSupplier.get()
-        //        .view(viewName)
-        //        .includeDocs(true)
-        //        .limit(limit)
-        //        .descending(descending)
-        //        .startKey(startKey)
-        //        .endKey(endKey).query(AdapterDescription.class);
-
-                // Manually filter to enforce exact match
-        //List<AdapterDescription> filtered = viewQuery.stream()
-        //    .filter(doc -> doc.getCategory() != null && doc.getCategory().contains(category))
-        //    .collect(Collectors.toList());
-
-       // return filtered;
     }
 
     
