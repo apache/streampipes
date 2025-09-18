@@ -79,7 +79,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     isNextDisabled: boolean = false;
     filtering = '';
 
-    startKeyMap: Map<number, number | null> = new Map();
+    startKeyMap: Map<number, number | string | null> = new Map();
 
     private sortInitialized = false;
 
@@ -140,9 +140,24 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         this.table.setNoDataRow(this.noDataRow);
     }
     loadData(pageIndex: number) {
-        const startkey = this.startKeyMap.get(pageIndex) || null;
-        console.log('LOAD DARA start key', startkey);
-        console.log(this.propertyName);
+        const start = this.startKeyMap.get(pageIndex) || null;
+        console.log('LOAD DATA start key', start);
+        console.log('LOAD DATA Property', this.propertyName);
+        let startkey = start;
+
+        // Check if propertyName includes 'category'
+        if (
+            startkey == null &&
+            ((typeof this.propertyName === 'string' &&
+                this.propertyName === 'category') ||
+                (Array.isArray(this.propertyName) &&
+                    this.propertyName.includes('category')))
+        ) {
+            startkey = '["' + this.filtering['category'] + '"]';
+        }
+
+        console.log('LOAD DATA start key', startkey);
+        console.log('LOAD DATA Property', this.propertyName);
 
         this.fetchDataFn(startkey, this.pageSize + 1).subscribe({
             next: (data: T[]) => {

@@ -361,7 +361,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             ) {
                 //endKey = '["' + this.filter.value.category + '"';
                 sortBy = 'category';
-                this.sort.active = '';
+                this.sort.active = 'category';
             }
         }
 
@@ -420,6 +420,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
         if (sortBy == 'category') {
             // Unfortunatly needs a different endpoint
+
             const arr = JSON.parse(startKey);
             console.log(arr);
             console.log(arr[0]);
@@ -453,8 +454,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     private getSortView(): string {
         // Parse naming of the view
 
-        console.log(this.sort);
-        if (this.sort?.active === '') {
+        console.log('VIEWS FROM SORTING', this.sort);
+        if (this.sort?.active === 'category') {
             return 'category';
         } else if (this.sort?.active === 'lastModified') {
             return 'createdAt';
