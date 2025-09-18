@@ -22,6 +22,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.lightcouch.CouchDbClient;
+import org.lightcouch.CouchDbProperties;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -42,6 +43,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Base64;
 import java.net.URL;
@@ -156,12 +158,40 @@ public List<AdapterDescription> getItemsByCategoryPaginated(String category, Str
         CouchDbClient dbClient = couchDbClientSupplier.get();//new CouchDbClient();  // or however you're managing it
         // GET INFO from dbClient 
 
-        LOG.info(dbClient.getBaseUri().toString());
-        LOG.info(dbClient.getBaseUri());
-
         Gson gson =  dbClient.getGson();
-        String host = "localhost";
-        int port = 5984;
+        URI baseUri = dbClient.getBaseUri();
+
+        // Log the base URI to check its structure
+        LOG.info("Base URI: " + baseUri.toString());
+
+        // Extract the host and port from the URI
+        String host = baseUri.getHost();
+        int port = baseUri.getPort();
+
+        LOG.info("Base URI: " + host.toString());
+        //LOG.info("Base URI: " + port.toString());
+        // If port is not explicitly set, default to 5984 (common CouchDB port)
+        //if (port == -1) {
+        //    port = 5984;
+        //}
+
+
+        //CouchDbProperties props = dbClient.getCouchDbProperties();
+
+        String userInfo = baseUri.getUserInfo(); // Returns "admin:admin"
+        String[] parts = userInfo != null ? userInfo.split(":") : new String[] { "admin", "admin" };
+
+        String username = parts[0];
+        String password = parts.length > 1 ? parts[1] : "";
+         LOG.info("Base URI: " + username);
+              LOG.info("Base URI: " + password);
+        //String host = props.getHost();
+        //int port = props.getPort();
+        //String username = props.getUsername();
+        //String password = props.getPassword();
+
+        String authHeader = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
+
         String dbName = "adapterinstance";
         String designDoc = "paginator";
         String viewName = "by_category";
@@ -179,9 +209,15 @@ public List<AdapterDescription> getItemsByCategoryPaginated(String category, Str
         );
 
         // Auth
-        String username = "admin";
-        String password = "admin";
-        String authHeader = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+        //String username = "admin";
+        //String password = "admin";
+        
+        
+        // Extract the username and password from the dbClient if it's configured for HTTP Basic Authentication
+        //String username = dbClient.getUsername();
+        //String password = dbClient.getPassword();
+
+        //String authHeader = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
         // HTTP request setup
         URL url = new URL(urlStr);
