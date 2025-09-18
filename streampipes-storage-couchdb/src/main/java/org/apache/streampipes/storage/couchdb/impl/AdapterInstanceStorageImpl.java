@@ -151,13 +151,14 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
 
     @Override
 public List<AdapterDescription> getItemsByCategoryPaginated(String category, String startDocId, int limit, boolean descending) {
+
+    // Does not use LightCouchDB, as the current functionality of the URI Parser runs into issues by querying endKey with arrays. 
+
     List<AdapterDescription> resultList = new ArrayList<>();
 
     try {
-
+        // Extract the necessary data form the couch DB Instance
         CouchDbClient dbClient = couchDbClientSupplier.get();//new CouchDbClient();  // or however you're managing it
-        // GET INFO from dbClient 
-
         Gson gson =  dbClient.getGson();
         URI baseUri = dbClient.getBaseUri();
 
@@ -167,28 +168,12 @@ public List<AdapterDescription> getItemsByCategoryPaginated(String category, Str
         // Extract the host and port from the URI
         String host = baseUri.getHost();
         int port = baseUri.getPort();
-
-        LOG.info("Base URI: " + host.toString());
-        //LOG.info("Base URI: " + port.toString());
-        // If port is not explicitly set, default to 5984 (common CouchDB port)
-        //if (port == -1) {
-        //    port = 5984;
-        //}
-
-
-        //CouchDbProperties props = dbClient.getCouchDbProperties();
-
         String userInfo = baseUri.getUserInfo(); // Returns "admin:admin"
+        LOG.info(userInfo);
         String[] parts = userInfo != null ? userInfo.split(":") : new String[] { "admin", "admin" };
 
         String username = parts[0];
         String password = parts.length > 1 ? parts[1] : "";
-         LOG.info("Base URI: " + username);
-              LOG.info("Base URI: " + password);
-        //String host = props.getHost();
-        //int port = props.getPort();
-        //String username = props.getUsername();
-        //String password = props.getPassword();
 
         String authHeader = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
 
@@ -199,7 +184,15 @@ public List<AdapterDescription> getItemsByCategoryPaginated(String category, Str
        
 
         // Query parameters
-        String startKey = URLEncoder.encode("[\"" + category + "\"]", StandardCharsets.UTF_8);
+       //Check if startDocId exists 
+        String startKey;
+       if (startDocId != null && !startDocId.isEmpty()) {
+    startKey = "[\"" + category + "\", \"" + startDocId + "\"]";
+} else {
+    startKey = "[\"" + category + "\"]";
+}
+        startKey = URLEncoder.encode(startKey);
+        //String startKey = URLEncoder.encode("[\"" + category + "\"]", StandardCharsets.UTF_8);
         String endKey = URLEncoder.encode("[\"" + category + "\", \"\ufff0\"]", StandardCharsets.UTF_8);
 
         // Construct full URL
@@ -207,17 +200,8 @@ public List<AdapterDescription> getItemsByCategoryPaginated(String category, Str
                 "http://%s:%d/%s/_design/%s/_view/%s?startkey=%s&endkey=%s&limit=%d&include_docs=true",
                 host, port, dbName, designDoc, viewName, startKey, endKey, limit
         );
-
-        // Auth
-        //String username = "admin";
-        //String password = "admin";
-        
-        
-        // Extract the username and password from the dbClient if it's configured for HTTP Basic Authentication
-        //String username = dbClient.getUsername();
-        //String password = dbClient.getPassword();
-
-        //String authHeader = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+        LOG.info("StartKey" + startKey.toString());
+        LOG.info("urlStr" +  urlStr.toString());
 
         // HTTP request setup
         URL url = new URL(urlStr);
