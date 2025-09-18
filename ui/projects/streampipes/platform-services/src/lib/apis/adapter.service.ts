@@ -67,6 +67,20 @@ export class AdapterService {
             descending,
         );
     }
+    getAdaptersCategorywisePaginated(
+        category: string,
+        startid: string | number | null,
+        limit: number,
+        descending: boolean = false,
+    ): Observable<AdapterDescription[]> {
+        return this.requestAdapterCategoryWiseDescriptionsPaginated(
+            '/master/adapters/paginator/category',
+            category,
+            startid,
+            limit,
+            descending,
+        );
+    }
 
     getAdapter(id: string): Observable<AdapterDescription> {
         return this.http
@@ -82,6 +96,36 @@ export class AdapterService {
         return this.http.post<CompactAdapter>(
             this.connectPath + `/master/adapters/compact`,
             adapterDescription,
+        );
+    }
+
+    requestAdapterCategoryWiseDescriptionsPaginated(
+        path: string,
+        category: string,
+        startid: string | number | null,
+        limit: number,
+        descending: boolean,
+    ): Observable<AdapterDescription[]> {
+        let params = new HttpParams().set('limit', limit.toString());
+
+        params = params.set('category', category);
+
+        console.log('category ', category);
+
+        if (startid) {
+            params = params.set('startKey', startid);
+        }
+
+        params = params.set('descending', descending);
+        const url = `${this.connectPath}${path}`;
+        console.log(params);
+
+        return this.http.get(url, { params }).pipe(
+            map(response => {
+                return (response as any[]).map(p =>
+                    AdapterDescription.fromData(p),
+                );
+            }),
         );
     }
 

@@ -349,6 +349,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     getEndKeyFromFilter(): { endKey: string | null; sortby: string } {
         let endKey: string | null = null;
         let sortBy: string;
+        // TODO DO I still need this ?
         if (this.filter.value.text != '') {
             endKey = this.filter.value.text;
             sortBy = 'name';
@@ -413,21 +414,35 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         console.log('EndKey Fetch Adapter', startKey);
         console.log('EndKey Fetch Adapter', sortBy);
 
-        return this.adapterService
-            .getAdaptersPaginated(
-                startKey,
-                endKey,
+        if (sortBy == 'category') {
+            // Unfortunatly needs a different endpoint
+            const arr = JSON.parse(startKey);
+            console.log(arr[0]);
+            console.log(arr[1]);
+
+            return this.adapterService.getAdaptersCategorywisePaginated(
+                arr[0],
+                arr[1],
                 pageSize,
-                sortBy,
-                this.sort?.direction !== 'asc',
-            )
-            .pipe(
-                tap(adapters => {
-                    this.existingAdapters = adapters;
-                    this.operationInProgressAdapterId = undefined;
-                    this.getMonitoringInfos(adapters);
-                }),
+                false,
             );
+        } else {
+            return this.adapterService
+                .getAdaptersPaginated(
+                    startKey,
+                    endKey,
+                    pageSize,
+                    sortBy,
+                    this.sort?.direction !== 'asc',
+                )
+                .pipe(
+                    tap(adapters => {
+                        this.existingAdapters = adapters;
+                        this.operationInProgressAdapterId = undefined;
+                        this.getMonitoringInfos(adapters);
+                    }),
+                );
+        }
     };
 
     private getSortView(): string {
