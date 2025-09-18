@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
@@ -168,13 +169,15 @@ public List<AdapterDescription> getItemsByCategoryPaginated(String category, Str
         // Extract the host and port from the URI
         String host = baseUri.getHost();
         int port = baseUri.getPort();
-        String userInfo = baseUri.getUserInfo(); // Returns "admin:admin"
-        LOG.info(userInfo);
-        String[] parts = userInfo != null ? userInfo.split(":") : new String[] { "admin", "admin" };
 
-        String username = parts[0];
-        String password = parts.length > 1 ? parts[1] : "";
+        //String userInfo = baseUri.getUserInfo(); // Returns "admin:admin"
+        //LOG.info(userInfo);
+        //String[] parts = userInfo != null ? userInfo.split(":") : new String[] { "admin", "admin" };
 
+        String username = Environments.getEnvironment().getCouchDbUsername().getValueOrDefault();//parts[0];
+        String password = Environments.getEnvironment().getCouchDbPassword().getValueOrDefault();//parts[0];//parts.length > 1 ? parts[1] : "";
+        LOG.info(username);
+        LOG.info(password);
         String authHeader = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
 
         String dbName = "adapterinstance";
