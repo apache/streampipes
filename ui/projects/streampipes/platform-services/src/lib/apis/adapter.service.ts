@@ -57,6 +57,7 @@ export class AdapterService {
         property: string = 'createdAt',
         descending: boolean = false,
     ): Observable<AdapterDescription[]> {
+        console.log('Property', property);
         return this.requestAdapterDescriptionsPaginated(
             '/master/adapters/paginator',
             startid,

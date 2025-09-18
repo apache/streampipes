@@ -357,7 +357,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 this.filter.value.category != '' &&
                 this.filter.value.category != 'All'
             ) {
-                endKey = '[[' + this.filter.value.category + '],';
+                endKey = '["' + this.filter.value.category + '"';
                 sortBy = 'category';
             }
         }
@@ -380,6 +380,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         const sortMap: { [key: string]: string | string[] } = {
             lastModified: 'createdAt',
             status: ['running', 'elementId'],
+            category: ['category', 'elementId'],
         };
 
         return sortMap[sortActive ?? ''] || sortActive || '';
@@ -396,7 +397,15 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
         if (filterkeys.endKey) {
             startKey = filterkeys.endKey;
-            endKey = filterkeys.endKey + '\ufff0';
+            if (startKey.startsWith('[')) {
+                startKey = startKey + ']';
+            }
+
+            if (startKey.startsWith('[')) {
+                endKey = filterkeys.endKey + ',"\ufff0"]';
+            } else {
+                endKey = filterkeys.endKey + '\ufff0';
+            }
             sortBy = filterkeys.sortby;
         }
 

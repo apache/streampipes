@@ -304,6 +304,17 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return managementService.getPaginatedAdapterInstances(startKey,endKey, limit, view, descending);
   }
 
+  @GetMapping(path = "/paginator/category", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  @PostFilter("hasPermission(filterObject.correspondingDataStreamElementId, 'READ')")
+  public List<AdapterDescription> getCategoryAdaptersPaginated(
+      @RequestParam(required = false) String startKey,
+      @RequestParam(required = false) String category,
+      @RequestParam(defaultValue = "10") int limit,
+      @RequestParam(defaultValue = "false") boolean descending) {
+    return managementService.getItemsByCategoryPaginated(category, startKey, limit,descending);
+  }
+
   private AdapterDescription getAdapterDescription(String elementId) throws AdapterException {
     return managementService.getAdapter(elementId);
   }

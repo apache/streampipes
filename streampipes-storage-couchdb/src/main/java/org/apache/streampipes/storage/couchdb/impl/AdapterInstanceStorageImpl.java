@@ -23,98 +23,164 @@ import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class.getCanonicalName());
 
-
-  public AdapterInstanceStorageImpl() {
-    super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
-  }
-
-  @Override
-  public AdapterDescription getFirstAdapterByAppId(String appId) {
-    return this.findAll()
-        .stream()
-        .filter(p -> p.getAppId().equals(appId))
-        .findFirst()
-        .orElseThrow(NoSuchElementException::new);
-  }
-
-  @Override
-  public List<AdapterDescription> getAdaptersByAppId(String appId) {
-    return this.findAll()
-        .stream()
-        .filter(p -> p.getAppId().equals(appId))
-        .toList();
-  }
-
-  @Override
-  public List<AdapterDescription> findAll() {
-    List<AdapterDescription> adapters = findAll("paginator/non_design_docs");
-    return adapters.stream()
-        .filter(adapter -> adapter.getDescription() != null)
-        .toList();
-  }
-
-  @Override
-public List<AdapterDescription> getAdapterPaginator(String startItem, String endItem, int limit, String view, boolean descending) {
-    long startItemLong = 0L; // default value
-    String uri = "paginator/by_" + view;
-
-    if (startItem == null || startItem.isEmpty()) {
-        return couchDbClientSupplier
-            .get()
-            .view(uri)
-            .includeDocs(true)
-            .limit(limit)
-            .descending(descending)
-            .query(AdapterDescription.class);
+    public AdapterInstanceStorageImpl() {
+        super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
     }
 
-    var buildCall = couchDbClientSupplier
-        .get()
-        .view(uri)
-        .includeDocs(true)
-        .limit(limit);
+    @Override
+    public AdapterDescription getFirstAdapterByAppId(String appId) {
+        return this.findAll()
+                .stream()
+                .filter(p -> p.getAppId().equals(appId))
+                .findFirst()
+                .orElseThrow(NoSuchElementException::new);
+    }
 
-    if ("createdAt".equals(view)) {
-        try {
-            startItemLong = Long.parseLong(startItem);
-            buildCall = buildCall.startKey(startItemLong);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid startItem format for 'createdAt'", e);
+    @Override
+    public List<AdapterDescription> getAdaptersByAppId(String appId) {
+        return this.findAll()
+                .stream()
+                .filter(p -> p.getAppId().equals(appId))
+                .toList();
+    }
+
+    @Override
+    public List<AdapterDescription> findAll() {
+        List<AdapterDescription> adapters = findAll("paginator/non_design_docs");
+        return adapters.stream()
+                .filter(adapter -> adapter.getDescription() != null)
+                .toList();
+    }
+
+    @Override
+    public List<AdapterDescription> getAdapterPaginator(String startItem, String endItem, int limit, String view,
+            boolean descending) {
+        long startItemLong = 0L; // default value
+        String uri = "paginator/by_" + view;
+
+        LOG.info(startItem);
+
+        if (startItem == null || startItem.isEmpty()) {
+            return couchDbClientSupplier
+                    .get()
+                    .view(uri)
+                    .includeDocs(true)
+                    .limit(limit)
+                    .descending(descending)
+                    .query(AdapterDescription.class);
         }
-    } else if (startItem.startsWith("[") && startItem.endsWith("]")) {
-        try {
-            // Assuming the startItem is a JSON array in string form
-            ObjectMapper objectMapper = new ObjectMapper();
-            Object[] startKeyArray = objectMapper.readValue(startItem, Object[].class);
-            buildCall = buildCall.startKey(startKeyArray);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Invalid startItem format for compound key", e);
+
+        var buildCall = couchDbClientSupplier
+                .get()
+                .view(uri)
+                .includeDocs(true)
+                .limit(limit);
+
+        if ("createdAt".equals(view)) {
+            try {
+                startItemLong = Long.parseLong(startItem);
+                buildCall = buildCall.startKey(startItemLong);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid startItem format for 'createdAt'", e);
+            }
+        } else if (startItem.startsWith("[") && startItem.endsWith("]")) {
+            try {
+                // Assuming the startItem is a JSON array in string form
+                LOG.info("Starting Object Thinf");
+                ObjectMapper objectMapper = new ObjectMapper();
+                Object[] startKeyArray = objectMapper.readValue(startItem, Object[].class);
+                LOG.info("Array Start Key");
+                 LOG.info("Array Start Key: " + Arrays.toString(startKeyArray));
+                buildCall = buildCall.startKey(startKeyArray[0]);
+
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Invalid startItem format for compound key", e);
+            }
+        } else {
+            LOG.info(startItem);
+            buildCall = buildCall.startKey(startItem);
         }
-    } else {
-        buildCall = buildCall.startKey(startItem);
+
+        if (endItem != null && !endItem.isEmpty()) {
+
+            LOG.info("added end key");
+            LOG.info(endItem);
+            if (endItem.startsWith("[") && endItem.endsWith("]")) {
+                try {
+                    // Assuming the startItem is a JSON array in string form
+                    LOG.info("Starting Object Thinf");
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    // TODO CHANGED END TO START
+                    Object[] endKeyArray = objectMapper.readValue(startItem, Object[].class);
+                
+
+                    LOG.info("Array End Key: " + Arrays.toString(endKeyArray));
+
+                    buildCall = buildCall.endKey(endKeyArray[0]);
+
+
+
+                } catch (IOException e) {
+                    throw new IllegalArgumentException("Invalid startItem format for compound key", e);
+                }
+            } else {
+                buildCall = buildCall.endKey(endItem);
+            }
+        }
+
+        return buildCall
+                .descending(descending)
+                .query(AdapterDescription.class);
     }
 
-    if (endItem != null && !endItem.isEmpty()){
+    @Override
+    public List<AdapterDescription> getItemsByCategoryPaginated(String category, String startDocId, int limit,
+            boolean descending) {
 
-      LOG.info("added end key");
-      LOG.info(endItem);
-      buildCall = buildCall.endKey(endItem);
+        String viewName = "paginator/by_category";
+
+        // Construct start key
+        Object[] startKey = (startDocId != null && !startDocId.isEmpty())
+                ? new Object[] { category } // startDocID
+                : new Object[] { category };
+
+        // Construct end key
+        Object[] endKey = new Object[] { category,  "\ufff0" };
+
+        //LOG.info("Category: " + category);
+        LOG.info("StartDocId: " + startDocId);
+        LOG.info("StartKey: " + Arrays.toString(startKey));
+        LOG.info("EndKey: " + Arrays.toString(endKey));
+        LOG.info("Descending: " + descending);
+
+        var viewQuery = couchDbClientSupplier.get()
+                .view(viewName)
+                .includeDocs(true)
+                .limit(limit)
+                .descending(descending)
+                .startKey(startKey)
+                .endKey(endKey).query(AdapterDescription.class);
+
+                // Manually filter to enforce exact match
+        List<AdapterDescription> filtered = viewQuery.stream()
+            .filter(doc -> doc.getCategory() != null && doc.getCategory().contains(category))
+            .collect(Collectors.toList());
+
+        return filtered;
     }
-
-    return buildCall
-        .descending(descending)
-        .query(AdapterDescription.class);
-}
 }

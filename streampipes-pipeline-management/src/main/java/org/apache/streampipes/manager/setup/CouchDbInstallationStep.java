@@ -52,8 +52,7 @@ public class CouchDbInstallationStep extends InstallationStep {
     new CreateAssetLinkTypeTask().execute();
     new CreateDefaultAssetTask().execute();
     new AddDefaultPipelineTemplatesTask(
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineTemplateStorage()
-    ).execute();
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineTemplateStorage()).execute();
   }
 
   @Override
@@ -114,8 +113,7 @@ public class CouchDbInstallationStep extends InstallationStep {
           + "}");
       notificationCountTypeViews.put("unread", countFunction);
       notificationCountDocument.setViews(notificationCountTypeViews);
-      Response countResp =
-          Utils.getCouchDbNotificationClient().design().synchronizeWithDb(notificationCountDocument);
+      Response countResp = Utils.getCouchDbNotificationClient().design().synchronizeWithDb(notificationCountDocument);
 
       if (resp.getError() != null && countResp != null) {
         logFailure(PREPARING_NOTIFICATIONS_TEXT);
@@ -126,7 +124,8 @@ public class CouchDbInstallationStep extends InstallationStep {
       logFailure(PREPARING_NOTIFICATIONS_TEXT, e);
     }
   }
-private void addPaginatorView() {
+
+  private void addPaginatorView() {
     DesignDocument paginatorDocument = prepareDocument("_design/paginator");
 
     Map<String, MapReduce> paginatorViews = new HashMap<>();
@@ -134,48 +133,46 @@ private void addPaginatorView() {
     // View to paginate documents by creation time
     MapReduce paginationFunctionByCreate = new MapReduce();
     paginationFunctionByCreate.setMap(
-        "function (doc) {\n" 
-        + "  if (doc.properties && doc.properties.createdAt) {\n" 
-        + "    emit(doc.properties.createdAt, doc);\n" 
-        + "  }\n" 
-        + "}"
-    );
+        "function (doc) {\n"
+            + "  if (doc.properties && doc.properties.createdAt) {\n"
+            + "    emit(doc.properties.createdAt, doc);\n"
+            + "  }\n"
+            + "}");
 
     // View to paginate documents by name
     MapReduce paginationFunctionByName = new MapReduce();
     paginationFunctionByName.setMap(
-        "function (doc) {\n" 
-        + "  if (doc.properties && doc.properties.name && typeof doc.properties.name === 'string') {\n" 
-        + "    emit(doc.properties.name, doc);\n" 
-        + "  }\n" 
-        + "}"
-    );
+        "function (doc) {\n"
+            + "  if (doc.properties && doc.properties.name && typeof doc.properties.name === 'string') {\n"
+            + "    emit(doc.properties.name, doc);\n"
+            + "  }\n"
+            + "}");
 
     // View to paginate documents by running
     MapReduce paginationFunctionByRunning = new MapReduce();
     paginationFunctionByRunning.setMap(
-        "function (doc) {\n" 
-        + "    emit([doc.properties.running, doc._id], doc);\n" 
-        + "}"
-    );
+        "function (doc) {\n"
+            + "    emit([doc.properties.running, doc._id], doc);\n"
+            + "}");
 
-    // View to paginate documents by categories
     MapReduce paginationFunctionByCategory = new MapReduce();
     paginationFunctionByCategory.setMap(
-        "function (doc) {\n" 
-        + "    emit([doc.properties.category, doc._id], doc);\n" 
-        + "}"
-    );
+        "function (doc) {\n"
+            + "  if (doc.properties && Array.isArray(doc.properties.category)) {\n"
+            + "    doc.properties.category.forEach(function (cat) {\n"
+            + "      emit([cat, doc._id], doc);\n"
+            + "    });\n"
+            + "  }\n"
+            + "}");
 
     // View to list all non-design documents
     MapReduce nonDesignDocsView = new MapReduce();
     nonDesignDocsView.setMap(
-        "function (doc) {\n" 
-        + "  if (!doc._id.startsWith(\"_design/\")) {\n" 
-        + "    emit(doc._id, null);\n" 
-        + "  }\n" 
-        + "}"
-    );
+        "function (doc) {\n"
+            + "  if (!doc._id.startsWith(\"_design/\")) {\n"
+            + "    emit(doc._id, null);\n"
+            + "  }\n"
+            + "}");
 
     // Add views to the document
     paginatorViews.put("by_createdAt", paginationFunctionByCreate);
@@ -188,9 +185,10 @@ private void addPaginatorView() {
 
     // Push the design document to CouchDB
     Utils.getCouchDbAdapterInstanceClient()
-         .design()
-         .synchronizeWithDb(paginatorDocument);
-}
+        .design()
+        .synchronizeWithDb(paginatorDocument);
+  }
+
   private void addPipelineView() {
     DesignDocument pipelineDocument = prepareDocument("_design/adapters");
     DesignDocument allPipelinesDocument = prepareDocument("_design/pipelines");
@@ -210,7 +208,6 @@ private void addPaginatorView() {
     adapterViews.put("used-adapters", adapterFunction);
     pipelineDocument.setViews(adapterViews);
     Utils.getCouchDbPipelineClient().design().synchronizeWithDb(pipelineDocument);
-
 
     MapReduce allPipelinesFunction = new MapReduce();
     allPipelinesFunction.setMap("function (doc) {\n"

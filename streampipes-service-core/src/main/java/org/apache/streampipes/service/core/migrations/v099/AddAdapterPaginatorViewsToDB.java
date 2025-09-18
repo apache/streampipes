@@ -91,11 +91,14 @@ public class AddAdapterPaginatorViewsToDB implements Migration {
                         + "    emit([doc.properties.running, doc._id], doc);\n"
                         + "}");
 
-        // View to paginate documents by categories
         MapReduce paginationFunctionByCategory = new MapReduce();
         paginationFunctionByCategory.setMap(
                 "function (doc) {\n"
-                        + "    emit([doc.properties.category, doc._id], doc);\n"
+                        + "  if (doc.properties && Array.isArray(doc.properties.category)) {\n"
+                        + "    doc.properties.category.forEach(function (cat) {\n"
+                        + "      emit([cat, doc._id], doc);\n"
+                        + "    });\n"
+                        + "  }\n"
                         + "}");
 
         // View to list all non-design documents

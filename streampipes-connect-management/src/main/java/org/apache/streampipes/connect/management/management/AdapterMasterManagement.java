@@ -149,6 +149,13 @@ public class AdapterMasterManagement {
     return adapterInstanceStorage.getAdapterPaginator(startKey,endKey, limit, view, descending);
   }
 
+
+    public List<AdapterDescription> getItemsByCategoryPaginated(String category, String startKey, int limit,
+      boolean descending) {
+    return adapterInstanceStorage.getItemsByCategoryPaginated(category,startKey, limit, descending);
+  }
+
+
   public void stopStreamAdapter(String elementId,
       boolean forceStop) throws AdapterException {
     AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
