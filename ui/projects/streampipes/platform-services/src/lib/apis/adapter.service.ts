@@ -109,15 +109,12 @@ export class AdapterService {
 
         params = params.set('category', category);
 
-        console.log('category ', category);
-
         if (startid) {
             params = params.set('startKey', startid);
         }
 
         params = params.set('descending', descending);
         const url = `${this.connectPath}${path}`;
-        console.log(params);
 
         return this.http.get(url, { params }).pipe(
             map(response => {
