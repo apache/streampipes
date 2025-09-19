@@ -353,7 +353,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         if (this.filter.value.text != '') {
             endKey = this.filter.value.text;
             sortBy = 'name';
-            this.sort.active = '';
+            this.sort.active = 'name';
         } else {
             if (
                 this.filter.value.category != '' &&

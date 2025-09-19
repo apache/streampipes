@@ -104,6 +104,10 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                 this.filtering = this.filter.value;
                 if (this.filter.value['category'] != '') {
                     this.propertyName = this.getViewFn('category');
+                } else if (this.filter.value['text'] != '') {
+                    this.propertyName = this.getViewFn('name');
+                } else {
+                    this.propertyName = this.getViewFn('');
                 }
                 this.resetPagination();
                 this.loadData(0);
