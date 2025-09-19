@@ -401,7 +401,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         let endKey: string | null = null;
 
         if (filterkeys.endKey) {
-            startKey = filterkeys.endKey;
+            if (startKey == null) {
+                startKey = filterkeys.endKey;
+            }
             if (startKey.startsWith('[')) {
                 startKey = startKey + ']';
             }
