@@ -347,27 +347,39 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         }
     }
 
-    getEndKeyFromFilter(): { endKey: string | null; sortby: string } {
+    getStartAndEndKeyFromFilter(startKey): {
+        startKey: string | null;
+        endKey: string | null;
+    } {
         let endKey: string | null = null;
-        let sortBy: string;
-        // TODO DO I still need this ?
         if (this.filter.value.text != '') {
             endKey = this.filter.value.text;
-            sortBy = 'name';
             this.sort.active = 'name';
         } else {
             if (
                 this.filter.value.category != '' &&
                 this.filter.value.category != 'All'
             ) {
-                //endKey = '["' + this.filter.value.category + '"';
-                sortBy = 'category';
                 this.sort.active = 'category';
             }
-        }
+            let endKey: string | null = null;
 
-        console.log('FROM FILTERING', endKey);
-        return { endKey: endKey, sortby: sortBy };
+            if (endKey) {
+                if (startKey == null) {
+                    startKey = endKey;
+                }
+                if (startKey.startsWith('[')) {
+                    startKey = startKey + ']';
+                }
+
+                if (startKey.startsWith('[')) {
+                    endKey = endKey + ',"\ufff0"]';
+                } else {
+                    endKey = endKey + '\ufff0';
+                }
+            }
+        }
+        return { startKey: startKey, endKey: endKey };
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
@@ -394,40 +406,12 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         startKey?: string,
         pageSize?: number,
     ): Observable<AdapterDescription[]> => {
-        let sortBy = this.getSortView();
-        const filterkeys = this.getEndKeyFromFilter();
-
-        console.log('f startkey', startKey);
-
-        let endKey: string | null = null;
-
-        if (filterkeys.endKey) {
-            if (startKey == null) {
-                startKey = filterkeys.endKey;
-            }
-            if (startKey.startsWith('[')) {
-                startKey = startKey + ']';
-            }
-
-            if (startKey.startsWith('[')) {
-                endKey = filterkeys.endKey + ',"\ufff0"]';
-            } else {
-                endKey = filterkeys.endKey + '\ufff0';
-            }
-            sortBy = filterkeys.sortby;
-        }
-
-        console.log('EndKey Fetch Adapter', endKey);
-        console.log('EndKey Fetch Adapter', startKey);
-        console.log('EndKey Fetch Adapter', sortBy);
-
+        const { startKey: derivedStartKey, endKey } =
+            this.getStartAndEndKeyFromFilter(startKey);
+        const sortBy = this.getSortView();
         if (sortBy == 'category') {
             // Unfortunatly needs a different endpoint
-
-            const arr = JSON.parse(startKey);
-            console.log(arr);
-            console.log(arr[0]);
-            console.log(arr[1]);
+            const arr = JSON.parse(derivedStartKey);
 
             return this.adapterService.getAdaptersCategorywisePaginated(
                 arr[0],
@@ -438,7 +422,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         } else {
             return this.adapterService
                 .getAdaptersPaginated(
-                    startKey,
+                    derivedStartKey,
                     endKey,
                     pageSize,
                     sortBy,
@@ -456,8 +440,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     private getSortView(): string {
         // Parse naming of the view
-
-        console.log('VIEWS FROM SORTING', this.sort);
         if (this.sort?.active === 'category') {
             return 'category';
         } else if (this.sort?.active === 'lastModified') {

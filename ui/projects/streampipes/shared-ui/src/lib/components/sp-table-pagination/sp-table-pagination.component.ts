@@ -82,12 +82,13 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     startKeyMap: Map<number, number | string | null> = new Map();
 
     private sortInitialized = false;
+    private filterInitialized = false;
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['sort'] && this.sort && !this.sortInitialized) {
             this.sort.sortChange.subscribe((sortChange: Sort) => {
+                console.log();
                 this.propertyName = this.getViewFn(sortChange.active);
-                console.log('Changed Triggert');
                 console.log(this.propertyName);
                 this.filter.value['category'] = '';
                 this.filter.value['text'] = '';
@@ -103,9 +104,11 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
             });
         }
 
-        if (changes.filter) {
+        if (changes.filter && !this.filterInitialized) {
             this.filter.subscribe(() => {
                 console.log('NEW FIlter Value', this.filter.value);
+                this.propertyName = this.sort.active;
+                console.log(this.propertyName);
                 this.filtering = this.filter.value;
                 if (this.filter.value['category'] != '') {
                     this.propertyName = this.getViewFn('category');
@@ -116,6 +119,8 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                 }
                 this.resetPagination();
                 this.loadData(0);
+
+                this.filterInitialized = true;
             });
         }
     }
