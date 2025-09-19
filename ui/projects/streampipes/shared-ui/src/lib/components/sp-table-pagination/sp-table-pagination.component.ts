@@ -87,7 +87,12 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         if (changes['sort'] && this.sort && !this.sortInitialized) {
             this.sort.sortChange.subscribe((sortChange: Sort) => {
                 this.propertyName = this.getViewFn(sortChange.active);
+                console.log('Changed Triggert');
+                console.log(this.propertyName);
+                this.filter.value['category'] = '';
+                this.filter.value['text'] = '';
                 this.resetPagination();
+                this.loadData(0);
             });
             this.sortInitialized = true;
         }
