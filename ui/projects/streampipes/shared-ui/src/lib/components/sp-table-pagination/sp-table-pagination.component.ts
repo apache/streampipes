@@ -86,31 +86,51 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['sort'] && this.sort && !this.sortInitialized) {
-            this.sort.sortChange.subscribe((sortChange: Sort) => {
-                this.propertyName = this.getViewFn(sortChange.active);
-                this.filter.value['category'] = '';
-                this.filter.value['text'] = '';
-                this.resetPagination();
-                this.loadData(0);
-            });
-            this.sortInitialized = true;
+            this.initSortSubscription();
         }
 
-        if (changes.refresh) {
-            this.refresh.subscribe(() => {
-                this.loadData(this.currentPage);
-            });
+        if (changes['refresh']) {
+            this.initRefreshSubscription();
         }
 
-        if (changes.filter && !this.filterInitialized) {
-            this.filter.subscribe(() => {
-                this.filtering = this.filter.value;
-                this.propertyName = this.getViewFn(this.filter.value['view']);
-                this.resetPagination();
-                this.loadData(0);
-                this.filterInitialized = true;
-            });
+        if (changes['filter'] && !this.filterInitialized) {
+            this.initFilterSubscription();
         }
+    }
+
+    private initSortSubscription(): void {
+        this.sort.sortChange.subscribe(sortChange =>
+            this.updateSort(sortChange),
+        );
+        this.sortInitialized = true;
+    }
+
+    private initRefreshSubscription(): void {
+        this.refresh?.subscribe(() => {
+            this.loadData(this.currentPage);
+        });
+    }
+
+    private initFilterSubscription(): void {
+        this.filter?.subscribe(() => {
+            this.filtering = this.filter.value;
+            this.propertyName = this.getViewFn(this.filter.value['view']);
+            this.resetPagination();
+            this.loadData(0);
+            this.filterInitialized = true;
+        });
+    }
+
+    private updateSort(sortChange: Sort): void {
+        this.propertyName = this.getViewFn(sortChange.active);
+        this.clearFilters();
+        this.resetPagination();
+        this.loadData(0);
+    }
+
+    private clearFilters(): void {
+        this.filter.value['category'] = '';
+        this.filter.value['text'] = '';
     }
 
     ngAfterViewInit() {
