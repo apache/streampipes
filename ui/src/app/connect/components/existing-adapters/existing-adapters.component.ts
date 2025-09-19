@@ -403,6 +403,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         }
         const endKey = text + '\ufff0';
         this.sort.active = 'name';
+        // Search Field only works if asc
         this.sort.direction = 'asc';
         return { startKey, endKey };
     }
