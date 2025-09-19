@@ -328,6 +328,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     applyFilter(filtering: AdapterFilterSettingsModel) {
         console.log('Filtering ', filtering);
+
         if (filtering.textFilter != '') {
             this.filter.next({ text: filtering.textFilter, category: '' });
         }
