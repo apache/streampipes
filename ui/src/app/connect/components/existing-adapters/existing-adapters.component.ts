@@ -382,6 +382,16 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             });
             return;
         }
+
+        if (filtering.selectedCategory && filtering.selectedCategory == 'All') {
+            this.sort.active = 'createdAt';
+            this.filter.next({
+                text: '',
+                category: '',
+                view: 'createdAt',
+            });
+            return;
+        }
         this.filter.next({ text: '', category: '', view: '' });
     }
 
@@ -426,14 +436,18 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     } {
         const filterValue = this.filter.value;
         const startKey = startKeyOrg;
-
-        if (filterValue.text) {
+        if (filterValue.text != '') {
             return this.buildRangeForTextFilter(filterValue.text, startKey);
-        } else if (filterValue.category && filterValue.category !== 'All') {
+        } else if (
+            filterValue.category != '' &&
+            filterValue.category !== 'All'
+        ) {
             return this.buildRangeForCategoryFilter(
                 filterValue.category,
                 startKey,
             );
+        } else if (filterValue.category == 'All') {
+            this.sort.active = '';
         }
 
         return { startKey, endKey: null };
