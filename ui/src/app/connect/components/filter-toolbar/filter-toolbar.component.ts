@@ -47,7 +47,6 @@ export class SpConnectFilterToolbarComponent implements OnInit {
     }
 
     loadAvailableTypeCategories() {
-        //TODO THIS IS a TODO
         this.dataMarketplaceService.getAdapterCategories().subscribe(res => {
             this.adapterCategories = res;
             this.adapterCategories.unshift({
@@ -60,11 +59,15 @@ export class SpConnectFilterToolbarComponent implements OnInit {
     }
 
     filterAdapter(event: MatSelectChange) {
+        // Reset the text filter when a category is selected
+        this.currentFilter.textFilter = '';
         this.filterChangedEmitter.emit(this.currentFilter);
     }
 
-    updateFilterTerm(event: string) {
-        this.currentFilter.textFilter = event;
+    updateFilterTerm(term: string) {
+        // Reset the category filter when text input is used
+        this.currentFilter.textFilter = term;
+        this.currentFilter.selectedCategory = 'All';
         this.filterChangedEmitter.emit(this.currentFilter);
     }
 }
