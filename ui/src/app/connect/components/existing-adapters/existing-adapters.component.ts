@@ -104,6 +104,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     startAdapterErrorText = 'Could not start adapter';
     stopAdapterErrorText = 'Could not stop adapter';
 
+    allAdapters: AdapterDescription[] = [];
     constructor(
         private cdRef: ChangeDetectorRef,
         private adapterService: AdapterService,
@@ -186,7 +187,38 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         return active;
     }
 
-    startAllAdapters(action: boolean) {
+    private getAllAdapters(): Observable<AdapterDescription[]> {
+        return this.adapterService.getAdapters().pipe(
+            tap(adapters => {
+                this.allAdapters = adapters;
+                this.operationInProgressAdapterId = undefined;
+                this.getMonitoringInfos(adapters);
+            }),
+        );
+    }
+
+    startAllAdapters(action: boolean): void {
+        this.getAllAdapters().subscribe(allAdapters => {
+            const dialogRef: DialogRef<AllAdapterActionsComponent> =
+                this.dialogService.open(AllAdapterActionsComponent, {
+                    panelType: PanelType.STANDARD_PANEL,
+                    title: (action ? 'Start' : 'Stop') + ' all adapters',
+                    width: '70vw',
+                    data: {
+                        adapters: allAdapters,
+                        action: action,
+                    },
+                });
+
+            dialogRef.afterClosed().subscribe(data => {
+                if (data) {
+                    this.getAdaptersRunning();
+                }
+            });
+        });
+    }
+
+    startAdapters(action: boolean) {
         const dialogRef: DialogRef<AllAdapterActionsComponent> =
             this.dialogService.open(AllAdapterActionsComponent, {
                 panelType: PanelType.STANDARD_PANEL,
@@ -393,7 +425,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         endKey: string | null;
     } {
         const filterValue = this.filter.value;
-        console.log('FIlterValue', filterValue);
         const startKey = startKeyOrg;
 
         if (filterValue.text) {
@@ -436,9 +467,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             this.getStartAndEndKeyFromFilter(startKey);
         const sortBy = this.getSortView();
 
-        console.log(sortBy);
-        console.log(endKey);
-        console.log(startKey);
         if (sortBy == 'category') {
             // Unfortunatly needs a different endpoint
             const arr = JSON.parse(derivedStartKey);
