@@ -87,9 +87,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['sort'] && this.sort && !this.sortInitialized) {
             this.sort.sortChange.subscribe((sortChange: Sort) => {
-                console.log();
                 this.propertyName = this.getViewFn(sortChange.active);
-                console.log(this.propertyName);
                 this.filter.value['category'] = '';
                 this.filter.value['text'] = '';
                 this.resetPagination();
@@ -145,24 +143,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
     }
     loadData(pageIndex: number) {
         const start = this.startKeyMap.get(pageIndex) || null;
-        console.log('LOAD DATA start key', start);
-        console.log('LOAD DATA Property', this.propertyName);
         let startkey = start;
-
-        // Check if propertyName includes 'category'
-        if (
-            //TODO  Move this to the other component only if else
-            startkey == null &&
-            ((typeof this.propertyName === 'string' &&
-                this.propertyName === 'category') ||
-                (Array.isArray(this.propertyName) &&
-                    this.propertyName.includes('category')))
-        ) {
-            startkey = '["' + this.filtering['category'] + '"]';
-        }
-
-        console.log('LOAD DATA start key', startkey);
-        console.log('LOAD DATA Property', this.propertyName);
 
         this.fetchDataFn(startkey, this.pageSize + 1).subscribe({
             next: (data: T[]) => {
@@ -175,18 +156,14 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                     this.totalItems = data.length + pageIndex * this.pageSize;
                 }
 
-                //this.last_key = data[data.length - 1][this.propertyName];
-
                 if (data.length > this.pageSize) {
                     let nextStartKey;
 
                     if (Array.isArray(this.propertyName)) {
-                        console.log('ARRAY');
                         nextStartKey = this.propertyName.map(
                             prop => data[this.pageSize][prop],
                         );
                     } else {
-                        console.log('ELSE');
                         nextStartKey = data[this.pageSize][this.propertyName];
                     }
                     const nextStartKeyString = Array.isArray(nextStartKey)
@@ -195,7 +172,6 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                     this.startKeyMap.set(pageIndex + 1, nextStartKeyString);
                     this.dataSource.data = data.slice(0, this.pageSize);
                 }
-                console.log(this.startKeyMap);
             },
             error: err => {
                 console.error('Failed to fetch paginated data', err);

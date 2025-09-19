@@ -332,8 +332,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     applyFilter(filtering: AdapterFilterSettingsModel) {
-        console.log('Filtering ', filtering);
-
         if (filtering.textFilter != '') {
             this.filter.next({
                 text: filtering.textFilter,
@@ -357,11 +355,13 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         }
     }
 
-    getStartAndEndKeyFromFilter(startKey): {
+    getStartAndEndKeyFromFilter(startKeyOrg): {
         startKey: string | null;
         endKey: string | null;
     } {
         let endKey: string | null = null;
+        let startKey = startKeyOrg;
+
         if (this.filter.value.text != '') {
             endKey = this.filter.value.text;
 
@@ -372,7 +372,12 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 this.filter.value.category != 'All'
             ) {
                 this.sort.active = 'category';
+
+                if (startKey == null) {
+                    startKey = '["' + this.filter.value.category + '"]';
+                }
             }
+
             let endKey: string | null = null;
 
             if (endKey) {
