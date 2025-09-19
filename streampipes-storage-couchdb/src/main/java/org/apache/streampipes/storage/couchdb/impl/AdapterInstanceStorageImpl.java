@@ -121,12 +121,8 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
             }
         } else if (startItem.startsWith("[") && startItem.endsWith("]")) {
             try {
-                // Assuming the startItem is a JSON array in string form
-                LOG.info("Starting Object Thinf");
                 ObjectMapper objectMapper = new ObjectMapper();
                 Object[] startKeyArray = objectMapper.readValue(startItem, Object[].class);
-                LOG.info("Array Start Key");
-                 LOG.info("Array Start Key: " + Arrays.toString(startKeyArray));
                 buildCall = buildCall.startKey(startKeyArray);
 
             } catch (IOException e) {
@@ -138,12 +134,8 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         }
 
         if (endItem != null && !endItem.isEmpty()) {
-
-            LOG.info("added end key");
-            LOG.info(endItem);
-             buildCall = buildCall.endKey(endItem);
-            
-        }
+            buildCall = buildCall.endKey(endItem);
+      }
 
         return buildCall
                 .descending(descending)
@@ -151,111 +143,90 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     }
 
     @Override
-public List<AdapterDescription> getItemsByCategoryPaginated(String category, String startDocId, int limit, boolean descending) {
+    public List<AdapterDescription> getItemsByCategoryPaginated(String category, String startDocId, int limit,
+            boolean descending) {
 
-    // Does not use LightCouchDB, as the current functionality of the URI Parser runs into issues by querying endKey with arrays. 
+        // Does not use LightCouchDB, as the current functionality of the URI Parser
+        // runs into issues by querying endKey with arrays.
 
-    List<AdapterDescription> resultList = new ArrayList<>();
+        List<AdapterDescription> resultList = new ArrayList<>();
 
-    try {
-        // Extract the necessary data form the couch DB Instance
-        CouchDbClient dbClient = couchDbClientSupplier.get();//new CouchDbClient();  // or however you're managing it
-        Gson gson =  dbClient.getGson();
-        URI baseUri = dbClient.getBaseUri();
+        try {
+            CouchDbClient dbClient = couchDbClientSupplier.get();
+            Gson gson = dbClient.getGson();
+            URI baseUri = dbClient.getBaseUri();
+            String host = baseUri.getHost();
+            int port = baseUri.getPort();
+            String username = Environments.getEnvironment().getCouchDbUsername().getValueOrDefault();
+            String password = Environments.getEnvironment().getCouchDbPassword().getValueOrDefault();
+            String authHeader = Base64.getEncoder()
+                    .encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
+            String dbName = "adapterinstance";
+            String designDoc = "paginator";
+            String viewName = "by_category";
 
-        // Log the base URI to check its structure
-        LOG.info("Base URI: " + baseUri.toString());
+            String startKey;
+            if (startDocId != null && !startDocId.isEmpty()) {
+                startKey = "[\"" + category + "\", \"" + startDocId + "\"]";
+            } else {
+                LOG.info("OnlyCat" + category);
+                startKey = "[\"" + category + "\"]";
+            }
+            startKey = URLEncoder.encode(startKey);
 
-        // Extract the host and port from the URI
-        String host = baseUri.getHost();
-        int port = baseUri.getPort();
+            String endKey = URLEncoder.encode("[\"" + category + "\", \"\ufff0\"]", StandardCharsets.UTF_8);
 
-        //String userInfo = baseUri.getUserInfo(); // Returns "admin:admin"
-        //LOG.info(userInfo);
-        //String[] parts = userInfo != null ? userInfo.split(":") : new String[] { "admin", "admin" };
+            String urlStr = String.format(
+                    "http://%s:%d/%s/_design/%s/_view/%s?startkey=%s&endkey=%s&limit=%d&include_docs=true",
+                    host, port, dbName, designDoc, viewName, startKey, endKey, limit);
 
-        String username = Environments.getEnvironment().getCouchDbUsername().getValueOrDefault();//parts[0];
-        String password = Environments.getEnvironment().getCouchDbPassword().getValueOrDefault();//parts[0];//parts.length > 1 ? parts[1] : "";
-        LOG.info(username);
-        LOG.info(password);
-        String authHeader = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
+            // HTTP request setup
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", "Basic " + authHeader);
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
 
-        String dbName = "adapterinstance";
-        String designDoc = "paginator";
-        String viewName = "by_category";
-      
-       
+            int responseCode = conn.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("Failed with HTTP code: " + responseCode);
+            }
 
-        // Query parameters
-       //Check if startDocId exists 
-        String startKey;
-       if (startDocId != null && !startDocId.isEmpty()) {
-        LOG.info("WE HABE A STARTSD" + startDocId);
-    startKey = "[\"" + category + "\", \"" + startDocId + "\"]";
-} else {
-    LOG.info("OnlyCat" + category);
-    startKey = "[\"" + category + "\"]";
-}
-        startKey = URLEncoder.encode(startKey);
-        //String startKey = URLEncoder.encode("[\"" + category + "\"]", StandardCharsets.UTF_8);
-        String endKey = URLEncoder.encode("[\"" + category + "\", \"\ufff0\"]", StandardCharsets.UTF_8);
+            try (Reader reader = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8)) {
+                JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
 
-        // Construct full URL
-        String urlStr = String.format(
-                "http://%s:%d/%s/_design/%s/_view/%s?startkey=%s&endkey=%s&limit=%d&include_docs=true",
-                host, port, dbName, designDoc, viewName, startKey, endKey, limit
-        );
-        LOG.info("StartKey" + startKey.toString());
-        LOG.info("urlStr" +  urlStr.toString());
+                if (root.has("rows")) {
+                    JsonArray rows = root.getAsJsonArray("rows");
 
-        // HTTP request setup
-        URL url = new URL(urlStr);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Authorization", "Basic " + authHeader);
-        conn.setConnectTimeout(5000);
-        conn.setReadTimeout(5000);
+                    for (JsonElement rowElem : rows) {
+                        JsonObject rowObj = rowElem.getAsJsonObject();
+                        JsonElement docElem = rowObj.get("doc");
 
-        int responseCode = conn.getResponseCode();
-        if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw new RuntimeException("Failed with HTTP code: " + responseCode);
-        }
+                        if (docElem != null && !docElem.isJsonNull()) {
+                            // Optional: enforce @class for polymorphic deserialization if needed
+                            docElem.getAsJsonObject().addProperty("@class",
+                                    "org.apache.streampipes.model.connect.adapter.AdapterDescription");
 
-        // ✅ Parse response using Gson
-        try (Reader reader = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8)) {
-            JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
-
-            if (root.has("rows")) {
-                JsonArray rows = root.getAsJsonArray("rows");
-
-                for (JsonElement rowElem : rows) {
-                    JsonObject rowObj = rowElem.getAsJsonObject();
-                    JsonElement docElem = rowObj.get("doc");
-
-                    if (docElem != null && !docElem.isJsonNull()) {
-                        // Optional: enforce @class for polymorphic deserialization if needed
-                        docElem.getAsJsonObject().addProperty("@class", "org.apache.streampipes.model.connect.adapter.AdapterDescription");
-
-                        AdapterDescription adapter = gson.fromJson(docElem, AdapterDescription.class);
-                        resultList.add(adapter);
+                            AdapterDescription adapter = gson.fromJson(docElem, AdapterDescription.class);
+                            resultList.add(adapter);
+                        }
                     }
                 }
             }
+
+        } catch (IOException e) {
+            System.err.println("I/O error during CouchDB request: " + e.getMessage());
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            System.err.println("Runtime exception: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Unexpected exception: " + e.getMessage());
+            e.printStackTrace();
         }
 
-    } catch (IOException e) {
-        System.err.println("I/O error during CouchDB request: " + e.getMessage());
-        e.printStackTrace();
-    } catch (RuntimeException e) {
-        System.err.println("Runtime exception: " + e.getMessage());
-        e.printStackTrace();
-    } catch (Exception e) {
-        System.err.println("Unexpected exception: " + e.getMessage());
-        e.printStackTrace();
+        return resultList;
     }
 
-    return resultList;
-    }
-
-    
 }
