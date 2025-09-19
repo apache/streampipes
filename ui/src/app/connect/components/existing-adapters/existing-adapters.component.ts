@@ -84,9 +84,14 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     isAdmin = false;
     refreshSwitch = new BehaviorSubject<boolean>(false);
-    filter = new BehaviorSubject<{ text: string; category: string }>({
+    filter = new BehaviorSubject<{
+        text: string;
+        category: string;
+        view: string;
+    }>({
         text: '',
         category: '',
+        view: '',
     });
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
@@ -330,7 +335,11 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         console.log('Filtering ', filtering);
 
         if (filtering.textFilter != '') {
-            this.filter.next({ text: filtering.textFilter, category: '' });
+            this.filter.next({
+                text: filtering.textFilter,
+                category: '',
+                view: 'name',
+            });
         }
         if (
             filtering.selectedCategory != '' &&
@@ -339,11 +348,12 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             this.filter.next({
                 text: '',
                 category: filtering.selectedCategory,
+                view: 'category',
             });
         }
 
         if (filtering.selectedCategory == 'All' && filtering.textFilter == '') {
-            this.filter.next({ text: '', category: '' });
+            this.filter.next({ text: '', category: '', view: '' });
         }
     }
 
@@ -354,6 +364,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         let endKey: string | null = null;
         if (this.filter.value.text != '') {
             endKey = this.filter.value.text;
+
             this.sort.active = 'name';
         } else {
             if (

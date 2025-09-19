@@ -106,20 +106,10 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
 
         if (changes.filter && !this.filterInitialized) {
             this.filter.subscribe(() => {
-                console.log('NEW FIlter Value', this.filter.value);
-                this.propertyName = this.sort.active;
-                console.log(this.propertyName);
                 this.filtering = this.filter.value;
-                if (this.filter.value['category'] != '') {
-                    this.propertyName = this.getViewFn('category');
-                } else if (this.filter.value['text'] != '') {
-                    this.propertyName = this.getViewFn('name');
-                } else {
-                    this.propertyName = this.getViewFn('');
-                }
+                this.propertyName = this.getViewFn(this.filter.value['view']);
                 this.resetPagination();
                 this.loadData(0);
-
                 this.filterInitialized = true;
             });
         }
@@ -161,6 +151,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
 
         // Check if propertyName includes 'category'
         if (
+            //TODO  Move this to the other component only if else
             startkey == null &&
             ((typeof this.propertyName === 'string' &&
                 this.propertyName === 'category') ||
@@ -190,10 +181,12 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
                     let nextStartKey;
 
                     if (Array.isArray(this.propertyName)) {
+                        console.log('ARRAY');
                         nextStartKey = this.propertyName.map(
                             prop => data[this.pageSize][prop],
                         );
                     } else {
+                        console.log('ELSE');
                         nextStartKey = data[this.pageSize][this.propertyName];
                     }
                     const nextStartKeyString = Array.isArray(nextStartKey)
