@@ -363,7 +363,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         let startKey = startKeyOrg;
 
         if (this.filter.value.text != '') {
-            endKey = this.filter.value.text;
+            if (startKey == null) {
+                startKey = this.filter.value.text;
+            }
+            endKey = this.filter.value.text + '\ufff0';
 
             this.sort.active = 'name';
         } else {
