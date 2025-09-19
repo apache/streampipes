@@ -24,6 +24,7 @@ import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import org.lightcouch.CouchDbClient;
+import org.lightcouch.View;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,6 +37,7 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -47,7 +49,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
-
 
     public AdapterInstanceStorageImpl() {
         super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
@@ -81,124 +82,61 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     @Override
     public List<AdapterDescription> getAdapterPaginator(String startItem, String endItem, int limit, String view,
             boolean descending) {
-        long startItemLong = 0L; // default value
         String uri = "paginator/by_" + view;
-
-        if (startItem == null || startItem.isEmpty()) {
-            return couchDbClientSupplier
-                    .get()
-                    .view(uri)
-                    .includeDocs(true)
-                    .limit(limit)
-                    .descending(descending)
-                    .query(AdapterDescription.class);
-        }
-
-        var buildCall = couchDbClientSupplier
-                .get()
-                .view(uri)
+        var dbClient = couchDbClientSupplier.get();
+        var viewBuilder = dbClient.view(uri)
                 .includeDocs(true)
-                .limit(limit);
+                .limit(limit)
+                .descending(descending);
 
-        if ("createdAt".equals(view)) {
-            try {
-                startItemLong = Long.parseLong(startItem);
-                buildCall = buildCall.startKey(startItemLong);
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid startItem format for 'createdAt'", e);
-            }
-        } else if (startItem.startsWith("[") && startItem.endsWith("]")) {
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                Object[] startKeyArray = objectMapper.readValue(startItem, Object[].class);
-                buildCall = buildCall.startKey(startKeyArray);
-
-            } catch (IOException e) {
-                throw new IllegalArgumentException("Invalid startItem format for compound key", e);
-            }
-        } else {
-            buildCall = buildCall.startKey(startItem);
+        if (startItem != null && !startItem.isEmpty()) {
+            viewBuilder = applyStartKey(viewBuilder, view, startItem);
         }
 
         if (endItem != null && !endItem.isEmpty()) {
-            buildCall = buildCall.endKey(endItem);
-      }
+            viewBuilder = viewBuilder.endKey(endItem);
+        }
 
-        return buildCall
-                .descending(descending)
-                .query(AdapterDescription.class);
+        return viewBuilder.query(AdapterDescription.class);
+    }
+
+    private View applyStartKey(View viewBuilder, String view, String startItem) {
+        try {
+            if ("createdAt".equals(view)) {
+                long startItemLong = Long.parseLong(startItem);
+                return viewBuilder.startKey(startItemLong);
+            }
+
+            if (startItem.startsWith("[") && startItem.endsWith("]")) {
+                ObjectMapper mapper = new ObjectMapper();
+                Object[] startKeyArray = mapper.readValue(startItem, Object[].class);
+                return viewBuilder.startKey(startKeyArray);
+            }
+
+            return viewBuilder.startKey(startItem);
+
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid startItem format for 'createdAt'", e);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Invalid startItem format for compound key", e);
+        }
     }
 
     @Override
-    public List<AdapterDescription> getItemsByCategoryPaginated(String category, String startDocId, int limit,
-            boolean descending) {
-
-        // Does not use LightCouchDB, as the current functionality of the URI Parser
-        // runs into issues by querying endKey with arrays.
-
+    public List<AdapterDescription> getItemsByCategoryPaginated(String category, String startDocId,
+            int limit, boolean descending) {
         List<AdapterDescription> resultList = new ArrayList<>();
 
         try {
-            CouchDbClient dbClient = couchDbClientSupplier.get();
-            Gson gson = dbClient.getGson();
-            URI baseUri = dbClient.getBaseUri();
-            String host = baseUri.getHost();
-            int port = baseUri.getPort();
-            String username = Environments.getEnvironment().getCouchDbUsername().getValueOrDefault();
-            String password = Environments.getEnvironment().getCouchDbPassword().getValueOrDefault();
-            String authHeader = Base64.getEncoder()
-                    .encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
-            String dbName = "adapterinstance";
-            String designDoc = "paginator";
-            String viewName = "by_category";
+            String url = buildCategoryPaginatedUrl(category, startDocId, limit);
+            HttpURLConnection conn = createAuthenticatedConnection(url);
 
-            String startKey;
-            if (startDocId != null && !startDocId.isEmpty()) {
-                startKey = "[\"" + category + "\", \"" + startDocId + "\"]";
-            } else {
-                startKey = "[\"" + category + "\"]";
-            }
-            startKey = URLEncoder.encode(startKey);
-
-            String endKey = URLEncoder.encode("[\"" + category + "\", \"\ufff0\"]", StandardCharsets.UTF_8);
-
-            String urlStr = String.format(
-                    "http://%s:%d/%s/_design/%s/_view/%s?startkey=%s&endkey=%s&limit=%d&include_docs=true",
-                    host, port, dbName, designDoc, viewName, startKey, endKey, limit);
-
-            // HTTP request setup
-            URL url = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Authorization", "Basic " + authHeader);
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(5000);
-
-            int responseCode = conn.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK) {
-                throw new RuntimeException("Failed with HTTP code: " + responseCode);
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("Failed with HTTP code: " + conn.getResponseCode());
             }
 
             try (Reader reader = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8)) {
-                JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
-
-                if (root.has("rows")) {
-                    JsonArray rows = root.getAsJsonArray("rows");
-
-                    for (JsonElement rowElem : rows) {
-                        JsonObject rowObj = rowElem.getAsJsonObject();
-                        JsonElement docElem = rowObj.get("doc");
-
-                        if (docElem != null && !docElem.isJsonNull()) {
-                            // Optional: enforce @class for polymorphic deserialization if needed
-                            docElem.getAsJsonObject().addProperty("@class",
-                                    "org.apache.streampipes.model.connect.adapter.AdapterDescription");
-
-                            AdapterDescription adapter = gson.fromJson(docElem, AdapterDescription.class);
-                            resultList.add(adapter);
-                        }
-                    }
-                }
+                resultList = parseAdapterDescriptions(reader, couchDbClientSupplier.get().getGson());
             }
 
         } catch (IOException e) {
@@ -207,12 +145,77 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         } catch (RuntimeException e) {
             System.err.println("Runtime exception: " + e.getMessage());
             e.printStackTrace();
-        } catch (Exception e) {
-            System.err.println("Unexpected exception: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return resultList;
+    }
+
+    private String buildCategoryPaginatedUrl(String category, String startDocId, int limit)
+            throws UnsupportedEncodingException {
+        String dbName = "adapterinstance";
+        String designDoc = "paginator";
+        String viewName = "by_category";
+
+        String startKey = startDocId != null && !startDocId.isEmpty()
+                ? "[\"" + category + "\", \"" + startDocId + "\"]"
+                : "[\"" + category + "\"]";
+
+        String endKey = "[\"" + category + "\", \"\ufff0\"]";
+
+        CouchDbClient dbClient = couchDbClientSupplier.get();
+        URI baseUri = dbClient.getBaseUri();
+
+        return String.format(
+                "http://%s:%d/%s/_design/%s/_view/%s?startkey=%s&endkey=%s&limit=%d&include_docs=true",
+                baseUri.getHost(),
+                baseUri.getPort(),
+                dbName,
+                designDoc,
+                viewName,
+                URLEncoder.encode(startKey, StandardCharsets.UTF_8),
+                URLEncoder.encode(endKey, StandardCharsets.UTF_8),
+                limit);
+    }
+
+    private HttpURLConnection createAuthenticatedConnection(String urlStr) throws IOException {
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        String username = Environments.getEnvironment().getCouchDbUsername().getValueOrDefault();
+        String password = Environments.getEnvironment().getCouchDbPassword().getValueOrDefault();
+        String authHeader = Base64.getEncoder()
+                .encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
+
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Authorization", "Basic " + authHeader);
+        conn.setConnectTimeout(5000);
+        conn.setReadTimeout(5000);
+
+        return conn;
+    }
+
+    private List<AdapterDescription> parseAdapterDescriptions(Reader reader, Gson gson) {
+        List<AdapterDescription> result = new ArrayList<>();
+        JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
+
+        if (root.has("rows")) {
+            JsonArray rows = root.getAsJsonArray("rows");
+
+            for (JsonElement rowElem : rows) {
+                JsonObject rowObj = rowElem.getAsJsonObject();
+                JsonElement docElem = rowObj.get("doc");
+
+                if (docElem != null && !docElem.isJsonNull()) {
+                    docElem.getAsJsonObject().addProperty("@class",
+                            "org.apache.streampipes.model.connect.adapter.AdapterDescription");
+
+                    AdapterDescription adapter = gson.fromJson(docElem, AdapterDescription.class);
+                    result.add(adapter);
+                }
+            }
+        }
+
+        return result;
     }
 
 }
