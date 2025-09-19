@@ -140,7 +140,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         this.startKeyMap.clear();
         this.currentPage = 0;
         this.last_key = null;
-        this.paginator.firstPage();
+        this.paginator?.firstPage();
         this.loadData(this.currentPage);
         this.isNextDisabled = false;
         this.totalItems = 1000000;
