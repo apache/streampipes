@@ -23,16 +23,16 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.View;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.lightcouch.CouchDbClient;
+import org.lightcouch.View;
+
+
 
 import java.io.IOException;
 import java.io.InputStreamReader;
