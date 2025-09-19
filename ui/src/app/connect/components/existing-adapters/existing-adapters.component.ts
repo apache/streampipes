@@ -384,13 +384,15 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         }
 
         if (filtering.selectedCategory && filtering.selectedCategory == 'All') {
-            this.sort.active = 'createdAt';
-            this.filter.next({
-                text: '',
-                category: '',
-                view: 'createdAt',
-            });
-            return;
+            if (this.sort.active === 'category') {
+                this.sort.active = 'createdAt';
+            }
+            //this.filter.next({
+            //    text: '',
+            //    category: '',
+            //    view: 'createdAt',
+            //});
+            //return;
         }
         this.filter.next({ text: '', category: '', view: '' });
     }
