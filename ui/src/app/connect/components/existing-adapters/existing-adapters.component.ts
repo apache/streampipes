@@ -387,12 +387,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             if (this.sort.active === 'category') {
                 this.sort.active = 'createdAt';
             }
-            //this.filter.next({
-            //    text: '',
-            //    category: '',
-            //    view: 'createdAt',
-            //});
-            //return;
         }
         this.filter.next({ text: '', category: '', view: '' });
     }
@@ -409,6 +403,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         }
         const endKey = text + '\ufff0';
         this.sort.active = 'name';
+        this.sort.direction = 'asc';
         return { startKey, endKey };
     }
 
