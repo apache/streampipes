@@ -35,29 +35,21 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URLEncoder;
-import java.util.Base64;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class.getCanonicalName());
 
     public AdapterInstanceStorageImpl() {
         super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
@@ -94,8 +86,6 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         long startItemLong = 0L; // default value
         String uri = "paginator/by_" + view;
 
-        LOG.info(startItem);
-
         if (startItem == null || startItem.isEmpty()) {
             return couchDbClientSupplier
                     .get()
@@ -129,7 +119,6 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
                 throw new IllegalArgumentException("Invalid startItem format for compound key", e);
             }
         } else {
-            LOG.info(startItem);
             buildCall = buildCall.startKey(startItem);
         }
 
@@ -169,7 +158,6 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
             if (startDocId != null && !startDocId.isEmpty()) {
                 startKey = "[\"" + category + "\", \"" + startDocId + "\"]";
             } else {
-                LOG.info("OnlyCat" + category);
                 startKey = "[\"" + category + "\"]";
             }
             startKey = URLEncoder.encode(startKey);
