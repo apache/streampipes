@@ -318,7 +318,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                     return elementIds.has(a.elementId);
                 }
             });
-        //this.dataSource.data = this.filteredAdapters;
     }
 
     startAdapterTutorial() {
@@ -331,74 +330,82 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    applyFilter(filtering: AdapterFilterSettingsModel) {
-        if (filtering.textFilter != '') {
+    applyFilter(filtering: AdapterFilterSettingsModel): void {
+        if (filtering.textFilter) {
             this.filter.next({
                 text: filtering.textFilter,
                 category: '',
                 view: 'name',
             });
+            return;
         }
         if (
-            filtering.selectedCategory != '' &&
-            filtering.selectedCategory != 'All'
+            filtering.selectedCategory &&
+            filtering.selectedCategory !== 'All'
         ) {
             this.filter.next({
                 text: '',
                 category: filtering.selectedCategory,
                 view: 'category',
             });
+            return;
         }
-
-        if (filtering.selectedCategory == 'All' && filtering.textFilter == '') {
-            this.filter.next({ text: '', category: '', view: '' });
-        }
+        this.filter.next({ text: '', category: '', view: '' });
     }
 
-    getStartAndEndKeyFromFilter(startKeyOrg): {
+    private buildRangeForTextFilter(
+        text: string,
+        startKey: string | null,
+    ): {
         startKey: string | null;
         endKey: string | null;
     } {
-        let endKey: string | null = null;
-        let startKey = startKeyOrg;
-
-        if (this.filter.value.text != '') {
-            if (startKey == null) {
-                startKey = this.filter.value.text;
-            }
-            endKey = this.filter.value.text + '\ufff0';
-
-            this.sort.active = 'name';
-        } else {
-            if (
-                this.filter.value.category != '' &&
-                this.filter.value.category != 'All'
-            ) {
-                this.sort.active = 'category';
-
-                if (startKey == null) {
-                    startKey = '["' + this.filter.value.category + '"]';
-                }
-            }
-
-            let endKey: string | null = null;
-
-            if (endKey) {
-                if (startKey == null) {
-                    startKey = endKey;
-                }
-                if (startKey.startsWith('[')) {
-                    startKey = startKey + ']';
-                }
-
-                if (startKey.startsWith('[')) {
-                    endKey = endKey + ',"\ufff0"]';
-                } else {
-                    endKey = endKey + '\ufff0';
-                }
-            }
+        if (!startKey || startKey == null) {
+            startKey = text;
         }
-        return { startKey: startKey, endKey: endKey };
+        const endKey = text + '\ufff0';
+        this.sort.active = 'name';
+        return { startKey, endKey };
+    }
+
+    private buildRangeForCategoryFilter(
+        category: string,
+        startKey: string | null,
+    ): {
+        startKey: string | null;
+        endKey: string | null;
+    } {
+        this.sort.active = 'category';
+
+        if (!startKey) {
+            startKey = `["${category}"]`;
+        }
+
+        const endKey = startKey.startsWith('[')
+            ? startKey.slice(0, -1) + ', "\ufff0"]'
+            : startKey + '\ufff0';
+
+        return { startKey, endKey };
+    }
+
+    getStartAndEndKeyFromFilter(startKeyOrg: string | null): {
+        startKey: string | null;
+        endKey: string | null;
+    } {
+        const filterValue = this.filter.value;
+        console.log('FIlterValue', filterValue);
+        const startKey = startKeyOrg;
+
+        if (filterValue.text) {
+            return this.buildRangeForTextFilter(filterValue.text, startKey);
+        } else if (filterValue.category && filterValue.category !== 'All') {
+            return this.buildRangeForCategoryFilter(
+                filterValue.category,
+                startKey,
+            );
+        }
+
+        return { startKey, endKey: null };
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
@@ -428,6 +435,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         const { startKey: derivedStartKey, endKey } =
             this.getStartAndEndKeyFromFilter(startKey);
         const sortBy = this.getSortView();
+
+        console.log(sortBy);
+        console.log(endKey);
+        console.log(startKey);
         if (sortBy == 'category') {
             // Unfortunatly needs a different endpoint
             const arr = JSON.parse(derivedStartKey);
