@@ -54,7 +54,6 @@ export class CompactAdapterUtils {
         failOnStatusCode = true,
     ) {
         const token = window.localStorage.getItem('auth-token');
-        console.log(token);
         return cy.request({
             method: 'POST',
             url: '/streampipes-backend/api/v2/connect/compact-adapters',

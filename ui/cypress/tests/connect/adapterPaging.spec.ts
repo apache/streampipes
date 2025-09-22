@@ -34,7 +34,6 @@ describe('Adapter Paging Test', () => {
     });
 
     it('Basic Paging check', () => {
-        // Generate 5 Adapters
         for (let i = 0; i < 10; i++) {
             const compactAdapter = CompactAdapterUtils.getMachineDataSimulator(
                 'test_' + i,
@@ -44,24 +43,39 @@ describe('Adapter Paging Test', () => {
         }
 
         ConnectUtils.goToConnect();
-        // set the paging to 5 items
-
         cy.dataCy('table-paginator').within(() => {
-            // Click the page size selector (usually a <mat-select>)
             cy.get('mat-select').click();
         });
-
-        // Click the option with value "5"
         cy.get('mat-option').contains('5').click();
-
-        // assert if it actually only shows 5 items
         cy.get('[data-cy="adapter-name"]').should('have.length', 5);
+
+        cy.get('[data-cy="adapter-name"]')
+            .first()
+            .invoke('text')
+            .then(firstPageFirstItem => {
+                cy.get('[data-cy="adapter-name"]').should('have.length', 5);
+                cy.get('[data-cy="table-paginator"]')
+                    .find('button[aria-label="Next"]')
+                    .should('not.be.disabled')
+                    .click();
+
+                cy.wait(10000);
+                cy.get('[data-cy="adapter-name"]')
+                    .first()
+                    .should('exist')
+                    .invoke('text')
+                    .should(secondPageFirstItem => {
+                        expect(secondPageFirstItem.trim()).to.not.equal(
+                            firstPageFirstItem.trim(),
+                        );
+                    });
+            });
 
         // Click on Next
 
-        cy.get('[data-cy="table-paginator"]')
-            .find('button[aria-label="Next"]')
-            .click();
+        //cy.get('[data-cy="table-paginator"]')
+        //    .find('button[aria-label="Next"]')
+        //    .click();
 
         // Wait for updated data (for example, by checking that first row is different)
         //cy.get('table.mat-table')
