@@ -465,6 +465,34 @@ export class ConnectUtils {
             });
     }
 
+    public static filterAdapterPagination(name: string) {
+        cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
+            timeout: 10000,
+        })
+            .contains(name)
+            .should('be.visible')
+            .click();
+        cy.wait(500);
+        cy.get('[data-cy="adapter-name"]')
+            .first()
+            .invoke('text')
+            .then(firstItemNameBefore => {
+                cy.get('th[mat-sort-header=""] .mat-sort-header-content')
+                    .contains(name)
+                    .click();
+
+                cy.wait(500);
+
+                cy.get('[data-cy="adapter-name"]')
+                    .first()
+                    .invoke('text')
+                    .then(firstItemNameAfter => {
+                        expect(firstItemNameBefore.trim()).to.not.equal(
+                            firstItemNameAfter.trim(),
+                        );
+                    });
+            });
+    }
     public static validateAdapterIsStopped() {
         ConnectUtils.goToConnect();
         ConnectBtns.startAdapter().should('have.length', 1);

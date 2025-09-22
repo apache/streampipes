@@ -51,48 +51,7 @@ describe('Adapter Paging Test', () => {
 
     it('Basic Filtering Name', () => {
         ConnectUtils.goToConnect();
-
-        // Ensure that the sort header for 'Name' is visible and click it
-        cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
-            timeout: 10000,
-        })
-            .contains('Name') // Ensure we are targeting the "Name" column
-            .should('be.visible') // Wait until it's visible
-            .click(); // Click to sort by 'Name'
-
-        // Wait for sorting to complete
-        cy.wait(500); // You can adjust or replace this with a more reliable method if needed
-
-        // Get the first item's name before sorting
-        cy.get('[data-cy="adapter-name"]')
-            .first()
-            .invoke('text')
-            .then(firstItemNameBefore => {
-                cy.log('First item before sorting: ' + firstItemNameBefore);
-
-                // Click the sort header for 'Name' column again (if sorting in both directions)
-                cy.get('th[mat-sort-header=""] .mat-sort-header-content')
-                    .contains('Name')
-                    .click();
-
-                // Wait for sorting to complete again
-                cy.wait(500);
-
-                // Get the first item's name after sorting
-                cy.get('[data-cy="adapter-name"]')
-                    .first()
-                    .invoke('text')
-                    .then(firstItemNameAfter => {
-                        cy.log(
-                            'First item after sorting: ' + firstItemNameAfter,
-                        );
-
-                        // Assert that the first item name has changed
-                        expect(firstItemNameBefore.trim()).to.not.equal(
-                            firstItemNameAfter.trim(),
-                        );
-                    });
-            });
+        ConnectUtils.filterAdapterPagination('Name');
     });
 
     it('Basic Filtering Running', () => {});
