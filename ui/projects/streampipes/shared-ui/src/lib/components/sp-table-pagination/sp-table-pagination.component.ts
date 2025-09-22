@@ -45,7 +45,7 @@ import { BehaviorSubject } from 'rxjs';
     styleUrls: ['./sp-table-pagination.component.scss'],
     standalone: false,
 })
-export class SpTablePaginationComponent<T> implements AfterViewInit {
+export class SpTablePaginationComponent<T> {
     @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;
     @ContentChildren(MatRowDef) rowDefs: QueryList<MatRowDef<T>>;
     @ContentChildren(MatColumnDef) columnDefs: QueryList<MatColumnDef>;
@@ -133,9 +133,9 @@ export class SpTablePaginationComponent<T> implements AfterViewInit {
         this.filter.value['text'] = '';
     }
 
-    ngAfterViewInit() {
-        this.loadData(0);
-    }
+    //ngAfterViewInit() {
+    //    this.loadData(0);
+    //}
     resetPagination() {
         this.startKeyMap.clear();
         this.currentPage = 0;

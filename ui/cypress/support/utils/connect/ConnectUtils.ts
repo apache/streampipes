@@ -453,6 +453,8 @@ export class ConnectUtils {
                     .should('not.be.disabled')
                     .click();
 
+                cy.wait(500);
+
                 cy.get('[data-cy="adapter-name"]')
                     .first()
                     .should('exist')
@@ -466,13 +468,6 @@ export class ConnectUtils {
     }
 
     public static filterAdapterPagination(name: string) {
-        cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
-            timeout: 10000,
-        })
-            .contains(name)
-            .should('be.visible')
-            .click();
-        cy.wait(500);
         cy.get('[data-cy="adapter-name"]')
             .first()
             .invoke('text')
@@ -481,7 +476,7 @@ export class ConnectUtils {
                     .contains(name)
                     .click();
 
-                cy.wait(500);
+                cy.wait(1000);
 
                 cy.get('[data-cy="adapter-name"]')
                     .first()

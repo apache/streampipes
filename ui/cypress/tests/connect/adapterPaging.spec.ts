@@ -28,32 +28,51 @@ describe('Adapter Paging Test', () => {
     it('Basic Paging check', () => {
         //CompactAdapterUtils.getAndSaveNMachineDataSimulator()
         ConnectUtils.goToConnect();
+        cy.wait(1000);
         cy.dataCy('table-paginator').within(() => {
             cy.get('mat-select').click();
         });
         cy.get('mat-option').contains('5').click();
+        cy.wait(1000);
+
         cy.get('[data-cy="adapter-name"]').should('have.length', 5);
         ConnectUtils.validateAdapterPagination();
     });
 
-    //it('Basic Filtering CreatedAT', () => {
-    // Click on filter
-
-    // Click Again
-
-    //                cy.get('table.mat-table')
-    //  .find('tr[mat-row]')
-    //  .first()
-    //  .find('td.mat-cell')
-    // .eq(0) // First column (0-based index)
-    // .should('contain.text', 'Expected Value');
-    //});
-
     it('Basic Filtering Name', () => {
         ConnectUtils.goToConnect();
+        cy.wait(1000);
+
+        cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
+            timeout: 10000,
+        })
+            .contains('Name')
+            .should('be.visible')
+            .click();
+        cy.wait(1000);
         ConnectUtils.filterAdapterPagination('Name');
     });
 
-    it('Basic Filtering Running', () => {});
+    it('Basic Filtering CreatedAT', () => {
+        ConnectUtils.goToConnect();
+        cy.wait(1000);
+        ConnectUtils.filterAdapterPagination('Created');
+    });
+
+    it('Basic Filtering Running', () => {
+        // TODO Add One Item as running
+        ConnectUtils.goToConnect();
+
+        cy.wait(1000);
+
+        cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
+            timeout: 10000,
+        })
+            .contains('Status')
+            .should('be.visible')
+            .click();
+        cy.wait(1000);
+        ConnectUtils.filterAdapterPagination('Status');
+    });
     it('Basic Filtering Category', () => {});
 });
