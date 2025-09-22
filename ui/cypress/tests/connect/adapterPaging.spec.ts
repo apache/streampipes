@@ -82,32 +82,19 @@ describe('Adapter Paging Test', () => {
     });
     it('Basic Filtering Category', () => {
         ConnectUtils.goToConnect();
-        // Select a Invalid Category // Check for 0
-        //cy.get('mat-select[formcontrolname="selectedCategory"]')  // Target the mat-select element (adjust selector as needed)
-        //.click();
         cy.wait(1000);
 
-        cy.get('[data-cy="category-select"]').click();
-
-        cy.wait(500);
-
-        // Select the desired category (assuming you want the category with label 'Category 1')
-        cy.get('mat-option')
-            .contains('Finance') // Replace 'Category 1' with the exact category name
-            .click();
+        ConnectUtils.filterAdapterForCategory('Finance');
         cy.wait(1000);
-        // Check that nothing is there
+
         cy.get('[data-cy="no-table-entries"]').should('be.visible');
         cy.get('[data-cy="no-table-entries"]')
             .should('be.visible')
             .contains('No entries available.');
         cy.wait(500);
-        cy.get('[data-cy="category-select"]').click();
 
-        // Select a Debugging Category // CHeck that smth there
-        cy.get('mat-option')
-            .contains('Debugging') // Replace 'Category 1' with the exact category name
-            .click();
+        ConnectUtils.filterAdapterForCategory('Debugging');
+
         cy.wait(1000);
         cy.get('[data-cy="no-table-entries"]').should('not.exist');
     });

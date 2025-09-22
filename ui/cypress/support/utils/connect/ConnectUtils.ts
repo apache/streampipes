@@ -488,6 +488,13 @@ export class ConnectUtils {
                     });
             });
     }
+    public static filterAdapterForCategory(category: string) {
+        cy.get('[data-cy="category-select"]').click();
+
+        cy.wait(500);
+
+        cy.get('mat-option').contains(category).click();
+    }
     public static validateAdapterIsStopped() {
         ConnectUtils.goToConnect();
         ConnectBtns.startAdapter().should('have.length', 1);
