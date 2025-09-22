@@ -479,7 +479,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         const { startKey: derivedStartKey, endKey } =
             this.getStartAndEndKeyFromFilter(startKey);
         const sortBy = this.getSortView();
-        console.log('SortBY', sortBy);
 
         if (sortBy == 'category') {
             // Unfortunatly needs a different endpoint

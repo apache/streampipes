@@ -117,7 +117,6 @@ export class SpTablePaginationComponent<T> {
         this.filter?.subscribe(() => {
             this.filtering = this.filter.value;
             this.propertyName = this.getViewFn(this.filter.value['view']);
-            console.log('Property Name from FIlter', this.propertyName);
             this.resetPagination();
             this.loadData(0);
         });
@@ -126,7 +125,6 @@ export class SpTablePaginationComponent<T> {
 
     private updateSort(sortChange: Sort): void {
         this.propertyName = this.getViewFn(sortChange.active);
-        console.log('Property Name from Update Sort', this.propertyName);
         this.clearFilters();
         this.resetPagination();
         this.loadData(0);
@@ -148,7 +146,6 @@ export class SpTablePaginationComponent<T> {
     }
     onPageChange(event: PageEvent) {
         this.pageSize = event.pageSize;
-        console.log('Page Size Change', this.pageSize);
         this.currentPage = event.pageIndex;
         this.loadData(this.currentPage);
     }
@@ -166,7 +163,6 @@ export class SpTablePaginationComponent<T> {
     loadData(pageIndex: number) {
         const start = this.startKeyMap.get(pageIndex) || null;
         let startkey = start;
-        console.log(start);
 
         this.fetchDataFn(startkey, this.pageSize + 1).subscribe({
             next: (data: T[]) => {
@@ -179,12 +175,8 @@ export class SpTablePaginationComponent<T> {
                     this.totalItems = data.length + pageIndex * this.pageSize;
                 }
 
-                console.log('page from fetch', this.pageSize);
-                console.log(data.length);
-
                 if (data.length > this.pageSize) {
                     let nextStartKey;
-                    console.log('DATA', this.propertyName);
 
                     if (Array.isArray(this.propertyName)) {
                         nextStartKey = this.propertyName.map(
@@ -192,7 +184,6 @@ export class SpTablePaginationComponent<T> {
                         );
                     } else {
                         nextStartKey = data[this.pageSize][this.propertyName];
-                        console.log(nextStartKey);
                     }
                     const nextStartKeyString = Array.isArray(nextStartKey)
                         ? JSON.stringify(nextStartKey)
@@ -200,7 +191,6 @@ export class SpTablePaginationComponent<T> {
                     this.startKeyMap.set(pageIndex + 1, nextStartKeyString);
                     this.dataSource.data = data.slice(0, this.pageSize);
                 }
-                console.log(this.startKeyMap);
             },
             error: err => {
                 console.error('Failed to fetch paginated data', err);
