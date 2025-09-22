@@ -70,11 +70,13 @@ export class CompactAdapterUtils {
     /**
      * Creates a CompactAdapterBuilder instance configured for a machine data simulator.
      */
-    public static getMachineDataSimulator(): CompactAdapterBuilder {
+    public static getMachineDataSimulator(
+        name: string = 'Test',
+    ): CompactAdapterBuilder {
         return CompactAdapterBuilder.create(
             'org.apache.streampipes.connect.iiot.adapters.simulator.machine',
         )
-            .setName('Test')
+            .setName(name)
             .addConfiguration('wait-time-ms', '1000')
             .addConfiguration('selected-simulator-option', 'flowrate');
     }
