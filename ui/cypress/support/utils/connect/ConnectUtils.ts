@@ -105,27 +105,35 @@ export class ConnectUtils {
             .setName(name)
             .addInput('input', 'wait-time-ms', '1000');
 
+        console.log('Step 1 Done');
+
         if (persist) {
             builder.setTimestampProperty('timestamp').setStoreInDataLake();
         }
 
         const configuration = builder.build();
-
+        console.log('Step 1 Build done');
         ConnectUtils.goToConnect();
-
+        console.log('DO to connect Done');
         ConnectUtils.goToNewAdapterPage();
+        console.log('New Adapter');
 
         ConnectUtils.selectAdapter(configuration.adapterType);
+        console.log('select');
 
         ConnectUtils.configureAdapter(configuration);
-
+        console.log('configure');
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        console.log('Schema');
 
         ConnectUtils.startAdapter(configuration);
+        console.log('Start');
     }
 
     public static goToConnect() {
         cy.visit('#/connect');
+        cy.dataCy('all-adapters-table', { timeout: 15000 }) // Increase timeout if needed
+            .should('exist'); // Wait for the element to exist in the DOM
     }
 
     public static goToNewAdapterPage() {
