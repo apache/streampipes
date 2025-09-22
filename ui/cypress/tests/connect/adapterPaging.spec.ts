@@ -51,53 +51,47 @@ describe('Adapter Paging Test', () => {
 
     it('Basic Filtering Name', () => {
         ConnectUtils.goToConnect();
+
+        // Ensure that the sort header for 'Name' is visible and click it
         cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
             timeout: 10000,
         })
-            .contains('Name') // Make sure we're targeting the "Name" column
+            .contains('Name') // Ensure we are targeting the "Name" column
             .should('be.visible') // Wait until it's visible
             .click(); // Click to sort by 'Name'
-        // Wait for sorting to complete (you could adjust or replace this with a more reliable method)
-        cy.wait(500);
 
-        // Get the first row's data before sorting
-        cy.get('table.mat-table')
-            .find('tr.mat-row')
+        // Wait for sorting to complete
+        cy.wait(500); // You can adjust or replace this with a more reliable method if needed
+
+        // Get the first item's name before sorting
+        cy.get('[data-cy="adapter-name"]')
             .first()
-            .within(() => {
-                cy.get('[data-cy="adapter-name"]').then($name => {
-                    const firstItemNameBefore = $name.text(); // Save the name of the first item
-                    cy.log('First item before sorting: ' + firstItemNameBefore);
+            .invoke('text')
+            .then(firstItemNameBefore => {
+                cy.log('First item before sorting: ' + firstItemNameBefore);
 
-                    // Click the sort header for 'Name' column again (if it sorts in both directions)
-                    cy.get('th[mat-sort-header=""] .mat-sort-header-content')
-                        .contains('Name')
-                        .click();
+                // Click the sort header for 'Name' column again (if sorting in both directions)
+                cy.get('th[mat-sort-header=""] .mat-sort-header-content')
+                    .contains('Name')
+                    .click();
 
-                    // Wait for sorting to complete again
-                    cy.wait(500);
+                // Wait for sorting to complete again
+                cy.wait(500);
 
-                    // Get the first row again after sorting
-                    cy.get('table.mat-table')
-                        .find('tr.mat-row')
-                        .first()
-                        .within(() => {
-                            cy.get('[data-cy="adapter-name"]').then(
-                                $newName => {
-                                    const firstItemNameAfter = $newName.text(); // Save the name of the new first item
-                                    cy.log(
-                                        'First item after sorting: ' +
-                                            firstItemNameAfter,
-                                    );
+                // Get the first item's name after sorting
+                cy.get('[data-cy="adapter-name"]')
+                    .first()
+                    .invoke('text')
+                    .then(firstItemNameAfter => {
+                        cy.log(
+                            'First item after sorting: ' + firstItemNameAfter,
+                        );
 
-                                    // Assert that the first item name has changed
-                                    expect(firstItemNameBefore).to.not.equal(
-                                        firstItemNameAfter,
-                                    );
-                                },
-                            );
-                        });
-                });
+                        // Assert that the first item name has changed
+                        expect(firstItemNameBefore.trim()).to.not.equal(
+                            firstItemNameAfter.trim(),
+                        );
+                    });
             });
     });
 
