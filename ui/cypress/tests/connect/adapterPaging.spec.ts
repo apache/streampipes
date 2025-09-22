@@ -60,19 +60,25 @@ describe('Adapter Paging Test', () => {
     });
 
     it('Basic Filtering Running', () => {
-        // TODO Add One Item as running
         ConnectUtils.goToConnect();
 
-        cy.wait(1000);
+        // Add one Adapter running
+        const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
+            .setStart()
+            .build();
 
-        cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
-            timeout: 10000,
-        })
-            .contains('Status')
-            .should('be.visible')
-            .click();
-        cy.wait(1000);
-        ConnectUtils.filterAdapterPagination('Status');
+        CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
+            cy.wait(1000);
+
+            cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
+                timeout: 10000,
+            })
+                .contains('Status')
+                .should('be.visible')
+                .click();
+            cy.wait(1000);
+            ConnectUtils.filterAdapterPagination('Status');
+        });
     });
     it('Basic Filtering Category', () => {});
 });
