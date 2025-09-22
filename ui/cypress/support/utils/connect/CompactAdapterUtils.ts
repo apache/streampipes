@@ -80,4 +80,17 @@ export class CompactAdapterUtils {
             .addConfiguration('wait-time-ms', '1000')
             .addConfiguration('selected-simulator-option', 'flowrate');
     }
+
+    public static getAndSaveNMachineDataSimulator(
+        name: string = 'Test',
+        n: number = 10,
+    ): void {
+        for (let i = 0; i < n; i++) {
+            const compactAdapter = CompactAdapterUtils.getMachineDataSimulator(
+                'test_' + i,
+            ).build();
+
+            CompactAdapterUtils.storeCompactAdapter(compactAdapter);
+        }
+    }
 }

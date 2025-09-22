@@ -22,83 +22,84 @@ import { CompactAdapterUtils } from '../../support/utils/connect/CompactAdapterU
 
 describe('Adapter Paging Test', () => {
     beforeEach('Setup Test', () => {
-        // Initialize the StreamPipes test and wait for token to be available
         cy.initStreamPipesTest();
-        //TODO Add token working in here
-
-        // Optionally, you can add one adapter running for testing purposes
-        // const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
-        //     .setStart()
-        //     .build();
-        // CompactAdapterUtils.storeCompactAdapter(compactAdapter);
     });
 
     it('Basic Paging check', () => {
-        for (let i = 0; i < 10; i++) {
-            const compactAdapter = CompactAdapterUtils.getMachineDataSimulator(
-                'test_' + i,
-            ).build();
-
-            CompactAdapterUtils.storeCompactAdapter(compactAdapter);
-        }
-
+        //CompactAdapterUtils.getAndSaveNMachineDataSimulator()
         ConnectUtils.goToConnect();
         cy.dataCy('table-paginator').within(() => {
             cy.get('mat-select').click();
         });
         cy.get('mat-option').contains('5').click();
         cy.get('[data-cy="adapter-name"]').should('have.length', 5);
+        ConnectUtils.validateAdapterPagination();
+    });
 
-        cy.get('[data-cy="adapter-name"]')
+    //it('Basic Filtering CreatedAT', () => {
+    // Click on filter
+
+    // Click Again
+
+    //                cy.get('table.mat-table')
+    //  .find('tr[mat-row]')
+    //  .first()
+    //  .find('td.mat-cell')
+    // .eq(0) // First column (0-based index)
+    // .should('contain.text', 'Expected Value');
+    //});
+
+    it('Basic Filtering Name', () => {
+        ConnectUtils.goToConnect();
+        cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
+            timeout: 10000,
+        })
+            .contains('Name') // Make sure we're targeting the "Name" column
+            .should('be.visible') // Wait until it's visible
+            .click(); // Click to sort by 'Name'
+        // Wait for sorting to complete (you could adjust or replace this with a more reliable method)
+        cy.wait(500);
+
+        // Get the first row's data before sorting
+        cy.get('table.mat-table')
+            .find('tr.mat-row')
             .first()
-            .invoke('text')
-            .then(firstPageFirstItem => {
-                cy.get('[data-cy="adapter-name"]').should('have.length', 5);
-                cy.get('[data-cy="table-paginator"]')
-                    .find('button[aria-label="Next"]')
-                    .should('not.be.disabled')
-                    .click();
+            .within(() => {
+                cy.get('[data-cy="adapter-name"]').then($name => {
+                    const firstItemNameBefore = $name.text(); // Save the name of the first item
+                    cy.log('First item before sorting: ' + firstItemNameBefore);
 
-                cy.wait(10000);
-                cy.get('[data-cy="adapter-name"]')
-                    .first()
-                    .should('exist')
-                    .invoke('text')
-                    .should(secondPageFirstItem => {
-                        expect(secondPageFirstItem.trim()).to.not.equal(
-                            firstPageFirstItem.trim(),
-                        );
-                    });
+                    // Click the sort header for 'Name' column again (if it sorts in both directions)
+                    cy.get('th[mat-sort-header=""] .mat-sort-header-content')
+                        .contains('Name')
+                        .click();
+
+                    // Wait for sorting to complete again
+                    cy.wait(500);
+
+                    // Get the first row again after sorting
+                    cy.get('table.mat-table')
+                        .find('tr.mat-row')
+                        .first()
+                        .within(() => {
+                            cy.get('[data-cy="adapter-name"]').then(
+                                $newName => {
+                                    const firstItemNameAfter = $newName.text(); // Save the name of the new first item
+                                    cy.log(
+                                        'First item after sorting: ' +
+                                            firstItemNameAfter,
+                                    );
+
+                                    // Assert that the first item name has changed
+                                    expect(firstItemNameBefore).to.not.equal(
+                                        firstItemNameAfter,
+                                    );
+                                },
+                            );
+                        });
+                });
             });
-
-        // Click on Next
-
-        //cy.get('[data-cy="table-paginator"]')
-        //    .find('button[aria-label="Next"]')
-        //    .click();
-
-        // Wait for updated data (for example, by checking that first row is different)
-        //cy.get('table.mat-table')
-        // .find('tr[mat-row]')
-        // .first()
-        // .find('td.mat-cell')
-        // .eq(0)
-        // .should('not.contain.text', 'First row from previous page');
-
-        // calculate lust of items on page 2 and validate
-        //cy.get('[data-cy="adapter-name"]').should('have.length', 4);
     });
-
-    it('Basic Filtering CreatedAT', () => {
-        //                cy.get('table.mat-table')
-        //  .find('tr[mat-row]')
-        //  .first()
-        //  .find('td.mat-cell')
-        // .eq(0) // First column (0-based index)
-        // .should('contain.text', 'Expected Value');
-    });
-
-    it('Basic Filtering Name', () => {});
 
     it('Basic Filtering Running', () => {});
     it('Basic Filtering Category', () => {});

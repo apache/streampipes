@@ -112,22 +112,12 @@ export class ConnectUtils {
         }
 
         const configuration = builder.build();
-        console.log('Step 1 Build done');
         ConnectUtils.goToConnect();
-        console.log('DO to connect Done');
         ConnectUtils.goToNewAdapterPage();
-        console.log('New Adapter');
-
         ConnectUtils.selectAdapter(configuration.adapterType);
-        console.log('select');
-
         ConnectUtils.configureAdapter(configuration);
-        console.log('configure');
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
-        console.log('Schema');
-
         ConnectUtils.startAdapter(configuration);
-        console.log('Start');
     }
 
     public static goToConnect() {
@@ -450,6 +440,29 @@ export class ConnectUtils {
         ConnectUtils.goToConnect();
         ConnectBtns.startAdapter().should('have.length', 0);
         ConnectBtns.stopAdapter().should('have.length', 1);
+    }
+
+    public static validateAdapterPagination() {
+        cy.get('[data-cy="adapter-name"]')
+            .first()
+            .invoke('text')
+            .then(firstPageFirstItem => {
+                cy.get('[data-cy="adapter-name"]').should('have.length', 5);
+                cy.get('[data-cy="table-paginator"]')
+                    .find('button[aria-label="Next"]')
+                    .should('not.be.disabled')
+                    .click();
+
+                cy.get('[data-cy="adapter-name"]')
+                    .first()
+                    .should('exist')
+                    .invoke('text')
+                    .should(secondPageFirstItem => {
+                        expect(secondPageFirstItem.trim()).to.not.equal(
+                            firstPageFirstItem.trim(),
+                        );
+                    });
+            });
     }
 
     public static validateAdapterIsStopped() {
