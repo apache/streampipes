@@ -35,6 +35,7 @@
     </table>
     <div fxFlex="100" fxLayoutAlign="end end" class="paginator-container">
         <mat-paginator
+            data-cy="table-paginator"
             #paginator
             [length]="totalItems"
             [pageSize]="pageSize"

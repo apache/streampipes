@@ -22,36 +22,70 @@ import { CompactAdapterUtils } from '../../support/utils/connect/CompactAdapterU
 
 describe('Adapter Paging Test', () => {
     beforeEach('Setup Test', () => {
-        // To set up test, we are adding 2 stream adapters that can be further configured
-        //TODO compactAdapter
+        // Initialize the StreamPipes test and wait for token to be available
         cy.initStreamPipesTest();
-        //cy.login(); // Comment this in and the line above out to disable a clean setup
-        console.log('Add a simulator');
-        ConnectUtils.addMachineDataSimulator('simulator-1');
+        //TODO Add token working in here
 
-        //Generate 5 Adapters
-        //for (let i = 0; i < 5; i++) {
+        // Optionally, you can add one adapter running for testing purposes
         // const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
-        //    .build();
-
-        //CompactAdapterUtils.storeCompactAdapter(compactAdapter)
-        //}
-
-        // One Adapter running for testing purposes
-
-        //const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
-        //    .setStart()
-        //    .build();
-
-        //CompactAdapterUtils.storeCompactAdapter(compactAdapter)
+        //     .setStart()
+        //     .build();
+        // CompactAdapterUtils.storeCompactAdapter(compactAdapter);
     });
 
     it('Basic Paging check', () => {
+        // Generate 5 Adapters
+        for (let i = 0; i < 10; i++) {
+            const compactAdapter = CompactAdapterUtils.getMachineDataSimulator(
+                'test_' + i,
+            ).build();
+
+            CompactAdapterUtils.storeCompactAdapter(compactAdapter);
+        }
+
         ConnectUtils.goToConnect();
         // set the paging to 5 items
 
-        // calculate list of items on page 1
+        cy.dataCy('table-paginator').within(() => {
+            // Click the page size selector (usually a <mat-select>)
+            cy.get('mat-select').click();
+        });
 
-        // calculate lust of items on page 2
+        // Click the option with value "5"
+        cy.get('mat-option').contains('5').click();
+
+        // assert if it actually only shows 5 items
+        cy.get('[data-cy="adapter-name"]').should('have.length', 5);
+
+        // Click on Next
+
+        cy.get('[data-cy="table-paginator"]')
+            .find('button[aria-label="Next"]')
+            .click();
+
+        // Wait for updated data (for example, by checking that first row is different)
+        //cy.get('table.mat-table')
+        // .find('tr[mat-row]')
+        // .first()
+        // .find('td.mat-cell')
+        // .eq(0)
+        // .should('not.contain.text', 'First row from previous page');
+
+        // calculate lust of items on page 2 and validate
+        cy.get('[data-cy="adapter-name"]').should('have.length', 4);
     });
+
+    it('Basic Filtering CreatedAT', () => {
+        //                cy.get('table.mat-table')
+        //  .find('tr[mat-row]')
+        //  .first()
+        //  .find('td.mat-cell')
+        // .eq(0) // First column (0-based index)
+        // .should('contain.text', 'Expected Value');
+    });
+
+    it('Basic Filtering Name', () => {});
+
+    it('Basic Filtering Running', () => {});
+    it('Basic Filtering Category', () => {});
 });

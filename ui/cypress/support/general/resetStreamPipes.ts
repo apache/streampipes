@@ -25,6 +25,7 @@ declare global {
 }
 
 export const resetStreamPipes = () => {
+    console.log(window.localStorage.getItem('auth-token'));
     cy.request({
         method: 'POST',
         url: '/streampipes-backend/api/v2/reset',
