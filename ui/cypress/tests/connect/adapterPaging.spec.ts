@@ -33,7 +33,7 @@ describe('Adapter Paging Test', () => {
             cy.get('mat-select').click();
         });
         cy.get('mat-option').contains('5').click();
-        cy.wait(1000);
+        cy.wait(2000);
 
         cy.get('[data-cy="adapter-name"]').should('have.length', 5);
         ConnectUtils.validateAdapterPagination();

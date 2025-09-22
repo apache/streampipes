@@ -91,7 +91,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }>({
         text: '',
         category: '',
-        view: 'createdAt',
+        view: '',
     });
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
@@ -388,6 +388,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 this.sort.active = 'createdAt';
             }
         }
+        // TODO MAYBE NECESSARY TO DO THIS AS ELSE
         this.filter.next({ text: '', category: '', view: 'createdAt' });
     }
 

@@ -447,13 +447,12 @@ export class ConnectUtils {
             .first()
             .invoke('text')
             .then(firstPageFirstItem => {
-                cy.get('[data-cy="adapter-name"]').should('have.length', 5);
                 cy.get('[data-cy="table-paginator"]')
                     .find('button[aria-label="Next"]')
                     .should('not.be.disabled')
                     .click();
 
-                cy.wait(500);
+                cy.wait(1000);
 
                 cy.get('[data-cy="adapter-name"]')
                     .first()
@@ -472,16 +471,17 @@ export class ConnectUtils {
             .first()
             .invoke('text')
             .then(firstItemNameBefore => {
+                cy.log(firstItemNameBefore);
                 cy.get('th[mat-sort-header=""] .mat-sort-header-content')
                     .contains(name)
                     .click();
-
-                cy.wait(1000);
+                cy.wait(500);
 
                 cy.get('[data-cy="adapter-name"]')
                     .first()
                     .invoke('text')
                     .then(firstItemNameAfter => {
+                        cy.log(firstItemNameAfter);
                         expect(firstItemNameBefore.trim()).to.not.equal(
                             firstItemNameAfter.trim(),
                         );
