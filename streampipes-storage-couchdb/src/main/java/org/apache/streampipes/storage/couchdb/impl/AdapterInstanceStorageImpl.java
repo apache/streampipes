@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
-      private static final Logger logger = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class);
 
     public AdapterInstanceStorageImpl() {
         super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
@@ -76,10 +75,7 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     @Override
     public List<AdapterDescription> findAll() {
         List<AdapterDescription> adapters = findAll("paginator/non_design_docs");
-        logger.info("Size of adapters: {}", adapters.size());
-        //TODO Need to put smth elese her ! 
         return adapters.stream()
-                //.filter(adapter -> adapter.getDescription())
                 .toList();
     }
 
