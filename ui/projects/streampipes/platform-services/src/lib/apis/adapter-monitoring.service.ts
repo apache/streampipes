@@ -17,10 +17,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SpLogEntry, SpMetricsEntry } from '../model/gen/streampipes-model';
-import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 import { AbstractMonitoringService } from './abstract-monitoring.service';
 
@@ -28,13 +26,6 @@ import { AbstractMonitoringService } from './abstract-monitoring.service';
     providedIn: 'root',
 })
 export class AdapterMonitoringService extends AbstractMonitoringService {
-    constructor(
-        http: HttpClient,
-        platformServicesCommons: PlatformServicesCommons,
-    ) {
-        super(http, platformServicesCommons);
-    }
-
     getLogInfoForAdapter(elementId: string): Observable<SpLogEntry[]> {
         return this.http
             .get(this.logUrl(elementId))
