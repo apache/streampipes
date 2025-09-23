@@ -467,18 +467,21 @@ export class ConnectUtils {
     }
 
     public static filterAdapterPagination(name: string) {
-        cy.get('[data-cy="adapter-name"]')
+        cy.dataCy('adapter-name', { timeout: 10000 })
             .first()
             .invoke('text')
             .then(firstItemNameBefore => {
                 cy.log(firstItemNameBefore);
-                cy.get('th[mat-sort-header=""] .mat-sort-header-content')
+
+                cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
+                    timeout: 10000,
+                })
                     .contains(name)
                     .click();
-                cy.wait(500);
 
-                cy.get('[data-cy="adapter-name"]')
+                cy.dataCy('adapter-name', { timeout: 10000 })
                     .first()
+                    .should('not.have.text', firstItemNameBefore.trim())
                     .invoke('text')
                     .then(firstItemNameAfter => {
                         cy.log(firstItemNameAfter);
@@ -489,9 +492,7 @@ export class ConnectUtils {
             });
     }
     public static filterAdapterForCategory(category: string) {
-        cy.get('[data-cy="category-select"]').click();
-
-        cy.wait(500);
+        cy.dataCy('category-select', { timeout: 10000 }).click();
 
         cy.get('mat-option').contains(category).click();
     }
