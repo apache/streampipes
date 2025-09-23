@@ -45,7 +45,7 @@ import { BehaviorSubject } from 'rxjs';
     styleUrls: ['./sp-table-pagination.component.scss'],
     standalone: false,
 })
-export class SpTablePaginationComponent<T> implements AfterViewInit {
+export class SpTablePaginationComponent<T> implements AfterViewInit, OnChanges, AfterContentInit {
     @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;
     @ContentChildren(MatRowDef) rowDefs: QueryList<MatRowDef<T>>;
     @ContentChildren(MatColumnDef) columnDefs: QueryList<MatColumnDef>;
