@@ -17,8 +17,12 @@ public class ServiceLoadDataReport {
         Weight = weight;
     }
 
-    public int setWeight(int CPU, int memory){
-        return Weight = Math.min(CPU/cpuStandard, memory/memoryStandard);
+    public void setWeight(int CPU, int memory){
+        Weight = Math.min(CPU / cpuStandard, memory / memoryStandard);
+    }
+
+    public int getWeight() {
+        return Weight;
     }
 
     public Usage getCPU() {

@@ -1,7 +1,7 @@
 package org.apache.streampipes.rest.extensions.monitoring;
 
+import org.apache.streampipes.extensions.management.monitoring.ServiceLoadDataReportGenerator;
 import org.apache.streampipes.model.loadbalancer.ServiceLoadDataReport;
-import org.apache.streampipes.model.loadbalancer.ServiceLoadDataReportGenerator;
 import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

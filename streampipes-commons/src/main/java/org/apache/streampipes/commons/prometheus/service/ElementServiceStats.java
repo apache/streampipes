@@ -11,13 +11,12 @@ public class ElementServiceStats {
     public String Id;
     public double cpuUsage = 0.0;
     public double memoryUsage = 0.0;
+    public double weight = 1.0;
     public double systemLoad = 0.0;
     public double historicalSystemLoad = 0.0;
     public double currentSystemLoad = 0.0;
 
-
     public ElementServiceStats(String id){
-
         if(!elementServiceStats.containsKey(id)) {
             elementServiceStats.put(id, this);
             elementServiceMetricsMap.put(id, new ElementServiceMetrics(id.substring(id.length()-6)));
@@ -30,13 +29,36 @@ public class ElementServiceStats {
         elementServiceMetricsMap.remove(this.Id).remove();
     }
 
-    public static void metrics(){
-
-        for(Map.Entry<String,ElementServiceStats> e : elementServiceStats.entrySet()) {
-            ElementServiceStats stats =e.getValue();
-            ElementServiceMetrics metrics = elementServiceMetricsMap.get(stats.Id);
+    public static void metricsByReport(String serviceId,double cpuUsage,double memoryUsage,double weight){
+        ElementServiceStats stats = elementServiceStats.get(serviceId);
+        if(stats==null){
+            stats=new ElementServiceStats(serviceId);
+        }
+        stats.cpuUsage=cpuUsage;
+        stats.memoryUsage=memoryUsage;
+        stats.weight=weight;
+        // Immediately write values to the corresponding Prometheus gauges
+        ElementServiceMetrics metrics = elementServiceMetricsMap.get(serviceId);
+        if (metrics != null) {
             metrics.cpuUsageGauge.set(stats.cpuUsage);
             metrics.memoryUsageGauge.set(stats.memoryUsage);
+            metrics.weightGauge.set(stats.weight);
+        }
+        ElementServiceMetrics.serviceCount.set(elementServiceStats.size());
+    }
+
+    public static void metrics(){
+        for(Map.Entry<String,ElementServiceStats> e : elementServiceStats.entrySet()) {
+            ElementServiceStats stats = e.getValue();
+            ElementServiceMetrics metrics = elementServiceMetricsMap.get(stats.Id);
+            if (metrics == null) {
+                String currentServiceId = e.getKey();
+                System.out.println(currentServiceId);
+                continue;
+            }
+            metrics.cpuUsageGauge.set(stats.cpuUsage);
+            metrics.memoryUsageGauge.set(stats.memoryUsage);
+            metrics.weightGauge.set(stats.weight);
             metrics.historicalSystemLoadGauge.set(stats.historicalSystemLoad);
             metrics.systemLoadGauge.set(stats.systemLoad);
             metrics.currentSystemLoadGauge.set(stats.currentSystemLoad);

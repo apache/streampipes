@@ -4,12 +4,13 @@ import io.prometheus.client.Gauge;
 import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
 
 public class ElementServiceMetrics {
+
     public final Gauge cpuUsageGauge;
     public final Gauge memoryUsageGauge;
+    public final Gauge weightGauge;
     public final Gauge systemLoadGauge;
     public final Gauge historicalSystemLoadGauge;
     public final Gauge currentSystemLoadGauge;
-
 
     public static final Gauge serviceCount =
             StreamPipesCollectorRegistry.registerGauge(
@@ -21,6 +22,8 @@ public class ElementServiceMetrics {
         StreamPipesCollectorRegistry.remove(cpuUsageGauge);
         memoryUsageGauge.set(0);
         StreamPipesCollectorRegistry.remove(memoryUsageGauge);
+        weightGauge.set(0);
+        StreamPipesCollectorRegistry.remove(weightGauge);
         systemLoadGauge.set(0);
         StreamPipesCollectorRegistry.remove(systemLoadGauge);
         historicalSystemLoadGauge.set(0);
@@ -28,6 +31,7 @@ public class ElementServiceMetrics {
         currentSystemLoadGauge.set(0);
         StreamPipesCollectorRegistry.remove(currentSystemLoadGauge);
     }
+
     public ElementServiceMetrics(String id) {
         cpuUsageGauge = StreamPipesCollectorRegistry.registerGauge(
                 "cpu_usage_" + id,
@@ -36,6 +40,10 @@ public class ElementServiceMetrics {
         memoryUsageGauge = StreamPipesCollectorRegistry.registerGauge(
                 "memory_usage_" + id,
                 "Memory usage in bytes "+ id
+        );
+        weightGauge = StreamPipesCollectorRegistry.registerGauge(
+                "weight_" + id,
+                "Weight of remaining available resources for service"+ id
         );
         systemLoadGauge = StreamPipesCollectorRegistry.registerGauge(
                 "system_load_" + id,
@@ -49,6 +57,5 @@ public class ElementServiceMetrics {
                 "current_system_load_" + id,
                 "Current system load average "+ id
         );
-
     }
 }
