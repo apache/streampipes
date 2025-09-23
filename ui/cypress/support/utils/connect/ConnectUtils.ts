@@ -513,4 +513,10 @@ export class ConnectUtils {
             ConnectBtns.deleteAdapter().should('have.length', amount);
         }
     }
+
+    public static waitingForExistingAdapters() {
+        return cy
+            .dataCy('no-table-entries', { timeout: 10000 })
+            .should('not.exist');
+    }
 }

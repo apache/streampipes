@@ -42,7 +42,7 @@ describe('Adapter Paging Test', () => {
         CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
 
-        cy.dataCy('no-table-entries', { timeout: 10000 }).should('not.exist');
+        ConnectUtils.waitingForExistingAdapters();
 
         ConnectBtns.sortingHeader('Name').click();
 
@@ -52,7 +52,7 @@ describe('Adapter Paging Test', () => {
     it('Basic Filtering CreatedAT', () => {
         CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
-        cy.dataCy('no-table-entries', { timeout: 10000 }).should('not.exist');
+        ConnectUtils.waitingForExistingAdapters();
         ConnectUtils.filterAdapterPagination('Created');
     });
 
@@ -60,7 +60,7 @@ describe('Adapter Paging Test', () => {
         CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
 
-        cy.dataCy('no-table-entries', { timeout: 10000 }).should('not.exist');
+        ConnectUtils.waitingForExistingAdapters();
 
         // Add one Adapter running
         const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
@@ -78,7 +78,8 @@ describe('Adapter Paging Test', () => {
     it('Basic Filtering Category', () => {
         CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
-        cy.dataCy('no-table-entries', { timeout: 10000 }).should('not.exist');
+        ConnectUtils.waitingForExistingAdapters();
+
         ConnectUtils.filterAdapterForCategory('Finance');
 
         cy.dataCy('no-table-entries').should('be.visible');
