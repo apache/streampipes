@@ -44,6 +44,7 @@
     "@bluehalo/ngx-leaflet": "^19.0.0",
     "@ctrl/ngx-codemirror": "7.0.0",
     "@fortawesome/fontawesome-free": "6.5.1",
+    "@gradle-tech/develocity-agent": "^2.0.2",
     "@jsplumb/browser-ui": "^6.2.10",
     "@ngbracket/ngx-layout": "^19.0.0",
     "@ngx-loading-bar/core": "6.0.2",
