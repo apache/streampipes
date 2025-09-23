@@ -40,6 +40,7 @@ describe('Adapter Paging Test', () => {
     });
 
     it('Basic Filtering Name', () => {
+        CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
         cy.wait(1000);
 
@@ -54,12 +55,14 @@ describe('Adapter Paging Test', () => {
     });
 
     it('Basic Filtering CreatedAT', () => {
+        CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
         cy.wait(1000);
         ConnectUtils.filterAdapterPagination('Created');
     });
 
     it('Basic Filtering Running', () => {
+        CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
 
         // Add one Adapter running
@@ -81,6 +84,7 @@ describe('Adapter Paging Test', () => {
         });
     });
     it('Basic Filtering Category', () => {
+        CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
         cy.wait(1000);
 
