@@ -60,14 +60,17 @@ public class ResetManagement {
     logger.info("Start resetting the system");
 
     setHideTutorialToFalse(username);
-
+      logger.info("1");
     clearPipelineAssemblyCache(username);
+      logger.info("2");
 
     stopAndDeleteAllPipelines();
+      logger.info("3");
 
     stopAndDeleteAllAdapters();
-
+      logger.info("4");
     deleteAllFiles();
+      logger.info("5");
 
     removeAllDataInDataLake();
 
@@ -102,6 +105,7 @@ public class ResetManagement {
   }
 
   private static void stopAndDeleteAllAdapters() {
+    logger.info("Delete Adapter Function");
     AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getAdapterInstanceStorage(),
@@ -111,7 +115,9 @@ public class ResetManagement {
     );
 
     List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();
+    logger.info("Size of adapters: {}", allAdapters.size());
     allAdapters.forEach(adapterDescription -> {
+      logger.info(adapterDescription.toString());
       try {
         adapterMasterManagement.deleteAdapter(adapterDescription.getElementId());
       } catch (AdapterException e) {

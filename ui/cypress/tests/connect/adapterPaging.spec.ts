@@ -26,7 +26,7 @@ describe('Adapter Paging Test', () => {
     });
 
     it('Basic Paging check', () => {
-        //CompactAdapterUtils.getAndSaveNMachineDataSimulator()
+        CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
         cy.wait(1000);
         cy.dataCy('table-paginator').within(() => {

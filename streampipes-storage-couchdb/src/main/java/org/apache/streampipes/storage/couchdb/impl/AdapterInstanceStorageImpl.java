@@ -31,8 +31,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.View;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,10 +49,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
+      private static final Logger logger = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class);
 
     public AdapterInstanceStorageImpl() {
         super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
     }
+    
 
     @Override
     public AdapterDescription getFirstAdapterByAppId(String appId) {
@@ -74,8 +76,10 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     @Override
     public List<AdapterDescription> findAll() {
         List<AdapterDescription> adapters = findAll("paginator/non_design_docs");
+        logger.info("Size of adapters: {}", adapters.size());
+        //TODO Need to put smth elese her ! 
         return adapters.stream()
-                .filter(adapter -> adapter.getDescription() != null)
+                //.filter(adapter -> adapter.getDescription())
                 .toList();
     }
 
