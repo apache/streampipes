@@ -105,27 +105,25 @@ export class ConnectUtils {
             .setName(name)
             .addInput('input', 'wait-time-ms', '1000');
 
+        console.log('Step 1 Done');
+
         if (persist) {
             builder.setTimestampProperty('timestamp').setStoreInDataLake();
         }
 
         const configuration = builder.build();
-
         ConnectUtils.goToConnect();
-
         ConnectUtils.goToNewAdapterPage();
-
         ConnectUtils.selectAdapter(configuration.adapterType);
-
         ConnectUtils.configureAdapter(configuration);
-
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
-
         ConnectUtils.startAdapter(configuration);
     }
 
     public static goToConnect() {
         cy.visit('#/connect');
+        cy.dataCy('all-adapters-table', { timeout: 15000 }) // Increase timeout if needed
+            .should('exist'); // Wait for the element to exist in the DOM
     }
 
     public static goToNewAdapterPage() {
@@ -444,6 +442,59 @@ export class ConnectUtils {
         ConnectBtns.stopAdapter().should('have.length', 1);
     }
 
+    public static validateAdapterPagination() {
+        cy.get('[data-cy="adapter-name"]')
+            .first()
+            .invoke('text')
+            .then(firstPageFirstItem => {
+                cy.get('[data-cy="table-paginator"]')
+                    .find('button[aria-label="Next"]')
+                    .should('not.be.disabled')
+                    .click();
+
+                cy.wait(1000);
+
+                cy.get('[data-cy="adapter-name"]')
+                    .first()
+                    .should('exist')
+                    .invoke('text')
+                    .should(secondPageFirstItem => {
+                        expect(secondPageFirstItem.trim()).to.not.equal(
+                            firstPageFirstItem.trim(),
+                        );
+                    });
+            });
+    }
+
+    public static filterAdapterPagination(name: string) {
+        cy.get('[data-cy="adapter-name"]')
+            .first()
+            .invoke('text')
+            .then(firstItemNameBefore => {
+                cy.log(firstItemNameBefore);
+                cy.get('th[mat-sort-header=""] .mat-sort-header-content')
+                    .contains(name)
+                    .click();
+                cy.wait(500);
+
+                cy.get('[data-cy="adapter-name"]')
+                    .first()
+                    .invoke('text')
+                    .then(firstItemNameAfter => {
+                        cy.log(firstItemNameAfter);
+                        expect(firstItemNameBefore.trim()).to.not.equal(
+                            firstItemNameAfter.trim(),
+                        );
+                    });
+            });
+    }
+    public static filterAdapterForCategory(category: string) {
+        cy.get('[data-cy="category-select"]').click();
+
+        cy.wait(500);
+
+        cy.get('mat-option').contains(category).click();
+    }
     public static validateAdapterIsStopped() {
         ConnectUtils.goToConnect();
         ConnectBtns.startAdapter().should('have.length', 1);

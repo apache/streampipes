@@ -16,15 +16,15 @@
  *
  */
 import {
-    AfterViewInit,
     Component,
-    NgModule,
     Input,
     ViewChild,
     ContentChildren,
     ContentChild,
     QueryList,
     SimpleChanges,
+    OnChanges,
+    AfterContentInit,
 } from '@angular/core';
 import {
     MatColumnDef,
@@ -45,7 +45,9 @@ import { BehaviorSubject } from 'rxjs';
     styleUrls: ['./sp-table-pagination.component.scss'],
     standalone: false,
 })
-export class SpTablePaginationComponent<T> implements AfterViewInit, OnChanges, AfterContentInit {
+export class SpTablePaginationComponent<T>
+    implements OnChanges, AfterContentInit
+{
     @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;
     @ContentChildren(MatRowDef) rowDefs: QueryList<MatRowDef<T>>;
     @ContentChildren(MatColumnDef) columnDefs: QueryList<MatColumnDef>;
@@ -83,13 +85,14 @@ export class SpTablePaginationComponent<T> implements AfterViewInit, OnChanges, 
 
     private sortInitialized = false;
     private filterInitialized = false;
+    private refreshInitialized = false;
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['sort'] && this.sort && !this.sortInitialized) {
             this.initSortSubscription();
         }
 
-        if (changes['refresh']) {
+        if (changes['refresh'] && !this.refreshInitialized) {
             this.initRefreshSubscription();
         }
 
@@ -109,6 +112,7 @@ export class SpTablePaginationComponent<T> implements AfterViewInit, OnChanges, 
         this.refresh?.subscribe(() => {
             this.loadData(this.currentPage);
         });
+        this.refreshInitialized = true;
     }
 
     private initFilterSubscription(): void {
@@ -117,8 +121,8 @@ export class SpTablePaginationComponent<T> implements AfterViewInit, OnChanges, 
             this.propertyName = this.getViewFn(this.filter.value['view']);
             this.resetPagination();
             this.loadData(0);
-            this.filterInitialized = true;
         });
+        this.filterInitialized = true;
     }
 
     private updateSort(sortChange: Sort): void {
@@ -133,9 +137,6 @@ export class SpTablePaginationComponent<T> implements AfterViewInit, OnChanges, 
         this.filter.value['text'] = '';
     }
 
-    ngAfterViewInit() {
-        this.loadData(0);
-    }
     resetPagination() {
         this.startKeyMap.clear();
         this.currentPage = 0;

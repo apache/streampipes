@@ -27,12 +27,13 @@ describe('Add Compact Adapters', () => {
     });
 
     it('Add an adapter via the compact API. Do not start', () => {
+        console.log('Start ADD Adapter');
         const compactAdapter =
             CompactAdapterUtils.getMachineDataSimulator().build();
+        console.log('Adapter built');
 
         CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
             ConnectUtils.validateAdapterIsStopped();
-
             PipelineUtils.checkAmountOfPipelinesPipeline(0);
         });
     });

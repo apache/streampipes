@@ -44,6 +44,7 @@
         <div class="form-field-small">
             <mat-form-field color="accent" appearance="outline">
                 <mat-select
+                    data-cy="category-select"
                     [(value)]="currentFilter.selectedCategory"
                     (selectionChange)="filterAdapter($event)"
                 >

@@ -170,7 +170,7 @@ public class CouchDbInstallationStep extends InstallationStep {
     nonDesignDocsView.setMap(
         "function (doc) {\n"
             + "  if (!doc._id.startsWith(\"_design/\")) {\n"
-            + "    emit(doc._id, null);\n"
+            + "    emit(doc._id, doc);\n"
             + "  }\n"
             + "}");
 

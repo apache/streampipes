@@ -32,8 +32,6 @@ import com.google.gson.JsonParser;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.View;
 
-
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -53,6 +51,7 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     public AdapterInstanceStorageImpl() {
         super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
     }
+    
 
     @Override
     public AdapterDescription getFirstAdapterByAppId(String appId) {
@@ -75,7 +74,6 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
     public List<AdapterDescription> findAll() {
         List<AdapterDescription> adapters = findAll("paginator/non_design_docs");
         return adapters.stream()
-                .filter(adapter -> adapter.getDescription() != null)
                 .toList();
     }
 

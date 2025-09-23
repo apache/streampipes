@@ -388,7 +388,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 this.sort.active = 'createdAt';
             }
         }
-        this.filter.next({ text: '', category: '', view: '' });
+        // TODO MAYBE NECESSARY TO DO THIS AS ELSE
+        this.filter.next({ text: '', category: '', view: 'createdAt' });
     }
 
     private buildRangeForTextFilter(
@@ -445,7 +446,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 startKey,
             );
         } else if (filterValue.category == 'All') {
-            this.sort.active = '';
+            this.sort.active = 'createdAt';
         }
 
         return { startKey, endKey: null };

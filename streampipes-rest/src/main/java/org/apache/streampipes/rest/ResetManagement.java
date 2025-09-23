@@ -44,7 +44,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ResetManagement {
-  // This class should be moved into another package. I moved it here because I got a cyclic maven
+  // This class should be moved into another package. I moved it here because I
+  // got a cyclic maven
   // dependency between this package and streampipes-pipeline-management
   // See in issue [STREAMPIPES-405]
 
@@ -104,11 +105,10 @@ public class ResetManagement {
   private static void stopAndDeleteAllAdapters() {
     AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getAdapterInstanceStorage(),
+            .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-    );
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics());
 
     List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();
     allAdapters.forEach(adapterDescription -> {
@@ -144,24 +144,22 @@ public class ResetManagement {
   }
 
   private static void removeAllDataViewWidgets() {
-    var widgetStorage =
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getDataExplorerWidgetStorage();
+    var widgetStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
+        .getDataExplorerWidgetStorage();
     widgetStorage.findAll()
-                 .forEach(widget -> widgetStorage.deleteElementById(widget.getElementId()));
+        .forEach(widget -> widgetStorage.deleteElementById(widget.getElementId()));
   }
 
   private static void removeAllDataViews() {
-    var dataLakeDashboardStorage =
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getDataExplorerDashboardStorage();
+    var dataLakeDashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
+        .getDataExplorerDashboardStorage();
     dataLakeDashboardStorage.findAll()
-                            .forEach(dashboard -> dataLakeDashboardStorage.deleteElementById(dashboard.getElementId()));
+        .forEach(dashboard -> dataLakeDashboardStorage.deleteElementById(dashboard.getElementId()));
   }
 
   private static void removeAllAssets(String username) {
     IGenericStorage genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
-                                                               .getGenericStorage();
+        .getGenericStorage();
     try {
       for (Map<String, Object> asset : genericStorage.findAll("asset-management")) {
         genericStorage.delete((String) asset.get("_id"), (String) asset.get("_rev"));
@@ -172,8 +170,7 @@ public class ResetManagement {
   }
 
   private static void removeAllPipelineTemplates() {
-    var pipelineElementTemplateStorage = StorageDispatcher
-        .INSTANCE
+    var pipelineElementTemplateStorage = StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getPipelineElementTemplateStorage();
 
@@ -186,10 +183,9 @@ public class ResetManagement {
   private static void clearGenericStorage() {
     var appDocTypesToDelete = List.of(
         "asset-management",
-        "asset-sites"
-    );
+        "asset-sites");
     var genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
-                                                   .getGenericStorage();
+        .getGenericStorage();
 
     appDocTypesToDelete.forEach(docType -> {
       try {
@@ -197,10 +193,9 @@ public class ResetManagement {
         for (var doc : allDocs) {
           genericStorage.delete(
               doc.get("_id")
-                 .toString(),
+                  .toString(),
               doc.get("_rev")
-                 .toString()
-          );
+                  .toString());
         }
       } catch (IOException e) {
         throw new RuntimeException(e);

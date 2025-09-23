@@ -70,12 +70,27 @@ export class CompactAdapterUtils {
     /**
      * Creates a CompactAdapterBuilder instance configured for a machine data simulator.
      */
-    public static getMachineDataSimulator(): CompactAdapterBuilder {
+    public static getMachineDataSimulator(
+        name: string = 'Test',
+    ): CompactAdapterBuilder {
         return CompactAdapterBuilder.create(
             'org.apache.streampipes.connect.iiot.adapters.simulator.machine',
         )
-            .setName('Test')
+            .setName(name)
             .addConfiguration('wait-time-ms', '1000')
             .addConfiguration('selected-simulator-option', 'flowrate');
+    }
+
+    public static getAndSaveNMachineDataSimulator(
+        name: string = 'Test',
+        n: number = 10,
+    ): void {
+        for (let i = 0; i < n; i++) {
+            const compactAdapter = CompactAdapterUtils.getMachineDataSimulator(
+                'test_' + i,
+            ).build();
+
+            CompactAdapterUtils.storeCompactAdapter(compactAdapter);
+        }
     }
 }
