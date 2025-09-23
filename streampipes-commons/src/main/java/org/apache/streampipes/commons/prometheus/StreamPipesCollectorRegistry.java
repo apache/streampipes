@@ -95,5 +95,7 @@ public class StreamPipesCollectorRegistry {
       .register(collectorRegistry);
   }
 
-
+  public static void remove(Gauge gauge) {
+    collectorRegistry.unregister(gauge);
+  }
 }
