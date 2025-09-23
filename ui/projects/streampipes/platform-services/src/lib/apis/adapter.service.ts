@@ -51,16 +51,16 @@ export class AdapterService {
     }
 
     getAdaptersPaginated(
-        startid: string | number | null,
-        endid: string | number | null,
+        startId: string | number | null,
+        endId: string | number | null,
         limit: number,
         property: string = 'createdAt',
         descending: boolean = false,
     ): Observable<AdapterDescription[]> {
         return this.requestAdapterDescriptionsPaginated(
             '/master/adapters/paginator',
-            startid,
-            endid,
+            startId,
+            endId,
             limit,
             property,
             descending,
@@ -68,14 +68,14 @@ export class AdapterService {
     }
     getAdaptersCategorywisePaginated(
         category: string,
-        startid: string | number | null,
+        startId: string | number | null,
         limit: number,
         descending: boolean = false,
     ): Observable<AdapterDescription[]> {
         return this.requestAdapterCategoryWiseDescriptionsPaginated(
             '/master/adapters/paginator/category',
             category,
-            startid,
+            startId,
             limit,
             descending,
         );
@@ -101,7 +101,7 @@ export class AdapterService {
     requestAdapterCategoryWiseDescriptionsPaginated(
         path: string,
         category: string,
-        startid: string | number | null,
+        startId: string | number | null,
         limit: number,
         descending: boolean,
     ): Observable<AdapterDescription[]> {
@@ -109,8 +109,8 @@ export class AdapterService {
 
         params = params.set('category', category);
 
-        if (startid) {
-            params = params.set('startKey', startid);
+        if (startId) {
+            params = params.set('startKey', startId);
         }
 
         params = params.set('descending', descending);
@@ -127,19 +127,19 @@ export class AdapterService {
 
     requestAdapterDescriptionsPaginated(
         path: string,
-        startid: string | number | null,
-        endid: string | number | null,
+        startId: string | number | null,
+        endId: string | number | null,
         limit: number,
         property: string,
         descending: boolean,
     ): Observable<AdapterDescription[]> {
         let params = new HttpParams().set('limit', limit.toString());
 
-        if (startid) {
-            params = params.set('startKey', startid);
+        if (startId) {
+            params = params.set('startKey', startId);
         }
-        if (endid) {
-            params = params.set('endKey', endid);
+        if (endId) {
+            params = params.set('endKey', endId);
         }
         params = params.set('view', property);
         params = params.set('descending', descending);
