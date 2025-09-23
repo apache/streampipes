@@ -70,7 +70,7 @@ services:
       spnet:
 
   couchdb:
-    image: couchdb:2.3.1
+    image: couchdb:3.3.1
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=admin
@@ -127,7 +127,7 @@ services:
       spnet:
 
   opcua:
-    image: mcr.microsoft.com/iotedge/opc-plc
+    image: mcr.microsoft.com/iotedge/opc-plc:2.12.37
     logging: *default-logging
     command: --ut=true
     networks:
