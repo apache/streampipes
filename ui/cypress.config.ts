@@ -19,6 +19,10 @@
 // tslint:disable-next-line:no-implicit-dependencies
 import { defineConfig } from 'cypress';
 
+const develocityReporter = require.resolve(
+    '@gradle-tech/develocity-agent/cypress-reporter',
+);
+
 export default defineConfig({
     projectId: 'q1jdu2',
     downloadsFolder: 'cypress/downloads',
@@ -56,5 +60,10 @@ export default defineConfig({
             return require('./cypress/plugins/index.ts')(on, config);
         },
         specPattern: '**/*.cy.ts',
+    },
+
+    reporter: 'cypress-multi-reporters',
+    reporterOptions: {
+        reporterEnabled: ['spec', develocityReporter].join(', '),
     },
 });
