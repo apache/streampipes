@@ -42,8 +42,14 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ui/package-lock.json
 
+      - name: Set up Develocity npm agent
+        run: |
+          npm exec -y -- pacote extract @gradle-tech/develocity-agent ~/.node_libraries/@gradle-tech/develocity-agent
+
       - name: Build with Maven
         run: mvn clean verify
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
 
       - name: Set env variables for Docker builds
         run: |
@@ -83,6 +89,9 @@ jobs:
         run: |
           npm install
           npm run build
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
+          NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'
 
       - name: Build and Push Docker UI Image
         uses: docker/build-push-action@v6
@@ -123,4 +132,3 @@ jobs:
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-iiot-minimal:${{ env.MVN_VERSION }}
-

@@ -41,15 +41,24 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ui/package-lock.json
 
+      - name: Set up Develocity npm agent
+        run: |
+          npm exec -y -- pacote extract @gradle-tech/develocity-agent ~/.node_libraries/@gradle-tech/develocity-agent
+
       - name: Build UI
         working-directory: ./ui
         run: |
           rm -rf node_modules package-lock.json
           npm install
           npm run build
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
+          NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'
 
       - name: Build with Maven
         run: mvn clean package
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
 
       - name: Build and run streampipes
         run: docker compose up --build -d
@@ -60,4 +69,7 @@ jobs:
 
       - name: 'UI Tests'
         working-directory: ./ui
-        run: npx cypress run --record --key ${{ secrets.CYPRESS_RECORD_KEY }}  --spec "cypress/tests/**/*.spec.ts"
+        run: npx cypress run --record --key ${{ secrets.CYPRESS_RECORD_KEY }} --spec "cypress/tests/**/*.spec.ts"
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
+          NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'
