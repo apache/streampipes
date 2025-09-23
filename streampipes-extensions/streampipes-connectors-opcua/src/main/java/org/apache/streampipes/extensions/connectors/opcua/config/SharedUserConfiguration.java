@@ -95,7 +95,7 @@ public class SharedUserConfiguration {
             Alternatives.from(
                 Labels.withId(OPC_URL),
                 StaticProperties.stringFreeTextProperty(
-                    Labels.withId(OPC_SERVER_URL), "opc.tcp://opcua:50000"))
+                    Labels.withId(OPC_SERVER_URL), "opc.tcp://localhost:4840"))
             ,
             Alternatives.from(Labels.withId(OPC_HOST),
                 StaticProperties.group(
