@@ -44,12 +44,7 @@ describe('Adapter Paging Test', () => {
 
         cy.dataCy('no-table-entries', { timeout: 10000 }).should('not.exist');
 
-        cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
-            timeout: 10000,
-        })
-            .contains('Name')
-            //.should('be.visible')
-            .click();
+        ConnectBtns.sortingHeader('Name').click();
 
         ConnectUtils.filterAdapterPagination('Name');
     });
@@ -57,7 +52,7 @@ describe('Adapter Paging Test', () => {
     it('Basic Filtering CreatedAT', () => {
         CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
-        cy.wait(1000);
+        cy.dataCy('no-table-entries', { timeout: 10000 }).should('not.exist');
         ConnectUtils.filterAdapterPagination('Created');
     });
 
@@ -65,7 +60,7 @@ describe('Adapter Paging Test', () => {
         CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
 
-        cy.wait(1000);
+        cy.dataCy('no-table-entries', { timeout: 10000 }).should('not.exist');
 
         // Add one Adapter running
         const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
@@ -75,21 +70,15 @@ describe('Adapter Paging Test', () => {
         CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
             cy.wait(1000);
 
-            cy.get('th[mat-sort-header=""] .mat-sort-header-content', {
-                timeout: 10000,
-            })
-                .contains('Status')
-                .should('be.visible')
-                .click();
-            cy.wait(1000);
+            ConnectBtns.sortingHeader('Status').should('be.visible').click();
+
             ConnectUtils.filterAdapterPagination('Status');
         });
     });
     it('Basic Filtering Category', () => {
         CompactAdapterUtils.getAndSaveNMachineDataSimulator();
         ConnectUtils.goToConnect();
-        cy.wait(1000);
-
+        cy.dataCy('no-table-entries', { timeout: 10000 }).should('not.exist');
         ConnectUtils.filterAdapterForCategory('Finance');
 
         cy.dataCy('no-table-entries').should('be.visible');

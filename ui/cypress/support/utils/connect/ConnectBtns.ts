@@ -151,4 +151,14 @@ export class ConnectBtns {
     }
 
     // ========================================================================
+    // =====================  Filter and Pagination Buttons  ==========================
+    public static sortingHeader(name: string) {
+        return cy
+            .get('th[mat-sort-header=""] .mat-sort-header-content', {
+                timeout: 10000,
+            })
+            .contains(name);
+    }
+
+    // ========================================================================
 }
