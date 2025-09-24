@@ -23,6 +23,7 @@ export class ConnectBtns {
     public static deleteAdapter() {
         return cy.dataCy('delete-adapter', { timeout: 10000 });
     }
+
     public static editAdapter() {
         return cy.dataCy('edit-adapter');
     }
@@ -99,6 +100,10 @@ export class ConnectBtns {
     }
 
     public static saveEditProperty() {
+        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
+            'have.length',
+            1,
+        );
         return cy.dataCy('sp-save-edit-property', { timeout: 10000 });
     }
 

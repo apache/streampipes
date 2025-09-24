@@ -246,7 +246,7 @@ export class ConnectUtils {
 
     public static storeAndStartEditedAdapter() {
         ConnectUtils.finishEventSchemaConfiguration();
-        ConnectBtns.storeEditAdapter().click({ multiple: true });
+        ConnectBtns.storeEditAdapter().click();
         ConnectBtns.updateAndMigratePipelines().click();
         ConnectUtils.closeAdapterPreview();
         ConnectBtns.startAdapter().click();
