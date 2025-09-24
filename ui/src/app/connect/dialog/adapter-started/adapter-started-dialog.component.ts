@@ -17,7 +17,6 @@
  */
 
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { MatStepper } from '@angular/material/stepper';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,

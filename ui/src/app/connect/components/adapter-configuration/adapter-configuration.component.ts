@@ -27,6 +27,11 @@ import { Router } from '@angular/router';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 
+interface LinkageData {
+    elementId: string;
+    pipelineId: string;
+}
+
 @Component({
     selector: 'sp-adapter-configuration',
     templateUrl: './adapter-configuration.component.html',
@@ -41,6 +46,7 @@ export class AdapterConfigurationComponent implements OnInit {
     @Input() adapter: AdapterDescription;
     @Input() isEditMode;
 
+    linkageData: LinkageData;
     myStepper: MatStepper;
     parentForm: UntypedFormGroup;
 
@@ -99,8 +105,9 @@ export class AdapterConfigurationComponent implements OnInit {
         this.router.navigate(['connect']);
     }
 
-    public addAsset() {
+    public addAsset(linkageData) {
         this.myStepper.next();
+        this.linkageData = linkageData;
     }
 
     @ViewChild(EventSchemaComponent) set schemaComponent(

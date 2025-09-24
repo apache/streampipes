@@ -80,7 +80,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
     /**
      * Is called when an Asset is supposed to be added
      */
-    @Output() addAssetEmitter: EventEmitter<void> = new EventEmitter<void>();
+    @Output() addAssetEmitter: EventEmitter<LinkageData> =
+        new EventEmitter<LinkageData>();
 
     /**
      * Go to next configuration step when this is complete
@@ -111,6 +112,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     startAdapterNow = true;
     showCode = false;
     addAssetFlag = false;
+    linkageData: LinkageData;
 
     constructor(
         private dialogService: DialogService,
@@ -227,11 +229,12 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
         dialogInstance.addAssetFlagEmitter.subscribe((data: LinkageData) => {
             console.log('Data from dialog:', data);
+            this.linkageData = data;
         });
 
         dialogRef.afterClosed().subscribe(() => {
             if (this.addAssetFlag) {
-                this.addAssetEmitter.emit();
+                this.addAssetEmitter.emit(this.linkageData);
             } else {
                 this.adapterStartedEmitter.emit();
             }
