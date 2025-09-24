@@ -76,7 +76,7 @@ describe('Test Edit Adapter', () => {
     });
 
     it('Successfully edit adapter with persistence pipeline', () => {
-        ConnectUtils.addMachineDataSimulator('simulator', true);
+        ConnectUtils.addMachineDataSimulator('simulator', true, '100');
 
         ConnectUtils.goToConnect();
 

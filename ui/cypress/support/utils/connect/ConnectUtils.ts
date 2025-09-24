@@ -100,10 +100,11 @@ export class ConnectUtils {
     public static addMachineDataSimulator(
         name: string,
         persist: boolean = false,
+        waitingTime: string = '1000',
     ) {
         const builder = AdapterBuilder.create('Machine_Data_Simulator')
             .setName(name)
-            .addInput('input', 'wait-time-ms', '1000');
+            .addInput('input', 'wait-time-ms', waitingTime);
 
         if (persist) {
             builder.setTimestampProperty('timestamp').setStoreInDataLake();
@@ -245,7 +246,7 @@ export class ConnectUtils {
 
     public static storeAndStartEditedAdapter() {
         ConnectUtils.finishEventSchemaConfiguration();
-        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.storeEditAdapter().click({ multiple: true });
         ConnectBtns.updateAndMigratePipelines().click();
         ConnectUtils.closeAdapterPreview();
         ConnectBtns.startAdapter().click();
