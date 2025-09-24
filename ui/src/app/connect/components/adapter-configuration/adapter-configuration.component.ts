@@ -19,18 +19,16 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { AdapterDescription } from '@streampipes/platform-services';
+import {
+    AdapterDescription,
+    LinkageData,
+} from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { Router } from '@angular/router';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-documentation/adapter-documentation-dialog.component';
-
-interface LinkageData {
-    elementId: string;
-    pipelineId: string;
-}
 
 @Component({
     selector: 'sp-adapter-configuration',
@@ -46,7 +44,7 @@ export class AdapterConfigurationComponent implements OnInit {
     @Input() adapter: AdapterDescription;
     @Input() isEditMode;
 
-    linkageData: LinkageData;
+    linkageData: LinkageData[];
     myStepper: MatStepper;
     parentForm: UntypedFormGroup;
 
@@ -106,8 +104,11 @@ export class AdapterConfigurationComponent implements OnInit {
     }
 
     public addAsset(linkageData) {
-        this.myStepper.next();
+        console.log(linkageData);
         this.linkageData = linkageData;
+        this.myStepper.next();
+
+        console.log('Linkage Data in addAsset:', linkageData);
     }
 
     @ViewChild(EventSchemaComponent) set schemaComponent(

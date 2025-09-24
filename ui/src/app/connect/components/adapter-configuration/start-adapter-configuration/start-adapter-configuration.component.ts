@@ -21,6 +21,7 @@ import {
     AdapterDescription,
     EventRateTransformationRuleDescription,
     EventSchema,
+    LinkageData,
     RemoveDuplicatesTransformationRuleDescription,
 } from '@streampipes/platform-services';
 import {
@@ -36,11 +37,6 @@ import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
-
-interface LinkageData {
-    elementId: string;
-    pipelineId: string;
-}
 
 @Component({
     selector: 'sp-start-adapter-configuration',
@@ -80,8 +76,9 @@ export class StartAdapterConfigurationComponent implements OnInit {
     /**
      * Is called when an Asset is supposed to be added
      */
-    @Output() addAssetEmitter: EventEmitter<LinkageData> =
-        new EventEmitter<LinkageData>();
+    @Output() addAssetEmitter: EventEmitter<LinkageData[]> = new EventEmitter<
+        LinkageData[]
+    >();
 
     /**
      * Go to next configuration step when this is complete
@@ -112,7 +109,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     startAdapterNow = true;
     showCode = false;
     addAssetFlag = false;
-    linkageData: LinkageData;
+    linkageData: LinkageData[];
 
     constructor(
         private dialogService: DialogService,
@@ -227,13 +224,14 @@ export class StartAdapterConfigurationComponent implements OnInit {
             this.addAssetFlag = data;
         });
 
-        dialogInstance.addAssetFlagEmitter.subscribe((data: LinkageData) => {
+        dialogInstance.linkageDataEmitter.subscribe((data: LinkageData[]) => {
             console.log('Data from dialog:', data);
             this.linkageData = data;
         });
 
         dialogRef.afterClosed().subscribe(() => {
             if (this.addAssetFlag) {
+                console.log('after close', this.linkageData);
                 this.addAssetEmitter.emit(this.linkageData);
             } else {
                 this.adapterStartedEmitter.emit();

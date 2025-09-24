@@ -31,12 +31,10 @@ import {
     SpLogMessage,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { CompactPipelineService } from '@streampipes/platform-services';
-
-interface LinkageData {
-    elementId: string;
-    pipelineId: string;
-}
+import {
+    CompactPipelineService,
+    LinkageData,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -76,8 +74,8 @@ export class AdapterStartedDialog implements OnInit {
     @Output() addAssetFlagEmitter: EventEmitter<boolean> =
         new EventEmitter<boolean>();
 
-    @Output() linkageDataEmitter: EventEmitter<LinkageData> =
-        new EventEmitter<LinkageData>();
+    @Output() linkageDataEmitter: EventEmitter<LinkageData[]> =
+        new EventEmitter<LinkageData[]>();
 
     templateErrorMessage: ErrorMessage;
     adapterUpdatePreflight = false;
@@ -231,10 +229,25 @@ export class AdapterStartedDialog implements OnInit {
         console.log('persist-' + this.adapter.name.replaceAll(' ', '-'));
         this.pollingActive = false;
         this.addAssetFlagEmitter.emit(true);
-        const linkageData: LinkageData = {
-            elementId: this.adapterElementId,
-            pipelineId: 'persist-' + this.adapter.name.replaceAll(' ', '-'),
-        };
+        const linkageData: LinkageData[] = [
+            {
+                type: 'adapter',
+                id: this.adapterElementId,
+                name: this.adapter.name,
+            },
+            //TODO CHECK IF PIPELINE WAS BUILT
+            {
+                type: 'pipeline',
+
+                id: 'persist-' + this.adapter.name.replaceAll(' ', '-'),
+                name: 'persist-' + this.adapter.name.replaceAll(' ', '-'),
+            },
+            {
+                type: 'data-source',
+                id: this.adapterElementId,
+                name: this.adapter.name,
+            },
+        ];
 
         this.linkageDataEmitter.emit(linkageData);
         this.dialogRef.close('Confirm');

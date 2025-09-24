@@ -62,6 +62,31 @@
             panelTitle="Components to add"
             outerMargin="20px 0px"
         >
+            <div class="components-container">
+                <div *ngFor="let component of linkageData">
+                    <mat-checkbox (change)="onCheckboxChange(component)">
+                        {{ component.type }}
+                    </mat-checkbox>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Name</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="component.name"
+                            [disabled]="!component.selected"
+                        />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Id</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="component.id"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+            </div>
         </sp-basic-inner-panel>
         <div fxLayoutAlign="end" style="margin-top: 10px">
             <button class="mat-basic" mat-flat-button>Cancel</button>

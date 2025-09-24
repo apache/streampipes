@@ -21,6 +21,7 @@ import { AfterViewInit, Component, Input } from '@angular/core';
 import {
     AdapterDescription,
     AssetManagementService,
+    AssetLink,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 
@@ -47,9 +48,16 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
     assetsData: Asset[] = [];
     selectedAssetId: string;
 
+    components = [
+        { type: 'Adapter', name: '', id: 'adapter-123', selected: true },
+        { type: 'Data Source', name: '', id: 'datasource-456', selected: true },
+        { type: 'Pipeline', name: '', id: 'pipeline-789', selected: false },
+        { type: 'Datalake', name: '', id: 'datalake-012', selected: false },
+    ];
+
     @Input() adapterDescription: AdapterDescription;
 
-    @Input() linkageData: LinkageData;
+    @Input() linkageData: LinkageData[];
 
     @Input() stepper: MatStepper;
 
@@ -58,6 +66,7 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         console.log('SAVE');
         this.getAssets();
+        console.log(this.linkageData);
     }
 
     getAssets(): void {
@@ -66,6 +75,25 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
                 this.assetsData = this.transformAssetsData(data);
             },
         });
+    }
+
+    onCheckboxChange(component: any) {
+        if (!component.selected) {
+            // Optionally reset the name if checkbox is unchecked (this is optional)
+            component.name = '';
+        }
+    }
+
+    makeLink(resourceId: string, label: string, assetLinkType: string): void {
+        //AssetLink
+        //TODO
+        //return {
+        //    linkLabel: label,
+        //    linkType: linkType.linkType,
+        //    editingDisabled: false,
+        //    queryHint: linkType.linkQueryHint,
+        //    navigationActive: linkType.navigationActive,
+        //    resourceId,
     }
 
     assignToAssets(linkageData: LinkageData) {}

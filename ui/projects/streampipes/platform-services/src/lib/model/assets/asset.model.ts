@@ -43,6 +43,12 @@ export interface AssetLink {
     navigationActive: boolean;
 }
 
+export interface LinkageData {
+    name: string;
+    id: string;
+    type: string;
+}
+
 export interface Isa95TypeDesc {
     label: string;
     type: Isa95Type;
