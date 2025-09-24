@@ -45,6 +45,7 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
      * Adapter description the selected format is added to
      */
     assetsData: Asset[] = [];
+    selectedAssetId: string;
 
     @Input() adapterDescription: AdapterDescription;
 
@@ -57,10 +58,6 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         console.log('SAVE');
         this.getAssets();
-
-        // Process the API data into a tree format
-        //this.assetsData = this.transformAssetsData(apiResponse);
-        console.log(this.assetsData);
     }
 
     getAssets(): void {
@@ -72,6 +69,10 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
     }
 
     assignToAssets(linkageData: LinkageData) {}
+
+    save(): void {
+        console.log('Currently selected Asset ID:', this.selectedAssetId);
+    }
 
     transformAssetsData(apiResponse: any[]): Asset[] {
         return apiResponse.map(asset => ({

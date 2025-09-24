@@ -20,7 +20,7 @@
     <div fxFlex="100" fxLayout="column">
         <mat-form-field appearance="fill">
             <mat-label>Select Asset</mat-label>
-            <mat-select>
+            <mat-select [(ngModel)]="selectedAssetId">
                 <mat-option
                     *ngFor="let asset of assetsData"
                     [value]="asset.assetId"
@@ -67,6 +67,7 @@
                 color="accent"
                 mat-button
                 style="margin-left: 10px"
+                (click)="save()"
             >
                 Add to Asset
             </button>
