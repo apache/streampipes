@@ -18,40 +18,51 @@
 
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="column">
-        <mat-form-field appearance="fill">
-            <mat-label>Select Asset</mat-label>
-            <mat-select [(ngModel)]="selectedAssetId">
-                <mat-option
-                    *ngFor="let asset of assetsData"
-                    [value]="asset.assetId"
-                >
-                    {{ asset.assetName }}
-                    <ng-container *ngIf="asset.assets?.length">
-                        <mat-select *ngIf="asset.assets?.length">
-                            <mat-option
-                                *ngFor="let subAsset of asset.assets"
-                                [value]="subAsset.assetId"
-                            >
-                                {{ subAsset.assetName }}
-                                <ng-container *ngIf="subAsset.assets?.length">
-                                    <!-- Recursive level for sub-assets -->
-                                    <mat-select *ngIf="subAsset.assets?.length">
-                                        <mat-option
-                                            *ngFor="
-                                                let subSubAsset of subAsset.assets
-                                            "
-                                            [value]="subSubAsset.assetId"
+        <sp-basic-inner-panel panelTitle="Select Asset" outerMargin="20px 0px">
+            <mat-form-field appearance="fill">
+                <mat-label>Select Asset</mat-label>
+                <mat-select [(ngModel)]="selectedAssetId">
+                    <mat-option
+                        *ngFor="let asset of assetsData"
+                        [value]="asset.assetId"
+                    >
+                        {{ asset.assetName }}
+                        <ng-container *ngIf="asset.assets?.length">
+                            <mat-select *ngIf="asset.assets?.length">
+                                <mat-option
+                                    *ngFor="let subAsset of asset.assets"
+                                    [value]="subAsset.assetId"
+                                >
+                                    {{ subAsset.assetName }}
+                                    <ng-container
+                                        *ngIf="subAsset.assets?.length"
+                                    >
+                                        <!-- Recursive level for sub-assets -->
+                                        <mat-select
+                                            *ngIf="subAsset.assets?.length"
                                         >
-                                            {{ subSubAsset.assetName }}
-                                        </mat-option>
-                                    </mat-select>
-                                </ng-container>
-                            </mat-option>
-                        </mat-select>
-                    </ng-container>
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+                                            <mat-option
+                                                *ngFor="
+                                                    let subSubAsset of subAsset.assets
+                                                "
+                                                [value]="subSubAsset.assetId"
+                                            >
+                                                {{ subSubAsset.assetName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </ng-container>
+                                </mat-option>
+                            </mat-select>
+                        </ng-container>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </sp-basic-inner-panel>
+        <sp-basic-inner-panel
+            panelTitle="Components to add"
+            outerMargin="20px 0px"
+        >
+        </sp-basic-inner-panel>
         <div fxLayoutAlign="end" style="margin-top: 10px">
             <button class="mat-basic" mat-flat-button>Cancel</button>
             <button
