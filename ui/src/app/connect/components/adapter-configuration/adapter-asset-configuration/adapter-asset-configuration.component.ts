@@ -16,53 +16,68 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 
 import {
     AdapterDescription,
-    EventRateTransformationRuleDescription,
-    EventSchema,
-    RemoveDuplicatesTransformationRuleDescription,
+    AssetManagementService,
 } from '@streampipes/platform-services';
-import {
-    UntypedFormBuilder,
-    UntypedFormControl,
-    UntypedFormGroup,
-    Validators,
-} from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { AdapterStartedDialog } from '../../../dialog/adapter-started/adapter-started-dialog.component';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { ShepherdService } from '../../../../services/tour/shepherd.service';
-import { TimestampPipe } from '../../../filter/timestamp.pipe';
-import { TransformationRuleService } from '../../../services/transformation-rule.service';
 
 interface LinkageData {
     elementId: string;
     pipelineId: string;
 }
 
+export interface Asset {
+    assetId: string;
+    assetName: string;
+    assets?: Asset[]; // Sub-assets
+}
 @Component({
     selector: 'sp-adapter-asset-configuration',
     templateUrl: './adapter-asset-configuration.component.html',
     styleUrls: ['./adapter-asset-configuration.component.scss'],
     standalone: false,
 })
-export class AdapterAssetConfigurationComponent implements OnInit {
+export class AdapterAssetConfigurationComponent implements AfterViewInit {
     /**
      * Adapter description the selected format is added to
      */
+    assetsData: Asset[] = [];
+
     @Input() adapterDescription: AdapterDescription;
 
     @Input() linkageData: LinkageData;
 
     @Input() stepper: MatStepper;
 
-    ngOnInit(): void {
+    constructor(private assetManagementService: AssetManagementService) {}
+
+    ngAfterViewInit(): void {
         console.log('SAVE');
+        this.getAssets();
+
+        // Process the API data into a tree format
+        //this.assetsData = this.transformAssetsData(apiResponse);
+        console.log(this.assetsData);
     }
 
-    getAssets(): void {}
+    getAssets(): void {
+        this.assetManagementService.getAllAssets().subscribe({
+            next: data => {
+                this.assetsData = this.transformAssetsData(data);
+            },
+        });
+    }
 
     assignToAssets(linkageData: LinkageData) {}
+
+    transformAssetsData(apiResponse: any[]): Asset[] {
+        return apiResponse.map(asset => ({
+            assetId: asset.assetId,
+            assetName: asset.assetName,
+            assets: asset.assets ? this.transformAssetsData(asset.assets) : [],
+        }));
+    }
 }

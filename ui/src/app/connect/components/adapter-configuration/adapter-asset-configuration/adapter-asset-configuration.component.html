@@ -18,6 +18,40 @@
 
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="column">
+        <mat-form-field appearance="fill">
+            <mat-label>Select Asset</mat-label>
+            <mat-select>
+                <mat-option
+                    *ngFor="let asset of assetsData"
+                    [value]="asset.assetId"
+                >
+                    {{ asset.assetName }}
+                    <ng-container *ngIf="asset.assets?.length">
+                        <mat-select *ngIf="asset.assets?.length">
+                            <mat-option
+                                *ngFor="let subAsset of asset.assets"
+                                [value]="subAsset.assetId"
+                            >
+                                {{ subAsset.assetName }}
+                                <ng-container *ngIf="subAsset.assets?.length">
+                                    <!-- Recursive level for sub-assets -->
+                                    <mat-select *ngIf="subAsset.assets?.length">
+                                        <mat-option
+                                            *ngFor="
+                                                let subSubAsset of subAsset.assets
+                                            "
+                                            [value]="subSubAsset.assetId"
+                                        >
+                                            {{ subSubAsset.assetName }}
+                                        </mat-option>
+                                    </mat-select>
+                                </ng-container>
+                            </mat-option>
+                        </mat-select>
+                    </ng-container>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
         <div fxLayoutAlign="end" style="margin-top: 10px">
             <button class="mat-basic" mat-flat-button>Cancel</button>
             <button
