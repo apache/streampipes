@@ -63,11 +63,19 @@
             outerMargin="20px 0px"
         >
             <div class="components-container">
-                <div *ngFor="let component of linkageData">
-                    <mat-checkbox (change)="onCheckboxChange(component)">
+                <div
+                    *ngFor="let component of linkageData"
+                    class="component-row"
+                >
+                    <!-- Checkbox Column -->
+                    <mat-checkbox
+                        [(ngModel)]="component.selected"
+                        (change)="onCheckboxChange(component)"
+                    >
                         {{ component.type }}
                     </mat-checkbox>
 
+                    <!-- Name Column -->
                     <mat-form-field appearance="fill">
                         <mat-label>Name</mat-label>
                         <input
@@ -77,6 +85,7 @@
                         />
                     </mat-form-field>
 
+                    <!-- Id Column -->
                     <mat-form-field appearance="fill">
                         <mat-label>Id</mat-label>
                         <input

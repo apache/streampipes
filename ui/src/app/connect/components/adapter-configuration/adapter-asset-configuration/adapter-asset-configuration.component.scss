@@ -15,3 +15,24 @@
  * limitations under the License.
  *
  */
+.components-container {
+    display: flex;
+    flex-direction: column; /* Display components vertically (rows) */
+    gap: 10px; /* Adds space between rows */
+    padding: 10px;
+}
+
+.component-row {
+    display: flex; /* Align items in a row */
+    align-items: center; /* Vertically align items in the row */
+    gap: 20px; /* Adds space between checkbox and inputs */
+}
+
+mat-form-field {
+    flex: 1; /* Makes the input fields take equal width */
+    margin-right: 10px; /* Space between the input fields */
+}
+
+mat-checkbox {
+    margin-right: 20px; /* Space between the checkbox and first input field */
+}

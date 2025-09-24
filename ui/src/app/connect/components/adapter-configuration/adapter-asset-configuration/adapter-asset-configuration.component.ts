@@ -22,13 +22,9 @@ import {
     AdapterDescription,
     AssetManagementService,
     AssetLink,
+    LinkageData,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
-
-interface LinkageData {
-    elementId: string;
-    pipelineId: string;
-}
 
 export interface Asset {
     assetId: string;
@@ -47,13 +43,6 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
      */
     assetsData: Asset[] = [];
     selectedAssetId: string;
-
-    components = [
-        { type: 'Adapter', name: '', id: 'adapter-123', selected: true },
-        { type: 'Data Source', name: '', id: 'datasource-456', selected: true },
-        { type: 'Pipeline', name: '', id: 'pipeline-789', selected: false },
-        { type: 'Datalake', name: '', id: 'datalake-012', selected: false },
-    ];
 
     @Input() adapterDescription: AdapterDescription;
 

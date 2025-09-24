@@ -104,11 +104,8 @@ export class AdapterConfigurationComponent implements OnInit {
     }
 
     public addAsset(linkageData) {
-        console.log(linkageData);
         this.linkageData = linkageData;
         this.myStepper.next();
-
-        console.log('Linkage Data in addAsset:', linkageData);
     }
 
     @ViewChild(EventSchemaComponent) set schemaComponent(

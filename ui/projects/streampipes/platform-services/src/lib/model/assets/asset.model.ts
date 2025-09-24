@@ -47,6 +47,7 @@ export interface LinkageData {
     name: string;
     id: string;
     type: string;
+    selected?: boolean | null;
 }
 
 export interface Isa95TypeDesc {
