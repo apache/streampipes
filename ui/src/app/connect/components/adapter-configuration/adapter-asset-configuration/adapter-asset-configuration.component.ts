@@ -19,10 +19,14 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
 
 import {
+    AssetConstants,
     AdapterDescription,
     AssetManagementService,
     AssetLink,
     LinkageData,
+    SpAssetModel,
+    AssetLinkType,
+    GenericStorageService,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 
@@ -43,6 +47,10 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
      */
     assetsData: Asset[] = [];
     selectedAssetId: string;
+    currentAsset: SpAssetModel;
+
+    assetLinkTypes: AssetLinkType[];
+    assetLinksLoaded = false;
 
     @Input() adapterDescription: AdapterDescription;
 
@@ -50,12 +58,29 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
 
     @Input() stepper: MatStepper;
 
-    constructor(private assetManagementService: AssetManagementService) {}
+    constructor(
+        private assetManagementService: AssetManagementService,
+        private genericStorageService: GenericStorageService,
+    ) {}
 
     ngAfterViewInit(): void {
         console.log('SAVE');
         this.getAssets();
+        this.getAssetLinks();
         console.log(this.linkageData);
+    }
+
+    getAssetLinks(): void {
+        this.genericStorageService
+            .getAllDocuments(AssetConstants.ASSET_LINK_TYPES_DOC_NAME)
+            .subscribe(assetLinkTypes => {
+                this.assetLinkTypes = assetLinkTypes.sort((a, b) =>
+                    a.linkLabel.localeCompare(b.linkLabel),
+                );
+
+                console.log(this.assetLinkTypes);
+                this.assetLinksLoaded = true;
+            });
     }
 
     getAssets(): void {
@@ -73,22 +98,51 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
         }
     }
 
-    makeLink(resourceId: string, label: string, assetLinkType: string): void {
-        //AssetLink
-        //TODO
-        //return {
-        //    linkLabel: label,
-        //    linkType: linkType.linkType,
-        //    editingDisabled: false,
-        //    queryHint: linkType.linkQueryHint,
-        //    navigationActive: linkType.navigationActive,
-        //    resourceId,
+    getCurrAssetLinkType(linkType: string): AssetLinkType {
+        return this.assetLinkTypes.find(a => a.linkType === linkType);
     }
 
-    assignToAssets(linkageData: LinkageData) {}
+    makeLink(linkageData: LinkageData[]): AssetLink[] {
+        const links: AssetLink[] = [];
+
+        // Loop through each item in linkageData
+        for (const item of linkageData) {
+            if (item.selected) {
+                const linkType = this.getCurrAssetLinkType(item.type);
+                console.log('Link Type');
+                links.push({
+                    linkLabel: item.name,
+                    linkType: item.type,
+                    editingDisabled: false,
+                    queryHint: item.type,
+                    navigationActive: linkType.navigationActive,
+                    resourceId: item.id,
+                });
+            }
+        }
+
+        return links;
+    }
+
+    assignToAssets(linkageData: LinkageData) {
+        // Take tthe original data
+        // add the links
+        //This is the right endpoint
+        //this.assetManagementService.updateAsset(asset)
+    }
 
     save(): void {
         console.log('Currently selected Asset ID:', this.selectedAssetId);
+        // Set current Asset
+        this.assetManagementService.getAsset(this.selectedAssetId).subscribe({
+            next: data => {
+                this.currentAsset = data;
+            },
+        });
+
+        const links = this.makeLink(this.linkageData);
+
+        // Add Links
     }
 
     transformAssetsData(apiResponse: any[]): Asset[] {

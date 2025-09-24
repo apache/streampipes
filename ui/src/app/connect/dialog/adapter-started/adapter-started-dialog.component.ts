@@ -225,8 +225,6 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     addToAsset() {
-        console.log(this.adapterElementId);
-        console.log('persist-' + this.adapter.name.replaceAll(' ', '-'));
         this.pollingActive = false;
         this.addAssetFlagEmitter.emit(true);
         const linkageData: LinkageData[] = [
@@ -235,19 +233,20 @@ export class AdapterStartedDialog implements OnInit {
                 id: this.adapterElementId,
                 name: this.adapter.name,
             },
-            //TODO CHECK IF PIPELINE WAS BUILT
-            {
-                type: 'pipeline',
-
-                id: 'persist-' + this.adapter.name.replaceAll(' ', '-'),
-                name: 'persist-' + this.adapter.name.replaceAll(' ', '-'),
-            },
             {
                 type: 'data-source',
                 id: this.adapterElementId,
                 name: this.adapter.name,
             },
         ];
+        if (this.saveInDataLake) {
+            linkageData.push({
+                type: 'pipeline',
+
+                id: 'persist-' + this.adapter.name.replaceAll(' ', '-'),
+                name: 'persist-' + this.adapter.name.replaceAll(' ', '-'),
+            });
+        }
 
         this.linkageDataEmitter.emit(linkageData);
         this.dialogRef.close('Confirm');
