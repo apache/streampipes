@@ -58,6 +58,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     @Input() isEditMode: boolean;
 
+    @Input() stepper: MatStepper;
+
     /**
      * Cancels the adapter configuration process
      */
@@ -69,6 +71,11 @@ export class StartAdapterConfigurationComponent implements OnInit {
      */
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
+
+    /**
+     * Is called when an Asset is supposed to be added
+     */
+    @Output() addAssetEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     /**
      * Go to next configuration step when this is complete
@@ -98,6 +105,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     startAdapterNow = true;
     showCode = false;
+    addAssetFlag = false;
 
     constructor(
         private dialogService: DialogService,
@@ -169,6 +177,10 @@ export class StartAdapterConfigurationComponent implements OnInit {
         }
     }
 
+    addAssetFlagTrue() {
+        console.log('Set Asset Flag');
+        this.addAssetFlag = true;
+    }
     public editAdapter() {
         this.checkAndApplyStreamRules();
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
@@ -201,10 +213,19 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 startAdapterNow: this.startAdapterNow,
             },
         });
-        this.shepherdService.trigger('adapter-settings-adapter-started');
+        const dialogInstance =
+            dialogRef.componentInstance as unknown as AdapterStartedDialog;
+        dialogInstance.addAssetFlagEmitter.subscribe((data: boolean) => {
+            console.log('Data from dialog:', data);
+            this.addAssetFlag = data;
+        });
 
         dialogRef.afterClosed().subscribe(() => {
-            this.adapterStartedEmitter.emit();
+            if (this.addAssetFlag) {
+                this.addAssetEmitter.emit();
+            } else {
+                this.adapterStartedEmitter.emit();
+            }
         });
     }
 

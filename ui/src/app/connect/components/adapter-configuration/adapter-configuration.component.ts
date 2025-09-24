@@ -99,6 +99,10 @@ export class AdapterConfigurationComponent implements OnInit {
         this.router.navigate(['connect']);
     }
 
+    public addAsset() {
+        this.myStepper.next();
+    }
+
     @ViewChild(EventSchemaComponent) set schemaComponent(
         eventSchemaComponent: EventSchemaComponent,
     ) {

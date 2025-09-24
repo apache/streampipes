@@ -78,12 +78,24 @@
                     [adapterDescription]="adapter"
                     [eventSchema]="adapter.dataStream.eventSchema"
                     [isEditMode]="isEditMode"
+                    [stepper]="stepper"
                     (removeSelectionEmitter)="removeSelection()"
                     (goBackEmitter)="goBack()"
                     (adapterStartedEmitter)="adapterWasStarted()"
+                    (addAssetEmitter)="addAsset()"
                 >
                 </sp-start-adapter-configuration>
             </mat-step>
+
+            @if (isEditMode == false) {
+                <mat-step>
+                    <ng-template matStepLabel>Add to Asset</ng-template>
+                    <sp-adapter-asset-configuration
+                        [adapterDescription]="adapter"
+                    >
+                    </sp-adapter-asset-configuration>
+                </mat-step>
+            }
         </mat-horizontal-stepper>
     </div>
 </sp-basic-view>

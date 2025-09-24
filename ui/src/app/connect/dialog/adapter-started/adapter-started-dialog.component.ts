@@ -16,7 +16,8 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import { MatStepper } from '@angular/material/stepper';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
@@ -67,6 +68,9 @@ export class AdapterStartedDialog implements OnInit {
      * This option will immediately start the adapter, when false it the adapter is only created and not started
      */
     @Input() startAdapterNow = true;
+
+    @Output() addAssetFlagEmitter: EventEmitter<boolean> =
+        new EventEmitter<boolean>();
 
     templateErrorMessage: ErrorMessage;
     adapterUpdatePreflight = false;
@@ -212,6 +216,13 @@ export class AdapterStartedDialog implements OnInit {
         this.pollingActive = false;
         this.dialogRef.close('Confirm');
         this.shepherdService.trigger('confirm_adapter_started_button');
+    }
+
+    addToAsset() {
+        this.pollingActive = false;
+        this.addAssetFlagEmitter.emit(true);
+        this.dialogRef.close('Confirm');
+        this.shepherdService.trigger('add_to_asset');
     }
 
     private startSaveInDataLakePipeline(adapterElementId: string) {
