@@ -37,6 +37,11 @@ import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 
+interface LinkageData {
+    elementId: string;
+    pipelineId: string;
+}
+
 @Component({
     selector: 'sp-start-adapter-configuration',
     templateUrl: './start-adapter-configuration.component.html',
@@ -218,6 +223,10 @@ export class StartAdapterConfigurationComponent implements OnInit {
         dialogInstance.addAssetFlagEmitter.subscribe((data: boolean) => {
             console.log('Data from dialog:', data);
             this.addAssetFlag = data;
+        });
+
+        dialogInstance.addAssetFlagEmitter.subscribe((data: LinkageData) => {
+            console.log('Data from dialog:', data);
         });
 
         dialogRef.afterClosed().subscribe(() => {

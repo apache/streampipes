@@ -34,6 +34,11 @@ import {
 import { DialogRef } from '@streampipes/shared-ui';
 import { CompactPipelineService } from '@streampipes/platform-services';
 
+interface LinkageData {
+    elementId: string;
+    pipelineId: string;
+}
+
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
     templateUrl: './adapter-started-dialog.component.html',
@@ -71,6 +76,9 @@ export class AdapterStartedDialog implements OnInit {
 
     @Output() addAssetFlagEmitter: EventEmitter<boolean> =
         new EventEmitter<boolean>();
+
+    @Output() linkageDataEmitter: EventEmitter<LinkageData> =
+        new EventEmitter<LinkageData>();
 
     templateErrorMessage: ErrorMessage;
     adapterUpdatePreflight = false;
@@ -142,6 +150,7 @@ export class AdapterStartedDialog implements OnInit {
             status => {
                 if (status.success) {
                     const adapterElementId = status.notifications[0].title;
+                    this.adapterElementId = adapterElementId;
                     if (this.saveInDataLake) {
                         this.startSaveInDataLakePipeline(adapterElementId);
                     } else {
@@ -219,8 +228,16 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     addToAsset() {
+        console.log(this.adapterElementId);
+        console.log('persist-' + this.adapter.name.replaceAll(' ', '-'));
         this.pollingActive = false;
         this.addAssetFlagEmitter.emit(true);
+        const linkageData: LinkageData = {
+            elementId: this.adapterElementId,
+            pipelineId: 'persist-' + this.adapter.name.replaceAll(' ', '-'),
+        };
+
+        this.linkageDataEmitter.emit(linkageData);
         this.dialogRef.close('Confirm');
         this.shepherdService.trigger('add_to_asset');
     }
