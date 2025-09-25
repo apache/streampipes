@@ -43,8 +43,6 @@ export class AssetManagementService {
     }
 
     updateAsset(asset: any): Observable<any> {
-        console.log('update aAsset');
-        console.log(asset);
         return this.http.put(`${this.assetBasePath}/${asset._id}`, asset);
     }
 
