@@ -224,33 +224,39 @@ export class AdapterStartedDialog implements OnInit {
         this.shepherdService.trigger('confirm_adapter_started_button');
     }
 
-    addToAsset() {
+    addToAsset(): void {
         this.pollingActive = false;
         this.addAssetFlagEmitter.emit(true);
-        const linkageData: LinkageData[] = [
-            {
-                type: 'adapter',
-                id: this.adapterElementId,
-                name: this.adapter.name,
-            },
-            {
-                type: 'data-source',
-                id: this.adapterElementId,
-                name: this.adapter.name,
-            },
-        ];
-        if (this.saveInDataLake) {
-            linkageData.push({
-                type: 'pipeline',
 
-                id: 'persist-' + this.adapter.name.replaceAll(' ', '-'),
-                name: 'persist-' + this.adapter.name.replaceAll(' ', '-'),
+        this.adapterService
+            .getAdapter(this.adapterElementId)
+            .subscribe(adapter => {
+                const linkageData: LinkageData[] = [
+                    {
+                        type: 'adapter',
+                        id: this.adapterElementId,
+                        name: adapter.name,
+                    },
+                    {
+                        type: 'data-source',
+                        id: adapter.correspondingDataStreamElementId,
+                        name: adapter.name,
+                    },
+                ];
+
+                if (this.saveInDataLake) {
+                    const pipelineId = `persist-${this.adapter.name.replaceAll(' ', '-')}`;
+                    linkageData.push({
+                        type: 'pipeline',
+                        id: pipelineId,
+                        name: pipelineId,
+                    });
+                }
+
+                this.linkageDataEmitter.emit(linkageData);
+                this.dialogRef.close('Confirm');
+                this.shepherdService.trigger('add_to_asset');
             });
-        }
-
-        this.linkageDataEmitter.emit(linkageData);
-        this.dialogRef.close('Confirm');
-        this.shepherdService.trigger('add_to_asset');
     }
 
     private startSaveInDataLakePipeline(adapterElementId: string) {
