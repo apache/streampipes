@@ -21,23 +21,29 @@
         <sp-basic-inner-panel panelTitle="Select Asset" outerMargin="20px 0px">
             <mat-form-field appearance="fill">
                 <mat-label>Select Asset</mat-label>
-                <mat-select [(ngModel)]="selectedAssetId">
+                <mat-select [(ngModel)]="selectedAssetIds">
                     <mat-option
                         *ngFor="let asset of assetsData"
-                        [value]="asset.assetId"
+                        [value]="{ id: asset.id, assetId: asset.assetId }"
                     >
                         {{ asset.assetName }}
+
+                        <!-- Sub-Assets -->
                         <ng-container *ngIf="asset.assets?.length">
                             <mat-select *ngIf="asset.assets?.length">
                                 <mat-option
                                     *ngFor="let subAsset of asset.assets"
-                                    [value]="subAsset.assetId"
+                                    [value]="{
+                                        id: subAsset.id,
+                                        assetId: subAsset.assetId
+                                    }"
                                 >
                                     {{ subAsset.assetName }}
+
+                                    <!-- Recursive level for sub-assets -->
                                     <ng-container
                                         *ngIf="subAsset.assets?.length"
                                     >
-                                        <!-- Recursive level for sub-assets -->
                                         <mat-select
                                             *ngIf="subAsset.assets?.length"
                                         >
@@ -45,7 +51,10 @@
                                                 *ngFor="
                                                     let subSubAsset of subAsset.assets
                                                 "
-                                                [value]="subSubAsset.assetId"
+                                                [value]="{
+                                                    id: subSubAsset.id,
+                                                    assetId: subSubAsset.assetId
+                                                }"
                                             >
                                                 {{ subSubAsset.assetName }}
                                             </mat-option>

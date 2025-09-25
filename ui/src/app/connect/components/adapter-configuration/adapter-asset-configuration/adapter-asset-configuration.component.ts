@@ -34,6 +34,7 @@ export interface Asset {
     assetId: string;
     assetName: string;
     assets?: Asset[]; // Sub-assets
+    id: string;
 }
 @Component({
     selector: 'sp-adapter-asset-configuration',
@@ -46,7 +47,7 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
      * Adapter description the selected format is added to
      */
     assetsData: Asset[] = [];
-    selectedAssetId: string;
+    selectedAssetIds: { id: string; assetId: string } = { id: '', assetId: '' };
     currentAsset: SpAssetModel;
 
     assetLinkTypes: AssetLinkType[];
@@ -67,7 +68,6 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
         console.log('SAVE');
         this.getAssets();
         this.getAssetLinks();
-        console.log(this.linkageData);
     }
 
     getAssetLinks(): void {
@@ -109,7 +109,7 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
         for (const item of linkageData) {
             if (item.selected) {
                 const linkType = this.getCurrAssetLinkType(item.type);
-                console.log('Link Type');
+                console.log('Link Type', linkType);
                 links.push({
                     linkLabel: item.name,
                     linkType: item.type,
@@ -132,24 +132,75 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
     }
 
     save(): void {
-        console.log('Currently selected Asset ID:', this.selectedAssetId);
+        console.log('Currently selected Asset ID:', this.selectedAssetIds);
         // Set current Asset
-        this.assetManagementService.getAsset(this.selectedAssetId).subscribe({
-            next: data => {
-                this.currentAsset = data;
-            },
-        });
+        this.assetManagementService
+            .getAsset(this.selectedAssetIds.id)
+            .subscribe({
+                next: data => {
+                    this.currentAsset = data;
+                    console.log('Current Asset', this.currentAsset);
 
-        const links = this.makeLink(this.linkageData);
+                    const links = this.makeLink(this.linkageData);
+
+                    console.log('Links', links);
+                    console.log('assetID', this.selectedAssetIds.assetId);
+                    const asset_new = this.findAssetById(
+                        this.selectedAssetIds.assetId,
+                    );
+                    console.log('asset_new ', asset_new);
+                    for (const link of links) {
+                        asset_new.assetLinks.push(link);
+                    }
+                    console.log('asset_new', asset_new);
+                    this.assetManagementService.updateAsset(asset_new);
+                },
+            });
 
         // Add Links
     }
 
-    transformAssetsData(apiResponse: any[]): Asset[] {
-        return apiResponse.map(asset => ({
-            assetId: asset.assetId,
-            assetName: asset.assetName,
-            assets: asset.assets ? this.transformAssetsData(asset.assets) : [],
-        }));
+    findAssetById(assetId: string): any {
+        if (this.currentAsset.assetId === assetId) {
+            return this.currentAsset;
+        }
+        return this.findSubAssetById(this.currentAsset.assets || [], assetId);
+    }
+
+    findSubAssetById(assets: any[], assetId: string): any {
+        for (const asset of assets) {
+            if (asset.assetId === assetId) {
+                return asset;
+            }
+            if (asset.assets?.length) {
+                const found = this.findSubAssetById(asset.assets, assetId);
+                if (found) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    transformAssetsData(apiResponse: any[], topLevelId: string = ''): Asset[] {
+        if (topLevelId === '') {
+            return apiResponse.map(asset => ({
+                id: asset._id,
+                assetId: asset.assetId,
+                assetName: asset.assetName,
+                assets: asset.assets
+                    ? this.transformAssetsData(asset.assets, asset._id)
+                    : [],
+            }));
+        } else {
+            return apiResponse.map(asset => ({
+                id: topLevelId,
+                assetId: asset.assetId,
+                assetName: asset.assetName,
+                assets: asset.assets
+                    ? this.transformAssetsData(asset.assets, topLevelId)
+                    : [],
+            }));
+        }
     }
 }
