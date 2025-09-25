@@ -16,7 +16,13 @@
  *
  */
 
-import { AfterViewInit, Component, Input } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+} from '@angular/core';
 import {
     AssetConstants,
     AdapterDescription,
@@ -46,6 +52,9 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
     @Input() adapterDescription: AdapterDescription;
     @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
+
+    @Output() adapterStartedEmitter: EventEmitter<void> =
+        new EventEmitter<void>();
 
     assetsData: Asset[] = [];
     selectedAssetIds = { id: '', assetId: '' };
@@ -154,11 +163,15 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
 
                 updateObservable?.subscribe({
                     next: updated => {
-                        console.log('Asset updated:', updated);
+                        this.adapterStartedEmitter.emit();
                     },
                 });
             },
         });
+    }
+
+    cancel(): void {
+        this.adapterStartedEmitter.emit();
     }
 
     private updateNestedAsset(assetToUpdate: any) {

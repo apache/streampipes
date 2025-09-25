@@ -107,13 +107,8 @@
             </div>
         </sp-basic-inner-panel>
         <div fxLayoutAlign="end" style="margin-top: 10px">
-            <button class="mat-basic" mat-flat-button>Cancel</button>
-            <button
-                style="margin-left: 10px"
-                class="mat-basic stepper-button"
-                mat-flat-button
-            >
-                Back
+            <button class="mat-basic" mat-flat-button (click)="cancel()">
+                Cancel
             </button>
             <button
                 mat-flat-button

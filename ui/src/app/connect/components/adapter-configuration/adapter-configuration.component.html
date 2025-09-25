@@ -93,6 +93,7 @@
                     <sp-adapter-asset-configuration
                         [adapterDescription]="adapter"
                         [linkageData]="linkageData"
+                        (adapterStartedEmitter)="adapterWasStarted()"
                     >
                     </sp-adapter-asset-configuration>
                 </mat-step>
