@@ -52,6 +52,7 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
 
     assetLinkTypes: AssetLinkType[];
     assetLinksLoaded = false;
+    path_to_asset = [];
 
     @Input() adapterDescription: AdapterDescription;
 
@@ -153,7 +154,13 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
                         asset_new.assetLinks.push(link);
                     }
                     console.log('asset_new', asset_new);
-                    this.assetManagementService.updateAsset(asset_new);
+                    this.assetManagementService
+                        .updateAsset(asset_new)
+                        .subscribe({
+                            next: data => {
+                                console.log(data);
+                            },
+                        });
                 },
             });
 
