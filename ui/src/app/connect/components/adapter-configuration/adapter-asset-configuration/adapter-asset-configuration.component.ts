@@ -17,7 +17,6 @@
  */
 
 import { AfterViewInit, Component, Input } from '@angular/core';
-
 import {
     AssetConstants,
     AdapterDescription,
@@ -33,9 +32,10 @@ import { MatStepper } from '@angular/material/stepper';
 export interface Asset {
     assetId: string;
     assetName: string;
-    assets?: Asset[]; // Sub-assets
+    assets?: Asset[];
     id: string;
 }
+
 @Component({
     selector: 'sp-adapter-asset-configuration',
     templateUrl: './adapter-asset-configuration.component.html',
@@ -43,190 +43,132 @@ export interface Asset {
     standalone: false,
 })
 export class AdapterAssetConfigurationComponent implements AfterViewInit {
-    /**
-     * Adapter description the selected format is added to
-     */
-    assetsData: Asset[] = [];
-    selectedAssetIds: { id: string; assetId: string } = { id: '', assetId: '' };
-    currentAsset: SpAssetModel;
-
-    assetLinkTypes: AssetLinkType[];
-    assetLinksLoaded = false;
-    path_to_asset = [];
-
     @Input() adapterDescription: AdapterDescription;
-
-    @Input() linkageData: LinkageData[];
-
+    @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
 
+    assetsData: Asset[] = [];
+    selectedAssetIds = { id: '', assetId: '' };
+    currentAsset: SpAssetModel;
+    assetLinkTypes: AssetLinkType[] = [];
+    assetLinksLoaded = false;
+
     constructor(
-        private assetManagementService: AssetManagementService,
-        private genericStorageService: GenericStorageService,
+        private assetService: AssetManagementService,
+        private storageService: GenericStorageService,
     ) {}
 
     ngAfterViewInit(): void {
-        console.log('SAVE');
-        this.getAssets();
-        this.getAssetLinks();
+        this.loadAssets();
+        this.loadAssetLinkTypes();
     }
 
-    getAssetLinks(): void {
-        this.genericStorageService
-            .getAllDocuments(AssetConstants.ASSET_LINK_TYPES_DOC_NAME)
-            .subscribe(assetLinkTypes => {
-                this.assetLinkTypes = assetLinkTypes.sort((a, b) =>
-                    a.linkLabel.localeCompare(b.linkLabel),
-                );
-
-                console.log(this.assetLinkTypes);
-                this.assetLinksLoaded = true;
-            });
-    }
-
-    getAssets(): void {
-        this.assetManagementService.getAllAssets().subscribe({
-            next: data => {
-                this.assetsData = this.transformAssetsData(data);
+    private loadAssets(): void {
+        this.assetService.getAllAssets().subscribe({
+            next: assets => {
+                this.assetsData = this.mapAssets(assets);
             },
         });
     }
 
-    onCheckboxChange(component: any) {
-        if (!component.selected) {
-            // Optionally reset the name if checkbox is unchecked (this is optional)
-            component.name = '';
-        }
+    private loadAssetLinkTypes(): void {
+        this.storageService
+            .getAllDocuments(AssetConstants.ASSET_LINK_TYPES_DOC_NAME)
+            .subscribe(linkTypes => {
+                this.assetLinkTypes = linkTypes.sort((a, b) =>
+                    a.linkLabel.localeCompare(b.linkLabel),
+                );
+                this.assetLinksLoaded = true;
+            });
     }
 
-    getCurrAssetLinkType(linkType: string): AssetLinkType {
+    private mapAssets(apiAssets: any[], parentId: string = ''): Asset[] {
+        return apiAssets.map(asset => ({
+            id: parentId || asset._id,
+            assetId: asset.assetId,
+            assetName: asset.assetName,
+            assets: asset.assets
+                ? this.mapAssets(asset.assets, parentId || asset._id)
+                : [],
+        }));
+    }
+
+    private getAssetLinkTypeById(linkType: string): AssetLinkType | undefined {
         return this.assetLinkTypes.find(a => a.linkType === linkType);
     }
 
-    makeLink(linkageData: LinkageData[]): AssetLink[] {
-        const links: AssetLink[] = [];
-
-        // Loop through each item in linkageData
-        for (const item of linkageData) {
-            if (item.selected) {
-                const linkType = this.getCurrAssetLinkType(item.type);
-                console.log('Link Type', linkType);
-                links.push({
+    private buildLinks(data: LinkageData[]): AssetLink[] {
+        return data
+            .filter(item => item.selected)
+            .map(item => {
+                const linkType = this.getAssetLinkTypeById(item.type);
+                return {
                     linkLabel: item.name,
                     linkType: item.type,
                     editingDisabled: false,
                     queryHint: item.type,
-                    navigationActive: linkType.navigationActive,
+                    navigationActive: linkType?.navigationActive ?? false,
                     resourceId: item.id,
-                });
-            }
-        }
-
-        return links;
-    }
-
-    assignToAssets(linkageData: LinkageData) {
-        // Take tthe original data
-        // add the links
-        //This is the right endpoint
-        //this.assetManagementService.updateAsset(asset)
-    }
-
-    save(): void {
-        console.log('Currently selected Asset ID:', this.selectedAssetIds);
-        // Set current Asset
-        this.assetManagementService
-            .getAsset(this.selectedAssetIds.id)
-            .subscribe({
-                next: data => {
-                    this.currentAsset = data;
-                    console.log('Current Asset', this.currentAsset);
-
-                    const links = this.makeLink(this.linkageData);
-
-                    console.log('Links', links);
-                    console.log('assetID', this.selectedAssetIds.assetId);
-                    const asset_new = this.findAssetById(
-                        this.selectedAssetIds.assetId,
-                    );
-                    console.log('asset_new ', asset_new);
-                    for (const link of links) {
-                        asset_new.assetLinks.push(link);
-                    }
-                    console.log('asset_new', asset_new);
-                    console.log('Asset ID', asset_new._id);
-                    if (!asset_new._id) {
-                        const index = this.currentAsset.assets.findIndex(
-                            (asset: any) => asset.assetId === asset_new.assetId,
-                        );
-                        console.log(index);
-
-                        if (index !== -1) {
-                            this.currentAsset.assets[index] = asset_new;
-
-                            this.assetManagementService
-                                .updateAsset(this.currentAsset)
-                                .subscribe({
-                                    next: data => {
-                                        console.log(data);
-                                    },
-                                });
-                        }
-                    }
-                    this.assetManagementService
-                        .updateAsset(asset_new)
-                        .subscribe({
-                            next: data => {
-                                console.log(data);
-                            },
-                        });
-                },
+                };
             });
-
-        // Add Links
     }
 
-    findAssetById(assetId: string): any {
-        if (this.currentAsset.assetId === assetId) {
-            return this.currentAsset;
-        }
-        return this.findSubAssetById(this.currentAsset.assets || [], assetId);
+    private findAssetById(assetId: string): any {
+        if (this.currentAsset?.assetId === assetId) return this.currentAsset;
+        return this.findSubAssetById(this.currentAsset?.assets ?? [], assetId);
     }
 
-    findSubAssetById(assets: any[], assetId: string): any {
+    private findSubAssetById(assets: any[], assetId: string): any {
         for (const asset of assets) {
-            if (asset.assetId === assetId) {
-                return asset;
-            }
-            if (asset.assets?.length) {
-                const found = this.findSubAssetById(asset.assets, assetId);
-                if (found) {
-                    return found;
-                }
-            }
+            if (asset.assetId === assetId) return asset;
+            const found = this.findSubAssetById(asset.assets ?? [], assetId);
+            if (found) return found;
         }
         return null;
     }
 
-    transformAssetsData(apiResponse: any[], topLevelId: string = ''): Asset[] {
-        if (topLevelId === '') {
-            return apiResponse.map(asset => ({
-                id: asset._id,
-                assetId: asset.assetId,
-                assetName: asset.assetName,
-                assets: asset.assets
-                    ? this.transformAssetsData(asset.assets, asset._id)
-                    : [],
-            }));
-        } else {
-            return apiResponse.map(asset => ({
-                id: topLevelId,
-                assetId: asset.assetId,
-                assetName: asset.assetName,
-                assets: asset.assets
-                    ? this.transformAssetsData(asset.assets, topLevelId)
-                    : [],
-            }));
-        }
+    onCheckboxChange(component: any): void {
+        if (!component.selected) component.name = '';
+    }
+
+    save(): void {
+        this.assetService.getAsset(this.selectedAssetIds.id).subscribe({
+            next: current => {
+                this.currentAsset = current;
+
+                const links = this.buildLinks(this.linkageData);
+                const targetAsset = this.findAssetById(
+                    this.selectedAssetIds.assetId,
+                );
+
+                if (!targetAsset) return;
+
+                targetAsset.assetLinks = [
+                    ...(targetAsset.assetLinks ?? []),
+                    ...links,
+                ];
+
+                const updateObservable = targetAsset._id
+                    ? this.assetService.updateAsset(targetAsset)
+                    : this.updateNestedAsset(targetAsset);
+
+                updateObservable?.subscribe({
+                    next: updated => {
+                        console.log('Asset updated:', updated);
+                    },
+                });
+            },
+        });
+    }
+
+    private updateNestedAsset(assetToUpdate: any) {
+        const index = this.currentAsset?.assets?.findIndex(
+            (asset: any) => asset.assetId === assetToUpdate.assetId,
+        );
+
+        if (index === -1 || index === undefined) return null;
+
+        this.currentAsset.assets[index] = assetToUpdate;
+        return this.assetService.updateAsset(this.currentAsset);
     }
 }
