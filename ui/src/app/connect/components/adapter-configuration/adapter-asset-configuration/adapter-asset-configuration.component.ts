@@ -154,6 +154,25 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
                         asset_new.assetLinks.push(link);
                     }
                     console.log('asset_new', asset_new);
+                    console.log('Asset ID', asset_new._id);
+                    if (!asset_new._id) {
+                        const index = this.currentAsset.assets.findIndex(
+                            (asset: any) => asset.assetId === asset_new.assetId,
+                        );
+                        console.log(index);
+
+                        if (index !== -1) {
+                            this.currentAsset.assets[index] = asset_new;
+
+                            this.assetManagementService
+                                .updateAsset(this.currentAsset)
+                                .subscribe({
+                                    next: data => {
+                                        console.log(data);
+                                    },
+                                });
+                        }
+                    }
                     this.assetManagementService
                         .updateAsset(asset_new)
                         .subscribe({
