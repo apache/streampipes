@@ -42,6 +42,7 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
+import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.storage.api.IPipelineStorage;

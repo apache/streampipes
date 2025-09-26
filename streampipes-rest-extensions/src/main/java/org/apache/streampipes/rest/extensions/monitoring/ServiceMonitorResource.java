@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("serviceMonitor")
 public class ServiceMonitorResource extends AbstractExtensionsResource {
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ServiceLoadDataReport> getServiceMonitor() {
-        return ok(ServiceLoadDataReportGenerator.generateReport());
-    }
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ServiceLoadDataReport> getServiceMonitor() {
+    return ok(ServiceLoadDataReportGenerator.getInstance().getCurrentReport());
+  }
 }

@@ -1,144 +1,345 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.apache.streampipes.extensions.management.monitoring;
 
-
-import com.sun.management.OperatingSystemMXBean;
 import org.apache.streampipes.commons.prometheus.service.ElementServiceStats;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.model.loadbalancer.ServiceLoadDataReport;
 import org.apache.streampipes.model.loadbalancer.Usage;
 
+import com.google.common.util.concurrent.AtomicDouble;
+import com.sun.management.OperatingSystemMXBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.management.ManagementFactory;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * Service Load Data Report Generator
+ * Responsible for collecting and calculating service CPU and memory usage, and generating load reports
+ */
 public class ServiceLoadDataReportGenerator {
-    private static final int CPU_CHECK_MILLIS = 100;
-    private static final double totalCPULimit;
-    private static final OperatingSystemMXBean systemBean;
-    private static ServiceLoadDataReport serviceLoadDataReport;;
+    
+  private static final Logger log = LoggerFactory.getLogger(ServiceLoadDataReportGenerator.class);
 
-    private static final ScheduledExecutorService executorService;
-    private static double CPUUsageSum = 0d;
-    private static double CPUUsageCount = 0;
+  // Configuration constants
+  private static final int CPU_CHECK_INTERVAL_MILLIS = 100;
+  private static final int USAGE_CALCULATION_INTERVAL_MINUTES = 1;
+  private static final int BYTES_TO_MB = 1024 * 1024;
 
-    public static double CPUResourceWeigh = 100000.0;
+  // Singleton instance
+  private static volatile ServiceLoadDataReportGenerator instance;
 
-    public static double MemoryResourceWeight = 100000.0;
+  // System resources
+  private final OperatingSystemMXBean systemBean;
+  private final double totalCPULimit;
+  private final ScheduledExecutorService executorService;
 
-    static {
-        executorService = Executors.newSingleThreadScheduledExecutor();
-        systemBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        serviceLoadDataReport = new ServiceLoadDataReport();
-        totalCPULimit = getTotalCPULimit();
+  // Thread-safe CPU usage statistics
+  private final AtomicDouble cpuUsageSum = new AtomicDouble(0.0);
+  private final AtomicLong cpuUsageCount = new AtomicLong(0);
 
-       // serviceLoadDataReport.setMemory(getMemoryUsage());
-        calculateUsage();
-        // 高频采集 CPU 瞬时值
-        executorService.scheduleWithFixedDelay(ServiceLoadDataReportGenerator::checkCPULoad, CPU_CHECK_MILLIS, CPU_CHECK_MILLIS, TimeUnit.MILLISECONDS);
-        // 每分钟汇总一次并写入 Prometheus 指标（调用 collectMetricsNow）
-        executorService.scheduleWithFixedDelay(() -> {
-            try {
-                calculateUsage();
-                collectMetricsNow();
-            } catch (Exception ignored) {
-            }
-        }, 1, 1, TimeUnit.MINUTES);
-    }
+  // Current load report
+  private volatile ServiceLoadDataReport currentReport;
 
-    public static ServiceLoadDataReport generateReport(){
-        //serviceLoadDataReport.setMemory(getMemoryUsage());
-        return serviceLoadDataReport;
-    }
+  // Initialization state
+  private volatile boolean initialized = false;
 
-    /**
-     * 基于当前 ServiceLoadDataReport 立即写入 Prometheus 指标。
-     * 如需强制刷新，可先手动调用 calculateUsage() 再调用此方法。
-     */
-    public static void collectMetricsNow() {
-        ServiceLoadDataReport r = generateReport();
-        if (r == null || r.getCPU() == null || r.getMemory() == null) {
-            return;
+  private ServiceLoadDataReportGenerator() {
+    this.systemBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+    this.totalCPULimit = calculateTotalCPULimit();
+    this.executorService = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(r, "ServiceLoadDataReportGenerator");
+        t.setDaemon(true);
+        return t;
+    });
+    this.currentReport = new ServiceLoadDataReport();
+  }
+
+  /**
+   * Get singleton instance
+   * @return ServiceLoadDataReportGenerator instance
+   */
+  public static ServiceLoadDataReportGenerator getInstance() {
+    if (instance == null) {
+      synchronized (ServiceLoadDataReportGenerator.class) {
+        if (instance == null) {
+          instance = new ServiceLoadDataReportGenerator();
         }
-        // 调试：打印原始值与百分比
-        System.out.println("DEBUG collectMetricsNow: serviceId=" + DeclarersSingleton.getInstance().getServiceId());
-        System.out.println("DEBUG CPU: usage=" + r.getCPU().usage + ", limit=" + r.getCPU().limit + ", percent=" + r.getCPU().percentUsage());
-        System.out.println("DEBUG Memory: usage=" + r.getMemory().usage + ", limit=" + r.getMemory().limit + ", percent=" + r.getMemory().percentUsage());
-        System.out.println("DEBUG Weight: " + r.getWeight());
-        ElementServiceStats.metricsByReport(
-                DeclarersSingleton.getInstance().getServiceId(),
-                (double) 100,
-                (double) 100,
-                r.getWeight()
-        );
-        ElementServiceStats.metrics();
+      }
+    }
+    return instance;
+  }
+
+  /**
+   * Initialize service load data report generator
+   */
+  public synchronized void initialize() {
+    if (initialized) {
+      log.warn("ServiceLoadDataReportGenerator already initialized");
+      return;
     }
 
+    log.info("Initializing ServiceLoadDataReportGenerator");
 
+    try {
+      // Initial data collection
+      calculateInitialUsage();
 
-    public static synchronized void checkCPULoad() {
-        double cpuLoad = systemBean.getCpuLoad();
-        if (!Double.isNaN(cpuLoad)) {
-            CPUUsageSum += cpuLoad;
-            CPUUsageCount++;
-        }
+      // Start scheduled tasks
+      startScheduledTasks();
+
+      initialized = true;
+      log.info("ServiceLoadDataReportGenerator initialized successfully");
+    } catch (Exception e) {
+      log.error("Failed to initialize ServiceLoadDataReportGenerator", e);
+      throw new RuntimeException("Failed to initialize ServiceLoadDataReportGenerator", e);
+    }
+  }
+
+  /**
+   * Shutdown service load data report generator
+   */
+  public synchronized void shutdown() {
+    if (!initialized) {
+      return;
     }
 
-    public static void calculateUsage() {
-        checkCPULoad();
-        doCalculateUsage();
-        doCalculateMemoryUsage();
-        doCalculateWeight();
+    log.info("Shutting down ServiceLoadDataReportGenerator");
+
+    try {
+      executorService.shutdown();
+      if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+        executorService.shutdownNow();
+      }
+      initialized = false;
+      log.info("ServiceLoadDataReportGenerator shutdown successfully");
+    } catch (InterruptedException e) {
+      log.warn("Interrupted while shutting down ServiceLoadDataReportGenerator", e);
+      executorService.shutdownNow();
+      Thread.currentThread().interrupt();
+    }
+  }
+
+  /**
+   * Get current load report
+   * @return Current service load data report
+   */
+  public ServiceLoadDataReport getCurrentReport() {
+    return currentReport;
+}
+
+  /**
+   * Calculate initial usage
+   */
+  private void calculateInitialUsage() {
+    calculateCpuLoad();
+    calculateUsages();
+  }
+
+  /**
+   * Start scheduled tasks
+   */
+  private void startScheduledTasks() {
+    // CPU load calculation task
+    executorService.scheduleWithFixedDelay(
+        this::calculateCpuLoad,
+        CPU_CHECK_INTERVAL_MILLIS,
+        CPU_CHECK_INTERVAL_MILLIS,
+        TimeUnit.MILLISECONDS
+    );
+
+    // Usage calculation task
+    executorService.scheduleWithFixedDelay(
+        this::calculateUsages,
+        USAGE_CALCULATION_INTERVAL_MINUTES,
+        USAGE_CALCULATION_INTERVAL_MINUTES,
+        TimeUnit.MINUTES
+    );
+  }
+
+  /**
+   * Calculate usage
+   */
+  public void calculateUsages() {
+    try {
+      ServiceLoadDataReport newReport = new ServiceLoadDataReport();
+      newReport.setCpu(getCpuUsage());
+      newReport.setMemory(getMemoryUsage());
+      newReport.setWeight(
+        (int) newReport.getCpu().percentUsage(),
+        (int) newReport.getMemory().percentUsage()
+      );
+
+      this.currentReport = newReport;
+
+      // Update metrics
+      updateMetrics(newReport);
+
+      log.debug("Successfully calculated usage and collected metrics");
+    } catch (Exception e) {
+      log.error("Error calculating usage", e);
+    }
+  }
+
+/**
+ * Update metrics
+ * @param report Load data report
+ */
+  private void updateMetrics(ServiceLoadDataReport report) {
+    try {
+      String serviceId = DeclarersSingleton.getInstance().getServiceId();
+      ElementServiceStats.metricsByReport(
+        serviceId,
+        report.getCpu().getUsage(),
+        report.getMemory().getUsage(),
+        report.getWeight()
+      );
+    } catch (Exception e) {
+      log.error("Error updating metrics", e);
+    }
+  }
+
+  /**
+   * Calculate CPU load
+   */
+  public void calculateCpuLoad() {
+    try {
+      double cpuLoad = getCpuLoadValue();
+      if (!Double.isNaN(cpuLoad) && cpuLoad >= 0) {
+        cpuUsageSum.addAndGet(Math.max(cpuLoad, 0));
+        cpuUsageCount.incrementAndGet();
+      }
+    } catch (Exception e) {
+      log.warn("Error calculating CPU load", e);
+    }
+  }
+
+  /**
+   * Get CPU load value
+   * @return CPU load value
+   */
+  private double getCpuLoadValue() {
+    try {
+      double cpuLoad = systemBean.getCpuLoad();
+      if (Double.isNaN(cpuLoad) || cpuLoad < 0) {
+        cpuLoad = systemBean.getProcessCpuLoad();
+      }
+      return cpuLoad;
+    } catch (Exception e) {
+      log.warn("Error getting CPU load", e);
+      return Double.NaN;
+    }
+  }
+
+  /**
+   * Calculate total CPU limit
+   * @return Total CPU limit
+   */
+  private double calculateTotalCPULimit() {
+    return 100.0 * Runtime.getRuntime().availableProcessors();
+}
+
+  /**
+   * Get total CPU usage
+   * @return Total CPU usage
+   */
+  private double getTotalCpuUsage() {
+    long count = cpuUsageCount.get();
+    if (count == 0) {
+      return 0.0;
     }
 
-    static void doCalculateUsage() {
-        ServiceLoadDataReport serviceLoadDataReport = new ServiceLoadDataReport();
-        serviceLoadDataReport.setCPU(getCPUUsage());
-        serviceLoadDataReport.setMemory(getMemoryUsage());
-        serviceLoadDataReport.setWeight((int) serviceLoadDataReport.getCPU().percentUsage(), (int) serviceLoadDataReport.getMemory().percentUsage());
-        ServiceLoadDataReportGenerator.serviceLoadDataReport = serviceLoadDataReport;
-        ElementServiceStats.metricsByReport(
-                DeclarersSingleton.getInstance().getServiceId(),
-                (double) 100,
-                (double) 100,
-                serviceLoadDataReport.getWeight()
-        );
-    }
+    double usage = cpuUsageSum.get() / count;
 
-    static void doCalculateMemoryUsage() {
-        serviceLoadDataReport.setMemory(getMemoryUsage());
-    }
+    // Reset counters
+    cpuUsageSum.set(0.0);
+    cpuUsageCount.set(0);
 
-    static void doCalculateWeight() {
-        serviceLoadDataReport.setWeight((int) serviceLoadDataReport.getCPU().percentUsage(), (int) serviceLoadDataReport.getMemory().percentUsage());
-    }
+    return usage;
+  }
 
-    private static double getTotalCPULimit(){
-        return 100 * Runtime.getRuntime().availableProcessors();
-    }
+  /**
+   * Get CPU usage
+   * @return CPU usage
+   */
+  private Usage getCpuUsage() {
+    double rawUsage = getTotalCpuUsage();
+    double scaledUsage = rawUsage * totalCPULimit;
+    return new Usage(scaledUsage, totalCPULimit);
+  }
 
-    private static synchronized double getTotalCPUUsage() {
-        if (CPUUsageCount == 0) {
-           return 0;
-        }
-        double CPUUsage = CPUUsageSum / CPUUsageCount;
-        System.out.println("DEBUG getTotalCPUUsage: CPUUsageSum=" + CPUUsageSum + ", CPUUsageCount=" + CPUUsageCount + ", result=" + CPUUsage);
-        CPUUsageSum = 0d;
-        CPUUsageCount = 0;
-        return CPUUsage;
-    }
+  /**
+   * Get memory usage
+   * @return Memory usage
+   */
+  private Usage getMemoryUsage() {
+    try {
+      long totalMemory = systemBean.getTotalMemorySize();
+      long freeMemory = systemBean.getFreeMemorySize();
 
-    private static Usage getCPUUsage() {
-        double rawUsage = getTotalCPUUsage();
-        double scaledUsage = rawUsage * totalCPULimit;
-        System.out.println("DEBUG getCPUUsage: rawUsage=" + rawUsage + ", totalCPULimit=" + totalCPULimit + ", scaledUsage=" + scaledUsage);
-        return new Usage(scaledUsage, totalCPULimit);
-    }
+      double totalMB = (double) totalMemory / BYTES_TO_MB;
+      double freeMB = (double) freeMemory / BYTES_TO_MB;
+      double usedMB = totalMB - freeMB;
 
-    private static Usage getMemoryUsage() {
-        double total = ((double) systemBean.getTotalMemorySize() / (1024 * 1024));
-        double free = ((double) systemBean.getFreeMemorySize() / (1024 * 1024));
-        System.out.println("DEBUG getMemoryUsage: total=" + total + ", free=" + free + ", used=" + (total - free));
-        return new Usage(total - free, total);
+      return new Usage(usedMB, totalMB);
+    } catch (Exception e) {
+      log.error("Error getting memory usage", e);
+      return new Usage(0.0, 0.0);
     }
+  }
+
+  /**
+   * Check if initialized
+   * @return Whether initialized
+   */
+  public boolean isInitialized() {
+    return initialized;
+}
+
+  /**
+   * Get CPU usage statistics
+   * @return CPU usage statistics
+   */
+  public String getCpuUsageStats() {
+    return String.format("CPU Usage: sum=%.2f, count=%d",
+        cpuUsageSum.get(), cpuUsageCount.get());
+  }
+
+  // Backward compatible static methods
+  /**
+   * @deprecated Use getInstance().initialize() instead
+   */
+  @Deprecated
+  public static void init() {
+    getInstance().initialize();
+  }
+
+  /**
+   * @deprecated Use getInstance().calculateUsage() instead
+   */
+  @Deprecated
+  public static void calculateUsage() {
+    getInstance().calculateUsages();
+}
 }
