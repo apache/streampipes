@@ -111,11 +111,8 @@
             (optionSelectedEmitter)="showAsset = $event"
         >
             @if (showAsset) {
-                <sp-adapter-code-panel
-                    [adapterDescription]="adapterDescription"
-                    class="w-100"
-                >
-                </sp-adapter-code-panel>
+                <sp-adapter-asset-configuration [adapterDescription]="adapter">
+                </sp-adapter-asset-configuration>
             }
         </sp-adapter-options-panel>
 

@@ -86,18 +86,6 @@
                 >
                 </sp-start-adapter-configuration>
             </mat-step>
-
-            @if (isEditMode == false) {
-                <mat-step>
-                    <ng-template matStepLabel>Add to Asset</ng-template>
-                    <sp-adapter-asset-configuration
-                        [adapterDescription]="adapter"
-                        [linkageData]="linkageData"
-                        (adapterStartedEmitter)="adapterWasStarted()"
-                    >
-                    </sp-adapter-asset-configuration>
-                </mat-step>
-            }
         </mat-horizontal-stepper>
     </div>
 </sp-basic-view>

@@ -67,5 +67,59 @@
                 </mat-select>
             </mat-form-field>
         </sp-basic-inner-panel>
+        <sp-basic-inner-panel
+            panelTitle="Components to add"
+            outerMargin="20px 0px"
+        >
+            <div class="components-container">
+                <div
+                    *ngFor="let component of linkageData"
+                    class="component-row"
+                >
+                    <!-- Checkbox Column -->
+                    <mat-checkbox
+                        [(ngModel)]="component.selected"
+                        (change)="onCheckboxChange(component)"
+                    >
+                        {{ component.type }}
+                    </mat-checkbox>
+
+                    <!-- Name Column -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Name</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="component.name"
+                            [disabled]="!component.selected"
+                        />
+                    </mat-form-field>
+
+                    <!-- Id Column -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Id</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="component.id"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+            </div>
+        </sp-basic-inner-panel>
+        <div fxLayoutAlign="end" style="margin-top: 10px">
+            <button class="mat-basic" mat-flat-button (click)="cancel()">
+                Cancel
+            </button>
+            <button
+                mat-flat-button
+                data-cy="adapter-settings-start-adapter-btn"
+                color="accent"
+                mat-button
+                style="margin-left: 10px"
+                (click)="save()"
+            >
+                Add to Asset
+            </button>
+        </div>
     </div>
 </div>
