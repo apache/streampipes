@@ -37,7 +37,12 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -100,9 +105,48 @@ public class AdapterMasterManagement {
   }
 
   public AdapterDescription getAdapter(String elementId) throws AdapterException {
+
+    Map<String, Long> timings = new HashMap<>();
+
+    long t1 = System.nanoTime();
     AdapterDescription allAdapters = adapterInstanceStorage.getElementById(elementId);
+    timings.put("Overall", System.nanoTime() - t1);
+    saveTimingToCSV(timings);
     return allAdapters;
   }
+
+
+  private void saveTimingToCSV(Map<String, Long> timings) {
+    String filePath = "./logs/compact_adapter_timings.csv";
+    java.io.File file = new java.io.File(filePath);
+
+    // Create logs directory if it doesn't exist
+    file.getParentFile().mkdirs();
+
+    boolean fileExists = file.exists();
+
+    try (FileWriter fw = new FileWriter(file, true);
+         PrintWriter pw = new PrintWriter(fw)) {
+
+        // Write header only if file doesn't exist or is empty
+        if (!fileExists || file.length() == 0) {
+            pw.print("timestamp");
+            for (String key : timings.keySet()) {
+                pw.print("," + key);
+            }
+            pw.println();
+        }
+
+        pw.print(LocalDateTime.now());
+        for (Long timeNs : timings.values()) {
+            pw.print("," + timeNs / 1_000_000); // convert to milliseconds
+        }
+        pw.println();
+
+    } catch (Exception e) {
+        e.printStackTrace(); // Consider using proper logging instead
+    }
+}
 
   /**
    * First the adapter is stopped removed, then the corresponding data source is
