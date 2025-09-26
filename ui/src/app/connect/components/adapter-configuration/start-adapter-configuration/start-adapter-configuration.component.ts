@@ -108,6 +108,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     startAdapterNow = true;
     showCode = false;
+    //TODO I only need one right ?
+    showAsset = false;
     addAssetFlag = false;
     linkageData: LinkageData[];
 

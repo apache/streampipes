@@ -104,6 +104,22 @@
         </sp-adapter-options-panel>
 
         <sp-adapter-options-panel
+            optionTitle="Add to Asset"
+            optionDescription="Add Adapter to an existing Asset"
+            optionIcon="precision_manufacturing"
+            dataCy="show-asset-checkbox"
+            (optionSelectedEmitter)="showAsset = $event"
+        >
+            @if (showAsset) {
+                <sp-adapter-code-panel
+                    [adapterDescription]="adapterDescription"
+                    class="w-100"
+                >
+                </sp-adapter-code-panel>
+            }
+        </sp-adapter-options-panel>
+
+        <sp-adapter-options-panel
             optionTitle="Remove Duplicates"
             optionDescription="Avoid duplicated events within a certain time interval"
             optionIcon="cleaning_services"
