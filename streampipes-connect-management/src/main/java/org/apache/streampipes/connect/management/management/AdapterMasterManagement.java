@@ -17,10 +17,6 @@
  */
 
 package org.apache.streampipes.connect.management.management;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -39,6 +35,9 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * This class is responsible for managing all the adapter instances which are
@@ -100,8 +99,11 @@ public class AdapterMasterManagement {
   }
 
   public AdapterDescription getAdapter(String elementId) throws AdapterException {
-    AdapterDescription allAdapters = adapterInstanceStorage.getElementById(elementId);
-    return allAdapters;
+    AdapterDescription adapter = adapterInstanceStorage.getElementById(elementId);
+    if (adapter == null) {
+        throw new AdapterException("Adapter with ID " + elementId + " not found");
+    }
+    return adapter;
   }
 
   /**
