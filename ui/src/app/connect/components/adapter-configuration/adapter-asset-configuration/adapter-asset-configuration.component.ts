@@ -161,6 +161,8 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
                     ? this.assetService.updateAsset(targetAsset)
                     : this.updateNestedAsset(targetAsset);
 
+                console.log(updateObservable);
+
                 updateObservable?.subscribe({
                     next: updated => {
                         this.adapterStartedEmitter.emit();
@@ -182,6 +184,7 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
         if (index === -1 || index === undefined) return null;
 
         this.currentAsset.assets[index] = assetToUpdate;
+        console.log('currentAsset ', this.currentAsset);
         return this.assetService.updateAsset(this.currentAsset);
     }
 }
