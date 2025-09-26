@@ -24,7 +24,7 @@ import org.apache.streampipes.commons.prometheus.core.PrometheusMetrics;
 
 /**
  * Service Metrics Manager
- * Inherits unified metrics manager, eliminating duplicate code
+ * Inherits PrometheusMetrics and implements service-related metric registration
  */
 public class ElementServiceMetrics extends PrometheusMetrics {
     
@@ -44,10 +44,11 @@ public class ElementServiceMetrics extends PrometheusMetrics {
 
   public ElementServiceMetrics(String id) {
     super(id);
-}
+  }
 
   @Override
-  protected void registerGauges() {
+  protected void registerMetrics() {
+    // Register all service-related Gauge metrics
     registerGauge(CPU_USAGE, "CPU usage percentage");
     registerGauge(MEMORY_USAGE, "Memory usage in bytes");
     registerGauge(WEIGHT, "Weight of remaining available resources for service");
@@ -55,116 +56,4 @@ public class ElementServiceMetrics extends PrometheusMetrics {
     registerGauge(HISTORICAL_SYSTEM_LOAD, "Historical system load average");
     registerGauge(CURRENT_SYSTEM_LOAD, "Current system load average");
   }
-
-  /**
-   * Update CPU usage metric
-   * @param cpuUsage CPU usage
-   */
-  public void updateCpuUsage(double cpuUsage) {
-    setGaugeValue(CPU_USAGE, cpuUsage);
-}
-
-  /**
-   * Update memory usage metric
-   * @param memoryUsage Memory usage
-   */
-  public void updateMemoryUsage(double memoryUsage) {
-    setGaugeValue(MEMORY_USAGE, memoryUsage);
-}
-
-  /**
-   * Update weight metric
-   * @param weight Weight
-   */
-  public void updateWeight(double weight) {
-    setGaugeValue(WEIGHT, weight);
-}
-
-  /**
-   * Update system load metric
-   * @param systemLoad System load
-   */
-  public void updateSystemLoad(double systemLoad) {
-    setGaugeValue(SYSTEM_LOAD, systemLoad);
-}
-
-  /**
-   * Update historical system load metric
-   * @param historicalSystemLoad Historical system load
-   */
-  public void updateHistoricalSystemLoad(double historicalSystemLoad) {
-    setGaugeValue(HISTORICAL_SYSTEM_LOAD, historicalSystemLoad);
-  }
-
-  /**
-   * Update current system load metric
-   * @param currentSystemLoad Current system load
-   */
-  public void updateCurrentSystemLoad(double currentSystemLoad) {
-    setGaugeValue(CURRENT_SYSTEM_LOAD, currentSystemLoad);
-  }
-
-  /**
-   * Update basic metrics
-   * @param cpuUsage CPU usage
-   * @param memoryUsage Memory usage
-   * @param weight Weight
-   */
-  public void updateBasicMetrics(double cpuUsage, double memoryUsage, double weight) {
-    updateCpuUsage(cpuUsage);
-    updateMemoryUsage(memoryUsage);
-    updateWeight(weight);
-  }
-
-  /**
-   * Update system load metrics
-   * @param systemLoad System load
-   * @param historicalSystemLoad Historical system load
-   * @param currentSystemLoad Current system load
-   */
-  public void updateSystemLoadMetrics(double systemLoad, double historicalSystemLoad, double currentSystemLoad) {
-    updateSystemLoad(systemLoad);
-    updateHistoricalSystemLoad(historicalSystemLoad);
-    updateCurrentSystemLoad(currentSystemLoad);
-  }
-
-  /**
-   * Update all metrics
-   * @param cpuUsage CPU usage
-   * @param memoryUsage Memory usage
-   * @param weight Weight
-   * @param systemLoad System load
-   * @param historicalSystemLoad Historical system load
-   * @param currentSystemLoad Current system load
-   */
-  public void updateAllMetrics(double cpuUsage, double memoryUsage, double weight,
-                            double systemLoad, double historicalSystemLoad, double currentSystemLoad) {
-    updateBasicMetrics(cpuUsage, memoryUsage, weight);
-    updateSystemLoadMetrics(systemLoad, historicalSystemLoad, currentSystemLoad);
-  }
-
-  // Getters for backward compatibility
-  public Gauge getCpuUsageGauge() {
-    return getGauge(CPU_USAGE);
-}
-
-  public Gauge getMemoryUsageGauge() {
-    return getGauge(MEMORY_USAGE);
-}
-
-  public Gauge getWeightGauge() {
-    return getGauge(WEIGHT);
-}
-
-  public Gauge getSystemLoadGauge() {
-    return getGauge(SYSTEM_LOAD);
-}
-
-  public Gauge getHistoricalSystemLoadGauge() {
-    return getGauge(HISTORICAL_SYSTEM_LOAD);
-}
-
-  public Gauge getCurrentSystemLoadGauge() {
-    return getGauge(CURRENT_SYSTEM_LOAD);
-}
 }

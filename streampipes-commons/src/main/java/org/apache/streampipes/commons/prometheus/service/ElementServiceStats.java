@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.commons.prometheus.service;
 
+import org.apache.streampipes.commons.prometheus.core.PrometheusMetrics;
 import org.apache.streampipes.commons.prometheus.core.PrometheusStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,9 @@ import java.util.Map;
 
 /**
  * Service Statistics Manager
- * Inherits unified statistics manager, eliminating duplicate code
+ * Uses new Map<serviceId, Stats> structure with metrics as internal objects of stats
  */
-public class ElementServiceStats extends PrometheusStats<ElementServiceMetrics> {
+public class ElementServiceStats extends PrometheusStats {
     
 private static final Logger log = LoggerFactory.getLogger(ElementServiceStats.class);
 
@@ -39,19 +40,14 @@ public double systemLoad = 0.0;
 public double historicalSystemLoad = 0.0;
 public double currentSystemLoad = 0.0;
 
-public ElementServiceStats(String id) {
-    super(id);
+public ElementServiceStats(String serviceId) {
+    super(serviceId);
 }
 
-  @Override
-  protected ElementServiceMetrics createMetrics() {
-    return new ElementServiceMetrics(id);
+@Override
+protected PrometheusMetrics createMetrics() {
+    return new ElementServiceMetrics(this.getId());
 }
-
-  @Override
-  protected void updateMetrics() {
-    metrics.updateAllMetrics(cpuUsage, memoryUsage, weight, systemLoad, historicalSystemLoad, currentSystemLoad);
-  }
 
   /**
    * Update CPU usage
@@ -59,7 +55,7 @@ public ElementServiceStats(String id) {
    */
   public void setCpuUsage(double cpuUsage) {
     this.cpuUsage = cpuUsage;
-    metrics.updateCpuUsage(cpuUsage);
+    setGaugeValue("cpu_usage", cpuUsage);
   }
 
   /**
@@ -68,7 +64,7 @@ public ElementServiceStats(String id) {
    */
   public void setMemoryUsage(double memoryUsage) {
     this.memoryUsage = memoryUsage;
-    metrics.updateMemoryUsage(memoryUsage);
+    setGaugeValue("memory_usage", memoryUsage);
   }
 
   /**
@@ -77,7 +73,7 @@ public ElementServiceStats(String id) {
    */
   public void setWeight(double weight) {
     this.weight = weight;
-    metrics.updateWeight(weight);
+    setGaugeValue("weight", weight);
   }
 
   /**
@@ -86,7 +82,7 @@ public ElementServiceStats(String id) {
    */
   public void setSystemLoad(double systemLoad) {
     this.systemLoad = systemLoad;
-    metrics.updateSystemLoad(systemLoad);
+    setGaugeValue("system_load", systemLoad);
   }
 
   /**
@@ -95,7 +91,7 @@ public ElementServiceStats(String id) {
    */
   public void setHistoricalSystemLoad(double historicalSystemLoad) {
     this.historicalSystemLoad = historicalSystemLoad;
-    metrics.updateHistoricalSystemLoad(historicalSystemLoad);
+    setGaugeValue("historical_system_load", historicalSystemLoad);
   }
 
   /**
@@ -104,7 +100,7 @@ public ElementServiceStats(String id) {
    */
   public void setCurrentSystemLoad(double currentSystemLoad) {
     this.currentSystemLoad = currentSystemLoad;
-    metrics.updateCurrentSystemLoad(currentSystemLoad);
+    setGaugeValue("current_system_load", currentSystemLoad);
   }
 
   /**
@@ -117,7 +113,9 @@ public ElementServiceStats(String id) {
     this.cpuUsage = cpuUsage;
     this.memoryUsage = memoryUsage;
     this.weight = weight;
-    metrics.updateBasicMetrics(cpuUsage, memoryUsage, weight);
+    setGaugeValue("cpu_usage", cpuUsage);
+    setGaugeValue("memory_usage", memoryUsage);
+    setGaugeValue("weight", weight);
   }
 
   /**
@@ -130,7 +128,9 @@ public ElementServiceStats(String id) {
     this.systemLoad = systemLoad;
     this.historicalSystemLoad = historicalSystemLoad;
     this.currentSystemLoad = currentSystemLoad;
-    metrics.updateSystemLoadMetrics(systemLoad, historicalSystemLoad, currentSystemLoad);
+    setGaugeValue("system_load", systemLoad);
+    setGaugeValue("historical_system_load", historicalSystemLoad);
+    setGaugeValue("current_system_load", currentSystemLoad);
   }
 
   /**
@@ -150,7 +150,12 @@ public ElementServiceStats(String id) {
     this.systemLoad = systemLoad;
     this.historicalSystemLoad = historicalSystemLoad;
     this.currentSystemLoad = currentSystemLoad;
-    metrics.updateAllMetrics(cpuUsage, memoryUsage, weight, systemLoad, historicalSystemLoad, currentSystemLoad);
+    setGaugeValue("cpu_usage", cpuUsage);
+    setGaugeValue("memory_usage", memoryUsage);
+    setGaugeValue("weight", weight);
+    setGaugeValue("system_load", systemLoad);
+    setGaugeValue("historical_system_load", historicalSystemLoad);
+    setGaugeValue("current_system_load", currentSystemLoad);
   }
 
   // Getters
@@ -179,11 +184,11 @@ public ElementServiceStats(String id) {
 }
 
   /**
-   * Update metrics by report (backward compatibility)
-   * @param serviceId Service ID
-   * @param cpuUsage CPU usage
-   * @param memoryUsage Memory usage
-   * @param weight Weight
+   * 通过报告更新指标（向后兼容）
+   * @param serviceId 服务ID
+   * @param cpuUsage CPU使用率
+   * @param memoryUsage 内存使用率
+   * @param weight 权重
    */
   public static void metricsByReport(String serviceId, double cpuUsage, double memoryUsage, double weight) {
     ElementServiceStats stats = getOrCreateStats(serviceId);
@@ -192,7 +197,7 @@ public ElementServiceStats(String id) {
   }
 
   /**
-   * Update all metrics (backward compatibility)
+   * 更新所有指标（向后兼容）
    */
   public static void metrics() {
     PrometheusStats.updateAllMetrics();
@@ -200,42 +205,43 @@ public ElementServiceStats(String id) {
   }
 
   /**
-   * Get or create statistics
-   * @param serviceId Service ID
-   * @return Statistics
+   * 获取或创建统计
+   * @param serviceId 服务ID
+   * @return 统计
    */
-@SuppressWarnings("unchecked")
   private static ElementServiceStats getOrCreateStats(String serviceId) {
-    ElementServiceStats stats = (ElementServiceStats) PrometheusStats.getStats(serviceId);
-    if (stats == null) {
-      stats = new ElementServiceStats(serviceId);
+    PrometheusStats stats = PrometheusStats.getStats(serviceId);
+    if (stats instanceof ElementServiceStats) {
+      return (ElementServiceStats) stats;
     }
-    return stats;
+    // 如果没找到或类型不匹配，创建新的
+    return new ElementServiceStats(serviceId);
   }
 
   /**
-   * Check if service exists (backward compatibility)
-   * @param serviceId Service ID
-   * @return Whether exists
+   * 检查服务是否存在（向后兼容）
+   * @param serviceId 服务ID
+   * @return 是否存在
    */
   public static boolean containsKey(String serviceId) {
-    return PrometheusStats.hasStats(serviceId);
-}
-
-  /**
-   * Get service statistics (backward compatibility)
-   * @param serviceId Service ID
-   * @return Statistics
-   */
-@SuppressWarnings("unchecked")
-  public static ElementServiceStats get(String serviceId) {
-    return (ElementServiceStats) PrometheusStats.getStats(serviceId);
+    PrometheusStats stats = PrometheusStats.getStats(serviceId);
+    return stats instanceof ElementServiceStats;
   }
 
   /**
-   * Update service count
+   * 获取服务统计（向后兼容）
+   * @param serviceId 服务ID
+   * @return 统计
+   */
+  public static ElementServiceStats get(String serviceId) {
+    PrometheusStats stats = PrometheusStats.getStats(serviceId);
+    return stats instanceof ElementServiceStats ? (ElementServiceStats) stats : null;
+  }
+
+  /**
+   * 更新服务计数
    */
   private static void updateServiceCount() {
     ElementServiceMetrics.serviceCount.set(PrometheusStats.getStatsCount());
- }
+  }
 }

@@ -23,24 +23,28 @@ import java.util.Map;
 
 /**
  * Unified Prometheus Statistics Manager
- * Provides reusable statistics management functionality, eliminating duplicate code
+ * Uses a Map<serviceId, Stats> to store all statistics, with metrics as internal objects of stats
  */
-public abstract class PrometheusStats<T extends PrometheusMetrics> {
+public abstract class PrometheusStats {
     
-  protected static final Map<String, PrometheusStats<?>> allStats = new ConcurrentHashMap<>();
-  protected static final Map<String, PrometheusMetrics> allMetrics = new ConcurrentHashMap<>();
+  private static final Map<String, PrometheusStats> allStats = new ConcurrentHashMap<>();
 
-  public final String id;
-  public final T metrics;
+  private final String id;
+  private final PrometheusMetrics metrics;
 
-  public PrometheusStats(String id) {
-    this.id = validateId(id);
+  public PrometheusStats(String serviceId) {
+    this.id = validateId(serviceId);
     this.metrics = createMetrics();
-
     // Register to global Map
-    allStats.put(id, this);
-    allMetrics.put(id, metrics);
+    allStats.put(serviceId, this);
   }
+
+  /**
+   * Create metrics manager
+   * Subclasses need to implement this method to create specific metrics managers
+   * @return Metrics manager
+   */
+  protected abstract PrometheusMetrics createMetrics();
 
   /**
    * Validate ID
@@ -55,59 +59,126 @@ public abstract class PrometheusStats<T extends PrometheusMetrics> {
   }
 
   /**
-   * Create metrics manager
-   * @return Metrics manager
+   * Increment Counter value
+   * @param name Metric name
+   * @param value Increment value
    */
-  protected abstract T createMetrics();
+  public void incrementCounter(String name, double value) {
+    metrics.incrementCounter(name, value);
+  }
 
   /**
-   * Update metrics
-   * Subclasses need to implement this method to update specific metrics
+   * Set Gauge value
+   * @param name Metric name
+   * @param value Metric value
    */
-  protected abstract void updateMetrics();
+  public void setGaugeValue(String name, double value) {
+    metrics.setGaugeValue(name, value);
+  }
+
+  /**
+   * Observe Histogram value
+   * @param name Metric name
+   * @param value Observed value
+   */
+  public void observeHistogram(String name, double value) {
+    metrics.observeHistogram(name, value);
+  }
+
+  /**
+   * Observe Summary value
+   * @param name Metric name
+   * @param value Observed value
+   */
+  public void observeSummary(String name, double value) {
+    metrics.observeSummary(name, value);
+  }
+
+  /**
+   * Get Counter metric
+   * @param name Metric name
+   * @return Counter metric
+   */
+  public io.prometheus.client.Counter getCounter(String name) {
+    return metrics.getCounter(name);
+  }
+
+  /**
+   * Get Gauge metric
+   * @param name Metric name
+   * @return Gauge metric
+   */
+  public io.prometheus.client.Gauge getGauge(String name) {
+    return metrics.getGauge(name);
+  }
+
+  /**
+   * Get Histogram metric
+   * @param name Metric name
+   * @return Histogram metric
+   */
+  public io.prometheus.client.Histogram getHistogram(String name) {
+    return metrics.getHistogram(name);
+  }
+
+  /**
+   * Get Summary metric
+   * @param name Metric name
+   * @return Summary metric
+   */
+  public io.prometheus.client.Summary getSummary(String name) {
+    return metrics.getSummary(name);
+  }
+
+  /**
+   * Check if metric exists
+   * @param name Metric name
+   * @return Whether exists
+   */
+  public boolean hasMetric(String name) {
+    return metrics.hasMetric(name);
+  }
 
   /**
    * Remove statistics
    */
   public void remove() {
     allStats.remove(id);
-    PrometheusMetrics metrics = allMetrics.remove(id);
     if (metrics != null) {
       metrics.remove();
     }
   }
 
   /**
-   * Update metrics for all statistics
+   * Update all statistics metrics
    */
   public static void updateAllMetrics() {
-    for (Map.Entry<String, PrometheusStats<?>> entry : allStats.entrySet()) {
-      PrometheusStats<?> stats = entry.getValue();
-      PrometheusMetrics metrics = allMetrics.get(stats.id);
-      if (metrics != null) {
-        stats.updateMetrics();
+    for (Map.Entry<String, PrometheusStats> entry : allStats.entrySet()) {
+      PrometheusStats stats = entry.getValue();
+      if (stats != null) {
+        // Specific metric update logic can be added here
       }
     }
   }
 
   /**
    * Get statistics
-   * @param id Statistics ID
+   * @param serviceId Service ID
    * @return Statistics
    */
-@SuppressWarnings("unchecked")
-  public static <T extends PrometheusStats<?>> T getStats(String id) {
-    return (T) allStats.get(id);
-}
+  public static PrometheusStats getStats(String serviceId) {
+    return allStats.get(serviceId);
+  }
 
   /**
    * Get metrics manager
-   * @param id Metrics ID
+   * @param serviceId Service ID
    * @return Metrics manager
    */
-  public static PrometheusMetrics getMetrics(String id) {
-    return allMetrics.get(id);
-}
+  public static PrometheusMetrics getMetrics(String serviceId) {
+    PrometheusStats stats = allStats.get(serviceId);
+    return stats != null ? stats.metrics : null;
+  }
 
   /**
    * Get statistics count
@@ -115,49 +186,48 @@ public abstract class PrometheusStats<T extends PrometheusMetrics> {
    */
   public static int getStatsCount() {
     return allStats.size();
-}
+  }
 
   /**
    * Get all statistics IDs
-   * @return Statistics ID set
+   * @return Set of statistics IDs
    */
   public static java.util.Set<String> getAllStatsIds() {
     return allStats.keySet();
-}
+  }
 
   /**
    * Check if statistics exist
-   * @param id Statistics ID
+   * @param serviceId Service ID
    * @return Whether exists
    */
-  public static boolean hasStats(String id) {
-    return allStats.containsKey(id);
-}
+  public static boolean hasStats(String serviceId) {
+    return allStats.containsKey(serviceId);
+  }
 
   /**
    * Clear all statistics
    */
   public static void clearAllStats() {
-    for (PrometheusStats<?> stats : allStats.values()) {
+    for (PrometheusStats stats : allStats.values()) {
       stats.remove();
     }
     allStats.clear();
-    allMetrics.clear();
   }
 
   /**
    * Get ID
    * @return ID
    */
-public String getId() {
+  public String getId() {
     return id;
-}
+  }
 
   /**
    * Get metrics manager
    * @return Metrics manager
    */
-public T getMetrics() {
+  public PrometheusMetrics getMetrics() {
     return metrics;
-}
+  }
 }
