@@ -57,11 +57,7 @@ public class PulsarConsumer implements EventConsumer {
           .messageListener(new MessageListener<byte[]>() {
             @Override
             public void received(Consumer<byte[]> consumer, Message<byte[]> msg) {
-                try {
-                    eventProcessor.onEvent(msg.getData());
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+              eventProcessor.onEvent(msg.getData());
             }
           })
           .subscribe();

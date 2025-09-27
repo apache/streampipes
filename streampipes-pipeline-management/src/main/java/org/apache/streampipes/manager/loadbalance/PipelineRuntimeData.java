@@ -7,7 +7,7 @@ import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.loadbalancer.ResourceUnit;
+import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -19,9 +19,9 @@ import java.util.concurrent.TimeUnit;
 
 public class PipelineRuntimeData {
 
-    static Map<String, List<ResourceUnit<InvocableStreamPipesEntity>>> sinksAndProcess;
+    static Map<String, List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>>> sinksAndProcess;
 
-    static Map<String, List<ResourceUnit<AdapterDescription>>> adapter;
+    static Map<String, List<LoadBalanceResourceUnit<AdapterDescription>>> adapter;
 
     private static final ServiceRegistrationManager serviceManager = new ServiceRegistrationManager(
             StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage());
@@ -78,7 +78,7 @@ public class PipelineRuntimeData {
                     }
 
                     if (!entities.isEmpty()) {
-                        ResourceUnit<InvocableStreamPipesEntity> unit = new ResourceUnit<>();
+                        LoadBalanceResourceUnit<InvocableStreamPipesEntity> unit = new LoadBalanceResourceUnit<>();
                         unit.setPipelineId(pipelineId);
                         unit.setServiceId(serviceId);
                         entities.forEach(unit::addElements);
@@ -109,7 +109,7 @@ public class PipelineRuntimeData {
                 String adapterId = ad.getElementId();
                 SpStateLocker.INSTANCE.tryLock(adapterId, TimeUnit.SECONDS);
                 try{
-                    ResourceUnit<AdapterDescription> unit = new ResourceUnit<>();
+                    LoadBalanceResourceUnit<AdapterDescription> unit = new LoadBalanceResourceUnit<>();
                     unit.setPipelineId(adapterId);
                     unit.setServiceId(serviceId);
                     unit.addElements(ad);
@@ -123,9 +123,9 @@ public class PipelineRuntimeData {
     }
 
         /*
-        public static void addSinkAndProcess(ResourceUnit<InvocableStreamPipesEntity> unit, SpServiceRegistration registration) {
+        public static void addSinkAndProcess(LoadBalanceResourceUnit<InvocableStreamPipesEntity> unit, SpServiceRegistration registration) {
             if (sinksAndProcess.containsKey(unit.getPipelineId())) {
-                List<ResourceUnit<InvocableStreamPipesEntity>> entities = sinksAndProcess.get(unit.getPipelineId());
+                List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> entities = sinksAndProcess.get(unit.getPipelineId());
                 for (int i=0;i<sinksAndProcess.get(unit.getPipelineId()).size();){
                     if(entities.get(i).getId().equals(unit.getId())){
                         entities.remove(i);
@@ -155,9 +155,9 @@ public class PipelineRuntimeData {
         adapter.clear();
     }
 
-//    public  static void addAdapter(ResourceUnit<AdapterDescription> unit, SpServiceRegistration registration) {
+//    public  static void addAdapter(LoadBalanceResourceUnit<AdapterDescription> unit, SpServiceRegistration registration) {
 //        if (adapter.containsKey(unit.getPipelineId())) {
-//            List<ResourceUnit<AdapterDescription>> entities = adapter.get(registration.getSvcId());
+//            List<LoadBalanceResourceUnit<AdapterDescription>> entities = adapter.get(registration.getSvcId());
 //            for (int i=0;i<adapter.get(unit.getPipelineId()).size();){
 //                if(entities.get(i).getPipelineId().equals(unit.getPipelineId())){
 //                    entities.remove(i);
@@ -173,11 +173,11 @@ public class PipelineRuntimeData {
 //        }
 //    }
 
-    public static Map<String, List<ResourceUnit<InvocableStreamPipesEntity>>> getSinksAndProcess() {
+    public static Map<String, List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>>> getSinksAndProcess() {
         return sinksAndProcess;
     }
 
-    public static Map<String, List<ResourceUnit<AdapterDescription>>> getAdapter() {
+    public static Map<String, List<LoadBalanceResourceUnit<AdapterDescription>>> getAdapter() {
         return adapter;
     }
 
@@ -186,10 +186,10 @@ public class PipelineRuntimeData {
         adapter.remove(serviceId);
     }
 
-//    public static List<ResourceUnit<InvocableStreamPipesEntity>> getServiceResourceUnit(String serviceId){
-//        List<ResourceUnit<InvocableStreamPipesEntity>> resourceUnits = new ArrayList<>();
-//        for(Map.Entry<String,List<ResourceUnit<InvocableStreamPipesEntity>>> entry : sinksAndProcess.entrySet()){
-//            for(ResourceUnit<InvocableStreamPipesEntity> resourceUnit : entry.getValue()){
+//    public static List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> getServiceResourceUnit(String serviceId){
+//        List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> resourceUnits = new ArrayList<>();
+//        for(Map.Entry<String,List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>>> entry : sinksAndProcess.entrySet()){
+//            for(LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit : entry.getValue()){
 //                if(resourceUnit.getServiceId().equals(serviceId)) {
 //                    resourceUnits.add(resourceUnit);
 //                }
@@ -199,8 +199,8 @@ public class PipelineRuntimeData {
 //    }
 //
 //    public static void removeServiceResourceUnit(String serviceId){
-//        for(Map.Entry<String,List<ResourceUnit<InvocableStreamPipesEntity>>> entry : sinksAndProcess.entrySet()){
-//            List<ResourceUnit<InvocableStreamPipesEntity>> list = entry.getValue();
+//        for(Map.Entry<String,List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>>> entry : sinksAndProcess.entrySet()){
+//            List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> list = entry.getValue();
 //            for(int i=0;i<list.size();){
 //                if(list.get(i).getServiceId().equals(serviceId)){
 //                    list.remove(i);
@@ -210,8 +210,8 @@ public class PipelineRuntimeData {
 //            }
 //        }
 //
-//        for(Map.Entry<String,List<ResourceUnit<AdapterDescription>>> entry : adapter.entrySet()){
-//            List<ResourceUnit<AdapterDescription>> list = entry.getValue();
+//        for(Map.Entry<String,List<LoadBalanceResourceUnit<AdapterDescription>>> entry : adapter.entrySet()){
+//            List<LoadBalanceResourceUnit<AdapterDescription>> list = entry.getValue();
 //            for(int i=0;i<list.size();){
 //                if(list.get(i).getServiceId().equals(serviceId)){
 //                    list.remove(i);
@@ -222,16 +222,16 @@ public class PipelineRuntimeData {
 //        }
 //    }
 
-    public static List<ResourceUnit<AdapterDescription>> getServiceAdapter(String serviceId){
-        List<ResourceUnit<AdapterDescription>> resourceUnits = new ArrayList<>();
-        for(Map.Entry<String,List<ResourceUnit<AdapterDescription>>> entry : adapter.entrySet()){
-            for(ResourceUnit<AdapterDescription> resourceUnit : entry.getValue()){
-                if(resourceUnit.getServiceId().equals(serviceId)) {
-                    resourceUnits.add(resourceUnit);
+    public static List<LoadBalanceResourceUnit<AdapterDescription>> getServiceAdapter(String serviceId){
+        List<LoadBalanceResourceUnit<AdapterDescription>> loadBalanceResourceUnits = new ArrayList<>();
+        for(Map.Entry<String,List<LoadBalanceResourceUnit<AdapterDescription>>> entry : adapter.entrySet()){
+            for(LoadBalanceResourceUnit<AdapterDescription> loadBalanceResourceUnit : entry.getValue()){
+                if(loadBalanceResourceUnit.getServiceId().equals(serviceId)) {
+                    loadBalanceResourceUnits.add(loadBalanceResourceUnit);
                 }
             }
         }
-        return resourceUnits;
+        return loadBalanceResourceUnits;
     }
 
 

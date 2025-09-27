@@ -57,13 +57,6 @@ public class AdapterHealthCheck implements Runnable {
   @Override
   public void run() {
     this.checkAndRestoreAdapters();
-    synchronized (ResourceUnitMigration.class) {
-      try {
-        this.checkAndRestoreAdapters();
-      } catch (Exception e){
-        LOG.error("Error while checking and restoring adapters: {}", e.getMessage());
-      }
-    }
   }
 
   /**

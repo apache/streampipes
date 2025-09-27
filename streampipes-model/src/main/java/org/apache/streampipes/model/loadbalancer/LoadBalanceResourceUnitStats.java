@@ -1,9 +1,6 @@
 package org.apache.streampipes.model.loadbalancer;
 
-public class ResourceUnitStats {
-
-
-    String resourceId;
+public class LoadBalanceResourceUnitStats {
 
     public double eventRateIn;
 
@@ -15,17 +12,8 @@ public class ResourceUnitStats {
 
     public long lastUpdate;
 
-    public ResourceUnitStats(String resourceId) {
-        this.resourceId = resourceId;
+    public LoadBalanceResourceUnitStats() {
         this.lastUpdate = System.currentTimeMillis();
-    }
-
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
     }
 
     public double getEventRateIn() {

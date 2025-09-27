@@ -41,7 +41,7 @@ public enum HttpServerAdapterManagement {
     this.httpServerAdapters.remove(endpointId);
   }
 
-  public void notify(String endpointId, byte[] event) throws IllegalArgumentException, InterruptedException {
+  public void notify(String endpointId, byte[] event) throws IllegalArgumentException {
     if (httpServerAdapters.containsKey(endpointId)) {
       httpServerAdapters.get(endpointId).onEvent(event);
     } else {

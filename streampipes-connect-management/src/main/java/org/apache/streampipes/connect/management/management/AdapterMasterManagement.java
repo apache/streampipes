@@ -162,7 +162,6 @@ public class AdapterMasterManagement {
       }
     }
     ExtensionsLogProvider.INSTANCE.reset(elementId);
-    LoadManager.stopPipeline(elementId);
 
     // remove the adapter from the metrics manager so that
     // no metrics for this adapter are exposed anymore

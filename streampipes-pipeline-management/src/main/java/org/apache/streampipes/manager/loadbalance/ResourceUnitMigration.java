@@ -10,10 +10,10 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.model.loadbalancer.PipelineInfo;
 import org.apache.streampipes.model.loadbalancer.PipelineStates;
-import org.apache.streampipes.model.loadbalancer.ResourceUnit;
-import org.apache.streampipes.model.loadbalancer.ResourceUnitStats;
+import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnitStats;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
@@ -27,9 +27,9 @@ public class ResourceUnitMigration {
 
     private static final Logger log = LoggerFactory.getLogger(ResourceUnitMigration.class);
 
-    public static void migration(ResourceUnit<InvocableStreamPipesEntity> resourceUnit, SpServiceRegistration registration) {
-        resourceUnit.setServiceId(registration.getSvcId());
-        String pipelineId = resourceUnit.getPipelineId();
+    public static void migration(LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit, SpServiceRegistration registration) {
+        loadBalanceResourceUnit.setServiceId(registration.getSvcId());
+        String pipelineId = loadBalanceResourceUnit.getPipelineId();
         MigrationStats stats = MigrationStats.get(pipelineId);
         if(stats==null){
             stats= new MigrationStats(pipelineId);
@@ -42,7 +42,7 @@ public class ResourceUnitMigration {
         currentPipelineInfo.setPipelineState(PipelineStates.SEPARATING);
         stats.migrationStatus = 2;
         MigrationStats.metrics();
-        for (InvocableStreamPipesEntity pipesEntity : resourceUnit.getElements()) {
+        for (InvocableStreamPipesEntity pipesEntity : loadBalanceResourceUnit.getElements()) {
             String endpointUrl = pipesEntity.getSelectedEndpointUrl() + pipesEntity.getDetachPath();
             new DetachHttpRequest().execute(pipesEntity, endpointUrl, pipelineId);
         }
@@ -53,7 +53,7 @@ public class ResourceUnitMigration {
         currentPipelineInfo.setPipelineState(PipelineStates.MIGRATING);
         stats.migrationStatus = 4;
         MigrationStats.metrics();
-        for (InvocableStreamPipesEntity pipesEntity : resourceUnit.getElements()) {
+        for (InvocableStreamPipesEntity pipesEntity : loadBalanceResourceUnit.getElements()) {
             pipesEntity.setSelectedEndpointUrl(getSelectedEndpoint(pipesEntity, registration.getServiceUrl()));
             String endpointUrl = pipesEntity.getSelectedEndpointUrl();
             new InvokeHttpRequest().execute(pipesEntity, endpointUrl, pipelineId);
@@ -65,14 +65,14 @@ public class ResourceUnitMigration {
         Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipelineId);
 
         for (DataSinkInvocation dataSinkInvocation : pipeline.getActions()) {
-            for (InvocableStreamPipesEntity entity : resourceUnit.getElements()) {
+            for (InvocableStreamPipesEntity entity : loadBalanceResourceUnit.getElements()) {
                 if (dataSinkInvocation.getElementId().equals(entity.getElementId())) {
                     dataSinkInvocation.setSelectedEndpointUrl(entity.getSelectedEndpointUrl());
                 }
             }
         }
         for (DataProcessorInvocation processorInvocation : pipeline.getSepas()) {
-            for (InvocableStreamPipesEntity entity : resourceUnit.getElements()) {
+            for (InvocableStreamPipesEntity entity : loadBalanceResourceUnit.getElements()) {
                 if (processorInvocation.getElementId().equals(entity.getElementId())) {
                     processorInvocation.setSelectedEndpointUrl(entity.getSelectedEndpointUrl());
                 }
@@ -87,20 +87,20 @@ public class ResourceUnitMigration {
         MigrationStats.metrics();
     }
 
-    public static void migrationForHealth(ResourceUnit<InvocableStreamPipesEntity> resourceUnit, SpServiceRegistration registration) {
-        System.out.println("update resourceUnit to:"+registration.getHost());
-        resourceUnit.setServiceId(registration.getSvcId());
+    public static void migrationForHealth(LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit, SpServiceRegistration registration) {
+        System.out.println("update loadBalanceResourceUnit to:"+registration.getHost());
+        loadBalanceResourceUnit.setServiceId(registration.getSvcId());
         try {
-            for (InvocableStreamPipesEntity pipesEntity : resourceUnit.getElements()) {
+            for (InvocableStreamPipesEntity pipesEntity : loadBalanceResourceUnit.getElements()) {
                 pipesEntity.setSelectedEndpointUrl(getSelectedEndpoint(pipesEntity, registration.getServiceUrl()));
                 String endpointUrl = pipesEntity.getSelectedEndpointUrl();
-                new InvokeHttpRequest().execute(pipesEntity, endpointUrl, resourceUnit.getPipelineId());
+                new InvokeHttpRequest().execute(pipesEntity, endpointUrl, loadBalanceResourceUnit.getPipelineId());
             }
 
-            Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(resourceUnit.getPipelineId());
+            Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(loadBalanceResourceUnit.getPipelineId());
 
             for (DataProcessorInvocation processorInvocation : pipeline.getSepas()) {
-                for (InvocableStreamPipesEntity entity : resourceUnit.getElements()) {
+                for (InvocableStreamPipesEntity entity : loadBalanceResourceUnit.getElements()) {
                     if (processorInvocation.getElementId().equals(entity.getElementId())) {
                         processorInvocation.setSelectedEndpointUrl(entity.getSelectedEndpointUrl());
                     }
@@ -108,7 +108,7 @@ public class ResourceUnitMigration {
             }
 
             for (DataSinkInvocation dataSinkInvocation : pipeline.getActions()) {
-                for (InvocableStreamPipesEntity entity : resourceUnit.getElements()) {
+                for (InvocableStreamPipesEntity entity : loadBalanceResourceUnit.getElements()) {
                     if (dataSinkInvocation.getElementId().equals(entity.getElementId())) {
                         dataSinkInvocation.setSelectedEndpointUrl(entity.getSelectedEndpointUrl());
                     }
@@ -125,46 +125,46 @@ public class ResourceUnitMigration {
 
     public static void migration(SpServiceRegistration sourceService, double source, SpServiceRegistration targetService,double target) {
         PipelineRuntimeData.loadAll();
-        List<ResourceUnit<InvocableStreamPipesEntity>> units = PipelineRuntimeData.getSinksAndProcess().get(sourceService.getSvcId());
+        List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> units = PipelineRuntimeData.getSinksAndProcess().get(sourceService.getSvcId());
         PipelineRuntimeData.clearAll();
         LoadData loadData = LoadManager.getLoadData();
-        List<ResourceUnitStats> list = loadData.getResourceUnitStats(sourceService.getSvcId());
+        List<LoadBalanceResourceUnitStats> list = loadData.getResourceUnitStats(sourceService.getSvcId());
         if(list==null){
             list=new ArrayList<>();
         }
         list.sort((a, b) -> Double.compare(  b.eventRateOut, a.eventRateOut));
 
-        List<ResourceUnitStats> list1 = loadData.getResourceUnitStats(targetService.getSvcId());
+        List<LoadBalanceResourceUnitStats> list1 = loadData.getResourceUnitStats(targetService.getSvcId());
         if(list1==null){
             list1=new ArrayList<>();
         }
         double all =0;
-        for(ResourceUnitStats stats:list){
+        for(LoadBalanceResourceUnitStats stats:list){
             all +=  stats.eventRateOut;
         }
         double num=0;
-        for(ResourceUnitStats stats:list1){
+        for(LoadBalanceResourceUnitStats stats:list1){
             num+=  stats.eventRateOut;
 
         }
         all += num;
 
         double tar=0;
-        for(ResourceUnitStats resourceUnitStats : list){
+        for(LoadBalanceResourceUnitStats loadBalanceResourceUnitStats : list){
             if(tar>=(((all-num)*(source-target)/(2*source)))){
                 System.out.println("target:out "+tar);
                 System.out.println("target:neet Tran:" + (((all-num)*(source-target)/(2*source))));
                 break;
             }
 
-            for(ResourceUnit<InvocableStreamPipesEntity> unit : units){
-                if(unit.getId().equals(resourceUnitStats.getResourceId())){
+            for(LoadBalanceResourceUnit<InvocableStreamPipesEntity> unit : units){
+                if(unit.getId().equals(loadBalanceResourceUnitStats.getResourceId())){
                     try {
                         String tryLockPipelineId = unit.getPipelineId();
                         SpStateLocker.INSTANCE.tryLock(tryLockPipelineId, TimeUnit.SECONDS);
                         try {
                             migration(unit,targetService);
-                            tar+= resourceUnitStats.eventRateOut;
+                            tar+= loadBalanceResourceUnitStats.eventRateOut;
                         } finally {
                             SpStateLocker.INSTANCE.unlock(tryLockPipelineId);
                         }

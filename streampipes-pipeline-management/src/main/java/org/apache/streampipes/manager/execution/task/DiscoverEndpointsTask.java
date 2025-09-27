@@ -27,7 +27,7 @@ import org.apache.streampipes.manager.loadbalance.ResourceUnitGenerator;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.loadbalancer.ResourceUnit;
+import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
@@ -40,7 +40,7 @@ public class DiscoverEndpointsTask implements PipelineExecutionTask {
   @Override
   public void executeTask(Pipeline pipeline,
                           PipelineExecutionInfo executionInfo) {
-    for (Map.Entry<ResourceUnit<InvocableStreamPipesEntity>, List<SpServiceRegistration>> e :ResourceUnitGenerator.unitGeneration(pipeline.getActions(),pipeline.getSepas()).entrySet()){
+    for (Map.Entry<LoadBalanceResourceUnit<InvocableStreamPipesEntity>, List<SpServiceRegistration>> e :ResourceUnitGenerator.unitGeneration(pipeline.getActions(),pipeline.getSepas()).entrySet()){
       e.getKey().setPipelineId(pipeline.getPipelineId());
       e.getKey().setLabels(pipeline.getLabels());
       SpServiceRegistration registration = LoadManager.allocation(e.getKey(),e.getValue(), pipeline.getLabels());

@@ -6,7 +6,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.loadbalancer.ResourceUnit;
+import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
@@ -24,24 +24,24 @@ public class    ResourceUnitGenerator {
         serviceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
     }
 
-    public static Map<ResourceUnit<AdapterDescription>, List<SpServiceRegistration>> unitGeneration(AdapterDescription adapterDescription){
-        ResourceUnit<AdapterDescription> resourceUnit =new ResourceUnit<>();
-        resourceUnit.addElements(adapterDescription);
-        resourceUnit.setLabels(new ArrayList<>());
-        resourceUnit.setPipelineId(adapterDescription.getElementId());
+    public static Map<LoadBalanceResourceUnit<AdapterDescription>, List<SpServiceRegistration>> unitGeneration(AdapterDescription adapterDescription){
+        LoadBalanceResourceUnit<AdapterDescription> loadBalanceResourceUnit =new LoadBalanceResourceUnit<>();
+        loadBalanceResourceUnit.addElements(adapterDescription);
+        loadBalanceResourceUnit.setLabels(new ArrayList<>());
+        loadBalanceResourceUnit.setPipelineId(adapterDescription.getElementId());
         List<SpServiceRegistration> serviceRegistrations = SpServiceDiscovery.getServiceDiscovery().findAll();
         List<SpServiceRegistration> list =getService(SpServiceUrlProvider
                 .ADAPTER
                 .getServiceTag(adapterDescription.getAppId())
                 .asString(), serviceRegistrations);
 
-        Map<ResourceUnit<AdapterDescription>,List<SpServiceRegistration>> map =new HashMap<>();
-        map.put(resourceUnit,list);
+        Map<LoadBalanceResourceUnit<AdapterDescription>,List<SpServiceRegistration>> map =new HashMap<>();
+        map.put(loadBalanceResourceUnit,list);
         return map;
     }
 
 
-    public static Map<ResourceUnit<InvocableStreamPipesEntity>, List<SpServiceRegistration>> unitGeneration (
+    public static Map<LoadBalanceResourceUnit<InvocableStreamPipesEntity>, List<SpServiceRegistration>> unitGeneration (
             List<DataSinkInvocation> sinks, List<DataProcessorInvocation> processor) {
         List<SpServiceRegistration> serviceRegistrations = SpServiceDiscovery.getServiceDiscovery().findAll();
         Map<String, List<SpServiceRegistration>> entityRunnableService = new HashMap<>();
@@ -56,7 +56,7 @@ public class    ResourceUnitGenerator {
             }
         }
 
-        Map<String,ResourceUnit<InvocableStreamPipesEntity>> resourceUnitMap1=get(resourceUnitMap,entityMap);
+        Map<String, LoadBalanceResourceUnit<InvocableStreamPipesEntity>> resourceUnitMap1=get(resourceUnitMap,entityMap);
 
         return resourceUnitMap1.entrySet().stream()
                 .collect(Collectors.toMap(
@@ -166,16 +166,16 @@ public class    ResourceUnitGenerator {
         }
     }
 
-    private static  Map<String, ResourceUnit<InvocableStreamPipesEntity>> get(Map<String, String> map, Map<String, InvocableStreamPipesEntity> entityMap) {
-        Map<String, ResourceUnit<InvocableStreamPipesEntity>> resourceUnitMap = new HashMap<>();
+    private static  Map<String, LoadBalanceResourceUnit<InvocableStreamPipesEntity>> get(Map<String, String> map, Map<String, InvocableStreamPipesEntity> entityMap) {
+        Map<String, LoadBalanceResourceUnit<InvocableStreamPipesEntity>> resourceUnitMap = new HashMap<>();
         for (Map.Entry<String, String> e : map.entrySet()) {
             String s = find(map, e.getKey());
             if (resourceUnitMap.containsKey(s)) {
                 resourceUnitMap.get(s).addElements(entityMap.get(e.getKey()));
             } else {
-                ResourceUnit<InvocableStreamPipesEntity> resourceUnit = new ResourceUnit<>();
-                resourceUnit.addElements(entityMap.get(e.getKey()));
-                resourceUnitMap.put(s, resourceUnit);
+                LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit = new LoadBalanceResourceUnit<>();
+                loadBalanceResourceUnit.addElements(entityMap.get(e.getKey()));
+                resourceUnitMap.put(s, loadBalanceResourceUnit);
             }
         }
         return resourceUnitMap;

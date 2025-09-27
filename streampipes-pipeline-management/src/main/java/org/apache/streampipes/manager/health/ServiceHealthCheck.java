@@ -29,7 +29,7 @@ import org.apache.streampipes.manager.loadbalance.ResourceUnitMigration;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
-import org.apache.streampipes.model.loadbalancer.ResourceUnit;
+import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.http.HttpStatus;
@@ -69,16 +69,16 @@ public class ServiceHealthCheck implements Runnable {
         registeredServices.forEach(this::checkServiceHealth);
         for (SpServiceRegistration service : serviceRegistrations) {
           System.out.println(service.getServiceUrl());
-          List<ResourceUnit<InvocableStreamPipesEntity>> resourceUnits =
+          List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> loadBalanceResourceUnits =
                   PipelineRuntimeData.getSinksAndProcess().getOrDefault(service.getSvcId(), new ArrayList<>());
-          for (ResourceUnit<InvocableStreamPipesEntity> entityResourceUnit : resourceUnits) {
-            if (entityResourceUnit.getElements() == null || entityResourceUnit.getElements().isEmpty()) {
+          for (LoadBalanceResourceUnit<InvocableStreamPipesEntity> entityLoadBalanceResourceUnit : loadBalanceResourceUnits) {
+            if (entityLoadBalanceResourceUnit.getElements() == null || entityLoadBalanceResourceUnit.getElements().isEmpty()) {
               continue;
             }
-            ResourceUnitMigration.migrationForHealth(entityResourceUnit, LoadManager.allocation(entityResourceUnit, getService(
+            ResourceUnitMigration.migrationForHealth(entityLoadBalanceResourceUnit, LoadManager.allocation(entityLoadBalanceResourceUnit, getService(
                     ExtensionsServiceEndpointUtils.getPipelineElementType(
-                                    entityResourceUnit.getElements().get(0))
-                            .getServiceTag(entityResourceUnit.getElements().get(0).getAppId())
+                                    entityLoadBalanceResourceUnit.getElements().get(0))
+                            .getServiceTag(entityLoadBalanceResourceUnit.getElements().get(0).getAppId())
                             .asString(), getRegisteredServices()), new ArrayList<>()));
           }
           PipelineRuntimeData.removeServiceResourceUnit(service.getSvcId());

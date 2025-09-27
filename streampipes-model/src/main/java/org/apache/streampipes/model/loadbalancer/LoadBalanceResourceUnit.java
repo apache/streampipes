@@ -5,10 +5,7 @@ import org.apache.streampipes.commons.random.UUIDGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResourceUnit<T> {
-
-
-    String id;
+public class LoadBalanceResourceUnit<T> {
 
     String pipelineId;
 
@@ -18,8 +15,7 @@ public class ResourceUnit<T> {
 
     String serviceId;
 
-    public ResourceUnit() {
-        id = UUIDGenerator.generateUuid();
+    public LoadBalanceResourceUnit() {
         this.elements = new ArrayList<>();
     }
 
@@ -54,13 +50,5 @@ public class ResourceUnit<T> {
 
     public void setLabels(List<String> labels) {
         this.labels = labels;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

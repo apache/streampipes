@@ -23,7 +23,7 @@ import org.apache.streampipes.manager.loadbalance.impl.*;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.loadbalancer.ResourceUnit;
+import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 
 import java.util.List;
 
@@ -62,12 +62,12 @@ public class LoadManager {
         }
         LoadManager.loadBalancer=new ExtensibleLoadManager(selector,migrator);
     }
-    public static SpServiceRegistration allocation(ResourceUnit<InvocableStreamPipesEntity> resourceUnit, List<SpServiceRegistration> serviceRegistrations, List<String> label){
-        return loadBalancer.allocation(resourceUnit,serviceRegistrations,label);
+    public static SpServiceRegistration allocation(LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit, List<SpServiceRegistration> serviceRegistrations, List<String> label){
+        return loadBalancer.allocation(loadBalanceResourceUnit,serviceRegistrations,label);
     }
 
-    public static SpServiceRegistration allocation(ResourceUnit<AdapterDescription> resourceUnit, List<SpServiceRegistration> serviceRegistrations){
-        return loadBalancer.allocationPe(resourceUnit,serviceRegistrations,resourceUnit.getLabels());
+    public static SpServiceRegistration allocation(LoadBalanceResourceUnit<AdapterDescription> loadBalanceResourceUnit, List<SpServiceRegistration> serviceRegistrations){
+        return loadBalancer.allocationPe(loadBalanceResourceUnit,serviceRegistrations, loadBalanceResourceUnit.getLabels());
     }
 
     public static LoadData getLoadData(){

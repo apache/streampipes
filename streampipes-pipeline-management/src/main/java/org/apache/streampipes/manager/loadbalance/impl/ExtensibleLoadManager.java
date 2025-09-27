@@ -1,7 +1,6 @@
 package org.apache.streampipes.manager.loadbalance.impl;
 
 import org.apache.streampipes.commons.prometheus.loadbalancer.LoadBalancerStats;
-import org.apache.streampipes.commons.prometheus.migration.MigrationStats;
 import org.apache.streampipes.extensions.api.locker.impl.SpStateLocker;
 import org.apache.streampipes.manager.health.ServiceRegistrationManager;
 import org.apache.streampipes.manager.loadbalance.*;
@@ -9,8 +8,8 @@ import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.loadbalancer.ResourceUnit;
-import org.apache.streampipes.model.loadbalancer.ResourceUnitStats;
+import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
+import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnitStats;
 import org.apache.streampipes.model.loadbalancer.ServiceLoadDataReport;
 import org.apache.streampipes.model.monitoring.MessageCounter;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
@@ -41,16 +40,16 @@ public class ExtensibleLoadManager implements LoadBalancer {
     }
 
     @Override
-    public SpServiceRegistration allocation(ResourceUnit<InvocableStreamPipesEntity> resourceUnit, List<SpServiceRegistration> serviceRegistrations, List<String> label) {
+    public SpServiceRegistration allocation(LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit, List<SpServiceRegistration> serviceRegistrations, List<String> label) {
         //SpServiceRegistration spServiceRegistration = selector.select(serviceRegistrations, label);
-        //PipelineRuntimeData.addSinkAndProcess(resourceUnit, spServiceRegistration);
+        //PipelineRuntimeData.addSinkAndProcess(loadBalanceResourceUnit, spServiceRegistration);
         return selector.select(serviceRegistrations, label);
     }
 
     @Override
-    public SpServiceRegistration allocationPe(ResourceUnit<AdapterDescription> resourceUnit, List<SpServiceRegistration> serviceRegistrations, List<String> label) {
+    public SpServiceRegistration allocationPe(LoadBalanceResourceUnit<AdapterDescription> loadBalanceResourceUnit, List<SpServiceRegistration> serviceRegistrations, List<String> label) {
         //SpServiceRegistration spServiceRegistration = selector.select(serviceRegistrations, label);
-        //PipelineRuntimeData.addAdapter(resourceUnit, spServiceRegistration);
+        //PipelineRuntimeData.addAdapter(loadBalanceResourceUnit, spServiceRegistration);
         return selector.select(serviceRegistrations, label);
     }
 
@@ -88,18 +87,18 @@ public class ExtensibleLoadManager implements LoadBalancer {
         return map;
     }
 
-    private Map<String, List<ResourceUnitStats>> getResourceUnitStats() {
-        Map<String, List<ResourceUnitStats>> map = new HashMap<>();
+    private Map<String, List<LoadBalanceResourceUnitStats>> getResourceUnitStats() {
+        Map<String, List<LoadBalanceResourceUnitStats>> map = new HashMap<>();
         ExtensionsLogProvider provider = ExtensionsLogProvider.INSTANCE;
         PipelineRuntimeData.loadAll();
-        for (Map.Entry<String, List<ResourceUnit<InvocableStreamPipesEntity>>> entry : PipelineRuntimeData.getSinksAndProcess().entrySet()) {
-            for (ResourceUnit<InvocableStreamPipesEntity> resourceUnit : entry.getValue()) {
-                ResourceUnitStats resourceUnitStats = new ResourceUnitStats(resourceUnit.getId());
+        for (Map.Entry<String, List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>>> entry : PipelineRuntimeData.getSinksAndProcess().entrySet()) {
+            for (LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit : entry.getValue()) {
+                LoadBalanceResourceUnitStats loadBalanceResourceUnitStats = new LoadBalanceResourceUnitStats(loadBalanceResourceUnit.getId());
                 long countOut = 0L;
                 long countIn = 0;
                 long throughputIn = 0;
                 long throughputOut = 0;
-                for (InvocableStreamPipesEntity entity : resourceUnit.getElements()) {
+                for (InvocableStreamPipesEntity entity : loadBalanceResourceUnit.getElements()) {
                     SpMetricsEntry spMetricsEntry = provider.getMetricInfosForResource(entity.getElementId());
                     for (Map.Entry<String, MessageCounter> e : spMetricsEntry.getMessagesIn().entrySet()) {
                         countIn += e.getValue().getCounter();
@@ -108,26 +107,26 @@ public class ExtensibleLoadManager implements LoadBalancer {
                     countOut += spMetricsEntry.getMessagesOut().getCounter();
                     throughputOut += spMetricsEntry.getMessagesOut().getSize();
                 }
-                resourceUnitStats.setEventRateIn((double) countIn );
-                resourceUnitStats.setEventRateOut((double) countOut );
-                resourceUnitStats.setEventThroughputIn((double) throughputIn );
-                resourceUnitStats.setEventThroughputOut((double) throughputOut );
-                if (!map.containsKey(resourceUnit.getServiceId())) {
-                    map.put(resourceUnit.getServiceId(), new ArrayList<>());
+                loadBalanceResourceUnitStats.setEventRateIn((double) countIn );
+                loadBalanceResourceUnitStats.setEventRateOut((double) countOut );
+                loadBalanceResourceUnitStats.setEventThroughputIn((double) throughputIn );
+                loadBalanceResourceUnitStats.setEventThroughputOut((double) throughputOut );
+                if (!map.containsKey(loadBalanceResourceUnit.getServiceId())) {
+                    map.put(loadBalanceResourceUnit.getServiceId(), new ArrayList<>());
                 }
 
-                map.get(resourceUnit.getServiceId()).add(resourceUnitStats);
+                map.get(loadBalanceResourceUnit.getServiceId()).add(loadBalanceResourceUnitStats);
             }
         }
 
-        for (Map.Entry<String, List<ResourceUnit<AdapterDescription>>> entry : PipelineRuntimeData.getAdapter().entrySet()) {
-            for (ResourceUnit<AdapterDescription> resourceUnit : entry.getValue()) {
-                ResourceUnitStats resourceUnitStats = new ResourceUnitStats(resourceUnit.getId());
+        for (Map.Entry<String, List<LoadBalanceResourceUnit<AdapterDescription>>> entry : PipelineRuntimeData.getAdapter().entrySet()) {
+            for (LoadBalanceResourceUnit<AdapterDescription> loadBalanceResourceUnit : entry.getValue()) {
+                LoadBalanceResourceUnitStats loadBalanceResourceUnitStats = new LoadBalanceResourceUnitStats(loadBalanceResourceUnit.getId());
                 long countOut = 0L;
                 long countIn = 0;
                 long throughputIn = 0;
                 long throughputOut = 0;
-                for (AdapterDescription entity : resourceUnit.getElements()) {
+                for (AdapterDescription entity : loadBalanceResourceUnit.getElements()) {
                     SpMetricsEntry spMetricsEntry = provider.getMetricInfosForResource(entity.getElementId());
                     for (Map.Entry<String, MessageCounter> e : spMetricsEntry.getMessagesIn().entrySet()) {
                         countIn += e.getValue().getCounter();
@@ -136,15 +135,15 @@ public class ExtensibleLoadManager implements LoadBalancer {
                     countOut += spMetricsEntry.getMessagesOut().getCounter();
                     throughputOut += spMetricsEntry.getMessagesOut().getSize();
                 }
-                resourceUnitStats.setEventRateIn((double) countIn );
-                resourceUnitStats.setEventRateOut((double) countOut );
-                resourceUnitStats.setEventThroughputIn((double) throughputIn );
-                resourceUnitStats.setEventThroughputOut((double) throughputOut );
-                if (!map.containsKey(resourceUnit.getServiceId())) {
-                    map.put(resourceUnit.getServiceId(), new ArrayList<>());
+                loadBalanceResourceUnitStats.setEventRateIn((double) countIn );
+                loadBalanceResourceUnitStats.setEventRateOut((double) countOut );
+                loadBalanceResourceUnitStats.setEventThroughputIn((double) throughputIn );
+                loadBalanceResourceUnitStats.setEventThroughputOut((double) throughputOut );
+                if (!map.containsKey(loadBalanceResourceUnit.getServiceId())) {
+                    map.put(loadBalanceResourceUnit.getServiceId(), new ArrayList<>());
                 }
 
-                map.get(resourceUnit.getServiceId()).add(resourceUnitStats);
+                map.get(loadBalanceResourceUnit.getServiceId()).add(loadBalanceResourceUnitStats);
 
             }
         }
