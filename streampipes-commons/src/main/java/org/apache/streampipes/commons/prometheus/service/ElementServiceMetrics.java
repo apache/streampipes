@@ -20,40 +20,53 @@ package org.apache.streampipes.commons.prometheus.service;
 
 import io.prometheus.client.Gauge;
 import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
-import org.apache.streampipes.commons.prometheus.core.PrometheusMetrics;
 
 /**
  * Service Metrics Manager
  * Inherits PrometheusMetrics and implements service-related metric registration
  */
-public class ElementServiceMetrics extends PrometheusMetrics {
-    
-  // Metric name constants
-  private static final String CPU_USAGE = "cpu_usage";
-  private static final String MEMORY_USAGE = "memory_usage";
-  private static final String WEIGHT = "weight";
-  private static final String SYSTEM_LOAD = "system_load";
-  private static final String HISTORICAL_SYSTEM_LOAD = "historical_system_load";
-  private static final String CURRENT_SYSTEM_LOAD = "current_system_load";
+public class ElementServiceMetrics{
 
-  // Global service counter
-  public static final Gauge serviceCount = StreamPipesCollectorRegistry.registerGauge(
-        "serviceCount",
-        "Total number of registered services"
+  public static final Gauge CPU_USAGE = StreamPipesCollectorRegistry.registerGauge(
+          "cpu_usage",
+          "Element CPU usage percentage",
+          "serviceId"
   );
 
+  public static final Gauge MEMORY_USAGE = StreamPipesCollectorRegistry.registerGauge(
+          "memory_usage",
+          "Element memory usage in bytes",
+          "serviceId"
+  );
+  public static final Gauge WEIGHT = StreamPipesCollectorRegistry.registerGauge(
+          "weight",
+          "Weight of remaining available resources for element",
+          "serviceId"
+  );
+  public static final Gauge SYSTEM_LOAD = StreamPipesCollectorRegistry.registerGauge(
+          "system_load",
+          "System load average over the last minute",
+          "serviceId"
+  );
+  public static final Gauge HISTORICAL_SYSTEM_LOAD = StreamPipesCollectorRegistry.registerGauge(
+          "historical_system_load",
+          "Historical system load average",
+          "serviceId"
+  );
+
+  private final String id;
+
+
+
   public ElementServiceMetrics(String id) {
-    super(id);
+    this.id = id;
   }
 
-  @Override
-  protected void registerMetrics() {
-    // Register all service-related Gauge metrics
-    registerGauge(CPU_USAGE, "CPU usage percentage");
-    registerGauge(MEMORY_USAGE, "Memory usage in bytes");
-    registerGauge(WEIGHT, "Weight of remaining available resources for service");
-    registerGauge(SYSTEM_LOAD, "System load average over the last minute");
-    registerGauge(HISTORICAL_SYSTEM_LOAD, "Historical system load average");
-    registerGauge(CURRENT_SYSTEM_LOAD, "Current system load average");
+  public void reportMetrics(double cpuUsage, double memoryUsage, double weight, double systemLoad, double historicalSystemLoad) {
+      CPU_USAGE.labels(this.id).set(cpuUsage);
+      MEMORY_USAGE.labels(this.id).set(memoryUsage);
+      WEIGHT.labels(this.id).set(weight);
+      SYSTEM_LOAD.labels(this.id).set(systemLoad);
+      HISTORICAL_SYSTEM_LOAD.labels(this.id).set(historicalSystemLoad);
   }
 }

@@ -47,8 +47,7 @@ public class ServiceLoadDataReportGenerator {
   private static final int USAGE_CALCULATION_INTERVAL_MINUTES = 1;
   private static final int BYTES_TO_MB = 1024 * 1024;
 
-  // Singleton instance
-  private static volatile ServiceLoadDataReportGenerator instance;
+  private final ElementServiceStats serviceStats;
 
   // System resources
   private final OperatingSystemMXBean systemBean;
@@ -59,11 +58,13 @@ public class ServiceLoadDataReportGenerator {
   private final AtomicDouble cpuUsageSum = new AtomicDouble(0.0);
   private final AtomicLong cpuUsageCount = new AtomicLong(0);
 
-  // Current load report
-  private volatile ServiceLoadDataReport currentReport;
-
   // Initialization state
   private volatile boolean initialized = false;
+
+  private volatile ServiceLoadDataReport currentReport = new ServiceLoadDataReport();
+
+  // Singleton instance
+  private static volatile ServiceLoadDataReportGenerator instance;
 
   private ServiceLoadDataReportGenerator() {
     this.systemBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
@@ -73,7 +74,7 @@ public class ServiceLoadDataReportGenerator {
         t.setDaemon(true);
         return t;
     });
-    this.currentReport = new ServiceLoadDataReport();
+    serviceStats = new ElementServiceStats(DeclarersSingleton.getInstance().getServiceId());
   }
 
   /**
@@ -147,7 +148,7 @@ public class ServiceLoadDataReportGenerator {
    */
   public ServiceLoadDataReport getCurrentReport() {
     return currentReport;
-}
+  }
 
   /**
    * Calculate initial usage
@@ -191,32 +192,16 @@ public class ServiceLoadDataReportGenerator {
         (int) newReport.getMemory().percentUsage()
       );
 
-      this.currentReport = newReport;
-
-      // Update metrics
-      updateMetrics(newReport);
+      serviceStats.setCpuUsage(newReport.getCpu().getUsage());
+      serviceStats.setMemoryUsage(newReport.getMemory().getUsage());
+      serviceStats.setSystemLoad(newReport.getTotalUsagePercent());
+      serviceStats.setHistoricalSystemLoad(systemBean.getSystemLoadAverage());
+      serviceStats.updateAllMetrics();
+      currentReport = newReport;
 
       log.debug("Successfully calculated usage and collected metrics");
     } catch (Exception e) {
       log.error("Error calculating usage", e);
-    }
-  }
-
-/**
- * Update metrics
- * @param report Load data report
- */
-  private void updateMetrics(ServiceLoadDataReport report) {
-    try {
-      String serviceId = DeclarersSingleton.getInstance().getServiceId();
-      ElementServiceStats.metricsByReport(
-        serviceId,
-        report.getCpu().getUsage(),
-        report.getMemory().getUsage(),
-        report.getWeight()
-      );
-    } catch (Exception e) {
-      log.error("Error updating metrics", e);
     }
   }
 
@@ -258,7 +243,7 @@ public class ServiceLoadDataReportGenerator {
    */
   private double calculateTotalCPULimit() {
     return 100.0 * Runtime.getRuntime().availableProcessors();
-}
+  }
 
   /**
    * Get total CPU usage
@@ -341,5 +326,5 @@ public class ServiceLoadDataReportGenerator {
   @Deprecated
   public static void calculateUsage() {
     getInstance().calculateUsages();
-}
+  }
 }
