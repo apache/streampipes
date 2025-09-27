@@ -49,9 +49,9 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
   }
 
   @Override
-  public void process(Map<String, Object> rawEvent, String sourceInfo) {
+  public void process(Map<String, Object> rawEvent, long size, String sourceInfo) {
     try {
-      monitoringManager.increaseInCounter(instanceId, sourceInfo, System.currentTimeMillis());
+      monitoringManager.increaseInCounter(instanceId, sourceInfo, size, System.currentTimeMillis());
       pipelineElement.onEvent(internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo));
     } catch (RuntimeException e) {
       LOG.error("RuntimeException while processing event in {}", pipelineElement.getClass().getCanonicalName(), e);

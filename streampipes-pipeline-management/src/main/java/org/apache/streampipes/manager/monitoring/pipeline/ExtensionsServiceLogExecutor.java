@@ -22,6 +22,9 @@ package org.apache.streampipes.manager.monitoring.pipeline;
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.commons.prometheus.pipelines.PipelineFlowStats;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.loadbalance.LoadManager;
+import org.apache.streampipes.manager.loadbalance.ResourceUnitMigration;
+import org.apache.streampipes.manager.monitoring.pipeline.service.ExtensionsServiceReportExecutor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -63,6 +66,15 @@ public class ExtensionsServiceLogExecutor implements Runnable {
         LOG.info("Could not fetch log info from endpoint {}", serviceEndpoint);
       }
     });
+    try {
+      ExtensionsLogProvider.INSTANCE.update(new ExtensionsServiceReportExecutor().run());
+      LoadManager.updateAll();
+      synchronized (ResourceUnitMigration.class) {
+        LoadManager.doLoadShedding();
+      }
+    }catch (Exception e){
+      LOG.info("Could not doShedding");
+    }
   }
 
   private void updatePipelineFlow() {

@@ -19,9 +19,7 @@
 package org.apache.streampipes.commons.environment;
 
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
-import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
-import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
-import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.*;
 
 import java.util.List;
 
@@ -164,6 +162,21 @@ public interface Environment {
   StringEnvironmentVariable getFileLoggingPrefix();
   StringEnvironmentVariable getFileLoggingDir();
   StringEnvironmentVariable getFileLoggingPattern();
+
+  DoubleEnvironmentVariable getCpuResourceWeight();
+  DoubleEnvironmentVariable getMemoryResourceWeight();
+
+  DoubleEnvironmentVariable getDirMemoryResourceWeight();
+  DoubleEnvironmentVariable getBandwidthInResourceWeight();
+  DoubleEnvironmentVariable getBandwidthOutResourceWeight();
+  FloatEnvironmentVariable getThresholdMigratorPercentage();
+  FloatEnvironmentVariable getMinMigratorPercentage();
+  FloatEnvironmentVariable getOverloadedThresholdPercentage();
+  FloatEnvironmentVariable getHistoryResourcePercentage();
+  IntEnvironmentVariable getMsgRateDifferenceMigratorThreshold();
+  FloatEnvironmentVariable getLoadTargetStd();
+  StringEnvironmentVariable getSelector();
+  StringEnvironmentVariable getMigrator();
 
   StringEnvironmentVariable getRetentionLocalDir();
 }

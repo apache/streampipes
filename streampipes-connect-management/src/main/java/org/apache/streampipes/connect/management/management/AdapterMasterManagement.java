@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
 import org.apache.streampipes.connect.management.util.GroundingUtils;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.manager.loadbalance.LoadManager;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
@@ -161,6 +162,7 @@ public class AdapterMasterManagement {
       }
     }
     ExtensionsLogProvider.INSTANCE.reset(elementId);
+    LoadManager.stopPipeline(elementId);
 
     // remove the adapter from the metrics manager so that
     // no metrics for this adapter are exposed anymore

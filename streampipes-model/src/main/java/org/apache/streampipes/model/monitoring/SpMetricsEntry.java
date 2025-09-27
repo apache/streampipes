@@ -59,12 +59,14 @@ public class SpMetricsEntry {
     this.messagesOut = messagesOut;
   }
 
-  public void addOutMetrics(long lastTimestamp) {
+  public void addOutMetrics(long lastTimestamp, long size) {
     this.messagesOut.setLastTimestamp(lastTimestamp);
     this.messagesOut.setCounter(this.messagesOut.getCounter() + 1);
+    this.messagesOut.setSize(messagesOut.getSize() + size);
   }
 
   public void addInMetrics(String sourceInfo,
+                           long size,
                            long lastTimestamp) {
     if (!this.messagesIn.containsKey(sourceInfo)) {
       this.messagesIn.put(sourceInfo, new MessageCounter());
@@ -72,6 +74,7 @@ public class SpMetricsEntry {
 
     var messagesIn = this.messagesIn.get(sourceInfo);
     messagesIn.setCounter(messagesIn.getCounter() + 1);
+    messagesIn.setSize(messagesIn.getSize() + size);
     messagesIn.setLastTimestamp(lastTimestamp);
   }
 

@@ -40,16 +40,49 @@ public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements
   @Override
   public List<String> getPipelinesUsingAdapter(String adapterId) {
     List<JsonObject> pipelinesWithAdapter =
-        couchDbClientSupplier
-            .get()
-            .view(ADAPTER_VIEW)
-            .key(adapterId)
-            .query(JsonObject.class);
+            couchDbClientSupplier
+                    .get()
+                    .view(ADAPTER_VIEW)
+                    .key(adapterId)
+                    .query(JsonObject.class);
     return pipelinesWithAdapter.stream().map(p -> p.get("value").getAsString()).collect(Collectors.toList());
   }
 
   @Override
   public List<Pipeline> findAll() {
+    List<Pipeline> pipelines = findAll(ALL_PIPELINES_VIEW);
+
+    List<Pipeline> result = new ArrayList<>();
+    for (Pipeline p : pipelines) {
+      if (p.getActions() != null) {
+        result.add(p);
+      }
+    }
+    return result;
+  }
+
+  @Override
+  public void storePipeline(Pipeline pipeline) {
+    persist(pipeline);
+  }
+
+  @Override
+  public void updatePipeline(Pipeline pipeline) {
+    update(pipeline);
+  }
+
+  @Override
+  public Pipeline getPipeline(String pipelineId) {
+    return findWithNullIfEmpty(pipelineId);
+  }
+
+  @Override
+  public void deletePipeline(String pipelineId) {
+    delete(pipelineId);
+  }
+
+  @Override
+  public List<Pipeline> getAllPipelines() {
     List<Pipeline> pipelines = findAll(ALL_PIPELINES_VIEW);
 
     List<Pipeline> result = new ArrayList<>();
