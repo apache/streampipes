@@ -69,6 +69,11 @@ public class ServiceRegistrationManager {
     return storage.findAll();
   }
 
+  public List<SpServiceRegistration> getAivServices() {
+    return storage.findAll().stream()
+            .filter(s->s.getStatus()==SpServiceStatus.HEALTHY).toList();
+  }
+
   public SpServiceRegistration getService(String serviceId) {
     return storage.getElementById(serviceId);
   }

@@ -66,9 +66,12 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
     try {
       if (event != null) {
         sendToBroker(dataFormatDefinition.fromMap(event));
+        byte[] data = dataFormatDefinition.fromMap(event);
+        sendToBroker(data);
         SpMonitoringManager.INSTANCE.increaseOutCounter(
-            adapterDescription.getElementId(),
-            System.currentTimeMillis());
+                adapterDescription.getElementId(),
+                data.length,
+                System.currentTimeMillis());
       }
     } catch (RuntimeException e) {
       new ExtensionsLogger(adapterDescription.getElementId()).error(e);

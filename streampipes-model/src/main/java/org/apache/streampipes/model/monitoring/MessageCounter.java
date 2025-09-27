@@ -22,6 +22,7 @@ public class MessageCounter {
 
   private long lastTimestamp;
   private long counter = 0;
+  private long size = 0;
 
   public MessageCounter() {
   }
@@ -40,5 +41,13 @@ public class MessageCounter {
 
   public void setCounter(long counter) {
     this.counter = counter;
+  }
+
+  public long getSize() {
+    return size;
+  }
+
+  public void setSize(long size) {
+    this.size = size;
   }
 }

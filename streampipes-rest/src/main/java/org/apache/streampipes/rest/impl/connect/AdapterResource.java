@@ -201,7 +201,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PreAuthorize("this.hasWriteAuthority() and hasPermission('#elementId', 'WRITE')")
   public ResponseEntity<?> startAdapter(@PathVariable("id") String elementId) {
     try {
-      managementService.startStreamAdapter(elementId);
+      managementService. startStreamAdapter(elementId);
       return ok(Notifications.success("Adapter started"));
     } catch (AdapterException e) {
       LOG.error("Could not start adapter with id {}", elementId, e);

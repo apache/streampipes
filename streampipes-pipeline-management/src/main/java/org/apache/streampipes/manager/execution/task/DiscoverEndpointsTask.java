@@ -22,32 +22,42 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
+import org.apache.streampipes.manager.loadbalance.LoadManager;
+import org.apache.streampipes.manager.loadbalance.ResourceUnitGenerator;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.loadbalancer.ResourceUnit;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DiscoverEndpointsTask implements PipelineExecutionTask {
   @Override
   public void executeTask(Pipeline pipeline,
                           PipelineExecutionInfo executionInfo) {
-    var processorsAndSinks = executionInfo.getProcessorsAndSinks();
-
-    processorsAndSinks.forEach(el -> {
-      try {
-        var endpointUrl = findSelectedEndpoint(el);
-        applyEndpointAndPipeline(pipeline.getPipelineId(), el, endpointUrl);
-      } catch (NoServiceEndpointsAvailableException e) {
-        executionInfo.addFailedPipelineElement(el);
+    for (Map.Entry<ResourceUnit<InvocableStreamPipesEntity>, List<SpServiceRegistration>> e :ResourceUnitGenerator.unitGeneration(pipeline.getActions(),pipeline.getSepas()).entrySet()){
+      e.getKey().setPipelineId(pipeline.getPipelineId());
+      e.getKey().setLabels(pipeline.getLabels());
+      SpServiceRegistration registration = LoadManager.allocation(e.getKey(),e.getValue(), pipeline.getLabels());
+      e.getKey().setServiceId(registration.getSvcId());
+      String url = registration.getServiceUrl();
+      for (InvocableStreamPipesEntity el : e.getKey().getElements()) {
+        try {
+          var endpointUrl = getSelectedEndpoint(el, url);
+          applyEndpointAndPipeline(pipeline.getPipelineId(), el, endpointUrl);
+        } catch (NoServiceEndpointsAvailableException en) {
+          executionInfo.addFailedPipelineElement(el);
+        }
       }
-    });
+    }
 
     var failedServices = executionInfo.getFailedServices();
-    if (executionInfo.getFailedServices().size() > 0) {
+    if (!executionInfo.getFailedServices().isEmpty()) {
       List<PipelineElementStatus> pe = failedServices
           .stream()
           .map(fs -> new PipelineElementStatus(fs.getElementId(), fs.getName(), false,
@@ -76,5 +86,10 @@ public class DiscoverEndpointsTask implements PipelineExecutionTask {
             ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement)
         );
   }
-
+  private String getSelectedEndpoint(InvocableStreamPipesEntity pipelineElement, String url)
+          throws NoServiceEndpointsAvailableException {
+    return ExtensionsServiceEndpointUtils
+            .getPipelineElementType(pipelineElement)
+            .getInvocationUrl(url,pipelineElement.getAppId());
+  }
 }

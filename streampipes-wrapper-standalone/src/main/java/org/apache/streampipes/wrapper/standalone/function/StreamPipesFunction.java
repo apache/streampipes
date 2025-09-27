@@ -106,7 +106,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   }
 
   @Override
-  public void process(Map<String, Object> rawEvent, String topicName) {
+  public void process(Map<String, Object> rawEvent, long size, String topicName) {
     try {
       var sourceInfo = sourceInfoMapper.get(topicName);
 
@@ -114,7 +114,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
           .fromMap(rawEvent, sourceInfo, schemaInfoMapper.get(topicName));
 
       this.onEvent(event, sourceInfo.getSourceId());
-      increaseCounter(sourceInfo.getSourceId());
+      increaseCounter(sourceInfo.getSourceId(), size);
     } catch (RuntimeException e) {
       addError(e);
     }
@@ -124,11 +124,12 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
     return stream.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
   }
 
-  private void increaseCounter(String sourceInfo) {
+  private void increaseCounter(String sourceInfo, long size) {
     var functionId = this.getFunctionConfig().getFunctionId();
     SpMonitoringManager.INSTANCE.increaseInCounter(
         functionId.getId(),
         sourceInfo,
+        size,
         System.currentTimeMillis()
     );
   }

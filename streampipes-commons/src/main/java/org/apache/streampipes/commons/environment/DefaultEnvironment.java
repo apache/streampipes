@@ -21,9 +21,7 @@ package org.apache.streampipes.commons.environment;
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
 import org.apache.streampipes.commons.environment.parser.OAuthConfigurationParser;
-import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
-import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
-import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.*;
 
 import java.util.List;
 
@@ -431,5 +429,70 @@ public class DefaultEnvironment implements Environment {
   @Override
   public BooleanEnvironmentVariable getConsoleLoggingEnabled() {
     return new BooleanEnvironmentVariable(Envs.SP_LOGGING_CONSOLE_ENABLED);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getCpuResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.CPU_RESOURCE_WEIGHT);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getMemoryResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.MEMORY_RESOURCE_WEIGHT);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getDirMemoryResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.DIR_MEMORY_RESOURCE_WEIGHT);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getBandwidthInResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.BANDWIDTH_IN_RESOURCE_WEIGHT);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getBandwidthOutResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.BANDWIDTH_OUT_RESOURCE_WEIGHT);
+  }
+
+  @Override
+  public FloatEnvironmentVariable getThresholdMigratorPercentage() {
+    return new FloatEnvironmentVariable(Envs.THRESHOLD_MIGRATOR_PERCENTAGE);
+  }
+
+  @Override
+  public FloatEnvironmentVariable getMinMigratorPercentage() {
+    return new FloatEnvironmentVariable(Envs.MIN_MIGRATOR_PERCENTAGE);
+  }
+
+  @Override
+  public FloatEnvironmentVariable getOverloadedThresholdPercentage() {
+    return new FloatEnvironmentVariable(Envs.OVERLOADED_THRESHOLD_PERCENTAGE);
+  }
+
+  @Override
+  public FloatEnvironmentVariable getHistoryResourcePercentage() {
+    return new FloatEnvironmentVariable(Envs.HISTORY_RESOURCE_PERCENTAGE);
+  }
+
+  @Override
+  public IntEnvironmentVariable getMsgRateDifferenceMigratorThreshold() {
+    return new IntEnvironmentVariable(Envs.MSG_RATE_DIFFERENCE_MIGRATOR_THRESHOLD);
+  }
+
+  @Override
+  public FloatEnvironmentVariable getLoadTargetStd() {
+    return new FloatEnvironmentVariable(Envs.LOAD_TARGET_STD);
+  }
+
+  @Override
+  public StringEnvironmentVariable getSelector() {
+    return new StringEnvironmentVariable(Envs.SELECTOR);
+  }
+
+  @Override
+  public StringEnvironmentVariable getMigrator() {
+    return new StringEnvironmentVariable(Envs.MIGRATOR);
   }
 }

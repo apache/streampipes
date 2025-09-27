@@ -49,6 +49,10 @@ public class Pipeline implements Storable {
 
   private PipelineHealthStatus healthStatus;
 
+  private List<String> labels;
+
+  private long lastMigratedAt;
+
   @JsonProperty("_id")
   private @SerializedName("_id")
   String pipelineId;
@@ -70,6 +74,15 @@ public class Pipeline implements Storable {
     this.pipelineNotifications = new ArrayList<>();
     this.sepas = new ArrayList<>();
     this.streams = new ArrayList<>();
+    this.labels = new ArrayList<>();
+  }
+
+  public List<String> getLabels() {
+    return labels;
+  }
+
+  public void setLabels(List<String> labels) {
+      this.labels = labels;
   }
 
   public List<DataSinkInvocation> getActions() {
@@ -208,6 +221,13 @@ public class Pipeline implements Storable {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public long getLastMigratedAt() {
+    return lastMigratedAt;
+  }
+  public void setLastMigratedAt(long lastMigratedAt) {
+    this.lastMigratedAt = lastMigratedAt;
   }
 
   public Pipeline clone() {

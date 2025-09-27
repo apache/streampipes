@@ -40,5 +40,4 @@ public class WorkerPaths {
   public static String getGuessSchemaPath() {
     return WorkerMainPath + "/guess/schema";
   }
-
 }

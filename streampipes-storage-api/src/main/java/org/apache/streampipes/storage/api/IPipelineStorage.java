@@ -26,4 +26,13 @@ public interface IPipelineStorage extends CRUDStorage<Pipeline> {
 
   List<String> getPipelinesUsingAdapter(String adapterId);
 
+  void storePipeline(Pipeline pipeline);
+
+  void updatePipeline(Pipeline pipeline);
+
+  Pipeline getPipeline(String pipelineId);
+
+  void deletePipeline(String pipelineId);
+
+  List<Pipeline> getAllPipelines();
 }

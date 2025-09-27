@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.commons.prometheus.service.ElementServiceStats;
 import org.apache.streampipes.manager.health.ServiceRegistrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
@@ -57,6 +58,7 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
   public ResponseEntity<Void> registerService(@RequestBody SpServiceRegistration serviceRegistration) {
     new ServiceRegistrationManager(extensionsServiceStorage)
         .addService(serviceRegistration, SpServiceStatus.REGISTERED);
+    new ElementServiceStats(serviceRegistration.getSvcId());
     return ok();
   }
 

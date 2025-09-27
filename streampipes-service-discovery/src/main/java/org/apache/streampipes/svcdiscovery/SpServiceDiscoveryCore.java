@@ -72,6 +72,11 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
         .collect(Collectors.toList());
   }
 
+  @Override
+  public List<SpServiceRegistration> findAll(){
+    return findServices(0);
+  }
+
   private String makeServiceUrl(SpServiceRegistration service) {
     return service.getServiceUrl();
   }

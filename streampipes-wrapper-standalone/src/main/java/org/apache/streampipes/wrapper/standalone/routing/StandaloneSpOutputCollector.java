@@ -55,8 +55,9 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
   public void collect(Event event) {
     Map<String, Object> outEvent = new EventConverter(event).toMap();
     try {
-      producer.publish(dataFormatDefinition.fromMap(outEvent));
-      SpMonitoringManager.INSTANCE.increaseOutCounter(resourceId, System.currentTimeMillis());
+      byte[] data = dataFormatDefinition.fromMap(outEvent);
+      producer.publish(data);
+      SpMonitoringManager.INSTANCE.increaseOutCounter(resourceId, data.length, System.currentTimeMillis());
     } catch (SpRuntimeException e) {
       extensionsLogger.error(e);
       LOG.error("Could not publish event", e);

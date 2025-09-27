@@ -74,7 +74,13 @@ public class SpKafkaConsumer implements EventConsumer, Runnable,
     Duration duration = Duration.of(100, ChronoUnit.MILLIS);
     while (isRunning) {
       ConsumerRecords<byte[], byte[]> records = consumer.poll(duration);
-      records.forEach(record -> eventProcessor.onEvent(record.value()));
+      records.forEach(record -> {
+          try {
+              eventProcessor.onEvent(record.value());
+          } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+          }
+      });
     }
     consumer.close();
   }

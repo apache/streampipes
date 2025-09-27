@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
+import org.apache.streampipes.manager.loadbalance.ResourceUnitMigration;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
@@ -56,6 +57,13 @@ public class AdapterHealthCheck implements Runnable {
   @Override
   public void run() {
     this.checkAndRestoreAdapters();
+    synchronized (ResourceUnitMigration.class) {
+      try {
+        this.checkAndRestoreAdapters();
+      } catch (Exception e){
+        LOG.error("Error while checking and restoring adapters: {}", e.getMessage());
+      }
+    }
   }
 
   /**
