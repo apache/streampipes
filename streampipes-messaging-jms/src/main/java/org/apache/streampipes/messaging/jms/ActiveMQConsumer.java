@@ -52,7 +52,11 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
       consumer.setMessageListener(message -> {
         if (message instanceof BytesMessage) {
           ByteSequence bs = ((ActiveMQBytesMessage) message).getContent();
-          eventProcessor.onEvent(bs.getData());
+            try {
+                eventProcessor.onEvent(bs.getData());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
 
       });

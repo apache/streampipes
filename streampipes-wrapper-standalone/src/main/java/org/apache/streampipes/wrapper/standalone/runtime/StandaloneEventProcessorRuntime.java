@@ -19,6 +19,8 @@
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.Limiter.SpRateLimiter;
+import org.apache.streampipes.extensions.api.MemoryManager.SpMemoryManager;
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
@@ -64,6 +66,8 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
   @Override
   public void process(Map<String, Object> rawEvent, String sourceInfo) {
     try {
+      SpRateLimiter.INSTANCE.limit();
+      SpMemoryManager.INSTANCE.allocate(rawEvent.size());
       monitoringManager.increaseInCounter(instanceId, sourceInfo, System.currentTimeMillis());
       var event = this.internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo);
       pipelineElement
@@ -74,6 +78,10 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
     } catch (RuntimeException e) {
       LOG.error("RuntimeException while processing event in {}", pipelineElement.getClass().getCanonicalName(), e);
       addLogEntry(e);
+    } catch (InterruptedException e) {
+        throw new SpRuntimeException(e);
+    } finally {
+      SpMemoryManager.INSTANCE.free(rawEvent.size());
     }
   }
 

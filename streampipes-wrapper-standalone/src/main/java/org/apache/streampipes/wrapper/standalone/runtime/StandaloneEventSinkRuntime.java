@@ -19,6 +19,8 @@
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.Limiter.SpRateLimiter;
+import org.apache.streampipes.extensions.api.MemoryManager.SpMemoryManager;
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -51,11 +53,17 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
   @Override
   public void process(Map<String, Object> rawEvent, String sourceInfo) {
     try {
+      SpRateLimiter.INSTANCE.limit();
+      SpMemoryManager.INSTANCE.allocate(rawEvent.size());
       monitoringManager.increaseInCounter(instanceId, sourceInfo, System.currentTimeMillis());
       pipelineElement.onEvent(internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo));
     } catch (RuntimeException e) {
       LOG.error("RuntimeException while processing event in {}", pipelineElement.getClass().getCanonicalName(), e);
       addLogEntry(e);
+    } catch (InterruptedException e) {
+        throw new SpRuntimeException(e);
+    } finally {
+        SpMemoryManager.INSTANCE.free(rawEvent.size());
     }
   }
 
