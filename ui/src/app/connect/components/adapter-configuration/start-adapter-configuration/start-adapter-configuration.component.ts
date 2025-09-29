@@ -21,7 +21,6 @@ import {
     AdapterDescription,
     EventRateTransformationRuleDescription,
     EventSchema,
-    LinkageData,
     RemoveDuplicatesTransformationRuleDescription,
 } from '@streampipes/platform-services';
 import {
@@ -118,8 +117,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        // initialize form for validation
-        console.log('Init Page');
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
@@ -199,8 +196,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     public startAdapter() {
         this.checkAndApplyStreamRules();
-        console.log('Atart Adapter', this.selectedAssets);
-
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: 'Adapter generation',
@@ -267,8 +262,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     onAssetSelected(selectedAssets: Asset[]): void {
-        console.log('onAssetSelected', selectedAssets);
         this.selectedAssets = selectedAssets;
-        console.log('Selected assets from child: ', this.selectedAssets);
     }
 }

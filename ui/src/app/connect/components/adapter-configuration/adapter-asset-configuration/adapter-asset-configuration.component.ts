@@ -16,25 +16,14 @@
  *
  */
 
-import {
-    AfterViewInit,
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    OnInit,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import {
-    AssetConstants,
     AssetManagementService,
-    AssetLink,
     LinkageData,
     SpAssetModel,
     AssetLinkType,
-    GenericStorageService,
-    PipelineElementAssetService,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
@@ -69,8 +58,6 @@ export class AdapterAssetConfigurationComponent implements OnInit {
 
     treeDropdownOpen = false;
 
-    //selectedAssets: Asset[] = [];
-
     assetsData: Asset[] = [];
     selectedAssetIds = { id: '', assetId: '' };
     currentAsset: SpAssetModel;
@@ -96,15 +83,10 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         );
 
         if (index > -1) {
-            // Deselect if already selected
             this.selectedAssets.splice(index, 1);
         } else {
-            // Select if not already selected
             this.selectedAssets.push(node);
         }
-
-        console.log('Emit Selected', this.selectedAssets);
-        //this.assetSelected(this.selectedAssets); // Emit the selected or deselected asset
         this.selectedAssetsChange.emit(this.selectedAssets);
     }
 
@@ -116,17 +98,13 @@ export class AdapterAssetConfigurationComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadAssets();
-        console.log(this.dataSource.data);
-        console.log(this.assetsData);
     }
 
     private loadAssets(): void {
         this.assetService.getAllAssets().subscribe({
             next: assets => {
-                console.log(assets);
                 this.assetsData = this.mapAssets(assets);
-                this.dataSource.data = this.assetsData; // <-- ADD THIS LINE
-                console.log(this.assetsData);
+                this.dataSource.data = this.assetsData;
             },
         });
     }
