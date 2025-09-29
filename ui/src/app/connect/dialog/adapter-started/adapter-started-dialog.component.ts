@@ -138,15 +138,6 @@ export class AdapterStartedDialog implements OnInit {
             });
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['selectedAssets']) {
-            console.log(
-                'selectedAssets changed: ',
-                changes['selectedAssets'].currentValue,
-            );
-        }
-    }
-
     updateAdapter(): void {
         this.loadingText = `Updating adapter ${this.adapter.name}`;
         this.loading = true;
@@ -256,13 +247,10 @@ export class AdapterStartedDialog implements OnInit {
     async addToAsset(): Promise<void> {
         this.pollingActive = false;
 
-        console.log(this.adapterElementId);
-
         try {
             const adapter = await this.adapterService
                 .getAdapter(this.adapterElementId)
                 .toPromise();
-            console.log(adapter);
 
             const linkageData: LinkageData[] = [
                 {
@@ -284,23 +272,16 @@ export class AdapterStartedDialog implements OnInit {
                     id: pipelineId,
                     name: pipelineId,
                 });
-                console.log(adapter.name);
 
                 const res = await this.dataLakeService
                     .getMeasurementByName(adapter.name)
                     .toPromise();
-                console.log(res);
                 linkageData.push({
                     type: 'measurement',
                     id: res.elementId,
                     name: adapter.name,
                 });
             }
-
-            console.log(linkageData);
-            console.log('addToAsset', this.selectedAssets);
-
-            // Proceed to save assets after async calls are done
             await this.assetSaveService.saveSelectedAssets(
                 this.selectedAssets,
                 linkageData,
@@ -308,7 +289,7 @@ export class AdapterStartedDialog implements OnInit {
 
             const assetTypesList = this.formatWithAnd(
                 linkageData.map(data => {
-                    return `${data.type}`; // Format as: 'adapter (id)'
+                    return `${data.type}`;
                 }),
             );
 
@@ -317,7 +298,6 @@ export class AdapterStartedDialog implements OnInit {
             );
 
             this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
-            console.log(this.addToAssetText);
         } catch (err) {
             console.error('Error in addToAsset:', err);
         }
