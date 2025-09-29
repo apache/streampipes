@@ -99,6 +99,7 @@ export class AdapterStartedDialog implements OnInit {
     adapterInstallationSuccessMessage = '';
     adapterElementId = '';
     adapterErrorMessage: SpLogMessage;
+    addToAssetText = '';
 
     constructor(
         public dialogRef: DialogRef<AdapterStartedDialog>,
@@ -286,10 +287,26 @@ export class AdapterStartedDialog implements OnInit {
                     linkageData,
                 );
                 console.log('Save finsished‚');
-                //this.linkageDataEmitter.emit(linkageData);
-                //this.dialogRef.close('Confirm');
-                //this.shepherdService.trigger('add_to_asset');
+
+                const assetTypesList = this.formatWithAnd(
+                    linkageData.map(data => {
+                        return `${data.type}`; // Format as: 'adapter (id)'
+                    }),
+                );
+
+                const assetIdsList = this.formatWithAnd(
+                    this.selectedAssets.map(asset => asset.assetName),
+                );
+
+                this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
+                console.log(this.addToAssetText);
             });
+    }
+
+    private formatWithAnd(list: string[]): string {
+        if (list.length === 1) return list[0]; // Only one item, no need for "and"
+        const lastItem = list.pop(); // Remove the last item
+        return `${list.join(', ')}, and ${lastItem}`; // Join the rest with commas and append "and" before the last item
     }
 
     private startSaveInDataLakePipeline(adapterElementId: string) {
