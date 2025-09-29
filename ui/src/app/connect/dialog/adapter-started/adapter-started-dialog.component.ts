@@ -248,65 +248,86 @@ export class AdapterStartedDialog implements OnInit {
         this.pollingActive = false;
 
         try {
-            const adapter = await this.adapterService
-                .getAdapter(this.adapterElementId)
-                .toPromise();
-
-            const linkageData: LinkageData[] = [
-                {
-                    type: 'adapter',
-                    id: this.adapterElementId,
-                    name: adapter.name,
-                },
-                {
-                    type: 'data-source',
-                    id: adapter.correspondingDataStreamElementId,
-                    name: adapter.name,
-                },
-            ];
+            const adapter = await this.getAdapter();
+            const linkageData: LinkageData[] = this.createLinkageData(adapter);
 
             if (this.saveInDataLake) {
-                const pipelineId = `persist-${this.adapter.name.replaceAll(' ', '-')}`;
-                linkageData.push({
-                    type: 'pipeline',
-                    id: pipelineId,
-                    name: pipelineId,
-                });
-
-                const res = await this.dataLakeService
-                    .getMeasurementByName(adapter.name)
-                    .toPromise();
-                linkageData.push({
-                    type: 'measurement',
-                    id: res.elementId,
-                    name: adapter.name,
-                });
+                await this.addDataLakeLinkageData(adapter, linkageData);
             }
-            await this.assetSaveService.saveSelectedAssets(
-                this.selectedAssets,
-                linkageData,
-            );
 
-            const assetTypesList = this.formatWithAnd(
-                linkageData.map(data => {
-                    return `${data.type}`;
-                }),
-            );
-
-            const assetIdsList = this.formatWithAnd(
-                this.selectedAssets.map(asset => asset.assetName),
-            );
-
-            this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
+            await this.saveAssets(linkageData);
+            this.setSuccessMessage(linkageData);
         } catch (err) {
             console.error('Error in addToAsset:', err);
         }
     }
 
+    private async getAdapter(): Promise<AdapterDescription> {
+        return await this.adapterService
+            .getAdapter(this.adapterElementId)
+            .toPromise();
+    }
+
+    private createLinkageData(adapter: AdapterDescription): LinkageData[] {
+        return [
+            {
+                type: 'adapter',
+                id: this.adapterElementId,
+                name: adapter.name,
+            },
+            {
+                type: 'data-source',
+                id: adapter.correspondingDataStreamElementId,
+                name: adapter.name,
+            },
+        ];
+    }
+
+    private async addDataLakeLinkageData(
+        adapter: AdapterDescription,
+        linkageData: LinkageData[],
+    ): Promise<void> {
+        const pipelineId = `persist-${this.adapter.name.replaceAll(' ', '-')}`;
+        linkageData.push({
+            type: 'pipeline',
+            id: pipelineId,
+            name: pipelineId,
+        });
+
+        const res = await this.dataLakeService
+            .getMeasurementByName(adapter.name)
+            .toPromise();
+
+        linkageData.push({
+            type: 'measurement',
+            id: res.elementId,
+            name: adapter.name,
+        });
+    }
+
+    private async saveAssets(linkageData: LinkageData[]): Promise<void> {
+        await this.assetSaveService.saveSelectedAssets(
+            this.selectedAssets,
+            linkageData,
+        );
+    }
+
+    private setSuccessMessage(linkageData: LinkageData[]): void {
+        const assetTypesList = this.formatWithAnd(
+            linkageData.map(data => data.type),
+        );
+
+        const assetIdsList = this.formatWithAnd(
+            this.selectedAssets.map(asset => asset.assetName),
+        );
+
+        this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
+    }
+
     private formatWithAnd(list: string[]): string {
-        if (list.length === 1) return list[0]; // Only one item, no need for "and"
-        const lastItem = list.pop(); // Remove the last item
-        return `${list.join(', ')}, and ${lastItem}`; // Join the rest with commas and append "and" before the last item
+        if (list.length === 1) return list[0];
+        const lastItem = list.pop();
+        return `${list.join(', ')}, and ${lastItem}`;
     }
 
     private startSaveInDataLakePipeline(adapterElementId: string) {
