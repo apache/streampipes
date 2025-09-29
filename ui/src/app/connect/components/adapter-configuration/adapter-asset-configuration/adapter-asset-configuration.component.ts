@@ -22,7 +22,10 @@ import {
     Input,
     Output,
     EventEmitter,
+    OnInit,
 } from '@angular/core';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 import {
     AssetConstants,
     AdapterDescription,
@@ -32,6 +35,7 @@ import {
     SpAssetModel,
     AssetLinkType,
     GenericStorageService,
+    PipelineElementAssetService,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 
@@ -48,13 +52,22 @@ export interface Asset {
     styleUrls: ['./adapter-asset-configuration.component.scss'],
     standalone: false,
 })
-export class AdapterAssetConfigurationComponent implements AfterViewInit {
+export class AdapterAssetConfigurationComponent implements OnInit {
     @Input() adapterDescription: AdapterDescription;
     @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
 
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
+
+    @Output() assetSelected: EventEmitter<Asset> = new EventEmitter<Asset>();
+
+    treeControl: NestedTreeControl<Asset>;
+    dataSource: MatTreeNestedDataSource<Asset>;
+
+    treeDropdownOpen = false;
+
+    selectedAsset: any = null;
 
     assetsData: Asset[] = [];
     selectedAssetIds = { id: '', assetId: '' };
@@ -65,17 +78,37 @@ export class AdapterAssetConfigurationComponent implements AfterViewInit {
     constructor(
         private assetService: AssetManagementService,
         private storageService: GenericStorageService,
-    ) {}
+    ) {
+        this.treeControl = new NestedTreeControl<Asset>(node => node.assets);
+        this.dataSource = new MatTreeNestedDataSource<Asset>();
+    }
 
-    ngAfterViewInit(): void {
+    hasChild = (_: number, node: any) =>
+        !!node.assets && node.assets.length > 0;
+
+    toggleTreeDropdown() {
+        this.treeDropdownOpen = !this.treeDropdownOpen;
+    }
+
+    onAssetSelect(node: Asset): void {
+        this.selectedAsset = node;
+        this.assetSelected.emit(node); // Emit the selected asset
+    }
+
+    ngOnInit(): void {
         this.loadAssets();
+        console.log(this.dataSource.data);
+        console.log(this.assetsData);
         this.loadAssetLinkTypes();
     }
 
     private loadAssets(): void {
         this.assetService.getAllAssets().subscribe({
             next: assets => {
+                console.log(assets);
                 this.assetsData = this.mapAssets(assets);
+                this.dataSource.data = this.assetsData; // <-- ADD THIS LINE
+                console.log(this.assetsData);
             },
         });
     }

@@ -36,3 +36,50 @@ mat-form-field {
 mat-checkbox {
     margin-right: 20px; /* Space between the checkbox and first input field */
 }
+.asset-tree {
+    font-family: 'Roboto', sans-serif;
+    padding-left: 10px;
+}
+
+.mat-tree-node {
+    display: flex;
+    align-items: center;
+}
+
+button[mat-icon-button] {
+    margin-right: 8px;
+}
+
+mat-icon {
+    font-size: 18px;
+    color: #3f51b5;
+}
+
+.mat-tree-node span {
+    font-weight: bold;
+}
+
+.mat-tree-node {
+    cursor: pointer;
+}
+
+.mat-tree-node:hover {
+    background-color: #e8e8e8;
+}
+
+/* For the nested nodes, make sure they are indented properly */
+.mat-nested-tree-node {
+    display: block; /* Make it a block element to stack below */
+    padding-left: 24px; /* Adjust the indentation as per your needs */
+    margin-bottom: 5px; /* Optional: Adds space between nested nodes */
+}
+
+/* Optional: Add spacing between the nodes */
+.mat-nested-tree-node span {
+    margin-left: 8px; /* Optional: Space between icon and text */
+}
+
+/* Optional: Customize icon alignment for nested nodes */
+.mat-nested-tree-node mat-icon {
+    margin-left: 16px; /* Optional: Adjusts space between the node and its icon */
+}

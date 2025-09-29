@@ -107,9 +107,10 @@ import { AdapterDetailsDataComponent } from './components/adapter-details/adapte
 import { EditRegexTransformationComponent } from './dialog/edit-event-property/components/edit-regex-transformation/edit-regex-transformation.component';
 import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapter-code-panel.component';
 import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
-
+import { MatTreeModule } from '@angular/material/tree';
 @NgModule({
     imports: [
+        MatTreeModule,
         MatCardModule,
         MatCheckboxModule,
         MatDialogModule,
