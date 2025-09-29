@@ -109,3 +109,14 @@ mat-icon {
 .transparent-btn:hover mat-icon {
     opacity: 1; /* Full opacity when hovered */
 }
+
+.selected-node {
+    background-color: #e0f7fa; /* Light blue background for selected nodes */
+    border-radius: 4px;
+    padding: 5px;
+}
+
+/* Hover effect for selected node */
+.selected-node:hover {
+    background-color: #b2ebf2; /* Slightly darker blue on hover */
+}

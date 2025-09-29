@@ -67,7 +67,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
 
     treeDropdownOpen = false;
 
-    selectedAsset: any = null;
+    selectedAssets: any = [];
 
     assetsData: Asset[] = [];
     selectedAssetIds = { id: '', assetId: '' };
@@ -91,8 +91,26 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     }
 
     onAssetSelect(node: Asset): void {
-        this.selectedAsset = node;
-        this.assetSelected.emit(node); // Emit the selected asset
+        const index = this.selectedAssets.findIndex(
+            asset => asset.assetId === node.assetId,
+        );
+
+        if (index > -1) {
+            // Deselect if already selected
+            this.selectedAssets.splice(index, 1);
+        } else {
+            // Select if not already selected
+            this.selectedAssets.push(node);
+        }
+
+        console.log('Selected', this.selectedAssets);
+        this.assetSelected.emit(node); // Emit the selected or deselected asset
+    }
+
+    isSelected(node: Asset): boolean {
+        return this.selectedAssets.some(
+            asset => asset.assetId === node.assetId,
+        );
     }
 
     ngOnInit(): void {

@@ -23,7 +23,11 @@
     >
         <!-- Parent Node Definition -->
         <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
-            <div class="mat-tree-node" (click)="onAssetSelect(node)">
+            <div
+                class="mat-tree-node"
+                (click)="onAssetSelect(node)"
+                [class.selected-node]="isSelected(node)"
+            >
                 <button
                     mat-icon-button
                     matTreeNodeToggle
@@ -44,7 +48,11 @@
 
         <!-- Leaf Node Definition (no children) -->
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            <div class="mat-tree-node" (click)="onAssetSelect(node)">
+            <div
+                class="mat-tree-node"
+                (click)="onAssetSelect(node)"
+                [class.selected-node]="isSelected(node)"
+            >
                 <button mat-icon-button class="transparent-btn">
                     <mat-icon>visibility</mat-icon>
                 </button>
