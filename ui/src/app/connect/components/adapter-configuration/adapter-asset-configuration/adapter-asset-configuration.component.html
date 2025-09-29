@@ -45,6 +45,9 @@
         <!-- Leaf Node Definition (no children) -->
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
             <div class="mat-tree-node" (click)="onAssetSelect(node)">
+                <button mat-icon-button class="transparent-btn">
+                    <mat-icon>visibility</mat-icon>
+                </button>
                 <span>{{ node.assetName }}</span>
             </div>
         </mat-tree-node>
