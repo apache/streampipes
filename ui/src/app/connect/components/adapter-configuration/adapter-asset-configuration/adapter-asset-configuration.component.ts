@@ -38,6 +38,7 @@ import {
     PipelineElementAssetService,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
+import { Observable } from 'rxjs';
 
 export interface Asset {
     assetId: string;
@@ -74,6 +75,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     currentAsset: SpAssetModel;
     assetLinkTypes: AssetLinkType[] = [];
     assetLinksLoaded = false;
+    updateObservable: Observable<SpAssetModel>;
 
     constructor(
         private assetService: AssetManagementService,
@@ -192,35 +194,53 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     }
 
     save(): void {
-        this.assetService.getAsset(this.selectedAssetIds.id).subscribe({
-            next: current => {
-                this.currentAsset = current;
+        // Loop through all selected assets
+        for (const asset of this.selectedAssets) {
+            this.assetService.getAsset(asset.assetId).subscribe({
+                next: current => {
+                    this.currentAsset = current;
 
-                const links = this.buildLinks(this.linkageData);
-                const targetAsset = this.findAssetById(
-                    this.selectedAssetIds.assetId,
-                );
+                    // Build the links for this asset
+                    const links = this.buildLinks(this.linkageData);
 
-                if (!targetAsset) return;
+                    // Find the target asset by ID
+                    const targetAsset = this.findAssetById(asset.assetId);
 
-                targetAsset.assetLinks = [
-                    ...(targetAsset.assetLinks ?? []),
-                    ...links,
-                ];
+                    if (!targetAsset) {
+                        console.warn('Asset not found: ', asset.assetId);
+                        return;
+                    }
 
-                const updateObservable = targetAsset._id
-                    ? this.assetService.updateAsset(targetAsset)
-                    : this.updateNestedAsset(targetAsset);
+                    // Add the new links to the asset's assetLinks
+                    targetAsset.assetLinks = [
+                        ...(targetAsset.assetLinks ?? []),
+                        ...links,
+                    ];
 
-                console.log(updateObservable);
+                    // Choose update function based on the existence of _id
+                    this.updateObservable = targetAsset._id
+                        ? this.assetService.updateAsset(targetAsset) // Update existing asset
+                        : this.updateNestedAsset(targetAsset); // Handle new asset
 
-                updateObservable?.subscribe({
-                    next: updated => {
-                        this.adapterStartedEmitter.emit();
-                    },
-                });
-            },
-        });
+                    // Log the update observable for debugging
+                    console.log(this.updateObservable);
+
+                    // Update asset and emit adapterStartedEmitter once the update is complete
+                    this.updateObservable?.subscribe({
+                        next: updated => {
+                            console.log('Updated asset: ', updated);
+                            this.adapterStartedEmitter.emit(); // Emit once the update is successful
+                        },
+                        error: err => {
+                            console.error('Error updating asset: ', err);
+                        },
+                    });
+                },
+                error: err => {
+                    console.error('Error fetching asset for update: ', err);
+                },
+            });
+        }
     }
 
     cancel(): void {

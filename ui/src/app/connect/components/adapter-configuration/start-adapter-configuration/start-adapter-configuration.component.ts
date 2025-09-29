@@ -221,23 +221,14 @@ export class StartAdapterConfigurationComponent implements OnInit {
         });
         const dialogInstance =
             dialogRef.componentInstance as unknown as AdapterStartedDialog;
-        dialogInstance.addAssetFlagEmitter.subscribe((data: boolean) => {
-            console.log('Data from dialog:', data);
-            this.addAssetFlag = data;
-        });
 
         dialogInstance.linkageDataEmitter.subscribe((data: LinkageData[]) => {
             console.log('Data from dialog:', data);
-            this.linkageData = data;
+            this.addAssetEmitter.emit(data);
         });
 
         dialogRef.afterClosed().subscribe(() => {
-            if (this.addAssetFlag) {
-                console.log('after close', this.linkageData);
-                this.addAssetEmitter.emit(this.linkageData);
-            } else {
-                this.adapterStartedEmitter.emit();
-            }
+            this.adapterStartedEmitter.emit();
         });
     }
 

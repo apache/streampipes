@@ -71,9 +71,6 @@ export class AdapterStartedDialog implements OnInit {
      */
     @Input() startAdapterNow = true;
 
-    @Output() addAssetFlagEmitter: EventEmitter<boolean> =
-        new EventEmitter<boolean>();
-
     @Output() linkageDataEmitter: EventEmitter<LinkageData[]> =
         new EventEmitter<LinkageData[]>();
 
@@ -199,6 +196,7 @@ export class AdapterStartedDialog implements OnInit {
         } else {
             this.onAdapterReady(successMessage, false);
         }
+        this.addToAsset();
     }
 
     onAdapterFailure(adapterErrorMessage: SpLogMessage) {
@@ -226,7 +224,6 @@ export class AdapterStartedDialog implements OnInit {
 
     addToAsset(): void {
         this.pollingActive = false;
-        this.addAssetFlagEmitter.emit(true);
 
         this.adapterService
             .getAdapter(this.adapterElementId)
@@ -252,10 +249,10 @@ export class AdapterStartedDialog implements OnInit {
                         name: pipelineId,
                     });
                 }
-
+                console.log(linkageData);
                 this.linkageDataEmitter.emit(linkageData);
-                this.dialogRef.close('Confirm');
-                this.shepherdService.trigger('add_to_asset');
+                //this.dialogRef.close('Confirm');
+                //this.shepherdService.trigger('add_to_asset');
             });
     }
 
