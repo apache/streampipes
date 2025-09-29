@@ -75,6 +75,12 @@ export class DatalakeRestService {
             .pipe(map(res => res as DataLakeMeasure));
     }
 
+    getMeasurementByName(name: String): Observable<DataLakeMeasure> {
+        return this.http
+            .get(`${this.dataLakeMeasureUrl}/byName/${name}`)
+            .pipe(map(res => res as DataLakeMeasure));
+    }
+
     performMultiQuery(
         queryParams: DatalakeQueryParameters[],
     ): Observable<SpQueryResult[]> {

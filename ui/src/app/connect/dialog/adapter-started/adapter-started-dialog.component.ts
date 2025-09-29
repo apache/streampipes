@@ -30,6 +30,7 @@ import {
     AdapterService,
     CompactPipeline,
     CompactPipelineElement,
+    DatalakeRestService,
     ErrorMessage,
     Message,
     PipelineOperationStatus,
@@ -108,6 +109,7 @@ export class AdapterStartedDialog implements OnInit {
         private pipelineTemplateService: PipelineTemplateService,
         private compactPipelineService: CompactPipelineService,
         private assetSaveService: AssetSaveService,
+        private dataLakeService: DatalakeRestService,
     ) {}
 
     ngOnInit() {
@@ -176,9 +178,8 @@ export class AdapterStartedDialog implements OnInit {
                         this.startSaveInDataLakePipeline(adapterElementId);
                     } else {
                         this.startAdapter(adapterElementId, true);
+                        this.addToAsset();
                     }
-
-                    this.addToAsset();
                 } else {
                     const errorMsg: SpLogMessage =
                         this.getErrorLogMessage(status);
@@ -279,6 +280,17 @@ export class AdapterStartedDialog implements OnInit {
                         id: pipelineId,
                         name: pipelineId,
                     });
+                    console.log(adapter.name);
+                    this.dataLakeService
+                        .getMeasurementByName(adapter.name)
+                        .subscribe(res => {
+                            console.log(res);
+                            linkageData.push({
+                                type: 'measurement',
+                                id: res.elementId,
+                                name: adapter.name,
+                            });
+                        });
                 }
                 console.log(linkageData);
                 console.log('addToAsset', this.selectedAssets);
@@ -286,7 +298,6 @@ export class AdapterStartedDialog implements OnInit {
                     this.selectedAssets,
                     linkageData,
                 );
-                console.log('Save finsished‚');
 
                 const assetTypesList = this.formatWithAnd(
                     linkageData.map(data => {
@@ -336,6 +347,7 @@ export class AdapterStartedDialog implements OnInit {
                                 this.pipelineOperationStatus =
                                     pipelineOperationStatus;
                                 this.startAdapter(adapterElementId, true);
+                                this.addToAsset();
                             },
                             error => {
                                 this.onAdapterFailure(error.error);
