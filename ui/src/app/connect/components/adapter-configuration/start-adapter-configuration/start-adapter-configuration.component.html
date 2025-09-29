@@ -110,10 +110,11 @@
             dataCy="show-asset-checkbox"
             (optionSelectedEmitter)="showAsset = $event"
         >
-            @if (showAsset) {
-                <sp-adapter-asset-configuration [adapterDescription]="adapter">
-                </sp-adapter-asset-configuration>
-            }
+            <sp-adapter-asset-configuration
+                [assetSelected]="onAssetSelected"
+                [(selectedAssets)]="selectedAssets"
+            >
+            </sp-adapter-asset-configuration>
         </sp-adapter-options-panel>
 
         <sp-adapter-options-panel

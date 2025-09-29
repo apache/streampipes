@@ -28,7 +28,6 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import {
     AssetConstants,
-    AdapterDescription,
     AssetManagementService,
     AssetLink,
     LinkageData,
@@ -54,21 +53,23 @@ export interface Asset {
     standalone: false,
 })
 export class AdapterAssetConfigurationComponent implements OnInit {
-    @Input() adapterDescription: AdapterDescription;
     @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
+
+    @Input() assetSelected;
 
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
 
-    @Output() assetSelected: EventEmitter<Asset> = new EventEmitter<Asset>();
+    @Input() selectedAssets: Asset[] = [];
+    @Output() selectedAssetsChange = new EventEmitter<Asset[]>();
 
     treeControl: NestedTreeControl<Asset>;
     dataSource: MatTreeNestedDataSource<Asset>;
 
     treeDropdownOpen = false;
 
-    selectedAssets: any = [];
+    //selectedAssets: Asset[] = [];
 
     assetsData: Asset[] = [];
     selectedAssetIds = { id: '', assetId: '' };
@@ -105,8 +106,9 @@ export class AdapterAssetConfigurationComponent implements OnInit {
             this.selectedAssets.push(node);
         }
 
-        console.log('Selected', this.selectedAssets);
-        this.assetSelected.emit(node); // Emit the selected or deselected asset
+        console.log('Emit Selected', this.selectedAssets);
+        //this.assetSelected(this.selectedAssets); // Emit the selected or deselected asset
+        this.selectedAssetsChange.emit(this.selectedAssets);
     }
 
     isSelected(node: Asset): boolean {
@@ -153,109 +155,5 @@ export class AdapterAssetConfigurationComponent implements OnInit {
                 ? this.mapAssets(asset.assets, parentId || asset._id)
                 : [],
         }));
-    }
-
-    private getAssetLinkTypeById(linkType: string): AssetLinkType | undefined {
-        return this.assetLinkTypes.find(a => a.linkType === linkType);
-    }
-
-    private buildLinks(data: LinkageData[]): AssetLink[] {
-        return data
-            .filter(item => item.selected)
-            .map(item => {
-                const linkType = this.getAssetLinkTypeById(item.type);
-                return {
-                    linkLabel: item.name,
-                    linkType: item.type,
-                    editingDisabled: false,
-                    queryHint: item.type,
-                    navigationActive: linkType?.navigationActive ?? false,
-                    resourceId: item.id,
-                };
-            });
-    }
-
-    private findAssetById(assetId: string): any {
-        if (this.currentAsset?.assetId === assetId) return this.currentAsset;
-        return this.findSubAssetById(this.currentAsset?.assets ?? [], assetId);
-    }
-
-    private findSubAssetById(assets: any[], assetId: string): any {
-        for (const asset of assets) {
-            if (asset.assetId === assetId) return asset;
-            const found = this.findSubAssetById(asset.assets ?? [], assetId);
-            if (found) return found;
-        }
-        return null;
-    }
-
-    onCheckboxChange(component: any): void {
-        if (!component.selected) component.name = '';
-    }
-
-    save(): void {
-        // Loop through all selected assets
-        for (const asset of this.selectedAssets) {
-            this.assetService.getAsset(asset.assetId).subscribe({
-                next: current => {
-                    this.currentAsset = current;
-
-                    // Build the links for this asset
-                    const links = this.buildLinks(this.linkageData);
-
-                    // Find the target asset by ID
-                    const targetAsset = this.findAssetById(asset.assetId);
-
-                    if (!targetAsset) {
-                        console.warn('Asset not found: ', asset.assetId);
-                        return;
-                    }
-
-                    // Add the new links to the asset's assetLinks
-                    targetAsset.assetLinks = [
-                        ...(targetAsset.assetLinks ?? []),
-                        ...links,
-                    ];
-
-                    // Choose update function based on the existence of _id
-                    this.updateObservable = targetAsset._id
-                        ? this.assetService.updateAsset(targetAsset) // Update existing asset
-                        : this.updateNestedAsset(targetAsset); // Handle new asset
-
-                    // Log the update observable for debugging
-                    console.log(this.updateObservable);
-
-                    // Update asset and emit adapterStartedEmitter once the update is complete
-                    this.updateObservable?.subscribe({
-                        next: updated => {
-                            console.log('Updated asset: ', updated);
-                            this.adapterStartedEmitter.emit(); // Emit once the update is successful
-                        },
-                        error: err => {
-                            console.error('Error updating asset: ', err);
-                        },
-                    });
-                },
-                error: err => {
-                    console.error('Error fetching asset for update: ', err);
-                },
-            });
-        }
-    }
-
-    cancel(): void {
-        this.adapterStartedEmitter.emit();
-    }
-
-    private updateNestedAsset(assetToUpdate: any) {
-        const index = this.currentAsset?.assets?.findIndex(
-            (asset: any) => asset.assetId === assetToUpdate.assetId,
-        );
-
-        if (index === -1 || index === undefined) return null;
-
-        this.currentAsset.assets[index] = assetToUpdate;
-        console.log('currentAsset ', this.currentAsset);
-        return this.assetService.updateAsset(this.currentAsset);
     }
 }

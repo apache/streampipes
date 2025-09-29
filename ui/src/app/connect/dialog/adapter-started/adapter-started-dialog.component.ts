@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    EventEmitter,
+    Output,
+    SimpleChanges,
+} from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
@@ -35,6 +42,10 @@ import {
     CompactPipelineService,
     LinkageData,
 } from '@streampipes/platform-services';
+import {
+    Asset,
+    AssetSaveService,
+} from '../../services/adapter-asset-configuration.service';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -50,6 +61,11 @@ export class AdapterStartedDialog implements OnInit {
      * AdapterDescription that should be persisted and started
      */
     @Input() adapter: AdapterDescription;
+
+    /**
+     * Assets selectedAsset to link the adapter tp
+     */
+    @Input() selectedAssets: Asset[];
 
     /**
      * Indicates if a pipeline to store the adapter events should be started
@@ -90,6 +106,7 @@ export class AdapterStartedDialog implements OnInit {
         private shepherdService: ShepherdService,
         private pipelineTemplateService: PipelineTemplateService,
         private compactPipelineService: CompactPipelineService,
+        private assetSaveService: AssetSaveService,
     ) {}
 
     ngOnInit() {
@@ -114,6 +131,15 @@ export class AdapterStartedDialog implements OnInit {
                     this.loading = false;
                 }
             });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['selectedAssets']) {
+            console.log(
+                'selectedAssets changed: ',
+                changes['selectedAssets'].currentValue,
+            );
+        }
     }
 
     updateAdapter(): void {
@@ -150,6 +176,8 @@ export class AdapterStartedDialog implements OnInit {
                     } else {
                         this.startAdapter(adapterElementId, true);
                     }
+
+                    this.addToAsset();
                 } else {
                     const errorMsg: SpLogMessage =
                         this.getErrorLogMessage(status);
@@ -196,7 +224,6 @@ export class AdapterStartedDialog implements OnInit {
         } else {
             this.onAdapterReady(successMessage, false);
         }
-        this.addToAsset();
     }
 
     onAdapterFailure(adapterErrorMessage: SpLogMessage) {
@@ -225,9 +252,12 @@ export class AdapterStartedDialog implements OnInit {
     addToAsset(): void {
         this.pollingActive = false;
 
+        console.log(this.adapterElementId);
+
         this.adapterService
             .getAdapter(this.adapterElementId)
             .subscribe(adapter => {
+                console.log(adapter);
                 const linkageData: LinkageData[] = [
                     {
                         type: 'adapter',
@@ -250,7 +280,13 @@ export class AdapterStartedDialog implements OnInit {
                     });
                 }
                 console.log(linkageData);
-                this.linkageDataEmitter.emit(linkageData);
+                console.log('addToAsset', this.selectedAssets);
+                this.assetSaveService.saveSelectedAssets(
+                    this.selectedAssets,
+                    linkageData,
+                );
+                console.log('Save finsished‚');
+                //this.linkageDataEmitter.emit(linkageData);
                 //this.dialogRef.close('Confirm');
                 //this.shepherdService.trigger('add_to_asset');
             });

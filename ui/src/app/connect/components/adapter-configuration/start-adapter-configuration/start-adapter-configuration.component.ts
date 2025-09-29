@@ -38,6 +38,13 @@ import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 
+export interface Asset {
+    assetId: string;
+    assetName: string;
+    assets?: Asset[];
+    id: string;
+}
+
 @Component({
     selector: 'sp-start-adapter-configuration',
     templateUrl: './start-adapter-configuration.component.html',
@@ -72,14 +79,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
      */
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
-
-    /**
-     * Is called when an Asset is supposed to be added
-     */
-    @Output() addAssetEmitter: EventEmitter<LinkageData[]> = new EventEmitter<
-        LinkageData[]
-    >();
-
     /**
      * Go to next configuration step when this is complete
      */
@@ -108,11 +107,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     startAdapterNow = true;
     showCode = false;
-    //TODO I only need one right ?
     showAsset = false;
-    addAssetFlag = false;
-    linkageData: LinkageData[];
-
+    selectedAssets = [];
     constructor(
         private dialogService: DialogService,
         private shepherdService: ShepherdService,
@@ -123,6 +119,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     ngOnInit(): void {
         // initialize form for validation
+        console.log('Init Page');
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
@@ -183,10 +180,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
         }
     }
 
-    addAssetFlagTrue() {
-        console.log('Set Asset Flag');
-        this.addAssetFlag = true;
-    }
     public editAdapter() {
         this.checkAndApplyStreamRules();
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
@@ -206,6 +199,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     public startAdapter() {
         this.checkAndApplyStreamRules();
+        console.log('Atart Adapter', this.selectedAssets);
 
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
@@ -217,16 +211,11 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 dataLakeTimestampField: this.dataLakeTimestampField,
                 editMode: false,
                 startAdapterNow: this.startAdapterNow,
+                selectedAssets: this.selectedAssets,
             },
         });
         const dialogInstance =
             dialogRef.componentInstance as unknown as AdapterStartedDialog;
-
-        dialogInstance.linkageDataEmitter.subscribe((data: LinkageData[]) => {
-            console.log('Data from dialog:', data);
-            this.addAssetEmitter.emit(data);
-        });
-
         dialogRef.afterClosed().subscribe(() => {
             this.adapterStartedEmitter.emit();
         });
@@ -275,5 +264,11 @@ export class StartAdapterConfigurationComponent implements OnInit {
         if (this.adapterDescription.name === 'Tutorial') {
             this.shepherdService.trigger(actionId);
         }
+    }
+
+    onAssetSelected(selectedAssets: Asset[]): void {
+        console.log('onAssetSelected', selectedAssets);
+        this.selectedAssets = selectedAssets;
+        console.log('Selected assets from child: ', this.selectedAssets);
     }
 }
