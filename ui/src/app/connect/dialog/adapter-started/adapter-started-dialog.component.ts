@@ -48,6 +48,8 @@ import {
     AssetSaveService,
 } from '../../services/adapter-asset-configuration.service';
 
+import { forkJoin } from 'rxjs';
+
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
     templateUrl: './adapter-started-dialog.component.html',
@@ -251,67 +253,74 @@ export class AdapterStartedDialog implements OnInit {
         this.shepherdService.trigger('confirm_adapter_started_button');
     }
 
-    addToAsset(): void {
+    async addToAsset(): Promise<void> {
         this.pollingActive = false;
 
         console.log(this.adapterElementId);
 
-        this.adapterService
-            .getAdapter(this.adapterElementId)
-            .subscribe(adapter => {
-                console.log(adapter);
-                const linkageData: LinkageData[] = [
-                    {
-                        type: 'adapter',
-                        id: this.adapterElementId,
-                        name: adapter.name,
-                    },
-                    {
-                        type: 'data-source',
-                        id: adapter.correspondingDataStreamElementId,
-                        name: adapter.name,
-                    },
-                ];
+        try {
+            const adapter = await this.adapterService
+                .getAdapter(this.adapterElementId)
+                .toPromise();
+            console.log(adapter);
 
-                if (this.saveInDataLake) {
-                    const pipelineId = `persist-${this.adapter.name.replaceAll(' ', '-')}`;
-                    linkageData.push({
-                        type: 'pipeline',
-                        id: pipelineId,
-                        name: pipelineId,
-                    });
-                    console.log(adapter.name);
-                    this.dataLakeService
-                        .getMeasurementByName(adapter.name)
-                        .subscribe(res => {
-                            console.log(res);
-                            linkageData.push({
-                                type: 'measurement',
-                                id: res.elementId,
-                                name: adapter.name,
-                            });
-                        });
-                }
-                console.log(linkageData);
-                console.log('addToAsset', this.selectedAssets);
-                this.assetSaveService.saveSelectedAssets(
-                    this.selectedAssets,
-                    linkageData,
-                );
+            const linkageData: LinkageData[] = [
+                {
+                    type: 'adapter',
+                    id: this.adapterElementId,
+                    name: adapter.name,
+                },
+                {
+                    type: 'data-source',
+                    id: adapter.correspondingDataStreamElementId,
+                    name: adapter.name,
+                },
+            ];
 
-                const assetTypesList = this.formatWithAnd(
-                    linkageData.map(data => {
-                        return `${data.type}`; // Format as: 'adapter (id)'
-                    }),
-                );
+            if (this.saveInDataLake) {
+                const pipelineId = `persist-${this.adapter.name.replaceAll(' ', '-')}`;
+                linkageData.push({
+                    type: 'pipeline',
+                    id: pipelineId,
+                    name: pipelineId,
+                });
+                console.log(adapter.name);
 
-                const assetIdsList = this.formatWithAnd(
-                    this.selectedAssets.map(asset => asset.assetName),
-                );
+                const res = await this.dataLakeService
+                    .getMeasurementByName(adapter.name)
+                    .toPromise();
+                console.log(res);
+                linkageData.push({
+                    type: 'measurement',
+                    id: res.elementId,
+                    name: adapter.name,
+                });
+            }
 
-                this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
-                console.log(this.addToAssetText);
-            });
+            console.log(linkageData);
+            console.log('addToAsset', this.selectedAssets);
+
+            // Proceed to save assets after async calls are done
+            await this.assetSaveService.saveSelectedAssets(
+                this.selectedAssets,
+                linkageData,
+            );
+
+            const assetTypesList = this.formatWithAnd(
+                linkageData.map(data => {
+                    return `${data.type}`; // Format as: 'adapter (id)'
+                }),
+            );
+
+            const assetIdsList = this.formatWithAnd(
+                this.selectedAssets.map(asset => asset.assetName),
+            );
+
+            this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
+            console.log(this.addToAssetText);
+        } catch (err) {
+            console.error('Error in addToAsset:', err);
+        }
     }
 
     private formatWithAnd(list: string[]): string {

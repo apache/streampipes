@@ -30,6 +30,7 @@ import {
     GenericStorageService,
     PipelineElementAssetService,
 } from '@streampipes/platform-services';
+import { LINE_STYLE_KEY_MAP } from 'echarts/types/src/model/mixin/lineStyle';
 
 export interface Asset {
     assetId: string;
@@ -44,7 +45,12 @@ export interface Asset {
 export class AssetSaveService {
     assetLinkTypes: AssetLinkType[] = [];
     currentAsset: SpAssetModel;
-    constructor(private assetService: AssetManagementService) {}
+    constructor(
+        private assetService: AssetManagementService,
+        private storageService: GenericStorageService,
+    ) {
+        this.loadAssetLinkTypes();
+    }
 
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
@@ -101,8 +107,12 @@ export class AssetSaveService {
 
     // Helper function to build links based on the linkage data
     private buildLinks(data: LinkageData[]): AssetLink[] {
+        console.log('Data from build Links', data);
+        console.log('Data from build Links', data.length);
         return data.map(item => {
+            console.log('item', item);
             const linkType = this.getAssetLinkTypeById(item.type);
+            console.log('lt ', linkType);
             return {
                 linkLabel: item.name,
                 linkType: item.type,
@@ -116,6 +126,7 @@ export class AssetSaveService {
 
     // Helper function to get asset link type by ID
     private getAssetLinkTypeById(linkType: string): AssetLinkType | undefined {
+        console.log('assetLinkTypes ', this.assetLinkTypes);
         return this.assetLinkTypes.find(a => a.linkType === linkType);
     }
 
@@ -149,5 +160,15 @@ export class AssetSaveService {
         this.assetService.updateAsset(currentAsset).subscribe(() => {
             console.log('Asset 2');
         });
+    }
+
+    private loadAssetLinkTypes(): void {
+        this.storageService
+            .getAllDocuments(AssetConstants.ASSET_LINK_TYPES_DOC_NAME)
+            .subscribe(linkTypes => {
+                this.assetLinkTypes = linkTypes.sort((a, b) =>
+                    a.linkLabel.localeCompare(b.linkLabel),
+                );
+            });
     }
 }

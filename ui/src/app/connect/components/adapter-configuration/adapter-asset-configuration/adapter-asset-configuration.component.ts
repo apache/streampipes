@@ -78,10 +78,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     assetLinksLoaded = false;
     updateObservable: Observable<SpAssetModel>;
 
-    constructor(
-        private assetService: AssetManagementService,
-        private storageService: GenericStorageService,
-    ) {
+    constructor(private assetService: AssetManagementService) {
         this.treeControl = new NestedTreeControl<Asset>(node => node.assets);
         this.dataSource = new MatTreeNestedDataSource<Asset>();
     }
@@ -121,7 +118,6 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         this.loadAssets();
         console.log(this.dataSource.data);
         console.log(this.assetsData);
-        this.loadAssetLinkTypes();
     }
 
     private loadAssets(): void {
@@ -133,17 +129,6 @@ export class AdapterAssetConfigurationComponent implements OnInit {
                 console.log(this.assetsData);
             },
         });
-    }
-
-    private loadAssetLinkTypes(): void {
-        this.storageService
-            .getAllDocuments(AssetConstants.ASSET_LINK_TYPES_DOC_NAME)
-            .subscribe(linkTypes => {
-                this.assetLinkTypes = linkTypes.sort((a, b) =>
-                    a.linkLabel.localeCompare(b.linkLabel),
-                );
-                this.assetLinksLoaded = true;
-            });
     }
 
     private mapAssets(apiAssets: any[], parentId: string = ''): Asset[] {
