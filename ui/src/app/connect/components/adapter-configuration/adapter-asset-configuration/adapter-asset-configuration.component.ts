@@ -31,8 +31,9 @@ import { Observable } from 'rxjs';
 export interface Asset {
     assetId: string;
     assetName: string;
-    assets?: Asset[];
+    assets?: Asset[]; // Sub-assets, if any
     id: string;
+    flattenPath: any[]; // Array to track the path to the asset
 }
 
 @Component({
@@ -78,6 +79,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     }
 
     onAssetSelect(node: Asset): void {
+        console.log(this.selectedAssets);
         const index = this.selectedAssets.findIndex(
             asset => asset.assetId === node.assetId,
         );
@@ -104,19 +106,37 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         this.assetService.getAllAssets().subscribe({
             next: assets => {
                 this.assetsData = this.mapAssets(assets);
+                console.log(this.assetsData);
                 this.dataSource.data = this.assetsData;
             },
         });
     }
+    private mapAssets(
+        apiAssets: any[],
+        parentId: string = '',
+        index: number[] = [],
+    ): Asset[] {
+        return apiAssets.map((asset, assetIndex) => {
+            let currentPath = [...index, assetIndex];
 
-    private mapAssets(apiAssets: any[], parentId: string = ''): Asset[] {
-        return apiAssets.map(asset => ({
-            id: parentId || asset._id,
-            assetId: asset.assetId,
-            assetName: asset.assetName,
-            assets: asset.assets
-                ? this.mapAssets(asset.assets, parentId || asset._id)
-                : [],
-        }));
+            if (parentId == '') {
+                currentPath = [asset._id];
+            }
+            const flattenedPath = [parentId, ...currentPath];
+
+            return {
+                id: parentId || asset._id,
+                assetId: asset.assetId,
+                assetName: asset.assetName,
+                flattenPath: flattenedPath,
+                assets: asset.assets
+                    ? this.mapAssets(
+                          asset.assets,
+                          parentId || asset._id,
+                          currentPath,
+                      )
+                    : [],
+            };
+        });
     }
 }
