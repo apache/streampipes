@@ -25,6 +25,7 @@ import {
     SpAssetModel,
     AssetLinkType,
     GenericStorageService,
+    SpAsset,
 } from '@streampipes/platform-services';
 
 export interface Asset {
@@ -70,9 +71,19 @@ export class AssetSaveService {
                         ...links,
                     ];
 
-                    const updateObservable = targetAsset._id
+                    let updateObservable = targetAsset._id
                         ? this.assetService.updateAsset(targetAsset)
                         : this.updateNestedAsset(targetAsset, current);
+
+                    if (!updateObservable._id) {
+                        const index = current?.assets?.findIndex(
+                            (asset: any) =>
+                                asset.assetId === updateObservable.assetId,
+                        );
+                        current.assets[index] = updateObservable;
+                        updateObservable =
+                            this.assetService.updateAsset(current);
+                    }
 
                     updateObservable?.subscribe({
                         next: updated => {
@@ -115,15 +126,63 @@ export class AssetSaveService {
         return null;
     }
 
-    private updateNestedAsset(assetToUpdate: any, currentAsset: SpAssetModel) {
+    private updateNestedAsset(
+        assetToUpdate: any,
+        currentAsset: SpAssetModel | SpAsset,
+    ) {
+        console.log('Updated Nested');
+        console.log(assetToUpdate);
+
+        // Try to find the asset in the current asset list
         const index = currentAsset?.assets?.findIndex(
             (asset: any) => asset.assetId === assetToUpdate.assetId,
         );
+        console.log(index);
+        console.log(currentAsset.assets?.length);
 
-        if (index === -1 || index === undefined) return null;
+        // If the asset is not found and there are no nested assets, return null
+        if (
+            (index === -1 || index === undefined) &&
+            currentAsset.assets?.length < 1
+        ) {
+            return null;
+        }
 
-        currentAsset.assets[index] = assetToUpdate;
-        this.assetService.updateAsset(currentAsset).subscribe(() => {});
+        // If the asset is found, update it directly
+        if (index !== -1 && index !== undefined) {
+            console.log('Updating Asset');
+            currentAsset.assets[index] = assetToUpdate; // Update the asset
+
+            console.log(currentAsset);
+            // If the currentAsset has _id, we perform the update on the top-level asset
+            if (currentAsset && this.hasId(currentAsset)) {
+                this.assetService.updateAsset(currentAsset).subscribe(() => {});
+            }
+            return currentAsset; // Return the updated currentAsset
+        }
+
+        // If there are nested assets, recursively update them
+        if (
+            currentAsset.assets?.length > 0 &&
+            (index === -1 || index === undefined)
+        ) {
+            console.log('Recursing into nested assets');
+            for (const nestedAsset of currentAsset.assets) {
+                const updatedAsset = this.updateNestedAsset(
+                    assetToUpdate,
+                    nestedAsset,
+                );
+                if (updatedAsset) {
+                    return updatedAsset; // Propagate the updated asset back up
+                }
+            }
+        }
+
+        // If no matching asset found, return currentAsset as is
+        return currentAsset;
+    }
+    private hasId(asset: SpAssetModel | SpAsset): asset is SpAssetModel {
+        return (asset as SpAssetModel)._id !== undefined;
     }
 
     private loadAssetLinkTypes(): void {
