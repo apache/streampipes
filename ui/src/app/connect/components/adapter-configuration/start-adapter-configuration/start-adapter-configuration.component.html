@@ -111,6 +111,7 @@
             (optionSelectedEmitter)="showAsset = $event"
         >
             <sp-adapter-asset-configuration
+                *ngIf="showAsset"
                 [assetSelected]="onAssetSelected"
                 [(selectedAssets)]="selectedAssets"
             >
