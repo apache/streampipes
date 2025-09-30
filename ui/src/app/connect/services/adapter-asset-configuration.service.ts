@@ -26,8 +26,15 @@ import {
     AssetLinkType,
     GenericStorageService,
     SpAsset,
-    Asset,
 } from '@streampipes/platform-services';
+
+export interface Asset {
+    assetId: string;
+    assetName: string;
+    assets?: Asset[];
+    id: string;
+    flattenPath: any[];
+}
 
 @Injectable({
     providedIn: 'root',
@@ -76,7 +83,7 @@ export class AssetSaveService {
                             console.log(path);
                             this.updateDictValue(
                                 current,
-                                path.splice(2),
+                                path.splice(1),
                                 links,
                             );
                         }

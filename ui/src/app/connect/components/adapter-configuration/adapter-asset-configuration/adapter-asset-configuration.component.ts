@@ -99,7 +99,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         this.assetService.getAllAssets().subscribe({
             next: assets => {
                 this.assetsData = this.mapAssets(assets);
-                console.log(this.assetsData);
+                console.log('loaded', this.assetsData);
                 this.dataSource.data = this.assetsData;
             },
         });
@@ -107,15 +107,22 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     private mapAssets(
         apiAssets: any[],
         parentId: string = '',
-        index: number[] = [],
+        index: any[] = [],
     ): Asset[] {
+        console.log(apiAssets);
         return apiAssets.map((asset, assetIndex) => {
-            let currentPath = [...index, assetIndex];
+            console.log('parentID', parentId);
+            console.log(index);
+            const currentPath = [...index, assetIndex];
 
-            if (parentId == '') {
-                currentPath = [asset._id];
+            let flattenedPath = [];
+
+            if (asset._id) {
+                parentId = asset._id;
+                flattenedPath = [parentId, ...currentPath];
+            } else {
+                flattenedPath = [...currentPath];
             }
-            const flattenedPath = [parentId, ...currentPath];
 
             return {
                 id: parentId || asset._id,
@@ -126,7 +133,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
                     ? this.mapAssets(
                           asset.assets,
                           parentId || asset._id,
-                          currentPath,
+                          flattenedPath,
                       )
                     : [],
             };
