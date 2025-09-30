@@ -107,59 +107,49 @@ export class AssetSaveService {
         path: (string | number)[],
         newValue: any,
     ) {
-        const result: any = { ...dict }; // Create a shallow copy of the main object to avoid mutating the original object
+        const result: any = { ...dict };
         console.log('Initial dict', dict);
         console.log('path', path);
 
-        let current = result; // Start with the root of the dict
-        let parent: any = null; // To keep track of the parent to update
-
-        // Traverse through the path, one level at a time
+        let current = result;
+        let parent: any = null;
         for (let i = 0; i < path.length; i++) {
             const key = path[i];
 
-            // If we're at the last element in the path, just update the assetLinks
             if (i === path.length - 1) {
                 current.assetLinks = newValue;
                 break;
             }
 
-            // Ensure we're dealing with arrays or objects appropriately
             if (Array.isArray(current.assets)) {
-                // Copy the current item in the assets array and traverse
                 parent = current;
-                current = { ...current.assets[key as number] }; // Make a copy of the object at that index
-                current.assets = [...current.assets]; // Make a shallow copy of the assets array to avoid mutation
+                current = { ...current.assets[key as number] };
+                current.assets = [...current.assets];
             }
 
             console.log('current at step', i, current);
         }
 
-        // After the loop, ensure the parent asset is updated with the new modified asset
         if (parent) {
             if (Array.isArray(parent.assets)) {
-                const key = path[path.length - 2]; // Get the previous key to update the array
+                const key = path[path.length - 2];
                 parent.assets[key as number] = current;
             } else {
-                const key = path[path.length - 2]; // Get the previous key to update the object
+                const key = path[path.length - 2];
                 parent.assets[key as string] = current;
             }
         }
 
         console.log('Updated result', result);
 
-        return result; // Return the updated object to ensure the changes propagate back
+        return result;
     }
 
     private getAssetPaths(apiAssets: Asset[]): {
         [key: string]: Array<Array<string | number>>;
     } {
-        // Initialize a dictionary to collect arrays of flattenPath for each id
         const idPaths = {};
-
-        // Iterate through the data and populate the dictionary
         apiAssets.forEach(item => {
-            // If the item has assets, loop through them and extract their flattenPath
             item.assets.forEach(asset => {
                 if (asset.id) {
                     if (!idPaths[asset.id]) {
@@ -169,7 +159,6 @@ export class AssetSaveService {
                 }
             });
 
-            // If the item has its own id and flattenPath, add it as well
             if (item.id && item.flattenPath) {
                 if (!idPaths[item.id]) {
                     idPaths[item.id] = [];
