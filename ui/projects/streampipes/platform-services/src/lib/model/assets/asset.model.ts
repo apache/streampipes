@@ -101,6 +101,14 @@ export interface SpAssetModel extends SpAsset {
     removable: boolean;
 }
 
+export interface Asset {
+    assetId: string;
+    assetName: string;
+    assets?: Asset[];
+    id: string;
+    flattenPath: any[];
+}
+
 export type Isa95Type =
     | 'PROCESS_CELL'
     | 'PRODUCTION_UNIT'

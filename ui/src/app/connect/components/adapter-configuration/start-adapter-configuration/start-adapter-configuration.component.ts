@@ -19,6 +19,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
     AdapterDescription,
+    Asset,
     EventRateTransformationRuleDescription,
     EventSchema,
     RemoveDuplicatesTransformationRuleDescription,
@@ -36,14 +37,6 @@ import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
-
-export interface Asset {
-    assetId: string;
-    assetName: string;
-    assets?: Asset[]; // Sub-assets, if any
-    id: string;
-    flattenPath: any[]; // Array to track the path to the asset
-}
 
 @Component({
     selector: 'sp-start-adapter-configuration',

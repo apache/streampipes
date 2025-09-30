@@ -26,15 +26,8 @@ import {
     AssetLinkType,
     GenericStorageService,
     SpAsset,
+    Asset,
 } from '@streampipes/platform-services';
-
-export interface Asset {
-    assetId: string;
-    assetName: string;
-    assets?: Asset[];
-    id: string;
-    flattenPath: any[];
-}
 
 @Injectable({
     providedIn: 'root',

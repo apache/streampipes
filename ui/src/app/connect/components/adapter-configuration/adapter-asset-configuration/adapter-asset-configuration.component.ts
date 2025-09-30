@@ -24,17 +24,10 @@ import {
     LinkageData,
     SpAssetModel,
     AssetLinkType,
+    Asset,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
-
-export interface Asset {
-    assetId: string;
-    assetName: string;
-    assets?: Asset[]; // Sub-assets, if any
-    id: string;
-    flattenPath: any[]; // Array to track the path to the asset
-}
 
 @Component({
     selector: 'sp-adapter-asset-configuration',
