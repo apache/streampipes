@@ -22,7 +22,9 @@
             <mat-expansion-panel-header>
                 <mat-panel-title
                     ><mat-icon color="accent">list</mat-icon
-                    ><b>&nbsp;Show input fields</b></mat-panel-title
+                    ><b
+                        >&nbsp;{{ 'Show input fields' | translate }}</b
+                    ></mat-panel-title
                 >
             </mat-expansion-panel-header>
             @for (inputStream of inputStreams; track $index) {

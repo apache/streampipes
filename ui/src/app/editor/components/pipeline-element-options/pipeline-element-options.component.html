@@ -33,7 +33,7 @@
                 <button
                     class="options-icon-button"
                     mat-icon-button
-                    matTooltip="Configure Element"
+                    [matTooltip]="'Configure Element' | translate"
                     [matTooltipPosition]="'above'"
                     (click)="customizeElement(pipelineElement)"
                     data-cy="settings-pipeline-element-button"
@@ -49,7 +49,7 @@
                 <button
                     class="options-icon-button"
                     mat-icon-button
-                    matTooltip="Configure Element"
+                    [matTooltip]="'Configure Element' | translate"
                     [matTooltipPosition]="'above'"
                     (click)="openCustomizeStreamDialog()"
                 >
@@ -60,7 +60,7 @@
                 <button
                     class="options-icon-button"
                     mat-icon-button
-                    matTooltip="Delete Element"
+                    [matTooltip]="'Delete Element' | translate"
                     [matTooltipPosition]="'above'"
                     (click)="removeElement(pipelineElement)"
                 >
@@ -75,7 +75,7 @@
                 <button
                     class="options-icon-button"
                     mat-icon-button
-                    matTooltip="Compatible Elements"
+                    [matTooltip]="'Compatible Elements' | translate"
                     [matTooltipPosition]="'below'"
                     [disabled]="
                         !possibleElements || possibleElements.length === 0
@@ -95,7 +95,7 @@
             <span class="options-button help-button" style="z-index: 10">
                 <button
                     class="options-icon-button"
-                    matTooltip="Help"
+                    [matTooltip]="'Help' | translate"
                     [matTooltipPosition]="'below'"
                     mat-icon-button
                     (click)="openHelpDialog()"
