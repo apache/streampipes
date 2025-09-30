@@ -40,8 +40,9 @@ import { ValidateName } from '../../../../core-ui/static-properties/input.valida
 export interface Asset {
     assetId: string;
     assetName: string;
-    assets?: Asset[];
+    assets?: Asset[]; // Sub-assets, if any
     id: string;
+    flattenPath: any[]; // Array to track the path to the asset
 }
 
 @Component({

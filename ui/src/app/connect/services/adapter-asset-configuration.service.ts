@@ -33,6 +33,7 @@ export interface Asset {
     assetName: string;
     assets?: Asset[];
     id: string;
+    flattenPath: any[];
 }
 
 @Injectable({
@@ -55,36 +56,42 @@ export class AssetSaveService {
         selectedAssets: Asset[],
         linkageData: LinkageData[],
     ): void {
-        selectedAssets.forEach(asset => {
-            this.assetService.getAsset(asset.id).subscribe({
+        console.log('selectedAssets', selectedAssets);
+        const uniqueAssetIDsDict = this.getAssetPaths(selectedAssets);
+        const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
+
+        console.log('rebuildDict', uniqueAssetIDsDict);
+
+        uniqueAssetIDs.forEach(id => {
+            this.assetService.getAsset(id).subscribe({
                 next: current => {
                     this.currentAsset = current;
 
                     const links = this.buildLinks(linkageData);
-                    const targetAsset = this.findAssetById(
-                        asset.assetId,
-                        current,
-                    );
 
-                    targetAsset.assetLinks = [
-                        ...(targetAsset.assetLinks ?? []),
-                        ...links,
-                    ];
+                    uniqueAssetIDsDict[id].forEach(path => {
+                        console.log(path);
 
-                    let updateObservable = targetAsset._id
-                        ? this.assetService.updateAsset(targetAsset)
-                        : this.updateNestedAsset(targetAsset, current);
+                        if (path.length === 2) {
+                            current.assetLinks = [
+                                ...(current.assetLinks ?? []),
+                                ...links,
+                            ];
+                        }
+                        if (path.length > 2) {
+                            console.log('UpdateDictValue');
+                            console.log(path);
+                            this.updateDictValue(
+                                current,
+                                path.splice(2),
+                                links,
+                            );
+                        }
+                    });
 
-                    if (!updateObservable._id) {
-                        const index = current?.assets?.findIndex(
-                            (asset: any) =>
-                                asset.assetId === updateObservable.assetId,
-                        );
-                        current.assets[index] = updateObservable;
-                        updateObservable =
-                            this.assetService.updateAsset(current);
-                    }
-
+                    console.log(current);
+                    const updateObservable =
+                        this.assetService.updateAsset(current);
                     updateObservable?.subscribe({
                         next: updated => {
                             this.adapterStartedEmitter.emit();
@@ -94,6 +101,55 @@ export class AssetSaveService {
             });
         });
     }
+
+    private updateDictValue(
+        dict: SpAssetModel,
+        path: (string | number)[],
+        newValue: any,
+    ) {
+        let result: any = dict;
+
+        console.log('p', path);
+
+        // Iterate through the path, stopping one step before the final key
+        for (let i = 0; i < path.length - 1; i++) {
+            console.log('i', i);
+            const key = path[i];
+            result = result.assets[key];
+        }
+        result.assetLinks = newValue;
+        console.log(result);
+    }
+
+    private getAssetPaths(apiAssets: Asset[]): {
+        [key: string]: Array<Array<string | number>>;
+    } {
+        // Initialize a dictionary to collect arrays of flattenPath for each id
+        const idPaths = {};
+
+        // Iterate through the data and populate the dictionary
+        apiAssets.forEach(item => {
+            // If the item has assets, loop through them and extract their flattenPath
+            item.assets.forEach(asset => {
+                if (asset.id) {
+                    if (!idPaths[asset.id]) {
+                        idPaths[asset.id] = [];
+                    }
+                    idPaths[asset.id].push(asset.flattenPath);
+                }
+            });
+
+            // If the item has its own id and flattenPath, add it as well
+            if (item.id && item.flattenPath) {
+                if (!idPaths[item.id]) {
+                    idPaths[item.id] = [];
+                }
+                idPaths[item.id].push(item.flattenPath);
+            }
+        });
+        return idPaths;
+    }
+
     private buildLinks(data: LinkageData[]): AssetLink[] {
         return data.map(item => {
             const linkType = this.getAssetLinkTypeById(item.type);
@@ -110,79 +166,6 @@ export class AssetSaveService {
 
     private getAssetLinkTypeById(linkType: string): AssetLinkType | undefined {
         return this.assetLinkTypes.find(a => a.linkType === linkType);
-    }
-
-    private findAssetById(assetId: string, currentAsset: SpAssetModel): any {
-        if (currentAsset?.assetId === assetId) return currentAsset;
-        return this.findSubAssetById(currentAsset?.assets ?? [], assetId);
-    }
-
-    private findSubAssetById(assets: any[], assetId: string): any {
-        for (const asset of assets) {
-            if (asset.assetId === assetId) return asset;
-            const found = this.findSubAssetById(asset.assets ?? [], assetId);
-            if (found) return found;
-        }
-        return null;
-    }
-
-    private updateNestedAsset(
-        assetToUpdate: any,
-        currentAsset: SpAssetModel | SpAsset,
-    ) {
-        console.log('Updated Nested');
-        console.log(assetToUpdate);
-
-        // Try to find the asset in the current asset list
-        const index = currentAsset?.assets?.findIndex(
-            (asset: any) => asset.assetId === assetToUpdate.assetId,
-        );
-        console.log(index);
-        console.log(currentAsset.assets?.length);
-
-        // If the asset is not found and there are no nested assets, return null
-        if (
-            (index === -1 || index === undefined) &&
-            currentAsset.assets?.length < 1
-        ) {
-            return null;
-        }
-
-        // If the asset is found, update it directly
-        if (index !== -1 && index !== undefined) {
-            console.log('Updating Asset');
-            currentAsset.assets[index] = assetToUpdate; // Update the asset
-
-            console.log(currentAsset);
-            // If the currentAsset has _id, we perform the update on the top-level asset
-            if (currentAsset && this.hasId(currentAsset)) {
-                this.assetService.updateAsset(currentAsset).subscribe(() => {});
-            }
-            return currentAsset; // Return the updated currentAsset
-        }
-
-        // If there are nested assets, recursively update them
-        if (
-            currentAsset.assets?.length > 0 &&
-            (index === -1 || index === undefined)
-        ) {
-            console.log('Recursing into nested assets');
-            for (const nestedAsset of currentAsset.assets) {
-                const updatedAsset = this.updateNestedAsset(
-                    assetToUpdate,
-                    nestedAsset,
-                );
-                if (updatedAsset) {
-                    return updatedAsset; // Propagate the updated asset back up
-                }
-            }
-        }
-
-        // If no matching asset found, return currentAsset as is
-        return currentAsset;
-    }
-    private hasId(asset: SpAssetModel | SpAsset): asset is SpAssetModel {
-        return (asset as SpAssetModel)._id !== undefined;
     }
 
     private loadAssetLinkTypes(): void {
