@@ -46,14 +46,14 @@ mat-checkbox {
 .mat-tree-node {
     display: flex;
     align-items: center;
-    padding-left: 0px; /* Indentation for the root node */
+    padding-left: 55px; /* Indentation for the root node */
 }
 
 /* Indentation for the child nodes */
 .mat-nested-tree-node {
     display: block; /* Stack the child nodes below the parent */
-    margin-left: 32px; /* Increase indentation for nested nodes */
-    margin-bottom: 10px; /* Optional: Add spacing between nested nodes */
+    margin-left: 8px; /* Increase indentation for nested nodes */
+    //margin-bottom: 10px; /* Optional: Add spacing between nested nodes */
 }
 
 /* Icon alignment and button margin */
