@@ -17,24 +17,24 @@
  */
 .components-container {
     display: flex;
-    flex-direction: column; /* Display components vertically (rows) */
-    gap: 10px; /* Adds space between rows */
+    flex-direction: column;
+    gap: 10px;
     padding: 10px;
 }
 
 .component-row {
-    display: flex; /* Align items in a row */
-    align-items: center; /* Vertically align items in the row */
-    gap: 20px; /* Adds space between checkbox and inputs */
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 mat-form-field {
-    flex: 1; /* Makes the input fields take equal width */
-    margin-right: 10px; /* Space between the input fields */
+    flex: 1;
+    margin-right: 10px;
 }
 
 mat-checkbox {
-    margin-right: 20px; /* Space between the checkbox and first input field */
+    margin-right: 20px;
 }
 .asset-tree {
     font-family: 'Roboto', sans-serif;
@@ -42,21 +42,17 @@ mat-checkbox {
     margin-left: 10px;
 }
 
-/* Make the tree node container a flex container */
 .mat-tree-node {
     display: flex;
     align-items: center;
-    padding-left: 55px; /* Indentation for the root node */
+    padding-left: 55px;
 }
 
-/* Indentation for the child nodes */
 .mat-nested-tree-node {
-    display: block; /* Stack the child nodes below the parent */
-    margin-left: 8px; /* Increase indentation for nested nodes */
-    //margin-bottom: 10px; /* Optional: Add spacing between nested nodes */
+    display: block;
+    margin-left: 8px;
 }
 
-/* Icon alignment and button margin */
 button[mat-icon-button] {
     margin-right: 8px;
 }
@@ -66,12 +62,10 @@ mat-icon {
     color: #3f51b5;
 }
 
-/* Optional: Add styling for node text */
 .mat-tree-node span {
     font-weight: bold;
 }
 
-/* Hover effect for nodes */
 .mat-tree-node:hover {
     background-color: #e8e8e8;
 }
@@ -84,39 +78,33 @@ mat-icon {
     margin-left: 16px;
 }
 
-/* Transparent button style for leaf nodes */
 .transparent-btn {
     background: transparent;
     border: none;
     padding: 0;
-    margin-left: 10px; /* Space between text and button */
-    color: #3f51b5; /* Color for the icon */
+    margin-left: 10px;
     cursor: pointer;
 }
 
-/* Hover effect on the transparent button */
 .transparent-btn:hover {
-    background-color: rgba(63, 81, 181, 0.1); /* Light background on hover */
+    background-color: rgba(63, 81, 181, 0.1);
 }
 
-/* Icon style inside the button */
 .transparent-btn mat-icon {
     font-size: 18px;
-    opacity: 0.4; /* Make the icon slightly transparent */
+    opacity: 0.4;
 }
 
-/* On hover, make the icon slightly more opaque (visible) */
 .transparent-btn:hover mat-icon {
-    opacity: 1; /* Full opacity when hovered */
+    opacity: 1;
 }
 
 .selected-node {
-    background-color: #e0f7fa; /* Light blue background for selected nodes */
+    background-color: #e0f7fa;
     border-radius: 4px;
     padding: 5px;
 }
 
-/* Hover effect for selected node */
 .selected-node:hover {
-    background-color: #b2ebf2; /* Slightly darker blue on hover */
+    background-color: #b2ebf2;
 }
