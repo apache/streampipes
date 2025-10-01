@@ -24,7 +24,8 @@ import {
     LinkageData,
     SpAssetModel,
     AssetLinkType,
-    Asset,
+    SpAsset,
+    AssetTreeNode,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
@@ -42,23 +43,25 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
 
-    @Input() selectedAssets: Asset[] = [];
-    @Output() selectedAssetsChange = new EventEmitter<Asset[]>();
+    @Output() selectedAssetsChange = new EventEmitter<AssetTreeNode[]>();
 
-    treeControl: NestedTreeControl<Asset>;
-    dataSource: MatTreeNestedDataSource<Asset>;
+    treeControl: NestedTreeControl<AssetTreeNode>;
+    dataSource: MatTreeNestedDataSource<AssetTreeNode>;
 
     treeDropdownOpen = false;
 
-    assetsData: Asset[] = [];
+    assetsData: AssetTreeNode[] = [];
     currentAsset: SpAssetModel;
     assetLinkTypes: AssetLinkType[] = [];
     assetLinksLoaded = false;
     updateObservable: Observable<SpAssetModel>;
+    selectedAssets: AssetTreeNode[] = [];
 
     constructor(private assetService: AssetManagementService) {
-        this.treeControl = new NestedTreeControl<Asset>(node => node.assets);
-        this.dataSource = new MatTreeNestedDataSource<Asset>();
+        this.treeControl = new NestedTreeControl<AssetTreeNode>(
+            node => node.assets,
+        );
+        this.dataSource = new MatTreeNestedDataSource<AssetTreeNode>();
     }
 
     hasChild = (_: number, node: any) =>
@@ -68,23 +71,21 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         this.treeDropdownOpen = !this.treeDropdownOpen;
     }
 
-    onAssetSelect(node: Asset): void {
-        console.log(node);
+    onAssetSelect(node: AssetTreeNode): void {
         const index = this.selectedAssets.findIndex(
             asset => asset.assetId === node.assetId,
         );
 
         if (index > -1) {
-            console.log('index lower 0');
-            //this.selectedAssets.splice(index, 1);
+            this.selectedAssets.splice(index, 1);
         } else {
             this.selectedAssets.push(node);
         }
-        console.log('Selected Assets', this.selectedAssets);
+
         this.selectedAssetsChange.emit(this.selectedAssets);
     }
 
-    isSelected(node: Asset): boolean {
+    isSelected(node: AssetTreeNode): boolean {
         return this.selectedAssets.some(
             asset => asset.assetId === node.assetId,
         );
@@ -98,38 +99,35 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         this.assetService.getAllAssets().subscribe({
             next: assets => {
                 this.assetsData = this.mapAssets(assets);
-                console.log('Asset Data ', this.assetsData);
+                console.log('Load Assets', this.assetsData);
+
                 this.dataSource.data = this.assetsData;
             },
         });
     }
     private mapAssets(
-        apiAssets: any[],
+        apiAssets: SpAsset[],
         parentId: string = '',
         index: any[] = [],
-    ): Asset[] {
+    ): AssetTreeNode[] {
         return apiAssets.map((asset, assetIndex) => {
             const currentPath = [...index, assetIndex];
             let flattenedPath = [];
 
-            if (asset._id) {
-                parentId = asset._id;
+            if (asset['_id']) {
+                parentId = asset['_id'];
                 flattenedPath = [parentId, ...currentPath];
             } else {
                 flattenedPath = [...currentPath];
             }
 
             return {
-                id: parentId || asset._id,
+                spAssetModelId: parentId,
                 assetId: asset.assetId,
                 assetName: asset.assetName,
                 flattenPath: flattenedPath,
                 assets: asset.assets
-                    ? this.mapAssets(
-                          asset.assets,
-                          parentId || asset._id,
-                          flattenedPath,
-                      )
+                    ? this.mapAssets(asset.assets, parentId, flattenedPath)
                     : [],
             };
         });

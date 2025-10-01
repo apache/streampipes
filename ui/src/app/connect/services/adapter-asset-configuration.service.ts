@@ -28,11 +28,11 @@ import {
     SpAsset,
 } from '@streampipes/platform-services';
 
-export interface Asset {
+export interface AssetTreeNode {
     assetId: string;
     assetName: string;
-    assets?: Asset[];
-    id: string;
+    assets?: AssetTreeNode[];
+    spAssetModelId: string;
     flattenPath: any[];
 }
 
@@ -53,14 +53,11 @@ export class AssetSaveService {
         new EventEmitter<void>();
 
     saveSelectedAssets(
-        selectedAssets: Asset[],
+        selectedAssets: AssetTreeNode[],
         linkageData: LinkageData[],
     ): void {
-        console.log('selectedAssets', selectedAssets);
         const uniqueAssetIDsDict = this.getAssetPaths(selectedAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
-
-        console.log('rebuildDict', uniqueAssetIDsDict);
 
         uniqueAssetIDs.forEach(id => {
             this.assetService.getAsset(id).subscribe({
@@ -70,8 +67,6 @@ export class AssetSaveService {
                     const links = this.buildLinks(linkageData);
 
                     uniqueAssetIDsDict[id].forEach(path => {
-                        console.log(path);
-
                         if (path.length === 2) {
                             current.assetLinks = [
                                 ...(current.assetLinks ?? []),
@@ -79,8 +74,6 @@ export class AssetSaveService {
                             ];
                         }
                         if (path.length > 2) {
-                            console.log('UpdateDictValue');
-                            console.log(path);
                             this.updateDictValue(
                                 current,
                                 path.splice(2),
@@ -89,7 +82,6 @@ export class AssetSaveService {
                         }
                     });
 
-                    console.log(current);
                     const updateObservable =
                         this.assetService.updateAsset(current);
                     updateObservable?.subscribe({
@@ -108,9 +100,6 @@ export class AssetSaveService {
         newValue: any,
     ) {
         const result: any = { ...dict };
-        console.log('Initial dict', dict);
-        console.log('path', path);
-
         let current = result;
         let parent: any = null;
         for (let i = 0; i < path.length; i++) {
@@ -126,8 +115,6 @@ export class AssetSaveService {
                 current = { ...current.assets[key as number] };
                 current.assets = [...current.assets];
             }
-
-            console.log('current at step', i, current);
         }
 
         if (parent) {
@@ -140,34 +127,30 @@ export class AssetSaveService {
             }
         }
 
-        console.log('Updated result', result);
-
         return result;
     }
 
-    private getAssetPaths(apiAssets: Asset[]): {
+    private getAssetPaths(apiAssets: AssetTreeNode[]): {
         [key: string]: Array<Array<string | number>>;
     } {
-        console.log('apiAssets', apiAssets);
         const idPaths = {};
         apiAssets.forEach(item => {
             item.assets.forEach(asset => {
-                if (asset.id) {
-                    if (!idPaths[item.id]) {
-                        idPaths[item.id] = [];
+                if (asset.spAssetModelId) {
+                    if (!idPaths[item.spAssetModelId]) {
+                        idPaths[item.spAssetModelId] = [];
                     }
-                    idPaths[item.id].push(asset.flattenPath);
+                    idPaths[item.spAssetModelId].push(asset.flattenPath);
                 }
             });
 
-            if (item.id && item.flattenPath) {
-                if (!idPaths[item.id]) {
-                    idPaths[item.id] = [];
+            if (item.spAssetModelId && item.flattenPath) {
+                if (!idPaths[item.spAssetModelId]) {
+                    idPaths[item.spAssetModelId] = [];
                 }
-                idPaths[item.id].push(item.flattenPath);
+                idPaths[item.spAssetModelId].push(item.flattenPath);
             }
         });
-        console.log('idPaths ', idPaths);
         return idPaths;
     }
 

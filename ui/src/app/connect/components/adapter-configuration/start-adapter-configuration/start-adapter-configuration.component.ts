@@ -27,7 +27,7 @@ import {
 } from '@angular/core';
 import {
     AdapterDescription,
-    Asset,
+    AssetTreeNode,
     EventRateTransformationRuleDescription,
     EventSchema,
     RemoveDuplicatesTransformationRuleDescription,
@@ -198,8 +198,12 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     public startAdapter() {
+        console.log('Start Adapter yipii');
+        console.log(this.selectedAssets);
+        console.log('Start Adapter yipii');
         this.checkAndApplyStreamRules();
-        console.log('Selected From start Adpter', this.saver);
+        //console.log('Selected From start Adpter', this.selectedAssets);
+
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: 'Adapter generation',
@@ -210,7 +214,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 dataLakeTimestampField: this.dataLakeTimestampField,
                 editMode: false,
                 startAdapterNow: this.startAdapterNow,
-                selectedAssets: this.saver,
+                selectedAssets: this.selectedAssets,
             },
         });
         const dialogInstance =
@@ -220,15 +224,18 @@ export class StartAdapterConfigurationComponent implements OnInit {
         });
     }
 
-    onSelectedAssetsChange(updatedAssets: Asset[]): void {
+    onSelectedAssetsChange(updatedAssets: AssetTreeNode[]): void {
+        console.log('Selected Asset yipii');
+        console.log(updatedAssets);
+        console.log('Selected Asset yipii');
         // This method will be called whenever the selected assets change in the child component
         this.selectedAssets = updatedAssets;
         this.saver = updatedAssets;
-        console.log('Updated Selected Assets in Parent:', this.selectedAssets);
-        console.log(
-            'Updated Selected Assets in Parent -- New Var:',
-            this.saver,
-        );
+        //console.log('Updated Selected Assets in Parent:', this.selectedAssets);
+        //console.log(
+        //    'Updated Selected Assets in Parent -- New Var:',
+        //    this.saver,
+        //);
     }
 
     private checkAndApplyStreamRules(): void {
