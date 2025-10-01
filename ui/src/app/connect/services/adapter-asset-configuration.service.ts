@@ -56,10 +56,8 @@ export class AssetSaveService {
         selectedAssets: SpAssetTreeNode[],
         linkageData: LinkageData[],
     ): void {
-        console.log('SelectedAssets', selectedAssets);
         const uniqueAssetIDsDict = this.getAssetPaths(selectedAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
-        console.log('UniqueIDsDict', uniqueAssetIDsDict);
 
         uniqueAssetIDs.forEach(spAssetModelId => {
             this.assetService.getAsset(spAssetModelId).subscribe({
@@ -69,7 +67,6 @@ export class AssetSaveService {
                     const links = this.buildLinks(linkageData);
 
                     uniqueAssetIDsDict[spAssetModelId].forEach(path => {
-                        console.log('path ', path);
                         if (path.length === 2) {
                             current.assetLinks = [
                                 ...(current.assetLinks ?? []),
@@ -77,12 +74,7 @@ export class AssetSaveService {
                             ];
                         }
                         if (path.length > 2) {
-                            this.updateDictValue(
-                                current,
-                                path, //.splice(2),
-                                links,
-                            );
-                            console.log(current);
+                            this.updateDictValue(current, path, links);
                         }
                     });
 
