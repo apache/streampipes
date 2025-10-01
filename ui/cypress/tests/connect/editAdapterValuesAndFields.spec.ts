@@ -61,7 +61,7 @@ describe('Test Edit Adapter', () => {
             .get('mat-option')
             .contains('Multiply')
             .click();
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
         cy.dataCy('sp-event-schema-next-button').click();
 
         // Fill in adapter name and close view
@@ -96,7 +96,7 @@ describe('Test Edit Adapter', () => {
             .contains('Float')
             .click();
         cy.dataCy('connect-schema-correction-value').clear();
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
         cy.get('[class="general-panel"]').should(
             'include.text',
             'test-property-1',

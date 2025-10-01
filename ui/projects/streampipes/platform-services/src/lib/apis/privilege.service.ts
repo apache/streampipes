@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
@@ -26,10 +26,8 @@ import { Privilege } from '../model/gen/streampipes-model-client';
     providedIn: 'root',
 })
 export class PrivilegeService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     findAll(): Observable<Privilege[]> {
         return this.http.get<Privilege[]>(this.privilegesBasePath);

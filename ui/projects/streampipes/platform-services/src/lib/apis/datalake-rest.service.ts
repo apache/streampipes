@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
     HttpClient,
     HttpContext,
@@ -34,7 +34,7 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
     providedIn: 'root',
 })
 export class DatalakeRestService {
-    constructor(private http: HttpClient) {}
+    private http = inject(HttpClient);
 
     private get baseUrl() {
         return '/streampipes-backend';

@@ -17,7 +17,7 @@
  */
 
 import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SharedDatalakeRestService } from './shared-dashboard.service';
 import {
@@ -30,10 +30,8 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
     providedIn: 'root',
 })
 export class DashboardService {
-    constructor(
-        private http: HttpClient,
-        private sharedDatalakeRestService: SharedDatalakeRestService,
-    ) {}
+    private http = inject(HttpClient);
+    private sharedDatalakeRestService = inject(SharedDatalakeRestService);
 
     getDashboards(): Observable<Dashboard[]> {
         return this.sharedDatalakeRestService.getDashboards(this.dashboardUrl);

@@ -1,9 +1,3 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { PlatformServicesCommons } from './commons.service';
-import { Observable } from 'rxjs';
-import { ExtensionItemInstallationRequest } from '../model/gen/streampipes-model';
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -22,14 +16,18 @@ import { ExtensionItemInstallationRequest } from '../model/gen/streampipes-model
  *
  */
 
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { PlatformServicesCommons } from './commons.service';
+import { Observable } from 'rxjs';
+import { ExtensionItemInstallationRequest } from '../model/gen/streampipes-model';
+
 @Injectable({
     providedIn: 'root',
 })
 export class ExtensionInstallationService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     add(
         installationRequest: ExtensionItemInstallationRequest,

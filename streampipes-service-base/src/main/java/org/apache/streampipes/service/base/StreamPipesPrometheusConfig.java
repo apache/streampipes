@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.service.core;
+package org.apache.streampipes.service.base;
 
 
 import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
