@@ -112,6 +112,8 @@
         >
             <sp-adapter-asset-configuration
                 *ngIf="showAsset"
+                [isEdit]="isEditMode"
+                [adapter]="adapterDescription"
                 (selectedAssetsChange)="onSelectedAssetsChange($event)"
             >
             </sp-adapter-asset-configuration>

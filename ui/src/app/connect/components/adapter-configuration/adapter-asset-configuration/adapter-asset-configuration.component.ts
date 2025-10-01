@@ -26,6 +26,7 @@ import {
     AssetLinkType,
     SpAsset,
     SpAssetTreeNode,
+    AdapterDescription,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
@@ -39,6 +40,8 @@ import { Observable } from 'rxjs';
 export class AdapterAssetConfigurationComponent implements OnInit {
     @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
+    @Input() isEdit: boolean;
+    @Input() adapter: AdapterDescription;
 
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
@@ -109,6 +112,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         index: any[] = [],
     ): SpAssetTreeNode[] {
         return apiAssets.map((asset, assetIndex) => {
+            //TODO Check in here for links
             const currentPath = [...index, assetIndex];
             let flattenedPath = [];
 
@@ -117,6 +121,10 @@ export class AdapterAssetConfigurationComponent implements OnInit {
                 flattenedPath = [parentId, ...currentPath];
             } else {
                 flattenedPath = [...currentPath];
+            }
+
+            if (this.isEdit) {
+                //TODO
             }
             const flattenedPathCopy = [...flattenedPath];
             return {
