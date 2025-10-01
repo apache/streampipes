@@ -28,10 +28,10 @@ import {
     SpAsset,
 } from '@streampipes/platform-services';
 
-export interface AssetTreeNode {
+export interface SpAssetTreeNode {
     assetId: string;
     assetName: string;
-    assets?: AssetTreeNode[];
+    assets?: SpAssetTreeNode[];
     spAssetModelId: string;
     flattenPath: any[];
 }
@@ -53,7 +53,7 @@ export class AssetSaveService {
         new EventEmitter<void>();
 
     saveSelectedAssets(
-        selectedAssets: AssetTreeNode[],
+        selectedAssets: SpAssetTreeNode[],
         linkageData: LinkageData[],
     ): void {
         const uniqueAssetIDsDict = this.getAssetPaths(selectedAssets);
@@ -130,7 +130,7 @@ export class AssetSaveService {
         return result;
     }
 
-    private getAssetPaths(apiAssets: AssetTreeNode[]): {
+    private getAssetPaths(apiAssets: SpAssetTreeNode[]): {
         [key: string]: Array<Array<string | number>>;
     } {
         const idPaths = {};

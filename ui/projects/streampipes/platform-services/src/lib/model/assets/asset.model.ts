@@ -101,10 +101,10 @@ export interface SpAssetModel extends SpAsset {
     removable: boolean;
 }
 
-export interface AssetTreeNode {
+export interface SpAssetTreeNode {
     assetId: string;
     assetName: string;
-    assets?: AssetTreeNode[];
+    assets?: SpAssetTreeNode[];
     spAssetModelId: string;
     flattenPath: any[];
 }

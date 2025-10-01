@@ -28,7 +28,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
     AdapterService,
-    AssetTreeNode,
+    SpAssetTreeNode,
     CompactPipeline,
     CompactPipelineElement,
     DatalakeRestService,
@@ -66,7 +66,7 @@ export class AdapterStartedDialog implements OnInit {
     /**
      * Assets selectedAsset to link the adapter tp
      */
-    @Input() selectedAssets: AssetTreeNode[];
+    @Input() selectedAssets: SpAssetTreeNode[];
 
     /**
      * Indicates if a pipeline to store the adapter events should be started

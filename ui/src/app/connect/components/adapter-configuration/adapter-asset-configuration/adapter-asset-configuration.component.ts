@@ -25,7 +25,7 @@ import {
     SpAssetModel,
     AssetLinkType,
     SpAsset,
-    AssetTreeNode,
+    SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
@@ -43,25 +43,25 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
 
-    @Output() selectedAssetsChange = new EventEmitter<AssetTreeNode[]>();
+    @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
 
-    treeControl: NestedTreeControl<AssetTreeNode>;
-    dataSource: MatTreeNestedDataSource<AssetTreeNode>;
+    treeControl: NestedTreeControl<SpAssetTreeNode>;
+    dataSource: MatTreeNestedDataSource<SpAssetTreeNode>;
 
     treeDropdownOpen = false;
 
-    assetsData: AssetTreeNode[] = [];
+    assetsData: SpAssetTreeNode[] = [];
     currentAsset: SpAssetModel;
     assetLinkTypes: AssetLinkType[] = [];
     assetLinksLoaded = false;
     updateObservable: Observable<SpAssetModel>;
-    selectedAssets: AssetTreeNode[] = [];
+    selectedAssets: SpAssetTreeNode[] = [];
 
     constructor(private assetService: AssetManagementService) {
-        this.treeControl = new NestedTreeControl<AssetTreeNode>(
+        this.treeControl = new NestedTreeControl<SpAssetTreeNode>(
             node => node.assets,
         );
-        this.dataSource = new MatTreeNestedDataSource<AssetTreeNode>();
+        this.dataSource = new MatTreeNestedDataSource<SpAssetTreeNode>();
     }
 
     hasChild = (_: number, node: any) =>
@@ -71,7 +71,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         this.treeDropdownOpen = !this.treeDropdownOpen;
     }
 
-    onAssetSelect(node: AssetTreeNode): void {
+    onAssetSelect(node: SpAssetTreeNode): void {
         const index = this.selectedAssets.findIndex(
             asset => asset.assetId === node.assetId,
         );
@@ -85,7 +85,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         this.selectedAssetsChange.emit(this.selectedAssets);
     }
 
-    isSelected(node: AssetTreeNode): boolean {
+    isSelected(node: SpAssetTreeNode): boolean {
         return this.selectedAssets.some(
             asset => asset.assetId === node.assetId,
         );
@@ -107,7 +107,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         apiAssets: SpAsset[],
         parentId: string = '',
         index: any[] = [],
-    ): AssetTreeNode[] {
+    ): SpAssetTreeNode[] {
         return apiAssets.map((asset, assetIndex) => {
             const currentPath = [...index, assetIndex];
             let flattenedPath = [];

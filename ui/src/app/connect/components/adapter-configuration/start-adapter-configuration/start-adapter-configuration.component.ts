@@ -27,7 +27,7 @@ import {
 } from '@angular/core';
 import {
     AdapterDescription,
-    AssetTreeNode,
+    SpAssetTreeNode,
     EventRateTransformationRuleDescription,
     EventSchema,
     RemoveDuplicatesTransformationRuleDescription,
@@ -220,7 +220,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
         });
     }
 
-    onSelectedAssetsChange(updatedAssets: AssetTreeNode[]): void {
+    onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.selectedAssets = updatedAssets;
     }
 
