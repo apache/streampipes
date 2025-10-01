@@ -76,7 +76,7 @@ export class AssetSaveService {
                         if (path.length > 2) {
                             this.updateDictValue(
                                 current,
-                                path.splice(2),
+                                path, //.splice(2),
                                 links,
                             );
                         }
@@ -102,7 +102,7 @@ export class AssetSaveService {
         const result: any = { ...dict };
         let current = result;
         let parent: any = null;
-        for (let i = 0; i < path.length; i++) {
+        for (let i = 2; i < path.length; i++) {
             const key = path[i];
 
             if (i === path.length - 1) {

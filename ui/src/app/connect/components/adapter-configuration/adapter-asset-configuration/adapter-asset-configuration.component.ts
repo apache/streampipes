@@ -120,14 +120,14 @@ export class AdapterAssetConfigurationComponent implements OnInit {
             } else {
                 flattenedPath = [...currentPath];
             }
-
+            const flattenedPathCopy = [...flattenedPath];
             return {
                 spAssetModelId: parentId,
                 assetId: asset.assetId,
                 assetName: asset.assetName,
                 flattenPath: flattenedPath,
                 assets: asset.assets
-                    ? this.mapAssets(asset.assets, parentId, flattenedPath)
+                    ? this.mapAssets(asset.assets, parentId, flattenedPathCopy)
                     : [],
             };
         });

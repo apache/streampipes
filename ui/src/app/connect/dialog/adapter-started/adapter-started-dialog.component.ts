@@ -28,6 +28,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
     AdapterService,
+    AssetTreeNode,
     CompactPipeline,
     CompactPipelineElement,
     DatalakeRestService,
@@ -43,10 +44,7 @@ import {
     CompactPipelineService,
     LinkageData,
 } from '@streampipes/platform-services';
-import {
-    Asset,
-    AssetSaveService,
-} from '../../services/adapter-asset-configuration.service';
+import { AssetSaveService } from '../../services/adapter-asset-configuration.service';
 
 import { forkJoin } from 'rxjs';
 
@@ -68,7 +66,7 @@ export class AdapterStartedDialog implements OnInit {
     /**
      * Assets selectedAsset to link the adapter tp
      */
-    @Input() selectedAssets: Asset[];
+    @Input() selectedAssets: AssetTreeNode[];
 
     /**
      * Indicates if a pipeline to store the adapter events should be started
