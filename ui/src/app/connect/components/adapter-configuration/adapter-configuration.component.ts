@@ -103,11 +103,6 @@ export class AdapterConfigurationComponent implements OnInit {
         this.router.navigate(['connect']);
     }
 
-    public addAsset(linkageData) {
-        this.linkageData = linkageData;
-        this.myStepper.next();
-    }
-
     @ViewChild(EventSchemaComponent) set schemaComponent(
         eventSchemaComponent: EventSchemaComponent,
     ) {

@@ -83,7 +83,7 @@ export class AssetSaveService {
                             console.log(path);
                             this.updateDictValue(
                                 current,
-                                path.splice(1),
+                                path.splice(2),
                                 links,
                             );
                         }
@@ -148,14 +148,15 @@ export class AssetSaveService {
     private getAssetPaths(apiAssets: Asset[]): {
         [key: string]: Array<Array<string | number>>;
     } {
+        console.log('apiAssets', apiAssets);
         const idPaths = {};
         apiAssets.forEach(item => {
             item.assets.forEach(asset => {
                 if (asset.id) {
-                    if (!idPaths[asset.id]) {
-                        idPaths[asset.id] = [];
+                    if (!idPaths[item.id]) {
+                        idPaths[item.id] = [];
                     }
-                    idPaths[asset.id].push(asset.flattenPath);
+                    idPaths[item.id].push(asset.flattenPath);
                 }
             });
 
@@ -166,6 +167,7 @@ export class AssetSaveService {
                 idPaths[item.id].push(item.flattenPath);
             }
         });
+        console.log('idPaths ', idPaths);
         return idPaths;
     }
 

@@ -112,8 +112,7 @@
         >
             <sp-adapter-asset-configuration
                 *ngIf="showAsset"
-                [assetSelected]="onAssetSelected"
-                [(selectedAssets)]="selectedAssets"
+                (selectedAssetsChange)="onSelectedAssetsChange($event)"
             >
             </sp-adapter-asset-configuration>
         </sp-adapter-options-panel>

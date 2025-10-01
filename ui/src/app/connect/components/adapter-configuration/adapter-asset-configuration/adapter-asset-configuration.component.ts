@@ -39,8 +39,6 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
 
-    @Input() assetSelected;
-
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
 
@@ -53,7 +51,6 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     treeDropdownOpen = false;
 
     assetsData: Asset[] = [];
-    selectedAssetIds = { id: '', assetId: '' };
     currentAsset: SpAssetModel;
     assetLinkTypes: AssetLinkType[] = [];
     assetLinksLoaded = false;
@@ -72,15 +69,18 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     }
 
     onAssetSelect(node: Asset): void {
+        console.log(node);
         const index = this.selectedAssets.findIndex(
             asset => asset.assetId === node.assetId,
         );
 
         if (index > -1) {
-            this.selectedAssets.splice(index, 1);
+            console.log('index lower 0');
+            //this.selectedAssets.splice(index, 1);
         } else {
             this.selectedAssets.push(node);
         }
+        console.log('Selected Assets', this.selectedAssets);
         this.selectedAssetsChange.emit(this.selectedAssets);
     }
 
@@ -98,6 +98,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         this.assetService.getAllAssets().subscribe({
             next: assets => {
                 this.assetsData = this.mapAssets(assets);
+                console.log('Asset Data ', this.assetsData);
                 this.dataSource.data = this.assetsData;
             },
         });
@@ -109,7 +110,6 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     ): Asset[] {
         return apiAssets.map((asset, assetIndex) => {
             const currentPath = [...index, assetIndex];
-
             let flattenedPath = [];
 
             if (asset._id) {

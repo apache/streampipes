@@ -16,7 +16,15 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    SimpleChanges,
+    OnChanges,
+} from '@angular/core';
 import {
     AdapterDescription,
     Asset,
@@ -102,6 +110,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     showCode = false;
     showAsset = false;
     selectedAssets = [];
+    saver = [];
     constructor(
         private dialogService: DialogService,
         private shepherdService: ShepherdService,
@@ -190,6 +199,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     public startAdapter() {
         this.checkAndApplyStreamRules();
+        console.log('Selected From start Adpter', this.saver);
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: 'Adapter generation',
@@ -200,7 +210,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 dataLakeTimestampField: this.dataLakeTimestampField,
                 editMode: false,
                 startAdapterNow: this.startAdapterNow,
-                selectedAssets: this.selectedAssets,
+                selectedAssets: this.saver,
             },
         });
         const dialogInstance =
@@ -208,6 +218,17 @@ export class StartAdapterConfigurationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(() => {
             this.adapterStartedEmitter.emit();
         });
+    }
+
+    onSelectedAssetsChange(updatedAssets: Asset[]): void {
+        // This method will be called whenever the selected assets change in the child component
+        this.selectedAssets = updatedAssets;
+        this.saver = updatedAssets;
+        console.log('Updated Selected Assets in Parent:', this.selectedAssets);
+        console.log(
+            'Updated Selected Assets in Parent -- New Var:',
+            this.saver,
+        );
     }
 
     private checkAndApplyStreamRules(): void {
@@ -253,9 +274,5 @@ export class StartAdapterConfigurationComponent implements OnInit {
         if (this.adapterDescription.name === 'Tutorial') {
             this.shepherdService.trigger(actionId);
         }
-    }
-
-    onAssetSelected(selectedAssets: Asset[]): void {
-        this.selectedAssets = selectedAssets;
     }
 }
