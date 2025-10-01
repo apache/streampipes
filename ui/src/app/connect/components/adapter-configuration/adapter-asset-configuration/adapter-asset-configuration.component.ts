@@ -59,6 +59,8 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     assetLinksLoaded = false;
     updateObservable: Observable<SpAssetModel>;
     selectedAssets: SpAssetTreeNode[] = [];
+    deselectedAssets: SpAssetTreeNode[] = [];
+    originalAssets: SpAssetTreeNode[] = [];
 
     constructor(private assetService: AssetManagementService) {
         this.treeControl = new NestedTreeControl<SpAssetTreeNode>(
@@ -79,13 +81,41 @@ export class AdapterAssetConfigurationComponent implements OnInit {
             asset => asset.assetId === node.assetId,
         );
 
+        const index_deselected = this.deselectedAssets.findIndex(
+            asset => asset.assetId === node.assetId,
+        );
+
+        console.log(this.originalAssets);
+
         if (index > -1) {
             this.selectedAssets.splice(index, 1);
+            //Differentiate between 'normal deselect' and deselecz from org
+            //TODO Check if node is in originalAssets
+
+            if (this.isNodeInOriginalData(node)) {
+                this.deselectedAssets.push(node);
+            }
+            console.log('node ', node);
         } else {
             this.selectedAssets.push(node);
+            if (index_deselected > -1) {
+                this.deselectedAssets.splice(index_deselected, 1);
+            }
         }
-        console.log(node);
         this.selectedAssetsChange.emit(this.selectedAssets);
+        console.log(this.deselectedAssets);
+    }
+
+    private isNodeInOriginalData(node: SpAssetTreeNode): boolean {
+        for (const asset of this.originalAssets) {
+            if (
+                asset.assetId === node.assetId ||
+                asset.spAssetModelId === node.spAssetModelId
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     isSelected(node: SpAssetTreeNode): boolean {
@@ -113,14 +143,11 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     }
 
     private setSelect() {
-        console.log('setSelect');
         if (!this.adapter || !this.adapter.elementId) {
-            console.log('No Adapter');
             return;
         }
 
         this.assetsData.forEach(node => {
-            console.log('Level1', node);
             this.selectNodeIfMatch(node);
         });
     }
@@ -134,14 +161,13 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         ) {
             if (!this.isSelected(node)) {
                 this.selectedAssets.push(node);
+                this.originalAssets.push(node);
             }
         }
 
         if (node.assets) {
             node.assets.forEach(childNode => this.selectNodeIfMatch(childNode));
         }
-
-        console.log(this.selectedAssets);
     }
 
     private mapAssets(
