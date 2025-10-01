@@ -56,17 +56,20 @@ export class AssetSaveService {
         selectedAssets: SpAssetTreeNode[],
         linkageData: LinkageData[],
     ): void {
+        console.log('SelectedAssets', selectedAssets);
         const uniqueAssetIDsDict = this.getAssetPaths(selectedAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
+        console.log('UniqueIDsDict', uniqueAssetIDsDict);
 
-        uniqueAssetIDs.forEach(id => {
-            this.assetService.getAsset(id).subscribe({
+        uniqueAssetIDs.forEach(spAssetModelId => {
+            this.assetService.getAsset(spAssetModelId).subscribe({
                 next: current => {
                     this.currentAsset = current;
 
                     const links = this.buildLinks(linkageData);
 
-                    uniqueAssetIDsDict[id].forEach(path => {
+                    uniqueAssetIDsDict[spAssetModelId].forEach(path => {
+                        console.log('path ', path);
                         if (path.length === 2) {
                             current.assetLinks = [
                                 ...(current.assetLinks ?? []),
@@ -74,11 +77,12 @@ export class AssetSaveService {
                             ];
                         }
                         if (path.length > 2) {
-                            this.updateDictValue(
+                            current = this.updateDictValue(
                                 current,
                                 path, //.splice(2),
                                 links,
                             );
+                            console.log(current);
                         }
                     });
 
@@ -99,11 +103,14 @@ export class AssetSaveService {
         path: (string | number)[],
         newValue: any,
     ) {
+        console.log('path from update dict', path);
         const result: any = { ...dict };
         let current = result;
         let parent: any = null;
         for (let i = 2; i < path.length; i++) {
             const key = path[i];
+            console.log('i', i);
+            console.log('key', key);
 
             if (i === path.length - 1) {
                 current.assetLinks = newValue;
@@ -135,15 +142,6 @@ export class AssetSaveService {
     } {
         const idPaths = {};
         apiAssets.forEach(item => {
-            item.assets.forEach(asset => {
-                if (asset.spAssetModelId) {
-                    if (!idPaths[item.spAssetModelId]) {
-                        idPaths[item.spAssetModelId] = [];
-                    }
-                    idPaths[item.spAssetModelId].push(asset.flattenPath);
-                }
-            });
-
             if (item.spAssetModelId && item.flattenPath) {
                 if (!idPaths[item.spAssetModelId]) {
                     idPaths[item.spAssetModelId] = [];
