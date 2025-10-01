@@ -110,7 +110,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     showCode = false;
     showAsset = false;
     selectedAssets = [];
-    saver = [];
+
     constructor(
         private dialogService: DialogService,
         private shepherdService: ShepherdService,
@@ -198,11 +198,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     public startAdapter() {
-        console.log('Start Adapter yipii');
-        console.log(this.selectedAssets);
-        console.log('Start Adapter yipii');
         this.checkAndApplyStreamRules();
-        //console.log('Selected From start Adpter', this.selectedAssets);
 
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
@@ -225,17 +221,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     onSelectedAssetsChange(updatedAssets: AssetTreeNode[]): void {
-        console.log('Selected Asset yipii');
-        console.log(updatedAssets);
-        console.log('Selected Asset yipii');
-        // This method will be called whenever the selected assets change in the child component
         this.selectedAssets = updatedAssets;
-        this.saver = updatedAssets;
-        //console.log('Updated Selected Assets in Parent:', this.selectedAssets);
-        //console.log(
-        //    'Updated Selected Assets in Parent -- New Var:',
-        //    this.saver,
-        //);
     }
 
     private checkAndApplyStreamRules(): void {

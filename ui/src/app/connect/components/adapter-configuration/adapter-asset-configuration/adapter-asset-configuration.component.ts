@@ -99,8 +99,6 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         this.assetService.getAllAssets().subscribe({
             next: assets => {
                 this.assetsData = this.mapAssets(assets);
-                console.log('Load Assets', this.assetsData);
-
                 this.dataSource.data = this.assetsData;
             },
         });
