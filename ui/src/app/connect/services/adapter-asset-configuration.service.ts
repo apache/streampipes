@@ -103,20 +103,13 @@ export class AssetSaveService {
         path: (string | number)[],
         newValue: any,
     ) {
-        console.log('path from update dict', path);
-        console.log('beginning dict', dict);
-        console.log(newValue);
         const result: any = { ...dict };
         let current = result;
         let parent: any = null;
         for (let i = 2; i < path.length; i++) {
             const key = path[i];
-            console.log('i', i);
-            console.log('key', key);
-            console.log('path length', path.length);
 
             if (i === path.length - 1) {
-                console.log('ITEM found');
                 current.assets[key].assetLinks = [
                     ...(current.assets[key].assetLinks ?? []),
                     ...newValue,
@@ -128,19 +121,8 @@ export class AssetSaveService {
             if (Array.isArray(current.assets)) {
                 parent = current;
                 current = { ...current.assets[key as number] };
-                //current.assets = [...current.assets];
             }
         }
-
-        //if (parent) {
-        //    if (Array.isArray(parent.assets)) {
-        //        const key = path[path.length - 2];
-        //        parent.assets[key as number] = current;
-        //    } else {
-        //        const key = path[path.length - 2];
-        //        parent.assets[key as string] = current;
-        //    }
-        // }
 
         return result;
     }
