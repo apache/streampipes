@@ -84,7 +84,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         } else {
             this.selectedAssets.push(node);
         }
-
+        console.log(node);
         this.selectedAssetsChange.emit(this.selectedAssets);
     }
 
@@ -96,23 +96,60 @@ export class AdapterAssetConfigurationComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadAssets();
+        console.log('Adapter Info', this.adapter);
     }
 
     private loadAssets(): void {
         this.assetService.getAllAssets().subscribe({
             next: assets => {
                 this.assetsData = this.mapAssets(assets);
+                console.log(this.assetsData);
                 this.dataSource.data = this.assetsData;
+                if (this.isEdit) {
+                    this.setSelect();
+                }
             },
         });
     }
+
+    private setSelect() {
+        console.log('setSelect');
+        if (!this.adapter || !this.adapter.elementId) {
+            console.log('No Adapter');
+            return;
+        }
+
+        this.assetsData.forEach(node => {
+            console.log('Level1', node);
+            this.selectNodeIfMatch(node);
+        });
+    }
+
+    private selectNodeIfMatch(node: SpAssetTreeNode) {
+        if (
+            node.assetLinks &&
+            node.assetLinks.some(
+                link => link.resourceId === this.adapter.elementId,
+            )
+        ) {
+            if (!this.isSelected(node)) {
+                this.selectedAssets.push(node);
+            }
+        }
+
+        if (node.assets) {
+            node.assets.forEach(childNode => this.selectNodeIfMatch(childNode));
+        }
+
+        console.log(this.selectedAssets);
+    }
+
     private mapAssets(
         apiAssets: SpAsset[],
         parentId: string = '',
         index: any[] = [],
     ): SpAssetTreeNode[] {
         return apiAssets.map((asset, assetIndex) => {
-            //TODO Check in here for links
             const currentPath = [...index, assetIndex];
             let flattenedPath = [];
 
@@ -122,16 +159,13 @@ export class AdapterAssetConfigurationComponent implements OnInit {
             } else {
                 flattenedPath = [...currentPath];
             }
-
-            if (this.isEdit) {
-                //TODO
-            }
             const flattenedPathCopy = [...flattenedPath];
             return {
                 spAssetModelId: parentId,
                 assetId: asset.assetId,
                 assetName: asset.assetName,
                 flattenPath: flattenedPath,
+                assetLinks: asset.assetLinks,
                 assets: asset.assets
                     ? this.mapAssets(asset.assets, parentId, flattenedPathCopy)
                     : [],
