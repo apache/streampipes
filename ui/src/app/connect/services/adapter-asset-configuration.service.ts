@@ -77,7 +77,7 @@ export class AssetSaveService {
                             ];
                         }
                         if (path.length > 2) {
-                            current = this.updateDictValue(
+                            this.updateDictValue(
                                 current,
                                 path, //.splice(2),
                                 links,
@@ -117,7 +117,11 @@ export class AssetSaveService {
 
             if (i === path.length - 1) {
                 console.log('ITEM found');
-                current.assets[key].assetLinks = newValue;
+                current.assets[key].assetLinks = [
+                    ...(current.assets[key].assetLinks ?? []),
+                    ...newValue,
+                ];
+
                 break;
             }
 
