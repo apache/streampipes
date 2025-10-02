@@ -32,6 +32,7 @@
             *ngIf="dataSource"
             [dataSource]="dataSource"
             [columns]="displayedColumns"
+            matSort
             data-cy="security-role-config"
         >
             <ng-container matColumnDef="roleName">

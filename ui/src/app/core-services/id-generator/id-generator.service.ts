@@ -46,4 +46,8 @@ export class IdGeneratorService {
     public generatePrefixedId(): string {
         return this.idPrefix + this.generate(6);
     }
+
+    public generateWithPrefix(prefix: string, length: number): string {
+        return prefix + this.generate(length);
+    }
 }

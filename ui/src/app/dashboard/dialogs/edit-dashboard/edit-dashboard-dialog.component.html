@@ -64,6 +64,28 @@
                     </mat-radio-group>
                 </div>
                 <div class="mt-10" fxLayout="column">
+                    <label>{{ 'Grid' | translate }}</label>
+                    <mat-form-field
+                        class="w-100 mt-10"
+                        floatLabel="auto"
+                        color="accent"
+                    >
+                        <mat-label>{{ 'Grid columns' | translate }}</mat-label>
+                        <input
+                            id="dvname"
+                            #dvname="ngModel"
+                            required
+                            matInput
+                            type="number"
+                            data-cy="grid-columns"
+                            [(ngModel)]="dashboard.gridColumns"
+                        />
+                        <mat-error>{{
+                            'Title must not be empty' | translate
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="mt-10" fxLayout="column">
                     <label>{{ 'Time settings' | translate }}</label>
                     <mat-checkbox
                         [(ngModel)]="

@@ -63,7 +63,6 @@ import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/compo
 import { SpAdapterOptionsPanelComponent } from './components/adapter-configuration/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AdapterConfigurationHeaderComponent } from './components/adapter-configuration/adapter-configuration-header/adapter-configuration-header.component';
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
 import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/schema-editor/event-schema-error-hints/event-schema-error-hints.component';
@@ -200,7 +199,6 @@ import { AdapterDetailsCodeComponent } from './components/adapter-details/adapte
     exports: [ErrorMessageComponent],
     declarations: [
         AdapterCodePanelComponent,
-        AdapterConfigurationHeaderComponent,
         AdapterConfigurationComponent,
         AdapterDescriptionComponent,
         AdapterDetailsCodeComponent,

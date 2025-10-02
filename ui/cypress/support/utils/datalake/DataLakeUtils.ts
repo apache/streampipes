@@ -25,6 +25,7 @@ import { ConnectUtils } from '../connect/ConnectUtils';
 import { ConnectBtns } from '../connect/ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { differenceInMonths } from 'date-fns';
+import { GeneralUtils } from '../GeneralUtils';
 
 export class DataLakeUtils {
     public static goToDatalake() {
@@ -174,8 +175,7 @@ export class DataLakeUtils {
     }
 
     public static editDashboard(dashboardName: string) {
-        // Click edit button
-        // following only works if single view is available
+        GeneralUtils.openMenuForRow(dashboardName);
         cy.dataCy('edit-dashboard-' + dashboardName).click();
     }
 
@@ -200,6 +200,7 @@ export class DataLakeUtils {
     }
 
     public static deleteDashboard(dashboardName: string) {
+        GeneralUtils.openMenuForRow(dashboardName);
         cy.dataCy('delete-dashboard-' + dashboardName, {
             timeout: 10000,
         }).click();
@@ -214,6 +215,7 @@ export class DataLakeUtils {
     }
 
     public static cancelDeleteDashboard(dashboardName: string) {
+        GeneralUtils.openMenuForRow(dashboardName);
         cy.dataCy('delete-dashboard-' + dashboardName, {
             timeout: 10000,
         }).click();
@@ -364,7 +366,7 @@ export class DataLakeUtils {
             .click();
     }
 
-    public static clickOrderBy(order: String) {
+    public static clickOrderBy(order: string) {
         if (order == 'ascending') {
             cy.dataCy('ascending-radio-button').click();
         } else {

@@ -1,0 +1,158 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container" fxLayout="column">
+    @if (compositeDashboard) {
+        <div class="sp-dialog-content p-15">
+            <div fxFlex="100">
+                <div
+                    fxFlex="100"
+                    fxLayout="column"
+                    style="margin: 5px; width: 100%"
+                >
+                    <!-- Name -->
+                    <mat-form-field
+                        class="w-100"
+                        floatLabel="auto"
+                        color="accent"
+                    >
+                        <mat-label
+                            >{{ 'New dashboard title' | translate }}
+                        </mat-label>
+                        <input
+                            id="dvname"
+                            #dvname="ngModel"
+                            required
+                            matInput
+                            data-cy="clone-data-view-name"
+                            [(ngModel)]="form.name"
+                        />
+                        <mat-error
+                            >{{ 'Title must not be empty' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Description (optional) -->
+                    <mat-form-field class="w-100" color="accent">
+                        <mat-label>{{ 'Description' | translate }}</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="form.description"
+                            data-cy="clone-data-view-description"
+                        />
+                    </mat-form-field>
+
+                    <!-- Deep clone -->
+                    <div class="mt-10" fxLayout="column">
+                        <label>{{ 'Clone options' | translate }}</label>
+                        <mat-checkbox
+                            class="mt-5"
+                            [(ngModel)]="form.deepClone"
+                            data-cy="clone-deep"
+                            >{{ 'Deep clone (also clone widgets)' | translate }}
+                        </mat-checkbox>
+                    </div>
+
+                    <!-- Allow widget edits (only if deepClone) -->
+                    @if (form.deepClone) {
+                        <div class="mt-10 mb-10" fxLayout="column">
+                            <mat-checkbox
+                                [(ngModel)]="form.allowWidgetEdits"
+                                data-cy="clone-allow-widget-edits"
+                                >{{ 'Modify chart configurations' | translate }}
+                            </mat-checkbox>
+                        </div>
+                    }
+
+                    <!-- Widget edit grid -->
+                    @if (form.deepClone && form.allowWidgetEdits) {
+                        <mat-accordion class="mt-10">
+                            @for (
+                                w of widgetConfigs;
+                                track w.current.elementId
+                            ) {
+                                <mat-expansion-panel
+                                    class="mat-elevation-z0 border-1"
+                                >
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            {{
+                                                w.current.baseAppearanceConfig
+                                                    .widgetTitle
+                                            }}
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+
+                                    <div
+                                        fxLayout="column"
+                                        class="widget-edit p-10"
+                                    >
+                                        <mat-form-field
+                                            class="w-100"
+                                            color="accent"
+                                        >
+                                            <mat-label
+                                                >{{ 'Chart Name' | translate }}
+                                            </mat-label>
+                                            <input
+                                                matInput
+                                                [(ngModel)]="
+                                                    w.cloned
+                                                        .baseAppearanceConfig
+                                                        .widgetTitle
+                                                "
+                                            />
+                                        </mat-form-field>
+                                    </div>
+                                </mat-expansion-panel>
+                            }
+                        </mat-accordion>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="sp-dialog-actions actions-align-left" fxLayoutGap="10px">
+            <button
+                [disabled]="dvname.invalid"
+                mat-button
+                mat-flat-button
+                color="accent"
+                data-cy="clone-save"
+                (click)="onSave()"
+            >
+                {{ 'Clone' | translate }}
+            </button>
+            <button
+                mat-button
+                mat-flat-button
+                class="mat-basic mr-10"
+                (click)="onCancel()"
+            >
+                {{ 'Close' | translate }}
+            </button>
+        </div>
+    } @else {
+        <div fxFlex="100" fxLayoutAlign="center center">
+            <mat-spinner [diameter]="20"></mat-spinner>
+            <h5 class="mt-10">Loading</h5>
+        </div>
+    }
+</div>
