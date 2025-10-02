@@ -124,14 +124,12 @@ export class AdapterAssetConfigurationComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadAssets();
-        console.log('Adapter Info', this.adapter);
     }
 
     private loadAssets(): void {
         this.assetService.getAllAssets().subscribe({
             next: assets => {
                 this.assetsData = this.mapAssets(assets);
-                console.log(this.assetsData);
                 this.dataSource.data = this.assetsData;
                 if (this.isEdit) {
                     this.setSelect();
