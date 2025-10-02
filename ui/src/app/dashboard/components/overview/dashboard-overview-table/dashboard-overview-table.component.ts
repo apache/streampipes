@@ -163,13 +163,21 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
     }
 
     openCloneDialog(dashboard: Dashboard): void {
-        this.dialogService.open(CloneDashboardDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('Clone dashboard'),
-            width: '50vw',
-            data: {
-                dashboard: dashboard,
+        const dialogRef = this.dialogService.open(
+            CloneDashboardDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Clone dashboard'),
+                width: '50vw',
+                data: {
+                    dashboard: dashboard,
+                },
             },
+        );
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.getDashboards();
+            }
         });
     }
 

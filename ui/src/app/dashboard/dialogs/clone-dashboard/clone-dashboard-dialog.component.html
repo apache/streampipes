@@ -31,9 +31,9 @@
                         floatLabel="auto"
                         color="accent"
                     >
-                        <mat-label>{{
-                            'New dashboard title' | translate
-                        }}</mat-label>
+                        <mat-label
+                            >{{ 'New dashboard title' | translate }}
+                        </mat-label>
                         <input
                             id="dvname"
                             #dvname="ngModel"
@@ -42,9 +42,9 @@
                             data-cy="clone-data-view-name"
                             [(ngModel)]="form.name"
                         />
-                        <mat-error>{{
-                            'Title must not be empty' | translate
-                        }}</mat-error>
+                        <mat-error
+                            >{{ 'Title must not be empty' | translate }}
+                        </mat-error>
                     </mat-form-field>
 
                     <!-- Description (optional) -->
@@ -69,20 +69,18 @@
                     </div>
 
                     <!-- Allow widget edits (only if deepClone) -->
-                    <div
-                        class="mt-10 mb-10"
-                        fxLayout="column"
-                        *ngIf="form.deepClone"
-                    >
-                        <mat-checkbox
-                            [(ngModel)]="form.allowWidgetEdits"
-                            data-cy="clone-allow-widget-edits"
-                            >{{ 'Modify chart configurations' | translate }}
-                        </mat-checkbox>
-                    </div>
+                    @if (form.deepClone) {
+                        <div class="mt-10 mb-10" fxLayout="column">
+                            <mat-checkbox
+                                [(ngModel)]="form.allowWidgetEdits"
+                                data-cy="clone-allow-widget-edits"
+                                >{{ 'Modify chart configurations' | translate }}
+                            </mat-checkbox>
+                        </div>
+                    }
 
                     <!-- Widget edit grid -->
-                    <div *ngIf="form.deepClone && form.allowWidgetEdits">
+                    @if (form.deepClone && form.allowWidgetEdits) {
                         <mat-accordion class="mt-10">
                             @for (
                                 w of widgetConfigs;
@@ -108,9 +106,9 @@
                                             class="w-100"
                                             color="accent"
                                         >
-                                            <mat-label>{{
-                                                'Chart Name' | translate
-                                            }}</mat-label>
+                                            <mat-label
+                                                >{{ 'Chart Name' | translate }}
+                                            </mat-label>
                                             <input
                                                 matInput
                                                 [(ngModel)]="
@@ -124,7 +122,7 @@
                                 </mat-expansion-panel>
                             }
                         </mat-accordion>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
