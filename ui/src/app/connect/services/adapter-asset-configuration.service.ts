@@ -51,25 +51,99 @@ export class AssetSaveService {
         deselectedAssets: SpAssetTreeNode[] = [],
         originalAssets: SpAssetTreeNode[] = [],
     ): void {
-        console.log('selected', selectedAssets);
-        console.log('deselected', deselectedAssets);
         const links = this.buildLinks(linkageData);
+
+        if (originalAssets.length > 0) {
+            this.renameLinkage(originalAssets, links);
+        }
 
         this.deleteLinkOnDeselectAssets(deselectedAssets, links);
         this.setLinkOnSelectAssets(selectedAssets, links);
     }
 
-    private renameLinkage(originalAssets: SpAssetTreeNode[], links: any[]) {
-        console.log('renameLinkage');
-        console.log('original Assets', originalAssets);
-        console.log('Links', links);
+    private renameLinkage(deselectedAssets, links) {
+        const uniqueAssetIDsDict = this.getAssetPaths(deselectedAssets);
+        const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
-        this.deleteLinkOnDeselectAssets(originalAssets, links);
-        this.setLinkOnSelectAssets(originalAssets, links);
+        uniqueAssetIDs.forEach(spAssetModelId => {
+            this.assetService.getAsset(spAssetModelId).subscribe({
+                next: current => {
+                    this.currentAsset = current;
 
-        //console.log('Begin setting')
+                    uniqueAssetIDsDict[spAssetModelId].forEach(path => {
+                        if (path.length === 2) {
+                            current.assetLinks = (current.assetLinks ?? []).map(
+                                (link: any) => {
+                                    const matchedLink = links.find(
+                                        l =>
+                                            JSON.stringify(l.resourceId) ===
+                                            JSON.stringify(link.resourceId),
+                                    );
+                                    if (matchedLink) {
+                                        // Replace linkLabel with matched link's kabel
+                                        link.linkLabel = matchedLink.linkLabel;
+                                    }
+                                    return link;
+                                },
+                            );
+                        }
 
-        //this.setLinkOnSelectAssets(originalAssets,links)
+                        if (path.length > 2) {
+                            links.forEach(linkToUpdate => {
+                                this.updateLinkLabelInDict(
+                                    current,
+                                    path,
+                                    linkToUpdate,
+                                );
+                            });
+                        }
+                    });
+
+                    const updateObservable =
+                        this.assetService.updateAsset(current);
+
+                    updateObservable?.subscribe({
+                        next: updated => {
+                            this.adapterStartedEmitter.emit();
+                        },
+                    });
+                },
+            });
+        });
+    }
+
+    private updateLinkLabelInDict(
+        dict: any,
+        path: (string | number)[],
+        linkToUpdate: any,
+    ) {
+        let current = dict;
+
+        for (let i = 2; i < path.length; i++) {
+            const key = path[i];
+            if (i === path.length - 1) {
+                if (current.assets?.[key]?.assetLinks) {
+                    current.assets[key].assetLinks = current.assets[
+                        key
+                    ].assetLinks.map((link: any) => {
+                        if (
+                            JSON.stringify(link.resourceId) ===
+                            JSON.stringify(linkToUpdate.resourceId)
+                        ) {
+                            // Replace linkLabel with linkToUpdate's kabel
+                            link.linkLabel = linkToUpdate.linkLabel;
+                        }
+                        return link;
+                    });
+                }
+            } else {
+                if (Array.isArray(current.assets)) {
+                    current = current.assets[key as number];
+                }
+            }
+        }
+
+        return current;
     }
 
     private setLinkOnSelectAssets(selectedAssets, links) {
@@ -106,7 +180,6 @@ export class AssetSaveService {
     }
 
     private deleteLinkOnDeselectAssets(deselectedAssets, links) {
-        // TODO: Only go for the same resourceID
         const uniqueAssetIDsDict = this.getAssetPaths(deselectedAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
@@ -140,12 +213,8 @@ export class AssetSaveService {
                         }
                     });
 
-                    console.log('Delete Update Asset Started');
-
                     const updateObservable =
                         this.assetService.updateAsset(current);
-
-                    console.log('Delete Update Asset Ended');
 
                     updateObservable?.subscribe({
                         next: updated => {

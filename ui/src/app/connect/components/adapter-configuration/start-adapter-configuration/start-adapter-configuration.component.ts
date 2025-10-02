@@ -234,9 +234,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
-        console.log('Start Set', updatedAssets);
         this.originalAssets = updatedAssets;
-        console.log(this.originalAssets);
     }
 
     private checkAndApplyStreamRules(): void {

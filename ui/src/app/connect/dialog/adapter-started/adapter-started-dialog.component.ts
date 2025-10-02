@@ -318,7 +318,6 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     private async saveAssets(linkageData: LinkageData[]): Promise<void> {
-        console.log('From Started', this.originalAssets);
         await this.assetSaveService.saveSelectedAssets(
             this.selectedAssets,
             linkageData,
