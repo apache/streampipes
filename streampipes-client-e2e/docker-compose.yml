@@ -111,7 +111,7 @@ services:
       spnet:
 
 volumes:
-  kafka:
+  kafka3:
   couchdb:
   zookeeper:
   influxdb:
