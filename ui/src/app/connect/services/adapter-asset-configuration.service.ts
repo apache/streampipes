@@ -47,8 +47,11 @@ export class AssetSaveService {
     saveSelectedAssets(
         selectedAssets: SpAssetTreeNode[],
         linkageData: LinkageData[],
-        deselectedAssets: SpAssetModel[] = [],
+        deselectedAssets: SpAssetTreeNode[] = [],
     ): void {
+        console.log('AssetSaveService ');
+        console.log('selectedAssets ', selectedAssets);
+        console.log('DeselectedAssets', deselectedAssets);
         const links = this.buildLinks(linkageData);
         this.setLinkOnSelectAssets(selectedAssets, links);
         this.deleteLinkOnDeselectAssets(deselectedAssets, links);

@@ -138,6 +138,9 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     updateAdapter(): void {
+        console.log('Deselected Assets', this.deselectedAssets);
+        console.log('selected Assets', this.selectedAssets);
+
         this.loadingText = `Updating adapter ${this.adapter.name}`;
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe({
@@ -285,7 +288,10 @@ export class AdapterStartedDialog implements OnInit {
         return [
             {
                 type: 'adapter',
-                id: this.adapterElementId,
+                id:
+                    this.adapterElementId !== ''
+                        ? this.adapterElementId
+                        : adapter.elementId,
                 name: adapter.name,
             },
             {
@@ -322,6 +328,7 @@ export class AdapterStartedDialog implements OnInit {
         await this.assetSaveService.saveSelectedAssets(
             this.selectedAssets,
             linkageData,
+            this.deselectedAssets,
         );
     }
 
