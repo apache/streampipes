@@ -98,9 +98,11 @@ export class AdapterAssetConfigurationComponent implements OnInit {
                 this.deselectedAssets.splice(index_deselected, 1);
             }
         }
+        console.log('Selected Assets', this.selectedAssets);
         const selectEmit = this.selectedAssets.filter(
             node => !this.isNodeInOriginalData(node),
         );
+        console.log('Select Emit', selectEmit);
         this.selectedAssetsChange.emit(selectEmit);
         this.deselectedAssetsChange.emit(this.deselectedAssets);
     }
@@ -108,7 +110,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     private isNodeInOriginalData(node: SpAssetTreeNode): boolean {
         for (const asset of this.originalAssets) {
             if (
-                asset.assetId === node.assetId ||
+                asset.assetId === node.assetId &&
                 asset.spAssetModelId === node.spAssetModelId
             ) {
                 return true;
@@ -159,9 +161,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
             if (!this.isSelected(node)) {
                 this.selectedAssets.push(node);
                 this.originalAssets.push(node);
-                console.log('Call to emit');
                 this.originalAssetsEmitter.emit(this.originalAssets);
-                console.log('Original', this.originalAssets);
             }
         }
 

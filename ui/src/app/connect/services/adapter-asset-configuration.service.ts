@@ -51,21 +51,12 @@ export class AssetSaveService {
         deselectedAssets: SpAssetTreeNode[] = [],
         originalAssets: SpAssetTreeNode[] = [],
     ): void {
+        console.log('selected', selectedAssets);
+        console.log('deselected', deselectedAssets);
         const links = this.buildLinks(linkageData);
-        console.log('Select', originalAssets);
-        if (originalAssets.length > 0) {
-            this.renameLinkage(originalAssets, links);
-        }
-        if (deselectedAssets.length > 0) {
-            this.deleteLinkOnDeselectAssets(deselectedAssets, links).subscribe({
-                next: () => {
-                    console.log('Begin setting');
-                    this.setLinkOnSelectAssets(selectedAssets, links);
-                },
-            });
-        } else if (selectedAssets.length > 0) {
-            this.setLinkOnSelectAssets(selectedAssets, links);
-        }
+
+        this.deleteLinkOnDeselectAssets(deselectedAssets, links);
+        this.setLinkOnSelectAssets(selectedAssets, links);
     }
 
     private renameLinkage(originalAssets: SpAssetTreeNode[], links: any[]) {
@@ -73,12 +64,8 @@ export class AssetSaveService {
         console.log('original Assets', originalAssets);
         console.log('Links', links);
 
-        this.deleteLinkOnDeselectAssets(originalAssets, links).subscribe({
-            next: () => {
-                console.log('Begin setting');
-                this.setLinkOnSelectAssets(originalAssets, links);
-            },
-        });
+        this.deleteLinkOnDeselectAssets(originalAssets, links);
+        this.setLinkOnSelectAssets(originalAssets, links);
 
         //console.log('Begin setting')
 
@@ -119,60 +106,54 @@ export class AssetSaveService {
     }
 
     private deleteLinkOnDeselectAssets(deselectedAssets, links) {
+        // TODO: Only go for the same resourceID
         const uniqueAssetIDsDict = this.getAssetPaths(deselectedAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
-        return new Observable<void>(observer => {
-            const deleteObservables = uniqueAssetIDs.map(spAssetModelId => {
-                return this.assetService.getAsset(spAssetModelId).pipe(
-                    concatMap(current => {
-                        this.currentAsset = current;
-                        uniqueAssetIDsDict[spAssetModelId].forEach(path => {
-                            if (path.length === 2) {
-                                current.assetLinks = (
-                                    current.assetLinks ?? []
-                                ).filter(
-                                    (link: any) =>
-                                        !links.some(
-                                            l =>
-                                                JSON.stringify(l.resourceId) ===
-                                                JSON.stringify(link.resourceId),
-                                        ),
+        uniqueAssetIDs.forEach(spAssetModelId => {
+            this.assetService.getAsset(spAssetModelId).subscribe({
+                next: current => {
+                    this.currentAsset = current;
+
+                    uniqueAssetIDsDict[spAssetModelId].forEach(path => {
+                        if (path.length === 2) {
+                            current.assetLinks = (
+                                current.assetLinks ?? []
+                            ).filter(
+                                (link: any) =>
+                                    !links.some(
+                                        l =>
+                                            JSON.stringify(l.resourceId) ===
+                                            JSON.stringify(link.resourceId),
+                                    ),
+                            );
+                        }
+
+                        if (path.length > 2) {
+                            links.forEach(linkToRemove => {
+                                this.deleteDictValue(
+                                    current,
+                                    path,
+                                    linkToRemove,
                                 );
-                            }
-                            if (path.length > 2) {
-                                links.forEach(linkToRemove => {
-                                    this.deleteDictValue(
-                                        current,
-                                        path,
-                                        linkToRemove,
-                                    );
-                                });
-                            }
-                        });
+                            });
+                        }
+                    });
 
-                        console.log('Delete Update Asset Started');
-                        const updateObservable =
-                            this.assetService.updateAsset(current);
-                        console.log('Delete Update Asset Ended');
-                        return updateObservable ?? new Observable();
-                    }),
-                );
+                    console.log('Delete Update Asset Started');
+
+                    const updateObservable =
+                        this.assetService.updateAsset(current);
+
+                    console.log('Delete Update Asset Ended');
+
+                    updateObservable?.subscribe({
+                        next: updated => {
+                            this.adapterStartedEmitter.emit();
+                        },
+                    });
+                },
             });
-
-            from(deleteObservables)
-                .pipe(concatMap(obs => obs))
-                .subscribe({
-                    next: () => {
-                        observer.next();
-                    },
-                    error: err => {
-                        observer.error(err);
-                    },
-                    complete: () => {
-                        observer.complete();
-                    },
-                });
         });
     }
 
