@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,33 +16,6 @@
  *
  */
 
-.fixed-height {
-    height: 50px;
-}
-
-.m-20 {
-    margin: 20px;
-}
-
-.h-100 {
-    height: 100%;
-}
-
-.dashboard-grid {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
-
-.designer-panel-container {
-    width: 100%;
-    height: 100%;
-}
-
-.designer-panel {
-    width: 450px;
-}
-
-.edit-menu-btn {
-    margin-right: 5px;
-}
+import { Directive } from '@angular/core';
+@Directive({ selector: 'ng-template[spTableActions]', standalone: false })
+export class SpTableActionsDirective {}
