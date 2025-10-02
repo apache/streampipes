@@ -18,38 +18,33 @@
 
 package org.apache.streampipes.integration.containers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.kafka.KafkaContainer;
 
 
-public class KafkaContainer extends org.testcontainers.containers.KafkaContainer {
+public class SpKafkaTestContainer {
 
-  Logger logger = LoggerFactory.getLogger(KafkaContainer.class);
+  private KafkaContainer kafka;
 
-  private static final int KAFKA_PORT = 9093;
-
-
-  public KafkaContainer() {
-    super(DockerImageName.parse("confluentinc/cp-kafka:7.9.1"));
+  public SpKafkaTestContainer() {
+    kafka = new KafkaContainer("apache/kafka");
   }
 
-
   public void start() {
-    super.start();
+    kafka.start();
   }
 
   public String getBrokerHost() {
-    return getHost();
+    return kafka.getHost();
   }
 
   public Integer getBrokerPort() {
-    return getMappedPort(KAFKA_PORT);
+    return kafka.getFirstMappedPort();
   }
 
-  public String getHttpUrl() {
-    return "http://" + getHost() + ":" + getBrokerPort();
+  public void stop() {
+    if (kafka != null) {
+      kafka.stop();
+    }
   }
-
 
 }
