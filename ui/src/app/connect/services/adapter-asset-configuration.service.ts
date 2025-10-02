@@ -65,7 +65,6 @@ export class AssetSaveService {
             this.assetService.getAsset(spAssetModelId).subscribe({
                 next: current => {
                     this.currentAsset = current;
-                    console.log('current', current);
 
                     uniqueAssetIDsDict[spAssetModelId].forEach(path => {
                         if (path.length === 2) {
@@ -92,15 +91,12 @@ export class AssetSaveService {
     }
 
     private deleteLinkOnDeselectAssets(deselectedAssets, links) {
-        console.log('deselected Assets ', deselectedAssets);
-        console.log('links', links);
         const uniqueAssetIDsDict = this.getAssetPaths(deselectedAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
         uniqueAssetIDs.forEach(spAssetModelId => {
             this.assetService.getAsset(spAssetModelId).subscribe({
                 next: current => {
                     this.currentAsset = current;
-                    console.log('current begin', current);
 
                     uniqueAssetIDsDict[spAssetModelId].forEach(path => {
                         if (path.length === 2) {

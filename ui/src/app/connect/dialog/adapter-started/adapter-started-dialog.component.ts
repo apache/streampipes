@@ -102,6 +102,7 @@ export class AdapterStartedDialog implements OnInit {
     adapterElementId = '';
     adapterErrorMessage: SpLogMessage;
     addToAssetText = '';
+    deletedFromAssetText = '';
 
     constructor(
         public dialogRef: DialogRef<AdapterStartedDialog>,
@@ -138,9 +139,6 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     updateAdapter(): void {
-        console.log('Deselected Assets', this.deselectedAssets);
-        console.log('selected Assets', this.selectedAssets);
-
         this.loadingText = `Updating adapter ${this.adapter.name}`;
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe({
@@ -248,7 +246,6 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     async addToAsset(): Promise<void> {
-        console.log('add to asset');
         this.pollingActive = false;
         let linkageData: LinkageData[];
 
@@ -262,13 +259,8 @@ export class AdapterStartedDialog implements OnInit {
                 }
             } else {
                 //If Edit Mode only delete Data directly related to Adapter
-                console.log('EDIT Mode');
-                console.log(this.adapter);
                 linkageData = this.createLinkageData(this.adapter);
-                console.log(linkageData);
             }
-
-            console.log('save Assets');
 
             await this.saveAssets(linkageData);
 
@@ -341,7 +333,15 @@ export class AdapterStartedDialog implements OnInit {
             this.selectedAssets.map(asset => asset.assetName),
         );
 
-        this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
+        const assetIdsRemovedList = this.formatWithAnd(
+            this.deselectedAssets.map(asset => asset.assetName),
+        );
+        if (this.selectedAssets.length > 0) {
+            this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
+        }
+        if (this.deselectedAssets.length > 0) {
+            this.deletedFromAssetText = `Your ${assetTypesList} were successfully removed from to ${assetIdsRemovedList}.`;
+        }
     }
 
     private formatWithAnd(list: string[]): string {

@@ -40,6 +40,9 @@ export class SpAdapterStartedSuccessComponent {
     saveInAsset = '';
 
     @Input()
+    deletedFromAsset = '';
+
+    @Input()
     pipelineOperationStatus: PipelineOperationStatus;
 
     @Input()
