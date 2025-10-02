@@ -49,9 +49,6 @@ export class AssetSaveService {
         linkageData: LinkageData[],
         deselectedAssets: SpAssetTreeNode[] = [],
     ): void {
-        console.log('AssetSaveService ');
-        console.log('selectedAssets ', selectedAssets);
-        console.log('DeselectedAssets', deselectedAssets);
         const links = this.buildLinks(linkageData);
         this.setLinkOnSelectAssets(selectedAssets, links);
         this.deleteLinkOnDeselectAssets(deselectedAssets, links);
@@ -161,7 +158,6 @@ export class AssetSaveService {
             }
         }
 
-        console.log('after Man', current);
         return current;
     }
 
