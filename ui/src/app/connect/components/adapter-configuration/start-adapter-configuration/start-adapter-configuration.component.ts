@@ -111,6 +111,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     showAsset = false;
     selectedAssets = [];
     deselectedAssets = [];
+    originalAssets = [];
 
     constructor(
         private dialogService: DialogService,
@@ -192,6 +193,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 editMode: true,
                 selectedAssets: this.selectedAssets,
                 deselectedAssets: this.deselectedAssets,
+                originalAssets: this.originalAssets,
             },
         });
 
@@ -229,6 +231,12 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.deselectedAssets = updatedAssets;
+    }
+
+    onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
+        console.log('Start Set', updatedAssets);
+        this.originalAssets = updatedAssets;
+        console.log(this.originalAssets);
     }
 
     private checkAndApplyStreamRules(): void {

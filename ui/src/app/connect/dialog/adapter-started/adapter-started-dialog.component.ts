@@ -68,6 +68,7 @@ export class AdapterStartedDialog implements OnInit {
      */
     @Input() selectedAssets: SpAssetTreeNode[];
     @Input() deselectedAssets: SpAssetTreeNode[];
+    @Input() originalAssets: SpAssetTreeNode[];
 
     /**
      * Indicates if a pipeline to store the adapter events should be started
@@ -263,8 +264,8 @@ export class AdapterStartedDialog implements OnInit {
             }
 
             await this.saveAssets(linkageData);
-
-            this.setSuccessMessage(linkageData);
+            //TODO
+            //this.setSuccessMessage(linkageData);
         } catch (err) {
             console.error('Error in addToAsset:', err);
         }
@@ -317,10 +318,12 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     private async saveAssets(linkageData: LinkageData[]): Promise<void> {
+        console.log('From Started', this.originalAssets);
         await this.assetSaveService.saveSelectedAssets(
             this.selectedAssets,
             linkageData,
             this.deselectedAssets,
+            this.originalAssets,
         );
     }
 

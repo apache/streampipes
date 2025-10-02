@@ -116,6 +116,7 @@
                 [adapter]="adapterDescription"
                 (selectedAssetsChange)="onSelectedAssetsChange($event)"
                 (deselectedAssetsChange)="onDeselectedAssetsChange($event)"
+                (originalAssetsEmitter)="onOriginalAssetsEmitted($event)"
             >
             </sp-adapter-asset-configuration>
         </sp-adapter-options-panel>

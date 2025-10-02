@@ -48,6 +48,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
 
     @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
     @Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() originalAssetsEmitter = new EventEmitter<SpAssetTreeNode[]>();
 
     treeControl: NestedTreeControl<SpAssetTreeNode>;
     dataSource: MatTreeNestedDataSource<SpAssetTreeNode>;
@@ -158,6 +159,9 @@ export class AdapterAssetConfigurationComponent implements OnInit {
             if (!this.isSelected(node)) {
                 this.selectedAssets.push(node);
                 this.originalAssets.push(node);
+                console.log('Call to emit');
+                this.originalAssetsEmitter.emit(this.originalAssets);
+                console.log('Original', this.originalAssets);
             }
         }
 

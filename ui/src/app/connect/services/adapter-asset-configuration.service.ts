@@ -27,6 +27,7 @@ import {
     GenericStorageService,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
+import { concatMap, from, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -48,10 +49,40 @@ export class AssetSaveService {
         selectedAssets: SpAssetTreeNode[],
         linkageData: LinkageData[],
         deselectedAssets: SpAssetTreeNode[] = [],
+        originalAssets: SpAssetTreeNode[] = [],
     ): void {
         const links = this.buildLinks(linkageData);
-        this.setLinkOnSelectAssets(selectedAssets, links);
-        this.deleteLinkOnDeselectAssets(deselectedAssets, links);
+        console.log('Select', originalAssets);
+        if (originalAssets.length > 0) {
+            this.renameLinkage(originalAssets, links);
+        }
+        if (deselectedAssets.length > 0) {
+            this.deleteLinkOnDeselectAssets(deselectedAssets, links).subscribe({
+                next: () => {
+                    console.log('Begin setting');
+                    this.setLinkOnSelectAssets(selectedAssets, links);
+                },
+            });
+        } else if (selectedAssets.length > 0) {
+            this.setLinkOnSelectAssets(selectedAssets, links);
+        }
+    }
+
+    private renameLinkage(originalAssets: SpAssetTreeNode[], links: any[]) {
+        console.log('renameLinkage');
+        console.log('original Assets', originalAssets);
+        console.log('Links', links);
+
+        this.deleteLinkOnDeselectAssets(originalAssets, links).subscribe({
+            next: () => {
+                console.log('Begin setting');
+                this.setLinkOnSelectAssets(originalAssets, links);
+            },
+        });
+
+        //console.log('Begin setting')
+
+        //this.setLinkOnSelectAssets(originalAssets,links)
     }
 
     private setLinkOnSelectAssets(selectedAssets, links) {
@@ -90,45 +121,58 @@ export class AssetSaveService {
     private deleteLinkOnDeselectAssets(deselectedAssets, links) {
         const uniqueAssetIDsDict = this.getAssetPaths(deselectedAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
-        uniqueAssetIDs.forEach(spAssetModelId => {
-            this.assetService.getAsset(spAssetModelId).subscribe({
-                next: current => {
-                    this.currentAsset = current;
 
-                    uniqueAssetIDsDict[spAssetModelId].forEach(path => {
-                        if (path.length === 2) {
-                            current.assetLinks = (
-                                current.assetLinks ?? []
-                            ).filter(
-                                (link: any) =>
-                                    !links.some(
-                                        l =>
-                                            JSON.stringify(l) ===
-                                            JSON.stringify(link),
-                                    ),
-                            );
-                        }
-
-                        if (path.length > 2) {
-                            links.forEach(linkToRemove => {
-                                this.deleteDictValue(
-                                    current,
-                                    path,
-                                    linkToRemove,
+        return new Observable<void>(observer => {
+            const deleteObservables = uniqueAssetIDs.map(spAssetModelId => {
+                return this.assetService.getAsset(spAssetModelId).pipe(
+                    concatMap(current => {
+                        this.currentAsset = current;
+                        uniqueAssetIDsDict[spAssetModelId].forEach(path => {
+                            if (path.length === 2) {
+                                current.assetLinks = (
+                                    current.assetLinks ?? []
+                                ).filter(
+                                    (link: any) =>
+                                        !links.some(
+                                            l =>
+                                                JSON.stringify(l.resourceId) ===
+                                                JSON.stringify(link.resourceId),
+                                        ),
                                 );
-                            });
-                        }
-                    });
+                            }
+                            if (path.length > 2) {
+                                links.forEach(linkToRemove => {
+                                    this.deleteDictValue(
+                                        current,
+                                        path,
+                                        linkToRemove,
+                                    );
+                                });
+                            }
+                        });
 
-                    const updateObservable =
-                        this.assetService.updateAsset(current);
-                    updateObservable?.subscribe({
-                        next: updated => {
-                            this.adapterStartedEmitter.emit();
-                        },
-                    });
-                },
+                        console.log('Delete Update Asset Started');
+                        const updateObservable =
+                            this.assetService.updateAsset(current);
+                        console.log('Delete Update Asset Ended');
+                        return updateObservable ?? new Observable();
+                    }),
+                );
             });
+
+            from(deleteObservables)
+                .pipe(concatMap(obs => obs))
+                .subscribe({
+                    next: () => {
+                        observer.next();
+                    },
+                    error: err => {
+                        observer.error(err);
+                    },
+                    complete: () => {
+                        observer.complete();
+                    },
+                });
         });
     }
 
@@ -147,8 +191,8 @@ export class AssetSaveService {
                         key
                     ].assetLinks.filter(
                         (link: any) =>
-                            JSON.stringify(link) !==
-                            JSON.stringify(linkToRemove),
+                            JSON.stringify(link.resourceId) !==
+                            JSON.stringify(linkToRemove.resourceId),
                     );
                 }
             } else {
