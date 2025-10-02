@@ -174,9 +174,24 @@ export class DataLakeUtils {
     }
 
     public static editDashboard(dashboardName: string) {
-        // Click edit button
-        // following only works if single view is available
+        this.openMenuForRow(dashboardName);
         cy.dataCy('edit-dashboard-' + dashboardName).click();
+    }
+
+    private static openMenuForRow(rowText: string) {
+        cy.contains('[role="row"], tr, mat-row', rowText) // be flexible on row element
+            .scrollIntoView()
+            .within(() => {
+                // Hover the trigger to open the menu
+                cy.dataCy('more-options').trigger('mouseenter', {
+                    force: true,
+                });
+            });
+
+        // Wait for the CDK overlay panel to become visible
+        cy.get('.cdk-overlay-container .mat-mdc-menu-panel:visible').should(
+            'exist',
+        );
     }
 
     public static editDataView(dataViewName: string) {
@@ -200,6 +215,7 @@ export class DataLakeUtils {
     }
 
     public static deleteDashboard(dashboardName: string) {
+        this.openMenuForRow(dashboardName);
         cy.dataCy('delete-dashboard-' + dashboardName, {
             timeout: 10000,
         }).click();
@@ -214,6 +230,7 @@ export class DataLakeUtils {
     }
 
     public static cancelDeleteDashboard(dashboardName: string) {
+        this.openMenuForRow(dashboardName);
         cy.dataCy('delete-dashboard-' + dashboardName, {
             timeout: 10000,
         }).click();

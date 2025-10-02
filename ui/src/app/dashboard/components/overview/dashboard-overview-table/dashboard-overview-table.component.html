@@ -138,7 +138,9 @@
                 @if (hasDataExplorerWritePrivileges) {
                     <button
                         mat-menu-item
-                        [attr.data-cy]="'edit-dashboard-' + element.name"
+                        [attr.data-cy]="
+                            'edit-dashboard-settings-' + element.name
+                        "
                         (click)="openEditDashboardDialog(element)"
                     >
                         <mat-icon>settings</mat-icon>
