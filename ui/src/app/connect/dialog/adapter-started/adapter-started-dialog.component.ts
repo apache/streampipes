@@ -264,8 +264,8 @@ export class AdapterStartedDialog implements OnInit {
             }
 
             await this.saveAssets(linkageData);
-            //TODO
-            //this.setSuccessMessage(linkageData);
+
+            this.setSuccessMessage(linkageData);
         } catch (err) {
             console.error('Error in addToAsset:', err);
         }
@@ -330,18 +330,17 @@ export class AdapterStartedDialog implements OnInit {
         const assetTypesList = this.formatWithAnd(
             linkageData.map(data => data.type),
         );
-
-        const assetIdsList = this.formatWithAnd(
-            this.selectedAssets.map(asset => asset.assetName),
-        );
-
-        const assetIdsRemovedList = this.formatWithAnd(
-            this.deselectedAssets.map(asset => asset.assetName),
-        );
         if (this.selectedAssets.length > 0) {
+            const assetIdsList = this.formatWithAnd(
+                this.selectedAssets.map(asset => asset.assetName),
+            );
+
             this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
         }
-        if (this.deselectedAssets.length > 0) {
+        if (this.deselectedAssets && this.deselectedAssets.length > 0) {
+            const assetIdsRemovedList = this.formatWithAnd(
+                this.deselectedAssets.map(asset => asset.assetName),
+            );
             this.deletedFromAssetText = `Your ${assetTypesList} were successfully removed from to ${assetIdsRemovedList}.`;
         }
     }
