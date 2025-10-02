@@ -98,11 +98,11 @@ export class AdapterAssetConfigurationComponent implements OnInit {
                 this.deselectedAssets.splice(index_deselected, 1);
             }
         }
-        console.log('Selected Assets', this.selectedAssets);
+
         const selectEmit = this.selectedAssets.filter(
             node => !this.isNodeInOriginalData(node),
         );
-        console.log('Select Emit', selectEmit);
+
         this.selectedAssetsChange.emit(selectEmit);
         this.deselectedAssetsChange.emit(this.deselectedAssets);
     }
