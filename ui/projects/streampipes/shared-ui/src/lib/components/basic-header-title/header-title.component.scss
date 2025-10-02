@@ -24,21 +24,13 @@
 .header-title {
     font-size: 1.7rem;
     font-weight: 700;
-    position: relative;
     display: inline-block;
-}
-
-.header-title::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -8px;
-    width: 60%;
-    height: 4px;
-    border-radius: 4px;
-    background: linear-gradient(
-        90deg,
-        var(--color-primary),
-        var(--color-primary-dark)
-    );
+    padding-left: 12px; /* space so text doesn't overlap border */
+    border-left: 4px solid transparent; /* thickness of the border */
+    border-image: linear-gradient(
+            to bottom,
+            var(--color-primary),
+            var(--color-primary-dark)
+        )
+        1;
 }
