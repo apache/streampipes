@@ -67,6 +67,7 @@ export class AdapterStartedDialog implements OnInit {
      * Assets selectedAsset to link the adapter tp
      */
     @Input() selectedAssets: SpAssetTreeNode[];
+    @Input() deselectedAssets: SpAssetTreeNode[];
 
     /**
      * Indicates if a pipeline to store the adapter events should be started
@@ -150,6 +151,7 @@ export class AdapterStartedDialog implements OnInit {
 
                     this.onAdapterFailure(errorLogMessage);
                 }
+                this.addToAsset();
             },
             error: error => {
                 this.onAdapterFailure(error.error);
@@ -243,17 +245,30 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     async addToAsset(): Promise<void> {
+        console.log('add to asset');
         this.pollingActive = false;
+        let linkageData: LinkageData[];
 
         try {
-            const adapter = await this.getAdapter();
-            const linkageData: LinkageData[] = this.createLinkageData(adapter);
+            if (!this.editMode) {
+                const adapter = await this.getAdapter();
+                linkageData = this.createLinkageData(adapter);
 
-            if (this.saveInDataLake) {
-                await this.addDataLakeLinkageData(adapter, linkageData);
+                if (this.saveInDataLake) {
+                    await this.addDataLakeLinkageData(adapter, linkageData);
+                }
+            } else {
+                //If Edit Mode only delete Data directly related to Adapter
+                console.log('EDIT Mode');
+                console.log(this.adapter);
+                linkageData = this.createLinkageData(this.adapter);
+                console.log(linkageData);
             }
 
+            console.log('save Assets');
+
             await this.saveAssets(linkageData);
+
             this.setSuccessMessage(linkageData);
         } catch (err) {
             console.error('Error in addToAsset:', err);

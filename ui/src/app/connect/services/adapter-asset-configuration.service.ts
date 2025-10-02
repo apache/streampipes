@@ -47,7 +47,14 @@ export class AssetSaveService {
     saveSelectedAssets(
         selectedAssets: SpAssetTreeNode[],
         linkageData: LinkageData[],
+        deselectedAssets: SpAssetModel[] = [],
     ): void {
+        const links = this.buildLinks(linkageData);
+        this.setLinkOnSelectAssets(selectedAssets, links);
+        this.deleteLinkOnDeselectAssets(deselectedAssets, links);
+    }
+
+    private setLinkOnSelectAssets(selectedAssets, links) {
         const uniqueAssetIDsDict = this.getAssetPaths(selectedAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
@@ -55,8 +62,7 @@ export class AssetSaveService {
             this.assetService.getAsset(spAssetModelId).subscribe({
                 next: current => {
                     this.currentAsset = current;
-
-                    const links = this.buildLinks(linkageData);
+                    console.log('current', current);
 
                     uniqueAssetIDsDict[spAssetModelId].forEach(path => {
                         if (path.length === 2) {
@@ -80,6 +86,84 @@ export class AssetSaveService {
                 },
             });
         });
+    }
+
+    private deleteLinkOnDeselectAssets(deselectedAssets, links) {
+        console.log('deselected Assets ', deselectedAssets);
+        console.log('links', links);
+        const uniqueAssetIDsDict = this.getAssetPaths(deselectedAssets);
+        const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
+        uniqueAssetIDs.forEach(spAssetModelId => {
+            this.assetService.getAsset(spAssetModelId).subscribe({
+                next: current => {
+                    this.currentAsset = current;
+                    console.log('current begin', current);
+
+                    uniqueAssetIDsDict[spAssetModelId].forEach(path => {
+                        if (path.length === 2) {
+                            current.assetLinks = (
+                                current.assetLinks ?? []
+                            ).filter(
+                                (link: any) =>
+                                    !links.some(
+                                        l =>
+                                            JSON.stringify(l) ===
+                                            JSON.stringify(link),
+                                    ),
+                            );
+                        }
+
+                        if (path.length > 2) {
+                            links.forEach(linkToRemove => {
+                                this.deleteDictValue(
+                                    current,
+                                    path,
+                                    linkToRemove,
+                                );
+                            });
+                        }
+                    });
+
+                    const updateObservable =
+                        this.assetService.updateAsset(current);
+                    updateObservable?.subscribe({
+                        next: updated => {
+                            this.adapterStartedEmitter.emit();
+                        },
+                    });
+                },
+            });
+        });
+    }
+
+    private deleteDictValue(
+        dict: any,
+        path: (string | number)[],
+        linkToRemove: any,
+    ) {
+        let current = dict;
+
+        for (let i = 2; i < path.length; i++) {
+            const key = path[i];
+            if (i === path.length - 1) {
+                if (current.assets?.[key]?.assetLinks) {
+                    current.assets[key].assetLinks = current.assets[
+                        key
+                    ].assetLinks.filter(
+                        (link: any) =>
+                            JSON.stringify(link) !==
+                            JSON.stringify(linkToRemove),
+                    );
+                }
+            } else {
+                if (Array.isArray(current.assets)) {
+                    current = current.assets[key as number];
+                }
+            }
+        }
+
+        console.log('after Man', current);
+        return current;
     }
 
     private updateDictValue(

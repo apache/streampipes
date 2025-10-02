@@ -47,6 +47,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         new EventEmitter<void>();
 
     @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
 
     treeControl: NestedTreeControl<SpAssetTreeNode>;
     dataSource: MatTreeNestedDataSource<SpAssetTreeNode>;
@@ -85,25 +86,22 @@ export class AdapterAssetConfigurationComponent implements OnInit {
             asset => asset.assetId === node.assetId,
         );
 
-        console.log(this.originalAssets);
-
         if (index > -1) {
             this.selectedAssets.splice(index, 1);
-            //Differentiate between 'normal deselect' and deselecz from org
-            //TODO Check if node is in originalAssets
-
             if (this.isNodeInOriginalData(node)) {
                 this.deselectedAssets.push(node);
             }
-            console.log('node ', node);
         } else {
             this.selectedAssets.push(node);
             if (index_deselected > -1) {
                 this.deselectedAssets.splice(index_deselected, 1);
             }
         }
-        this.selectedAssetsChange.emit(this.selectedAssets);
-        console.log(this.deselectedAssets);
+        const selectEmit = this.selectedAssets.filter(
+            node => !this.isNodeInOriginalData(node),
+        );
+        this.selectedAssetsChange.emit(selectEmit);
+        this.deselectedAssetsChange.emit(this.deselectedAssets);
     }
 
     private isNodeInOriginalData(node: SpAssetTreeNode): boolean {
