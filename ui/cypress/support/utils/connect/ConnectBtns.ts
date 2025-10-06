@@ -26,6 +26,10 @@ export class ConnectBtns {
         return cy.dataCy('delete-adapter', { timeout: 10000 });
     }
 
+    public static moreOptions() {
+        return cy.dataCy('more-options', { timeout: 10000 });
+    }
+
     public static editAdapter() {
         return cy.dataCy('edit-adapter');
     }

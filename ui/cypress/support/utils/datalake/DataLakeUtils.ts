@@ -209,6 +209,7 @@ export class DataLakeUtils {
     }
 
     public static deleteDataView(dataViewName: string) {
+        GeneralUtils.openMenuForRow(dataViewName);
         cy.dataCy('delete-data-view-' + dataViewName, {
             timeout: 10000,
         }).click();
@@ -224,6 +225,7 @@ export class DataLakeUtils {
     }
 
     public static cancelDeleteDataView(dataViewName: string) {
+        GeneralUtils.openMenuForRow(dataViewName);
         cy.dataCy('delete-data-view-' + dataViewName, {
             timeout: 10000,
         }).click();

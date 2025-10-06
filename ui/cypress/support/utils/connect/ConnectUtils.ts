@@ -411,9 +411,14 @@ export class ConnectUtils {
      * Validates the event schema for an adapter by checking the amount of properties
      * and the runtime names of the event properties
      * @param runtimeNames runtime names of the event properties
+     * @param adapterName name of the adapter
      */
-    public static validateEventSchema(runtimeNames: string[]) {
+    public static validateEventSchema(
+        adapterName: string,
+        runtimeNames: string[],
+    ) {
         ConnectUtils.goToConnect();
+        GeneralUtils.openMenuForRow(adapterName);
         ConnectBtns.detailsAdapter().click();
 
         cy.get('tr.mat-mdc-row').should('have.length', runtimeNames.length);
@@ -470,7 +475,7 @@ export class ConnectUtils {
             cy.wait(1000);
             cy.dataCy('no-table-entries').should('be.visible');
         } else {
-            ConnectBtns.deleteAdapter().should('have.length', amount);
+            ConnectBtns.moreOptions().should('have.length', amount);
         }
     }
 }
