@@ -68,9 +68,6 @@ export class AssetSaveService {
                 selectedAssets,
             );
 
-            console.log('deselected', deselectedAssets);
-            console.log('filtered', filteredOriginal);
-
             if (filteredOriginal.length > 0) {
                 this.renameLinkage(filteredOriginal, links);
             }
@@ -96,8 +93,6 @@ export class AssetSaveService {
     }
 
     renameLinkage(originalAssets, links) {
-        console.log('Linkage Data', links);
-
         const uniqueAssetIDsDict = this.getAssetPaths(originalAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
@@ -110,18 +105,10 @@ export class AssetSaveService {
                         if (path.length === 2) {
                             current.assetLinks = (current.assetLinks ?? []).map(
                                 (link: any) => {
-                                    console.log(link);
-                                    console.log(links);
                                     const matchedLink = links.find(
                                         l => l.resourceId === link.resourceId,
                                     );
-                                    console.log('LL ', link.linkLabel);
-                                    console.log('Matched ', matchedLink);
                                     if (matchedLink) {
-                                        console.log(
-                                            'WAS Matched ',
-                                            matchedLink,
-                                        );
                                         link.linkLabel = matchedLink.linkLabel;
                                     }
                                     return link;
