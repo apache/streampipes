@@ -143,7 +143,13 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     updateAdapter(): void {
-        this.loadingText = `Updating adapter ${this.adapter.name}`;
+        this.loadingText = this.translateService.instant(
+            'Updating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
+
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe({
             next: status => {
@@ -164,7 +170,12 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     addAdapter() {
-        this.loadingText = `Creating adapter ${this.adapter.name}`;
+        this.loadingText = this.translateService.instant(
+            'Creating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
         this.loading = true;
         this.adapterService.addAdapter(this.adapter).subscribe(
             status => {
@@ -209,7 +220,12 @@ export class AdapterStartedDialog implements OnInit {
             'Your new data stream is now available in the pipeline editor.';
         if (this.startAdapterNow) {
             this.adapterElementId = adapterElementId;
-            this.loadingText = `Starting adapter ${this.adapter.name}`;
+            this.loadingText = this.translateService.instant(
+                'Starting adapter {{adapterName}}',
+                {
+                    adapterName: this.adapter.name,
+                },
+            );
             this.adapterService
                 .startAdapterByElementId(adapterElementId)
                 .subscribe(
