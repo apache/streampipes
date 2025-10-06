@@ -44,6 +44,7 @@ export interface AssetLink {
 }
 
 export interface LinkageData {
+    //Data Model to extract AssetLinks from the UI
     name: string;
     id: string;
     type: string;
