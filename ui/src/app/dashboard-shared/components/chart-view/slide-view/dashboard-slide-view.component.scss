@@ -23,6 +23,7 @@
     cursor: pointer;
     margin: 5px 10px;
     padding: 5px;
+    background: var(--color-bg-0);
 }
 
 .viz-preview-selected {
@@ -32,8 +33,8 @@
 .selection-box {
     overflow-y: auto;
     overflow-x: hidden;
-    margin-bottom: 5px;
-    height: calc(100vh - 147px);
+    height: calc(100vh - 137px);
+    border-right: 1px solid var(--color-bg-3);
     max-width: 100%;
 }
 

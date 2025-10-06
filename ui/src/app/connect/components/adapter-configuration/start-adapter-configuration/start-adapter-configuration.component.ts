@@ -27,9 +27,9 @@ import {
 } from '@angular/core';
 import {
     AdapterDescription,
-    SpAssetTreeNode,
     EventRateTransformationRuleDescription,
     EventSchema,
+    SpAssetTreeNode,
     RemoveDuplicatesTransformationRuleDescription,
 } from '@streampipes/platform-services';
 import {
@@ -66,8 +66,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     @Input() eventSchema: EventSchema;
 
     @Input() isEditMode: boolean;
-
-    @Input() stepper: MatStepper;
 
     /**
      * Cancels the adapter configuration process

@@ -16,34 +16,6 @@
  *
  */
 
-.sp-bg-lightgray {
-    background-color: var(--color-bg-1);
-}
-
-.sp-tab-bg {
-    background-color: var(--color-bg-1);
-}
-
-.page-container {
-    margin: 10px;
-    border: 1px solid var(--color-bg-3);
-    min-height: calc(100% - 50px);
-    border-radius: 10px;
-}
-
-.page-container-nav {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-.page-container-padding-inner {
-    margin: 10px;
-}
-
-.upper-case {
-    text-transform: uppercase;
-}
-
-.pr-5 {
-    padding-right: 5px;
-}
+import { Directive } from '@angular/core';
+@Directive({ selector: 'ng-template[spTableActions]', standalone: false })
+export class SpTableActionsDirective {}

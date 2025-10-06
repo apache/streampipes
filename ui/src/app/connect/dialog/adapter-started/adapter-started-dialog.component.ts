@@ -24,6 +24,7 @@ import {
     Output,
     inject,
 } from '@angular/core';
+
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
@@ -38,16 +39,14 @@ import {
     PipelineTemplateService,
     PipelineUpdateInfo,
     SpLogMessage,
+    LinkageData,
+    CompactPipelineService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import {
-    CompactPipelineService,
-    LinkageData,
-} from '@streampipes/platform-services';
-import { AssetSaveService } from '../../services/adapter-asset-configuration.service';
 
-import { firstValueFrom } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { AssetSaveService } from '../../services/adapter-asset-configuration.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -153,6 +152,13 @@ export class AdapterStartedDialog implements OnInit {
             },
         );
 
+        this.loadingText = this.translateService.instant(
+            'Updating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
+
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe({
             next: status => {
@@ -181,16 +187,24 @@ export class AdapterStartedDialog implements OnInit {
                 adapterName: this.adapter.name,
             },
         );
+        this.loadingText = this.translateService.instant(
+            'Creating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
         this.loading = true;
         this.adapterService.addAdapter(this.adapter).subscribe(
             status => {
                 if (status.success) {
                     const adapterElementId = status.notifications[0].title;
                     this.adapterElementId = adapterElementId;
+                    this.adapterElementId = adapterElementId;
                     if (this.saveInDataLake) {
                         this.startSaveInDataLakePipeline(adapterElementId);
                     } else {
                         this.startAdapter(adapterElementId, true);
+                        this.addToAsset();
                         this.addToAsset();
                     }
                 } else {
@@ -225,6 +239,12 @@ export class AdapterStartedDialog implements OnInit {
             'Your new data stream is now available in the pipeline editor.';
         if (this.startAdapterNow) {
             this.adapterElementId = adapterElementId;
+            this.loadingText = this.translateService.instant(
+                'Starting adapter {{adapterName}}',
+                {
+                    adapterName: this.adapter.name,
+                },
+            );
             this.loadingText = this.translateService.instant(
                 'Starting adapter {{adapterName}}',
                 {
@@ -409,6 +429,7 @@ export class AdapterStartedDialog implements OnInit {
                                 this.pipelineOperationStatus =
                                     pipelineOperationStatus;
                                 this.startAdapter(adapterElementId, true);
+                                this.addToAsset();
                                 this.addToAsset();
                             },
                             error => {

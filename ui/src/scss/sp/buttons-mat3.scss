@@ -24,7 +24,7 @@
     }
     @include mat.button-overrides(
         (
-            filled-container-shape: 5px,
+            filled-container-shape: 20px,
             outlined-outline-color: var(--mat-sys-outline),
             outlined-label-text-color: var(--mat-sys-on-surface),
             filled-label-text-weight: 400,

@@ -30,7 +30,6 @@ import { Dashboard } from '@streampipes/platform-services';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
 import { TranslateService } from '@ngx-translate/core';
-import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
 
 @Component({
     selector: 'sp-dashboard-overview',
@@ -50,7 +49,6 @@ export class DashboardOverviewComponent implements OnInit {
 
     public dialog = inject(MatDialog);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
-    private dataExplorerSharedService = inject(DataExplorerSharedService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private breadcrumbService = inject(SpBreadcrumbService);
@@ -83,6 +81,7 @@ export class DashboardOverviewComponent implements OnInit {
                 createdAtEpochMs: Date.now(),
                 lastModifiedEpochMs: Date.now(),
             },
+            gridColumns: 12,
         };
 
         this.openDashboardModificationDialog(true, dataViewDashboard);

@@ -20,8 +20,61 @@
     <table mat-table class="sp-table" [dataSource]="dataSource">
         <ng-content></ng-content>
 
+        @if (showActionsMenu) {
+            <ng-container matColumnDef="actions">
+                <th
+                    fxFlex
+                    fxLayoutAlign="center center"
+                    mat-header-cell
+                    *matHeaderCellDef
+                ></th>
+                <td
+                    fxFlex
+                    fxLayoutAlign="end center"
+                    mat-cell
+                    *matCellDef="let element"
+                >
+                    <div
+                        [matMenuTriggerFor]="menu"
+                        #menuTrigger="matMenuTrigger"
+                        (mouseenter)="mouseEnter(menuTrigger)"
+                        (mouseleave)="mouseLeave(menuTrigger)"
+                    >
+                        <button
+                            mat-icon-button
+                            [matMenuTriggerFor]="menu"
+                            #menuTrigger="matMenuTrigger"
+                            (click)="$event.stopPropagation()"
+                            [attr.data-cy]="'more-options'"
+                        >
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                    </div>
+                    <mat-menu #menu="matMenu" [hasBackdrop]="false">
+                        <div
+                            (mouseenter)="mouseEnter(menuTrigger)"
+                            (mouseleave)="mouseLeave(menuTrigger)"
+                        >
+                            <ng-container
+                                *ngTemplateOutlet="
+                                    actionsTemplate;
+                                    context: { $implicit: element }
+                                "
+                            >
+                            </ng-container>
+                        </div>
+                    </mat-menu>
+                </td>
+            </ng-container>
+        }
+
         <tr mat-header-row *matHeaderRowDef="columns"></tr>
-        <tr mat-row *matRowDef="let row; columns: columns"></tr>
+        <tr
+            mat-row
+            *matRowDef="let row; columns: columns"
+            (click)="rowClicked.emit(row)"
+            [ngClass]="rowsClickable ? 'cursor-pointer' : ''"
+        ></tr>
 
         <tr class="mat-row" *matNoDataRow>
             <td

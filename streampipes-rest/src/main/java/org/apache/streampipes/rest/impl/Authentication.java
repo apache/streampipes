@@ -157,6 +157,8 @@ public class Authentication extends AbstractRestResource {
     Principal principal = ((PrincipalUserDetails<?>) auth.getPrincipal()).getDetails();
     if (principal instanceof UserAccount) {
       JwtAuthenticationResponse tokenResp = makeJwtResponse(auth);
+      ((UserAccount) principal).setLastLoginAtMillis(System.currentTimeMillis());
+      getSpResourceManager().manageUsers().updateUser(principal);
       return ok(tokenResp);
     } else {
       throw new BadCredentialsException("Could not create auth token");

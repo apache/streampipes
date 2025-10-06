@@ -42,6 +42,7 @@ export * from './lib/components/sp-exception-message/exception-details-dialog/ex
 export * from './lib/components/sp-exception-message/exception-details/exception-details.component';
 export * from './lib/components/sp-label/sp-label.component';
 export * from './lib/components/sp-table/sp-table.component';
+export * from './lib/components/sp-table/sp-table-actions.directive';
 export * from './lib/components/warning-box/warning-box.component';
 export * from './lib/components/time-selector/time-selector.model';
 export * from './lib/components/time-selector/time-range-selector.component';

@@ -19,10 +19,12 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div>
-            <h4>These elements can't be connected.</h4>
+            <h4>{{ 'These elements can't be connected.' | translate }}</h4>
             <h4>
-                The input data stream does not satisfy the requirements
-                specified by the data processor.
+                {{
+                    'The input data stream does not satisfy the requirements
+                specified by the data processor.' | translate
+                }}
             </h4>
             <button
                 mat-button
@@ -30,8 +32,12 @@
                 type="button"
                 class="md-accent"
             >
-                <div *ngIf="!statusDetailsVisible">Show Details</div>
-                <div *ngIf="statusDetailsVisible">Hide Details</div>
+                <div *ngIf="!statusDetailsVisible">
+                    {{ 'Show Details' | translate }}
+                </div>
+                <div *ngIf="statusDetailsVisible">
+                    {{ 'Hide Details' | translate }}
+                </div>
             </button>
             <div *ngIf="statusDetailsVisible">
                 <div *ngFor="let entry of notifications">
@@ -54,7 +60,7 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
         <button mat-button mat-flat-button class="mat-basic" (click)="close()">
-            Close
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>
