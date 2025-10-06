@@ -66,7 +66,7 @@ export default defineConfig({
             return plugins;
         },
         specPattern: 'cypress/tests/**/*.{js,jsx,ts,tsx}',
-        baseUrl: 'http://localhost:80',
+        baseUrl: 'http://localhost:8082',
     },
 
     component: {
