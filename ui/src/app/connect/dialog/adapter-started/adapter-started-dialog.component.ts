@@ -22,7 +22,7 @@ import {
     OnInit,
     EventEmitter,
     Output,
-    SimpleChanges,
+    inject,
 } from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
@@ -46,7 +46,8 @@ import {
 } from '@streampipes/platform-services';
 import { AssetSaveService } from '../../services/adapter-asset-configuration.service';
 
-import { forkJoin } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -54,8 +55,10 @@ import { forkJoin } from 'rxjs';
     standalone: false,
 })
 export class AdapterStartedDialog implements OnInit {
+    translateService = inject(TranslateService);
+
     adapterInstalled = false;
-    pollingActive = false;
+
     public pipelineOperationStatus: PipelineOperationStatus;
 
     /**
@@ -89,6 +92,9 @@ export class AdapterStartedDialog implements OnInit {
      * This option will immediately start the adapter, when false it the adapter is only created and not started
      */
     @Input() startAdapterNow = true;
+
+    @Input()
+    allResourcesAlias = this.translateService.instant('Resources');
 
     @Output() linkageDataEmitter: EventEmitter<LinkageData[]> =
         new EventEmitter<LinkageData[]>();
@@ -140,7 +146,13 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     updateAdapter(): void {
-        this.loadingText = `Updating adapter ${this.adapter.name}`;
+        this.loadingText = this.translateService.instant(
+            'Updating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
+
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe({
             next: status => {
@@ -163,7 +175,12 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     addAdapter() {
-        this.loadingText = `Creating adapter ${this.adapter.name}`;
+        this.loadingText = this.translateService.instant(
+            'Creating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
         this.loading = true;
         this.adapterService.addAdapter(this.adapter).subscribe(
             status => {
@@ -208,7 +225,12 @@ export class AdapterStartedDialog implements OnInit {
             'Your new data stream is now available in the pipeline editor.';
         if (this.startAdapterNow) {
             this.adapterElementId = adapterElementId;
-            this.loadingText = `Starting adapter ${this.adapter.name}`;
+            this.loadingText = this.translateService.instant(
+                'Starting adapter {{adapterName}}',
+                {
+                    adapterName: this.adapter.name,
+                },
+            );
             this.adapterService
                 .startAdapterByElementId(adapterElementId)
                 .subscribe(
@@ -242,15 +264,12 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     onCloseConfirm() {
-        this.pollingActive = false;
         this.dialogRef.close('Confirm');
         this.shepherdService.trigger('confirm_adapter_started_button');
     }
 
     async addToAsset(): Promise<void> {
-        this.pollingActive = false;
         let linkageData: LinkageData[];
-
         try {
             if (!this.editMode) {
                 const adapter = await this.getAdapter();
@@ -272,9 +291,9 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     private async getAdapter(): Promise<AdapterDescription> {
-        return await this.adapterService
-            .getAdapter(this.adapterElementId)
-            .toPromise();
+        return await firstValueFrom(
+            this.adapterService.getAdapter(this.adapterElementId),
+        );
     }
 
     private createLinkageData(adapter: AdapterDescription): LinkageData[] {
@@ -335,13 +354,25 @@ export class AdapterStartedDialog implements OnInit {
                 this.selectedAssets.map(asset => asset.assetName),
             );
 
-            this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
+            this.addToAssetText = this.translateService.instant(
+                'Your {{assetTypes}} were successfully added to {{assetIds}}.',
+                {
+                    assetTypes: assetTypesList,
+                    assetIds: assetIdsList,
+                },
+            );
         }
         if (this.deselectedAssets && this.deselectedAssets.length > 0) {
             const assetIdsRemovedList = this.formatWithAnd(
                 this.deselectedAssets.map(asset => asset.assetName),
             );
-            this.deletedFromAssetText = `Your ${assetTypesList} were successfully removed from to ${assetIdsRemovedList}.`;
+            this.deletedFromAssetText = this.translateService.instant(
+                'Your {{assetTypes}} were successfully added to {{assetIds}}.',
+                {
+                    assetTypes: assetTypesList,
+                    assetIds: assetIdsRemovedList,
+                },
+            );
         }
     }
 

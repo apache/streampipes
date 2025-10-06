@@ -108,6 +108,7 @@ import { EditRegexTransformationComponent } from './dialog/edit-event-property/c
 import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapter-code-panel.component';
 import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
 import { MatTreeModule } from '@angular/material/tree';
+import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
     imports: [
         MatTreeModule,
@@ -148,6 +149,7 @@ import { MatTreeModule } from '@angular/material/tree';
         MatSnackBarModule,
         PlatformServicesModule,
         TreeModule,
+        TranslateModule.forChild(),
         RouterModule.forChild([
             {
                 path: '',
