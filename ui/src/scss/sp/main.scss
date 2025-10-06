@@ -19,6 +19,12 @@
 @use './variables' as spThemeVars;
 @use '../custom-theme/custom-variables' as customThemeVars;
 
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 md-progress-linear.md-accent .md-container {
     background-color: rgb(168, 168, 168);
 }
