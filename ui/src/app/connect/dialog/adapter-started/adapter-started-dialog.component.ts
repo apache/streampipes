@@ -367,7 +367,7 @@ export class AdapterStartedDialog implements OnInit {
                 this.deselectedAssets.map(asset => asset.assetName),
             );
             this.deletedFromAssetText = this.translateService.instant(
-                'Your {{assetTypes}} were successfully added to {{assetIds}}.',
+                'Your {{assetTypes}} were successfully deleted from {{assetIds}}.',
                 {
                     assetTypes: assetTypesList,
                     assetIds: assetIdsRemovedList,
