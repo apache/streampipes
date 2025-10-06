@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.model.datalake;
 
-public record ExportProviderSettings(
-      ProviderType providerType,
-      String accessKey, 
-      String secretKey, 
-      String bucketName, 
-      String endPoint
-) {}
+public enum ProviderType {
+    FOLDER,
+    S3
+    
+}
