@@ -46,7 +46,7 @@ import {
 } from '@streampipes/platform-services';
 import { AssetSaveService } from '../../services/adapter-asset-configuration.service';
 
-import { forkJoin } from 'rxjs';
+import { firstValueFrom, forkJoin } from 'rxjs';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -258,9 +258,9 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     private async getAdapter(): Promise<AdapterDescription> {
-        return await this.adapterService
-            .getAdapter(this.adapterElementId)
-            .toPromise();
+        return await firstValueFrom(
+            this.adapterService.getAdapter(this.adapterElementId),
+        );
     }
 
     private createLinkageData(adapter: AdapterDescription): LinkageData[] {
