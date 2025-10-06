@@ -55,7 +55,7 @@ import { forkJoin } from 'rxjs';
 })
 export class AdapterStartedDialog implements OnInit {
     adapterInstalled = false;
-    pollingActive = false;
+
     public pipelineOperationStatus: PipelineOperationStatus;
 
     /**
@@ -237,14 +237,11 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     onCloseConfirm() {
-        this.pollingActive = false;
         this.dialogRef.close('Confirm');
         this.shepherdService.trigger('confirm_adapter_started_button');
     }
 
     async addToAsset(): Promise<void> {
-        this.pollingActive = false;
-
         try {
             const adapter = await this.getAdapter();
             const linkageData: LinkageData[] = this.createLinkageData(adapter);
