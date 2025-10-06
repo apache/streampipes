@@ -47,7 +47,9 @@ describe(
                 .build();
 
             ConnectUtils.testAdapter(adapterInput);
-            ConnectUtils.deleteAdapter();
+            ConnectUtils.deleteAdapter(
+                adapterInput.adapterName.replaceAll(' ', ''),
+            );
         });
 
         it('File stream adapter should not allow add timestamp option in schema editor', () => {

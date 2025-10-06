@@ -182,6 +182,7 @@ export class DataLakeUtils {
     public static editDataView(dataViewName: string) {
         // Click edit button
         // following only works if single view is available
+        GeneralUtils.openMenuForRow(dataViewName);
         cy.dataCy('edit-data-view-' + dataViewName).click();
     }
 

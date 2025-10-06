@@ -20,6 +20,7 @@ import { ExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/di
 import { DataLakeUtils } from './datalake/DataLakeUtils';
 import { FileNameService } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/services/file-name.service';
 import { CsvFormatExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/format-export-config.model';
+import { GeneralUtils } from './GeneralUtils';
 
 export class DataDownloadDialogUtils {
     public static testDownload(
@@ -30,6 +31,7 @@ export class DataDownloadDialogUtils {
         // const exportDate: Date;
         DataLakeUtils.goToDatalake();
 
+        GeneralUtils.openMenuForRow(dataViewName);
         // select data view in edit mode
         DataLakeUtils.editDataView(dataViewName);
 

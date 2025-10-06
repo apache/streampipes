@@ -40,6 +40,7 @@ describe('Test Edit Adapter', () => {
 
         // click edit adapter
         ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+        ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
 
@@ -68,7 +69,7 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.closeAdapterPreview();
 
-        ConnectUtils.startAndValidateAdapter(3);
+        ConnectUtils.startAndValidateAdapter('Edited Adapter', 3);
         ConnectUtils.goToConnect();
 
         // Validate that name of adapter and data stream
@@ -82,6 +83,7 @@ describe('Test Edit Adapter', () => {
 
         // stop adapter and edit adapter
         ConnectBtns.stopAdapter().click();
+        ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().click();
 
         // change data type of density to integer
