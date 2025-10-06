@@ -77,7 +77,7 @@ describe('Test Edit Adapter', () => {
     });
 
     it('Successfully edit adapter with persistence pipeline', () => {
-        ConnectUtils.addMachineDataSimulator('simulator', true, '100');
+        ConnectUtils.addMachineDataSimulator('simulator', true, '1000');
 
         ConnectUtils.goToConnect();
 
@@ -93,6 +93,7 @@ describe('Test Edit Adapter', () => {
             'Integer',
             true,
         );
+        ConnectEventSchemaUtils.renameProperty('density', 'density2');
 
         ConnectUtils.storeAndStartEditedAdapter();
 
@@ -107,7 +108,7 @@ describe('Test Edit Adapter', () => {
             initialValue = value;
         });
 
-        cy.wait(5000);
+        cy.wait(3000);
 
         DataLakeBtns.refreshDataLakeMeasures().click();
 

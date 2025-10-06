@@ -188,6 +188,7 @@ export class PipelineUtils {
         PipelineBtns.deletePipeline().click({ force: true });
 
         cy.dataCy('sp-pipeline-stop-and-delete').click();
+        cy.wait(2000);
 
         PipelineBtns.deletePipeline().should('have.length', 0);
     }
