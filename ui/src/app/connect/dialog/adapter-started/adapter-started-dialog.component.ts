@@ -22,7 +22,7 @@ import {
     OnInit,
     EventEmitter,
     Output,
-    SimpleChanges,
+    inject,
 } from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
@@ -46,7 +46,8 @@ import {
 } from '@streampipes/platform-services';
 import { AssetSaveService } from '../../services/adapter-asset-configuration.service';
 
-import { firstValueFrom, forkJoin } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -54,6 +55,8 @@ import { firstValueFrom, forkJoin } from 'rxjs';
     standalone: false,
 })
 export class AdapterStartedDialog implements OnInit {
+    translateService = inject(TranslateService);
+
     adapterInstalled = false;
 
     public pipelineOperationStatus: PipelineOperationStatus;
@@ -87,6 +90,9 @@ export class AdapterStartedDialog implements OnInit {
      * This option will immediately start the adapter, when false it the adapter is only created and not started
      */
     @Input() startAdapterNow = true;
+
+    @Input()
+    allResourcesAlias = this.translateService.instant('Resources');
 
     @Output() linkageDataEmitter: EventEmitter<LinkageData[]> =
         new EventEmitter<LinkageData[]>();
@@ -316,7 +322,13 @@ export class AdapterStartedDialog implements OnInit {
             this.selectedAssets.map(asset => asset.assetName),
         );
 
-        this.addToAssetText = `Your ${assetTypesList} were successfully added to ${assetIdsList}.`;
+        this.addToAssetText = this.translateService.instant(
+            'Your {{assetTypes}} were successfully added to {{assetIds}}.',
+            {
+                assetTypes: assetTypesList,
+                assetIds: assetIdsList,
+            },
+        );
     }
 
     private formatWithAnd(list: string[]): string {
