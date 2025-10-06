@@ -153,6 +153,7 @@ export class AdapterStartedDialog implements OnInit {
 
                     this.onAdapterFailure(errorLogMessage);
                 }
+
                 this.addToAsset();
             },
             error: error => {
@@ -259,7 +260,6 @@ export class AdapterStartedDialog implements OnInit {
                     await this.addDataLakeLinkageData(adapter, linkageData);
                 }
             } else {
-                //If Edit Mode only delete Data directly related to Adapter
                 linkageData = this.createLinkageData(this.adapter);
             }
 

@@ -53,16 +53,53 @@ export class AssetSaveService {
     ): void {
         const links = this.buildLinks(linkageData);
 
-        if (originalAssets.length > 0) {
-            this.renameLinkage(originalAssets, links);
+        if (deselectedAssets.length > 0) {
+            this.deleteLinkOnDeselectAssets(deselectedAssets, links);
+        }
+        if (selectedAssets.length > 0) {
+            this.setLinkOnSelectAssets(selectedAssets, links);
         }
 
-        this.deleteLinkOnDeselectAssets(deselectedAssets, links);
-        this.setLinkOnSelectAssets(selectedAssets, links);
+        if (originalAssets.length > 0) {
+            //filter is necessary, otherwise conflicting database instances are produced
+            const filteredOriginal = this.filterAssets(
+                originalAssets,
+                deselectedAssets,
+                selectedAssets,
+            );
+
+            console.log('deselected', deselectedAssets);
+            console.log('filtered', filteredOriginal);
+            //   this.renameLinkage(filteredOriginal, links);
+            if (filteredOriginal.length > 0) {
+                this.renameLinkage(filteredOriginal, links);
+                //   this.deleteLinkOnDeselectAssets(filteredOriginal, links);
+                //   this.setLinkOnSelectAssets(filteredOriginal, links);
+            }
+        }
+    }
+    private filterAssets(
+        originalAssets: SpAssetTreeNode[],
+        deselectedAssets: SpAssetTreeNode[],
+        selectedAssets: SpAssetTreeNode[],
+    ): SpAssetTreeNode[] {
+        const deselectedAssetIds = new Set(
+            deselectedAssets.map(asset => asset.assetId),
+        );
+        const selectedAssetIds = new Set(
+            selectedAssets.map(asset => asset.assetId),
+        );
+
+        return originalAssets.filter(
+            asset =>
+                !deselectedAssetIds.has(asset.assetId) &&
+                !selectedAssetIds.has(asset.assetId),
+        );
     }
 
-    private renameLinkage(deselectedAssets, links) {
-        const uniqueAssetIDsDict = this.getAssetPaths(deselectedAssets);
+    renameLinkage(originalAssets, linkageData) {
+        const links = this.buildLinks(linkageData);
+        const uniqueAssetIDsDict = this.getAssetPaths(originalAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
         uniqueAssetIDs.forEach(spAssetModelId => {
@@ -80,7 +117,6 @@ export class AssetSaveService {
                                             JSON.stringify(link.resourceId),
                                     );
                                     if (matchedLink) {
-                                        // Replace linkLabel with matched link's kabel
                                         link.linkLabel = matchedLink.linkLabel;
                                     }
                                     return link;
@@ -130,7 +166,6 @@ export class AssetSaveService {
                             JSON.stringify(link.resourceId) ===
                             JSON.stringify(linkToUpdate.resourceId)
                         ) {
-                            // Replace linkLabel with linkToUpdate's kabel
                             link.linkLabel = linkToUpdate.linkLabel;
                         }
                         return link;
