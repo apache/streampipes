@@ -27,7 +27,7 @@ import {
     GenericStorageService,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
-import { concatMap, from, Observable } from 'rxjs';
+import { concatMap, firstValueFrom, from, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -45,19 +45,19 @@ export class AssetSaveService {
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
 
-    saveSelectedAssets(
+    async saveSelectedAssets(
         selectedAssets: SpAssetTreeNode[],
         linkageData: LinkageData[],
         deselectedAssets: SpAssetTreeNode[] = [],
         originalAssets: SpAssetTreeNode[] = [],
-    ): void {
+    ): Promise<void> {
         const links = this.buildLinks(linkageData);
 
         if (deselectedAssets.length > 0) {
-            this.deleteLinkOnDeselectAssets(deselectedAssets, links);
+            await this.deleteLinkOnDeselectAssets(deselectedAssets, links);
         }
         if (selectedAssets.length > 0) {
-            this.setLinkOnSelectAssets(selectedAssets, links);
+            await this.setLinkOnSelectAssets(selectedAssets, links);
         }
 
         if (originalAssets.length > 0) {
@@ -70,11 +70,9 @@ export class AssetSaveService {
 
             console.log('deselected', deselectedAssets);
             console.log('filtered', filteredOriginal);
-            //   this.renameLinkage(filteredOriginal, links);
+
             if (filteredOriginal.length > 0) {
                 this.renameLinkage(filteredOriginal, links);
-                //   this.deleteLinkOnDeselectAssets(filteredOriginal, links);
-                //   this.setLinkOnSelectAssets(filteredOriginal, links);
             }
         }
     }
@@ -97,8 +95,9 @@ export class AssetSaveService {
         );
     }
 
-    renameLinkage(originalAssets, linkageData) {
-        const links = this.buildLinks(linkageData);
+    renameLinkage(originalAssets, links) {
+        console.log('Linkage Data', links);
+
         const uniqueAssetIDsDict = this.getAssetPaths(originalAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
@@ -111,12 +110,18 @@ export class AssetSaveService {
                         if (path.length === 2) {
                             current.assetLinks = (current.assetLinks ?? []).map(
                                 (link: any) => {
+                                    console.log(link);
+                                    console.log(links);
                                     const matchedLink = links.find(
-                                        l =>
-                                            JSON.stringify(l.resourceId) ===
-                                            JSON.stringify(link.resourceId),
+                                        l => l.resourceId === link.resourceId,
                                     );
+                                    console.log('LL ', link.linkLabel);
+                                    console.log('Matched ', matchedLink);
                                     if (matchedLink) {
+                                        console.log(
+                                            'WAS Matched ',
+                                            matchedLink,
+                                        );
                                         link.linkLabel = matchedLink.linkLabel;
                                     }
                                     return link;
@@ -162,10 +167,7 @@ export class AssetSaveService {
                     current.assets[key].assetLinks = current.assets[
                         key
                     ].assetLinks.map((link: any) => {
-                        if (
-                            JSON.stringify(link.resourceId) ===
-                            JSON.stringify(linkToUpdate.resourceId)
-                        ) {
+                        if (link.resourceId === linkToUpdate.resourceId) {
                             link.linkLabel = linkToUpdate.linkLabel;
                         }
                         return link;
@@ -180,85 +182,70 @@ export class AssetSaveService {
 
         return current;
     }
-
-    private setLinkOnSelectAssets(selectedAssets, links) {
+    async setLinkOnSelectAssets(
+        selectedAssets: SpAssetTreeNode[],
+        links: AssetLink[],
+    ): Promise<void> {
         const uniqueAssetIDsDict = this.getAssetPaths(selectedAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
-        uniqueAssetIDs.forEach(spAssetModelId => {
-            this.assetService.getAsset(spAssetModelId).subscribe({
-                next: current => {
-                    this.currentAsset = current;
+        for (const spAssetModelId of uniqueAssetIDs) {
+            const current = await firstValueFrom(
+                this.assetService.getAsset(spAssetModelId),
+            );
 
-                    uniqueAssetIDsDict[spAssetModelId].forEach(path => {
-                        if (path.length === 2) {
-                            current.assetLinks = [
-                                ...(current.assetLinks ?? []),
-                                ...links,
-                            ];
-                        }
-                        if (path.length > 2) {
-                            this.updateDictValue(current, path, links);
-                        }
-                    });
+            uniqueAssetIDsDict[spAssetModelId].forEach(path => {
+                if (path.length === 2) {
+                    current.assetLinks = [
+                        ...(current.assetLinks ?? []),
+                        ...links,
+                    ];
+                }
 
-                    const updateObservable =
-                        this.assetService.updateAsset(current);
-                    updateObservable?.subscribe({
-                        next: updated => {
-                            this.adapterStartedEmitter.emit();
-                        },
-                    });
-                },
+                if (path.length > 2) {
+                    this.updateDictValue(current, path, links);
+                }
             });
-        });
+
+            const updateObservable = this.assetService.updateAsset(current);
+            await firstValueFrom(updateObservable); // Ensure this completes before continuing
+        }
     }
 
-    private deleteLinkOnDeselectAssets(deselectedAssets, links) {
+    async deleteLinkOnDeselectAssets(
+        deselectedAssets: SpAssetTreeNode[],
+        links: AssetLink[],
+    ): Promise<void> {
         const uniqueAssetIDsDict = this.getAssetPaths(deselectedAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
-        uniqueAssetIDs.forEach(spAssetModelId => {
-            this.assetService.getAsset(spAssetModelId).subscribe({
-                next: current => {
-                    this.currentAsset = current;
+        for (const spAssetModelId of uniqueAssetIDs) {
+            const current = await firstValueFrom(
+                this.assetService.getAsset(spAssetModelId),
+            );
 
-                    uniqueAssetIDsDict[spAssetModelId].forEach(path => {
-                        if (path.length === 2) {
-                            current.assetLinks = (
-                                current.assetLinks ?? []
-                            ).filter(
-                                (link: any) =>
-                                    !links.some(
-                                        l =>
-                                            JSON.stringify(l.resourceId) ===
-                                            JSON.stringify(link.resourceId),
-                                    ),
-                            );
-                        }
+            uniqueAssetIDsDict[spAssetModelId].forEach(path => {
+                if (path.length === 2) {
+                    current.assetLinks = (current.assetLinks ?? []).filter(
+                        (link: any) =>
+                            !links.some(
+                                l =>
+                                    JSON.stringify(l.resourceId) ===
+                                    JSON.stringify(link.resourceId),
+                            ),
+                    );
+                }
 
-                        if (path.length > 2) {
-                            links.forEach(linkToRemove => {
-                                this.deleteDictValue(
-                                    current,
-                                    path,
-                                    linkToRemove,
-                                );
-                            });
-                        }
+                if (path.length > 2) {
+                    links.forEach(linkToRemove => {
+                        this.deleteDictValue(current, path, linkToRemove);
                     });
-
-                    const updateObservable =
-                        this.assetService.updateAsset(current);
-
-                    updateObservable?.subscribe({
-                        next: updated => {
-                            this.adapterStartedEmitter.emit();
-                        },
-                    });
-                },
+                }
             });
-        });
+
+            const updateObservable = this.assetService.updateAsset(current);
+            await firstValueFrom(updateObservable); // Ensure this completes before continuing
+        }
     }
 
     private deleteDictValue(
