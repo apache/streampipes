@@ -482,5 +482,10 @@
   "Error Details": null,
   "Resources": null,
   "All {{allResourcesAlias}}": "All {{allResourcesAlias}}",
-  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Clone"
+  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Clone",
+  "Your {{assetTypes}} were successfully added to {{assetIds}}.": "Your {{assetTypes}} were successfully added to {{assetIds}}.",
+  "Your {{assetTypes}} were successfully deleted from {{assetIds}}.": "Your {{assetTypes}} were successfully deleted from {{assetIds}}.",
+  "Starting adapter {{adapterName}}": "Starting adapter {{adapterName}}",
+  "Creating adapter {{adapterName}}": "Creating adapter {{adapterName}}",
+  "Updating adapter {{adapterName}}": "Updating adapter {{adapterName}}"
 }
