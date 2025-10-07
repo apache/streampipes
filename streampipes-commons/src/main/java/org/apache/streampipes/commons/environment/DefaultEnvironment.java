@@ -234,6 +234,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getExtAssetBaseDir() {
+    return new StringEnvironmentVariable(Envs.SP_EXT_ASSET_BASE_DIR);
+  }
+
+  @Override
   public StringEnvironmentVariable getFlinkJarFileLoc() {
     return new StringEnvironmentVariable(Envs.SP_FLINK_JAR_FILE_LOC);
   }
