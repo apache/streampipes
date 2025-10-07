@@ -6,23 +6,20 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Instant;
 
 
 public class S3 implements IObjectStorage{
 
-    //private final Path filePath;
+    private final String fileName;
     private final S3Client s3;
     private final String bucketName;
 
@@ -38,26 +35,32 @@ public class S3 implements IObjectStorage{
                 )
                 .build();
             this.bucketName = settings.bucketName();
+            this.fileName = "/" + measurementName + "/dump_"
+                + Instant.now().toString() + "." + format; 
 
     }
 
     @Override
     public void store(StreamingResponseBody datastream) throws IOException {
 
-        String fileName = "dump_" + Instant.now().toString() + ".csv"; 
-
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)  
                 .build();
 
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-        try (OutputStream os = new S3OutputStream(s3, bucketName, fileName)) {
-            // Write the stream to the output stream which will upload it to S3
-            datastream.writeTo(os);
-        } catch (Exception e) {
-            throw new IOException("Error uploading data to S3", e);
-        }
+   
+        datastream.writeTo(byteArrayOutputStream);
+
+   
+        byte[] data = byteArrayOutputStream.toByteArray();
+
+        RequestBody requestBody = RequestBody.fromBytes(data);
+
+        // Upload to S3
+        this.s3.putObject(putObjectRequest, requestBody);
+        this.s3.close();
     }
 
     
