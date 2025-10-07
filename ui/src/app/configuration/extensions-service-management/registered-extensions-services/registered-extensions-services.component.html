@@ -30,7 +30,7 @@
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Status
+                {{ 'Status' | translate }}
             </th>
             <td
                 fxFlex="10"
@@ -60,7 +60,7 @@
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Service Group
+                {{ 'Service Group' | translate }}
             </th>
             <td
                 fxFlex="45"
@@ -79,7 +79,7 @@
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Service ID
+                {{ 'Service ID' | translate }}
             </th>
             <td
                 fxFlex="35"
@@ -101,7 +101,7 @@
                 <button
                     mat-icon-button
                     color="accent"
-                    matTooltip="Refresh"
+                    [matTooltip]="'Refresh' | translate"
                     (click)="getRegisteredServices()"
                 >
                     <mat-icon>refresh</mat-icon>
@@ -116,7 +116,7 @@
                 <button
                     mat-icon-button
                     color="accent"
-                    matTooltip="View service details"
+                    [matTooltip]="'View service details' | translate"
                     (click)="openServiceDetails(element)"
                 >
                     <mat-icon>search</mat-icon>

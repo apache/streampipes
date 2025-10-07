@@ -17,21 +17,21 @@
   -->
 
 <sp-split-section
-    title="Terms"
-    subtitle="Terms acknowledgment after login"
+    [title]="'Terms' | translate"
+    [subtitle]="'Terms acknowledgment after login' | translate"
     [formGroup]="parentForm"
 >
     <mat-checkbox formControlName="requireTermsAcknowledgment"
-        >Require users to accept terms after login
+        >{{ 'Require users to accept terms after login' | translate }}
     </mat-checkbox>
 
     @if (parentForm.get('requireTermsAcknowledgment').getRawValue()) {
         <mat-form-field color="accent" class="mt-10">
-            <mat-label>Dialog Title</mat-label>
+            <mat-label>{{ 'Dialog Title' | translate }}</mat-label>
             <input formControlName="termsAcknowledgmentTitle" fxFlex matInput />
         </mat-form-field>
 
-        <h5>Terms</h5>
+        <h5>{{ 'Terms' | translate }}</h5>
         <quill-editor
             fxFlex="100"
             #textEditor
