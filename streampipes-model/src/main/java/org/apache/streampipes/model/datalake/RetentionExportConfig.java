@@ -29,7 +29,7 @@ public class RetentionExportConfig {
     }
 
     // Getter for exportConfig
-    public ExportConfig exportConfig() {
+    public ExportConfig getExportConfig() {
         return exportConfig;
     }
 
@@ -39,7 +39,7 @@ public class RetentionExportConfig {
     }
 
     // Getter for exportProviderSettings
-    public ExportProviderSettings exportProviderSettings() {
+    public ExportProviderSettings getExportProviderSettings() {
         return exportProviderSettings;
     }
 

@@ -44,15 +44,15 @@ public class S3 implements IObjectStorage{
     public S3(String measurementName, String format, ExportProviderSettings settings) throws Exception {
 
           this.s3 = S3Client.builder()
-                .endpointOverride(URI.create(settings.endPoint())) 
+                .endpointOverride(URI.create(settings.getEndPoint())) 
                 .region(Region.of("us-east-1"))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(settings.accessKey(),  EncryptionUtils.decrypt(settings.secretKey()))
+                                AwsBasicCredentials.create(settings.getAccessKey(),  EncryptionUtils.decrypt(settings.getSecretKey()))
                         )
                 )
                 .build();
-            this.bucketName = settings.bucketName();
+            this.bucketName = settings.getBucketName();
             this.fileName = "/" + measurementName + "/dump_"
                 + Instant.now().toString() + "." + format; 
 

@@ -35,7 +35,7 @@ public class ExportProviderSettings {
     }
 
     // Getter for providerType
-    public ProviderType providerType() {
+    public ProviderType getProviderType() {
         return providerType;
     }
 
@@ -45,7 +45,7 @@ public class ExportProviderSettings {
     }
 
     // Getter for accessKey
-    public String accessKey() {
+    public String getAccessKey() {
         return accessKey;
     }
 
@@ -55,7 +55,7 @@ public class ExportProviderSettings {
     }
 
     // Getter for secretKey
-    public String secretKey() {
+    public String getSecretKey() {
         return secretKey;
     }
 
@@ -65,7 +65,7 @@ public class ExportProviderSettings {
     }
 
     // Getter for bucketName
-    public String bucketName() {
+    public String getBucketName() {
         return bucketName;
     }
 
@@ -75,7 +75,7 @@ public class ExportProviderSettings {
     }
 
     // Getter for endPoint
-    public String endPoint() {
+    public String getEndPoint() {
         return endPoint;
     }
 

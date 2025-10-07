@@ -420,8 +420,8 @@ public class DataLakeResource extends AbstractRestResource {
         LOG.info("" + retention);
         try {
           
-          retention.retentionExportConfig().exportProviderSettings().setSecretKey(
-          EncryptionUtils.encrypt(retention.retentionExportConfig().exportProviderSettings().secretKey()));
+          retention.getRetentionExportConfig().getExportProviderSettings().setSecretKey(
+          EncryptionUtils.encrypt(retention.getRetentionExportConfig().getExportProviderSettings().getSecretKey()));
           
         } catch (Exception e) {
           e.printStackTrace();

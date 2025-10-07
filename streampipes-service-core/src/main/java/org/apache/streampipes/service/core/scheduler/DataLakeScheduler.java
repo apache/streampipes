@@ -61,16 +61,16 @@ public class DataLakeScheduler {
         }
 
         var outputFormat = OutputFormat
-                .fromString(dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().format());
+                .fromString(dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
 
         Map<String, String> params = new HashMap<>();
 
-        params.put("delimiter", dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().csvDelimiter());
-        params.put("format", dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().format());
+        params.put("delimiter", dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().csvDelimiter());
+        params.put("format", dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
         params.put("headerColumnName",
-                dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().headerColumnName());
+                dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().headerColumnName());
         params.put("missingValueBehaviour",
-                dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().missingValueBehaviour());
+                dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().missingValueBehaviour());
         params.put("endDate", Long.toString(endDate));
 
         ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(dataLakeMeasure.getMeasureName(), params);
@@ -78,19 +78,19 @@ public class DataLakeScheduler {
                 sanitizedParams,
                 outputFormat,
                 "ignore".equals(
-                        dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().missingValueBehaviour()),
+                        dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().missingValueBehaviour()),
                 output);
         try {
-            ExportProviderSettings exportProviderSettings = dataLakeMeasure.getRetentionTime().retentionExportConfig()
-                    .exportProviderSettings();
+            ExportProviderSettings exportProviderSettings = dataLakeMeasure.getRetentionTime().getRetentionExportConfig()
+                    .getExportProviderSettings();
 
-            ProviderType providerType = exportProviderSettings.providerType();
+            ProviderType providerType = exportProviderSettings.getProviderType();
 
             LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
 
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
                     providerType, dataLakeMeasure.getMeasureName(), exportProviderSettings,
-                    dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().format());
+                    dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
             exportProvider.store(streamingOutput);
 
         } catch (Exception e) {
@@ -128,16 +128,16 @@ public class DataLakeScheduler {
             if (dataLakeMeasure.getRetentionTime() != null) {
 
                 var result = getStartAndEndTime(
-                        dataLakeMeasure.getRetentionTime().dataRetentionConfig().olderThanDays());
+                        dataLakeMeasure.getRetentionTime().getDataRetentionConfig().olderThanDays());
                 Instant now = (Instant) result.get("now");
                 long endDate = (Long) result.get("endDate");
 
-                if (dataLakeMeasure.getRetentionTime().dataRetentionConfig().action() != RetentionAction.DELETE) {
+                if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.DELETE) {
                     LOG.info("Start saving Measurement " + dataLakeMeasure.getMeasureName());
                     exportMeasurement(dataLakeMeasure, now, endDate);
                     LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully saved");
                 }
-                if (dataLakeMeasure.getRetentionTime().dataRetentionConfig().action() != RetentionAction.SAVE) {
+                if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.SAVE) {
                     LOG.info("Start delete Measurement " + dataLakeMeasure.getMeasureName());
                     deleteMeasurement(dataLakeMeasure, now, endDate);
                     LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully deleted");
