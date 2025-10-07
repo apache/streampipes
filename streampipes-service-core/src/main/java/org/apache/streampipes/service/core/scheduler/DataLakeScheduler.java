@@ -108,7 +108,7 @@ public class DataLakeScheduler {
 
     private Map<String, Object> getStartAndEndTime(int olderThanDays) {
         Instant now = Instant.now();
-        Instant daysAgo = now.minus(olderThanDays, ChronoUnit.MINUTES);
+        Instant daysAgo = now.minus(olderThanDays, ChronoUnit.DAYS);
 
         long endDate = daysAgo.toEpochMilli();
 
@@ -118,8 +118,7 @@ public class DataLakeScheduler {
         return result;
     }
 
-    @Scheduled(cron = "0 */2 * * * *") //Cron Job in Dev Setting; Running every 2 min
-//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (6) 00:01 //@Scheduled(cron = "0 */2 * * *
+    @Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (6) 00:01 //@Scheduled(cron = "0 */2 * * *
                                      // *") //Cron Job in Dev Setting; Running every 2 min
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
