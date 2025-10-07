@@ -98,6 +98,8 @@ public interface Environment {
 
   StringEnvironmentVariable getCoreAssetBaseDir();
 
+  StringEnvironmentVariable getExtAssetBaseDir();
+
   // Flink Wrapper
   StringEnvironmentVariable getFlinkJarFileLoc();
 

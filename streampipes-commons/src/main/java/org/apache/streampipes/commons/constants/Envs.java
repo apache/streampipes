@@ -23,6 +23,7 @@ public enum Envs {
   SP_PORT("SP_PORT"),
 
   SP_CORE_ASSET_BASE_DIR("SP_CORE_ASSET_BASE_DIR"),
+  SP_EXT_ASSET_BASE_DIR("SP_EXT_ASSET_BASE_DIR"),
 
   SP_CORE_SCHEME("SP_CORE_SCHEME", "http", "http"),
   SP_CORE_HOST("SP_CORE_HOST", "backend", "localhost"),
