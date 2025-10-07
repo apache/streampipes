@@ -61,16 +61,16 @@ public class DataLakeScheduler {
         }
 
         var outputFormat = OutputFormat
-                .fromString(dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().format());
+                .fromString(dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().format());
 
         Map<String, String> params = new HashMap<>();
 
-        params.put("delimiter", dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().csvDelimiter());
-        params.put("format", dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().format());
+        params.put("delimiter", dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().csvDelimiter());
+        params.put("format", dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().format());
         params.put("headerColumnName",
-                dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().headerColumnName());
+                dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().headerColumnName());
         params.put("missingValueBehaviour",
-                dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour());
+                dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().missingValueBehaviour());
         params.put("endDate", Long.toString(endDate));
 
         ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(dataLakeMeasure.getMeasureName(), params);
@@ -78,10 +78,10 @@ public class DataLakeScheduler {
                 sanitizedParams,
                 outputFormat,
                 "ignore".equals(
-                        dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour()),
+                        dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().missingValueBehaviour()),
                 output);
         try {
-            ExportProviderSettings exportProviderSettings = dataLakeMeasure.getRetentionTime().exportConfig()
+            ExportProviderSettings exportProviderSettings = dataLakeMeasure.getRetentionTime().retentionExportConfig()
                     .exportProviderSettings();
 
             ProviderType providerType = exportProviderSettings.providerType();
@@ -90,7 +90,7 @@ public class DataLakeScheduler {
 
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
                     providerType, dataLakeMeasure.getMeasureName(), exportProviderSettings,
-                    dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().format());
+                    dataLakeMeasure.getRetentionTime().retentionExportConfig().exportConfig().format());
             exportProvider.store(streamingOutput);
 
         } catch (Exception e) {

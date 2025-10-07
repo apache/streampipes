@@ -18,6 +18,7 @@
 package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
 
+import org.apache.streampipes.dataexplorer.export.ObjectStorge.encryption.EncryptionUtils;
 import org.apache.streampipes.model.datalake.ExportProviderSettings;
 
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -47,7 +48,7 @@ public class S3 implements IObjectStorage{
                 .region(Region.of("us-east-1"))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(settings.accessKey(), settings.secretKey())
+                                AwsBasicCredentials.create(settings.accessKey(),  EncryptionUtils.decrypt(settings.secretKey()))
                         )
                 )
                 .build();

@@ -22,9 +22,11 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
+import org.apache.streampipes.dataexplorer.export.ObjectStorge.encryption.EncryptionUtils;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
+import org.apache.streampipes.model.datalake.ExportProviderSettings;
 import org.apache.streampipes.model.datalake.RetentionTimeConfig;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
@@ -416,6 +418,14 @@ public class DataLakeResource extends AbstractRestResource {
   public ResponseEntity<?> setDataLakeRetention(
       @PathVariable String elementId,
       @RequestBody RetentionTimeConfig retention){
+        try {
+          
+          retention.retentionExportConfig().exportProviderSettings().setSecretKey(
+          EncryptionUtils.encrypt(retention.retentionExportConfig().exportProviderSettings().secretKey()));
+          
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
         var measure = this.dataExplorerSchemaManagement.getById(elementId);
         measure.setRetentionTime(retention);
       try {
