@@ -25,6 +25,7 @@ import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.ExportProviderSettings;
+import org.apache.streampipes.model.datalake.ProviderType;
 import org.apache.streampipes.model.datalake.RetentionAction;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
@@ -83,7 +84,7 @@ public class DataLakeScheduler {
             ExportProviderSettings exportProviderSettings = dataLakeMeasure.getRetentionTime().exportConfig()
                     .exportProviderSettings();
 
-            String providerType = exportProviderSettings.providerType();
+            ProviderType providerType = exportProviderSettings.providerType();
 
             LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
 

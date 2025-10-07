@@ -19,7 +19,19 @@
 package org.apache.streampipes.model.datalake;
 
 public enum ProviderType {
-    FOLDER,
-    S3
+    FOLDER("local"),
+    S3("S3");
+
+    private String providerValue;
+
+    // Constructor to assign the value
+    ProviderType(String providerValue) {
+        this.providerValue = providerValue;
+    }
+
+    // Method to get the value of the provider
+    public String getProviderValue() {
+        return providerValue;
+    }
     
 }
