@@ -68,8 +68,12 @@ export class DataRetentionDialogComponent implements OnInit {
                                     headerColumnName: 'key',
                                 },
                                 exportProviderSettings: {
-                                    providerType: 'local',
+                                    providerType: 'FOLDER',
                                     path: './output',
+                                    endPoint: '',
+                                    accessKey: '',
+                                    secretKey: '',
+                                    bucketName: '',
                                 },
                             },
                         } as RetentionTimeConfig);

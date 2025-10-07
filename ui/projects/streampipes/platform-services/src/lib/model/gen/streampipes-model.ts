@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-09-09 16:10:11.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-07 11:10:36.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1874,7 +1874,11 @@ export class ExportItem {
 }
 
 export class ExportProviderSettings {
-    providerType: string;
+    accessKey: string;
+    bucketName: string;
+    endPoint: string;
+    providerType: ProviderType;
+    secretKey: string;
 
     static fromData(
         data: ExportProviderSettings,
@@ -1884,7 +1888,11 @@ export class ExportProviderSettings {
             return data;
         }
         const instance = target || new ExportProviderSettings();
+        instance.accessKey = data.accessKey;
+        instance.bucketName = data.bucketName;
+        instance.endPoint = data.endPoint;
         instance.providerType = data.providerType;
+        instance.secretKey = data.secretKey;
         return instance;
     }
 }
@@ -3927,11 +3935,6 @@ export class StaticPropertyAlternatives extends StaticProperty {
     }
 }
 
-export interface Storable {
-    elementId: string;
-    rev: string;
-}
-
 export class StreamPipesApplicationPackage {
     adapters: string[];
     assets: string[];
@@ -4299,6 +4302,8 @@ export type PropertyScope =
     | 'DIMENSION_PROPERTY'
     | 'MEASUREMENT_PROPERTY'
     | 'NONE';
+
+export type ProviderType = 'FOLDER' | 'S3';
 
 export type RetentionAction = 'DELETE' | 'SAVE' | 'SAVEDELETE';
 
