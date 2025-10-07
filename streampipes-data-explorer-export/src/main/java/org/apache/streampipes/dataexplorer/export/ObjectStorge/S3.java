@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.encryption.EncryptionUtils;
 import org.apache.streampipes.model.datalake.ExportProviderSettings;
-
+import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -42,13 +42,13 @@ public class S3 implements IObjectStorage{
     private final String bucketName;
 
     public S3(String measurementName, String format, ExportProviderSettings settings) throws Exception {
-
+        
           this.s3 = S3Client.builder()
                 .endpointOverride(URI.create(settings.getEndPoint())) 
                 .region(Region.of("us-east-1"))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(settings.getAccessKey(),  EncryptionUtils.decrypt(settings.getSecretKey()))
+                                AwsBasicCredentials.create(settings.getAccessKey(),  SecretEncryptionManager.decrypt(settings.getSecretKey()))
                         )
                 )
                 .build();

@@ -33,6 +33,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -421,7 +422,7 @@ public class DataLakeResource extends AbstractRestResource {
         try {
           
           retention.getRetentionExportConfig().getExportProviderSettings().setSecretKey(
-          EncryptionUtils.encrypt(retention.getRetentionExportConfig().getExportProviderSettings().getSecretKey()));
+          SecretEncryptionManager.encrypt(retention.getRetentionExportConfig().getExportProviderSettings().getSecretKey()));
           
         } catch (Exception e) {
           e.printStackTrace();
