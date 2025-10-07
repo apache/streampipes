@@ -53,6 +53,8 @@ export class DataRetentionDialogComponent implements OnInit {
                         measure.retentionTime != null
                     ) {
                         this.retentionConfig ??= measure.retentionTime;
+                        this.retentionConfig.retentionExportConfig.exportProviderSettings.secretKey =
+                            '';
                     } else {
                         this.retentionConfig ??= RetentionTimeConfig.fromData({
                             dataRetentionConfig: {
