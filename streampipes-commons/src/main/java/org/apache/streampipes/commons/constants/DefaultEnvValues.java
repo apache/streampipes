@@ -28,8 +28,6 @@ public class DefaultEnvValues {
 
   public static final String DEFAULT_ENCRYPTION_PASSCODE = "eGgemyGBoILAu3xckoIp";
 
-  public static final String DEFAULT_ENCRYPTION_PASSCODE_AES = "eGgemyGBoILAu3xckoIpKlPs";
-
   public static final String SP_KAFKA_RETENTION_MS_DEFAULT = "600000";
 
   public static final String LOCALHOST = "localhost";
