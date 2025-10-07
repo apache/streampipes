@@ -37,8 +37,8 @@ mat-form-field {
 mat-checkbox {
     margin-right: 20px;
 }
+
 .asset-tree {
-    font-family: 'Roboto', sans-serif;
     padding-left: 10px;
     margin-left: 10px;
 }
@@ -47,6 +47,7 @@ mat-checkbox {
     display: flex;
     align-items: center;
     padding-left: 10px;
+    cursor: pointer;
 }
 
 .mat-nested-tree-node {
@@ -58,64 +59,22 @@ button[mat-icon-button] {
     margin-right: 8px;
 }
 
-mat-icon {
-    font-size: 18px;
-    color: #3f51b5;
-}
-
-.mat-tree-node span {
-    font-weight: bold;
-}
-
 .mat-tree-node:hover {
-    background-color: #e8e8e8;
-}
-
-.mat-nested-tree-node span {
-    margin-left: 8px;
-}
-
-.mat-nested-tree-node mat-icon {
-    margin-left: 16px;
-}
-
-.transparent-btn {
-    background: transparent;
-    border: none;
-    padding: 0;
-    margin-left: 10px;
-    cursor: pointer;
-}
-
-.transparent-btn:hover {
-    background-color: rgba(63, 81, 181, 0.1);
-}
-
-.transparent-btn mat-icon {
-    font-size: 18px;
-    opacity: 0.4;
-}
-
-.transparent-btn:hover mat-icon {
-    opacity: 1;
+    background-color: var(--color-bg-2);
+    border-radius: 4px;
 }
 
 .selected-node {
-    background-color: #e0f7fa;
-    border-radius: 4px;
-    padding: 5px;
-    font-family: 'Roboto-Bold', serif;
-    font-weight: bolder;
-}
-
-.selected-node:hover {
-    background-color: #b2ebf2;
+    color: var(--color-secondary);
 }
 
 .placeholder-icon {
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    margin-right: 8px;
+    width: 32px;
+    height: 32px;
 }
 
 .placeholder-icon .mat-icon.invisible {

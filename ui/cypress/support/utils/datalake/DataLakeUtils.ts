@@ -182,6 +182,7 @@ export class DataLakeUtils {
     public static editDataView(dataViewName: string) {
         // Click edit button
         // following only works if single view is available
+        GeneralUtils.openMenuForRow(dataViewName);
         cy.dataCy('edit-data-view-' + dataViewName).click();
     }
 
@@ -208,6 +209,7 @@ export class DataLakeUtils {
     }
 
     public static deleteDataView(dataViewName: string) {
+        GeneralUtils.openMenuForRow(dataViewName);
         cy.dataCy('delete-data-view-' + dataViewName, {
             timeout: 10000,
         }).click();
@@ -223,6 +225,7 @@ export class DataLakeUtils {
     }
 
     public static cancelDeleteDataView(dataViewName: string) {
+        GeneralUtils.openMenuForRow(dataViewName);
         cy.dataCy('delete-data-view-' + dataViewName, {
             timeout: 10000,
         }).click();

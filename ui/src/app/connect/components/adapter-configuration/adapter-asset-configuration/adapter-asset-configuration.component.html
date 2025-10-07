@@ -15,7 +15,7 @@
   ~ limitations under the License.
   ~
   -->
-<div *ngIf="assetsData?.length">
+<div *ngIf="assetsData?.length" class="mt-10">
     <mat-tree
         [dataSource]="dataSource"
         [treeControl]="treeControl"
@@ -23,11 +23,7 @@
     >
         <!-- Parent Node Definition -->
         <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
-            <div
-                class="mat-tree-node"
-                (click)="onAssetSelect(node)"
-                [class.selected-node]="isSelected(node)"
-            >
+            <div class="mat-tree-node" (click)="onAssetSelect(node)">
                 <button
                     mat-icon-button
                     matTreeNodeToggle
@@ -39,7 +35,9 @@
                             : 'chevron_right'
                     }}</mat-icon>
                 </button>
-                <span>{{ node.assetName }}</span>
+                <span [class.selected-node]="isSelected(node)">{{
+                    node.assetName
+                }}</span>
             </div>
             <div *ngIf="treeControl.isExpanded(node)" role="group">
                 <ng-container matTreeNodeOutlet></ng-container>
@@ -48,19 +46,13 @@
 
         <!-- Leaf Node Definition (no children) -->
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            <div
-                class="mat-tree-node"
-                (click)="onAssetSelect(node)"
-                [class.selected-node]="isSelected(node)"
-            >
-                <button
-                    mat-icon-button
-                    matTreeNodeToggle
-                    [attr.aria-label]="'Toggle ' + node.assetName"
-                >
-                    <mat-icon></mat-icon>
-                </button>
-                <span>{{ node.assetName }}</span>
+            <div class="mat-tree-node" (click)="onAssetSelect(node)">
+                <span class="mat-icon-button placeholder-icon">
+                    <mat-icon class="invisible"></mat-icon>
+                </span>
+                <span [class.selected-node]="isSelected(node)">{{
+                    node.assetName
+                }}</span>
             </div>
         </mat-tree-node>
     </mat-tree>

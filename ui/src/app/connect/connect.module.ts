@@ -108,6 +108,8 @@ import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapt
 import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
+
 @NgModule({
     imports: [
         MatTreeModule,
@@ -199,6 +201,7 @@ import { TranslateModule } from '@ngx-translate/core';
             },
         ]),
         SharedUiModule,
+        TranslatePipe,
     ],
     exports: [ErrorMessageComponent],
     declarations: [
