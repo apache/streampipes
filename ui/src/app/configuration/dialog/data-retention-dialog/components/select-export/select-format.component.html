@@ -82,9 +82,76 @@
             "
             data-cy="exportProvider-select"
         >
-            <mat-option value="local" data-cy="exportProvider-local">
+            <mat-option value="FOLDER" data-cy="exportProvider-local">
                 {{ 'local' | translate }}
+            </mat-option>
+
+            <mat-option value="S3" data-cy="exportProvider-s3">
+                {{ 'S3' | translate }}
             </mat-option>
         </mat-select>
     </mat-form-field>
+    @if (
+        dataRetentionConfig.exportConfig.exportProviderSettings.providerType ===
+        'S3'
+    ) {
+        <div class="s3-config-container">
+            <!-- Access Key Input -->
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>{{ 'Access Key' | translate }}</mat-label>
+                <input
+                    matInput
+                    [(ngModel)]="
+                        dataRetentionConfig.exportConfig.exportProviderSettings
+                            .accessKey
+                    "
+                    placeholder="{{ 'Enter Access Key' | translate }}"
+                    data-cy="exportProvider-s3-accessKey"
+                />
+            </mat-form-field>
+
+            <!-- Secret Key Input -->
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>{{ 'Secret Key' | translate }}</mat-label>
+                <input
+                    matInput
+                    [(ngModel)]="
+                        dataRetentionConfig.exportConfig.exportProviderSettings
+                            .secretKey
+                    "
+                    placeholder="{{ 'Enter Secret Key' | translate }}"
+                    type="password"
+                    data-cy="exportProvider-s3-secretKey"
+                />
+            </mat-form-field>
+
+            <!-- Endpoint Input with URI Validation -->
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>{{ 'Endpoint' | translate }}</mat-label>
+                <input
+                    matInput
+                    [(ngModel)]="
+                        dataRetentionConfig.exportConfig.exportProviderSettings
+                            .endpoint
+                    "
+                    placeholder="{{ 'Enter Endpoint' | translate }}"
+                    data-cy="exportProvider-s3-endpoint"
+                />
+            </mat-form-field>
+
+            <!-- Bucket Input -->
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>{{ 'Bucket' | translate }}</mat-label>
+                <input
+                    matInput
+                    [(ngModel)]="
+                        dataRetentionConfig.exportConfig.exportProviderSettings
+                            .bucket
+                    "
+                    placeholder="{{ 'Enter Bucket Name' | translate }}"
+                    data-cy="exportProvider-s3-bucket"
+                />
+            </mat-form-field>
+        </div>
+    }
 </sp-configuration-box>
