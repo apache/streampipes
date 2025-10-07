@@ -19,8 +19,8 @@ package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
 
 import org.apache.streampipes.model.datalake.ExportProviderSettings;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
