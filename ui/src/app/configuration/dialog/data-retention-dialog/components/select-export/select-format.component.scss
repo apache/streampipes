@@ -15,3 +15,23 @@
  *  limitations under the License.
  *
  */
+.invalid-uri {
+    border: 1px solid red !important;
+}
+
+.s3-config-container {
+    margin-top: 5px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.s3-config-container mat-form-field {
+    margin-bottom: 5px;
+}
+
+mat-hint {
+    color: red;
+    font-size: 12px;
+}
