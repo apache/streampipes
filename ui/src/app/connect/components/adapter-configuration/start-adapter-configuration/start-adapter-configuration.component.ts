@@ -16,9 +16,18 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    SimpleChanges,
+    OnChanges,
+} from '@angular/core';
 import {
     AdapterDescription,
+    SpAssetTreeNode,
     EventRateTransformationRuleDescription,
     EventSchema,
     RemoveDuplicatesTransformationRuleDescription,
@@ -58,6 +67,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     @Input() isEditMode: boolean;
 
+    @Input() stepper: MatStepper;
+
     /**
      * Cancels the adapter configuration process
      */
@@ -69,7 +80,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
      */
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
-
     /**
      * Go to next configuration step when this is complete
      */
@@ -98,6 +108,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     startAdapterNow = true;
     showCode = false;
+    showAsset = false;
+    selectedAssets = [];
 
     constructor(
         private dialogService: DialogService,
@@ -108,7 +120,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        // initialize form for validation
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
@@ -199,13 +210,18 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 dataLakeTimestampField: this.dataLakeTimestampField,
                 editMode: false,
                 startAdapterNow: this.startAdapterNow,
+                selectedAssets: this.selectedAssets,
             },
         });
-        this.shepherdService.trigger('adapter-settings-adapter-started');
-
+        const dialogInstance =
+            dialogRef.componentInstance as unknown as AdapterStartedDialog;
         dialogRef.afterClosed().subscribe(() => {
             this.adapterStartedEmitter.emit();
         });
+    }
+
+    onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.selectedAssets = updatedAssets;
     }
 
     private checkAndApplyStreamRules(): void {

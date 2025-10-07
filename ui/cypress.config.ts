@@ -45,7 +45,25 @@ export default defineConfig({
         // We've imported your old cypress plugins here.
         // You may want to clean this up later by importing these.
         setupNodeEvents(on, config) {
-            return require('./cypress/plugins/index.ts')(on, config);
+            const plugins = require('./cypress/plugins/index.ts')(on, config);
+
+            // Add language setting for Chromium & Firefox
+            on('before:browser:launch', (browser, launchOptions) => {
+                if (browser.family === 'chromium') {
+                    // Chrome / Edge
+                    launchOptions.args.push('--lang=en-US,en');
+                } else if (browser.family === 'firefox') {
+                    // Firefox
+                    // preferences is optional in the type, so guard + cast
+                    launchOptions.preferences ??= {};
+                    (launchOptions.preferences as Record<string, unknown>)[
+                        'intl.accept_languages'
+                    ] = 'en-US';
+                }
+                return launchOptions;
+            });
+
+            return plugins;
         },
         specPattern: 'cypress/tests/**/*.{js,jsx,ts,tsx}',
         baseUrl: 'http://localhost:80',

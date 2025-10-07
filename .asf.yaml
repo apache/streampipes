@@ -55,7 +55,17 @@ github:
     edit_comment_discussion: "Re: [D] {title}"
     delete_comment_discussion: "Re: [D] {title}"
 
-  del_branch_on_merge: true
+  pull_requests:
+    allow_update_branch: true
+    del_branch_on_merge: true
+
+  enabled_merge_buttons:
+    # enable squash button:
+    squash: true
+    merge:  false
+    rebase: false
+    squash_commit_message: PR_TITLE
+
 
   protected_branches:
     dev:

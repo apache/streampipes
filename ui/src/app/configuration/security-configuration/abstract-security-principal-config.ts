@@ -16,7 +16,7 @@
  *
  */
 
-import { Directive, OnInit, ViewChild } from '@angular/core';
+import { Directive, inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -43,19 +43,15 @@ export abstract class AbstractSecurityPrincipalConfig<
 {
     users: T[] = [];
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    pageSize = 1;
     @ViewChild(MatSort) sort: MatSort;
 
     dataSource: MatTableDataSource<T>;
 
-    constructor(
-        protected userService: UserService,
-        protected userAdminService: UserAdminService,
-        protected dialogService: DialogService,
-        private dialog: MatDialog,
-        private translateService: TranslateService,
-    ) {}
+    protected userService = inject(UserService);
+    protected userAdminService = inject(UserAdminService);
+    protected dialogService = inject(DialogService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
 
     ngOnInit(): void {
         this.load();
@@ -94,6 +90,9 @@ export abstract class AbstractSecurityPrincipalConfig<
         this.getObservable().subscribe(response => {
             this.users = response;
             this.dataSource = new MatTableDataSource(this.users);
+            setTimeout(() => {
+                this.dataSource.sort = this.sort;
+            });
         });
     }
 

@@ -22,6 +22,7 @@ import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
     DateFormatService,
+    PanelType,
 } from '@streampipes/shared-ui';
 import { SpDataExplorerOverviewDirective } from '../../../../data-explorer/components/overview/data-explorer-overview.directive';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,6 +30,8 @@ import { DataExplorerDashboardService } from '../../../../dashboard-shared/servi
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
+import { CloneDashboardDialogComponent } from '../../../dialogs/clone-dashboard/clone-dashboard-dialog.component';
+import { EditDashboardDialogComponent } from '../../../dialogs/edit-dashboard/edit-dashboard-dialog.component';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
@@ -157,5 +160,28 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
 
     makeDashboardKioskUrl(dashboardId: string): string {
         return `${window.location.protocol}//${window.location.host}/#/dashboard-kiosk/${dashboardId}`;
+    }
+
+    openCloneDialog(dashboard: Dashboard): void {
+        const dialogRef = this.dialogService.open(
+            CloneDashboardDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Clone dashboard'),
+                width: '50vw',
+                data: {
+                    dashboard: dashboard,
+                },
+            },
+        );
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.getDashboards();
+            }
+        });
+    }
+
+    onRowClicked(dashboard: Dashboard) {
+        this.showDashboard(dashboard);
     }
 }

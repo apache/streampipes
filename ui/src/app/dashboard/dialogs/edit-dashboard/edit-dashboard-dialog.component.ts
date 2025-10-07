@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
@@ -30,10 +30,8 @@ export class EditDashboardDialogComponent implements OnInit {
     @Input() createMode: boolean;
     @Input() dashboard: Dashboard;
 
-    constructor(
-        private dialogRef: DialogRef<EditDashboardDialogComponent>,
-        private dashboardService: DashboardService,
-    ) {}
+    private dialogRef = inject(DialogRef<EditDashboardDialogComponent>);
+    private dashboardService = inject(DashboardService);
 
     ngOnInit() {
         if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {

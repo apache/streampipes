@@ -65,6 +65,28 @@
         </sp-pipeline-started-status>
         <mat-divider fxFlex="100"></mat-divider>
     </div>
+
+    <div
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxFlex="100"
+        *ngIf="saveInAsset !== ''"
+    >
+        <div>
+            <div
+                class="info-message"
+                fxFlex="100"
+                fxLayoutAlign="center center"
+                fxLayout="row"
+            >
+                <i class="material-icons">done</i>
+                <span data-cy="sp-connect-adapter-success-added"
+                    >&nbsp;{{ saveInAsset }}</span
+                >
+            </div>
+        </div>
+        <mat-divider fxFlex="100"></mat-divider>
+    </div>
     <sp-exception-details
         *ngIf="adapterErrorMessage"
         [message]="adapterErrorMessage"

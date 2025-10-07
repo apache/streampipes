@@ -19,7 +19,10 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { AdapterDescription } from '@streampipes/platform-services';
+import {
+    AdapterDescription,
+    LinkageData,
+} from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
@@ -41,6 +44,7 @@ export class AdapterConfigurationComponent implements OnInit {
     @Input() adapter: AdapterDescription;
     @Input() isEditMode;
 
+    linkageData: LinkageData[];
     myStepper: MatStepper;
     parentForm: UntypedFormGroup;
 

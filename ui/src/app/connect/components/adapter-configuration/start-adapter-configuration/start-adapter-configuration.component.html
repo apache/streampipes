@@ -104,8 +104,25 @@
         </sp-adapter-options-panel>
 
         <sp-adapter-options-panel
-            optionTitle="Remove Duplicates"
-            optionDescription="Avoid duplicated events within a certain time interval"
+            [optionTitle]="'Add to Asset' | translate"
+            [optionDescription]="'Add Adapter to an existing Asset' | translate"
+            optionIcon="precision_manufacturing"
+            dataCy="show-asset-checkbox"
+            (optionSelectedEmitter)="showAsset = $event"
+        >
+            <sp-adapter-asset-configuration
+                *ngIf="showAsset"
+                (selectedAssetsChange)="onSelectedAssetsChange($event)"
+            >
+            </sp-adapter-asset-configuration>
+        </sp-adapter-options-panel>
+
+        <sp-adapter-options-panel
+            [optionTitle]="'Remove Duplicates' | translate"
+            [optionDescription]="
+                'Avoid duplicated events within a certain time interval'
+                    | translate
+            "
             optionIcon="cleaning_services"
             dataCy="connect-remove-duplicates-box"
             [isChecked]="removeDuplicates"
@@ -120,7 +137,7 @@
                     matInput
                     id="input-removeDuplicatesTime"
                     [ngModelOptions]="{ standalone: true }"
-                    placeholder="Remove Duplicates Time Window"
+                    [placeholder]="'Remove Duplicates Time Window' | translate"
                     [(ngModel)]="removeDuplicatesTime"
                     data-cy="connect-remove-duplicates-input"
                 />
@@ -128,8 +145,11 @@
         </sp-adapter-options-panel>
 
         <sp-adapter-options-panel
-            optionTitle="Reduce event rate"
-            optionDescription="Send maximum one event in the specified time window"
+            [optionTitle]="'Reduce event rate' | translate"
+            [optionDescription]="
+                'Send maximum one event in the specified time window'
+                    | translate
+            "
             optionIcon="speed"
             dataCy="connect-reduce-event-rate-box"
             [isChecked]="eventRateReduction"
@@ -146,13 +166,13 @@
                     id="input-evenRateTime"
                     [ngModelOptions]="{ standalone: true }"
                     [(ngModel)]="eventRateTime"
-                    placeholder="Time Window (Milliseconds)"
+                    [placeholder]="'Time Window (Milliseconds)' | translate"
                     matTooltipPosition="above"
                     data-cy="connect-reduce-event-input"
                 />
             </mat-form-field>
             <mat-form-field *ngIf="eventRateReduction" color="accent">
-                <mat-label>Event Aggregation</mat-label>
+                <mat-label>{{ 'Event Aggregation' | translate }}</mat-label>
                 <mat-select
                     [(ngModel)]="eventRateMode"
                     [ngModelOptions]="{ standalone: true }"
@@ -171,15 +191,18 @@
 
         <!-- Start pipeline template to store raw events in data lake -->
         <sp-adapter-options-panel
-            optionTitle="Persist events"
-            optionDescription="Store all events of this source in the internal data store"
+            [optionTitle]="'Persist events' | translate"
+            [optionDescription]="
+                'Store all events of this source in the internal data store'
+                    | translate
+            "
             optionIcon="save"
             dataCy="sp-store-in-datalake"
             *ngIf="!isEditMode"
             (optionSelectedEmitter)="handlePersistOption($event)"
         >
             <mat-form-field *ngIf="saveInDataLake" color="accent" class="mt-10">
-                <mat-label>Select Time Field</mat-label>
+                <mat-label>{{ 'Select Time Field' | translate }}</mat-label>
                 <mat-select
                     [(ngModel)]="dataLakeTimestampField"
                     [ngModelOptions]="{ standalone: true }"
@@ -201,8 +224,11 @@
         </sp-adapter-options-panel>
 
         <sp-adapter-options-panel
-            optionTitle="Show code"
-            optionDescription="Show code to programmatically deploy this adapter over the API"
+            [optionTitle]="'Show code' | translate"
+            [optionDescription]="
+                'Show code to programmatically deploy this adapter over the API'
+                    | translate
+            "
             optionIcon="code"
             dataCy="show-code-checkbox"
             (optionSelectedEmitter)="showCode = $event"
@@ -219,7 +245,7 @@
 
     <div fxLayoutAlign="end" style="margin-top: 10px">
         <button class="mat-basic" mat-flat-button (click)="removeSelection()">
-            Cancel
+            {{ 'Cancel' | translate }}
         </button>
         <button
             style="margin-left: 10px"
@@ -227,7 +253,7 @@
             mat-flat-button
             (click)="goBack()"
         >
-            Back
+            {{ 'Back' | translate }}
         </button>
         <button
             *ngIf="!isEditMode"
@@ -239,7 +265,7 @@
             mat-button
             style="margin-left: 10px"
         >
-            Start Adapter
+            {{ 'Start Adapter' | translate }}
         </button>
         <button
             *ngIf="isEditMode"
@@ -251,7 +277,7 @@
             mat-button
             style="margin-left: 10px"
         >
-            Update Adapter
+            {{ 'Update Adapter' | translate }}
         </button>
     </div>
 </div>

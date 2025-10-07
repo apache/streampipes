@@ -16,7 +16,7 @@
   ~
   -->
 <div fxFlex="100" fxLayout="column">
-    <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="mb-10">
         <h5 style="margin-right: 10px">
             {{ selectedElement.inputStreams[0].name || '' }}
         </h5>
@@ -25,10 +25,10 @@
             mat-flat-button
             class="small-button"
             (click)="selectAll(collectedPropertiesFirstStream)"
-            style="margin-right: 10px; margin-left: 10px"
+            style="margin-right: 10px"
             [disabled]="restrictedEditMode"
         >
-            Select all
+            {{ 'Select all' | translate }}
         </button>
         <button
             mat-flat-button
@@ -36,7 +36,7 @@
             (click)="deselectAll(collectedPropertiesFirstStream)"
             [disabled]="restrictedEditMode"
         >
-            Select none
+            {{ 'Select none' | translate }}
         </button>
     </div>
     <div *ngFor="let property of collectedPropertiesFirstStream; let i = index">

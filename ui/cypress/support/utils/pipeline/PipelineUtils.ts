@@ -24,6 +24,7 @@ import { PipelineBtns } from './PipelineBtns';
 import { ConnectUtils } from '../connect/ConnectUtils';
 import { PipelineBuilder } from '../../builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../builder/PipelineElementBuilder';
+import { GeneralUtils } from '../GeneralUtils';
 
 export class PipelineUtils {
     public static addPipeline(pipelineInput: PipelineInput) {
@@ -62,7 +63,8 @@ export class PipelineUtils {
         PipelineUtils.addPipeline(pipelineInput);
     }
 
-    public static editPipeline() {
+    public static editPipeline(pipelineName: string) {
+        GeneralUtils.openMenuForRow(pipelineName);
         cy.dataCy('modify-pipeline-btn').first().click();
     }
 
@@ -178,13 +180,15 @@ export class PipelineUtils {
         }
     }
 
-    public static deletePipeline() {
+    public static deletePipeline(pipelineName: string) {
         // Delete pipeline
         PipelineUtils.goToPipelines();
+        GeneralUtils.openMenuForRow(pipelineName);
         PipelineBtns.deletePipeline().should('have.length', 1);
         PipelineBtns.deletePipeline().click({ force: true });
 
         cy.dataCy('sp-pipeline-stop-and-delete').click();
+        cy.wait(2000);
 
         PipelineBtns.deletePipeline().should('have.length', 0);
     }

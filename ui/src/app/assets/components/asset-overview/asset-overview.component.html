@@ -55,6 +55,9 @@
                     fxFlex="100"
                     [columns]="displayedColumns"
                     [dataSource]="dataSource"
+                    [showActionsMenu]="true"
+                    [rowsClickable]="true"
+                    (rowClicked)="goToDetailsView($event)"
                     matSort
                 >
                     <ng-container matColumnDef="name">
@@ -83,55 +86,36 @@
                             </div>
                         </td>
                     </ng-container>
-                    <ng-container matColumnDef="action">
-                        <th
-                            mat-header-cell
-                            *matHeaderCellDef
-                            style="justify-content: center"
-                        ></th>
-                        <td mat-cell *matCellDef="let asset">
-                            <div fxLayout="row" fxLayoutAlign="end center">
-                                <button
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="Show info"
-                                    matTooltipPosition="above"
-                                    (click)="goToDetailsView(asset)"
-                                >
-                                    <i class="material-icons">search</i>
-                                </button>
-                                <button
-                                    *ngIf="hasWritePrivilege"
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="Edit asset"
-                                    matTooltipPosition="above"
-                                    data-cy="edit-asset-button"
-                                    [attr.data-cy]="
-                                        'edit-asset-' + asset.assetName
-                                    "
-                                    (click)="goToDetailsView(asset, true)"
-                                >
-                                    <i class="material-icons">edit</i>
-                                </button>
+                    <ng-template spTableActions let-element>
+                        <button
+                            mat-menu-item
+                            (click)="goToDetailsView(element)"
+                        >
+                            <mat-icon>search</mat-icon>
+                            <span>{{ 'Show' | translate }}</span>
+                        </button>
+                        <button
+                            *ngIf="hasWritePrivilege"
+                            mat-menu-item
+                            data-cy="edit-asset-button"
+                            [attr.data-cy]="'edit-asset-' + element.assetName"
+                            (click)="goToDetailsView(element, true)"
+                        >
+                            <mat-icon>edit</mat-icon>
+                            <span>{{ 'Edit' | translate }}</span>
+                        </button>
 
-                                <button
-                                    *ngIf="hasWritePrivilege"
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="Delete asset"
-                                    data-cy="delete"
-                                    matTooltipPosition="above"
-                                    [attr.data-cy]="
-                                        'delete-asset-' + asset.assetName
-                                    "
-                                    (click)="deleteAsset(asset)"
-                                >
-                                    <i class="material-icons">delete</i>
-                                </button>
-                            </div>
-                        </td>
-                    </ng-container>
+                        <button
+                            *ngIf="hasWritePrivilege"
+                            mat-menu-item
+                            data-cy="delete"
+                            [attr.data-cy]="'delete-asset-' + element.assetName"
+                            (click)="deleteAsset(element)"
+                        >
+                            <mat-icon>delete</mat-icon>
+                            <span>{{ 'Delete' | translate }}</span>
+                        </button>
+                    </ng-template>
                 </sp-table>
             </div>
         </div>

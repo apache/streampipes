@@ -62,6 +62,8 @@ import { ViewAssetLabelsComponent } from './components/asset-details/view-asset/
 import { ViewAssetBasicsComponent } from './components/asset-details/view-asset/view-asset-basics/view-assset-basics.component';
 import { ViewAssetLinksComponent } from './components/asset-details/view-asset/view-asset-links/view-asset-links.component';
 import { AssetLinkCardComponent } from './components/asset-details/view-asset/view-asset-links/asset-link-card/asset-link-card.component';
+import { MatMenuItem } from '@angular/material/menu';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -116,6 +118,8 @@ import { AssetLinkCardComponent } from './components/asset-details/view-asset/vi
         SharedUiModule,
         MatTreeModule,
         MatSortModule,
+        MatMenuItem,
+        TranslatePipe,
     ],
     declarations: [
         AssetDetailsBasicsComponent,
