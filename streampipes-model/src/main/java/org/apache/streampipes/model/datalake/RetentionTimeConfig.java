@@ -21,12 +21,12 @@ package org.apache.streampipes.model.datalake;
 public class RetentionTimeConfig {
 
     private DataRetentionConfig dataRetentionConfig;
-    private RetentionExportConfig exportConfig;
+    private RetentionExportConfig retentionExportConfig;
 
     // Constructor
     public RetentionTimeConfig(DataRetentionConfig dataRetentionConfig, RetentionExportConfig exportConfig) {
         this.dataRetentionConfig = dataRetentionConfig;
-        this.exportConfig = exportConfig;
+        this.retentionExportConfig = exportConfig;
     }
 
     // Getter for dataRetentionConfig
@@ -41,11 +41,11 @@ public class RetentionTimeConfig {
 
     // Getter for exportConfig
     public RetentionExportConfig retentionExportConfig() {
-        return exportConfig;
+        return retentionExportConfig;
     }
 
     // Setter for exportConfig
     public void setRetentionExportConfig(RetentionExportConfig exportConfig) {
-        this.exportConfig = exportConfig;
+        this.retentionExportConfig = exportConfig;
     }
 }

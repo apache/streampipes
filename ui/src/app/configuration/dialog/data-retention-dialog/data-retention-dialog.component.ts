@@ -60,7 +60,7 @@ export class DataRetentionDialogComponent implements OnInit {
                                 interval: 'DAILY',
                                 action: 'DELETE',
                             },
-                            exportConfig: {
+                            retentionExportConfig: {
                                 exportConfig: {
                                     format: 'csv',
                                     csvDelimiter: 'comma',

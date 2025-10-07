@@ -22,7 +22,8 @@
             <mat-radio-group
                 class="sp-radio-group"
                 [(ngModel)]="
-                    dataRetentionConfig.exportConfig.exportConfig.format
+                    dataRetentionConfig.retentionExportConfig.exportConfig
+                        .format
                 "
             >
                 <mat-radio-button
@@ -50,11 +51,14 @@
         </sp-configuration-box>
     </div>
 
-    @if (dataRetentionConfig.exportConfig.exportConfig.format === 'csv') {
+    @if (
+        dataRetentionConfig.retentionExportConfig.exportConfig.format === 'csv'
+    ) {
         <sp-configuration-box [title]="'Delimiter' | translate">
             <mat-radio-group
                 [(ngModel)]="
-                    dataRetentionConfig.exportConfig.exportConfig.delimiter
+                    dataRetentionConfig.retentionExportConfig.exportConfig
+                        .delimiter
                 "
                 class="sp-radio-group"
             >
@@ -77,7 +81,7 @@
         <mat-label>{{ 'Select Provider' | translate }}</mat-label>
         <mat-select
             [(ngModel)]="
-                dataRetentionConfig.exportConfig.exportProviderSettings
+                dataRetentionConfig.retentionExportConfig.exportProviderSettings
                     .providerType
             "
             data-cy="exportProvider-select"
@@ -92,8 +96,8 @@
         </mat-select>
     </mat-form-field>
     @if (
-        dataRetentionConfig.exportConfig.exportProviderSettings.providerType ===
-        'S3'
+        dataRetentionConfig.retentionExportConfig.exportProviderSettings
+            .providerType === 'S3'
     ) {
         <div class="s3-config-container">
             <mat-form-field class="w-100">
@@ -101,8 +105,8 @@
                 <input
                     matInput
                     [(ngModel)]="
-                        dataRetentionConfig.exportConfig.exportProviderSettings
-                            .accessKey
+                        dataRetentionConfig.retentionExportConfig
+                            .exportProviderSettings.accessKey
                     "
                     placeholder="{{ 'Enter Access Key' | translate }}"
                     data-cy="exportProvider-s3-accessKey"
@@ -114,8 +118,8 @@
                 <input
                     matInput
                     [(ngModel)]="
-                        dataRetentionConfig.exportConfig.exportProviderSettings
-                            .secretKey
+                        dataRetentionConfig.retentionExportConfig
+                            .exportProviderSettings.secretKey
                     "
                     placeholder="{{ 'Enter Secret Key' | translate }}"
                     type="password"
@@ -128,8 +132,8 @@
                 <input
                     matInput
                     [(ngModel)]="
-                        dataRetentionConfig.exportConfig.exportProviderSettings
-                            .endPoint
+                        dataRetentionConfig.retentionExportConfig
+                            .exportProviderSettings.endPoint
                     "
                     placeholder="{{ 'Enter Endpoint' | translate }}"
                     data-cy="exportProvider-s3-endpoint"
@@ -141,8 +145,8 @@
                 <input
                     matInput
                     [(ngModel)]="
-                        dataRetentionConfig.exportConfig.exportProviderSettings
-                            .bucketName
+                        dataRetentionConfig.retentionExportConfig
+                            .exportProviderSettings.bucketName
                     "
                     placeholder="{{ 'Enter Bucket Name' | translate }}"
                     data-cy="exportProvider-s3-bucket"

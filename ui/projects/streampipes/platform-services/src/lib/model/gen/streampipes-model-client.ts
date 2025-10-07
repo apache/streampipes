@@ -19,9 +19,9 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-10-07 11:10:43.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-07 14:56:24.
 
-import { Storable } from './platform-services';
+import { Storable } from ',/platform-services';
 
 export class Group implements Storable {
     alternateIds: string[];

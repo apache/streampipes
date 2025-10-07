@@ -157,7 +157,7 @@ export class DatalakeRestService {
 
     cleanup(index: string, config: any) {
         const url = `${this.dataLakeUrl}/${index}/cleanup`;
-
+        console.log(config);
         const request = new HttpRequest('POST', url, config, {
             headers: new HttpHeaders({ 'Content-Type': 'application/json' }), // optional if already handled globally
         });
