@@ -75,7 +75,6 @@ public interface Environment {
 
   StringEnvironmentVariable getExtensionsAuthMode();
   StringEnvironmentVariable getEncryptionPasscode();
-  StringEnvironmentVariable getEncryptionPasscodeAES();
 
   BooleanEnvironmentVariable getOAuthEnabled();
   StringEnvironmentVariable getOAuthRedirectUri();
