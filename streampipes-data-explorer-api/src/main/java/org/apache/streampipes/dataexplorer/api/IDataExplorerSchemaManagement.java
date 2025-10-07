@@ -21,12 +21,15 @@ package org.apache.streampipes.dataexplorer.api;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IDataExplorerSchemaManagement {
 
   List<DataLakeMeasure> getAllMeasurements();
 
   DataLakeMeasure getById(String elementId);
+
+  Optional<DataLakeMeasure> getExistingMeasureByName(String measureName);
 
   DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure);
 

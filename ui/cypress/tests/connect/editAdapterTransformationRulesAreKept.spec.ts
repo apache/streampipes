@@ -46,6 +46,7 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         ConnectUtils.closeAdapterPreview();
 
         // Edit adapter and check if given values and added property still provided
+        ConnectBtns.openActionsMenu('Test Adapter');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
         cy.contains('Next').click();

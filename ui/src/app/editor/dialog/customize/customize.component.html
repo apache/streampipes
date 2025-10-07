@@ -34,7 +34,7 @@
                         color="accent"
                         appearance="outline"
                     >
-                        <mat-label>Use template</mat-label>
+                        <mat-label>{{ 'Use template' | translate }}</mat-label>
                         <mat-select
                             (selectionChange)="loadTemplate($event)"
                             [(value)]="selectedTemplate"
@@ -56,14 +56,14 @@
                         color="accent"
                         [disabled]="!pipelineElement.payload.includesAssets"
                     >
-                        Show documentation
+                        {{ 'Show documentation' | translate }}
                     </mat-slide-toggle>
                     <span>&nbsp;</span>
                     <mat-slide-toggle
                         [(ngModel)]="displayRecommended"
                         color="accent"
                     >
-                        Show only recommended settings
+                        {{ 'Show only recommended settings' | translate }}
                     </mat-slide-toggle>
                 </div>
             </div>
@@ -159,7 +159,8 @@
                 [disabled]="!formValid"
                 data-cy="sp-element-configuration-save"
             >
-                <i class="material-icons">save</i><span>&nbsp;Save</span>
+                <i class="material-icons">save</i
+                ><span>&nbsp;{{ 'Save' | translate }}</span>
             </button>
             <button
                 mat-button
@@ -168,7 +169,7 @@
                 (click)="close()"
                 data-cy="cancel-customize"
             >
-                Cancel
+                {{ 'Cancel' | translate }}
             </button>
             <div fxFlex></div>
             <button
@@ -180,7 +181,7 @@
                 (click)="triggerTemplateMode()"
             >
                 <i class="material-icons">add_circle_outline</i
-                ><span>&nbsp;Create template</span>
+                ><span>&nbsp;{{ 'Create template' | translate }}</span>
             </button>
         </div>
         <div fxLayout="row" *ngIf="templateMode">
@@ -194,7 +195,7 @@
                 data-cy="save-template"
             >
                 <i class="material-icons">save</i
-                ><span>&nbsp;Save template</span>
+                ><span>&nbsp;{{ 'Save template' | translate }}</span>
             </button>
             <button
                 mat-button
@@ -202,7 +203,7 @@
                 class="mat-basic"
                 (click)="cancelTemplateMode()"
             >
-                Cancel
+                {{ 'Cancel' | translate }}
             </button>
         </div>
     </div>

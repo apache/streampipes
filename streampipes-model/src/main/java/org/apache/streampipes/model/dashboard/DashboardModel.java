@@ -45,6 +45,7 @@ public class DashboardModel implements Storable, SpResource {
   private String name;
   private String description;
   private boolean displayHeader;
+  private int gridColumns = 8;
 
   private Map<String, Object> dashboardTimeSettings;
   private Map<String, Object> dashboardGeneralSettings;
@@ -146,6 +147,10 @@ public class DashboardModel implements Storable, SpResource {
 
   public void setDashboardLiveSettings(Map<String, Object> dashboardLiveSettings) {
     this.dashboardLiveSettings = dashboardLiveSettings;
+  }
+
+  public int getGridColumns() {
+    return gridColumns;
   }
 
   @Override

@@ -18,6 +18,7 @@
 
 import { AssetBtns } from './AssetBtns';
 import { ConnectUtils } from '../connect/ConnectUtils';
+import { GeneralUtils } from '../GeneralUtils';
 
 export class AssetUtils {
     public static goToAssets() {
@@ -59,6 +60,7 @@ export class AssetUtils {
     }
 
     public static editAsset(assetName: string) {
+        GeneralUtils.openMenuForRow(assetName);
         AssetBtns.editAssetBtn(assetName).click();
     }
 
@@ -84,6 +86,7 @@ export class AssetUtils {
     }
 
     public static deleteAsset(assetName: string) {
+        GeneralUtils.openMenuForRow(assetName);
         AssetBtns.deleteAssetBtn(assetName).click();
         cy.dataCy('confirm-delete').click();
     }

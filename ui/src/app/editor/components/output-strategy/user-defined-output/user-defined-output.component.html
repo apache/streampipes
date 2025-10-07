@@ -33,7 +33,7 @@
             [disabled]="restrictedEditMode"
             data-cy="use-input-schema"
         >
-            Use input schema
+            {{ 'Use input schema' | translate }}
         </button>
     </div>
 
@@ -45,7 +45,7 @@
     >
         <div fxLayout="column" fxFlex="30">
             <mat-form-field fxFlex color="accent">
-                <mat-label>Runtime name</mat-label>
+                <mat-label>{{ 'Runtime name' | translate }}</mat-label>
                 <input
                     [(ngModel)]="ep.runtimeName"
                     data-cy="runtime-name"
@@ -56,7 +56,7 @@
         </div>
         <div fxLayout="column" fxFlex="30">
             <mat-form-field class="example-full-width" color="accent">
-                <mat-label>Runtime type</mat-label>
+                <mat-label>{{ 'Runtime type' | translate }}</mat-label>
                 <mat-select
                     [(ngModel)]="ep.runtimeType"
                     [disabled]="restrictedEditMode"
@@ -73,7 +73,7 @@
         </div>
         <div fxLayout="column" fxFlex="30">
             <mat-form-field fxFlex color="accent">
-                <mat-label>Semantic type</mat-label>
+                <mat-label>{{ 'Semantic type' | translate }}</mat-label>
                 <input
                     [(ngModel)]="ep.semanticType"
                     [disabled]="restrictedEditMode"
@@ -103,7 +103,7 @@
             data-cy="add-field"
         >
             <mat-icon class="icon">add</mat-icon>
-            <span>Add field</span>
+            <span>{{ 'Add field' | translate }}</span>
         </button>
     </div>
 </div>

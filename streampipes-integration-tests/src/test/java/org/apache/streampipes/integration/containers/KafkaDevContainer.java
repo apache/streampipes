@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.integration.containers;
 
-public class KafkaDevContainer  extends KafkaContainer{
+public class KafkaDevContainer extends SpKafkaTestContainer {
   @Override
   public void start() {
     // do nothing

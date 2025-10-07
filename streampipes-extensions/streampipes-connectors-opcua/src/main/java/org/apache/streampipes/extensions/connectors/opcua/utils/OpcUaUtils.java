@@ -34,6 +34,8 @@ import org.eclipse.milo.opcua.sdk.client.api.UaClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -44,6 +46,8 @@ import java.util.concurrent.ExecutionException;
  * Collection of several utility functions in context of OPC UA
  */
 public class OpcUaUtils {
+
+  private static final Logger LOG = LoggerFactory.getLogger(OpcUaUtils.class);
 
   private static final String OPC_TCP_PREFIX = "opc.tcp://";
 
@@ -141,17 +145,26 @@ public class OpcUaUtils {
     Throwable cause = e.getCause();
 
     if (cause instanceof UaException uaException) {
-      return CompositeCertificateValidator.REJECTED_STATUS_CODES
-          .contains(uaException.getStatusCode().getValue());
+      return checkAndLogCertificateException(uaException);
     }
 
     Throwable nestedCause = cause != null ? cause.getCause() : null;
     if (nestedCause instanceof UaException uaException) {
-      return CompositeCertificateValidator.REJECTED_STATUS_CODES
-          .contains(uaException.getStatusCode().getValue());
+      return checkAndLogCertificateException(uaException);
     }
 
     return false;
+  }
+
+  private static boolean checkAndLogCertificateException(UaException e) {
+    var containsRejectedStatusCode = CompositeCertificateValidator.REJECTED_STATUS_CODES
+        .contains(e.getStatusCode().getValue());
+
+    if (containsRejectedStatusCode) {
+      var statusCode = CompositeCertificateValidator.REJECTED_STATUS_CODES.stream().filter(code -> code.equals(e.getStatusCode().getValue())).findFirst();
+      statusCode.ifPresent(sc -> LOG.warn("Status Code: {}", sc));
+    }
+    return containsRejectedStatusCode;
   }
 
   private static String makeExceptionMessage(ExecutionException e) {
