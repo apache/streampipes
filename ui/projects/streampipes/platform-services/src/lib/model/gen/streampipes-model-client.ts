@@ -240,11 +240,6 @@ export class ServiceAccount extends Principal {
     }
 }
 
-export interface Storable {
-    elementId: string;
-    rev: string;
-}
-
 export class UserAccount extends Principal {
     createdAtMillis: number;
     darkMode: boolean;
