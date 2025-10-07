@@ -29,7 +29,12 @@
             </button>
         </div>
     }
-    <div fxLayout="row" fxLayoutAlign="start center" class="alternate-id-row">
+    <div
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        class="alternate-id-row"
+        fxLayoutGap="10px"
+    >
         <mat-form-field color="accent" fxFlex subscriptSizing="dynamic">
             <mat-label>New Alternate ID</mat-label>
             <input
@@ -40,7 +45,11 @@
             />
         </mat-form-field>
         <div fxLayoutAlign="start center">
-            <button mat-button class="mat-basic" (click)="addAlternateId()">
+            <button
+                mat-flat-button
+                class="mat-basic"
+                (click)="addAlternateId()"
+            >
                 <mat-icon>add</mat-icon><span>Add</span>
             </button>
         </div>
