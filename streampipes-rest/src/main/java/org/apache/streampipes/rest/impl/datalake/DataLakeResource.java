@@ -417,7 +417,6 @@ public class DataLakeResource extends AbstractRestResource {
   public ResponseEntity<?> setDataLakeRetention(
       @PathVariable String elementId,
       @RequestBody RetentionTimeConfig retention){
-        LOG.info("" + retention);
         try {
           
           retention.getRetentionExportConfig().getExportProviderSettings().setSecretKey(
@@ -426,7 +425,6 @@ public class DataLakeResource extends AbstractRestResource {
         } catch (Exception e) {
           e.printStackTrace();
         }
-          LOG.info("1" + retention);
         var measure = this.dataExplorerSchemaManagement.getById(elementId);
         measure.setRetentionTime(retention);
       try {
