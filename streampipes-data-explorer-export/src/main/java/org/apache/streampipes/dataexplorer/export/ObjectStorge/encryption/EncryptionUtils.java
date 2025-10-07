@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.dataexplorer.export.ObjectStorge.encryption;
 
+import org.apache.streampipes.commons.environment.Environments;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -25,8 +27,8 @@ import java.util.Base64;
 public class EncryptionUtils {
 
     private static final String ALGORITHM = "AES"; 
-
-    private static final String ENCRYPTION_KEY = System.getenv("Envs.SP_ENCRYPTION_PASSCODE"); 
+    
+    private static final String ENCRYPTION_KEY = Environments.getEnvironment().getEncryptionPasscodeAES().getValueOrDefault();//System.getenv("SP_ENCRYPTION_PASSCODE"); 
 
     public static String encrypt(String plainText) throws Exception {
         SecretKeySpec keySpec = new SecretKeySpec(ENCRYPTION_KEY.getBytes(), ALGORITHM);

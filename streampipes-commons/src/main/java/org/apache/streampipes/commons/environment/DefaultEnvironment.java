@@ -177,6 +177,10 @@ public class DefaultEnvironment implements Environment {
   public StringEnvironmentVariable getEncryptionPasscode() {
     return new StringEnvironmentVariable(Envs.SP_ENCRYPTION_PASSCODE);
   }
+    @Override
+  public StringEnvironmentVariable getEncryptionPasscodeAES() {
+    return new StringEnvironmentVariable(Envs.SP_ENCRYPTION_PASSCODE_AES);
+  }
 
   @Override
   public BooleanEnvironmentVariable getOAuthEnabled() {
