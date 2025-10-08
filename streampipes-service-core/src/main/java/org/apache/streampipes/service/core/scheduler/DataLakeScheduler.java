@@ -28,6 +28,7 @@ import org.apache.streampipes.model.configuration.ProviderType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.RetentionAction;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,20 +82,41 @@ public class DataLakeScheduler {
                         dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().missingValueBehaviour()),
                 output);
         try {
-            ExportProviderSettings exportProviderSettings = dataLakeMeasure.getRetentionTime().getRetentionExportConfig()
-                    .getExportProviderSettings();
+            String exportProviderId = dataLakeMeasure.getRetentionTime().getRetentionExportConfig()
+                    .getExportProviderId();
+            // FInd Item in Document 
+             
+            List<ExportProviderSettings>  exportProviders = StorageDispatcher.INSTANCE
+                .getNoSqlStore()
+                .getSpCoreConfigurationStorage()
+                .get()
+                .getExportProviderSettings();
+            
+            ExportProviderSettings exportProviderSetting = null;
+            
+            for (int i = 0; i < exportProviders.size(); i++) {
+                ExportProviderSettings existing = exportProviders.get(i);
+                if (existing != null && existing.getProviderId().equals(exportProviderId)) {
+                 exportProviderSetting = existing;
+                }
+            }
 
-            ProviderType providerType = exportProviderSettings.getProviderType();
+            if (exportProviderSetting == null){
+                LOG.error("The desired export provider was not found. No export has been done.");
+               return;
+            }
+
+            ProviderType providerType = exportProviderSetting.getProviderType();
 
             LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
 
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
-                    providerType, dataLakeMeasure.getMeasureName(), exportProviderSettings,
+                    providerType, dataLakeMeasure.getMeasureName(), exportProviderSetting,
                     dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
             exportProvider.store(streamingOutput);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Could not establish a connection to the export provider.");
         }
     }
 
