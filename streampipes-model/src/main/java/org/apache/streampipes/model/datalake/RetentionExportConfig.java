@@ -22,28 +22,22 @@ public class RetentionExportConfig {
     private ExportConfig exportConfig; 
     private ExportProviderSettings exportProviderSettings;
 
-    // Constructor
     public RetentionExportConfig(ExportConfig exportConfig, ExportProviderSettings exportProviderSettings) {
         this.exportConfig = exportConfig;
         this.exportProviderSettings = exportProviderSettings;
     }
 
-    // Getter for exportConfig
     public ExportConfig getExportConfig() {
         return exportConfig;
     }
 
-    // Setter for exportConfig
     public void setExportConfig(ExportConfig exportConfig) {
         this.exportConfig = exportConfig;
     }
-
-    // Getter for exportProviderSettings
     public ExportProviderSettings getExportProviderSettings() {
         return exportProviderSettings;
     }
 
-    // Setter for exportProviderSettings
     public void setExportProviderSettings(ExportProviderSettings exportProviderSettings) {
         this.exportProviderSettings = exportProviderSettings;
     }

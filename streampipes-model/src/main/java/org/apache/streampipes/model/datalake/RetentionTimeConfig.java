@@ -24,7 +24,6 @@ public class RetentionTimeConfig {
     private DataRetentionConfig dataRetentionConfig;
     private RetentionExportConfig retentionExportConfig;
 
-        // Default constructor
     public RetentionTimeConfig() {}
 
 
@@ -35,24 +34,18 @@ public class RetentionTimeConfig {
         this.retentionExportConfig = retentionExportConfig;
     }
 
-
-
-    // Getter for dataRetentionConfig
     public DataRetentionConfig getDataRetentionConfig() {
         return dataRetentionConfig;
     }
 
-    // Setter for dataRetentionConfig
     public void setDataRetentionConfig(DataRetentionConfig dataRetentionConfig) {
         this.dataRetentionConfig = dataRetentionConfig;
     }
 
-    // Getter for exportConfig
     public RetentionExportConfig getRetentionExportConfig() {
         return retentionExportConfig;
     }
 
-    // Setter for exportConfig
     public void setRetentionExportConfig(RetentionExportConfig exportConfig) {
         this.retentionExportConfig = exportConfig;
     }

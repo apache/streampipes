@@ -33,53 +33,36 @@ public class ExportProviderSettings {
         this.bucketName = bucketName;
         this.endPoint = endPoint;
     }
-
-    // Getter for providerType
+    
     public ProviderType getProviderType() {
         return providerType;
     }
-
-    // Setter for providerType
     public void setProviderType(ProviderType providerType) {
         this.providerType = providerType;
     }
-
-    // Getter for accessKey
     public String getAccessKey() {
         return accessKey;
     }
-
-    // Setter for accessKey
     public void setAccessKey(String accessKey) {
         this.accessKey = accessKey;
     }
-
-    // Getter for secretKey
     public String getSecretKey() {
         return secretKey;
     }
-
-    // Setter for secretKey
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
-
-    // Getter for bucketName
     public String getBucketName() {
         return bucketName;
     }
-
-    // Setter for bucketName
     public void setBucketName(String bucketName) {
         this.bucketName = bucketName;
     }
 
-    // Getter for endPoint
     public String getEndPoint() {
         return endPoint;
     }
 
-    // Setter for endPoint
     public void setEndPoint(String endPoint) {
         this.endPoint = endPoint;
     }
