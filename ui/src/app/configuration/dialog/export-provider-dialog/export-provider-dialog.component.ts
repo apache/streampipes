@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AwsRegion,
@@ -29,14 +29,17 @@ import { ExportProviderService } from 'projects/streampipes/platform-services/sr
     templateUrl: './export-provider-dialog.component.html',
     standalone: false,
 })
-export class ExportProviderComponent {
+export class ExportProviderComponent implements OnInit {
+    @Input()
+    provider: ExportProviderSettings;
+
     exportProviderSetting: ExportProviderSettings = {
         providerType: 'FOLDER',
         accessKey: '',
         secretKey: '',
         bucketName: '',
         endPoint: '',
-        providerId: 'us-east-1',
+        providerId: '',
         awsRegion: 'us-east-1',
         secretEncrypted: false,
     };
@@ -76,14 +79,22 @@ export class ExportProviderComponent {
         private exportProviderRestService: ExportProviderService,
     ) {}
 
+    ngOnInit() {
+        if (this.provider) {
+            console.log(this.provider.awsRegion);
+            this.exportProviderSetting = this.provider;
+        }
+    }
+
     close(refreshDataLakeIndex: boolean) {
         this.dialogRef.close(refreshDataLakeIndex);
     }
 
     addData() {
         console.log('Add Data');
-        this.exportProviderSetting.providerId = this.makeProviderId();
-
+        if (this.exportProviderSetting.providerId == '') {
+            this.exportProviderSetting.providerId = this.makeProviderId();
+        }
         console.log('Start Update with');
         console.log(this.exportProviderSetting);
 

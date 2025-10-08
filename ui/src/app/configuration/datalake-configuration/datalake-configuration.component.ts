@@ -70,7 +70,12 @@ export class DatalakeConfigurationComponent implements OnInit {
         'retention',
     ];
 
-    displayedColumnsExport: string[] = ['providertype', 'endpoint', 'bucket'];
+    displayedColumnsExport: string[] = [
+        'providertype',
+        'endpoint',
+        'bucket',
+        'editExportProvider',
+    ];
 
     pageSize = 15;
     pageIndex = 0;
@@ -151,12 +156,15 @@ export class DatalakeConfigurationComponent implements OnInit {
             });
     }
 
-    createExportProvider() {
+    createExportProvider(provider: ExportProviderSettings | null) {
         const dialogRef: DialogRef<ExportProviderComponent> =
             this.dialogService.open(ExportProviderComponent, {
                 panelType: PanelType.STANDARD_PANEL,
                 title: 'New Export Provider',
                 width: '70vw',
+                data: {
+                    provider: provider,
+                },
             });
 
         dialogRef.afterClosed().subscribe(data => {
