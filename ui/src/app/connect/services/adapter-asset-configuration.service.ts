@@ -27,7 +27,7 @@ import {
     GenericStorageService,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
-import { concatMap, firstValueFrom, from, Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -131,7 +131,7 @@ export class AssetSaveService {
                         this.assetService.updateAsset(current);
 
                     updateObservable?.subscribe({
-                        next: updated => {
+                        next: () => {
                             this.adapterStartedEmitter.emit();
                         },
                     });
@@ -271,7 +271,6 @@ export class AssetSaveService {
     ) {
         const result: any = { ...dict };
         let current = result;
-        let parent: any = null;
         for (let i = 2; i < path.length; i++) {
             const key = path[i];
 

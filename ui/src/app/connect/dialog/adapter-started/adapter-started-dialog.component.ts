@@ -254,7 +254,7 @@ export class AdapterStartedDialog implements OnInit {
             this.adapterService
                 .startAdapterByElementId(adapterElementId)
                 .subscribe(
-                    startStatus => {
+                    () => {
                         this.onAdapterReady(successMessage, showPreview);
                     },
                     error => {

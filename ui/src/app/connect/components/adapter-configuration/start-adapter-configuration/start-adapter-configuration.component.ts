@@ -16,15 +16,7 @@
  *
  */
 
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    SimpleChanges,
-    OnChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
     AdapterDescription,
     EventRateTransformationRuleDescription,
@@ -217,8 +209,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 selectedAssets: this.selectedAssets,
             },
         });
-        const dialogInstance =
-            dialogRef.componentInstance as unknown as AdapterStartedDialog;
+
         dialogRef.afterClosed().subscribe(() => {
             this.adapterStartedEmitter.emit();
         });
