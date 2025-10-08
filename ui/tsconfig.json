@@ -24,8 +24,6 @@
     "types": ["node"],
     "lib": ["es2021", "dom"],
     "baseUrl": "./",
-    "skipLibCheck": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "skipLibCheck": true
   }
 }

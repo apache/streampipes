@@ -108,7 +108,9 @@
             [optionDescription]="'Add Adapter to an existing Asset' | translate"
             optionIcon="precision_manufacturing"
             dataCy="show-asset-checkbox"
-            [isChecked]="showAsset"
+            [isChecked]="
+                showAsset && (!isEditMode || originalAssets.length > 0)
+            "
             (optionSelectedEmitter)="showAsset = $event"
         >
             <sp-adapter-asset-configuration
