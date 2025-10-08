@@ -15,28 +15,44 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.datalake;
+package org.apache.streampipes.model.configuration;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
 public class ExportProviderSettings {
 
+    private boolean secretEncrypted;
+
     private ProviderType providerType;
+    private String providerId;
     private String accessKey;
     private String secretKey;
     private String bucketName;
     private String endPoint;
-
-    // Constructor
-    public ExportProviderSettings(ProviderType providerType, String accessKey, String secretKey, String bucketName, String endPoint) {
+    private AwsRegion awsRegion;
+    
+    public ExportProviderSettings(ProviderType providerType, String providerId, String accessKey, String secretKey, String bucketName, String endPoint, AwsRegion awsRegion) {
         this.providerType = providerType;
+        this.providerId = providerId;
         this.accessKey = accessKey;
         this.secretKey = secretKey;
         this.bucketName = bucketName;
         this.endPoint = endPoint;
+        this.awsRegion = awsRegion;
     }
     
     public ProviderType getProviderType() {
         return providerType;
     }
+    public AwsRegion getAwsRegion() {
+        return awsRegion;
+    }
+
+    public void setAwsRegion(AwsRegion awsRegion) {
+        this.awsRegion = awsRegion;
+    }
+
     public void setProviderType(ProviderType providerType) {
         this.providerType = providerType;
     }
@@ -66,4 +82,34 @@ public class ExportProviderSettings {
     public void setEndPoint(String endPoint) {
         this.endPoint = endPoint;
     }
+
+        public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    public static ExportProviderSettings fromDefaults() {
+   ExportProviderSettings config = new ExportProviderSettings();
+    config.setSecretEncrypted(false);
+
+    return config;
+  }
+
+    public ExportProviderSettings() {
+
+  }
+
+  public boolean isSecretEncrypted() {
+    return secretEncrypted;
+  }
+
+  public void setSecretEncrypted(boolean secretEncrypted) {
+    this.secretEncrypted = secretEncrypted;
+  }
 }
+
+
+

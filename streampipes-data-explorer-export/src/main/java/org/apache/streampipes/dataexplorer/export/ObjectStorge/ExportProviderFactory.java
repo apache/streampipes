@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
-import org.apache.streampipes.model.datalake.ExportProviderSettings;
-import org.apache.streampipes.model.datalake.ProviderType;
+import org.apache.streampipes.model.configuration.ExportProviderSettings;
+import org.apache.streampipes.model.configuration.ProviderType;
 
 public class ExportProviderFactory {
     

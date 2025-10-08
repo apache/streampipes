@@ -20,11 +20,11 @@ package org.apache.streampipes.model.datalake;
 public class RetentionExportConfig {
     
     private ExportConfig exportConfig; 
-    private ExportProviderSettings exportProviderSettings;
+    private String exportProviderId;
 
-    public RetentionExportConfig(ExportConfig exportConfig, ExportProviderSettings exportProviderSettings) {
+    public RetentionExportConfig(ExportConfig exportConfig, String exportProviderId) {
         this.exportConfig = exportConfig;
-        this.exportProviderSettings = exportProviderSettings;
+        this.exportProviderId = exportProviderId;
     }
 
     public ExportConfig getExportConfig() {
@@ -34,11 +34,11 @@ public class RetentionExportConfig {
     public void setExportConfig(ExportConfig exportConfig) {
         this.exportConfig = exportConfig;
     }
-    public ExportProviderSettings getExportProviderSettings() {
-        return exportProviderSettings;
+    public String getExportProviderId() {
+        return exportProviderId;
     }
 
-    public void setExportProviderSettings(ExportProviderSettings exportProviderSettings) {
-        this.exportProviderSettings = exportProviderSettings;
+    public void setExportProviderId(String exportProviderId) {
+        this.exportProviderId = exportProviderId;
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.datalake;
+package org.apache.streampipes.model.configuration;
 
 public enum ProviderType {
     FOLDER,

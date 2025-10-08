@@ -23,9 +23,9 @@ import org.apache.streampipes.dataexplorer.export.ObjectStorge.ExportProviderFac
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.IObjectStorage;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
+import org.apache.streampipes.model.configuration.ExportProviderSettings;
+import org.apache.streampipes.model.configuration.ProviderType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.ExportProviderSettings;
-import org.apache.streampipes.model.datalake.ProviderType;
 import org.apache.streampipes.model.datalake.RetentionAction;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
