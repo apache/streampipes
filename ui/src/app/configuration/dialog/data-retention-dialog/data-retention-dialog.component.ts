@@ -53,8 +53,6 @@ export class DataRetentionDialogComponent implements OnInit {
                         measure.retentionTime != null
                     ) {
                         this.retentionConfig ??= measure.retentionTime;
-                        this.retentionConfig.retentionExportConfig.exportProviderSettings.secretKey =
-                            '';
                     } else {
                         this.retentionConfig ??= RetentionTimeConfig.fromData({
                             dataRetentionConfig: {
@@ -69,14 +67,7 @@ export class DataRetentionDialogComponent implements OnInit {
                                     missingValueBehaviour: 'ignore',
                                     headerColumnName: 'key',
                                 },
-                                exportProviderSettings: {
-                                    providerType: 'FOLDER',
-                                    path: './output',
-                                    endPoint: '',
-                                    accessKey: '',
-                                    secretKey: '',
-                                    bucketName: '',
-                                },
+                                exportProviderId: '',
                             },
                         } as RetentionTimeConfig);
                     }

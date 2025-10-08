@@ -22,6 +22,7 @@ import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
     ChartService,
     DatalakeRestService,
+    ExportProviderSettings,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -37,6 +38,7 @@ import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/de
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/data-retention-dialog.component';
+import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
 @Component({
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
@@ -52,6 +54,10 @@ export class DatalakeConfigurationComponent implements OnInit {
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
     availableMeasurements: DataLakeConfigurationEntry[] = [];
+    availableExportProvider: ExportProviderSettings[] = [];
+
+    dataSourceExport: MatTableDataSource<ExportProviderSettings> =
+        new MatTableDataSource([]);
 
     displayedColumns: string[] = [
         'name',
@@ -63,6 +69,8 @@ export class DatalakeConfigurationComponent implements OnInit {
         'retention',
     ];
 
+    displayedColumnsExport: string[] = ['providertype', 'endpoint', 'bucket'];
+
     pageSize = 15;
     pageIndex = 0;
 
@@ -72,6 +80,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         private dialogService: DialogService,
         private breadcrumbService: SpBreadcrumbService,
         private tabService: SpConfigurationTabsService,
+        private exportProviderRestService: ExportProviderService,
     ) {}
 
     ngOnInit(): void {
@@ -81,6 +90,17 @@ export class DatalakeConfigurationComponent implements OnInit {
             { label: this.tabService.getTabTitle('datalake') },
         ]);
         this.loadAvailableMeasurements();
+        this.loadAvailableExportProvider();
+    }
+
+    loadAvailableExportProvider() {
+        this.availableExportProvider = [];
+        this.exportProviderRestService
+            .getAllExportProviders()
+            .subscribe(allExportProviders => {
+                this.availableExportProvider = allExportProviders;
+                this.dataSourceExport.data = this.availableExportProvider;
+            });
     }
 
     loadAvailableMeasurements() {
