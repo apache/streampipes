@@ -282,6 +282,18 @@
                             <button
                                 color="accent"
                                 mat-icon-button
+                                matTooltip="New Export Provider"
+                                data-cy="new-export-providers"
+                                (click)="createExportProvider()"
+                            >
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+
+                        <div fxLayout="row" fxLayoutAlign="end center">
+                            <button
+                                color="accent"
+                                mat-icon-button
                                 matTooltip="Refresh"
                                 data-cy="refresh-export-providers-measures"
                                 (click)="loadAvailableExportProvider()"

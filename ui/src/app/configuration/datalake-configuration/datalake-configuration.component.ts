@@ -39,6 +39,7 @@ import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/data-retention-dialog.component';
 import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
+import { ExportProviderComponent } from '../dialog/export-provider-dialog/export-provider-dialog.component';
 @Component({
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
@@ -148,6 +149,21 @@ export class DatalakeConfigurationComponent implements OnInit {
                         });
                     });
             });
+    }
+
+    createExportProvider() {
+        const dialogRef: DialogRef<ExportProviderComponent> =
+            this.dialogService.open(ExportProviderComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'New Export Provider',
+                width: '70vw',
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.loadAvailableExportProvider();
+            }
+        });
     }
 
     cleanDatalakeIndex(measurementIndex: string) {
