@@ -81,13 +81,15 @@ export class ExportProviderComponent {
     }
 
     addData() {
+        console.log('Add Data');
         this.exportProviderSetting.providerId = this.makeProviderId();
 
-        this.exportProviderRestService.updateExportProvider(
-            this.exportProviderSetting,
-        );
+        console.log('Start Update with');
+        console.log(this.exportProviderSetting);
 
-        this.dialogRef.close();
+        this.exportProviderRestService
+            .updateExportProvider(this.exportProviderSetting)
+            .subscribe(() => this.dialogRef.close());
     }
 
     private makeProviderId(): string {

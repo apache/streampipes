@@ -17,7 +17,7 @@
   -->
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <mat-form-field appearance="fill" class="sp-select-field">
+        <mat-form-field class="sp-select-field">
             <mat-label>{{ 'Select Provider' | translate }}</mat-label>
             <mat-select
                 [(ngModel)]="exportProviderSetting.providerType"
@@ -86,7 +86,7 @@
                 >
                     <mat-option
                         *ngFor="let region of awsRegions"
-                        [value]="region"
+                        [value]="region.toUpperCase()"
                     >
                         {{ region }}
                     </mat-option>
@@ -110,6 +110,7 @@
                 mat-button
                 mat-flat-button
                 class="mat-basic"
+                style="margin-left: 12px"
                 (click)="close(false)"
             >
                 Close
