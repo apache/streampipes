@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-10-07 14:56:18.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-08 14:57:11.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1162,6 +1161,7 @@ export class DashboardModel implements Storable, SpResource {
     description: string;
     displayHeader: boolean;
     elementId: string;
+    gridColumns: number;
     id: string;
     metadata: ResourceMetadata;
     name: string;
@@ -1189,6 +1189,7 @@ export class DashboardModel implements Storable, SpResource {
         instance.description = data.description;
         instance.displayHeader = data.displayHeader;
         instance.elementId = data.elementId;
+        instance.gridColumns = data.gridColumns;
         instance.id = data.id;
         instance.metadata = ResourceMetadata.fromData(data.metadata);
         instance.name = data.name;
@@ -1876,9 +1877,12 @@ export class ExportItem {
 
 export class ExportProviderSettings {
     accessKey: string;
+    awsRegion: AwsRegion;
     bucketName: string;
     endPoint: string;
+    providerId: string;
     providerType: ProviderType;
+    secretEncrypted: boolean;
     secretKey: string;
 
     static fromData(
@@ -1890,9 +1894,12 @@ export class ExportProviderSettings {
         }
         const instance = target || new ExportProviderSettings();
         instance.accessKey = data.accessKey;
+        instance.awsRegion = data.awsRegion;
         instance.bucketName = data.bucketName;
         instance.endPoint = data.endPoint;
+        instance.providerId = data.providerId;
         instance.providerType = data.providerType;
+        instance.secretEncrypted = data.secretEncrypted;
         instance.secretKey = data.secretKey;
         return instance;
     }
@@ -3364,7 +3371,7 @@ export class ResourceMetadata {
 
 export class RetentionExportConfig {
     exportConfig: ExportConfig;
-    exportProviderSettings: ExportProviderSettings;
+    exportProviderId: string;
 
     static fromData(
         data: RetentionExportConfig,
@@ -3375,9 +3382,7 @@ export class RetentionExportConfig {
         }
         const instance = target || new RetentionExportConfig();
         instance.exportConfig = ExportConfig.fromData(data.exportConfig);
-        instance.exportProviderSettings = ExportProviderSettings.fromData(
-            data.exportProviderSettings,
-        );
+        instance.exportProviderId = data.exportProviderId;
         return instance;
     }
 }
@@ -3936,6 +3941,11 @@ export class StaticPropertyAlternatives extends StaticProperty {
     }
 }
 
+export interface Storable {
+    elementId: string;
+    rev: string;
+}
+
 export class StreamPipesApplicationPackage {
     adapters: string[];
     assets: string[];
@@ -4261,6 +4271,35 @@ export class WildcardTopicMapping {
         return instance;
     }
 }
+
+export type AwsRegion =
+    | 'us-east-1'
+    | 'us-east-2'
+    | 'us-west-1'
+    | 'us-west-2'
+    | 'ca-central-1'
+    | 'ca-west-1'
+    | 'eu-north-1'
+    | 'eu-west-1'
+    | 'eu-west-2'
+    | 'eu-west-3'
+    | 'eu-central-1'
+    | 'eu-south-1'
+    | 'eu-south-2'
+    | 'eu-central-2'
+    | 'ap-south-1'
+    | 'ap-east-1'
+    | 'ap-northeast-1'
+    | 'ap-northeast-2'
+    | 'ap-northeast-3'
+    | 'ap-southeast-1'
+    | 'ap-southeast-2'
+    | 'ap-southeast-3'
+    | 'sa-east-1'
+    | 'me-south-1'
+    | 'me-central-1'
+    | 'us-gov-east-1'
+    | 'us-gov-west-1';
 
 export type CertificateState = 'REJECTED' | 'TRUSTED';
 
