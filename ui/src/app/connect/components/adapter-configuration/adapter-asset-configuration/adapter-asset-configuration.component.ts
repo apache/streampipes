@@ -151,7 +151,12 @@ export class AdapterAssetConfigurationComponent implements OnInit {
         });
     }
 
-    private selectNodeIfMatch(node: SpAssetTreeNode) {
+    private selectNodeIfMatch(
+        node: SpAssetTreeNode,
+        path: SpAssetTreeNode[] = [],
+    ) {
+        const currentPath = [...path, node];
+
         if (
             node.assetLinks &&
             node.assetLinks.some(
@@ -162,11 +167,14 @@ export class AdapterAssetConfigurationComponent implements OnInit {
                 this.selectedAssets.push(node);
                 this.originalAssets.push(node);
                 this.originalAssetsEmitter.emit(this.originalAssets);
+                currentPath.forEach(n => this.treeControl.expand(n));
             }
         }
 
         if (node.assets) {
-            node.assets.forEach(childNode => this.selectNodeIfMatch(childNode));
+            node.assets.forEach(child =>
+                this.selectNodeIfMatch(child, currentPath),
+            );
         }
     }
 

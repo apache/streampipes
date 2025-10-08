@@ -120,6 +120,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.showAsset = this.isEditMode;
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
