@@ -141,7 +141,7 @@ export class AssetSaveService {
     }
 
     private updateLinkLabelInDict(
-        dict: any,
+        dict: SpAssetTreeNode,
         path: (string | number)[],
         linkToUpdate: any,
     ) {
@@ -236,7 +236,7 @@ export class AssetSaveService {
     }
 
     private deleteDictValue(
-        dict: any,
+        dict: SpAssetTreeNode,
         path: (string | number)[],
         linkToRemove: any,
     ) {
