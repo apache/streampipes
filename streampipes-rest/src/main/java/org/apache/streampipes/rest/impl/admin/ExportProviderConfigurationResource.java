@@ -22,8 +22,7 @@ import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +39,6 @@ import java.util.List;
 @RequestMapping("/api/v2/admin/exportprovider-config")
 public class ExportProviderConfigurationResource extends AbstractAuthGuardedRestResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExportProviderConfigurationResource.class);
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
@@ -52,25 +50,19 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> updateExportProviderConfiguration(@RequestBody ExportProviderSettings config) {
-
-    LOG.info("" + config);
   
     if (!config.isSecretEncrypted()) {
         config.setSecretKey(SecretEncryptionManager.encrypt(config.getSecretKey()));
         config.setSecretEncrypted(true);
     }
-        LOG.info("" + config);
     var storage = getSpCoreConfigurationStorage();
     var cfg = storage.get();
 
-    LOG.info("" + cfg);
 
     List<ExportProviderSettings> providerSettings = cfg.getExportProviderSettings();
     if (providerSettings == null) {
         providerSettings = new ArrayList<>();
     }
-
-    LOG.info("" + providerSettings);
 
     boolean updated = false;
 
