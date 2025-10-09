@@ -49,6 +49,7 @@ export class SelectDataExportComponent implements OnInit {
 
     ngOnInit() {
         this.loadAvailableExportProvider();
+        this.selectedProviderType = 'FOLDER';
 
         if (
             this.dataRetentionConfig.retentionExportConfig.exportProviderId !==
@@ -103,6 +104,18 @@ export class SelectDataExportComponent implements OnInit {
         ) {
             this.dataRetentionConfig.retentionExportConfig.exportProviderId =
                 this.availableFolderExportProvider[0].providerId;
+            this.selectedProviderId =
+                this.availableFolderExportProvider[0].providerId;
+        } else if (type === 'S3' && this.availableS3ExportProvider.length > 0) {
+            this.dataRetentionConfig.retentionExportConfig.exportProviderId =
+                this.availableS3ExportProvider[0].providerId;
+            this.selectedProviderId =
+                this.availableS3ExportProvider[0].providerId;
+        } else {
+            // no providers available for this type, clear the exportProviderId
+            this.dataRetentionConfig.retentionExportConfig.exportProviderId =
+                '';
+            this.selectedProviderId = '';
         }
     }
 }

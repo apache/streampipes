@@ -102,4 +102,32 @@ export class DataRetentionDialogComponent implements OnInit {
                 this.close(true);
             });
     }
+
+    requiresExportValidation(): boolean {
+        const action = this.retentionConfig?.dataRetentionConfig?.action;
+        return action === 'SAVE' || action === 'SAVEDELETE';
+    }
+
+    isExportValid(): boolean {
+        const exportConfig =
+            this.retentionConfig?.retentionExportConfig?.exportConfig;
+        const providerId =
+            this.retentionConfig?.retentionExportConfig?.exportProviderId;
+        if (!exportConfig?.format) {
+            console.error('Export format is required.');
+            return false;
+        }
+
+        if (exportConfig.format === 'csv' && !exportConfig.csvDelimiter) {
+            console.error('CSV delimiter is required for CSV format.');
+            return false;
+        }
+
+        if (providerId == '') {
+            console.error('S3 provider details must be selected.');
+            return false;
+        }
+
+        return true;
+    }
 }
