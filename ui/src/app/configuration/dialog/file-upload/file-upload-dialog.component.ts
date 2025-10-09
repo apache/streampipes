@@ -16,10 +16,11 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FilesService } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-file-upload-dialog-component',
@@ -28,6 +29,7 @@ import { FilesService } from '@streampipes/platform-services';
     standalone: false,
 })
 export class FileUploadDialogComponent {
+    private translateService = inject(TranslateService);
     inputValue: string;
     fileNames: string[] = [];
     duplicateFileNames: string[] = [];
@@ -36,7 +38,7 @@ export class FileUploadDialogComponent {
     selectedUploadFiles: FileList;
 
     hasInput: boolean;
-    errorMessage = 'Please enter a value';
+    errorMessage = this.translateService.instant('Please enter a value');
 
     uploadStatus = 0;
 

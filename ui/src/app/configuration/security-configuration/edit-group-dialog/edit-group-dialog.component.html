@@ -21,9 +21,11 @@
         <div fxFlex="100" fxLayout="column" class="p-15">
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                 <div class="general-options-panel" fxLayout="column">
-                    <span class="general-options-header">Basics</span>
+                    <span class="general-options-header">{{
+                        'Basics' | translate
+                    }}</span>
                     <mat-form-field color="accent">
-                        <mat-label>Group Name</mat-label>
+                        <mat-label>{{ 'Group Name' | translate }}</mat-label>
                         <input
                             formControlName="groupName"
                             fxFlex
@@ -34,7 +36,9 @@
                     </mat-form-field>
                 </div>
                 <div fxLayout="column" class="general-options-panel">
-                    <span class="general-options-header">Roles</span>
+                    <span class="general-options-header">{{
+                        'Roles' | translate
+                    }}</span>
                     <mat-checkbox
                         *ngFor="let role of availableRoles$ | async"
                         [value]="role.elementId"
@@ -45,7 +49,9 @@
                     </mat-checkbox>
                 </div>
                 <div fxLayout="column" class="general-options-panel">
-                    <span class="general-options-header">Alternate IDs</span>
+                    <span class="general-options-header">{{
+                        'Alternate IDs' | translate
+                    }}</span>
                     <sp-alternate-id-configuration
                         [alternateIds]="clonedGroup.alternateIds"
                     >
@@ -64,7 +70,8 @@
                 [disabled]="!parentForm.valid || clonedGroup.roles.length === 0"
                 data-cy="sp-element-edit-user-save"
             >
-                <i class="material-icons">save</i><span>&nbsp;Save</span>
+                <i class="material-icons">save</i
+                ><span>&nbsp;{{ 'Save' | translate }}</span>
             </button>
             <button
                 mat-button
@@ -72,7 +79,7 @@
                 class="mat-basic"
                 (click)="close(false)"
             >
-                Cancel
+                {{ 'Cancel' | translate }}
             </button>
         </div>
     </div>

@@ -17,7 +17,7 @@
   -->
 
 <div fxLayout="column" fxFlex="100">
-    <h5>Additional documents from generic storage</h5>
+    <h5>{{ 'Additional documents from generic storage' | translate }}</h5>
 
     @for (exportItem of exportItems; track exportItem.resourceId) {
         <sp-generic-storage-item
@@ -32,10 +32,10 @@
         <div fxLayout="row" fxLayoutAlign="start center" class="mt-10">
             <div fxLayoutAlign="start center" fxFlex>
                 <mat-form-field color="accent" fxFlex subscriptSizing="dynamic">
-                    <mat-label>Document ID</mat-label>
+                    <mat-label>{{ 'Document ID' | translate }}</mat-label>
                     <input
                         matInput
-                        placeholder="Document ID"
+                        [placeholder]="'Document ID' | translate"
                         [(ngModel)]="newDocumentId"
                     />
                 </mat-form-field>
@@ -46,7 +46,7 @@
                     color="accent"
                     (click)="addGenericStorageDocument()"
                 >
-                    Add
+                    {{ 'Add' | translate }}
                 </button>
             </div>
         </div>

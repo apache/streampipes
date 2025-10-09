@@ -36,12 +36,12 @@
         fxLayoutGap="10px"
     >
         <mat-form-field color="accent" fxFlex subscriptSizing="dynamic">
-            <mat-label>New Alternate ID</mat-label>
+            <mat-label>{{ 'New Alternate ID' | translate }}</mat-label>
             <input
                 matInput
                 [(ngModel)]="newAlternateId"
                 (keyup.enter)="addAlternateId()"
-                placeholder="Enter new alternate ID"
+                [placeholder]="'Enter new alternate ID' | translate"
             />
         </mat-form-field>
         <div fxLayoutAlign="start center">
@@ -50,7 +50,7 @@
                 class="mat-basic"
                 (click)="addAlternateId()"
             >
-                <mat-icon>add</mat-icon><span>Add</span>
+                <mat-icon>add</mat-icon><span>{{ 'Add' | translate }}</span>
             </button>
         </div>
     </div>

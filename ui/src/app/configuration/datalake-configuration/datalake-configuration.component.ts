@@ -41,6 +41,8 @@ import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/da
 import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
 import { ExportProviderComponent } from '../dialog/export-provider-dialog/export-provider-dialog.component';
 import { DeleteExportProviderComponent } from '../dialog/delete-export-provider/delete-export-provider-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
+
 @Component({
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
@@ -59,6 +61,7 @@ export class DatalakeConfigurationComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private tabService = inject(SpConfigurationTabsService);
     private exportProviderRestService = inject(ExportProviderService);
+    private translateService = inject(TranslateService);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
@@ -176,7 +179,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         const dialogRef: DialogRef<DeleteDatalakeIndexComponent> =
             this.dialogService.open(DeleteDatalakeIndexComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: 'Truncate data',
+                title: this.translateService.instant('Truncate data'),
                 width: '70vw',
                 data: {
                     measurementIndex: measurementIndex,
@@ -195,7 +198,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         const dialogRef: DialogRef<DeleteDatalakeIndexComponent> =
             this.dialogService.open(DeleteDatalakeIndexComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: 'Delete data',
+                title: this.translateService.instant('Delete data'),
                 width: '70vw',
                 data: {
                     measurementIndex: measurementIndex,
@@ -231,7 +234,7 @@ export class DatalakeConfigurationComponent implements OnInit {
     openDownloadDialog(measurementName: string) {
         this.dialogService.open(DataDownloadDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Download data',
+            title: this.translateService.instant('Download data'),
             width: '50vw',
             data: {
                 dataDownloadDialogModel: {
@@ -244,7 +247,7 @@ export class DatalakeConfigurationComponent implements OnInit {
     openRetentionDialog(measurementId: string) {
         this.dialogService.open(DataRetentionDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Set Data Retention',
+            title: this.translateService.instant('Set Data Retention'),
             width: '50vw',
             data: {
                 dataRetentionDialogModel: {

@@ -17,33 +17,35 @@
   -->
 
 <sp-split-section
-    title="Links"
-    subtitle="Configure application links"
+    [title]="'Links' | translate"
+    [subtitle]="'Configure application links' | translate"
     [formGroup]="parentForm"
 >
-    <div class="subsection-title">Documentation Link</div>
+    <div class="subsection-title">{{ 'Documentation Link' | translate }}</div>
     <mat-form-field color="accent">
-        <mat-label>Documentation URL</mat-label>
+        <mat-label>{{ 'Documentation URL' | translate }}</mat-label>
         <input formControlName="documentationUrl" fxFlex matInput />
     </mat-form-field>
     <mat-checkbox formControlName="showDocumentationLinkOnStartScreen"
-        >Show documentation link on login page
+        >{{ 'Show documentation link on login page' | translate }}
     </mat-checkbox>
     <mat-checkbox formControlName="showDocumentationLinkInProfileMenu"
-        >Show documentation link in user menu
+        >{{ 'Show documentation link in user menu' | translate }}
     </mat-checkbox>
 
-    <div class="subsection-title mt-10">API Documentation Link</div>
+    <div class="subsection-title mt-10">
+        {{ 'API Documentation Link' | translate }}
+    </div>
     <mat-checkbox formControlName="showApiDocumentationLinkOnStartScreen"
-        >Show API documentation link on login page
+        >{{ 'Show API documentation link on login page' | translate }}
     </mat-checkbox>
 
-    <div class="subsection-title mt-10">Support Link</div>
+    <div class="subsection-title mt-10">{{ 'Support Link' | translate }}</div>
     <mat-form-field color="accent">
-        <mat-label>Support URL</mat-label>
+        <mat-label>{{ 'Support URL' | translate }}</mat-label>
         <input formControlName="supportUrl" fxFlex matInput />
     </mat-form-field>
     <mat-checkbox formControlName="showSupportUrlOnStartScreen"
-        >Show support link on login page
+        >{{ 'Show support link on login page' | translate }}
     </mat-checkbox>
 </sp-split-section>
