@@ -16,13 +16,13 @@
  *
  */
 .invalid-uri {
-    border: 1px solid red !important;
+    border: var(--color-warn);
 }
 
 .s3-config-container {
     margin-top: 5px;
     padding: 15px;
-    background-color: #f9f9f9;
+    background-color: var(--color-bg-2);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
