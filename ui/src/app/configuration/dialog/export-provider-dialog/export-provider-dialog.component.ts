@@ -24,10 +24,7 @@ import {
     Validators,
 } from '@angular/forms';
 import { DialogRef } from '@streampipes/shared-ui';
-import {
-    AwsRegion,
-    ExportProviderSettings,
-} from '@streampipes/platform-services';
+import { ExportProviderSettings } from '@streampipes/platform-services';
 import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
 
 @Component({
@@ -44,36 +41,6 @@ export class ExportProviderComponent implements OnInit {
     private fb = inject(FormBuilder);
 
     exportForm: FormGroup;
-
-    awsRegions: AwsRegion[] = [
-        'us-east-1',
-        'us-east-2',
-        'us-west-1',
-        'us-west-2',
-        'ca-central-1',
-        'ca-west-1',
-        'eu-north-1',
-        'eu-west-1',
-        'eu-west-2',
-        'eu-west-3',
-        'eu-central-1',
-        'eu-south-1',
-        'eu-south-2',
-        'eu-central-2',
-        'ap-south-1',
-        'ap-east-1',
-        'ap-northeast-1',
-        'ap-northeast-2',
-        'ap-northeast-3',
-        'ap-southeast-1',
-        'ap-southeast-2',
-        'ap-southeast-3',
-        'sa-east-1',
-        'me-south-1',
-        'me-central-1',
-        'us-gov-east-1',
-        'us-gov-west-1',
-    ];
 
     ngOnInit() {
         this.initForm();
@@ -97,7 +64,7 @@ export class ExportProviderComponent implements OnInit {
             secretKey: ['', Validators.required],
             endPoint: ['', [Validators.required, this.uriValidator]],
             bucketName: ['', Validators.required],
-            awsRegion: ['us-east-1', Validators.required],
+            awsRegion: ['US_EAST_1', Validators.required],
             providerId: [''],
             secretEncrypted: [false],
         });
@@ -149,7 +116,7 @@ export class ExportProviderComponent implements OnInit {
         if (!formValue.providerId) {
             formValue.providerId = this.makeProviderId();
         }
-        formValue.awsRegion = formValue.awsRegion.toUpperCase() as AwsRegion;
+        formValue.awsRegion = formValue.awsRegion;
 
         this.exportProviderRestService
             .updateExportProvider(formValue)

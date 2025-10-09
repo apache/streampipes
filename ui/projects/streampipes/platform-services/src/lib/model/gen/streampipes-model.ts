@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-10-08 14:57:11.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-09 16:21:10.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1877,7 +1877,7 @@ export class ExportItem {
 
 export class ExportProviderSettings {
     accessKey: string;
-    awsRegion: AwsRegion;
+    awsRegion: string;
     bucketName: string;
     endPoint: string;
     providerId: string;
@@ -4271,35 +4271,6 @@ export class WildcardTopicMapping {
         return instance;
     }
 }
-
-export type AwsRegion =
-    | 'us-east-1'
-    | 'us-east-2'
-    | 'us-west-1'
-    | 'us-west-2'
-    | 'ca-central-1'
-    | 'ca-west-1'
-    | 'eu-north-1'
-    | 'eu-west-1'
-    | 'eu-west-2'
-    | 'eu-west-3'
-    | 'eu-central-1'
-    | 'eu-south-1'
-    | 'eu-south-2'
-    | 'eu-central-2'
-    | 'ap-south-1'
-    | 'ap-east-1'
-    | 'ap-northeast-1'
-    | 'ap-northeast-2'
-    | 'ap-northeast-3'
-    | 'ap-southeast-1'
-    | 'ap-southeast-2'
-    | 'ap-southeast-3'
-    | 'sa-east-1'
-    | 'me-south-1'
-    | 'me-central-1'
-    | 'us-gov-east-1'
-    | 'us-gov-west-1';
 
 export type CertificateState = 'REJECTED' | 'TRUSTED';
 
