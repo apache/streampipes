@@ -115,6 +115,9 @@ export class ExportProviderComponent implements OnInit {
             const control = this.exportForm.get(field);
             if (enabled) {
                 control?.setValidators(Validators.required);
+                if (field === 'endPoint') {
+                    control?.addValidators(this.uriValidator.bind(this));
+                }
                 control?.enable();
             } else {
                 control?.clearValidators();
@@ -125,7 +128,7 @@ export class ExportProviderComponent implements OnInit {
     }
     uriValidator(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
-        if (!value) return null; // Required validator will handle empty case
+        if (!value) return null;
 
         try {
             new URL(value);

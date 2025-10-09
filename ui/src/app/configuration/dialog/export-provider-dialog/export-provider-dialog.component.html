@@ -63,7 +63,9 @@
                         @if (
                             exportForm.get('endPoint')?.hasError('invalidUri')
                         ) {
-                            <mat-error> Invalid URI format. </mat-error>
+                            <mat-error
+                                >{{ 'Invalid URI format.' | translate }}
+                            </mat-error>
                         }
                     </mat-form-field>
 
