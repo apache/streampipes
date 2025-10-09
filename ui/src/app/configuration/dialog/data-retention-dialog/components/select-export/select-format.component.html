@@ -102,7 +102,9 @@
         >
             <mat-label>{{ 'Select Provider' | translate }}</mat-label>
             <mat-select
-                [(ngModel)]="selectedProviderId"
+                [(ngModel)]="
+                    dataRetentionConfig.retentionExportConfig.exportProviderId
+                "
                 data-cy="exportProviderId-select"
             >
                 <mat-option

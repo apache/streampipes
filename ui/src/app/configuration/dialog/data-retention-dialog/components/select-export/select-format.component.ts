@@ -64,7 +64,7 @@ export class SelectDataExportComponent implements OnInit {
                         provider => provider.providerType === 'FOLDER',
                     );
                 // Defualts to Folder
-                this.selectedProviderId =
+                this.dataRetentionConfig.retentionExportConfig.exportProviderId =
                     this.availableFolderExportProvider[0].providerId;
             });
     }
@@ -75,10 +75,11 @@ export class SelectDataExportComponent implements OnInit {
             type === 'FOLDER' &&
             this.availableFolderExportProvider.length > 0
         ) {
-            this.selectedProviderId =
+            this.dataRetentionConfig.retentionExportConfig.exportProviderId =
                 this.availableFolderExportProvider[0].providerId;
         } else if (type === 'S3') {
-            this.selectedProviderId = '';
+            this.dataRetentionConfig.retentionExportConfig.exportProviderId =
+                '';
         }
     }
 }
