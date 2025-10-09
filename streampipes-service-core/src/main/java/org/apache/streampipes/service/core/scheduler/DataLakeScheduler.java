@@ -32,8 +32,10 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.time.Instant;
@@ -42,8 +44,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
-public class DataLakeScheduler {
+@Configuration
+public class DataLakeScheduler implements SchedulingConfigurer {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataLakeScheduler.class);
 
@@ -130,7 +132,7 @@ public class DataLakeScheduler {
 
     private Map<String, Object> getStartAndEndTime(int olderThanDays) {
         Instant now = Instant.now();
-        Instant daysAgo = now.minus(olderThanDays, ChronoUnit.MINUTES);
+        Instant daysAgo = now.minus(olderThanDays, ChronoUnit.DAYS);
 
         long endDate = daysAgo.toEpochMilli();
 
@@ -140,8 +142,6 @@ public class DataLakeScheduler {
         return result;
     }
 
-    @Scheduled(cron = "0 */2 * * * *")//@Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (6) 00:01 //@Scheduled(cron = "0 */2 * * *
-                                     // *") //Cron Job in Dev Setting; Running every 2 min
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");
@@ -166,5 +166,18 @@ public class DataLakeScheduler {
                 }
             }
         }
+    }
+
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+         LOG.info(System.getenv("SP_DATALAKE_SCHEDULER_CRON"));
+        taskRegistrar.addTriggerTask(
+
+            this::cleanupMeasurements,
+           
+            triggerContext -> new CronTrigger(System.getenv("SP_DATALAKE_SCHEDULER_CRON")).nextExecution(triggerContext)
+
+        );
+ 
     }
 }
