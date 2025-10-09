@@ -55,6 +55,15 @@
         >
             {{ 'Start Sync' | translate }}
         </button>
+
+        <button
+            mat-flat-button
+            color="accent"
+            data-cy="download-configuration-download-btn"
+            (click)="deleteCleanUp()"
+        >
+            {{ 'Delete Sync' | translate }}
+        </button>
         <button
             mat-flat-button
             class="mat-basic"

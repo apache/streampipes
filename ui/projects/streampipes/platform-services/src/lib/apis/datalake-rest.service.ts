@@ -170,6 +170,11 @@ export class DatalakeRestService {
         return this.http.request(request);
     }
 
+    deleteCleanup(index: string) {
+        const url = `${this.dataLakeUrl}/${index}/cleanup`;
+        return this.http.delete(url);
+    }
+
     buildDownloadRequest(index: string, queryParams: any) {
         const url = this.dataLakeUrl + '/measurements/' + index + '/download';
         const request = new HttpRequest('GET', url, {

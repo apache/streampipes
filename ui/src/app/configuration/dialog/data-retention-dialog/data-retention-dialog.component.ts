@@ -87,9 +87,16 @@ export class DataRetentionDialogComponent implements OnInit {
     }
 
     setCleanUp() {
-        console.log('Retention Config ', this.retentionConfig);
         this.datalakeRestService
             .cleanup(this.measurementIndex, this.retentionConfig)
+            .subscribe(data => {
+                this.close(true);
+            });
+    }
+
+    deleteCleanUp() {
+        this.datalakeRestService
+            .deleteCleanup(this.measurementIndex)
             .subscribe(data => {
                 this.close(true);
             });
