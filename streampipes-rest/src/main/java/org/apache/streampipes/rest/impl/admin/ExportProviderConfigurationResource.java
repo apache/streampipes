@@ -47,6 +47,16 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
     return ok(getSpCoreConfigurationStorage().get().getExportProviderSettings());
   }
 
+  @GetMapping(value = "/{providerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+@PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+public ResponseEntity<ExportProviderSettings> getExportProviderSettingById(@PathVariable String providerId) {
+    return getSpCoreConfigurationStorage().get().getExportProviderSettings().stream()
+        .filter(setting -> setting.getProviderId().equalsIgnoreCase(providerId))
+        .findFirst()
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+}
+
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> updateExportProviderConfiguration(@RequestBody ExportProviderSettings config) {
