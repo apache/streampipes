@@ -22,13 +22,18 @@
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <b
                     ><h4>
-                        Do you really want to delete the export provider?
+                        {{
+                            'Do you really want to delete the export provider?'
+                                | translate
+                        }}
                     </h4></b
                 >
                 <b
                     ><h5>
-                        This operation cannot be undone. Please ensure that the
-                        data provider is not used in a datalake retention.
+                        {{
+                            'This operation cannot be undone. Please ensure that the data provider is not used in a datalake retention.'
+                                | translate
+                        }}
                     </h5></b
                 >
             </div>
@@ -41,7 +46,7 @@
                     data-cy="confirm-delete-data-btn"
                     (click)="deleteExportProvider()"
                 >
-                    Delete Data
+                    {{ 'Delete Data' | translate }}
                 </button>
             </div>
         </div>

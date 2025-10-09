@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
 
@@ -29,13 +29,11 @@ export class DeleteExportProviderComponent {
     @Input()
     providerId: string;
 
+    private dialogRef = inject(DialogRef<DeleteExportProviderComponent>);
+    private exportProviderRestService = inject(ExportProviderService);
+
     isInProgress = false;
     currentStatus: any;
-
-    constructor(
-        private dialogRef: DialogRef<DeleteExportProviderComponent>,
-        private exportProviderRestService: ExportProviderService,
-    ) {}
 
     close(refreshDataLakeIndex: boolean) {
         this.dialogRef.close(refreshDataLakeIndex);
@@ -44,7 +42,6 @@ export class DeleteExportProviderComponent {
     deleteExportProvider() {
         this.isInProgress = true;
         this.currentStatus = 'Deleting export provider.';
-        console.log('providerId', this.providerId);
         this.exportProviderRestService
             .deleteExportProvider(this.providerId)
             .subscribe(data => {
