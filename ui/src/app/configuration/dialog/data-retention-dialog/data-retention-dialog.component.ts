@@ -16,13 +16,15 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DataRetentionDialogModel } from './model/data-retention-dialog.model';
 import {
     DatalakeRestService,
+    ExportProviderSettings,
     RetentionTimeConfig,
 } from '@streampipes/platform-services';
+import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
 
 @Component({
     selector: 'sp-data-retention-dialog',
@@ -34,14 +36,13 @@ export class DataRetentionDialogComponent implements OnInit {
     @Input() dataRetentionDialogModel: DataRetentionDialogModel;
 
     retentionConfig: RetentionTimeConfig;
+    exportProvider: ExportProviderSettings;
 
     @Input()
     measurementIndex: string;
 
-    constructor(
-        public dialogRef: DialogRef<DataRetentionDialogComponent>,
-        private datalakeRestService: DatalakeRestService,
-    ) {}
+    dialogRef = inject(DialogRef<DataRetentionDialogComponent>);
+    datalakeRestService = inject(DatalakeRestService);
 
     ngOnInit() {
         this.datalakeRestService

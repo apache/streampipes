@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
@@ -53,6 +53,13 @@ export class DatalakeConfigurationComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
+    private datalakeRestService = inject(DatalakeRestService);
+    private dataViewDataExplorerService = inject(ChartService);
+    private dialogService = inject(DialogService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private tabService = inject(SpConfigurationTabsService);
+    private exportProviderRestService = inject(ExportProviderService);
+
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
     availableMeasurements: DataLakeConfigurationEntry[] = [];
@@ -81,15 +88,6 @@ export class DatalakeConfigurationComponent implements OnInit {
 
     pageSize = 15;
     pageIndex = 0;
-
-    constructor(
-        private datalakeRestService: DatalakeRestService,
-        private dataViewDataExplorerService: ChartService,
-        private dialogService: DialogService,
-        private breadcrumbService: SpBreadcrumbService,
-        private tabService: SpConfigurationTabsService,
-        private exportProviderRestService: ExportProviderService,
-    ) {}
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();

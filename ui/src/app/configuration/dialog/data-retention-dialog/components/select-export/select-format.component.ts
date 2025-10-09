@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import {
     DataExplorerDataConfig,
     ExportProviderSettings,
@@ -36,6 +36,10 @@ export class SelectDataExportComponent implements OnInit {
     @Input()
     dataRetentionConfig: RetentionTimeConfig;
 
+    exportProviderRestService = inject(ExportProviderService);
+
+    exportProvider: ExportProviderSettings;
+
     availableExportProvider: ExportProviderSettings[] = [];
     availableS3ExportProvider: ExportProviderSettings[] = [];
     availableFolderExportProvider: ExportProviderSettings[] = [];
@@ -45,9 +49,30 @@ export class SelectDataExportComponent implements OnInit {
 
     ngOnInit() {
         this.loadAvailableExportProvider();
-    }
+        console.log('Select Data Component');
 
-    constructor(private exportProviderRestService: ExportProviderService) {}
+        this.exportProviderRestService
+            .getExportProviderById(
+                this.dataRetentionConfig.retentionExportConfig.exportProviderId,
+            )
+            .subscribe(exportProvider => {
+                this.exportProvider = exportProvider;
+                console.log(this.exportProvider);
+                console.log(this.exportProvider);
+                console.log(this.dataRetentionConfig);
+                if (this.exportProvider) {
+                    this.selectedProviderType =
+                        this.exportProvider.providerType;
+
+                    this.selectedProviderId = this.exportProvider.providerId;
+                    console.log(this.selectedProviderId);
+                    console.log(
+                        this.dataRetentionConfig.retentionExportConfig
+                            .exportProviderId,
+                    );
+                }
+            });
+    }
 
     loadAvailableExportProvider() {
         this.availableExportProvider = [];
@@ -55,6 +80,7 @@ export class SelectDataExportComponent implements OnInit {
             .getAllExportProviders()
             .subscribe(allExportProviders => {
                 this.availableExportProvider = allExportProviders;
+
                 this.availableS3ExportProvider =
                     this.availableExportProvider.filter(
                         provider => provider.providerType === 'S3',
@@ -69,6 +95,7 @@ export class SelectDataExportComponent implements OnInit {
             });
     }
     onProviderTypeChange(type: string): void {
+        console.log('Type', type);
         this.selectedProviderType = type;
         // sets default
         if (
