@@ -78,8 +78,8 @@
         </sp-configuration-box>
     }
     <sp-configuration-box [title]="'Export Provider' | translate">
-        <div fxLayout="column" fxLayoutGap="16px">
-            <mat-form-field class="sp-select-field">
+        <div class="mt-10 p-10">
+            <mat-form-field class="w-100">
                 <mat-label>{{ 'Select Provider Type' | translate }}</mat-label>
                 <mat-select
                     [(ngModel)]="selectedProviderType"
@@ -96,10 +96,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field
-                class="sp-select-field"
-                *ngIf="selectedProviderType == 'S3'"
-            >
+            <mat-form-field class="w-100" *ngIf="selectedProviderType == 'S3'">
                 <mat-label>{{ 'Select Provider' | translate }}</mat-label>
                 <mat-select
                     [(ngModel)]="
@@ -124,6 +121,20 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+        </div>
+        <div
+            *ngIf="
+                selectedProviderType == 'S3' &&
+                availableS3ExportProvider?.length === 0
+            "
+            fxLayout="row"
+            fxLayoutAlign="start center"
+        >
+            <mat-icon color="primary" class="mr-5 info-icon">info</mat-icon>
+            {{
+                'No export providers found. Please create one first.'
+                    | translate
+            }}
         </div>
     </sp-configuration-box>
 </sp-configuration-box>
