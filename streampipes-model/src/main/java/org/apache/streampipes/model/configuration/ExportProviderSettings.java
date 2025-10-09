@@ -30,9 +30,9 @@ public class ExportProviderSettings {
     private String secretKey;
     private String bucketName;
     private String endPoint;
-    private AwsRegion awsRegion;
+    private String awsRegion;
     
-    public ExportProviderSettings(ProviderType providerType, String providerId, String accessKey, String secretKey, String bucketName, String endPoint, AwsRegion awsRegion) {
+    public ExportProviderSettings(ProviderType providerType, String providerId, String accessKey, String secretKey, String bucketName, String endPoint, String awsRegion) {
         this.providerType = providerType;
         this.providerId = providerId;
         this.accessKey = accessKey;
@@ -45,11 +45,11 @@ public class ExportProviderSettings {
     public ProviderType getProviderType() {
         return providerType;
     }
-    public AwsRegion getAwsRegion() {
+    public String getAwsRegion() {
         return awsRegion;
     }
 
-    public void setAwsRegion(AwsRegion awsRegion) {
+    public void setAwsRegion(String awsRegion) {
         this.awsRegion = awsRegion;
     }
 

@@ -25,7 +25,7 @@ public class DefaultExportProviderConfig {
 public List<ExportProviderSettings> make() {
 
     var defaultSettings = new ExportProviderSettings(
-       ProviderType.FOLDER, "FOLDER", "", "", "", "", AwsRegion.US_EAST_1);
+       ProviderType.FOLDER, "FOLDER", "", "", "", "", "US_EAST_1");
 
     return List.of(defaultSettings);
   }
