@@ -40,6 +40,7 @@ import { SpConfigurationRoutes } from '../configuration.routes';
 import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/data-retention-dialog.component';
 import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
 import { ExportProviderComponent } from '../dialog/export-provider-dialog/export-provider-dialog.component';
+import { DeleteExportProviderComponent } from '../dialog/delete-export-provider/delete-export-provider-dialog.component';
 @Component({
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
@@ -75,6 +76,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         'endpoint',
         'bucket',
         'editExportProvider',
+        'delete',
     ];
 
     pageSize = 15;
@@ -208,6 +210,25 @@ export class DatalakeConfigurationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
                 this.loadAvailableMeasurements();
+            }
+        });
+    }
+
+    deleteExportProvider(providerId: string) {
+        console.log('from DataLake Config', providerId);
+        const dialogRef: DialogRef<DeleteExportProviderComponent> =
+            this.dialogService.open(DeleteExportProviderComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Delete Export Provider',
+                width: '70vw',
+                data: {
+                    providerId: providerId,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.loadAvailableExportProvider();
             }
         });
     }

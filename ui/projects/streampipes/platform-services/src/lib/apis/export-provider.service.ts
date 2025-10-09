@@ -45,7 +45,7 @@ export class ExportProviderService {
         );
     }
 
-    deleteCertificate(exportProviderId: string): Observable<void> {
+    deleteExportProvider(exportProviderId: string): Observable<void> {
         return this.http.delete<void>(
             `${this.exportProviderBasePath}/${exportProviderId}`,
         );
