@@ -170,7 +170,6 @@ public class DataLakeScheduler implements SchedulingConfigurer {
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-         LOG.info(System.getenv("SP_DATALAKE_SCHEDULER_CRON"));
         taskRegistrar.addTriggerTask(
 
             this::cleanupMeasurements,
