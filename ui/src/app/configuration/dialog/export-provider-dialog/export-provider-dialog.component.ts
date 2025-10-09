@@ -81,7 +81,6 @@ export class ExportProviderComponent implements OnInit {
 
     ngOnInit() {
         if (this.provider) {
-            console.log(this.provider.awsRegion);
             this.exportProviderSetting = this.provider;
         }
     }
@@ -91,13 +90,9 @@ export class ExportProviderComponent implements OnInit {
     }
 
     addData() {
-        console.log('Add Data');
         if (this.exportProviderSetting.providerId == '') {
             this.exportProviderSetting.providerId = this.makeProviderId();
         }
-        console.log('Start Update with');
-        console.log(this.exportProviderSetting);
-
         this.exportProviderRestService
             .updateExportProvider(this.exportProviderSetting)
             .subscribe(() => this.dialogRef.close());

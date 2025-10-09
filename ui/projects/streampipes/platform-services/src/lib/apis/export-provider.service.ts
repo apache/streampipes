@@ -38,7 +38,6 @@ export class ExportProviderService {
     updateExportProvider(
         exportProviderSettings: ExportProviderSettings,
     ): Observable<ExportProviderSettings> {
-        console.log('EXPORT');
         return this.http.put<ExportProviderSettings>(
             `${this.exportProviderBasePath}`,
             exportProviderSettings,
