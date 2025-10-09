@@ -17,13 +17,11 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
-
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,56 +41,46 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v2/admin/exportprovider-config")
 public class ExportProviderConfigurationResource extends AbstractAuthGuardedRestResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExportProviderConfigurationResource.class);
-
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<List<ExportProviderSettings>> getExportProviderConfiguration() {
     return ok(getSpCoreConfigurationStorage().get().getExportProviderSettings());
   }
 
-
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> updateExportProviderConfiguration(@RequestBody ExportProviderSettings config) {
 
-    LOG.info("PUT");
-  
     if (!config.isSecretEncrypted()) {
-        config.setSecretKey(SecretEncryptionManager.encrypt(config.getSecretKey()));
-        config.setSecretEncrypted(true);
+      config.setSecretKey(SecretEncryptionManager.encrypt(config.getSecretKey()));
+      config.setSecretEncrypted(true);
     }
     var storage = getSpCoreConfigurationStorage();
     var cfg = storage.get();
 
-
     List<ExportProviderSettings> providerSettings = cfg.getExportProviderSettings();
     if (providerSettings == null) {
-        providerSettings = new ArrayList<>();
+      providerSettings = new ArrayList<>();
     }
 
     boolean updated = false;
 
     for (int i = 0; i < providerSettings.size(); i++) {
-        ExportProviderSettings existing = providerSettings.get(i);
-        if (existing != null && existing.getProviderId().equals(config.getProviderId())) {
-            providerSettings.set(i, config);
-            updated = true;
-            break;
-        }
+      ExportProviderSettings existing = providerSettings.get(i);
+      if (existing != null && existing.getProviderId().equals(config.getProviderId())) {
+        providerSettings.set(i, config);
+        updated = true;
+        break;
+      }
     }
-    LOG.info("Updated" + updated);
     if (!updated) {
-        providerSettings.add(config);
+      providerSettings.add(config);
     }
-    LOG.info("Provider Settings" + providerSettings.size());
-
     cfg.setExportProviderSettings(providerSettings);
     storage.updateElement(cfg);
 
     return ok();
   }
-
 
   @DeleteMapping(value = "/{providerId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
@@ -107,7 +95,7 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
     var storage = getSpCoreConfigurationStorage();
     var cfg = storage.get();
     cfg.setExportProviderSettings(filteredProviders);
-    storage.updateElement(cfg);    
+    storage.updateElement(cfg);
     return ok();
   }
 
