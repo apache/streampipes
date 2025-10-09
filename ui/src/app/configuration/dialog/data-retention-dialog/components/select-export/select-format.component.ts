@@ -68,6 +68,8 @@ export class SelectDataExportComponent implements OnInit {
                         this.selectedProviderId =
                             this.exportProvider.providerId;
                         console.log(this.selectedProviderId);
+                        this.dataRetentionConfig.retentionExportConfig.exportProviderId =
+                            this.selectedProviderId;
                         console.log(
                             this.dataRetentionConfig.retentionExportConfig
                                 .exportProviderId,
