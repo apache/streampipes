@@ -146,6 +146,7 @@ export class ExportProviderComponent implements OnInit {
         if (!formValue.providerId) {
             formValue.providerId = this.makeProviderId();
         }
+        formValue.awsRegion = formValue.awsRegion.toUpperCase() as AwsRegion;
 
         this.exportProviderRestService
             .updateExportProvider(formValue)

@@ -29,8 +29,6 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-
-            <!-- S3 Fields -->
             <div
                 class="s3-config-container"
                 *ngIf="exportForm.get('providerType')?.value === 'S3'"
@@ -92,7 +90,7 @@
                     >
                         <mat-option
                             *ngFor="let region of awsRegions"
-                            [value]="region.toUpperCase()"
+                            [value]="region"
                         >
                             {{ region }}
                         </mat-option>
