@@ -67,15 +67,8 @@ export class SelectDataExportComponent implements OnInit {
 
                         this.selectedProviderId =
                             this.exportProvider.providerId;
-                        console.log(this.selectedProviderId);
                         this.dataRetentionConfig.retentionExportConfig.exportProviderId =
                             this.selectedProviderId;
-                        console.log(
-                            this.dataRetentionConfig.retentionExportConfig
-                                .exportProviderId,
-                        );
-
-                        console.log(this.availableExportProvider);
                     }
                 });
         }
@@ -102,7 +95,6 @@ export class SelectDataExportComponent implements OnInit {
             });
     }
     onProviderTypeChange(type: string): void {
-        console.log('Type', type);
         this.selectedProviderType = type;
         // sets default
         if (
@@ -111,9 +103,6 @@ export class SelectDataExportComponent implements OnInit {
         ) {
             this.dataRetentionConfig.retentionExportConfig.exportProviderId =
                 this.availableFolderExportProvider[0].providerId;
-        } //else if (type === 'S3') {
-        // this.dataRetentionConfig.retentionExportConfig.exportProviderId =
-        //     '';
-        // }
+        }
     }
 }

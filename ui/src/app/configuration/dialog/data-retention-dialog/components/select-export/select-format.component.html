@@ -86,55 +86,61 @@
                     data-cy="exportProvider-select"
                     (selectionChange)="onProviderTypeChange($event.value)"
                 >
-                    <mat-option
-                        *ngFor="let type of providerType"
-                        [value]="type.toUpperCase()"
-                        [attr.data-cy]="'exportProvider-' + type.toLowerCase()"
-                    >
-                        {{ type | translate }}
-                    </mat-option>
+                    @for (type of providerType; track type) {
+                        <mat-option
+                            [value]="type.toUpperCase()"
+                            [attr.data-cy]="
+                                'exportProvider-' + type.toLowerCase()
+                            "
+                        >
+                            {{ type | translate }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
-
-            <mat-form-field class="w-100" *ngIf="selectedProviderType == 'S3'">
-                <mat-label>{{ 'Select Provider' | translate }}</mat-label>
-                <mat-select
-                    [(ngModel)]="
-                        dataRetentionConfig.retentionExportConfig
-                            .exportProviderId
-                    "
-                    data-cy="exportProviderId-select"
-                >
-                    <mat-option
-                        *ngFor="let provider of availableS3ExportProvider"
-                        [value]="provider.providerId"
-                        [attr.data-cy]="
-                            'exportProviderId-' + provider.providerId
+            @if (selectedProviderType == 'S3') {
+                <mat-form-field class="w-100">
+                    <mat-label>{{ 'Select Provider' | translate }}</mat-label>
+                    <mat-select
+                        [(ngModel)]="
+                            dataRetentionConfig.retentionExportConfig
+                                .exportProviderId
                         "
+                        data-cy="exportProviderId-select"
                     >
-                        {{
-                            'Endpoint: ' +
-                                provider.endPoint +
-                                ' Bucket: ' +
-                                provider.bucketName
-                        }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+                        @for (
+                            provider of availableS3ExportProvider;
+                            track provider
+                        ) {
+                            <mat-option
+                                [value]="provider.providerId"
+                                [attr.data-cy]="
+                                    'exportProviderId-' + provider.providerId
+                                "
+                            >
+                                {{
+                                    'Endpoint: ' +
+                                        provider.endPoint +
+                                        ' Bucket: ' +
+                                        provider.bucketName
+                                }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
         </div>
-        <div
-            *ngIf="
-                selectedProviderType == 'S3' &&
-                availableS3ExportProvider?.length === 0
-            "
-            fxLayout="row"
-            fxLayoutAlign="start center"
-        >
-            <mat-icon color="primary" class="mr-5 info-icon">info</mat-icon>
-            {{
-                'No export providers found. Please create one first.'
-                    | translate
-            }}
-        </div>
+        @if (
+            selectedProviderType == 'S3' &&
+            availableS3ExportProvider?.length === 0
+        ) {
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon color="primary" class="mr-5 info-icon">info</mat-icon>
+                {{
+                    'No export providers found. Please create one first.'
+                        | translate
+                }}
+            </div>
+        }
     </sp-configuration-box>
 </sp-configuration-box>
