@@ -64,6 +64,13 @@
                         placeholder="{{ 'Enter Endpoint' | translate }}"
                         data-cy="exportProvider-s3-endpoint"
                     />
+                    <mat-error
+                        *ngIf="
+                            exportForm.get('endPoint')?.hasError('invalidUri')
+                        "
+                    >
+                        Invalid URI format.
+                    </mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="w-100">

@@ -15,8 +15,14 @@
  * limitations under the License.
  *
  */
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    AbstractControl,
+    FormBuilder,
+    FormGroup,
+    ValidationErrors,
+    Validators,
+} from '@angular/forms';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AwsRegion,
@@ -32,6 +38,10 @@ import { ExportProviderService } from 'projects/streampipes/platform-services/sr
 export class ExportProviderComponent implements OnInit {
     @Input()
     provider: ExportProviderSettings;
+
+    private dialogRef = inject<DialogRef<ExportProviderComponent>>(DialogRef);
+    private exportProviderRestService = inject(ExportProviderService);
+    private fb = inject(FormBuilder);
 
     exportForm: FormGroup;
 
@@ -65,12 +75,6 @@ export class ExportProviderComponent implements OnInit {
         'us-gov-west-1',
     ];
 
-    constructor(
-        private dialogRef: DialogRef<ExportProviderComponent>,
-        private exportProviderRestService: ExportProviderService,
-        private fb: FormBuilder,
-    ) {}
-
     ngOnInit() {
         this.initForm();
 
@@ -78,12 +82,9 @@ export class ExportProviderComponent implements OnInit {
             this.exportForm.patchValue(this.provider);
         }
 
-        // Conditionally enable/disable S3 fields
         this.exportForm.get('providerType')?.valueChanges.subscribe(type => {
             this.toggleS3Fields(type === 'S3');
         });
-
-        // Initial toggle
         this.toggleS3Fields(
             this.exportForm.get('providerType')?.value === 'S3',
         );
@@ -94,7 +95,7 @@ export class ExportProviderComponent implements OnInit {
             providerType: ['FOLDER', Validators.required],
             accessKey: ['', Validators.required],
             secretKey: ['', Validators.required],
-            endPoint: ['', Validators.required],
+            endPoint: ['', [Validators.required, this.uriValidator]],
             bucketName: ['', Validators.required],
             awsRegion: ['us-east-1', Validators.required],
             providerId: [''],
@@ -121,6 +122,17 @@ export class ExportProviderComponent implements OnInit {
             }
             control?.updateValueAndValidity();
         });
+    }
+    uriValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        if (!value) return null; // Required validator will handle empty case
+
+        try {
+            new URL(value);
+            return null;
+        } catch (e) {
+            return { invalidUri: true };
+        }
     }
 
     addData() {
