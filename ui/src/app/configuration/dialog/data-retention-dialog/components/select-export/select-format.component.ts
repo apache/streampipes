@@ -17,8 +17,12 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DataExplorerDataConfig } from '@streampipes/platform-services';
+import {
+    DataExplorerDataConfig,
+    ExportProviderSettings,
+} from '@streampipes/platform-services';
 import { RetentionTimeConfig } from '@streampipes/platform-services';
+import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
 
 @Component({
     selector: 'sp-data-export',
@@ -26,9 +30,55 @@ import { RetentionTimeConfig } from '@streampipes/platform-services';
     styleUrls: ['./select-format.component.scss'],
     standalone: false,
 })
-export class SelectDataExportComponent {
+export class SelectDataExportComponent implements OnInit {
     @Input()
     dataExplorerDataConfig: DataExplorerDataConfig;
     @Input()
     dataRetentionConfig: RetentionTimeConfig;
+
+    availableExportProvider: ExportProviderSettings[] = [];
+    availableS3ExportProvider: ExportProviderSettings[] = [];
+    availableFolderExportProvider: ExportProviderSettings[] = [];
+    providerType: string[] = ['Folder', 'S3'];
+    selectedProviderType: string;
+    selectedProviderId: string;
+
+    ngOnInit() {
+        this.loadAvailableExportProvider();
+    }
+
+    constructor(private exportProviderRestService: ExportProviderService) {}
+
+    loadAvailableExportProvider() {
+        this.availableExportProvider = [];
+        this.exportProviderRestService
+            .getAllExportProviders()
+            .subscribe(allExportProviders => {
+                this.availableExportProvider = allExportProviders;
+                this.availableS3ExportProvider =
+                    this.availableExportProvider.filter(
+                        provider => provider.providerType === 'S3',
+                    );
+                this.availableFolderExportProvider =
+                    this.availableExportProvider.filter(
+                        provider => provider.providerType === 'FOLDER',
+                    );
+                // Defualts to Folder
+                this.selectedProviderId =
+                    this.availableFolderExportProvider[0].providerId;
+            });
+    }
+    onProviderTypeChange(type: string): void {
+        this.selectedProviderType = type;
+        // sets default
+        if (
+            type === 'FOLDER' &&
+            this.availableFolderExportProvider.length > 0
+        ) {
+            this.selectedProviderId =
+                this.availableFolderExportProvider[0].providerId;
+        } else if (type === 'S3') {
+            this.selectedProviderId = '';
+        }
+    }
 }
