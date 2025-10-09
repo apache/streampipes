@@ -354,58 +354,70 @@
                         <ng-container matColumnDef="editExportProvider">
                             <th mat-header-cell *matHeaderCellDef>Edit</th>
                             <td mat-cell *matCellDef="let configurationEntry">
-                                <div fxLayout="row">
-                                    <span
-                                        fxFlex
-                                        fxFlexOrder="3"
-                                        fxLayout="row"
-                                        fxLayoutAlign="start center"
-                                    >
-                                        <button
-                                            color="accent"
-                                            mat-icon-button
-                                            matTooltip="Edit Export Provider"
-                                            matTooltipPosition="above"
-                                            data-cy="exportProvider-edit-btn"
-                                            (click)="
-                                                createExportProvider(
-                                                    configurationEntry
-                                                )
-                                            "
+                                @if (
+                                    configurationEntry.providerId != 'FOLDER'
+                                ) {
+                                    <div fxLayout="row">
+                                        <span
+                                            fxFlex
+                                            fxFlexOrder="3"
+                                            fxLayout="row"
+                                            fxLayoutAlign="start center"
                                         >
-                                            <i class="material-icons">edit</i>
-                                        </button>
-                                    </span>
-                                </div>
+                                            <button
+                                                color="accent"
+                                                mat-icon-button
+                                                matTooltip="Edit Export Provider"
+                                                matTooltipPosition="above"
+                                                data-cy="exportProvider-edit-btn"
+                                                (click)="
+                                                    createExportProvider(
+                                                        configurationEntry
+                                                    )
+                                                "
+                                            >
+                                                <i class="material-icons"
+                                                    >edit</i
+                                                >
+                                            </button>
+                                        </span>
+                                    </div>
+                                }
                             </td>
                         </ng-container>
 
                         <ng-container matColumnDef="delete">
                             <th mat-header-cell *matHeaderCellDef>Remove</th>
                             <td mat-cell *matCellDef="let configurationEntry">
-                                <div fxLayout="row">
-                                    <span
-                                        fxFlex
-                                        fxFlexOrder="3"
-                                        fxLayout="row"
-                                        fxLayoutAlign="start center"
-                                    >
-                                        <button
-                                            color="accent"
-                                            mat-icon-button
-                                            matTooltip="Remove export provider configuration"
-                                            data-cy="exportProvider-delete-btn"
-                                            matTooltipPosition="above"
-                                            (click)="
-                                                deleteExportProvider(
-                                                    configurationEntry.providerId
-                                                )
-                                            "
+                                @if (
+                                    configurationEntry.providerId != 'FOLDER'
+                                ) {
+                                    <div fxLayout="row">
+                                        <span
+                                            fxFlex
+                                            fxFlexOrder="3"
+                                            fxLayout="row"
+                                            fxLayoutAlign="start center"
                                         >
-                                            <i class="material-icons">delete</i>
-                                        </button>
-                                    </span>
-                                </div>
+                                            <button
+                                                color="accent"
+                                                mat-icon-button
+                                                matTooltip="Remove export provider configuration"
+                                                data-cy="exportProvider-delete-btn"
+                                                matTooltipPosition="above"
+                                                (click)="
+                                                    deleteExportProvider(
+                                                        configurationEntry.providerId
+                                                    )
+                                                "
+                                            >
+                                                <i class="material-icons"
+                                                    >delete</i
+                                                >
+                                            </button>
+                                        </span>
+                                    </div>
+                                }
                             </td>
                         </ng-container>
 
