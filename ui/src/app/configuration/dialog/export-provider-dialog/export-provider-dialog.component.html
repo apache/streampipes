@@ -17,104 +17,107 @@
   -->
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <mat-form-field class="sp-select-field">
-            <mat-label>{{ 'Select Provider' | translate }}</mat-label>
-            <mat-select
-                [(ngModel)]="exportProviderSetting.providerType"
-                data-cy="exportProvider-select"
-            >
-                <mat-option value="FOLDER" data-cy="exportProvider-local">
-                    {{ 'local' | translate }}
-                </mat-option>
-                <mat-option value="S3" data-cy="exportProvider-s3">
-                    {{ 'S3' | translate }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <div
-            class="s3-config-container"
-            *ngIf="exportProviderSetting.providerType === 'S3'"
-        >
-            <mat-form-field class="w-100">
-                <mat-label>{{ 'Access Key' | translate }}</mat-label>
-                <input
-                    matInput
-                    [(ngModel)]="exportProviderSetting.accessKey"
-                    placeholder="{{ 'Enter Access Key' | translate }}"
-                    data-cy="exportProvider-s3-accessKey"
-                />
-            </mat-form-field>
-
-            <mat-form-field class="w-100">
-                <mat-label>{{ 'Secret Key' | translate }}</mat-label>
-                <input
-                    matInput
-                    [(ngModel)]="exportProviderSetting.secretKey"
-                    placeholder="{{ 'Enter Secret Key' | translate }}"
-                    type="password"
-                    data-cy="exportProvider-s3-secretKey"
-                />
-            </mat-form-field>
-
-            <mat-form-field class="w-100">
-                <mat-label>{{ 'Endpoint' | translate }}</mat-label>
-                <input
-                    matInput
-                    [(ngModel)]="exportProviderSetting.endPoint"
-                    placeholder="{{ 'Enter Endpoint' | translate }}"
-                    data-cy="exportProvider-s3-endpoint"
-                />
-            </mat-form-field>
-
-            <mat-form-field class="w-100">
-                <mat-label>{{ 'Bucket' | translate }}</mat-label>
-                <input
-                    matInput
-                    [(ngModel)]="exportProviderSetting.bucketName"
-                    placeholder="{{ 'Enter Bucket Name' | translate }}"
-                    data-cy="exportProvider-s3-bucket"
-                />
-            </mat-form-field>
-
-            <mat-form-field class="w-100">
-                <mat-label>{{ 'Region' | translate }}</mat-label>
+        <form [formGroup]="exportForm">
+            <mat-form-field class="sp-select-field">
+                <mat-label>{{ 'Select Provider' | translate }}</mat-label>
                 <mat-select
-                    [(ngModel)]="exportProviderSetting.awsRegion"
-                    placeholder="{{ 'Select Region' | translate }}"
-                    data-cy="exportProvider-s3-region"
+                    formControlName="providerType"
+                    data-cy="exportProvider-select"
                 >
-                    <mat-option
-                        *ngFor="let region of awsRegions"
-                        [value]="region.toUpperCase()"
-                    >
-                        {{ region }}
+                    <mat-option value="S3" data-cy="exportProvider-s3">
+                        {{ 'S3' | translate }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-        </div>
 
-        <mat-divider></mat-divider>
-
-        <div class="sp-dialog-actions actions-align-right">
-            <button
-                mat-button
-                mat-flat-button
-                class="mat-basic"
-                (click)="addData()"
+            <!-- S3 Fields -->
+            <div
+                class="s3-config-container"
+                *ngIf="exportForm.get('providerType')?.value === 'S3'"
             >
-                Save
-            </button>
+                <mat-form-field class="w-100">
+                    <mat-label>{{ 'Access Key' | translate }}</mat-label>
+                    <input
+                        matInput
+                        formControlName="accessKey"
+                        placeholder="{{ 'Enter Access Key' | translate }}"
+                        data-cy="exportProvider-s3-accessKey"
+                    />
+                </mat-form-field>
 
-            <button
-                mat-button
-                mat-flat-button
-                class="mat-basic"
-                style="margin-left: 12px"
-                (click)="close(false)"
-            >
-                Close
-            </button>
-        </div>
+                <mat-form-field class="w-100">
+                    <mat-label>{{ 'Secret Key' | translate }}</mat-label>
+                    <input
+                        matInput
+                        type="password"
+                        formControlName="secretKey"
+                        placeholder="{{ 'Enter Secret Key' | translate }}"
+                        data-cy="exportProvider-s3-secretKey"
+                    />
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <mat-label>{{ 'Endpoint' | translate }}</mat-label>
+                    <input
+                        matInput
+                        formControlName="endPoint"
+                        placeholder="{{ 'Enter Endpoint' | translate }}"
+                        data-cy="exportProvider-s3-endpoint"
+                    />
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <mat-label>{{ 'Bucket' | translate }}</mat-label>
+                    <input
+                        matInput
+                        formControlName="bucketName"
+                        placeholder="{{ 'Enter Bucket Name' | translate }}"
+                        data-cy="exportProvider-s3-bucket"
+                    />
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <mat-label>{{ 'Region' | translate }}</mat-label>
+                    <mat-select
+                        formControlName="awsRegion"
+                        placeholder="{{ 'Select Region' | translate }}"
+                        data-cy="exportProvider-s3-region"
+                    >
+                        <mat-option
+                            *ngFor="let region of awsRegions"
+                            [value]="region.toUpperCase()"
+                        >
+                            {{ region }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="sp-dialog-actions actions-align-right">
+                <button
+                    mat-button
+                    mat-flat-button
+                    class="mat-basic"
+                    type="button"
+                    (click)="addData()"
+                    [disabled]="exportForm.invalid"
+                >
+                    Save
+                </button>
+
+                <button
+                    mat-button
+                    mat-flat-button
+                    class="mat-basic"
+                    style="margin-left: 12px"
+                    type="button"
+                    (click)="close(false)"
+                >
+                    Close
+                </button>
+            </div>
+        </form>
     </div>
 </div>

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-
 import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AwsRegion,
@@ -33,16 +33,7 @@ export class ExportProviderComponent implements OnInit {
     @Input()
     provider: ExportProviderSettings;
 
-    exportProviderSetting: ExportProviderSettings = {
-        providerType: 'FOLDER',
-        accessKey: '',
-        secretKey: '',
-        bucketName: '',
-        endPoint: '',
-        providerId: '',
-        awsRegion: 'us-east-1',
-        secretEncrypted: false,
-    };
+    exportForm: FormGroup;
 
     awsRegions: AwsRegion[] = [
         'us-east-1',
@@ -77,25 +68,80 @@ export class ExportProviderComponent implements OnInit {
     constructor(
         private dialogRef: DialogRef<ExportProviderComponent>,
         private exportProviderRestService: ExportProviderService,
+        private fb: FormBuilder,
     ) {}
 
     ngOnInit() {
+        this.initForm();
+
         if (this.provider) {
-            this.exportProviderSetting = this.provider;
+            this.exportForm.patchValue(this.provider);
         }
+
+        // Conditionally enable/disable S3 fields
+        this.exportForm.get('providerType')?.valueChanges.subscribe(type => {
+            this.toggleS3Fields(type === 'S3');
+        });
+
+        // Initial toggle
+        this.toggleS3Fields(
+            this.exportForm.get('providerType')?.value === 'S3',
+        );
     }
 
-    close(refreshDataLakeIndex: boolean) {
-        this.dialogRef.close(refreshDataLakeIndex);
+    initForm() {
+        this.exportForm = this.fb.group({
+            providerType: ['FOLDER', Validators.required],
+            accessKey: ['', Validators.required],
+            secretKey: ['', Validators.required],
+            endPoint: ['', Validators.required],
+            bucketName: ['', Validators.required],
+            awsRegion: ['us-east-1', Validators.required],
+            providerId: [''],
+            secretEncrypted: [false],
+        });
+    }
+
+    toggleS3Fields(enabled: boolean) {
+        const fields = [
+            'accessKey',
+            'secretKey',
+            'endPoint',
+            'bucketName',
+            'awsRegion',
+        ];
+        fields.forEach(field => {
+            const control = this.exportForm.get(field);
+            if (enabled) {
+                control?.setValidators(Validators.required);
+                control?.enable();
+            } else {
+                control?.clearValidators();
+                control?.disable();
+            }
+            control?.updateValueAndValidity();
+        });
     }
 
     addData() {
-        if (this.exportProviderSetting.providerId == '') {
-            this.exportProviderSetting.providerId = this.makeProviderId();
+        if (this.exportForm.invalid) {
+            this.exportForm.markAllAsTouched();
+            return;
         }
+
+        const formValue: ExportProviderSettings = this.exportForm.value;
+
+        if (!formValue.providerId) {
+            formValue.providerId = this.makeProviderId();
+        }
+
         this.exportProviderRestService
-            .updateExportProvider(this.exportProviderSetting)
-            .subscribe(() => this.dialogRef.close());
+            .updateExportProvider(formValue)
+            .subscribe(() => this.dialogRef.close(true));
+    }
+
+    close(refresh: boolean) {
+        this.dialogRef.close(refresh);
     }
 
     private makeProviderId(): string {

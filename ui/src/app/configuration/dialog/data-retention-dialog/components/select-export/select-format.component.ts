@@ -49,29 +49,34 @@ export class SelectDataExportComponent implements OnInit {
 
     ngOnInit() {
         this.loadAvailableExportProvider();
-        console.log('Select Data Component');
 
-        this.exportProviderRestService
-            .getExportProviderById(
-                this.dataRetentionConfig.retentionExportConfig.exportProviderId,
-            )
-            .subscribe(exportProvider => {
-                this.exportProvider = exportProvider;
-                console.log(this.exportProvider);
-                console.log(this.exportProvider);
-                console.log(this.dataRetentionConfig);
-                if (this.exportProvider) {
-                    this.selectedProviderType =
-                        this.exportProvider.providerType;
+        if (
+            this.dataRetentionConfig.retentionExportConfig.exportProviderId !==
+            ''
+        ) {
+            this.exportProviderRestService
+                .getExportProviderById(
+                    this.dataRetentionConfig.retentionExportConfig
+                        .exportProviderId,
+                )
+                .subscribe(exportProvider => {
+                    this.exportProvider = exportProvider;
+                    if (this.exportProvider) {
+                        this.selectedProviderType =
+                            this.exportProvider.providerType;
 
-                    this.selectedProviderId = this.exportProvider.providerId;
-                    console.log(this.selectedProviderId);
-                    console.log(
-                        this.dataRetentionConfig.retentionExportConfig
-                            .exportProviderId,
-                    );
-                }
-            });
+                        this.selectedProviderId =
+                            this.exportProvider.providerId;
+                        console.log(this.selectedProviderId);
+                        console.log(
+                            this.dataRetentionConfig.retentionExportConfig
+                                .exportProviderId,
+                        );
+
+                        console.log(this.availableExportProvider);
+                    }
+                });
+        }
     }
 
     loadAvailableExportProvider() {
@@ -104,9 +109,9 @@ export class SelectDataExportComponent implements OnInit {
         ) {
             this.dataRetentionConfig.retentionExportConfig.exportProviderId =
                 this.availableFolderExportProvider[0].providerId;
-        } else if (type === 'S3') {
-            this.dataRetentionConfig.retentionExportConfig.exportProviderId =
-                '';
-        }
+        } //else if (type === 'S3') {
+        // this.dataRetentionConfig.retentionExportConfig.exportProviderId =
+        //     '';
+        // }
     }
 }
