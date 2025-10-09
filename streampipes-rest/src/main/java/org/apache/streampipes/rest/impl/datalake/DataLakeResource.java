@@ -420,14 +420,6 @@ public class DataLakeResource extends AbstractRestResource {
   public ResponseEntity<?> setDataLakeRetention(
       @PathVariable String elementId,
       @RequestBody RetentionTimeConfig retention){
-        //try {
-          
-        //  retention.getRetentionExportConfig().getExportProviderSettings().setSecretKey(
-        //  SecretEncryptionManager.encrypt(retention.getRetentionExportConfig().getExportProviderSettings().getSecretKey()));
-          
-        //} catch (Exception e) {
-        //  e.printStackTrace();
-        //}
         var measure = this.dataExplorerSchemaManagement.getById(elementId);
         measure.setRetentionTime(retention);
       try {
@@ -438,6 +430,18 @@ public class DataLakeResource extends AbstractRestResource {
   
     return ok();
   }
+
+@DeleteMapping(path = "/{elementId}/cleanup")
+public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId) {
+    var measure = this.dataExplorerSchemaManagement.getById(elementId);
+    measure.deleteRetentionTime();
+    try {
+        this.dataExplorerSchemaManagement.updateMeasurement(measure);
+    } catch (IllegalArgumentException e) {
+        return badRequest(e.getMessage());
+    }
+    return ok();
+}
 
   private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {
     Map<String, String> queryParamMap = new HashMap<>();

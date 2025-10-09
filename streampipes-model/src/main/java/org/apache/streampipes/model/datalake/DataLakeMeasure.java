@@ -146,6 +146,10 @@ public class DataLakeMeasure implements Storable {
     this.retentionTime = retentionTime;
   }
 
+  public void deleteRetentionTime() {
+    this.retentionTime = null;
+  }
+
   public RetentionTimeConfig getRetentionTime() {
     return retentionTime;
   }
