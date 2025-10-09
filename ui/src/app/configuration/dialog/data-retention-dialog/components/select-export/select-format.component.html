@@ -78,48 +78,52 @@
         </sp-configuration-box>
     }
     <sp-configuration-box [title]="'Export Provider' | translate">
-        <mat-form-field class="sp-select-field">
-            <mat-label>{{ 'Select Provider Type' | translate }}</mat-label>
-            <mat-select
-                [(ngModel)]="selectedProviderType"
-                data-cy="exportProvider-select"
-                (selectionChange)="onProviderTypeChange($event.value)"
-            >
-                <mat-option
-                    *ngFor="let type of providerType"
-                    [value]="type.toUpperCase()"
-                    [attr.data-cy]="'exportProvider-' + type.toLowerCase()"
+        <div fxLayout="column" fxLayoutGap="16px">
+            <mat-form-field class="sp-select-field">
+                <mat-label>{{ 'Select Provider Type' | translate }}</mat-label>
+                <mat-select
+                    [(ngModel)]="selectedProviderType"
+                    data-cy="exportProvider-select"
+                    (selectionChange)="onProviderTypeChange($event.value)"
                 >
-                    {{ type | translate }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+                    <mat-option
+                        *ngFor="let type of providerType"
+                        [value]="type.toUpperCase()"
+                        [attr.data-cy]="'exportProvider-' + type.toLowerCase()"
+                    >
+                        {{ type | translate }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <mat-form-field
-            appearance="fill"
-            class="sp-select-field"
-            *ngIf="selectedProviderType == 'S3'"
-        >
-            <mat-label>{{ 'Select Provider' | translate }}</mat-label>
-            <mat-select
-                [(ngModel)]="
-                    dataRetentionConfig.retentionExportConfig.exportProviderId
-                "
-                data-cy="exportProviderId-select"
+            <mat-form-field
+                class="sp-select-field"
+                *ngIf="selectedProviderType == 'S3'"
             >
-                <mat-option
-                    *ngFor="let provider of availableS3ExportProvider"
-                    [value]="provider.providerId"
-                    [attr.data-cy]="'exportProviderId-' + provider.providerId"
+                <mat-label>{{ 'Select Provider' | translate }}</mat-label>
+                <mat-select
+                    [(ngModel)]="
+                        dataRetentionConfig.retentionExportConfig
+                            .exportProviderId
+                    "
+                    data-cy="exportProviderId-select"
                 >
-                    {{
-                        'Endpoint: ' +
-                            provider.endPoint +
-                            ' Bucket: ' +
-                            provider.bucketName
-                    }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+                    <mat-option
+                        *ngFor="let provider of availableS3ExportProvider"
+                        [value]="provider.providerId"
+                        [attr.data-cy]="
+                            'exportProviderId-' + provider.providerId
+                        "
+                    >
+                        {{
+                            'Endpoint: ' +
+                                provider.endPoint +
+                                ' Bucket: ' +
+                                provider.bucketName
+                        }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </sp-configuration-box>
 </sp-configuration-box>
