@@ -169,10 +169,8 @@ export class DatalakeConfigurationComponent implements OnInit {
                 },
             });
 
-        dialogRef.afterClosed().subscribe(data => {
-            if (data) {
-                this.loadAvailableExportProvider();
-            }
+        dialogRef.afterClosed().subscribe(() => {
+            this.loadAvailableExportProvider();
         });
     }
 
@@ -215,7 +213,6 @@ export class DatalakeConfigurationComponent implements OnInit {
     }
 
     deleteExportProvider(providerId: string) {
-        console.log('from DataLake Config', providerId);
         const dialogRef: DialogRef<DeleteExportProviderComponent> =
             this.dialogService.open(DeleteExportProviderComponent, {
                 panelType: PanelType.STANDARD_PANEL,

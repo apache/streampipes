@@ -34,6 +34,13 @@ export class ExportProviderService {
             this.exportProviderBasePath,
         );
     }
+    getExportProviderById(
+        providerId: string,
+    ): Observable<ExportProviderSettings> {
+        return this.http.get<ExportProviderSettings>(
+            `${this.exportProviderBasePath}/${providerId}`,
+        );
+    }
 
     updateExportProvider(
         exportProviderSettings: ExportProviderSettings,
