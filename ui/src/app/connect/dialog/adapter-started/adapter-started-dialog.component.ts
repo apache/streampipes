@@ -24,6 +24,7 @@ import {
     Output,
     inject,
 } from '@angular/core';
+
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
@@ -38,16 +39,14 @@ import {
     PipelineTemplateService,
     PipelineUpdateInfo,
     SpLogMessage,
+    LinkageData,
+    CompactPipelineService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import {
-    CompactPipelineService,
-    LinkageData,
-} from '@streampipes/platform-services';
-import { AssetSaveService } from '../../services/adapter-asset-configuration.service';
 
-import { firstValueFrom } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { AssetSaveService } from '../../services/adapter-asset-configuration.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -70,6 +69,8 @@ export class AdapterStartedDialog implements OnInit {
      * Assets selectedAsset to link the adapter tp
      */
     @Input() selectedAssets: SpAssetTreeNode[];
+    @Input() deselectedAssets: SpAssetTreeNode[];
+    @Input() originalAssets: SpAssetTreeNode[];
 
     /**
      * Indicates if a pipeline to store the adapter events should be started
@@ -107,6 +108,7 @@ export class AdapterStartedDialog implements OnInit {
     adapterElementId = '';
     adapterErrorMessage: SpLogMessage;
     addToAssetText = '';
+    deletedFromAssetText = '';
 
     constructor(
         public dialogRef: DialogRef<AdapterStartedDialog>,
@@ -150,6 +152,13 @@ export class AdapterStartedDialog implements OnInit {
             },
         );
 
+        this.loadingText = this.translateService.instant(
+            'Updating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
+
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe({
             next: status => {
@@ -162,6 +171,8 @@ export class AdapterStartedDialog implements OnInit {
 
                     this.onAdapterFailure(errorLogMessage);
                 }
+
+                this.addToAsset();
             },
             error: error => {
                 this.onAdapterFailure(error.error);
@@ -176,16 +187,24 @@ export class AdapterStartedDialog implements OnInit {
                 adapterName: this.adapter.name,
             },
         );
+        this.loadingText = this.translateService.instant(
+            'Creating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
         this.loading = true;
         this.adapterService.addAdapter(this.adapter).subscribe(
             status => {
                 if (status.success) {
                     const adapterElementId = status.notifications[0].title;
                     this.adapterElementId = adapterElementId;
+                    this.adapterElementId = adapterElementId;
                     if (this.saveInDataLake) {
                         this.startSaveInDataLakePipeline(adapterElementId);
                     } else {
                         this.startAdapter(adapterElementId, true);
+                        this.addToAsset();
                         this.addToAsset();
                     }
                 } else {
@@ -226,10 +245,16 @@ export class AdapterStartedDialog implements OnInit {
                     adapterName: this.adapter.name,
                 },
             );
+            this.loadingText = this.translateService.instant(
+                'Starting adapter {{adapterName}}',
+                {
+                    adapterName: this.adapter.name,
+                },
+            );
             this.adapterService
                 .startAdapterByElementId(adapterElementId)
                 .subscribe(
-                    startStatus => {
+                    () => {
                         this.onAdapterReady(successMessage, showPreview);
                     },
                     error => {
@@ -264,15 +289,21 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     async addToAsset(): Promise<void> {
+        let linkageData: LinkageData[];
         try {
-            const adapter = await this.getAdapter();
-            const linkageData: LinkageData[] = this.createLinkageData(adapter);
+            if (!this.editMode) {
+                const adapter = await this.getAdapter();
+                linkageData = this.createLinkageData(adapter);
 
-            if (this.saveInDataLake) {
-                await this.addDataLakeLinkageData(adapter, linkageData);
+                if (this.saveInDataLake) {
+                    await this.addDataLakeLinkageData(adapter, linkageData);
+                }
+            } else {
+                linkageData = this.createLinkageData(this.adapter);
             }
 
             await this.saveAssets(linkageData);
+
             this.setSuccessMessage(linkageData);
         } catch (err) {
             console.error('Error in addToAsset:', err);
@@ -289,7 +320,10 @@ export class AdapterStartedDialog implements OnInit {
         return [
             {
                 type: 'adapter',
-                id: this.adapterElementId,
+                id:
+                    this.adapterElementId !== ''
+                        ? this.adapterElementId
+                        : adapter.elementId,
                 name: adapter.name,
             },
             {
@@ -326,6 +360,8 @@ export class AdapterStartedDialog implements OnInit {
         await this.assetSaveService.saveSelectedAssets(
             this.selectedAssets,
             linkageData,
+            this.deselectedAssets,
+            this.originalAssets,
         );
     }
 
@@ -333,18 +369,31 @@ export class AdapterStartedDialog implements OnInit {
         const assetTypesList = this.formatWithAnd(
             linkageData.map(data => data.type),
         );
+        if (this.selectedAssets.length > 0) {
+            const assetIdsList = this.formatWithAnd(
+                this.selectedAssets.map(asset => asset.assetName),
+            );
 
-        const assetIdsList = this.formatWithAnd(
-            this.selectedAssets.map(asset => asset.assetName),
-        );
-
-        this.addToAssetText = this.translateService.instant(
-            'Your {{assetTypes}} were successfully added to {{assetIds}}.',
-            {
-                assetTypes: assetTypesList,
-                assetIds: assetIdsList,
-            },
-        );
+            this.addToAssetText = this.translateService.instant(
+                'Your {{assetTypes}} were successfully added to {{assetIds}}.',
+                {
+                    assetTypes: assetTypesList,
+                    assetIds: assetIdsList,
+                },
+            );
+        }
+        if (this.deselectedAssets && this.deselectedAssets.length > 0) {
+            const assetIdsRemovedList = this.formatWithAnd(
+                this.deselectedAssets.map(asset => asset.assetName),
+            );
+            this.deletedFromAssetText = this.translateService.instant(
+                'Your {{assetTypes}} were successfully deleted from {{assetIds}}.',
+                {
+                    assetTypes: assetTypesList,
+                    assetIds: assetIdsRemovedList,
+                },
+            );
+        }
     }
 
     private formatWithAnd(list: string[]): string {
@@ -380,6 +429,7 @@ export class AdapterStartedDialog implements OnInit {
                                 this.pipelineOperationStatus =
                                     pipelineOperationStatus;
                                 this.startAdapter(adapterElementId, true);
+                                this.addToAsset();
                                 this.addToAsset();
                             },
                             error => {

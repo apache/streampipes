@@ -27,6 +27,7 @@ import {
     GenericStorageService,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -44,11 +45,55 @@ export class AssetSaveService {
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
 
-    saveSelectedAssets(
+    async saveSelectedAssets(
         selectedAssets: SpAssetTreeNode[],
         linkageData: LinkageData[],
-    ): void {
-        const uniqueAssetIDsDict = this.getAssetPaths(selectedAssets);
+        deselectedAssets: SpAssetTreeNode[] = [],
+        originalAssets: SpAssetTreeNode[] = [],
+    ): Promise<void> {
+        const links = this.buildLinks(linkageData);
+
+        if (deselectedAssets.length > 0) {
+            await this.deleteLinkOnDeselectAssets(deselectedAssets, links);
+        }
+        if (selectedAssets.length > 0) {
+            await this.setLinkOnSelectAssets(selectedAssets, links);
+        }
+
+        if (originalAssets.length > 0) {
+            //filter is necessary, otherwise conflicting database instances are produced
+            const filteredOriginal = this.filterAssets(
+                originalAssets,
+                deselectedAssets,
+                selectedAssets,
+            );
+
+            if (filteredOriginal.length > 0) {
+                this.renameLinkage(filteredOriginal, links);
+            }
+        }
+    }
+    private filterAssets(
+        originalAssets: SpAssetTreeNode[],
+        deselectedAssets: SpAssetTreeNode[],
+        selectedAssets: SpAssetTreeNode[],
+    ): SpAssetTreeNode[] {
+        const deselectedAssetIds = new Set(
+            deselectedAssets.map(asset => asset.assetId),
+        );
+        const selectedAssetIds = new Set(
+            selectedAssets.map(asset => asset.assetId),
+        );
+
+        return originalAssets.filter(
+            asset =>
+                !deselectedAssetIds.has(asset.assetId) &&
+                !selectedAssetIds.has(asset.assetId),
+        );
+    }
+
+    renameLinkage(originalAssets, links) {
+        const uniqueAssetIDsDict = this.getAssetPaths(originalAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
         uniqueAssetIDs.forEach(spAssetModelId => {
@@ -56,30 +101,167 @@ export class AssetSaveService {
                 next: current => {
                     this.currentAsset = current;
 
-                    const links = this.buildLinks(linkageData);
-
                     uniqueAssetIDsDict[spAssetModelId].forEach(path => {
                         if (path.length === 2) {
-                            current.assetLinks = [
-                                ...(current.assetLinks ?? []),
-                                ...links,
-                            ];
+                            current.assetLinks = (current.assetLinks ?? []).map(
+                                (link: any) => {
+                                    const matchedLink = links.find(
+                                        l => l.resourceId === link.resourceId,
+                                    );
+                                    if (matchedLink) {
+                                        link.linkLabel = matchedLink.linkLabel;
+                                    }
+                                    return link;
+                                },
+                            );
                         }
+
                         if (path.length > 2) {
-                            this.updateDictValue(current, path, links);
+                            links.forEach(linkToUpdate => {
+                                this.updateLinkLabelInDict(
+                                    current,
+                                    path,
+                                    linkToUpdate,
+                                );
+                            });
                         }
                     });
 
                     const updateObservable =
                         this.assetService.updateAsset(current);
+
                     updateObservable?.subscribe({
-                        next: updated => {
+                        next: () => {
                             this.adapterStartedEmitter.emit();
                         },
                     });
                 },
             });
         });
+    }
+
+    private updateLinkLabelInDict(
+        dict: SpAssetTreeNode,
+        path: (string | number)[],
+        linkToUpdate: any,
+    ) {
+        let current = dict;
+
+        for (let i = 2; i < path.length; i++) {
+            const key = path[i];
+            if (i === path.length - 1) {
+                if (current.assets?.[key]?.assetLinks) {
+                    current.assets[key].assetLinks = current.assets[
+                        key
+                    ].assetLinks.map((link: any) => {
+                        if (link.resourceId === linkToUpdate.resourceId) {
+                            link.linkLabel = linkToUpdate.linkLabel;
+                        }
+                        return link;
+                    });
+                }
+            } else {
+                if (Array.isArray(current.assets)) {
+                    current = current.assets[key as number];
+                }
+            }
+        }
+
+        return current;
+    }
+    async setLinkOnSelectAssets(
+        selectedAssets: SpAssetTreeNode[],
+        links: AssetLink[],
+    ): Promise<void> {
+        const uniqueAssetIDsDict = this.getAssetPaths(selectedAssets);
+        const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
+
+        for (const spAssetModelId of uniqueAssetIDs) {
+            const current = await firstValueFrom(
+                this.assetService.getAsset(spAssetModelId),
+            );
+
+            uniqueAssetIDsDict[spAssetModelId].forEach(path => {
+                if (path.length === 2) {
+                    current.assetLinks = [
+                        ...(current.assetLinks ?? []),
+                        ...links,
+                    ];
+                }
+
+                if (path.length > 2) {
+                    this.updateDictValue(current, path, links);
+                }
+            });
+
+            const updateObservable = this.assetService.updateAsset(current);
+            await firstValueFrom(updateObservable); // Ensure this completes before continuing
+        }
+    }
+
+    async deleteLinkOnDeselectAssets(
+        deselectedAssets: SpAssetTreeNode[],
+        links: AssetLink[],
+    ): Promise<void> {
+        const uniqueAssetIDsDict = this.getAssetPaths(deselectedAssets);
+        const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
+
+        for (const spAssetModelId of uniqueAssetIDs) {
+            const current = await firstValueFrom(
+                this.assetService.getAsset(spAssetModelId),
+            );
+
+            uniqueAssetIDsDict[spAssetModelId].forEach(path => {
+                if (path.length === 2) {
+                    current.assetLinks = (current.assetLinks ?? []).filter(
+                        (link: any) =>
+                            !links.some(
+                                l =>
+                                    JSON.stringify(l.resourceId) ===
+                                    JSON.stringify(link.resourceId),
+                            ),
+                    );
+                }
+
+                if (path.length > 2) {
+                    links.forEach(linkToRemove => {
+                        this.deleteDictValue(current, path, linkToRemove);
+                    });
+                }
+            });
+
+            const updateObservable = this.assetService.updateAsset(current);
+            await firstValueFrom(updateObservable); // Ensure this completes before continuing
+        }
+    }
+
+    private deleteDictValue(
+        dict: SpAssetTreeNode,
+        path: (string | number)[],
+        linkToRemove: any,
+    ) {
+        let current = dict;
+
+        for (let i = 2; i < path.length; i++) {
+            const key = path[i];
+            if (i === path.length - 1) {
+                if (current.assets?.[key]?.assetLinks) {
+                    current.assets[key].assetLinks = current.assets[
+                        key
+                    ].assetLinks.filter(
+                        (link: any) =>
+                            JSON.stringify(link.resourceId) !==
+                            JSON.stringify(linkToRemove.resourceId),
+                    );
+                }
+            } else {
+                if (Array.isArray(current.assets)) {
+                    current = current.assets[key as number];
+                }
+            }
+        }
+
+        return current;
     }
 
     private updateDictValue(
@@ -89,7 +271,6 @@ export class AssetSaveService {
     ) {
         const result: any = { ...dict };
         let current = result;
-        let parent: any = null;
         for (let i = 2; i < path.length; i++) {
             const key = path[i];
 

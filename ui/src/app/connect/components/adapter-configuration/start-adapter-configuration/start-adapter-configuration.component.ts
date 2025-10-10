@@ -16,20 +16,12 @@
  *
  */
 
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    SimpleChanges,
-    OnChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
     AdapterDescription,
-    SpAssetTreeNode,
     EventRateTransformationRuleDescription,
     EventSchema,
+    SpAssetTreeNode,
     RemoveDuplicatesTransformationRuleDescription,
 } from '@streampipes/platform-services';
 import {
@@ -66,8 +58,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     @Input() eventSchema: EventSchema;
 
     @Input() isEditMode: boolean;
-
-    @Input() stepper: MatStepper;
 
     /**
      * Cancels the adapter configuration process
@@ -110,6 +100,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
     showCode = false;
     showAsset = false;
     selectedAssets = [];
+    deselectedAssets = [];
+    originalAssets = [];
 
     constructor(
         private dialogService: DialogService,
@@ -120,6 +112,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.showAsset = this.isEditMode;
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
@@ -189,6 +182,9 @@ export class StartAdapterConfigurationComponent implements OnInit {
             data: {
                 adapter: this.adapterDescription,
                 editMode: true,
+                selectedAssets: this.selectedAssets,
+                deselectedAssets: this.deselectedAssets,
+                originalAssets: this.originalAssets,
             },
         });
 
@@ -213,8 +209,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 selectedAssets: this.selectedAssets,
             },
         });
-        const dialogInstance =
-            dialogRef.componentInstance as unknown as AdapterStartedDialog;
+
         dialogRef.afterClosed().subscribe(() => {
             this.adapterStartedEmitter.emit();
         });
@@ -222,6 +217,14 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.selectedAssets = updatedAssets;
+    }
+
+    onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.deselectedAssets = updatedAssets;
+    }
+
+    onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
+        this.originalAssets = updatedAssets;
     }
 
     private checkAndApplyStreamRules(): void {
