@@ -28,6 +28,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -343,5 +344,272 @@ public class JSEvalProcessorTest {
 
         var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
         testExecutor.run(inputEvents, outputEvents);
+    }
+
+    // Tests for stateful JavaScript functions using IIFE pattern
+
+    @Test
+    public void testStatefulEventCounter() {
+        // Example from StreamPipes blog - counting events with stateful logic
+        String jsFunction = """
+        (() => {
+          let count = 0;
+          return function process(event) {
+            count += 1;
+            return {
+              sensor_id: event.sensor_id,
+              original_value: event.value,
+              count: count
+            };
+          };
+        })()
+        """;
+
+        List<Map<String, Object>> inputEvents = List.of(
+                Map.of("sensor_id", "S001", "value", 10),
+                Map.of("sensor_id", "S002", "value", 20),
+                Map.of("sensor_id", "S001", "value", 30)
+        );
+
+        List<Map<String, Object>> outputEvents = List.of(
+                Map.of("sensor_id", "S001", "original_value", 10, "count", 1),
+                Map.of("sensor_id", "S002", "original_value", 20, "count", 2),
+                Map.of("sensor_id", "S001", "original_value", 30, "count", 3)
+        );
+
+        var configuration = TestConfiguration
+                .builder()
+                .config(JS_FUNCTION, jsFunction)
+                .prefixStrategy(PrefixStrategy.SAME_PREFIX)
+                .build();
+
+        var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+        testExecutor.run(inputEvents, outputEvents);
+    }
+
+    @Test
+    public void testStatefulRunningAverage() {
+        // Stateful function to calculate running average
+        String jsFunction = """
+        (() => {
+          let sum = 0;
+          let count = 0;
+          return function process(event) {
+            sum += event.value;
+            count += 1;
+            return {
+              value: event.value,
+              running_sum: sum,
+              running_count: count,
+              running_average: sum / count
+            };
+          };
+        })()
+        """;
+
+        List<Map<String, Object>> inputEvents = List.of(
+                Map.of("value", 10),
+                Map.of("value", 20),
+                Map.of("value", 30)
+        );
+
+        List<Map<String, Object>> outputEvents = List.of(
+                Map.of("value", 10, "running_sum", 10, "running_count", 1, "running_average", 10), // Integer, not 10.0
+                Map.of("value", 20, "running_sum", 30, "running_count", 2, "running_average", 15), // Integer, not 15.0
+                Map.of("value", 30, "running_sum", 60, "running_count", 3, "running_average", 20)  // Integer, not 20.0
+        );
+
+        var configuration = TestConfiguration
+                .builder()
+                .config(JS_FUNCTION, jsFunction)
+                .prefixStrategy(PrefixStrategy.SAME_PREFIX)
+                .build();
+
+        var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+        testExecutor.run(inputEvents, outputEvents);
+    }
+
+    @Test
+    public void testStatefulThresholdDetection() {
+        // Stateful function to detect threshold breaches with state memory
+        String jsFunction = """
+        (() => {
+          let previousValue = null;
+          let breachCount = 0;
+          const threshold = 50;
+          
+          return function process(event) {
+            let currentValue = event.temperature;
+            let isBreach = currentValue > threshold;
+            let isIncreasing = previousValue !== null && currentValue > previousValue;
+            
+            if (isBreach) {
+              breachCount += 1;
+            }
+            
+            let result = {
+              temperature: currentValue,
+              threshold_breach: isBreach,
+              is_increasing: isIncreasing,
+              total_breaches: breachCount,
+              previous_temperature: previousValue
+            };
+            
+            previousValue = currentValue;
+            return result;
+          };
+        })()
+        """;
+
+        List<Map<String, Object>> inputEvents = List.of(
+                Map.of("temperature", 30),
+                Map.of("temperature", 60),  // First breach
+                Map.of("temperature", 40),
+                Map.of("temperature", 70)   // Second breach
+        );
+
+        List<Map<String, Object>> outputEvents = List.of(
+                createMapWithNull("temperature", 30, "threshold_breach", false, "is_increasing", false,
+                        "total_breaches", 0, "previous_temperature", null),
+                Map.of("temperature", 60, "threshold_breach", true, "is_increasing", true,
+                        "total_breaches", 1, "previous_temperature", 30),
+                Map.of("temperature", 40, "threshold_breach", false, "is_increasing", false,
+                        "total_breaches", 1, "previous_temperature", 60),
+                Map.of("temperature", 70, "threshold_breach", true, "is_increasing", true,
+                        "total_breaches", 2, "previous_temperature", 40)
+        );
+
+        var configuration = TestConfiguration
+                .builder()
+                .config(JS_FUNCTION, jsFunction)
+                .prefixStrategy(PrefixStrategy.SAME_PREFIX)
+                .build();
+
+        var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+        testExecutor.run(inputEvents, outputEvents);
+    }
+
+    @Test
+    public void testStatefulSessionTracker() {
+        // Stateful function to track user sessions with timeout
+        String jsFunction = """
+    (() => {
+      let lastActivityTime = null;
+      let sessionCount = 0;
+      const sessionTimeoutMs = 30000; // 30 seconds
+      
+      return function process(event) {
+        let currentTime = event.timestamp;
+        let isNewSession = false;
+        let timeSinceLastActivity = 0;
+        
+        if (lastActivityTime === null || (currentTime - lastActivityTime) > sessionTimeoutMs) {
+          sessionCount += 1;
+          isNewSession = true;
+          timeSinceLastActivity = 0; // Reset for new sessions
+        } else {
+          timeSinceLastActivity = currentTime - lastActivityTime;
+        }
+        
+        let result = {
+          user_id: event.user_id,
+          activity: event.activity,
+          timestamp: currentTime,
+          session_number: sessionCount,
+          is_new_session: isNewSession,
+          time_since_last_activity: timeSinceLastActivity
+        };
+        
+        lastActivityTime = currentTime; // Update AFTER calculating the difference
+        return result;
+      };
+    })()
+    """;
+
+        long baseTime = 1000000;
+        List<Map<String, Object>> inputEvents = List.of(
+                Map.of("user_id", "user1", "activity", "login", "timestamp", baseTime),
+                Map.of("user_id", "user1", "activity", "click", "timestamp", baseTime + 10000),  // Same session
+                Map.of("user_id", "user1", "activity", "click", "timestamp", baseTime + 50000)   // New session (timeout)
+        );
+
+        List<Map<String, Object>> outputEvents = List.of(
+                Map.of("user_id", "user1", "activity", "login", "timestamp", 1000000,
+                        "session_number", 1, "is_new_session", true, "time_since_last_activity", 0),
+                Map.of("user_id", "user1", "activity", "click", "timestamp", 1010000,
+                        "session_number", 1, "is_new_session", false, "time_since_last_activity", 10000),
+                Map.of("user_id", "user1", "activity", "click", "timestamp", 1050000,
+                        "session_number", 2, "is_new_session", true, "time_since_last_activity", 0)
+        );
+
+        var configuration = TestConfiguration
+                .builder()
+                .config(JS_FUNCTION, jsFunction)
+                .prefixStrategy(PrefixStrategy.SAME_PREFIX)
+                .build();
+
+        var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+        testExecutor.run(inputEvents, outputEvents);
+    }
+
+
+    @Test
+    public void testStatefulWindowedSum() {
+        // Stateful function implementing a simple sliding window sum
+        String jsFunction = """
+        (() => {
+          let values = [];
+          const windowSize = 3;
+          
+          return function process(event) {
+            values.push(event.value);
+            
+            // Keep only the last windowSize values
+            if (values.length > windowSize) {
+              values.shift();
+            }
+            
+            let windowSum = values.reduce((sum, val) => sum + val, 0);
+            
+            return {
+              current_value: event.value,
+              window_values: values.slice(), // Copy of the array
+              window_sum: windowSum,
+              window_size: values.length
+            };
+          };
+        })()
+        """;
+
+        List<Map<String, Object>> inputEvents = List.of(
+                Map.of("value", 10),
+                Map.of("value", 20),
+                Map.of("value", 30),
+                Map.of("value", 40)  // This should cause the window to slide
+        );
+
+        List<Map<String, Object>> outputEvents = List.of(
+                Map.of("current_value", 10, "window_values", List.of(10), "window_sum", 10, "window_size", 1),
+                Map.of("current_value", 20, "window_values", List.of(10, 20), "window_sum", 30, "window_size", 2),
+                Map.of("current_value", 30, "window_values", List.of(10, 20, 30), "window_sum", 60, "window_size", 3),
+                Map.of("current_value", 40, "window_values", List.of(20, 30, 40), "window_sum", 90, "window_size", 3)
+        );
+
+        var configuration = TestConfiguration
+                .builder()
+                .config(JS_FUNCTION, jsFunction)
+                .prefixStrategy(PrefixStrategy.SAME_PREFIX)
+                .build();
+
+        var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+        testExecutor.run(inputEvents, outputEvents);
+    }
+
+    private Map<String, Object> createMapWithNull(Object... keyValuePairs) {
+        Map<String, Object> map = new HashMap<>();
+        for (int i = 0; i < keyValuePairs.length; i += 2) {
+            map.put((String) keyValuePairs[i], keyValuePairs[i + 1]);
+        }
+        return map;
     }
 }
