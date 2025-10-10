@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import {
     UntypedFormControl,
@@ -27,6 +27,7 @@ import {
     CompactPipeline,
     Pipeline,
     PipelineService,
+    SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { PipelineStorageOptions } from '../../../model/editor.model';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
@@ -50,13 +51,14 @@ export class SavePipelineSettingsComponent implements OnInit {
     @Input()
     currentPipelineName: string;
 
+    private shepherdService = inject(ShepherdService);
+    private pipelineService = inject(PipelineService);
+
     compactPipeline: CompactPipeline;
 
-    constructor(
-        private shepherdService: ShepherdService,
-        private pipelineService: PipelineService,
-    ) {}
+    addToAssets: boolean = false;
 
+    selectedAssets: SpAssetTreeNode[] = [];
     ngOnInit() {
         this.submitPipelineForm.addControl(
             'pipelineName',
@@ -88,6 +90,10 @@ export class SavePipelineSettingsComponent implements OnInit {
         this.pipelineService
             .convertToCompactPipeline(this.pipeline)
             .subscribe(p => (this.compactPipeline = p));
+    }
+
+    onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.selectedAssets = updatedAssets;
     }
 
     triggerTutorial() {

@@ -110,11 +110,11 @@
             dataCy="show-asset-checkbox"
             (optionSelectedEmitter)="showAsset = $event"
         >
-            <sp-adapter-asset-configuration
+            <sp-asset-link-configuration
                 *ngIf="showAsset"
                 (selectedAssetsChange)="onSelectedAssetsChange($event)"
             >
-            </sp-adapter-asset-configuration>
+            </sp-asset-link-configuration>
         </sp-adapter-options-panel>
 
         <sp-adapter-options-panel

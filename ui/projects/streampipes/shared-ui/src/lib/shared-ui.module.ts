@@ -99,6 +99,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SpTableActionsDirective } from './components/sp-table/sp-table-actions.directive';
+import { AssetLinkConfigurationComponent } from './components/asset-link-configuration/asset-link-configuration.component';
 
 @NgModule({
     declarations: [
@@ -151,6 +152,7 @@ import { SpTableActionsDirective } from './components/sp-table/sp-table-actions.
         InputSchemaPropertyComponent,
         SortByRuntimeNamePipe,
         SpTableActionsDirective,
+        AssetLinkConfigurationComponent,
     ],
     imports: [
         CommonModule,
@@ -190,6 +192,7 @@ import { SpTableActionsDirective } from './components/sp-table/sp-table-actions.
     ],
     exports: [
         AssetBrowserComponent,
+        AssetLinkConfigurationComponent,
         ConfirmDialogComponent,
         DataDownloadDialogComponent,
         DateInputComponent,

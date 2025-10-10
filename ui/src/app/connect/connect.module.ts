@@ -52,7 +52,6 @@ import { ErrorMessageComponent } from './components/adapter-configuration/schema
 import { LoadingMessageComponent } from './components/adapter-configuration/schema-editor/loading-message/loading-message.component';
 import { SchemaEditorHeaderComponent } from './components/adapter-configuration/schema-editor/schema-editor-header/schema-editor-header.component';
 import { StartAdapterConfigurationComponent } from './components/adapter-configuration/start-adapter-configuration/start-adapter-configuration.component';
-import { AdapterAssetConfigurationComponent } from './components/adapter-configuration/adapter-asset-configuration/adapter-asset-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { RouterModule } from '@angular/router';
@@ -237,7 +236,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         SchemaEditorHeaderComponent,
         SpEpSettingsSectionComponent,
         StartAdapterConfigurationComponent,
-        AdapterAssetConfigurationComponent,
         SpAdapterDeploymentSettingsComponent,
         SpAdapterDetailsLogsComponent,
         SpAdapterDetailsMetricsComponent,

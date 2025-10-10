@@ -31,12 +31,12 @@ import { MatStepper } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'sp-adapter-asset-configuration',
-    templateUrl: './adapter-asset-configuration.component.html',
-    styleUrls: ['./adapter-asset-configuration.component.scss'],
+    selector: 'sp-asset-link-configuration',
+    templateUrl: './asset-link-configuration.component.html',
+    styleUrls: ['./asset-link-configuration.component.scss'],
     standalone: false,
 })
-export class AdapterAssetConfigurationComponent implements OnInit {
+export class AssetLinkConfigurationComponent implements OnInit {
     @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
 
