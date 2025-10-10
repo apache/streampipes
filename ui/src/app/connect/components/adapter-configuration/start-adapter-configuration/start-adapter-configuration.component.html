@@ -116,7 +116,7 @@
             <sp-asset-link-configuration
                 *ngIf="showAsset"
                 [isEdit]="isEditMode"
-                [adapter]="adapterDescription"
+                [itemId]="adapterDescription.elementId"
                 (selectedAssetsChange)="onSelectedAssetsChange($event)"
                 (deselectedAssetsChange)="onDeselectedAssetsChange($event)"
                 (originalAssetsEmitter)="onOriginalAssetsEmitted($event)"

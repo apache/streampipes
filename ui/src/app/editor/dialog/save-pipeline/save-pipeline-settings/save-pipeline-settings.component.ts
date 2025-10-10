@@ -58,7 +58,10 @@ export class SavePipelineSettingsComponent implements OnInit {
 
     addToAssets: boolean = false;
 
-    selectedAssets: SpAssetTreeNode[] = [];
+    selectedAssets = [];
+    deselectedAssets = [];
+    originalAssets = [];
+
     ngOnInit() {
         this.submitPipelineForm.addControl(
             'pipelineName',
@@ -94,6 +97,14 @@ export class SavePipelineSettingsComponent implements OnInit {
 
     onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.selectedAssets = updatedAssets;
+    }
+
+    onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.deselectedAssets = updatedAssets;
+    }
+
+    onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
+        this.originalAssets = updatedAssets;
     }
 
     triggerTutorial() {

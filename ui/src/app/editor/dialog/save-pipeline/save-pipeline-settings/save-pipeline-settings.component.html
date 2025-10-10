@@ -135,7 +135,10 @@
                 <mat-expansion-panel-header>Assets</mat-expansion-panel-header>
 
                 <sp-asset-link-configuration
+                    [isEdit]="isEditMode"
                     (selectedAssetsChange)="onSelectedAssetsChange($event)"
+                    (deselectedAssetsChange)="onDeselectedAssetsChange($event)"
+                    (originalAssetsEmitter)="onOriginalAssetsEmitted($event)"
                 >
                 </sp-asset-link-configuration>
             </mat-expansion-panel>

@@ -41,7 +41,7 @@ export class AssetLinkConfigurationComponent implements OnInit {
     @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
     @Input() isEdit: boolean;
-    @Input() adapter: AdapterDescription;
+    @Input() itemId: unknown;
 
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
@@ -142,7 +142,7 @@ export class AssetLinkConfigurationComponent implements OnInit {
     }
 
     private setSelect() {
-        if (!this.adapter || !this.adapter.elementId) {
+        if (!this.itemId) {
             return;
         }
 
@@ -159,9 +159,7 @@ export class AssetLinkConfigurationComponent implements OnInit {
 
         if (
             node.assetLinks &&
-            node.assetLinks.some(
-                link => link.resourceId === this.adapter.elementId,
-            )
+            node.assetLinks.some(link => link.resourceId === this.itemId)
         ) {
             if (!this.isSelected(node)) {
                 this.selectedAssets.push(node);
