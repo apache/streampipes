@@ -21,6 +21,7 @@ import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
+import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
 describe(
     'Test File Replay Adapter',
@@ -47,7 +48,7 @@ describe(
                 .build();
 
             ConnectUtils.testAdapter(adapterInput);
-            ConnectUtils.deleteAdapter();
+            ConnectUtils.deleteAdapter(adapterInput.adapterName);
         });
 
         it('File stream adapter should not allow add timestamp option in schema editor', () => {
@@ -124,6 +125,7 @@ describe(
             ConnectUtils.testAdapter(adapterInput);
 
             // click on edit adapter
+            GeneralUtils.openMenuForRow(adapterInput.adapterName);
             ConnectBtns.editAdapter().click();
 
             // validate that the file name is set as default

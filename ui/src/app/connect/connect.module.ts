@@ -52,6 +52,7 @@ import { ErrorMessageComponent } from './components/adapter-configuration/schema
 import { LoadingMessageComponent } from './components/adapter-configuration/schema-editor/loading-message/loading-message.component';
 import { SchemaEditorHeaderComponent } from './components/adapter-configuration/schema-editor/schema-editor-header/schema-editor-header.component';
 import { StartAdapterConfigurationComponent } from './components/adapter-configuration/start-adapter-configuration/start-adapter-configuration.component';
+import { AdapterAssetConfigurationComponent } from './components/adapter-configuration/adapter-asset-configuration/adapter-asset-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { RouterModule } from '@angular/router';
@@ -105,9 +106,13 @@ import { AdapterDetailsDataComponent } from './components/adapter-details/adapte
 import { EditRegexTransformationComponent } from './dialog/edit-event-property/components/edit-regex-transformation/edit-regex-transformation.component';
 import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapter-code-panel.component';
 import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
+import { MatTreeModule } from '@angular/material/tree';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
+        MatTreeModule,
         MatCardModule,
         MatCheckboxModule,
         MatDialogModule,
@@ -145,6 +150,7 @@ import { AdapterDetailsCodeComponent } from './components/adapter-details/adapte
         MatSnackBarModule,
         PlatformServicesModule,
         TreeModule,
+        TranslateModule.forChild(),
         RouterModule.forChild([
             {
                 path: '',
@@ -195,6 +201,7 @@ import { AdapterDetailsCodeComponent } from './components/adapter-details/adapte
             },
         ]),
         SharedUiModule,
+        TranslatePipe,
     ],
     exports: [ErrorMessageComponent],
     declarations: [
@@ -230,6 +237,7 @@ import { AdapterDetailsCodeComponent } from './components/adapter-details/adapte
         SchemaEditorHeaderComponent,
         SpEpSettingsSectionComponent,
         StartAdapterConfigurationComponent,
+        AdapterAssetConfigurationComponent,
         SpAdapterDeploymentSettingsComponent,
         SpAdapterDetailsLogsComponent,
         SpAdapterDetailsMetricsComponent,

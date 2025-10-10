@@ -26,6 +26,7 @@ import {
 import { FileUploadDialogComponent } from '../dialog/file-upload/file-upload-dialog.component';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     templateUrl: './files.component.html',
@@ -41,6 +42,7 @@ export class FilesComponent implements OnInit {
         private dialogService: DialogService,
         private breadcrumbService: SpBreadcrumbService,
         private tabService: SpConfigurationTabsService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit() {
@@ -54,7 +56,7 @@ export class FilesComponent implements OnInit {
     openFileUploadDialog() {
         const dialogRef = this.dialogService.open(FileUploadDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Upload file',
+            title: this.translateService.instant('Upload file'),
             width: '40vw',
         });
 

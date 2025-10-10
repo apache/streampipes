@@ -19,7 +19,7 @@
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
     <button
         mat-flat-button
-        [matTooltip]="'Save Pipeline' | translate"
+        [matTooltip]="'Save pipeline' | translate"
         [matTooltipPosition]="'above'"
         [disabled]="!pipelineValidationService.pipelineValid"
         (click)="savePipelineEmitter.emit()"
@@ -28,7 +28,7 @@
     >
         <div fxLayoutAlign="start center" fxLayout="row">
             <i class="material-icons">save</i>
-            <span>&nbsp;{{ 'Save pipeline' | translate }}</span>
+            <span>&nbsp;{{ 'Save' | translate }}</span>
         </div>
     </button>
     <span class="assembly-options-divider"></span>
@@ -52,14 +52,12 @@
     </button>
     <span class="assembly-options-divider"></span>
     <button
-        mat-flat-button
-        class="mat-basic"
+        mat-icon-button
         [matTooltip]="'Auto Layout' | translate"
         [matTooltipPosition]="'above'"
         (click)="autoLayout()"
     >
         <i class="material-icons">settings_overscan</i>
-        <span>&nbsp;{{ 'Auto Layout' | translate }}</span>
     </button>
     <span class="assembly-options-divider"></span>
     <button

@@ -20,15 +20,15 @@
     <div class="sp-dialog-content p-15">
         <div fxLayout="column" fxLayoutGap="10px" class="p-15">
             <div fxLayout="row" fxLayoutGap="10px" fxFlex="60">
-                <div fxFlex="20">Service ID</div>
+                <div fxFlex="20">{{ 'Service ID' | translate }}</div>
                 <div fxFlex="80">{{ serviceReg.svcId }}</div>
             </div>
             <div fxLayout="row" fxLayoutGap="10px" fxFlex="60">
-                <div fxFlex="20">Service Group</div>
+                <div fxFlex="20">{{ 'Service Group' | translate }}</div>
                 <div fxFlex="80">{{ serviceReg.svcGroup }}</div>
             </div>
             <div fxLayout="row" fxLayoutGap="10px" fxFlex="60">
-                <div fxFlex="20">Location</div>
+                <div fxFlex="20">{{ 'Location' | translate }}</div>
                 <div fxFlex="80">
                     {{ serviceReg.scheme }}://{{ serviceReg.host }}:{{
                         serviceReg.port
@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div fxLayout="row" fxLayoutGap="10px" fxFlex="60">
-                <div fxFlex="20">Tags</div>
+                <div fxFlex="20">{{ 'Tags' | translate }}</div>
                 <div fxFlex="80">
                     <div>
                         <div
@@ -58,7 +58,7 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
         <button mat-button mat-flat-button class="mat-basic" (click)="close()">
-            Close
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

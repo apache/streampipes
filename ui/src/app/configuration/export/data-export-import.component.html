@@ -19,9 +19,12 @@
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'export'">
     <div fxLayout="column" class="page-container-padding">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section title="Export" subtitle="Export application data">
+            <sp-split-section
+                [title]="'Export' | translate"
+                [subtitle]="'Export application data' | translate"
+            >
                 <div class="subsection-title">
-                    Export assets and all linked resources
+                    {{ 'Export assets and all linked resources' | translate }}
                 </div>
                 <div fxLayout="column" *ngFor="let asset of assets">
                     <mat-checkbox
@@ -39,16 +42,23 @@
                         data-cy="export-asset-button"
                     >
                         <i class="material-icons">cloud_download</i
-                        ><span>&nbsp;Start export process</span>
+                        ><span
+                            >&nbsp;{{
+                                'Start export process' | translate
+                            }}</span
+                        >
                     </button>
                 </div>
             </sp-split-section>
         </div>
         <mat-divider></mat-divider>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section title="Import" subtitle="Import application data">
+            <sp-split-section
+                [title]="'Import' | translate"
+                [subtitle]="'Import application data' | translate"
+            >
                 <div class="subsection-title">
-                    Import from application package
+                    {{ 'Import from application package' | translate }}
                 </div>
 
                 <div class="mt-10">
@@ -60,7 +70,11 @@
                         data-cy="import-application-data-button"
                     >
                         <i class="material-icons">cloud_upload</i
-                        ><span>&nbsp;Start import process</span>
+                        ><span
+                            >&nbsp;{{
+                                'Start import process' | translate
+                            }}</span
+                        >
                     </button>
                 </div>
             </sp-split-section>

@@ -43,6 +43,14 @@ export interface AssetLink {
     navigationActive: boolean;
 }
 
+export interface LinkageData {
+    //Data Model to extract AssetLinks from the UI
+    name: string;
+    id: string;
+    type: string;
+    selected?: boolean | null;
+}
+
 export interface Isa95TypeDesc {
     label: string;
     type: Isa95Type;
@@ -92,6 +100,14 @@ export interface SpAssetModel extends SpAsset {
     appDocType: string;
 
     removable: boolean;
+}
+
+export interface SpAssetTreeNode {
+    assetId: string;
+    assetName: string;
+    assets?: SpAssetTreeNode[];
+    spAssetModelId: string;
+    flattenPath: any[];
 }
 
 export type Isa95Type =

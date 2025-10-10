@@ -22,6 +22,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { saveAs } from 'file-saver';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-file-overview',
@@ -40,6 +41,7 @@ export class FileOverviewComponent implements OnInit {
     constructor(
         private filesService: FilesService,
         private dialog: MatDialog,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit() {
@@ -57,7 +59,9 @@ export class FileOverviewComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
-                title: 'Do you really want to delete this file?',
+                title: this.translateService.instant(
+                    'Do you really want to delete this file?',
+                ),
                 subtitle: 'This cannot be undone.',
                 cancelTitle: 'No',
                 okTitle: 'Yes',

@@ -24,7 +24,7 @@
             class="p-15"
             *ngIf="currentImportStep === 0"
         >
-            <h4>Upload application package file</h4>
+            <h4>{{ 'Upload application package file' | translate }}</h4>
             <mat-form-field
                 style="width: 95%"
                 (click)="fileInput.click()"
@@ -32,7 +32,7 @@
             >
                 <input
                     matInput
-                    placeholder="File"
+                    [placeholder]="'File' | translate"
                     disabled
                     (value)="(fileName)"
                 />
@@ -78,54 +78,54 @@
             *ngIf="currentImportStep === 1"
         >
             <div fxLayout="row" fxLayoutAlign="start center">
-                <h4>Select resources to import</h4>
+                <h4>{{ 'Select resources to import' | translate }}</h4>
                 <button
                     mat-flat-button
                     color="accent"
                     class="small-button ml-5"
                     (click)="toggleSelect(true)"
                 >
-                    Select all
+                    {{ 'Select all' | translate }}
                 </button>
                 <button
                     mat-flat-button
                     class="small-button mat-basic"
                     (click)="toggleSelect(false)"
                 >
-                    Deselect all
+                    {{ 'Deselect all' | translate }}
                 </button>
             </div>
             <sp-data-export-item
                 [exportItems]="importConfiguration.assets"
-                sectionTitle="Assets"
+                [sectionTitle]="'Assets' | translate"
             ></sp-data-export-item>
             <sp-data-export-item
                 [exportItems]="importConfiguration.adapters"
-                sectionTitle="Adapters"
+                [sectionTitle]="'Adapters' | translate"
             ></sp-data-export-item>
             <sp-data-export-item
                 [exportItems]="importConfiguration.dashboards"
-                sectionTitle="Dashboards"
+                [sectionTitle]="'Dashboards' | translate"
             ></sp-data-export-item>
             <sp-data-export-item
                 [exportItems]="importConfiguration.dataViews"
-                sectionTitle="Data Views"
+                [sectionTitle]="'Charts' | translate"
             ></sp-data-export-item>
             <sp-data-export-item
                 [exportItems]="importConfiguration.dataSources"
-                sectionTitle="Data Streams"
+                [sectionTitle]="'Data Streams' | translate"
             ></sp-data-export-item>
             <sp-data-export-item
                 [exportItems]="importConfiguration.dataLakeMeasures"
-                sectionTitle="Data Lake Storage"
+                [sectionTitle]="'Data Lake Storage' | translate"
             ></sp-data-export-item>
             <sp-data-export-item
                 [exportItems]="importConfiguration.files"
-                sectionTitle="Files"
+                [sectionTitle]="'Files' | translate"
             ></sp-data-export-item>
             <sp-data-export-item
                 [exportItems]="importConfiguration.pipelines"
-                sectionTitle="Pipelines"
+                [sectionTitle]="'Pipelines' | translate"
             ></sp-data-export-item>
             <sp-generic-storage-items
                 [exportItems]="importConfiguration.genericStorageDocuments"
@@ -138,19 +138,23 @@
                 *ngIf="currentImportStep === 1"
                 class="mt-10"
             >
-                <h4>Import options</h4>
+                <h4>{{ 'Import options' | translate }}</h4>
                 <div fxLayout="column" *ngIf="importConfiguration">
                     <mat-checkbox
                         [(ngModel)]="importConfiguration.overrideBrokerSettings"
-                        >Use broker settings from this instance
+                        >{{
+                            'Use broker settings from this instance' | translate
+                        }}
                     </mat-checkbox>
                     <div class="warning-box">
                         <mat-checkbox
                             [(ngModel)]="
                                 importConfiguration.overwriteExistingDocuments
                             "
-                            >Update/overwrite existing documents with the same
-                            ID (operation may break things)
+                            >{{
+                                'Update/overwrite existing documents with the same ID (operation may break things)'
+                                    | translate
+                            }}
                         </mat-checkbox>
                     </div>
                 </div>
@@ -164,7 +168,7 @@
             fxLayoutAlign="center center"
         >
             <mat-spinner [diameter]="50" color="accent"></mat-spinner>
-            <h4 class="mt-10">Importing resources...</h4>
+            <h4 class="mt-10">{{ 'Importing resources...' | translate }}</h4>
         </div>
     </div>
     <mat-divider></mat-divider>
@@ -181,7 +185,7 @@
                     [disabled]="!hasInput"
                     data-cy="next-import-button"
                 >
-                    <span>&nbsp;Next</span>
+                    <span>&nbsp;{{ 'Next' | translate }}</span>
                 </button>
                 <button
                     mat-button
@@ -193,7 +197,7 @@
                     data-cy="import-button"
                 >
                     <i class="material-icons">file_download</i
-                    ><span>&nbsp;Import data</span>
+                    ><span>&nbsp;{{ 'Import data' | translate }}</span>
                 </button>
                 <button
                     mat-button
@@ -203,7 +207,7 @@
                     (click)="back()"
                     *ngIf="currentImportStep > 0"
                 >
-                    Back
+                    {{ 'Back' | translate }}
                 </button>
                 <button
                     mat-button
@@ -211,7 +215,7 @@
                     class="mat-basic"
                     (click)="close()"
                 >
-                    Cancel
+                    {{ 'Cancel' | translate }}
                 </button>
             </div>
         </div>

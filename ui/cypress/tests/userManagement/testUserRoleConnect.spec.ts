@@ -42,7 +42,7 @@ describe('Test User Roles for Connect', () => {
 
     it('Connect admin should see public adapters of other users', () => {
         // Set adapter to public
-        PermissionUtils.markElementAsPublic();
+        PermissionUtils.markElementAsPublic('simulator');
 
         switchUserAndValidateConnectModuleIsShown();
 
@@ -52,7 +52,7 @@ describe('Test User Roles for Connect', () => {
 
     it('Connect admin should see shared adapters of other users', () => {
         // Share adapter with user
-        PermissionUtils.authorizeUser(connectAdminUser.email);
+        PermissionUtils.authorizeUser('simulator', connectAdminUser.email);
 
         switchUserAndValidateConnectModuleIsShown();
 

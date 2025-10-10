@@ -71,6 +71,7 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
   public void validateCertificateChain(List<X509Certificate> certificateChain) throws UaException {
     PKIXCertPathBuilderResult certPathResult;
 
+    X509Certificate peer = getEndEntity(certificateChain);
     try {
       certPathResult = CertificateValidationUtil.buildTrustedCertPath(
           certificateChain,
@@ -79,7 +80,7 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
       );
     } catch (UaException e) {
       if (isCertificateRejected(e.getStatusCode().getValue())) {
-        sendToCore(certificateChain.get(0));
+        sendToCore(peer);
       }
       throw e;
     }
@@ -95,6 +96,13 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
         ValidationCheck.NO_OPTIONAL_CHECKS,
         false
     );
+  }
+
+  private X509Certificate getEndEntity(List<X509Certificate> chain) {
+    return chain.stream()
+        .filter(c -> c.getBasicConstraints() < 0)
+        .findFirst()
+        .orElse(chain.get(0));
   }
 
   @Override
