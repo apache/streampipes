@@ -19,6 +19,8 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
 import {
+    DatalakeRestService,
+    DataSinkInvocation,
     LinkageData,
     Message,
     Pipeline,
@@ -37,7 +39,7 @@ import {
     PipelineStorageOptions,
 } from '../../model/editor.model';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
-import { firstValueFrom, Observable, of, pipe, tap } from 'rxjs';
+import { firstValueFrom, lastValueFrom, Observable, of, pipe, tap } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import {
     Status,
@@ -60,6 +62,7 @@ export class SavePipelineComponent implements OnInit {
     private shepherdService = inject(ShepherdService);
     private pipelineCanvasService = inject(PipelineCanvasMetadataService);
     private assetSaveService = inject(AssetSaveService);
+    private dataLakeService = inject(DatalakeRestService);
 
     @Input()
     pipeline: Pipeline;
@@ -131,8 +134,6 @@ export class SavePipelineComponent implements OnInit {
                     }
                     this.modifyStatusIndicator(Status.SUCCESS);
                     this.pipelineId = message.notifications[1].description;
-                    //Add Asset as soon as pipelineId is known
-                    this.addToAsset();
                 }),
                 // only continue if pipeline was saved
                 filter(message => message.success),
@@ -146,7 +147,11 @@ export class SavePipelineComponent implements OnInit {
                 switchMap(() => this.getStartPipeline$()),
             )
             .subscribe({
-                next: message => this.onSuccess(message),
+                next: message => {
+                    this.onSuccess(message);
+                    // Add Asset as soon as pipelineId is known
+                    this.addToAsset();
+                },
                 error: msg => {
                     this.onFailure(msg);
                 },
@@ -345,6 +350,34 @@ export class SavePipelineComponent implements OnInit {
             name: pipeline.name,
         });
 
+        const serviceList: DataSinkInvocation[] =
+            pipeline.actions as DataSinkInvocation[];
+        const dataSinkServices: DataSinkInvocation[] = serviceList.filter(
+            action => action.serviceTagPrefix === 'DATA_SINK',
+        );
+        console.log(dataSinkServices);
+
+        for (const service of dataSinkServices) {
+            const staticProperty = service.staticProperties.find(
+                prop => prop.internalName === 'db_measurement',
+            );
+
+            const measureFromPipeline = (staticProperty as { value: string })
+                .value;
+
+            console.log('value ', measureFromPipeline);
+            const measure = await lastValueFrom(
+                this.dataLakeService.getMeasurementByName(measureFromPipeline),
+            );
+
+            console.log('Measure', measure);
+
+            linkageData.push({
+                type: 'measurement',
+                id: measure.elementId,
+                name: measureFromPipeline,
+            });
+        }
         return linkageData;
     }
 

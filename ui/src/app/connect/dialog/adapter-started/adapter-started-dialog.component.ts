@@ -45,7 +45,7 @@ import {
 import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
 
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -340,9 +340,9 @@ export class AdapterStartedDialog implements OnInit {
             name: pipelineId,
         });
 
-        const res = await this.dataLakeService
-            .getMeasurementByName(adapter.name)
-            .toPromise();
+        const res = await lastValueFrom(
+            this.dataLakeService.getMeasurementByName(adapter.name),
+        );
 
         linkageData.push({
             type: 'measurement',

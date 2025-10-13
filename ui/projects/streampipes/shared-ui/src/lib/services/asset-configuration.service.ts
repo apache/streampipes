@@ -53,6 +53,10 @@ export class AssetSaveService {
     ): Promise<void> {
         const links = this.buildLinks(linkageData);
 
+        console.log('From Service', selectedAssets);
+        console.log('From Service Deselected ', deselectedAssets);
+        console.log('From Service originalAssers', originalAssets);
+
         if (deselectedAssets.length > 0) {
             await this.deleteLinkOnDeselectAssets(deselectedAssets, links);
         }
