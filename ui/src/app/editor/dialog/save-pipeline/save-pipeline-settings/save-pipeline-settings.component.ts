@@ -97,14 +97,17 @@ export class SavePipelineSettingsComponent implements OnInit {
 
     onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.selectedAssets = updatedAssets;
+        console.log('selectedAssetst', this.selectedAssets);
     }
 
     onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.deselectedAssets = updatedAssets;
+        console.log('deselectedAssetst', this.deselectedAssets);
     }
 
     onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
         this.originalAssets = updatedAssets;
+        console.log('original Assets', this.originalAssets);
     }
 
     triggerTutorial() {

@@ -205,7 +205,6 @@ export class AdapterStartedDialog implements OnInit {
                     } else {
                         this.startAdapter(adapterElementId, true);
                         this.addToAsset();
-                        this.addToAsset();
                     }
                 } else {
                     const errorMsg: SpLogMessage =

@@ -16,15 +16,17 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
+    LinkageData,
     Message,
     Pipeline,
     PipelineCanvasMetadata,
     PipelineCanvasMetadataService,
     PipelineOperationStatus,
     PipelineService,
+    SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { EditorService } from '../../services/editor.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
@@ -35,13 +37,14 @@ import {
     PipelineStorageOptions,
 } from '../../model/editor.model';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of, pipe, tap } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import {
     Status,
     StatusIndicator,
 } from '../../../core-ui/multi-step-status-indicator/multi-step-status-indicator.model';
 import { PipelineAction } from '../../../pipelines/model/pipeline-model';
+import { AssetSaveService } from 'src/app/connect/services/adapter-asset-configuration.service';
 
 @Component({
     selector: 'sp-save-pipeline',
@@ -50,11 +53,24 @@ import { PipelineAction } from '../../../pipelines/model/pipeline-model';
     standalone: false,
 })
 export class SavePipelineComponent implements OnInit {
+    private editorService = inject(EditorService);
+    private dialogRef = inject(DialogRef<SavePipelineComponent>);
+    private idGeneratorService = inject(IdGeneratorService);
+    private pipelineService = inject(PipelineService);
+    private router = inject(Router);
+    private shepherdService = inject(ShepherdService);
+    private pipelineCanvasService = inject(PipelineCanvasMetadataService);
+    private assetSaveService = inject(AssetSaveService);
+
     @Input()
     pipeline: Pipeline;
 
     @Input()
     originalPipeline: Pipeline;
+
+    selectedAssets: SpAssetTreeNode[];
+    deselectedAssets: SpAssetTreeNode[];
+    originalAssets: SpAssetTreeNode[];
 
     @Input()
     pipelineCanvasMetadata: PipelineCanvasMetadata;
@@ -77,16 +93,6 @@ export class SavePipelineComponent implements OnInit {
     statusIndicators: StatusIndicator[] = [];
     finalPipelineOperationStatus: PipelineOperationStatus;
     pipelineAction: PipelineAction;
-
-    constructor(
-        private editorService: EditorService,
-        private dialogRef: DialogRef<SavePipelineComponent>,
-        private idGeneratorService: IdGeneratorService,
-        private pipelineService: PipelineService,
-        private router: Router,
-        private shepherdService: ShepherdService,
-        private pipelineCanvasService: PipelineCanvasMetadataService,
-    ) {}
 
     ngOnInit() {
         this.storageOptions.updateModeActive =
@@ -126,6 +132,8 @@ export class SavePipelineComponent implements OnInit {
                     }
                     this.modifyStatusIndicator(Status.SUCCESS);
                     this.pipelineId = message.notifications[1].description;
+                    //TODO Added to Assset herte
+                    this.addToAsset();
                 }),
                 // only continue if pipeline was saved
                 filter(message => message.success),
@@ -174,6 +182,7 @@ export class SavePipelineComponent implements OnInit {
                 );
             }
         }
+
         this.performStorageOperations(stopPipeline$, savePipeline$);
     }
 
@@ -315,5 +324,45 @@ export class SavePipelineComponent implements OnInit {
                 : undefined;
         }
         this.dialogRef.close(reloadConfig);
+    }
+
+    async addToAsset(): Promise<void> {
+        let linkageData: LinkageData[] = [];
+
+        // Await the async function and update linkageData correctly
+        linkageData = await this.addPipelineLinkageData(linkageData);
+
+        // Proceed with saving the assets
+        await this.saveAssets(linkageData);
+    }
+
+    // Make sure this function returns LinkageData[] instead of Promise<void>
+    private async addPipelineLinkageData(
+        linkageData: LinkageData[],
+    ): Promise<LinkageData[]> {
+        // Return LinkageData[] instead of void
+        console.log('pipelineId', this.pipelineId);
+
+        // Modify linkageData in place, as it’s passed by reference
+        linkageData.push({
+            type: 'pipeline',
+            id: this.pipelineId,
+            name: this.pipelineId,
+        });
+
+        return linkageData; // Return the updated linkageData array
+    }
+
+    private async saveAssets(linkageData: LinkageData[]): Promise<void> {
+        console.log('Call to Service Selected', this.selectedAssets);
+        console.log('Call to Service Delected', this.deselectedAssets);
+        console.log('Call to Service original', this.originalAssets);
+        console.log('linkage Data');
+        await this.assetSaveService.saveSelectedAssets(
+            this.selectedAssets,
+            linkageData,
+            this.deselectedAssets,
+            this.originalAssets,
+        );
     }
 }

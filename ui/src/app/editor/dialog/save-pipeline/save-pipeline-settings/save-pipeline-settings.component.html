@@ -131,17 +131,14 @@
     </mat-checkbox>
     @if (addToAssets) {
         <div class="mt-10">
-            <mat-expansion-panel class="mat-elevation-z0 border-1">
-                <mat-expansion-panel-header>Assets</mat-expansion-panel-header>
-
-                <sp-asset-link-configuration
-                    [isEdit]="isEditMode"
-                    (selectedAssetsChange)="onSelectedAssetsChange($event)"
-                    (deselectedAssetsChange)="onDeselectedAssetsChange($event)"
-                    (originalAssetsEmitter)="onOriginalAssetsEmitted($event)"
-                >
-                </sp-asset-link-configuration>
-            </mat-expansion-panel>
+            <sp-asset-link-configuration
+                [isEdit]="isEditMode"
+                [itemId]="pipeline._id"
+                (selectedAssetsChange)="onSelectedAssetsChange($event)"
+                (deselectedAssetsChange)="onDeselectedAssetsChange($event)"
+                (originalAssetsEmitter)="onOriginalAssetsEmitted($event)"
+            >
+            </sp-asset-link-configuration>
         </div>
     }
     <div class="mt-10">
