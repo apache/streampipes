@@ -200,7 +200,6 @@ export class AdapterStartedDialog implements OnInit {
                     } else {
                         this.startAdapter(adapterElementId, true);
                         this.addToAsset();
-                        this.addToAsset();
                     }
                 } else {
                     const errorMsg: SpLogMessage =
@@ -424,7 +423,6 @@ export class AdapterStartedDialog implements OnInit {
                                 this.pipelineOperationStatus =
                                     pipelineOperationStatus;
                                 this.startAdapter(adapterElementId, true);
-                                this.addToAsset();
                                 this.addToAsset();
                             },
                             error => {
