@@ -40,8 +40,6 @@ import { Observable } from 'rxjs';
 export class AssetLinkConfigurationComponent implements OnInit {
     @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
-    @Input() isEdit: boolean;
-    @Input() itemId: unknown;
 
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
@@ -140,42 +138,6 @@ export class AssetLinkConfigurationComponent implements OnInit {
             },
         });
     }
-
-    private setSelect() {
-        if (!this.itemId) {
-            return;
-        }
-
-        this.assetsData.forEach(node => {
-            this.selectNodeIfMatch(node);
-        });
-    }
-
-    private selectNodeIfMatch(
-        node: SpAssetTreeNode,
-        path: SpAssetTreeNode[] = [],
-    ) {
-        const currentPath = [...path, node];
-
-        if (
-            node.assetLinks &&
-            node.assetLinks.some(link => link.resourceId === this.itemId)
-        ) {
-            if (!this.isSelected(node)) {
-                this.selectedAssets.push(node);
-                this.originalAssets.push(node);
-                this.originalAssetsEmitter.emit(this.originalAssets);
-                currentPath.forEach(n => this.treeControl.expand(n));
-            }
-        }
-
-        if (node.assets) {
-            node.assets.forEach(child =>
-                this.selectNodeIfMatch(child, currentPath),
-            );
-        }
-    }
-
     private mapAssets(
         apiAssets: SpAsset[],
         parentId: string = '',

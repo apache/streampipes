@@ -24,7 +24,6 @@ import {
     Output,
     inject,
 } from '@angular/core';
-
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
@@ -200,6 +199,7 @@ export class AdapterStartedDialog implements OnInit {
                         this.startSaveInDataLakePipeline(adapterElementId);
                     } else {
                         this.startAdapter(adapterElementId, true);
+                        this.addToAsset();
                         this.addToAsset();
                     }
                 } else {
