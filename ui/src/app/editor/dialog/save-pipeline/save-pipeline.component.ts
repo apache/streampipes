@@ -39,7 +39,7 @@ import {
     PipelineStorageOptions,
 } from '../../model/editor.model';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
-import { firstValueFrom, lastValueFrom, Observable, of, pipe, tap } from 'rxjs';
+import { firstValueFrom, lastValueFrom, Observable, of, tap } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import {
     Status,

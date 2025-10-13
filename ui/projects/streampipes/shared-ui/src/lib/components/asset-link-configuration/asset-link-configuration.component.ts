@@ -26,7 +26,6 @@ import {
     AssetLinkType,
     SpAsset,
     SpAssetTreeNode,
-    AdapterDescription,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
