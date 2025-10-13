@@ -73,20 +73,13 @@ public ResponseEntity<ExportProviderSettings> getExportProviderSettingById(@Path
       providerSettings = new ArrayList<>();
     }
 
-    boolean updated = false;
+    List<ExportProviderSettings> providerSettingsWithoutExisting = providerSettings.stream()
+    .filter(existing -> existing != null && !existing.getProviderId().equals(config.getProviderId()))
+    .collect(Collectors.toList());
 
-    for (int i = 0; i < providerSettings.size(); i++) {
-      ExportProviderSettings existing = providerSettings.get(i);
-      if (existing != null && existing.getProviderId().equals(config.getProviderId())) {
-        providerSettings.set(i, config);
-        updated = true;
-        break;
-      }
-    }
-    if (!updated) {
-      providerSettings.add(config);
-    }
-    cfg.setExportProviderSettings(providerSettings);
+    providerSettingsWithoutExisting.add(config);
+
+    cfg.setExportProviderSettings(providerSettingsWithoutExisting);
     storage.updateElement(cfg);
 
     return ok();
