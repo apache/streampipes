@@ -42,10 +42,9 @@ import {
     LinkageData,
     CompactPipelineService,
 } from '@streampipes/platform-services';
-import { DialogRef } from '@streampipes/shared-ui';
+import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
 
 import { TranslateService } from '@ngx-translate/core';
-import { AssetSaveService } from '../../services/adapter-asset-configuration.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -55,6 +54,13 @@ import { firstValueFrom } from 'rxjs';
 })
 export class AdapterStartedDialog implements OnInit {
     translateService = inject(TranslateService);
+    public dialogRef = inject(DialogRef<AdapterStartedDialog>);
+    private adapterService = inject(AdapterService);
+    private shepherdService = inject(ShepherdService);
+    private pipelineTemplateService = inject(PipelineTemplateService);
+    private compactPipelineService = inject(CompactPipelineService);
+    private assetSaveService = inject(AssetSaveService);
+    private dataLakeService = inject(DatalakeRestService);
 
     adapterInstalled = false;
 
@@ -109,16 +115,6 @@ export class AdapterStartedDialog implements OnInit {
     adapterErrorMessage: SpLogMessage;
     addToAssetText = '';
     deletedFromAssetText = '';
-
-    constructor(
-        public dialogRef: DialogRef<AdapterStartedDialog>,
-        private adapterService: AdapterService,
-        private shepherdService: ShepherdService,
-        private pipelineTemplateService: PipelineTemplateService,
-        private compactPipelineService: CompactPipelineService,
-        private assetSaveService: AssetSaveService,
-        private dataLakeService: DatalakeRestService,
-    ) {}
 
     ngOnInit() {
         if (this.editMode) {

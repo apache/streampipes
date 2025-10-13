@@ -17,7 +17,7 @@
  */
 
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
 import {
     LinkageData,
     Message,
@@ -44,7 +44,6 @@ import {
     StatusIndicator,
 } from '../../../core-ui/multi-step-status-indicator/multi-step-status-indicator.model';
 import { PipelineAction } from '../../../pipelines/model/pipeline-model';
-import { AssetSaveService } from 'src/app/connect/services/adapter-asset-configuration.service';
 
 @Component({
     selector: 'sp-save-pipeline',

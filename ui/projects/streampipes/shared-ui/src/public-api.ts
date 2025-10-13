@@ -67,3 +67,4 @@ export * from './lib/services/time-selection.service';
 export * from './lib/components/asset-browser/asset-browser.service';
 export * from './lib/services/date-format.service';
 export * from './lib/services/pipeline-element-schema.service';
+export * from './lib/services/asset-configuration.service';
