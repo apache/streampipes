@@ -38,6 +38,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -68,12 +69,14 @@ public class DataLakeScheduler implements SchedulingConfigurer {
 
         Map<String, String> params = new HashMap<>();
 
-        params.put("delimiter", dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().csvDelimiter());
+        params.put("delimiter",
+                dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().csvDelimiter());
         params.put("format", dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
         params.put("headerColumnName",
                 dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().headerColumnName());
         params.put("missingValueBehaviour",
-                dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().missingValueBehaviour());
+                dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig()
+                        .missingValueBehaviour());
         params.put("endDate", Long.toString(endDate));
 
         ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(dataLakeMeasure.getMeasureName(), params);
@@ -81,44 +84,60 @@ public class DataLakeScheduler implements SchedulingConfigurer {
                 sanitizedParams,
                 outputFormat,
                 "ignore".equals(
-                        dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().missingValueBehaviour()),
+                        dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig()
+                                .missingValueBehaviour()),
                 output);
-        try {
-            String exportProviderId = dataLakeMeasure.getRetentionTime().getRetentionExportConfig()
-                    .getExportProviderId();
-            // FInd Item in Document 
-             
-            List<ExportProviderSettings>  exportProviders = StorageDispatcher.INSTANCE
+
+        String exportProviderId = dataLakeMeasure.getRetentionTime().getRetentionExportConfig()
+                .getExportProviderId();
+        // FInd Item in Document
+
+        List<ExportProviderSettings> exportProviders = StorageDispatcher.INSTANCE
                 .getNoSqlStore()
                 .getSpCoreConfigurationStorage()
                 .get()
                 .getExportProviderSettings();
-            
-            ExportProviderSettings exportProviderSetting = null;
-            
-            for (int i = 0; i < exportProviders.size(); i++) {
-                ExportProviderSettings existing = exportProviders.get(i);
-                if (existing != null && existing.getProviderId().equals(exportProviderId)) {
-                 exportProviderSetting = existing;
-                }
+
+        ExportProviderSettings exportProviderSetting = null;
+
+        for (int i = 0; i < exportProviders.size(); i++) {
+            ExportProviderSettings existing = exportProviders.get(i);
+            if (existing != null && existing.getProviderId().equals(exportProviderId)) {
+                exportProviderSetting = existing;
             }
+        }
 
-            if (exportProviderSetting == null){
-                LOG.error("The desired export provider was not found. No export has been done.");
-               return;
-            }
+        if (exportProviderSetting == null) {
+            LOG.error("The desired export provider was not found. No export has been done.");
+            return;
+        }
 
-            ProviderType providerType = exportProviderSetting.getProviderType();
+        ProviderType providerType = exportProviderSetting.getProviderType();
 
-            LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
+        LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
+
+        try {
 
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
                     providerType, dataLakeMeasure.getMeasureName(), exportProviderSetting,
                     dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
             exportProvider.store(streamingOutput);
 
+        } catch (IllegalArgumentException e) {
+
+            LOG.error("Export provider could not be created. Unsupported provider type: {}. Error: {}", providerType,
+                    e.getMessage(), e);
+        } catch (IOException e) {
+
+            LOG.error("I/O error occurred while trying to store data. Provider Type: {}. Error: {}", providerType,
+                    e.getMessage(), e);
+        } catch (RuntimeException e) {
+            LOG.error("Runtime exception occurred while attempting to store data. Provider Type: {}. Error: {}",
+                    providerType, e.getMessage(), e);
         } catch (Exception e) {
-            LOG.error("Could not establish a connection to the export provider.");
+
+            LOG.error("An unexpected error occurred during export. Provider Type: {}. Error: {}", providerType,
+                    e.getMessage(), e);
         }
     }
 
@@ -172,11 +191,12 @@ public class DataLakeScheduler implements SchedulingConfigurer {
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         taskRegistrar.addTriggerTask(
 
-            this::cleanupMeasurements,
-           
-            triggerContext -> new CronTrigger(System.getenv("SP_DATALAKE_SCHEDULER_CRON")).nextExecution(triggerContext)
+                this::cleanupMeasurements,
+
+                triggerContext -> new CronTrigger(System.getenv("SP_DATALAKE_SCHEDULER_CRON"))
+                        .nextExecution(triggerContext)
 
         );
- 
+
     }
 }

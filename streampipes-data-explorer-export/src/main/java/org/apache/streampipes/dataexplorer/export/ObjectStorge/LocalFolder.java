@@ -31,9 +31,9 @@ public class LocalFolder implements IObjectStorage {
 
     private final Path filePath;
 
-    public LocalFolder(String measurementName, String format) throws Exception {
+    public LocalFolder(String measurementName, String format) throws RuntimeException, IOException {
 
-        Files.createDirectories(Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName));
+        Files.createDirectories(Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName));   
 
         this.filePath = Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName + "/dump_"
                 + Instant.now().toString() + "." + format);

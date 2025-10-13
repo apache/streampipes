@@ -41,9 +41,8 @@ public class S3 implements IObjectStorage{
     private final S3Client s3;
     private final String bucketName;
 
-    public S3(String measurementName, String format, ExportProviderSettings settings) throws Exception {
+    public S3(String measurementName, String format, ExportProviderSettings settings) throws RuntimeException {
 
-        
           this.s3 = S3Client.builder()
                 .endpointOverride(URI.create(settings.getEndPoint())) 
                 .region(Region.of(settings.getAwsRegion()))
@@ -53,6 +52,7 @@ public class S3 implements IObjectStorage{
                         )
                 )
                 .build();
+         
             this.bucketName = settings.getBucketName();
             this.fileName = "/" + measurementName + "/dump_"
                 + Instant.now().toString() + "." + format; 
