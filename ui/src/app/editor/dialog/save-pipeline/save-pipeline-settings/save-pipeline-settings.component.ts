@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import {
     UntypedFormControl,
@@ -57,10 +64,16 @@ export class SavePipelineSettingsComponent implements OnInit {
     compactPipeline: CompactPipeline;
 
     addToAssets: boolean = false;
+    @Input()
+    selectedAssets: SpAssetTreeNode[];
+    @Input()
+    deselectedAssets: SpAssetTreeNode[];
+    @Input()
+    originalAssets: SpAssetTreeNode[];
 
-    selectedAssets = [];
-    deselectedAssets = [];
-    originalAssets = [];
+    @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() originalAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
 
     ngOnInit() {
         this.submitPipelineForm.addControl(
@@ -97,16 +110,19 @@ export class SavePipelineSettingsComponent implements OnInit {
 
     onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.selectedAssets = updatedAssets;
+        this.selectedAssetsChange.emit(this.selectedAssets);
         console.log('selectedAssetst', this.selectedAssets);
     }
 
     onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.deselectedAssets = updatedAssets;
+        this.deselectedAssetsChange.emit(this.deselectedAssets);
         console.log('deselectedAssetst', this.deselectedAssets);
     }
 
     onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
         this.originalAssets = updatedAssets;
+        this.originalAssetsChange.emit(this.originalAssets);
         console.log('original Assets', this.originalAssets);
     }
 

@@ -329,28 +329,20 @@ export class SavePipelineComponent implements OnInit {
     async addToAsset(): Promise<void> {
         let linkageData: LinkageData[] = [];
 
-        // Await the async function and update linkageData correctly
         linkageData = await this.addPipelineLinkageData(linkageData);
 
-        // Proceed with saving the assets
         await this.saveAssets(linkageData);
     }
-
-    // Make sure this function returns LinkageData[] instead of Promise<void>
     private async addPipelineLinkageData(
         linkageData: LinkageData[],
     ): Promise<LinkageData[]> {
-        // Return LinkageData[] instead of void
-        console.log('pipelineId', this.pipelineId);
-
-        // Modify linkageData in place, as it’s passed by reference
         linkageData.push({
             type: 'pipeline',
             id: this.pipelineId,
             name: this.pipelineId,
         });
 
-        return linkageData; // Return the updated linkageData array
+        return linkageData;
     }
 
     private async saveAssets(linkageData: LinkageData[]): Promise<void> {
