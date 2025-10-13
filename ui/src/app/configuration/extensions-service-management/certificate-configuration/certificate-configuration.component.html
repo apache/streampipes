@@ -31,7 +31,7 @@
             mat-sort-header
             *matHeaderCellDef
         >
-            Issuer
+            {{ 'Issuer' | translate }}
         </th>
         <td
             fxFlex="40"
@@ -51,7 +51,7 @@
             mat-sort-header
             *matHeaderCellDef
         >
-            Expires
+            {{ 'Expires' | translate }}
         </th>
         <td
             fxFlex
@@ -68,7 +68,7 @@
             <button
                 mat-icon-button
                 color="accent"
-                matTooltip="Refresh"
+                [matTooltip]="'Refresh' | translate"
                 (click)="loadCertificates()"
             >
                 <mat-icon>refresh</mat-icon>
@@ -85,7 +85,7 @@
                 <button
                     mat-flat-button
                     class="mat-basic"
-                    matTooltip="Certificate Details"
+                    [matTooltip]="'Certificate Details' | translate"
                     matTooltipPosition="above"
                     [attr.data-cy]="
                         'certificate-details-btn-' + certificate.elementId
@@ -93,7 +93,7 @@
                     (click)="openDetailsDialog(certificate)"
                 >
                     <i class="material-icons">search</i>
-                    <span>&nbsp;Details</span>
+                    <span>&nbsp;{{ 'Details' | translate }}</span>
                 </button>
                 <button
                     mat-flat-button
@@ -109,14 +109,16 @@
                     }}</i>
                     <span
                         >&nbsp;{{
-                            certificate.state === 'TRUSTED' ? 'Reject' : 'Trust'
+                            certificate.state === 'TRUSTED'
+                                ? ('Reject' | translate)
+                                : ('Trust' | translate)
                         }}</span
                     >
                 </button>
                 <button
                     mat-flat-button
                     class="btn-warn"
-                    matTooltip="Delete certificate"
+                    [matTooltip]="'Delete certificate' | translate"
                     matTooltipPosition="above"
                     [attr.data-cy]="
                         'certificate-delete-btn-' + certificate.elementId
@@ -124,7 +126,7 @@
                     (click)="onDelete(certificate)"
                 >
                     <i class="material-icons">delete</i>
-                    <span>&nbsp;Delete</span>
+                    <span>&nbsp;{{ 'Delete' | translate }}</span>
                 </button>
             </div>
         </td>

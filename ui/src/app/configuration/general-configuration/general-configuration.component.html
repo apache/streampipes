@@ -24,15 +24,22 @@
             *ngIf="formReady"
         >
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                <sp-split-section title="Basic" subtitle="Basic settings">
+                <sp-split-section
+                    [title]="'Basic' | translate"
+                    [subtitle]="'Basic settings' | translate"
+                >
                     <div
                         class="warning mb-10"
                         *ngIf="!generalConfig.configured"
                     >
-                        These are default values - to use features such as email
-                        you need to store these values once.
+                        {{
+                            'These are default values - to use features such as email you need to store these values once.'
+                                | translate
+                        }}
                     </div>
-                    <div class="subsection-title">App Name</div>
+                    <div class="subsection-title">
+                        {{ 'App Name' | translate }}
+                    </div>
                     <mat-form-field appearance="outline">
                         <input
                             formControlName="appName"
@@ -42,13 +49,15 @@
                             data-cy="general-config-app-name"
                         />
                     </mat-form-field>
-                    <div class="subsection-title">Host and Port</div>
+                    <div class="subsection-title">
+                        {{ 'Host and Port' | translate }}
+                    </div>
                     <div fxLayout="column" fxFlex="100">
                         <div fxLayout="row">
                             <div fxLayout="row" fxLayoutAlign="start center">
                                 <mat-button-toggle-group
                                     name="protocol"
-                                    aria-label="Protocol"
+                                    [attr.aria-label]="'Protocol' | translate"
                                     formControlName="protocol"
                                 >
                                     <mat-button-toggle value="http"
@@ -64,7 +73,7 @@
                                 class="ml-10"
                                 subscriptSizing="dynamic"
                             >
-                                <mat-label>Host</mat-label>
+                                <mat-label>{{ 'Host' | translate }}</mat-label>
                                 <input
                                     formControlName="hostname"
                                     fxFlex
@@ -78,7 +87,7 @@
                                 class="ml-10"
                                 subscriptSizing="dynamic"
                             >
-                                <mat-label>Port</mat-label>
+                                <mat-label>{{ 'Port' | translate }}</mat-label>
                                 <input
                                     formControlName="port"
                                     fxFlex
@@ -92,8 +101,8 @@
                     </div>
                 </sp-split-section>
                 <sp-split-section
-                    title="Registration"
-                    subtitle="Registration process"
+                    [title]="'Registration' | translate"
+                    [subtitle]="'Registration process' | translate"
                 >
                     <div
                         class="warning mb-10"
@@ -102,8 +111,10 @@
                             !mailConfig.emailConfigured
                         "
                     >
-                        Self-registration requires valid mail server and basic
-                        host settings.
+                        {{
+                            'Self - registration requires valid mail server and basic host settings.'
+                                | translate
+                        }}
                     </div>
                     <div
                         fxLayout="column"
@@ -113,13 +124,15 @@
                         "
                     >
                         <mat-checkbox formControlName="allowSelfRegistration"
-                            >Allow self-registration
+                            >{{ 'Allow self - registration' | translate }}
                         </mat-checkbox>
                         <div
                             *ngIf="generalConfig.allowSelfRegistration"
                             class="mt-10 mb-10"
                         >
-                            <h5>Default roles for new users</h5>
+                            <h5>
+                                {{ 'Default roles for new users' | translate }}
+                            </h5>
                             <mat-form-field color="accent" appearance="outline">
                                 <mat-select
                                     formControlName="defaultUserRoles"
@@ -136,7 +149,10 @@
                             </mat-form-field>
                         </div>
                         <mat-checkbox formControlName="allowPasswordRecovery"
-                            >Allow self-service password recovery
+                            >{{
+                                'Allow self - service password recovery'
+                                    | translate
+                            }}
                         </mat-checkbox>
                     </div>
                 </sp-split-section>
@@ -154,7 +170,7 @@
                             data-cy="sp-element-general-config-save"
                         >
                             <i class="material-icons">save</i
-                            ><span>&nbsp;Save</span>
+                            ><span>&nbsp;{{ 'Save' | translate }}</span>
                         </button>
                     </div>
                 </sp-split-section>

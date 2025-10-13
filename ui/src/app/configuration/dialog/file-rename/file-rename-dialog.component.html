@@ -24,18 +24,20 @@
                     <div fxFlex="100" fxLayoutAlign="center" fxLayout="column">
                         <b>
                             <h4>
-                                A file with the same name already exists. Please
-                                select from existing files or rename it:
+                                {{
+                                    'A file with the same name already exists. Please select from existing files or rename it:'
+                                        | translate
+                                }}
                             </h4>
                         </b>
                         <div class="input-group">
-                            <span style="margin-right: 10px"
-                                >new filename:</span
-                            >
+                            <span style="margin-right: 10px">{{
+                                'new filename:' | translate
+                            }}</span>
                             <mat-form-field>
                                 <input
                                     matInput
-                                    placeholder="new filename"
+                                    [placeholder]="'new filename' | translate"
                                     [(ngModel)]="fileName"
                                 />
                             </mat-form-field>
@@ -55,7 +57,7 @@
             data-cy="sp-file-management-store-file"
             style="margin-right: 10px"
         >
-            Rename file
+            {{ 'Rename file' | translate }}
         </button>
         <button
             mat-button
@@ -64,7 +66,7 @@
             (click)="cancel()"
             style="margin-right: 10px"
         >
-            Cancel
+            {{ 'Cancel' | translate }}
         </button>
     </div>
 </div>

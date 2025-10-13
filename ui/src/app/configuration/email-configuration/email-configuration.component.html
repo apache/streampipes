@@ -25,11 +25,13 @@
             *ngIf="formReady"
         >
             <sp-split-section
-                title="Mail Settings"
-                subtitle="Settings to connect to a mail server"
+                [title]="'Mail Settings' | translate"
+                [subtitle]="'Settings to connect to a mail server' | translate"
             >
                 <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                    <div class="subsection-title">Mail Server</div>
+                    <div class="subsection-title">
+                        {{ 'Mail Server' | translate }}
+                    </div>
                     <mat-form-field color="accent">
                         <mat-label>SMTP Host</mat-label>
                         <input
@@ -49,7 +51,9 @@
                             required
                         />
                     </mat-form-field>
-                    <div class="subsection-title">Transport</div>
+                    <div class="subsection-title">
+                        {{ 'Transport' | translate }}
+                    </div>
                     <mat-radio-group
                         fxLayout="column"
                         formControlName="transport"
@@ -64,22 +68,24 @@
                             >TLS</mat-radio-button
                         >
                     </mat-radio-group>
-                    <div class="subsection-title mt-20">Authentication</div>
+                    <div class="subsection-title mt-20">
+                        {{ 'Authentication' | translate }}
+                    </div>
                     <mat-checkbox formControlName="usesAuthentication"
-                        >SMTP server requires authentication
+                        >{{ 'SMTP server requires authentication' | translate }}
                     </mat-checkbox>
                     <mat-form-field
                         color="accent"
                         *ngIf="mailConfig.usesAuthentication"
                     >
-                        <mat-label>SMTP Username</mat-label>
+                        <mat-label>{{ 'SMTP Username' | translate }}</mat-label>
                         <input formControlName="smtpUsername" fxFlex matInput />
                     </mat-form-field>
                     <mat-form-field
                         color="accent"
                         *ngIf="mailConfig.usesAuthentication"
                     >
-                        <mat-label>SMTP Password</mat-label>
+                        <mat-label>{{ 'SMTP Password' | translate }}</mat-label>
                         <input
                             formControlName="smtpPassword"
                             fxFlex
@@ -87,23 +93,25 @@
                             matInput
                         />
                     </mat-form-field>
-                    <div class="subsection-title mt-20">Proxy</div>
-                    <mat-checkbox formControlName="usesProxy"
-                        >Uses proxy</mat-checkbox
-                    >
+                    <div class="subsection-title mt-20">
+                        {{ 'Proxy' | translate }}
+                    </div>
+                    <mat-checkbox formControlName="usesProxy">{{
+                        'Uses proxy' | translate
+                    }}</mat-checkbox>
                     <mat-form-field color="accent" *ngIf="mailConfig.usesProxy">
-                        <mat-label>Proxy Host</mat-label>
+                        <mat-label>{{ 'Proxy Host' | translate }}</mat-label>
                         <input formControlName="proxyHost" fxFlex matInput />
                     </mat-form-field>
                     <mat-form-field color="accent" *ngIf="mailConfig.usesProxy">
-                        <mat-label>Proxy Port</mat-label>
+                        <mat-label>{{ 'Proxy Port' | translate }}</mat-label>
                         <input formControlName="proxyPort" fxFlex matInput />
                     </mat-form-field>
                     <mat-checkbox
                         formControlName="usesProxyAuthentication"
                         *ngIf="mailConfig.usesProxy"
                     >
-                        Proxy requires authentication
+                        {{ 'Proxy requires authentication' | translate }}
                     </mat-checkbox>
                     <mat-form-field
                         color="accent"
@@ -112,7 +120,9 @@
                             mailConfig.usesProxyAuthentication
                         "
                     >
-                        <mat-label>Proxy Username</mat-label>
+                        <mat-label>{{
+                            'Proxy Username' | translate
+                        }}</mat-label>
                         <input
                             formControlName="proxyUsername"
                             fxFlex
@@ -134,9 +144,13 @@
                             matInput
                         />
                     </mat-form-field>
-                    <div class="subsection-title mt-20">Sender</div>
+                    <div class="subsection-title mt-20">
+                        {{ 'Sender' | translate }}
+                    </div>
                     <mat-form-field color="accent">
-                        <mat-label>Sender Email Address</mat-label>
+                        <mat-label>{{
+                            'Sender Email Address' | translate
+                        }}</mat-label>
                         <input
                             formControlName="senderAddress"
                             fxFlex
@@ -145,11 +159,13 @@
                         />
                     </mat-form-field>
                     <mat-form-field color="accent">
-                        <mat-label>Sender Name</mat-label>
+                        <mat-label>{{ 'Sender Name' | translate }}</mat-label>
                         <input formControlName="senderName" fxFlex matInput />
                     </mat-form-field>
                     <mat-form-field color="accent">
-                        <mat-label>Recipient for test mail</mat-label>
+                        <mat-label>{{
+                            'Recipient for test mail' | translate
+                        }}</mat-label>
                         <input
                             formControlName="defaultRecipient"
                             fxFlex
@@ -167,7 +183,7 @@
                             data-cy="sp-element-email-config-save"
                         >
                             <i class="material-icons">save</i
-                            ><span>&nbsp;Save</span>
+                            ><span>&nbsp;{{ 'Save' | translate }}</span>
                         </button>
                         <button
                             mat-button
@@ -180,7 +196,7 @@
                             "
                             data-cy="sp-element-email-config-test"
                         >
-                            <span>Send Test Mail</span>
+                            <span>{{ 'Send Test Mail' | translate }}</span>
                         </button>
                     </div>
                     <div fxLayout="column" *ngIf="attemptSendingTestMail">
@@ -188,7 +204,9 @@
                             <mat-progress-spinner
                                 diameter="10"
                             ></mat-progress-spinner>
-                            <h5>Trying to send test mail...</h5>
+                            <h5>
+                                {{ 'Trying to send test mail...' | translate }}
+                            </h5>
                         </div>
                         <div fxLayout="row">
                             <h5
@@ -197,7 +215,10 @@
                                     sendingTestMailSuccess
                                 "
                             >
-                                Success - please check your mail inbox.
+                                {{
+                                    'Success - please check your mail inbox.'
+                                        | translate
+                                }}
                             </h5>
                             <div
                                 fxLayout="column"
@@ -207,7 +228,9 @@
                                 "
                             >
                                 <div class="error-panel">
-                                    <h4>Could not send email</h4>
+                                    <h4>
+                                        {{ 'Could not send email' | translate }}
+                                    </h4>
                                     <h5>{{ sendingEmailErrorMessage }}</h5>
                                 </div>
                             </div>

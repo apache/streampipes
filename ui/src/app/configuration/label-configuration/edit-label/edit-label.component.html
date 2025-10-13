@@ -34,11 +34,11 @@
             *ngIf="label && showPreview"
         ></sp-label>
         <mat-form-field color="accent" appearance="outline">
-            <mat-label>Label</mat-label>
+            <mat-label>{{ 'Label' | translate }}</mat-label>
             <input matInput [(ngModel)]="label.label" data-cy="label-name" />
         </mat-form-field>
         <mat-form-field color="accent" appearance="outline">
-            <mat-label>Description</mat-label>
+            <mat-label>{{ 'Description' | translate }}</mat-label>
             <input
                 matInput
                 [(ngModel)]="label.description"
@@ -57,7 +57,7 @@
                 class="mat-basic mr-5"
                 (click)="cancelEmitter.emit()"
             >
-                Cancel
+                {{ 'Cancel' | translate }}
             </button>
             <button
                 mat-button
@@ -66,7 +66,7 @@
                 data-cy="save-label-button"
                 (click)="saveEmitter.emit(label)"
             >
-                Save
+                {{ 'Save' | translate }}
             </button>
         </div>
     </div>

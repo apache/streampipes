@@ -21,16 +21,21 @@
         <div class="sp-dialog-content">
             <div fxFlex="100" fxLayout="column" class="p-15">
                 <sp-warning-box *ngIf="isUserAccount && isExternalProvider">
-                    Settings of externally-managed users cannot be changed.
+                    {{
+                        'Settings of externally-managed users cannot be changed.'
+                            | translate
+                    }}
                 </sp-warning-box>
                 <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                     <div class="general-options-panel" fxLayout="column">
-                        <span class="general-options-header">Basics</span>
+                        <span class="general-options-header">{{
+                            'Basics' | translate
+                        }}</span>
                         <mat-error *ngIf="registrationError">{{
                             registrationError
                         }}</mat-error>
                         <mat-form-field color="accent" *ngIf="!isUserAccount">
-                            <mat-label>Username</mat-label>
+                            <mat-label>{{ 'Username' | translate }}</mat-label>
                             <input
                                 formControlName="username"
                                 fxFlex
@@ -39,7 +44,7 @@
                             />
                         </mat-form-field>
                         <mat-form-field color="accent" *ngIf="isUserAccount">
-                            <mat-label>Email</mat-label>
+                            <mat-label>{{ 'Email' | translate }}</mat-label>
                             <input
                                 formControlName="username"
                                 fxFlex
@@ -47,16 +52,18 @@
                                 matInput
                                 data-cy="new-user-email"
                             />
-                            <mat-error
-                                >Must be a valid email address.</mat-error
-                            >
+                            <mat-error>{{
+                                'Must be a valid email address.' | translate
+                            }}</mat-error>
                         </mat-form-field>
                         <div class="email-changed" *ngIf="emailChanged">
-                            Changing the current user's email will require a
-                            re-login.
+                            {{
+                                "Changing the current user's email will require a re-login."
+                                    | translate
+                            }}
                         </div>
                         <mat-form-field color="accent" *ngIf="isUserAccount">
-                            <mat-label>Full Name</mat-label>
+                            <mat-label>{{ 'Full Name' | translate }}</mat-label>
                             <input
                                 formControlName="fullName"
                                 fxFlex
@@ -70,14 +77,21 @@
                         class="general-options-panel"
                         *ngIf="!editMode && isUserAccount"
                     >
-                        <span class="general-options-header">Password</span>
+                        <span class="general-options-header">{{
+                            'Password' | translate
+                        }}</span>
                         <mat-checkbox
                             formControlName="sendPasswordToUser"
                             *ngIf="emailConfigured"
-                            >Auto-create password and send to user</mat-checkbox
+                            >{{
+                                'Auto-create password and send to user'
+                                    | translate
+                            }}</mat-checkbox
                         >
                         <mat-form-field color="accent">
-                            <mat-label>Initial password</mat-label>
+                            <mat-label>{{
+                                'Initial password' | translate
+                            }}</mat-label>
                             <input
                                 formControlName="password"
                                 fxFlex
@@ -88,7 +102,9 @@
                             />
                         </mat-form-field>
                         <mat-form-field color="accent">
-                            <mat-label>Repeat password</mat-label>
+                            <mat-label>{{
+                                'Repeat password' | translate
+                            }}</mat-label>
                             <input
                                 formControlName="repeatPassword"
                                 fxFlex
@@ -98,20 +114,22 @@
                                 data-cy="new-user-password-repeat"
                             />
                         </mat-form-field>
-                        <mat-error *ngIf="parentForm.hasError('notMatching')"
-                            >Passwords do not match.</mat-error
-                        >
+                        <mat-error *ngIf="parentForm.hasError('notMatching')">{{
+                            'Passwords do not match.' | translate
+                        }}</mat-error>
                     </div>
                     <div
                         fxLayout="column"
                         class="general-options-panel"
                         *ngIf="!isUserAccount"
                     >
-                        <span class="general-options-header"
-                            >Authentication</span
-                        >
+                        <span class="general-options-header">{{
+                            'Authentication' | translate
+                        }}</span>
                         <mat-form-field color="accent">
-                            <mat-label>Client Secret</mat-label>
+                            <mat-label>{{
+                                'Client Secret' | translate
+                            }}</mat-label>
                             <input
                                 formControlName="clientSecret"
                                 fxFlex
@@ -122,11 +140,15 @@
                         </mat-form-field>
                         <mat-error
                             *ngIf="parentForm.controls.clientSecret.errors"
-                            >Minimum length 35 characters.</mat-error
+                            >{{
+                                'Minimum length 35 characters.' | translate
+                            }}</mat-error
                         >
                     </div>
                     <div fxLayout="column" class="general-options-panel">
-                        <span class="general-options-header">Groups</span>
+                        <span class="general-options-header">{{
+                            'Groups' | translate
+                        }}</span>
                         <mat-checkbox
                             *ngFor="let group of availableGroups"
                             [disabled]="
@@ -140,7 +162,9 @@
                         </mat-checkbox>
                     </div>
                     <div fxLayout="column" class="general-options-panel">
-                        <span class="general-options-header">Roles</span>
+                        <span class="general-options-header">{{
+                            'Roles' | translate
+                        }}</span>
                         <mat-checkbox
                             *ngFor="let role of availableRoles$ | async"
                             [value]="role.elementId"
@@ -156,18 +180,20 @@
                     </div>
                     @if (!isExternalProvider) {
                         <div fxLayout="column" class="general-options-panel">
-                            <span class="general-options-header">Account</span>
+                            <span class="general-options-header">{{
+                                'Account' | translate
+                            }}</span>
                             <mat-checkbox
                                 formControlName="accountEnabled"
                                 data-cy="new-user-enabled"
                             >
-                                Enabled
+                                {{ 'Enabled' | translate }}
                             </mat-checkbox>
                             <mat-checkbox
                                 formControlName="accountLocked"
                                 data-cy="new-user-locked"
                             >
-                                Locked
+                                {{ 'Locked' | translate }}
                             </mat-checkbox>
                         </div>
                     }
@@ -189,14 +215,14 @@
                         data-cy="sp-element-edit-user-save"
                     >
                         <i class="material-icons">save</i
-                        ><span>&nbsp;Save</span>
+                        ><span>&nbsp;{{ 'Save' | translate }}</span>
                     </button>
                     <button
                         mat-flat-button
                         class="mat-basic"
                         (click)="close(false)"
                     >
-                        Cancel
+                        {{ 'Cancel' | translate }}
                     </button>
                 </div>
             </div>
