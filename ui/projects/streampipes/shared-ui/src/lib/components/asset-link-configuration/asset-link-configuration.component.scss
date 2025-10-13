@@ -42,6 +42,11 @@ mat-checkbox {
     padding-left: 10px;
     margin-left: 10px;
 }
+.tree-container {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
 
 .mat-tree-node {
     display: flex;
