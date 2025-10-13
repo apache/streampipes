@@ -42,10 +42,11 @@ public class S3 implements IObjectStorage{
     private final String bucketName;
 
     public S3(String measurementName, String format, ExportProviderSettings settings) throws Exception {
+
         
           this.s3 = S3Client.builder()
                 .endpointOverride(URI.create(settings.getEndPoint())) 
-                .region(Region.of("us-east-1"))
+                .region(Region.of(settings.getAwsRegion()))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
                                 AwsBasicCredentials.create(settings.getAccessKey(),  SecretEncryptionManager.decrypt(settings.getSecretKey()))

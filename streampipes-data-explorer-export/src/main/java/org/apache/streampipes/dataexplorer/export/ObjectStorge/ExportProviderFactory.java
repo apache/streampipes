@@ -21,13 +21,14 @@ import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.configuration.ProviderType;
 
 public class ExportProviderFactory {
+
     
     public static IObjectStorage createExportProvider(
             ProviderType providerType, 
             String measurementName, 
             ExportProviderSettings settings, 
             String format) throws Exception {
-        
+
         switch (providerType) {
             case FOLDER: 
                 return new LocalFolder(measurementName, format);
