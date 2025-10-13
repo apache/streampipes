@@ -98,7 +98,7 @@
                     }
                 </mat-select>
             </mat-form-field>
-            @if (selectedProviderType == 'S3') {
+            @if (selectedProviderType === 'S3') {
                 <mat-form-field class="w-100">
                     <mat-label>{{ 'Select Provider' | translate }}</mat-label>
                     <mat-select
@@ -132,7 +132,7 @@
             }
         </div>
         @if (
-            selectedProviderType == 'S3' &&
+            selectedProviderType === 'S3' &&
             availableS3ExportProvider?.length === 0
         ) {
             <div fxLayout="row" fxLayoutAlign="start center">
