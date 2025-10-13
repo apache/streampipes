@@ -37,7 +37,7 @@ import {
     PipelineStorageOptions,
 } from '../../model/editor.model';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
-import { Observable, of, pipe, tap } from 'rxjs';
+import { firstValueFrom, Observable, of, pipe, tap } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import {
     Status,
@@ -132,7 +132,7 @@ export class SavePipelineComponent implements OnInit {
                     }
                     this.modifyStatusIndicator(Status.SUCCESS);
                     this.pipelineId = message.notifications[1].description;
-                    //TODO Added to Assset herte
+                    //Add Asset as soon as pipelineId is known
                     this.addToAsset();
                 }),
                 // only continue if pipeline was saved
@@ -336,20 +336,21 @@ export class SavePipelineComponent implements OnInit {
     private async addPipelineLinkageData(
         linkageData: LinkageData[],
     ): Promise<LinkageData[]> {
+        const pipeline = await firstValueFrom(
+            this.pipelineService.getPipelineById(this.pipelineId),
+        );
+
         linkageData.push({
             type: 'pipeline',
             id: this.pipelineId,
-            name: this.pipelineId,
+            name: pipeline.name,
         });
 
         return linkageData;
     }
 
     private async saveAssets(linkageData: LinkageData[]): Promise<void> {
-        console.log('Call to Service Selected', this.selectedAssets);
-        console.log('Call to Service Delected', this.deselectedAssets);
-        console.log('Call to Service original', this.originalAssets);
-        console.log('linkage Data');
+        console.log('save Assets', linkageData);
         await this.assetSaveService.saveSelectedAssets(
             this.selectedAssets,
             linkageData,
