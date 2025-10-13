@@ -134,8 +134,6 @@ export class AssetLinkConfigurationComponent implements OnInit {
             next: assets => {
                 this.assetsData = this.mapAssets(assets);
                 this.dataSource.data = this.assetsData;
-                console.log('isEdit', this.isEdit);
-                console.log('itemid ', this.itemId);
                 if (this.isEdit) {
                     this.setSelect();
                 }
