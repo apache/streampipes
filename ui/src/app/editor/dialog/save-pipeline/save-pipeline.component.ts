@@ -332,7 +332,6 @@ export class SavePipelineComponent implements OnInit {
 
     async addToAsset(): Promise<void> {
         let linkageData: LinkageData[] = [];
-
         linkageData = await this.addPipelineLinkageData(linkageData);
 
         await this.saveAssets(linkageData);
@@ -355,7 +354,6 @@ export class SavePipelineComponent implements OnInit {
         const dataSinkServices: DataSinkInvocation[] = serviceList.filter(
             action => action.serviceTagPrefix === 'DATA_SINK',
         );
-        console.log(dataSinkServices);
 
         for (const service of dataSinkServices) {
             const staticProperty = service.staticProperties.find(
@@ -365,12 +363,9 @@ export class SavePipelineComponent implements OnInit {
             const measureFromPipeline = (staticProperty as { value: string })
                 .value;
 
-            console.log('value ', measureFromPipeline);
             const measure = await lastValueFrom(
                 this.dataLakeService.getMeasurementByName(measureFromPipeline),
             );
-
-            console.log('Measure', measure);
 
             linkageData.push({
                 type: 'measurement',
@@ -382,7 +377,6 @@ export class SavePipelineComponent implements OnInit {
     }
 
     private async saveAssets(linkageData: LinkageData[]): Promise<void> {
-        console.log('save Assets', linkageData);
         await this.assetSaveService.saveSelectedAssets(
             this.selectedAssets,
             linkageData,
