@@ -19,8 +19,6 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
-import { AssetBtns } from '../../support/utils/asset/AssetBtns';
-import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 
 describe('Creates a new adapter with a linked asset', () => {
     const assetName = 'TestAsset';
@@ -64,7 +62,7 @@ describe('Creates a new adapter with a linked asset', () => {
         ]);
 
         //Check if Added Correctly
-        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
 
         //Edit
