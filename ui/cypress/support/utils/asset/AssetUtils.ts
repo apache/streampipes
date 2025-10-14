@@ -59,6 +59,16 @@ export class AssetUtils {
             .should('have.length', amount);
     }
 
+    public static checkAmountOfLinkedResourcesByAssetName(
+        assetName: string,
+        amount: number,
+    ) {
+        AssetUtils.goToAssets();
+        AssetUtils.editAsset(assetName);
+        AssetBtns.assetLinksTab().click();
+        AssetUtils.checkAmountOfLinkedResources(amount);
+    }
+
     public static editAsset(assetName: string) {
         GeneralUtils.openMenuForRow(assetName);
         AssetBtns.editAssetBtn(assetName).click();

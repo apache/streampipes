@@ -64,15 +64,8 @@ describe('Creates a new adapter with a linked asset', () => {
         ]);
 
         //Check if Added Correctly
-        AssetUtils.goToAssets();
-        AssetUtils.editAsset(assetName);
-        AssetBtns.assetLinksTab().click();
-        AssetUtils.checkAmountOfLinkedResources(2);
-
-        AssetUtils.goToAssets();
-        AssetUtils.editAsset(assetName2);
-        AssetBtns.assetLinksTab().click();
-        AssetUtils.checkAmountOfLinkedResources(2);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
 
         //Edit
 
