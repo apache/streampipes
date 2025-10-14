@@ -819,5 +819,6 @@
   "Documentation": "Dokumentation",
   "Error Details": "Fehler-Details",
   "All {{allResourcesAlias}}": "Alle {{allResourcesAlias}}",
-  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Kopie"
+  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Kopie",
+  "{{action}} {{ current }} of {{ total }} ({{ name }})...{{ status }}": "{{action}} {{ current }} von {{ total }} ({{name}})...{{ status }}"
 }

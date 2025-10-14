@@ -108,11 +108,18 @@
             [optionDescription]="'Add Adapter to an existing Asset' | translate"
             optionIcon="precision_manufacturing"
             dataCy="show-asset-checkbox"
+            [isChecked]="
+                showAsset && (!isEditMode || originalAssets.length > 0)
+            "
             (optionSelectedEmitter)="showAsset = $event"
         >
             <sp-adapter-asset-configuration
                 *ngIf="showAsset"
+                [isEdit]="isEditMode"
+                [adapter]="adapterDescription"
                 (selectedAssetsChange)="onSelectedAssetsChange($event)"
+                (deselectedAssetsChange)="onDeselectedAssetsChange($event)"
+                (originalAssetsEmitter)="onOriginalAssetsEmitted($event)"
             >
             </sp-adapter-asset-configuration>
         </sp-adapter-options-panel>

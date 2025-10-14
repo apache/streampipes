@@ -105,6 +105,7 @@ export interface SpAssetModel extends SpAsset {
 export interface SpAssetTreeNode {
     assetId: string;
     assetName: string;
+    assetLinks: AssetLink[];
     assets?: SpAssetTreeNode[];
     spAssetModelId: string;
     flattenPath: any[];

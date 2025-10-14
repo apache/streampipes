@@ -26,6 +26,7 @@ import {
     AssetLinkType,
     SpAsset,
     SpAssetTreeNode,
+    AdapterDescription,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
@@ -39,11 +40,15 @@ import { Observable } from 'rxjs';
 export class AdapterAssetConfigurationComponent implements OnInit {
     @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
+    @Input() isEdit: boolean;
+    @Input() adapter: AdapterDescription;
 
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
 
     @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() originalAssetsEmitter = new EventEmitter<SpAssetTreeNode[]>();
 
     treeControl: NestedTreeControl<SpAssetTreeNode>;
     dataSource: MatTreeNestedDataSource<SpAssetTreeNode>;
@@ -56,6 +61,8 @@ export class AdapterAssetConfigurationComponent implements OnInit {
     assetLinksLoaded = false;
     updateObservable: Observable<SpAssetModel>;
     selectedAssets: SpAssetTreeNode[] = [];
+    deselectedAssets: SpAssetTreeNode[] = [];
+    originalAssets: SpAssetTreeNode[] = [];
 
     constructor(private assetService: AssetManagementService) {
         this.treeControl = new NestedTreeControl<SpAssetTreeNode>(
@@ -76,13 +83,40 @@ export class AdapterAssetConfigurationComponent implements OnInit {
             asset => asset.assetId === node.assetId,
         );
 
+        const index_deselected = this.deselectedAssets.findIndex(
+            asset => asset.assetId === node.assetId,
+        );
+
         if (index > -1) {
             this.selectedAssets.splice(index, 1);
+            if (this.isNodeInOriginalData(node)) {
+                this.deselectedAssets.push(node);
+            }
         } else {
             this.selectedAssets.push(node);
+            if (index_deselected > -1) {
+                this.deselectedAssets.splice(index_deselected, 1);
+            }
         }
 
-        this.selectedAssetsChange.emit(this.selectedAssets);
+        const selectEmit = this.selectedAssets.filter(
+            node => !this.isNodeInOriginalData(node),
+        );
+
+        this.selectedAssetsChange.emit(selectEmit);
+        this.deselectedAssetsChange.emit(this.deselectedAssets);
+    }
+
+    private isNodeInOriginalData(node: SpAssetTreeNode): boolean {
+        for (const asset of this.originalAssets) {
+            if (
+                asset.assetId === node.assetId &&
+                asset.spAssetModelId === node.spAssetModelId
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     isSelected(node: SpAssetTreeNode): boolean {
@@ -100,9 +134,50 @@ export class AdapterAssetConfigurationComponent implements OnInit {
             next: assets => {
                 this.assetsData = this.mapAssets(assets);
                 this.dataSource.data = this.assetsData;
+                if (this.isEdit) {
+                    this.setSelect();
+                }
             },
         });
     }
+
+    private setSelect() {
+        if (!this.adapter || !this.adapter.elementId) {
+            return;
+        }
+
+        this.assetsData.forEach(node => {
+            this.selectNodeIfMatch(node);
+        });
+    }
+
+    private selectNodeIfMatch(
+        node: SpAssetTreeNode,
+        path: SpAssetTreeNode[] = [],
+    ) {
+        const currentPath = [...path, node];
+
+        if (
+            node.assetLinks &&
+            node.assetLinks.some(
+                link => link.resourceId === this.adapter.elementId,
+            )
+        ) {
+            if (!this.isSelected(node)) {
+                this.selectedAssets.push(node);
+                this.originalAssets.push(node);
+                this.originalAssetsEmitter.emit(this.originalAssets);
+                currentPath.forEach(n => this.treeControl.expand(n));
+            }
+        }
+
+        if (node.assets) {
+            node.assets.forEach(child =>
+                this.selectNodeIfMatch(child, currentPath),
+            );
+        }
+    }
+
     private mapAssets(
         apiAssets: SpAsset[],
         parentId: string = '',
@@ -124,6 +199,7 @@ export class AdapterAssetConfigurationComponent implements OnInit {
                 assetId: asset.assetId,
                 assetName: asset.assetName,
                 flattenPath: flattenedPath,
+                assetLinks: asset.assetLinks,
                 assets: asset.assets
                     ? this.mapAssets(asset.assets, parentId, flattenedPathCopy)
                     : [],
