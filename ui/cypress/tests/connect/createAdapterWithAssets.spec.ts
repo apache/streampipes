@@ -83,6 +83,7 @@ describe('Creates a new adapter with a linked asset', () => {
         // Rename
 
         cy.dataCy('sp-adapter-name').clear().type('Changed');
+        cy.wait(10000);
 
         // Deselect Asset 2
         ConnectUtils.deleteAsset([assetName]);
