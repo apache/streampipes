@@ -82,6 +82,9 @@ export class AssetUtils {
 
     public static editAsset(assetName: string) {
         GeneralUtils.openMenuForRow(assetName);
+        cy.get('[data-cy="edit-asset-' + assetName + '"]', { timeout: 10000 })
+            .should('exist')
+            .should('be.visible');
         AssetBtns.editAssetBtn(assetName).click();
     }
 

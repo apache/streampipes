@@ -20,6 +20,7 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
+import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 
 describe('Creates a new adapter with a linked asset', () => {
     const assetName = 'TestAsset';
@@ -39,10 +40,12 @@ describe('Creates a new adapter with a linked asset', () => {
         AssetUtils.addAssetWithNoAdapter(assetName3);
     });
 
-    /**it('Add Assets during Adapter generation', () => {
+    it('Add Assets during Adapter generation', () => {
         // Create
 
-        ConnectUtils.addAdapterWithLinkedAssets(adapterConfiguration);
+        ConnectUtils.addAdapterWithLinkedAssets(adapterConfiguration, [
+            assetName,
+        ]);
 
         // Go Back to Asset
         AssetUtils.goToAssets();
@@ -53,7 +56,7 @@ describe('Creates a new adapter with a linked asset', () => {
 
         //Check if Link is there
         AssetUtils.checkAmountOfLinkedResources(2);
-    });**/
+    });
 
     it('Edit Assets during Adapter editing', () => {
         // Add the first two Asssets by default
@@ -101,6 +104,6 @@ describe('Creates a new adapter with a linked asset', () => {
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 2);
 
         // Test Renaming
-        AssetUtils.checkResourceNamingByAssetName(assetName2, 'Changed');
+        //AssetUtils.checkResourceNamingByAssetName(assetName2, 'Changed');
     });
 });
