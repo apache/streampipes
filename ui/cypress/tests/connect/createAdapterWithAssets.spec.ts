@@ -71,7 +71,6 @@ describe('Creates a new adapter with a linked asset', () => {
 
         //Edit
         ConnectUtils.goToConnect();
-        cy.wait(10000);
         ConnectBtns.openActionsMenu('Machine Data Simulator Test');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
@@ -81,9 +80,8 @@ describe('Creates a new adapter with a linked asset', () => {
         ConnectUtils.finishEventSchemaConfiguration();
 
         // Rename
-
         cy.dataCy('sp-adapter-name').clear().type('Changed');
-        cy.wait(10000);
+        cy.dataCy('sp-adapter-name').should('have.value', 'Changed');
 
         // Deselect Asset 2
         ConnectUtils.editAsset([assetName]);
@@ -100,7 +98,6 @@ describe('Creates a new adapter with a linked asset', () => {
         ConnectUtils.closeAdapterPreview();
 
         // Test Number of Asset Links
-        //AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName, 0);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 2);
 

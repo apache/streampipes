@@ -89,7 +89,6 @@ export class ConnectUtils {
         assetNameList,
     ) {
         ConnectUtils.goToConnect();
-        cy.wait(10000);
 
         ConnectUtils.goToNewAdapterPage();
 
@@ -152,6 +151,7 @@ export class ConnectUtils {
 
     public static goToConnect() {
         cy.visit('#/connect');
+        cy.dataCy('connect-create-new-adapter-button').should('be.visible');
     }
 
     public static goToNewAdapterPage() {
