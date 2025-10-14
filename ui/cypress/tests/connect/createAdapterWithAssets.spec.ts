@@ -19,12 +19,14 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
+import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 
 describe('Creates a new adapter with a linked asset', () => {
+    const assetName = 'TestAsset';
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        const assetName = 'TestAsset';
+
         AssetUtils.addAssetWithNoAdapter(assetName);
     });
 
@@ -53,10 +55,14 @@ describe('Creates a new adapter with a linked asset', () => {
         ConnectUtils.startAdapter(adapterConfiguration, false, false, true);
 
         // Go Back to Asset
-
+        AssetUtils.goToAssets();
         // CLick on Asset
 
+        AssetUtils.editAsset(assetName);
+        AssetBtns.assetLinksTab().click();
+
         //Check if Link is there
+        AssetUtils.checkAmountOfLinkedResources(2);
 
         //ConnectUtils.addToAsset(adapterConfiguration);
         // Relevant for the Edit Case
