@@ -35,9 +35,12 @@ describe('Creates a new adapter with a linked asset', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
 
-        AssetUtils.addAssetWithNoAdapter(assetName);
-        AssetUtils.addAssetWithNoAdapter(assetName2);
         AssetUtils.addAssetWithNoAdapter(assetName3);
+        AssetUtils.checkAmountOfAssets(1);
+        AssetUtils.addAssetWithNoAdapter(assetName2);
+        AssetUtils.checkAmountOfAssets(2);
+        AssetUtils.addAssetWithNoAdapter(assetName);
+        AssetUtils.checkAmountOfAssets(3);
     });
 
     it('Add Assets during Adapter generation', () => {
