@@ -92,15 +92,5 @@ describe('Test Saving Pipeline with Asset Link', () => {
             assetName2,
             'Renamed Pipeline',
         );
-
-        //PipelineUtils.deletePipeline(`Pipeline Test`);
-
-        // Go Back to Asset
-        //AssetUtils.goToAssets();
-        // CLick on Asset
-
-        //AssetUtils.editAsset(assetName);
-        //AssetBtns.assetLinksTab().click();
-        //AssetUtils.checkAmountOfLinkedResources(2);
     });
 });

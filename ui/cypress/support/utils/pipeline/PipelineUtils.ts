@@ -173,19 +173,15 @@ export class PipelineUtils {
                 pipelineInput.pipelineName,
             );
         }
-        //this.addToAsset(assetNameList);
         PipelineUtils.finalizePipelineStart(assetNameList);
     }
 
     private static addToAsset(assetNameList) {
-        //TODO Working here
-        //cy.dataCy('sp-show-pipeline-asset-checkbox').children().click();
         cy.dataCy('sp-show-pipeline-asset-checkbox')
-            .find('input[type="checkbox"]') // Find the checkbox input inside the mat-checkbox
+            .find('input[type="checkbox"]')
             .then($checkbox => {
-                // Check if the checkbox is not checked
                 if (!$checkbox.prop('checked')) {
-                    cy.wrap($checkbox).click(); // Click it if it is not selected
+                    cy.wrap($checkbox).click();
                 }
             });
 
