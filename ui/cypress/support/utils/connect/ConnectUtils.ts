@@ -86,6 +86,7 @@ export class ConnectUtils {
 
     public static addAdapterWithLinkedAssets(
         adapterConfiguration: AdapterInput,
+        assetNameList,
     ) {
         ConnectUtils.goToConnect();
         cy.wait(10000);
@@ -98,7 +99,13 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startAdapter(adapterConfiguration, false, false, true);
+        ConnectUtils.startAdapter(
+            adapterConfiguration,
+            false,
+            false,
+            true,
+            assetNameList,
+        );
     }
 
     private static configureDimensionProperties(
@@ -199,6 +206,7 @@ export class ConnectUtils {
         noLiveDataView = false,
         adapterStartFails = false,
         addToAsset = false,
+        assetNameList = [],
     ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
@@ -225,7 +233,7 @@ export class ConnectUtils {
         //add the Adapter to an Asset
 
         if (addToAsset) {
-            this.addToAsset(adapterInput);
+            this.addToAsset(adapterInput, assetNameList);
         }
 
         ConnectBtns.adapterSettingsStartAdapter().click();
@@ -249,14 +257,22 @@ export class ConnectUtils {
         this.closeAdapterPreview();
     }
 
-    public static addToAsset(adapterInput: AdapterInput) {
+    public static addToAsset(adapterInput: AdapterInput, assetNameList = []) {
         cy.dataCy('show-asset-checkbox').click();
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
-        cy.get('mat-tree.asset-tree')
-            .find('.mat-tree-node')
-            // filter('.leaf-node-class')
-            .first()
-            .click();
+        //cy.get('mat-tree.asset-tree')
+        //    .find('.mat-tree-node')
+        // filter('.leaf-node-class')
+        //    .first()
+        //    .click();
+
+        assetNameList.forEach(assetName => {
+            console.log(assetName);
+            cy.get('mat-tree.asset-tree')
+                .find('.mat-tree-node') // Select all tree nodes
+                .contains(assetName) // Find node containing the assetName
+                .click(); // Click the node that matches
+        });
     }
 
     // Close adapter preview

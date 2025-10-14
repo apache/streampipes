@@ -25,6 +25,7 @@ import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEven
 describe('Creates a new adapter with a linked asset', () => {
     const assetName = 'TestAsset';
     const assetName2 = 'TestAsset2';
+    const assetName3 = 'TestAsset3';
     const adapterConfiguration = AdapterBuilder.create('Machine_Data_Simulator')
         .setName('Machine Data Simulator Test')
         .addInput('input', 'wait-time-ms', '1000')
@@ -36,9 +37,10 @@ describe('Creates a new adapter with a linked asset', () => {
 
         AssetUtils.addAssetWithNoAdapter(assetName);
         AssetUtils.addAssetWithNoAdapter(assetName2);
+        AssetUtils.addAssetWithNoAdapter(assetName3);
     });
 
-    it('Add Assets during Adapter generation', () => {
+    /**it('Add Assets during Adapter generation', () => {
         // Create
 
         ConnectUtils.addAdapterWithLinkedAssets(adapterConfiguration);
@@ -52,21 +54,36 @@ describe('Creates a new adapter with a linked asset', () => {
 
         //Check if Link is there
         AssetUtils.checkAmountOfLinkedResources(2);
+    });**/
+
+    it('Edit Assets during Adapter editing', () => {
+        // Add the first two Asssets by default
+        ConnectUtils.addAdapterWithLinkedAssets(adapterConfiguration, [
+            assetName,
+            assetName2,
+        ]);
+
+        //Check if Added Correctly
+        AssetUtils.goToAssets();
+        AssetUtils.editAsset(assetName);
+        AssetBtns.assetLinksTab().click();
+        AssetUtils.checkAmountOfLinkedResources(2);
+
+        AssetUtils.goToAssets();
+        AssetUtils.editAsset(assetName2);
+        AssetBtns.assetLinksTab().click();
+        AssetUtils.checkAmountOfLinkedResources(2);
+
+        //Edit
+
+        // Rename
+        // Deselect Asset 2
+        // Select Asset 3
+
+        // Test Renamint on Asset 1
+
+        // Test Number of Items Asset 1
+        //Test Number of Items Asset 2
+        //Test Number of Items Asset 3
     });
-
-    //it('Edit Assets during Adapter editing', () => {
-
-    //    ConnectUtils.addAdapterWithLinkedAssets(adapterConfiguration)
-
-    // Go Back to Asset
-    //    AssetUtils.goToAssets();
-    // CLick on Asset
-
-    //    AssetUtils.editAsset(assetName);
-    //    AssetBtns.assetLinksTab().click();
-
-    //Check if Link is there
-    //    AssetUtils.checkAmountOfLinkedResources(2);
-
-    //});
 });
