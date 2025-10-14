@@ -84,6 +84,23 @@ export class ConnectUtils {
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
     }
 
+    public static addAdapterWithLinkedAssets(
+        adapterConfiguration: AdapterInput,
+    ) {
+        ConnectUtils.goToConnect();
+        cy.wait(10000);
+
+        ConnectUtils.goToNewAdapterPage();
+
+        ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
+
+        ConnectUtils.configureAdapter(adapterConfiguration);
+
+        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+
+        ConnectUtils.startAdapter(adapterConfiguration, false, false, true);
+    }
+
     private static configureDimensionProperties(
         adapterConfiguration: AdapterInput,
     ) {

@@ -24,35 +24,24 @@ import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEven
 
 describe('Creates a new adapter with a linked asset', () => {
     const assetName = 'TestAsset';
+    const assetName2 = 'TestAsset2';
+    const adapterConfiguration = AdapterBuilder.create('Machine_Data_Simulator')
+        .setName('Machine Data Simulator Test')
+        .addInput('input', 'wait-time-ms', '1000')
+        .setStartAdapter(false)
+        .build();
+
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
 
         AssetUtils.addAssetWithNoAdapter(assetName);
+        AssetUtils.addAssetWithNoAdapter(assetName2);
     });
 
-    it('Perform Test', () => {
+    it('Add Assets during Adapter generation', () => {
         // Create
 
-        const adapterConfiguration = AdapterBuilder.create(
-            'Machine_Data_Simulator',
-        )
-            .setName('Machine Data Simulator Test')
-            .addInput('input', 'wait-time-ms', '1000')
-            .setStartAdapter(false)
-            .build();
-
-        ConnectUtils.goToConnect();
-        cy.wait(10000);
-
-        ConnectUtils.goToNewAdapterPage();
-
-        ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
-
-        ConnectUtils.configureAdapter(adapterConfiguration);
-
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
-
-        ConnectUtils.startAdapter(adapterConfiguration, false, false, true);
+        ConnectUtils.addAdapterWithLinkedAssets(adapterConfiguration);
 
         // Go Back to Asset
         AssetUtils.goToAssets();
@@ -63,17 +52,21 @@ describe('Creates a new adapter with a linked asset', () => {
 
         //Check if Link is there
         AssetUtils.checkAmountOfLinkedResources(2);
-
-        //ConnectUtils.addToAsset(adapterConfiguration);
-        // Relevant for the Edit Case
-        //const adapterInput = AdapterBuilder.create('Machine_Data_Simulator')
-        //    .setName('Machine Data Simulator Test')
-        //    .addInput('input', 'wait-time-ms', '1000')
-        //    .setStartAdapter(false)
-        //    .build();
-
-        //ConnectUtils.testAdapter(adapterInput);
-
-        //ConnectUtils.startAndValidateAdapter(7);
     });
+
+    //it('Edit Assets during Adapter editing', () => {
+
+    //    ConnectUtils.addAdapterWithLinkedAssets(adapterConfiguration)
+
+    // Go Back to Asset
+    //    AssetUtils.goToAssets();
+    // CLick on Asset
+
+    //    AssetUtils.editAsset(assetName);
+    //    AssetBtns.assetLinksTab().click();
+
+    //Check if Link is there
+    //    AssetUtils.checkAmountOfLinkedResources(2);
+
+    //});
 });
