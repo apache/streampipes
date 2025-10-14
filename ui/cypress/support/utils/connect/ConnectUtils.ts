@@ -181,6 +181,7 @@ export class ConnectUtils {
         adapterInput: AdapterInput,
         noLiveDataView = false,
         adapterStartFails = false,
+        addToAsset = false,
     ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
@@ -204,6 +205,12 @@ export class ConnectUtils {
             ConnectBtns.startAdapterNowCheckbox().click();
         }
 
+        //add the Adapter to an Asset
+
+        if (addToAsset) {
+            this.addToAsset(adapterInput);
+        }
+
         ConnectBtns.adapterSettingsStartAdapter().click();
 
         if (adapterStartFails) {
@@ -223,6 +230,16 @@ export class ConnectUtils {
         }
 
         this.closeAdapterPreview();
+    }
+
+    public static addToAsset(adapterInput: AdapterInput) {
+        cy.dataCy('show-asset-checkbox').click();
+        cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
+        cy.get('mat-tree.asset-tree')
+            .find('.mat-tree-node')
+            // filter('.leaf-node-class')
+            .first()
+            .click();
     }
 
     // Close adapter preview

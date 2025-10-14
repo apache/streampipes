@@ -85,6 +85,16 @@ export class AssetUtils {
         AssetUtils.goBackToOverview();
     }
 
+    public static addAssetWithNoAdapter(assetName: string) {
+        AssetUtils.goToAssets();
+
+        AssetUtils.addNewAsset(assetName);
+
+        AssetBtns.assetLinksTab().click();
+
+        AssetBtns.saveAssetBtn().click();
+    }
+
     public static deleteAsset(assetName: string) {
         GeneralUtils.openMenuForRow(assetName);
         AssetBtns.deleteAssetBtn(assetName).click();
