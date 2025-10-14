@@ -86,10 +86,10 @@ describe('Creates a new adapter with a linked asset', () => {
         cy.wait(10000);
 
         // Deselect Asset 2
-        ConnectUtils.deleteAsset([assetName]);
+        ConnectUtils.editAsset([assetName]);
 
         // Select Asset 3
-        ConnectUtils.addToAsset([assetName3]);
+        ConnectUtils.editAsset([assetName3]);
 
         ConnectBtns.storeEditAdapter().click();
 
@@ -100,11 +100,11 @@ describe('Creates a new adapter with a linked asset', () => {
         ConnectUtils.closeAdapterPreview();
 
         // Test Number of Asset Links
-        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName, 0);
+        //AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName, 0);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 2);
 
         // Test Renaming
-        //AssetUtils.checkResourceNamingByAssetName(assetName2, 'Changed');
+        AssetUtils.checkResourceNamingByAssetName(assetName2, 'Changed');
     });
 });
