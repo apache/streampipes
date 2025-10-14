@@ -179,7 +179,16 @@ export class PipelineUtils {
 
     private static addToAsset(assetNameList) {
         //TODO Working here
-        cy.dataCy('sp-show-pipeline-asset-checkbox').children().click();
+        //cy.dataCy('sp-show-pipeline-asset-checkbox').children().click();
+        cy.dataCy('sp-show-pipeline-asset-checkbox')
+            .find('input[type="checkbox"]') // Find the checkbox input inside the mat-checkbox
+            .then($checkbox => {
+                // Check if the checkbox is not checked
+                if (!$checkbox.prop('checked')) {
+                    cy.wrap($checkbox).click(); // Click it if it is not selected
+                }
+            });
+
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
         assetNameList.forEach(assetName => {
             console.log(assetName);
@@ -202,7 +211,9 @@ export class PipelineUtils {
 
     public static finalizePipelineStart(assetNameList?: String[]) {
         cy.dataCy('sp-editor-checkbox-navigate-to-overview').children().click();
-        PipelineUtils.addToAsset(assetNameList);
+        if (assetNameList) {
+            PipelineUtils.addToAsset(assetNameList);
+        }
         cy.dataCy('sp-editor-apply').click();
 
         cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(

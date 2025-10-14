@@ -50,7 +50,10 @@ describe('Test Saving Pipeline with Asset Link', () => {
             )
             .build();
 
-        PipelineUtils.addPipelineWithAssetLinks(pipelineInput, [assetName]);
+        PipelineUtils.addPipelineWithAssetLinks(pipelineInput, [
+            assetName,
+            assetName2,
+        ]);
     });
 
     it('Add Pipeline to Asset during creation', () => {
@@ -63,5 +66,41 @@ describe('Test Saving Pipeline with Asset Link', () => {
         AssetUtils.editAsset(assetName);
         AssetBtns.assetLinksTab().click();
         AssetUtils.checkAmountOfLinkedResources(2);
+
+        // Go Back to Asset
+        AssetUtils.goToAssets();
+
+        AssetUtils.editAsset(assetName2);
+        AssetBtns.assetLinksTab().click();
+        AssetUtils.checkAmountOfLinkedResources(2);
+    });
+
+    it('Edit Pipeline to Asset during Edit', () => {
+        PipelineUtils.editPipeline('Pipeline Test');
+        cy.wait(1000);
+        cy.dataCy('sp-editor-save-pipeline').click();
+        cy.dataCy('sp-editor-pipeline-name').clear();
+        PipelineUtils.updatePipeline('Renamed Pipeline');
+        PipelineUtils.finalizePipelineStart([assetName, assetName3]);
+
+        // Test Number of Asset Links
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 2);
+
+        // Test Renaming
+        AssetUtils.checkResourceNamingByAssetName(
+            assetName2,
+            'Renamed Pipeline',
+        );
+
+        //PipelineUtils.deletePipeline(`Pipeline Test`);
+
+        // Go Back to Asset
+        //AssetUtils.goToAssets();
+        // CLick on Asset
+
+        //AssetUtils.editAsset(assetName);
+        //AssetBtns.assetLinksTab().click();
+        //AssetUtils.checkAmountOfLinkedResources(2);
     });
 });
