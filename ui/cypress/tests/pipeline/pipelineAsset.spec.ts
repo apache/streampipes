@@ -21,6 +21,7 @@ import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
+import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 
 describe('Test Saving Pipeline with Asset Link', () => {
     const assetName = 'Test';
@@ -34,9 +35,7 @@ describe('Test Saving Pipeline with Asset Link', () => {
         AssetUtils.checkAmountOfAssets(2);
         AssetUtils.addAssetWithNoAdapter(assetName);
         AssetUtils.checkAmountOfAssets(3);
-    });
 
-    it('Add Pipeline to Asset during creation', () => {
         // Generate A Pipeline
         const adapterName = 'simulator';
 
@@ -52,7 +51,17 @@ describe('Test Saving Pipeline with Asset Link', () => {
             .build();
 
         PipelineUtils.addPipelineWithAssetLinks(pipelineInput, [assetName]);
+    });
 
+    it('Add Pipeline to Asset during creation', () => {
         PipelineUtils.deletePipeline(`Pipeline Test`);
+
+        // Go Back to Asset
+        AssetUtils.goToAssets();
+        // CLick on Asset
+
+        AssetUtils.editAsset(assetName);
+        AssetBtns.assetLinksTab().click();
+        AssetUtils.checkAmountOfLinkedResources(2);
     });
 });
