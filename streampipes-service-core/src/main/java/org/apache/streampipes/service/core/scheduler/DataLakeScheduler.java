@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.service.core.scheduler;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.ExportProviderFactory;
@@ -189,11 +190,13 @@ public class DataLakeScheduler implements SchedulingConfigurer {
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+        var env = Environments.getEnvironment(); 
         taskRegistrar.addTriggerTask(
 
                 this::cleanupMeasurements,
 
-                triggerContext -> new CronTrigger(System.getenv("SP_DATALAKE_SCHEDULER_CRON"))
+
+                triggerContext -> new CronTrigger(env.getDatalakeSchedulerCron().getValueOrDefault())
                         .nextExecution(triggerContext)
 
         );

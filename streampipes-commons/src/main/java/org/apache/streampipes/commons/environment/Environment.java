@@ -168,4 +168,5 @@ public interface Environment {
   StringEnvironmentVariable getFileLoggingPattern();
 
   StringEnvironmentVariable getRetentionLocalDir();
+  StringEnvironmentVariable getDatalakeSchedulerCron();
 }

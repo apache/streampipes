@@ -442,4 +442,8 @@ public class DefaultEnvironment implements Environment {
   public StringEnvironmentVariable getRetentionLocalDir() {
     return new StringEnvironmentVariable(Envs.SP_RETENTION_LOCAL_DIR);
   }
+  @Override
+  public StringEnvironmentVariable getDatalakeSchedulerCron() {
+    return new StringEnvironmentVariable(Envs.SP_DATALAKE_SCHEDULER_CRON);
+  }
 }
