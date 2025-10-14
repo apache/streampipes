@@ -69,6 +69,17 @@ export class AssetUtils {
         AssetUtils.checkAmountOfLinkedResources(amount);
     }
 
+    public static checkResourceNamingByAssetName(
+        assetName: string,
+        name: string,
+    ) {
+        AssetUtils.goToAssets();
+        AssetUtils.editAsset(assetName);
+        AssetBtns.assetLinksTab().click();
+        cy.dataCy('linked-resources-list').children().contains(name);
+        //.should('have.length', amount);
+    }
+
     public static editAsset(assetName: string) {
         GeneralUtils.openMenuForRow(assetName);
         AssetBtns.editAssetBtn(assetName).click();

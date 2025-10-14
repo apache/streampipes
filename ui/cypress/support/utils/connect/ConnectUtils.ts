@@ -233,7 +233,7 @@ export class ConnectUtils {
         //add the Adapter to an Asset
 
         if (addToAsset) {
-            this.addToAsset(adapterInput, assetNameList);
+            this.addToAsset(assetNameList);
         }
 
         ConnectBtns.adapterSettingsStartAdapter().click();
@@ -257,21 +257,28 @@ export class ConnectUtils {
         this.closeAdapterPreview();
     }
 
-    public static addToAsset(adapterInput: AdapterInput, assetNameList = []) {
+    public static addToAsset(assetNameList = []) {
         cy.dataCy('show-asset-checkbox').click();
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
-        //cy.get('mat-tree.asset-tree')
-        //    .find('.mat-tree-node')
-        // filter('.leaf-node-class')
-        //    .first()
-        //    .click();
 
         assetNameList.forEach(assetName => {
             console.log(assetName);
             cy.get('mat-tree.asset-tree')
-                .find('.mat-tree-node') // Select all tree nodes
-                .contains(assetName) // Find node containing the assetName
-                .click(); // Click the node that matches
+                .find('.mat-tree-node')
+                .contains(assetName)
+                .click();
+        });
+    }
+
+    public static deleteAsset(assetNameList = []) {
+        cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
+
+        assetNameList.forEach(assetName => {
+            console.log(assetName);
+            cy.get('mat-tree.asset-tree')
+                .find('.mat-tree-node')
+                .contains(assetName)
+                .click();
         });
     }
 

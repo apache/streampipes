@@ -19,6 +19,7 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
+import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe('Creates a new adapter with a linked asset', () => {
     const assetName = 'TestAsset';
@@ -62,19 +63,44 @@ describe('Creates a new adapter with a linked asset', () => {
         ]);
 
         //Check if Added Correctly
-        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName, 2);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
 
         //Edit
+        ConnectUtils.goToConnect();
+        cy.wait(10000);
+        ConnectBtns.openActionsMenu('Machine Data Simulator Test');
+        ConnectBtns.editAdapter().should('not.be.disabled');
+        ConnectBtns.editAdapter().click();
+
+        // Go over the first two steps
+        ConnectBtns.nextBtn().click();
+        ConnectUtils.finishEventSchemaConfiguration();
 
         // Rename
+
+        cy.dataCy('sp-adapter-name').clear().type('Changed');
+
         // Deselect Asset 2
+        ConnectUtils.deleteAsset([assetName]);
+
         // Select Asset 3
+        ConnectUtils.addToAsset([assetName3]);
 
-        // Test Renamint on Asset 1
+        ConnectBtns.storeEditAdapter().click();
 
-        // Test Number of Items Asset 1
-        //Test Number of Items Asset 2
-        //Test Number of Items Asset 3
+        cy.dataCy('sp-connect-adapter-success-added', {
+            timeout: 60000,
+        }).should('be.visible');
+
+        ConnectUtils.closeAdapterPreview();
+
+        // Test Number of Asset Links
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName, 0);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 2);
+
+        // Test Renaming
+        AssetUtils.checkResourceNamingByAssetName(assetName2, 'Changed');
     });
 });
