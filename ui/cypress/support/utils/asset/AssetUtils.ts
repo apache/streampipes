@@ -34,7 +34,14 @@ export class AssetUtils {
         AssetBtns.createAssetBtn().click();
         AssetBtns.assetNameInput().clear();
         AssetBtns.assetNameInput().type(assetName);
+        AssetBtns.createAssetPanelBtn().click();
+    }
+
+    public static addAndSaveAsset(assetName: string) {
+        AssetUtils.addNewAsset(assetName);
+
         AssetBtns.saveAssetBtn().click();
+        AssetBtns.createAssetBtn().should('be.visible');
     }
 
     public static openManageAssetLinks() {
@@ -58,6 +65,10 @@ export class AssetUtils {
         cy.dataCy('linked-resources-list')
             .children()
             .should('have.length', amount);
+    }
+
+    public static checkAmountOfAssetsGreaterThan(amount: number) {
+        cy.dataCy('assets-table').should('have.length.greaterThan', amount);
     }
 
     public static checkAmountOfLinkedResourcesByAssetName(
@@ -109,16 +120,6 @@ export class AssetUtils {
         AssetUtils.checkAmountOfLinkedResources(2);
         AssetBtns.saveAssetBtn().click();
         AssetUtils.goBackToOverview();
-    }
-
-    public static addAssetWithNoAdapter(assetName: string) {
-        AssetUtils.goToAssets();
-
-        AssetUtils.addNewAsset(assetName);
-
-        AssetBtns.assetLinksTab().click();
-
-        AssetBtns.saveAssetBtn().click();
     }
 
     public static deleteAsset(assetName: string) {

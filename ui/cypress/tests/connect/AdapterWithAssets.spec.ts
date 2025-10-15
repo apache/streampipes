@@ -23,7 +23,7 @@ import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 
 describe('Creates a new adapter with a linked asset', () => {
-    const assetName = 'TestAsset';
+    const assetName1 = 'TestAsset1';
     const assetName2 = 'TestAsset2';
     const assetName3 = 'TestAsset3';
     const adapterConfiguration = AdapterBuilder.create('Machine_Data_Simulator')
@@ -34,28 +34,24 @@ describe('Creates a new adapter with a linked asset', () => {
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-
-        AssetUtils.addAssetWithNoAdapter(assetName3);
-        AssetUtils.checkAmountOfAssets(1);
-        AssetUtils.addAssetWithNoAdapter(assetName2);
-        AssetUtils.checkAmountOfAssets(2);
-        AssetUtils.addAssetWithNoAdapter(assetName);
-        AssetUtils.checkAmountOfAssets(3);
+        AssetUtils.goToAssets();
+        AssetUtils.addAndSaveAsset(assetName3);
+        AssetUtils.addAndSaveAsset(assetName2);
+        AssetUtils.addAndSaveAsset(assetName1);
     });
 
     it('Add Assets during Adapter generation', () => {
         // Create
-
+        ConnectUtils.goToConnect();
         ConnectUtils.addAdapterWithLinkedAssets(adapterConfiguration, [
-            assetName,
+            assetName1,
         ]);
 
-        // Go Back to Asset
+        //Go Back to Asset
         AssetUtils.goToAssets();
-        // CLick on Asset
-        cy.wait(400);
+        AssetUtils.checkAmountOfAssetsGreaterThan(0);
 
-        AssetUtils.editAsset(assetName);
+        AssetUtils.editAsset(assetName1);
         AssetBtns.assetLinksTab().click();
 
         //Check if Link is there
@@ -65,14 +61,12 @@ describe('Creates a new adapter with a linked asset', () => {
     it('Edit Assets during Adapter editing', () => {
         // Add the first two Asssets by default
         ConnectUtils.addAdapterWithLinkedAssets(adapterConfiguration, [
-            assetName,
+            assetName1,
             assetName2,
         ]);
 
         //Check if Added Correctly
-        cy.wait(400);
-        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName, 2);
-        cy.wait(400);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 2);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
 
         //Edit
@@ -86,13 +80,12 @@ describe('Creates a new adapter with a linked asset', () => {
         ConnectUtils.finishEventSchemaConfiguration();
 
         // Rename
-        cy.dataCy('sp-adapter-name').clear().type('Changed');
-        cy.dataCy('sp-adapter-name').should('have.value', 'Changed');
+        ConnectUtils.renameAdapter('Changed');
 
         // Deselect Asset 2
-        ConnectUtils.editAsset([assetName]);
+        ConnectUtils.editAsset([assetName1]);
 
-        // Select Asset 3
+        // Select Asset 3 //TODO Click on Asset
         ConnectUtils.editAsset([assetName3]);
 
         ConnectBtns.storeEditAdapter().click();
@@ -104,9 +97,7 @@ describe('Creates a new adapter with a linked asset', () => {
         ConnectUtils.closeAdapterPreview();
 
         // Test Number of Asset Links
-        cy.wait(400);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
-        cy.wait(400);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 2);
 
         // Test Renaming

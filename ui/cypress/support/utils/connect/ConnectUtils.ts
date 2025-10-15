@@ -88,15 +88,7 @@ export class ConnectUtils {
         adapterConfiguration: AdapterInput,
         assetNameList,
     ) {
-        ConnectUtils.goToConnect();
-
-        ConnectUtils.goToNewAdapterPage();
-
-        ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
-
-        ConnectUtils.configureAdapter(adapterConfiguration);
-
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectUtils.addAdapter(adapterConfiguration);
 
         ConnectUtils.startAdapter(
             adapterConfiguration,
@@ -121,6 +113,10 @@ export class ConnectUtils {
         }
     }
 
+    public static renameAdapter(newName: string) {
+        cy.dataCy('sp-adapter-name').clear().type(newName);
+        cy.dataCy('sp-adapter-name').should('have.value', newName);
+    }
     public static addMachineDataSimulator(
         name: string,
         persist: boolean = false,
@@ -262,7 +258,6 @@ export class ConnectUtils {
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
 
         assetNameList.forEach(assetName => {
-            console.log(assetName);
             cy.get('mat-tree.asset-tree')
                 .find('.mat-tree-node')
                 .contains(assetName)
