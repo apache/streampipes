@@ -38,9 +38,19 @@ describe('Creates a new adapter with a linked asset', () => {
         AssetUtils.addAndSaveAsset(assetName1);
         //Generated Data ?
         DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
+
+        // Create Diagram
+        DataLakeUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
+        //Save
+        DataLakeUtils.saveToAddAssets();
+        DataLakeUtils.addToAsset([assetName1, assetName2]);
     });
 
-    it('Add Assets during Adapter generation', () => {});
+    it('Add Assets during Chart generation', () => {
+        //Test
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+    });
 
     /**it('Add Assets during Adapter generation', () => {
         // Create

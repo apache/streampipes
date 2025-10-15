@@ -195,12 +195,34 @@ export class DataLakeUtils {
         });
     }
 
+    public static saveToAddAssets() {
+        cy.dataCy('save-data-view-btn', { timeout: 10000 }).click({
+            force: true,
+        });
+    }
+
     public static saveDashboardConfiguration() {
         cy.dataCy('save-dashboard-btn', { timeout: 10000 }).click();
     }
 
     public static getEmptyDashboardInformation() {
         return cy.dataCy('empty-dashboard');
+    }
+
+    public static addToAsset(assetNameList = []) {
+        //cy.dataCy('show-asset-checkbox').click();
+        cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
+
+        assetNameList.forEach(assetName => {
+            cy.get('mat-tree.asset-tree')
+                .find('.mat-tree-node')
+                .contains(assetName)
+                .click();
+        });
+
+        cy.dataCy('asset-dialog-confirm-delete', { timeout: 10000 }).click({
+            force: true,
+        });
     }
 
     public static deleteDashboard(dashboardName: string) {
