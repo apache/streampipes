@@ -34,7 +34,7 @@ export class PipelineElementRuntimeInfoService {
         sourceDescription: SpDataStream,
     ): Observable<HttpEvent<string>> {
         return this.http.post(
-            `${this.platformServicesCommons.apiBasePath}/pipeline-element/runtime`,
+            `${this.platformServicesCommons.apiBasePath}/stream-preview`,
             sourceDescription,
             {
                 responseType: 'text',

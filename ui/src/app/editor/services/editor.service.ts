@@ -210,6 +210,6 @@ export class EditorService {
     }
 
     get pipelinePreviewBasePath() {
-        return this.apiBasePath + '/pipeline-element-preview';
+        return this.apiBasePath + '/pipeline-preview';
     }
 }

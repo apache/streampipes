@@ -35,8 +35,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v2/pipeline-element/runtime")
-public class PipelineElementRuntimeInfo extends AbstractRestResource {
+@RequestMapping("/api/v2/stream-preview")
+public class StreamPreviewResource extends AbstractRestResource {
 
   @PostMapping(
       produces = MediaType.APPLICATION_OCTET_STREAM_VALUE,

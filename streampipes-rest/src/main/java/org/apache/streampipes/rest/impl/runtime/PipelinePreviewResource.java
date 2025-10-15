@@ -38,8 +38,8 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/api/v2/pipeline-element-preview")
-public class PipelineElementPreview extends AbstractAuthGuardedRestResource {
+@RequestMapping("/api/v2/pipeline-preview")
+public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
 
 
   @PostMapping(

@@ -157,23 +157,27 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
             );
             this.editorService
                 .initiatePipelinePreview(pipeline)
-                .subscribe(response => {
-                    this.pipelinePreview = response;
+                .subscribe(pipelinePreviewModel => {
+                    this.pipelinePreview = pipelinePreviewModel;
                     this.previewModeActive = true;
-                    this.pipelinePreviewSub = this.editorService
-                        .getPipelinePreviewResult(response.previewId)
-                        .subscribe(res => {
-                            const data = this.livePreviewService.convert(
-                                res as HttpDownloadProgressEvent,
-                            );
-                            if (data) {
-                                this.livePreviewService.eventSub.next(data);
-                            }
-                        });
+                    this.subscribeToPreview(pipelinePreviewModel.previewId);
                 });
         } else {
             this.deletePipelineElementPreview();
         }
+    }
+
+    private subscribeToPreview(previewId: string) {
+        this.pipelinePreviewSub = this.editorService
+            .getPipelinePreviewResult(previewId)
+            .subscribe(res => {
+                const data = this.livePreviewService.convert(
+                    res as HttpDownloadProgressEvent,
+                );
+                if (data) {
+                    this.livePreviewService.eventSub.next(data);
+                }
+            });
     }
 
     deletePipelineElementPreview() {
