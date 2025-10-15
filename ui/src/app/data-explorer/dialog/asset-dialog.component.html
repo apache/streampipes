@@ -20,7 +20,29 @@
     <mat-dialog-content>
         <div>
             <h4>{{ data.title }}</h4>
-            <h5>{{ data.subtitle }}</h5>
+            <mat-checkbox
+                [(ngModel)]="addToAssets"
+                color="accent"
+                data-cy="sp-show-chart-asset-checkbox"
+            >
+                Add Pipeline to Assets
+            </mat-checkbox>
+            @if (addToAssets) {
+                <div class="mt-10">
+                    <sp-asset-link-configuration
+                        [isEdit]="true"
+                        [itemId]=""
+                        (selectedAssetsChange)="onSelectedAssetsChange($event)"
+                        (deselectedAssetsChange)="
+                            onDeselectedAssetsChange($event)
+                        "
+                        (originalAssetsEmitter)="
+                            onOriginalAssetsEmitted($event)
+                        "
+                    >
+                    </sp-asset-link-configuration>
+                </div>
+            }
         </div>
     </mat-dialog-content>
     <mat-dialog-actions>

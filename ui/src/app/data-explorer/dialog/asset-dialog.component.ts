@@ -16,8 +16,9 @@
  *
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SpAssetTreeNode } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-asset-dialog',
@@ -25,10 +26,37 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     standalone: false,
 })
 export class AssetDialogComponent {
+    addToAssets: boolean = false;
+    @Input()
+    selectedAssets: SpAssetTreeNode[];
+    @Input()
+    deselectedAssets: SpAssetTreeNode[];
+    @Input()
+    originalAssets: SpAssetTreeNode[];
+
+    @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() originalAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+
     constructor(
         public dialogRef: MatDialogRef<AssetDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
     ) {}
+
+    onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.selectedAssets = updatedAssets;
+        this.selectedAssetsChange.emit(this.selectedAssets);
+    }
+
+    onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.deselectedAssets = updatedAssets;
+        this.deselectedAssetsChange.emit(this.deselectedAssets);
+    }
+
+    onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
+        this.originalAssets = updatedAssets;
+        this.originalAssetsChange.emit(this.originalAssets);
+    }
 
     onCancel(): void {
         this.dialogRef.close();
