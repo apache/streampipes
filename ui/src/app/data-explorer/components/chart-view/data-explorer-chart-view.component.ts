@@ -182,6 +182,23 @@ export class DataExplorerChartViewComponent
                 ? this.dataViewService.updateChart(this.dataView)
                 : this.dataViewService.saveChart(this.dataView);
         observable.subscribe(() => {
+            //TODO Open Dialog !
+            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                width: '500px',
+                data: {
+                    title: this.translateService.instant(
+                        'Do you want to link the chart to an Asset?',
+                    ),
+                    subtitle: this.translateService.instant(
+                        'Update asset links or close.',
+                    ),
+                    cancelTitle:
+                        this.translateService.instant('Discard changes'),
+                    okTitle: this.translateService.instant('Update'),
+                    confirmAndCancel: true,
+                },
+            });
+            //TODO How to close this ?
             this.routingService.navigateToDataViewOverview(true);
         });
     }
