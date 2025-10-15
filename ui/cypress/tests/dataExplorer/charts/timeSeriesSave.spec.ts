@@ -16,7 +16,7 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
+import { DataLakeUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 
 const testView1 = 'TestView1';
 const testView2 = 'TestView2';

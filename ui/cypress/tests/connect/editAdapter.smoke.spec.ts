@@ -20,8 +20,8 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
-import { DataLakeBtns } from '../../support/utils/datalake/DataLakeBtns';
+import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataLakeBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {

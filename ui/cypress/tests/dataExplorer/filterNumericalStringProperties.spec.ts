@@ -16,8 +16,8 @@
  *
  */
 
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
-import { DataLakeWidgetTableUtils } from '../../support/utils/datalake/DataLakeWidgetTableUtils';
+import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataLakeWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';

@@ -16,21 +16,17 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
+import { DataLakeUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 
-describe('Test Heatmap View in Data Explorer', () => {
+describe('Test Scatter View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
         DataLakeUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'heatmap');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'scatter-chart');
 
-        // Check checkbox
-        DataLakeUtils.openVisualizationConfig();
-        cy.get('mat-checkbox input').click({ force: true });
-
-        // Check if heatmap chart is visible
-        cy.dataCy('heatmap').should('be.visible');
+        // Check if scatter plot is displayed
+        cy.dataCy('scatter-chart').should('be.visible');
     });
 });

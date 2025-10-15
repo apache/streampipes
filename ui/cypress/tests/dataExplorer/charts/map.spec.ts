@@ -16,7 +16,7 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
+import { DataLakeUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Test Map View in Data Explorer', () => {
     beforeEach('Setup Test', () => {

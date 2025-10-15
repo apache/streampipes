@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Test Deletion of Data View and Dashboard', () => {
     beforeEach('Setup Test', () => {

@@ -23,7 +23,7 @@ import { PipelineElementBuilder } from '../../support/builder/PipelineElementBui
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
 describe('Test Edit Adapter and Pipeline', () => {

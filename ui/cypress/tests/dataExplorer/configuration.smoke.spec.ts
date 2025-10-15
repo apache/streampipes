@@ -17,7 +17,7 @@
  */
 
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Test Truncate data in datalake', () => {
     beforeEach('Setup Test', () => {

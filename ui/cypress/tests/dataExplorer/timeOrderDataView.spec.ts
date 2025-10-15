@@ -16,8 +16,8 @@
  *
  */
 
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
-import { DataLakeBtns } from '../../support/utils/datalake/DataLakeBtns';
+import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataLakeBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 import { DataExplorerWidget } from '../../support/model/DataExplorerWidget';
 
 describe('Test Time Order in Data Explorer', () => {

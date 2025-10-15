@@ -16,7 +16,7 @@
  *
  */
 
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import {
     subDays,
     subHours,

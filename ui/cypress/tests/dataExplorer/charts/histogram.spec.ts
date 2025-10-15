@@ -16,9 +16,9 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
+import { DataLakeUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 
-describe('Test Indicator View in Data Explorer', () => {
+describe('Test Histogram View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
         DataLakeUtils.initDataLakeTests();
     });
@@ -27,13 +27,13 @@ describe('Test Indicator View in Data Explorer', () => {
         DataLakeUtils.addDataViewAndWidget(
             'view',
             'Persist',
-            'indicator-chart',
+            'histogram-chart',
         );
 
-        // Check checkbox
+        // Change field for histogram
         DataLakeUtils.openVisualizationConfig();
-        cy.dataCy('data-explorer-select-delta-checkbox').click();
 
-        cy.dataCy('indicator-chart').should('be.visible');
+        // Check if histogram chart is displayed
+        cy.dataCy('histogram-chart').should('be.visible');
     });
 });

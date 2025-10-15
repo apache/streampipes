@@ -17,8 +17,8 @@
  */
 
 import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
-import { DataLakeWidgetTableUtils } from '../../support/utils/datalake/DataLakeWidgetTableUtils';
+import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataLakeWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 
 describe('Test Table View in Data Explorer', () => {
     beforeEach('Setup Test', () => {

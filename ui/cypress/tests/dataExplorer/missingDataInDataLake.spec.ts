@@ -16,9 +16,9 @@
  *
  */
 
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
-import { DataLakeWidgetTableUtils } from '../../support/utils/datalake/DataLakeWidgetTableUtils';
+import { DataLakeWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 
 describe('Test missing properties in data lake', () => {
     const dataViewName = 'TestView';

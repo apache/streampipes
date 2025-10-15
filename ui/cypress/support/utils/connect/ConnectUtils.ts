@@ -19,7 +19,7 @@
 import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
-import { DataLakeUtils } from '../datalake/DataLakeUtils';
+import { DataLakeUtils } from '../dataExplorer/DataExplorerUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { UserUtils } from '../UserUtils';
