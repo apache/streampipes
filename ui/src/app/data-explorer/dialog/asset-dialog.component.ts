@@ -50,8 +50,6 @@ export class AssetDialogComponent {
         public dialogRef: MatDialogRef<AssetDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
     ) {
-        console.log(this.data.dataInput.elementId);
-        console.log(this.data);
         if (this.data.editMode) {
             this.addToAssets = true;
         }
@@ -71,8 +69,6 @@ export class AssetDialogComponent {
 
     saveToAssets(): void {
         let linkageData: LinkageData[];
-        console.log('saveToAsset ', this.data.dataInput);
-        console.log('Edit', this.data.editMode);
         try {
             linkageData = this.createLinkageData();
 
