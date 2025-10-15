@@ -16,29 +16,17 @@
  *
  */
 
-package org.apache.streampipes.model.datalake;
-public class RetentionExportConfig {
-    
-    private ExportConfig exportConfig; 
-    private String exportProviderId;
+package org.apache.streampipes.model.configuration;
 
-    public RetentionExportConfig(ExportConfig exportConfig, String exportProviderId) {
-        this.exportConfig = exportConfig;
-        this.exportProviderId = exportProviderId;
-    }
+import java.util.List;
 
-    public ExportConfig getExportConfig() {
-        return exportConfig;
-    }
+public class DefaultExportProviderConfig {
 
-    public void setExportConfig(ExportConfig exportConfig) {
-        this.exportConfig = exportConfig;
-    }
-    public String getExportProviderId() {
-        return exportProviderId;
-    }
+public List<ExportProviderSettings> make() {
 
-    public void setExportProviderId(String exportProviderId) {
-        this.exportProviderId = exportProviderId;
-    }
+    var defaultSettings = new ExportProviderSettings(
+       ProviderType.FOLDER, "FOLDER", "", "", "", "", "US_EAST_1");
+
+    return List.of(defaultSettings);
+  }
 }

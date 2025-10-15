@@ -163,12 +163,16 @@ export class DatalakeRestService {
 
     cleanup(index: string, config: any) {
         const url = `${this.dataLakeUrl}/${index}/cleanup`;
-
         const request = new HttpRequest('POST', url, config, {
             headers: new HttpHeaders({ 'Content-Type': 'application/json' }), // optional if already handled globally
         });
 
         return this.http.request(request);
+    }
+
+    deleteCleanup(index: string) {
+        const url = `${this.dataLakeUrl}/${index}/cleanup`;
+        return this.http.delete(url);
     }
 
     buildDownloadRequest(index: string, queryParams: any) {
