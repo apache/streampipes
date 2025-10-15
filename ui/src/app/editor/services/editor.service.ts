@@ -200,10 +200,6 @@ export class EditorService {
             );
     }
 
-    deletePipelinePreviewRequest(previewId: string): Observable<any> {
-        return this.http.delete(this.pipelinePreviewBasePath + '/' + previewId);
-    }
-
     getPipelinePreviewResult(previewId: string): Observable<HttpEvent<string>> {
         return this.http.get(`${this.pipelinePreviewBasePath}/${previewId}`, {
             responseType: 'text',

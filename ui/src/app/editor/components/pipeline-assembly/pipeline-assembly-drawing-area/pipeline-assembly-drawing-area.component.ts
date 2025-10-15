@@ -22,6 +22,7 @@ import {
     EventEmitter,
     Input,
     NgZone,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
@@ -52,7 +53,7 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./pipeline-assembly-drawing-area.component.scss'],
     standalone: false,
 })
-export class PipelineAssemblyDrawingAreaComponent implements OnInit {
+export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     @Input()
     jsplumbBridge: JsplumbBridge;
 
@@ -107,6 +108,10 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit {
                 this.pipelineCanvasMetadata,
             );
         }
+    }
+
+    ngOnDestroy(): void {
+        this.pipelinePreviewSub?.unsubscribe();
     }
 
     isPipelineAssemblyEmpty() {
@@ -167,21 +172,14 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit {
                         });
                 });
         } else {
-            this.deletePipelineElementPreview(false);
+            this.deletePipelineElementPreview();
         }
     }
 
-    deletePipelineElementPreview(resume: boolean) {
+    deletePipelineElementPreview() {
         if (this.previewModeActive) {
             this.pipelinePreviewSub?.unsubscribe();
-            this.editorService
-                .deletePipelinePreviewRequest(this.pipelinePreview.previewId)
-                .subscribe(() => {
-                    this.previewModeActive = false;
-                    if (resume) {
-                        this.togglePipelineElementLivePreview();
-                    }
-                });
+            this.previewModeActive = false;
         }
     }
 
