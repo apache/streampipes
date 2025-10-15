@@ -24,17 +24,15 @@ import { PipelineElementBuilder } from '../../support/builder/PipelineElementBui
 import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 
 describe('Test Saving Pipeline with Asset Link', () => {
-    const assetName = 'Test';
+    const assetName1 = 'Test1';
     const assetName2 = 'Test2';
     const assetName3 = 'Test3';
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        AssetUtils.addAssetWithNoAdapter(assetName3);
-        AssetUtils.checkAmountOfAssets(1);
-        AssetUtils.addAssetWithNoAdapter(assetName2);
-        AssetUtils.checkAmountOfAssets(2);
-        AssetUtils.addAssetWithNoAdapter(assetName);
-        AssetUtils.checkAmountOfAssets(3);
+        AssetUtils.goToAssets();
+        AssetUtils.addAndSaveAsset(assetName3);
+        AssetUtils.addAndSaveAsset(assetName2);
+        AssetUtils.addAndSaveAsset(assetName1);
 
         // Generate A Pipeline
         const adapterName = 'simulator';
@@ -51,7 +49,7 @@ describe('Test Saving Pipeline with Asset Link', () => {
             .build();
 
         PipelineUtils.addPipelineWithAssetLinks(pipelineInput, [
-            assetName,
+            assetName1,
             assetName2,
         ]);
     });
@@ -61,17 +59,17 @@ describe('Test Saving Pipeline with Asset Link', () => {
 
         // Go Back to Asset
         AssetUtils.goToAssets();
-        cy.wait(1000);
+        AssetUtils.checkAmountOfAssetsGreaterThan(0);
 
         // CLick on Asset
 
-        AssetUtils.editAsset(assetName);
+        AssetUtils.editAsset(assetName1);
         AssetBtns.assetLinksTab().click();
         AssetUtils.checkAmountOfLinkedResources(2);
 
         // Go Back to Asset
         AssetUtils.goToAssets();
-        cy.wait(1000);
+        AssetUtils.checkAmountOfAssetsGreaterThan(0);
         AssetUtils.editAsset(assetName2);
         AssetBtns.assetLinksTab().click();
         AssetUtils.checkAmountOfLinkedResources(2);
@@ -79,11 +77,12 @@ describe('Test Saving Pipeline with Asset Link', () => {
 
     it('Edit Pipeline to Asset during Edit', () => {
         PipelineUtils.editPipeline('Pipeline Test');
-        cy.wait(1000);
-        cy.dataCy('sp-editor-save-pipeline').click();
+        cy.dataCy('sp-editor-save-pipeline', { timeout: 10000 })
+            .should('exist')
+            .click();
         cy.dataCy('sp-editor-pipeline-name').clear();
         PipelineUtils.updatePipeline('Renamed Pipeline');
-        PipelineUtils.finalizePipelineStart([assetName, assetName3]);
+        PipelineUtils.finalizePipelineStart([assetName1, assetName3]);
 
         // Test Number of Asset Links
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);

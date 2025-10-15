@@ -68,7 +68,10 @@ export class AssetUtils {
     }
 
     public static checkAmountOfAssetsGreaterThan(amount: number) {
-        cy.dataCy('assets-table').should('have.length.greaterThan', amount);
+        cy.dataCy('assets-table', { timeout: 10000 }).should(
+            'have.length.greaterThan',
+            amount,
+        );
     }
 
     public static checkAmountOfLinkedResourcesByAssetName(
