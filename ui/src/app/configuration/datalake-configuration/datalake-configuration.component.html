@@ -279,6 +279,203 @@
                     <h5>{{ '(no stored measurements)' | translate }}</h5>
                 }
             </sp-split-section>
+            <sp-split-section
+                [title]="'Export Providers' | translate"
+                [subtitle]="
+                    'Add, Edit, and Delete export providers used for backing up data lakes.'
+                        | translate
+                "
+            >
+                <div fxFlex="100" fxLayout="column">
+                    <div fxFlex="100" fxLayout="row">
+                        <div
+                            fxFlex
+                            fxLayoutAlign="start center"
+                            class="subsection-title"
+                        >
+                            {{ 'Existing Export Providers' | translate }}
+                        </div>
+
+                        <div fxLayout="row" fxLayoutAlign="end center">
+                            <button
+                                color="accent"
+                                mat-icon-button
+                                matTooltip="{{
+                                    'New Export Provider' | translate
+                                }}"
+                                data-cy="new-export-providers"
+                                (click)="createExportProvider(null)"
+                            >
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+
+                        <div fxLayout="row" fxLayoutAlign="end center">
+                            <button
+                                color="accent"
+                                mat-icon-button
+                                matTooltip="{{ 'Refresh' | translate }}"
+                                data-cy="refresh-export-providers-measures"
+                                (click)="loadAvailableExportProvider()"
+                            >
+                                <mat-icon>refresh</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <table
+                        fxFlex="100"
+                        mat-table
+                        data-cy="exportproviders-settings"
+                        [dataSource]="dataSourceExport"
+                        style="width: 100%"
+                        matSort
+                    >
+                        <ng-container matColumnDef="providertype">
+                            <th
+                                mat-header-cell
+                                mat-sort-header
+                                *matHeaderCellDef
+                            >
+                                {{ 'Provider Type' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let configurationEntry">
+                                <h4 style="margin-bottom: 0px">
+                                    {{ configurationEntry.providerType }}
+                                </h4>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="endpoint">
+                            <th
+                                mat-header-cell
+                                mat-sort-header
+                                *matHeaderCellDef
+                            >
+                                {{ 'Endpoint' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let configurationEntry">
+                                {{ configurationEntry.endPoint }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="bucket">
+                            <th
+                                mat-header-cell
+                                mat-sort-header
+                                *matHeaderCellDef
+                            >
+                                {{ 'Bucket' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let configurationEntry">
+                                {{ configurationEntry.bucketName }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="editExportProvider">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'Edit' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let configurationEntry">
+                                <div
+                                    *ngIf="
+                                        configurationEntry.providerId !==
+                                        'FOLDER'
+                                    "
+                                >
+                                    <div fxLayout="row">
+                                        <span
+                                            fxFlex
+                                            fxFlexOrder="3"
+                                            fxLayout="row"
+                                            fxLayoutAlign="start center"
+                                        >
+                                            <button
+                                                color="accent"
+                                                mat-icon-button
+                                                matTooltip="{{
+                                                    'Edit Export Provider'
+                                                        | translate
+                                                }}"
+                                                matTooltipPosition="above"
+                                                data-cy="exportProvider-edit-btn"
+                                                (click)="
+                                                    createExportProvider(
+                                                        configurationEntry
+                                                    )
+                                                "
+                                            >
+                                                <i class="material-icons"
+                                                    >edit</i
+                                                >
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="delete">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'Remove' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let configurationEntry">
+                                <div
+                                    *ngIf="
+                                        configurationEntry.providerId !==
+                                        'FOLDER'
+                                    "
+                                >
+                                    <div fxLayout="row">
+                                        <span
+                                            fxFlex
+                                            fxFlexOrder="3"
+                                            fxLayout="row"
+                                            fxLayoutAlign="start center"
+                                        >
+                                            <button
+                                                color="accent"
+                                                mat-icon-button
+                                                matTooltip="{{
+                                                    'Remove export provider configuration'
+                                                        | translate
+                                                }}"
+                                                data-cy="exportProvider-delete-btn"
+                                                matTooltipPosition="above"
+                                                (click)="
+                                                    deleteExportProvider(
+                                                        configurationEntry.providerId
+                                                    )
+                                                "
+                                            >
+                                                <i class="material-icons"
+                                                    >delete</i
+                                                >
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr
+                            mat-header-row
+                            *matHeaderRowDef="displayedColumnsExport"
+                        ></tr>
+                        <tr
+                            mat-row
+                            *matRowDef="
+                                let row;
+                                columns: displayedColumnsExport
+                            "
+                        ></tr>
+                    </table>
+                </div>
+
+                <div *ngIf="availableExportProvider.length === 0">
+                    <h5>{{ 'no stored export providers' | translate }}</h5>
+                </div>
+            </sp-split-section>
         </div>
     </div>
 </sp-basic-nav-tabs>
