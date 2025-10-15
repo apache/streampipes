@@ -16,9 +16,21 @@
  *
  */
 
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Inject,
+    Input,
+    Output,
+} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SpAssetTreeNode } from '@streampipes/platform-services';
+import {
+    DataExplorerWidgetModel,
+    LinkageData,
+    SpAssetTreeNode,
+} from '@streampipes/platform-services';
+import { AssetSaveService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-asset-dialog',
@@ -26,17 +38,25 @@ import { SpAssetTreeNode } from '@streampipes/platform-services';
     standalone: false,
 })
 export class AssetDialogComponent {
-    addToAssets: boolean = false;
-    @Input()
-    selectedAssets: SpAssetTreeNode[];
-    @Input()
-    deselectedAssets: SpAssetTreeNode[];
-    @Input()
-    originalAssets: SpAssetTreeNode[];
+    private assetSaveService = inject(AssetSaveService);
 
-    @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
-    @Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
-    @Output() originalAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    //addToAssets: boolean = false;
+    //@Input()
+    selectedAssets: SpAssetTreeNode[];
+    //@Input()
+    deselectedAssets: SpAssetTreeNode[];
+    //@Input()
+    originalAssets: SpAssetTreeNode[];
+    @Input()
+    isEdit: boolean;
+    //@Input()
+    //dataInput: DataExplorerWidgetModel
+
+    addToAssets = false;
+
+    //@Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    //@Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    //@Output() originalAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
 
     constructor(
         public dialogRef: MatDialogRef<AssetDialogComponent>,
@@ -45,17 +65,57 @@ export class AssetDialogComponent {
 
     onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.selectedAssets = updatedAssets;
-        this.selectedAssetsChange.emit(this.selectedAssets);
+        //this.selectedAssetsChange.emit(this.selectedAssets);
     }
 
     onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.deselectedAssets = updatedAssets;
-        this.deselectedAssetsChange.emit(this.deselectedAssets);
+        //this.deselectedAssetsChange.emit(this.deselectedAssets);
     }
 
     onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
         this.originalAssets = updatedAssets;
-        this.originalAssetsChange.emit(this.originalAssets);
+        //this.originalAssetsChange.emit(this.originalAssets);
+    }
+
+    saveToAssets(): void {
+        let linkageData: LinkageData[];
+        console.log('saveToAsset ', this.data.dataInput);
+        try {
+            //if (!this.editMode) {
+            //TODO
+            //    const adapter = await this.getAdapter();
+            //    linkageData = this.createLinkageData(adapter);
+
+            //      if (this.saveInDataLake) {
+            //          await this.addDataLakeLinkageData(adapter, linkageData);
+            //     }
+            //} else {
+            linkageData = this.createLinkageData();
+            //}
+
+            this.saveAssets(linkageData);
+        } catch (err) {
+            console.error('Error in addToAsset:', err);
+        }
+    }
+    private createLinkageData(): LinkageData[] {
+        return [
+            {
+                type: 'chart',
+                id: this.data.dataInput.elementId,
+                name: this.data.dataInput.elementId,
+            },
+        ];
+    }
+
+    private async saveAssets(linkageData: LinkageData[]): Promise<void> {
+        await this.assetSaveService.saveSelectedAssets(
+            this.selectedAssets,
+            linkageData,
+            this.deselectedAssets,
+            this.originalAssets,
+        );
     }
 
     onCancel(): void {
