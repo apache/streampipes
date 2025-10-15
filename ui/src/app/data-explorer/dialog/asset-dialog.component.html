@@ -51,7 +51,7 @@
                 mat-button
                 (click)="onCancel()"
                 *ngIf="data.confirmAndCancel"
-                data-cy="cancel-delete"
+                data-cy="asset-dialog-cancel-delete"
             >
                 {{ data.cancelTitle }}
             </button>
@@ -60,7 +60,7 @@
                 color="accent"
                 (click)="saveToAssets()"
                 cdkFocusInitial
-                data-cy="confirm-delete"
+                data-cy="asset-dialog-confirm-delete"
             >
                 {{ data.okTitle }}
             </button>
