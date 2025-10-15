@@ -53,6 +53,7 @@ describe('Creates a new adapter with a linked asset', () => {
         // Go Back to Asset
         AssetUtils.goToAssets();
         // CLick on Asset
+        cy.wait(400);
 
         AssetUtils.editAsset(assetName);
         AssetBtns.assetLinksTab().click();
@@ -69,7 +70,9 @@ describe('Creates a new adapter with a linked asset', () => {
         ]);
 
         //Check if Added Correctly
+        cy.wait(400);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName, 2);
+        cy.wait(400);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
 
         //Edit
@@ -101,7 +104,9 @@ describe('Creates a new adapter with a linked asset', () => {
         ConnectUtils.closeAdapterPreview();
 
         // Test Number of Asset Links
+        cy.wait(400);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
+        cy.wait(400);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 2);
 
         // Test Renaming

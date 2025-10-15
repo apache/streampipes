@@ -64,7 +64,9 @@ export class AssetUtils {
         amount: number,
     ) {
         AssetUtils.goToAssets();
+        cy.wait(400);
         AssetUtils.editAsset(assetName);
+        cy.wait(400);
         AssetBtns.assetLinksTab().click();
         AssetUtils.checkAmountOfLinkedResources(amount);
     }
