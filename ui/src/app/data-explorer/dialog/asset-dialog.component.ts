@@ -40,23 +40,13 @@ import { AssetSaveService } from '@streampipes/shared-ui';
 export class AssetDialogComponent {
     private assetSaveService = inject(AssetSaveService);
 
-    //addToAssets: boolean = false;
-    //@Input()
     selectedAssets: SpAssetTreeNode[];
-    //@Input()
     deselectedAssets: SpAssetTreeNode[];
-    //@Input()
     originalAssets: SpAssetTreeNode[];
     @Input()
     isEdit: boolean;
-    //@Input()
-    //dataInput: DataExplorerWidgetModel
 
     addToAssets = false;
-
-    //@Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
-    //@Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
-    //@Output() originalAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
 
     constructor(
         public dialogRef: MatDialogRef<AssetDialogComponent>,
@@ -65,17 +55,14 @@ export class AssetDialogComponent {
 
     onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.selectedAssets = updatedAssets;
-        //this.selectedAssetsChange.emit(this.selectedAssets);
     }
 
     onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.deselectedAssets = updatedAssets;
-        //this.deselectedAssetsChange.emit(this.deselectedAssets);
     }
 
     onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
         this.originalAssets = updatedAssets;
-        //this.originalAssetsChange.emit(this.originalAssets);
     }
 
     saveToAssets(): void {
