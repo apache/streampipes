@@ -61,6 +61,8 @@ describe('Test Saving Pipeline with Asset Link', () => {
 
         // Go Back to Asset
         AssetUtils.goToAssets();
+        cy.wait(1000);
+
         // CLick on Asset
 
         AssetUtils.editAsset(assetName);
@@ -69,7 +71,7 @@ describe('Test Saving Pipeline with Asset Link', () => {
 
         // Go Back to Asset
         AssetUtils.goToAssets();
-
+        cy.wait(1000);
         AssetUtils.editAsset(assetName2);
         AssetBtns.assetLinksTab().click();
         AssetUtils.checkAmountOfLinkedResources(2);

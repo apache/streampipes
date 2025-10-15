@@ -23,6 +23,7 @@ import { GeneralUtils } from '../GeneralUtils';
 export class AssetUtils {
     public static goToAssets() {
         cy.visit('#/assets/overview');
+        cy.dataCy('create-new-asset-button').should('be.visible');
     }
 
     public static goBackToOverview() {
