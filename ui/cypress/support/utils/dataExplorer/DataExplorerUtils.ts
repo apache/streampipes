@@ -190,6 +190,9 @@ export class DataLakeUtils {
         cy.dataCy('save-data-view-btn', { timeout: 10000 }).click({
             force: true,
         });
+        cy.dataCy('asset-dialog-cancel-delete', { timeout: 10000 }).click({
+            force: true,
+        });
     }
 
     public static saveDashboardConfiguration() {
