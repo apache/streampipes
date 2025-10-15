@@ -136,6 +136,13 @@ export class DataLakeUtils {
             DataExplorerWidget.TIME_SERIES,
         );
     }
+    public static renameWidget(newName: string) {
+        cy.dataCy('appearance-config-widget-title').clear().type(newName);
+        cy.dataCy('appearance-config-widget-title').should(
+            'have.value',
+            newName,
+        );
+    }
 
     public static loadRandomDataSetIntoDataLake() {
         PrepareTestDataUtils.loadDataIntoDataLake('fileTest/random.csv');
