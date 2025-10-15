@@ -46,10 +46,28 @@ describe('Creates a new adapter with a linked asset', () => {
         DataLakeUtils.addToAsset([assetName1, assetName2]);
     });
 
-    it('Add Assets during Chart generation', () => {
+    /**it('Add Assets during Chart generation', () => {
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+    });*/
+
+    it('Edit Assets during Chart generation', () => {
+        //Test
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+
+        // Go To Chart and Edit
+        DataLakeUtils.goToDatalake();
+        DataLakeUtils.editDataView('NewWidget');
+        //TODO Rename
+
+        DataLakeUtils.saveToAddAssets();
+        DataLakeUtils.addToAsset([assetName1, assetName3]);
+
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);
+        //TODO Test Rename
     });
 
     /**it('Add Assets during Adapter generation', () => {
