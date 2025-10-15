@@ -23,6 +23,7 @@ import {
     ChartService,
     DatalakeRestService,
     ExportProviderSettings,
+    ExportProviderService,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -38,7 +39,6 @@ import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/de
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/data-retention-dialog.component';
-import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
 import { ExportProviderComponent } from '../dialog/export-provider-dialog/export-provider-dialog.component';
 import { DeleteExportProviderComponent } from '../dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
