@@ -133,6 +133,7 @@ export class AssetLinkConfigurationComponent implements OnInit {
             next: assets => {
                 this.assetsData = this.mapAssets(assets);
                 this.dataSource.data = this.assetsData;
+                console.log('Service', this.isEdit);
                 if (this.isEdit) {
                     this.setSelect();
                 }
@@ -141,6 +142,7 @@ export class AssetLinkConfigurationComponent implements OnInit {
     }
 
     private setSelect() {
+        console.log('ITEM ID ', this.itemId);
         if (!this.itemId) {
             return;
         }

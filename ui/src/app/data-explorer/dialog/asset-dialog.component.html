@@ -30,8 +30,8 @@
             @if (addToAssets) {
                 <div class="mt-10">
                     <sp-asset-link-configuration
-                        [isEdit]="true"
-                        [itemId]=""
+                        [isEdit]="data.editMode"
+                        [itemId]="data.dataInput.elementId"
                         (selectedAssetsChange)="onSelectedAssetsChange($event)"
                         (deselectedAssetsChange)="
                             onDeselectedAssetsChange($event)

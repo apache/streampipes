@@ -43,15 +43,19 @@ export class AssetDialogComponent {
     selectedAssets: SpAssetTreeNode[];
     deselectedAssets: SpAssetTreeNode[];
     originalAssets: SpAssetTreeNode[];
-    @Input()
-    isEdit: boolean;
 
     addToAssets = false;
 
     constructor(
         public dialogRef: MatDialogRef<AssetDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-    ) {}
+    ) {
+        console.log(this.data.dataInput.elementId);
+        console.log(this.data);
+        if (this.data.editMode) {
+            this.addToAssets = true;
+        }
+    }
 
     onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
         this.selectedAssets = updatedAssets;
@@ -68,18 +72,9 @@ export class AssetDialogComponent {
     saveToAssets(): void {
         let linkageData: LinkageData[];
         console.log('saveToAsset ', this.data.dataInput);
+        console.log('Edit', this.data.editMode);
         try {
-            //if (!this.editMode) {
-            //TODO
-            //    const adapter = await this.getAdapter();
-            //    linkageData = this.createLinkageData(adapter);
-
-            //      if (this.saveInDataLake) {
-            //          await this.addDataLakeLinkageData(adapter, linkageData);
-            //     }
-            //} else {
             linkageData = this.createLinkageData();
-            //}
 
             this.saveAssets(linkageData);
         } catch (err) {
