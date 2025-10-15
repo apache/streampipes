@@ -183,10 +183,6 @@ export class DataExplorerChartViewComponent
                 ? this.dataViewService.updateChart(this.dataView)
                 : this.dataViewService.saveChart(this.dataView);
         observable.subscribe(data => {
-            //TODO Open Dialog !
-            console.log('data', data);
-            console.log(this.editMode);
-            //console.log('dataview', this.dataView)
             const dialogRef = this.dialog.open(AssetDialogComponent, {
                 width: '500px',
                 data: {
@@ -203,7 +199,6 @@ export class DataExplorerChartViewComponent
                     dataInput: data,
                 },
             });
-            //TODO How to close this ?
             this.routingService.navigateToDataViewOverview(true);
         });
     }

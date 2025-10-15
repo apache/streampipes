@@ -82,7 +82,7 @@ export class AssetDialogComponent {
             {
                 type: 'chart',
                 id: this.data.dataInput.elementId,
-                name: this.data.dataInput.elementId,
+                name: this.data.dataInput.baseAppearanceConfig.widgetTitle,
             },
         ];
     }
@@ -94,13 +94,10 @@ export class AssetDialogComponent {
             this.deselectedAssets,
             this.originalAssets,
         );
+        this.dialogRef.close(true);
     }
 
     onCancel(): void {
         this.dialogRef.close();
-    }
-
-    onOk(): void {
-        this.dialogRef.close(true);
     }
 }
