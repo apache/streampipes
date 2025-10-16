@@ -52,6 +52,7 @@ describe('Creates a new adapter with a linked asset', () => {
 
         DataExplorerUtils.saveToAddAssets();
         DataExplorerUtils.addToAsset([assetName1, assetName3]);
+        DataExplorerUtils.saveAssetLinkFromChart();
 
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);

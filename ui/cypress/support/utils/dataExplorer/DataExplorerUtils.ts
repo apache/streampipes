@@ -282,10 +282,12 @@ export class DataExplorerUtils {
                 .contains(assetName)
                 .click();
         });
+    }
 
-        // cy.dataCy('asset-dialog-confirm-delete', { timeout: 10000 }).click({
-        //     force: true,
-        //});
+    public static saveAssetLinkFromChart() {
+        cy.dataCy('asset-dialog-confirm-delete', { timeout: 10000 }).click({
+            force: true,
+        });
     }
 
     public static deleteDashboard(dashboardName: string) {
@@ -663,5 +665,6 @@ export class DataExplorerUtils {
         //Save
         DataExplorerUtils.saveToAddAssets();
         DataExplorerUtils.addToAsset(assetNames);
+        DataExplorerUtils.saveAssetLinkFromChart();
     }
 }
