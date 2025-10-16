@@ -20,7 +20,7 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
-import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { DataLakeBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 
 describe('Test Edit Adapter', () => {
@@ -98,13 +98,13 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.storeAndStartEditedAdapter();
 
         // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
-        DataLakeUtils.goToDatalakeConfiguration();
+        DataExplorerUtils.goToDatalakeConfiguration();
 
-        DataLakeUtils.waitForCountingResults();
+        DataExplorerUtils.waitForCountingResults();
 
         let initialValue;
 
-        DataLakeUtils.getDatalakeNumberOfEvents().then(value => {
+        DataExplorerUtils.getDatalakeNumberOfEvents().then(value => {
             initialValue = value;
         });
 
@@ -112,9 +112,9 @@ describe('Test Edit Adapter', () => {
 
         DataLakeBtns.refreshDataLakeMeasures().click();
 
-        DataLakeUtils.waitForCountingResults();
+        DataExplorerUtils.waitForCountingResults();
 
-        DataLakeUtils.getDatalakeNumberOfEvents().then(newValue => {
+        DataExplorerUtils.getDatalakeNumberOfEvents().then(newValue => {
             expect(newValue).not.equal(initialValue);
         });
     });

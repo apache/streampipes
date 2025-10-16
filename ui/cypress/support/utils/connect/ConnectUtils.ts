@@ -19,7 +19,7 @@
 import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
-import { DataLakeUtils } from '../dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../dataExplorer/DataExplorerUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { UserUtils } from '../UserUtils';
@@ -492,7 +492,7 @@ export class ConnectUtils {
         // Wait till data is stored
         cy.wait(waitTime);
 
-        DataLakeUtils.checkResults(
+        DataExplorerUtils.checkResults(
             'Adapter to test rules',
             expectedFile,
             ignoreTime,
