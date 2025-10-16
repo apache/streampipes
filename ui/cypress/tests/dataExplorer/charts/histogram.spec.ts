@@ -16,22 +16,22 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Test Histogram View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        DataLakeUtils.initDataLakeTests();
+        DataExplorerUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget(
+        DataExplorerUtils.addDataViewAndWidget(
             'view',
             'Persist',
             'histogram-chart',
         );
 
         // Change field for histogram
-        DataLakeUtils.openVisualizationConfig();
+        DataExplorerUtils.openVisualizationConfig();
 
         // Check if histogram chart is displayed
         cy.dataCy('histogram-chart').should('be.visible');

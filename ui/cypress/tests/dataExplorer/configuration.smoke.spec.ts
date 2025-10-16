@@ -17,16 +17,16 @@
  */
 
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
-import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Test Truncate data in datalake', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataLakeUtils.loadRandomDataSetIntoDataLake();
+        DataExplorerUtils.loadRandomDataSetIntoDataLake();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalakeConfiguration();
+        DataExplorerUtils.goToDatalakeConfiguration();
 
         // Check if amount of events is correct
         cy.dataCy('datalake-number-of-events', { timeout: 10000 })
@@ -52,12 +52,12 @@ describe('Test Truncate data in datalake', () => {
 describe('Delete data in datalake', () => {
     before('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataLakeUtils.loadRandomDataSetIntoDataLake();
+        DataExplorerUtils.loadRandomDataSetIntoDataLake();
         PipelineUtils.deletePipeline('Persist prepared_data');
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalakeConfiguration();
+        DataExplorerUtils.goToDatalakeConfiguration();
 
         // Check if amount of events is correct
         cy.dataCy('datalake-number-of-events', { timeout: 10000 })

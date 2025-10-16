@@ -17,7 +17,7 @@
  */
 
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
-import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Creates a new adapter with a linked asset', () => {
     const assetName1 = 'TestAsset1';
@@ -30,34 +30,28 @@ describe('Creates a new adapter with a linked asset', () => {
         AssetUtils.addAndSaveAsset(assetName3);
         AssetUtils.addAndSaveAsset(assetName2);
         AssetUtils.addAndSaveAsset(assetName1);
-        //Generated Data ?
-        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
-
-        // Create Diagram
-        DataLakeUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
-        //Save
-        DataLakeUtils.saveToAddAssets();
-        DataLakeUtils.addToAsset([assetName1, assetName2]);
     });
 
     it('Add Assets during Chart generation', () => {
+        DataExplorerUtils.createDataViewWithAssets([assetName1, assetName2]);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
     });
 
     it('Edit Assets during Chart generation', () => {
+        DataExplorerUtils.createDataViewWithAssets([assetName1, assetName2]);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
 
         // Go To Chart and Edit
-        DataLakeUtils.goToDatalake();
-        DataLakeUtils.editDataView('NewWidget');
-        DataLakeUtils.renameWidget('Rename');
+        DataExplorerUtils.goToDatalake();
+        DataExplorerUtils.editDataView('NewWidget');
+        DataExplorerUtils.renameWidget('Rename');
 
-        DataLakeUtils.saveToAddAssets();
-        DataLakeUtils.addToAsset([assetName1, assetName3]);
+        DataExplorerUtils.saveToAddAssets();
+        DataExplorerUtils.addToAsset([assetName1, assetName3]);
 
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);

@@ -16,8 +16,8 @@
  *
  */
 
-import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataLakeWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
@@ -46,46 +46,46 @@ describe('Validate that filter works for numerical dimension property', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalake();
-        DataLakeUtils.createAndEditDataView();
+        DataExplorerUtils.goToDatalake();
+        DataExplorerUtils.createAndEditDataView();
 
         // create table widget and select time range
         const startDate = new Date(1737029442000);
         const endDate = new Date(1742220659000);
 
-        DataLakeUtils.clickOrderBy('descending');
+        DataExplorerUtils.clickOrderBy('descending');
 
-        DataLakeUtils.openVisualizationConfig();
-        DataLakeUtils.selectVisualizationType(DataExplorerWidget.TABLE);
-        DataLakeUtils.selectTimeRange(startDate, endDate);
+        DataExplorerUtils.openVisualizationConfig();
+        DataExplorerUtils.selectVisualizationType(DataExplorerWidget.TABLE);
+        DataExplorerUtils.selectTimeRange(startDate, endDate);
         cy.wait(1000);
 
         // validate data in table
-        DataLakeWidgetTableUtils.checkAmountOfRows(2);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(2);
 
         // select filter for tag
-        DataLakeUtils.selectDataConfig();
+        DataExplorerUtils.selectDataConfig();
         var filterConfig = new DataLakeFilterConfig('dimensionKey', '1', '=');
-        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataExplorerUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered
-        DataLakeWidgetTableUtils.checkAmountOfRows(1);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(1);
 
         // remove filter
-        DataLakeUtils.dataConfigRemoveFilter();
+        DataExplorerUtils.dataConfigRemoveFilter();
 
-        DataLakeUtils.selectDataConfig();
+        DataExplorerUtils.selectDataConfig();
 
         filterConfig = new DataLakeFilterConfig('v1', '20', '=');
-        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataExplorerUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered
-        DataLakeWidgetTableUtils.checkAmountOfRows(1);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(1);
 
         // remove filter
-        DataLakeUtils.dataConfigRemoveFilter();
+        DataExplorerUtils.dataConfigRemoveFilter();
 
         // validate data again
-        DataLakeWidgetTableUtils.checkAmountOfRows(2);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(2);
     });
 });
