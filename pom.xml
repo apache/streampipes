@@ -68,7 +68,7 @@
         <graalvm.js.version>23.0.0</graalvm.js.version>
         <gson.version>2.12.1</gson.version>
         <guava.version>33.4.0-jre</guava.version>
-        <grpc.version>1.59.1</grpc.version>
+        <grpc.version>1.76.0</grpc.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <hadoop.version>3.4.1</hadoop.version>
@@ -118,12 +118,13 @@
         <postgresql.version>42.7.2</postgresql.version>
         <protobuf.version>4.28.2</protobuf.version>
         <pulsar.version>3.2.2</pulsar.version>
-        <parquet.version>1.12.0</parquet.version>
+        <parquet.version>1.16.0</parquet.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
         <rdf4j.version>3.7.7</rdf4j.version>
         <rendersnake.version>1.9.0</rendersnake.version>
         <rocketmq.version>5.0.2</rocketmq.version>
+        <s3.version>2.25.14</s3.version>
         <siddhi.version>5.1.27</siddhi.version>
         <simple-java-mail.version>8.10.0</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
@@ -448,6 +449,11 @@
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-streaming-java_2.11</artifactId>
                 <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3</artifactId>
+                <version>${s3.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
