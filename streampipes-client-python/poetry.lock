@@ -501,62 +501,65 @@ files = [
 
 [[package]]
 name = "confluent-kafka"
-version = "2.10.0"
+version = "2.12.0"
 description = "Confluent's Python client for Apache Kafka"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
 files = [
-    {file = "confluent_kafka-2.10.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:635c62a51ec31ff82864043120dbc7c61eb62abf4e0682cc6ee8526e9b04e16d"},
-    {file = "confluent_kafka-2.10.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:32f5ea8ecee98d1c1afd523115cbdb719a6f87b852c19b8898fa76db95ec5f4a"},
-    {file = "confluent_kafka-2.10.0-cp310-cp310-manylinux_2_28_aarch64.whl", hash = "sha256:46734d24b0e0c8fd84b05174a7338a71eb3a7d34a494e4c458838f89c537508f"},
-    {file = "confluent_kafka-2.10.0-cp310-cp310-manylinux_2_28_x86_64.whl", hash = "sha256:413d7a3d4caca6b2c28dbe86595ef17af83d679edea403bcb75fd5af3bd5afa7"},
-    {file = "confluent_kafka-2.10.0-cp310-cp310-win_amd64.whl", hash = "sha256:7eead1134e3aae9380bf5c923d93e25052cfca5b6a55bf99d11ebadf3ec6f21e"},
-    {file = "confluent_kafka-2.10.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:1448d6a5e8afd99c81221db2fd7cf33bd2079ce04df8ff5882b208911b0112a7"},
-    {file = "confluent_kafka-2.10.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:965743d6832d3947c29970eeeedcb3728dfe69b5296fd5578fdb18ce39792318"},
-    {file = "confluent_kafka-2.10.0-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:4e4d4350f66eb3c4cd987f603f08974e461ce732dc63741744e09e0b490a3b1d"},
-    {file = "confluent_kafka-2.10.0-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:7eae0c1e49fb42e5085555c4387102034c0fe3194e2572049769ef4c30f733cc"},
-    {file = "confluent_kafka-2.10.0-cp311-cp311-win_amd64.whl", hash = "sha256:82800e5cf27e21a7bbccb5aa6f2d9114ab253364526b08b0b97614369bf95612"},
-    {file = "confluent_kafka-2.10.0-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:2268a607d374325e3a8fc779d8639de4344ce4d1ad2b88e8f9d13d97baae4e71"},
-    {file = "confluent_kafka-2.10.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:a89e9ba5c8e18891b3bbf333001a9e12af43bd5bc3c3353065109582f3f078fc"},
-    {file = "confluent_kafka-2.10.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:7252fee8d7287bae71f1a506967b3782e67ba5b699c4d095d16fabce92a63cfd"},
-    {file = "confluent_kafka-2.10.0-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:ddb9400786eedd8a6c0cbcceaddb8329a2597f4c02dc72389e83859da47d22d6"},
-    {file = "confluent_kafka-2.10.0-cp312-cp312-win_amd64.whl", hash = "sha256:ef5aad8c04c54fe6ef89dc08a4ba24a80be90b05bbbc3348370c1c51222e0a5e"},
-    {file = "confluent_kafka-2.10.0-cp313-cp313-macosx_13_0_arm64.whl", hash = "sha256:10230c3da4cd047cf488cef405f6e209da4e8403c0e52e45b89b1d878420082b"},
-    {file = "confluent_kafka-2.10.0-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:514c4a4dcb522aacdc17fa3e2751ae8670553850c9e22844ac997ec6459b3a48"},
-    {file = "confluent_kafka-2.10.0-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:bf706b1ebb540276791b5c42ac624c93195c34782848b24b2da1467caeef479b"},
-    {file = "confluent_kafka-2.10.0-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:6b8b057d436d82c1b2d819915d03e2b446bfa55403acd440f9222509ba2147de"},
-    {file = "confluent_kafka-2.10.0-cp313-cp313-win_amd64.whl", hash = "sha256:649ccde18b4f2ff509a16093a06ca13629e4f4b3146d4ef5a82805c869cf8cbd"},
-    {file = "confluent_kafka-2.10.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:9a80084018177238dbe0dd6562c46259e1883e2eaf9eef8945bf74f13fc69b5c"},
-    {file = "confluent_kafka-2.10.0-cp37-cp37m-manylinux_2_28_aarch64.whl", hash = "sha256:bba76d0965b31e61c9d7a45831e8f801f089af98a781508b74daeac54268b883"},
-    {file = "confluent_kafka-2.10.0-cp37-cp37m-manylinux_2_28_x86_64.whl", hash = "sha256:e7dd3a0607139ed3de4d3c511861ff8a84af0f04c47acb6c899f033540027c58"},
-    {file = "confluent_kafka-2.10.0-cp37-cp37m-win_amd64.whl", hash = "sha256:13f49fe760ff33c43c852c3e09ef7a914efea9a8a7e553080e13d611cd3eedad"},
-    {file = "confluent_kafka-2.10.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:5784cf3301470ce85a41b5dbcf1b7d4fe0ac31eee120f3c184b18ed79f32dc9f"},
-    {file = "confluent_kafka-2.10.0-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:30d40b0b43f0e15d830b610640eeb625ebd49cc792254fcdcd5ae7396d91004d"},
-    {file = "confluent_kafka-2.10.0-cp38-cp38-manylinux_2_28_aarch64.whl", hash = "sha256:5a7a16592ce6c5fffdfec4f587ab887f478e68f70df14484184e4e8ec3a86c90"},
-    {file = "confluent_kafka-2.10.0-cp38-cp38-manylinux_2_28_x86_64.whl", hash = "sha256:b81d70ba4fbb81350daccea9de7d99f190bb02bc4d0dfbb151ce9ddee501e245"},
-    {file = "confluent_kafka-2.10.0-cp38-cp38-win_amd64.whl", hash = "sha256:0fb9ea56dc8d1773678f7ea3c1a1c0f59001502c8ff44df79142ab471915e81e"},
-    {file = "confluent_kafka-2.10.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:3e1915c428c044a5764fdd79cd12e94c961d9e74863ae1440287141173bf3138"},
-    {file = "confluent_kafka-2.10.0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:6b692f7e1af2c2085a342ffb0d1c2d0fd6664b3bff43a3c092c0c4d2c6c8f77b"},
-    {file = "confluent_kafka-2.10.0-cp39-cp39-manylinux_2_28_aarch64.whl", hash = "sha256:d5e841e2e2a75fab254acf806449ce013d4e72470bf0aa7c96469fa9b3829693"},
-    {file = "confluent_kafka-2.10.0-cp39-cp39-manylinux_2_28_x86_64.whl", hash = "sha256:735c560ecb076e33eb5e14741a1cd55023f0cbc156e4d09f8591dcf9e55efc0b"},
-    {file = "confluent_kafka-2.10.0-cp39-cp39-win_amd64.whl", hash = "sha256:84c4e50aaf0a51402810bd82cc3b9601a17c866fb44a1aa310b7686009d06b56"},
-    {file = "confluent_kafka-2.10.0.tar.gz", hash = "sha256:30a346908f3ad49c4bc1cb5557e7a8ce484190f8633aa18f9b87b2620809ac13"},
+    {file = "confluent_kafka-2.12.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:1f083c9edf5a2d7b8bdf3c535f6d614243a242a88a408c6cf1afd72705b0e510"},
+    {file = "confluent_kafka-2.12.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:140400d2a288c03e3948c1ff7cc654a089de195582c3a5e12e2e30306b71dcb6"},
+    {file = "confluent_kafka-2.12.0-cp310-cp310-manylinux_2_28_aarch64.whl", hash = "sha256:ad423a07c642b6a6e0cea832d4ffdd28dea1f9a3700cac17d93b6ed012c3d16b"},
+    {file = "confluent_kafka-2.12.0-cp310-cp310-manylinux_2_28_x86_64.whl", hash = "sha256:f4b20f646c1e3875d964f94c5db3c4b3cf3f8675319dfc9715c11f5dc30e4889"},
+    {file = "confluent_kafka-2.12.0-cp310-cp310-win_amd64.whl", hash = "sha256:dd8362fc6a71b75463d77a68b882f78134d27bae817c51d76afb27cf93f60dc4"},
+    {file = "confluent_kafka-2.12.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:737a08fd5e1e3b73317b6c6ca26c7c54137fa9f734e16a389f2e9f8637b5aaa1"},
+    {file = "confluent_kafka-2.12.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:17d49c465a312f7cbb6b84aff5437f670b0db748660da241a2adf08ee72e86c7"},
+    {file = "confluent_kafka-2.12.0-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:e4d4ee68eb92fce723dc3f79b4bedce552b575cdda9abe0b2adc387542ffb20d"},
+    {file = "confluent_kafka-2.12.0-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:5404760ec45d43257b68acf6e52071aeb9a613957008713e51d166f2e5b07965"},
+    {file = "confluent_kafka-2.12.0-cp311-cp311-win_amd64.whl", hash = "sha256:4b3b8321a7d84e01fae98e9eb982e73d974ba018a2db90c1c8f2a2f68313f865"},
+    {file = "confluent_kafka-2.12.0-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:e41f18fd554c3916c769d0a4137c8b754eb2358101775b08ba79e6d75916c7c5"},
+    {file = "confluent_kafka-2.12.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:71c0893037869ea8164ec62fd42995c93eee9d667eed8ca85ce3a36ab37341a8"},
+    {file = "confluent_kafka-2.12.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:01219f2e93ab25377444721bb8080467d0dae66a584faf4eeadaab842f6a86b5"},
+    {file = "confluent_kafka-2.12.0-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:fb65a64745e5308b7890f8caf26261ea29bae32961412f80ff29bf982a0e35d9"},
+    {file = "confluent_kafka-2.12.0-cp312-cp312-win_amd64.whl", hash = "sha256:5feda9d5e49b571264f4ce50f0b30b0d00b978cedd78fb863bf1defa4c0438dc"},
+    {file = "confluent_kafka-2.12.0-cp313-cp313-macosx_15_0_arm64.whl", hash = "sha256:e950516caef3419a2f1988f539890e3ac4252573dbb6f6dd5e039570ed0f1ccf"},
+    {file = "confluent_kafka-2.12.0-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:5be15a3a933f286bdd90a136c06d2f101e5d328b89add565a00164462e930f0c"},
+    {file = "confluent_kafka-2.12.0-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:5b236849e5f7a35c10b80aa9d6d5e64279af03ef25980b3f19ce2aa8af28902e"},
+    {file = "confluent_kafka-2.12.0-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:1418d0029a171bb47242f9e82ace7c51b1c2f7d690fcb5dc30fa0649c251333e"},
+    {file = "confluent_kafka-2.12.0-cp313-cp313-win_amd64.whl", hash = "sha256:1ad3a90ff25bd6055b87091b4b8528361f8bdce0976417e22047a1c85f709c21"},
+    {file = "confluent_kafka-2.12.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:1d435845fcbc5285b9d9949d46518f858468ccde1b72524a6606d0f917e88484"},
+    {file = "confluent_kafka-2.12.0-cp37-cp37m-manylinux_2_28_aarch64.whl", hash = "sha256:a664a65580123438cf55b14f24f35c6c72f4f590cec308003f62aa666f4e045d"},
+    {file = "confluent_kafka-2.12.0-cp37-cp37m-manylinux_2_28_x86_64.whl", hash = "sha256:2a418b37e7b03d4cdae5b90a8749213a971a5bcc2f6ec43f04cddaeaff9a1449"},
+    {file = "confluent_kafka-2.12.0-cp37-cp37m-win_amd64.whl", hash = "sha256:c61b414332e5c8ce1bf66cc9be0e33ae54830b045d9db5470b521deca1d0dabe"},
+    {file = "confluent_kafka-2.12.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:13293b3ccc0716757d48cbd186046e1abb95121687753565c26a65db899cd704"},
+    {file = "confluent_kafka-2.12.0-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:dafdc2f355ad213e3083876f4b509e4301501a450b0f05cbb559fbd60df09168"},
+    {file = "confluent_kafka-2.12.0-cp38-cp38-manylinux_2_28_aarch64.whl", hash = "sha256:9e5cc6981e6bc3b3970b8cbe95cbf9714e2eee7a228518b606a8c1206be3263d"},
+    {file = "confluent_kafka-2.12.0-cp38-cp38-manylinux_2_28_x86_64.whl", hash = "sha256:8d66097e6eff51f2aeb9e1a607b76024cb640e69ef5a9d72440b7fffb6f9f3db"},
+    {file = "confluent_kafka-2.12.0-cp38-cp38-win_amd64.whl", hash = "sha256:ef9474a190e47ad98dd489de55a038862f7b574952a64df763bb11d84d3c6242"},
+    {file = "confluent_kafka-2.12.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:ec8fe2e8da08a1ccd870a23ed0ab7144ff628334af9569eeb07bb59b9163f2be"},
+    {file = "confluent_kafka-2.12.0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:cafb88bf09c5e1153131b674169afe337b40f6f11c74a1f928acb98b61a035fa"},
+    {file = "confluent_kafka-2.12.0-cp39-cp39-manylinux_2_28_aarch64.whl", hash = "sha256:7bab42020e8aac3cd5097cd6bb7bbe368fb1c333e219a5b3a2ce74d98eb5e74a"},
+    {file = "confluent_kafka-2.12.0-cp39-cp39-manylinux_2_28_x86_64.whl", hash = "sha256:3cf1c4f385388716324917202469cf23bf1cdc5e726e39fc47f4f996c34b2464"},
+    {file = "confluent_kafka-2.12.0-cp39-cp39-win_amd64.whl", hash = "sha256:91ea4a61e81cb58ae5b40baa1e1c9d8afbaf7d4492fc056c914118d8d7606d40"},
+    {file = "confluent_kafka-2.12.0.tar.gz", hash = "sha256:2a8d8734c6eaf30a751dde2ad75fc78b35aad60d66a3a7aa837c7513f36c29b7"},
 ]
 
+[package.dependencies]
+tomli = {version = "*", markers = "python_version < \"3.13\""}
+
 [package.extras]
-all = ["attrs", "attrs", "authlib", "avro (>=1.11.1,<2)", "avro (>=1.11.1,<2)", "azure-identity", "azure-identity", "azure-keyvault-keys", "azure-keyvault-keys", "boto3", "boto3 (>=1.35)", "cachetools", "cachetools", "cel-python (>=0.1.5)", "cel-python (>=0.1.5)", "confluent-kafka", "fastapi", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "flake8", "google-api-core", "google-api-core", "google-auth", "google-auth", "google-cloud-kms", "google-cloud-kms", "googleapis-common-protos", "googleapis-common-protos", "hkdf (==0.0.3)", "hkdf (==0.0.3)", "httpx", "httpx (>=0.26)", "hvac", "hvac", "jsonata-python", "jsonata-python", "jsonschema", "jsonschema", "opentelemetry-distro", "opentelemetry-exporter-otlp", "orjson", "protobuf", "protobuf", "psutil", "pydantic", "pyrsistent", "pyrsistent", "pytest", "pytest-timeout", "pytest_cov", "pyyaml (>=6.0.0)", "pyyaml (>=6.0.0)", "requests", "requests", "requests-mock", "respx", "six", "sphinx", "sphinx-rtd-theme", "tink", "tink", "urllib3 (<2) ; python_version <= \"3.7\"", "urllib3 (<3) ; python_version > \"3.7\"", "uvicorn"]
-avro = ["attrs", "authlib", "avro (>=1.11.1,<2)", "cachetools", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "httpx (>=0.26)", "requests"]
-dev = ["attrs", "attrs", "authlib", "avro (>=1.11.1,<2)", "avro (>=1.11.1,<2)", "azure-identity", "azure-identity", "azure-keyvault-keys", "azure-keyvault-keys", "boto3", "boto3 (>=1.35)", "cachetools", "cachetools", "cel-python (>=0.1.5)", "cel-python (>=0.1.5)", "confluent-kafka", "fastapi", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "flake8", "google-api-core", "google-api-core", "google-auth", "google-auth", "google-cloud-kms", "google-cloud-kms", "googleapis-common-protos", "googleapis-common-protos", "hkdf (==0.0.3)", "hkdf (==0.0.3)", "httpx", "httpx (>=0.26)", "hvac", "hvac", "jsonata-python", "jsonata-python", "jsonschema", "jsonschema", "orjson", "protobuf", "protobuf", "pydantic", "pyrsistent", "pyrsistent", "pytest", "pytest-timeout", "pytest_cov", "pyyaml (>=6.0.0)", "pyyaml (>=6.0.0)", "requests", "requests", "requests-mock", "respx", "six", "sphinx", "sphinx-rtd-theme", "tink", "tink", "urllib3 (<2) ; python_version <= \"3.7\"", "urllib3 (<3) ; python_version > \"3.7\"", "uvicorn"]
-docs = ["attrs", "authlib", "avro (>=1.11.1,<2)", "azure-identity", "azure-keyvault-keys", "boto3 (>=1.35)", "cachetools", "cel-python (>=0.1.5)", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "google-api-core", "google-auth", "google-cloud-kms", "googleapis-common-protos", "hkdf (==0.0.3)", "httpx (>=0.26)", "hvac", "jsonata-python", "jsonschema", "protobuf", "pyrsistent", "pyyaml (>=6.0.0)", "requests", "sphinx", "sphinx-rtd-theme", "tink"]
-examples = ["attrs", "avro (>=1.11.1,<2)", "azure-identity", "azure-keyvault-keys", "boto3", "cachetools", "cel-python (>=0.1.5)", "confluent-kafka", "fastapi", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "google-api-core", "google-auth", "google-cloud-kms", "googleapis-common-protos", "hkdf (==0.0.3)", "httpx", "hvac", "jsonata-python", "jsonschema", "protobuf", "pydantic", "pyrsistent", "pyyaml (>=6.0.0)", "requests", "six", "tink", "uvicorn"]
-json = ["attrs", "authlib", "cachetools", "httpx (>=0.26)", "jsonschema", "pyrsistent"]
-protobuf = ["attrs", "authlib", "cachetools", "googleapis-common-protos", "httpx (>=0.26)", "protobuf"]
-rules = ["attrs", "authlib", "azure-identity", "azure-keyvault-keys", "boto3 (>=1.35)", "cachetools", "cel-python (>=0.1.5)", "google-api-core", "google-auth", "google-cloud-kms", "hkdf (==0.0.3)", "httpx (>=0.26)", "hvac", "jsonata-python", "pyyaml (>=6.0.0)", "tink"]
-schema-registry = ["attrs", "authlib", "cachetools", "httpx (>=0.26)"]
-schemaregistry = ["attrs", "authlib", "cachetools", "httpx (>=0.26)"]
+all = ["async-timeout", "attrs", "attrs (>=21.2.0)", "authlib (>=1.0.0)", "authlib (>=1.0.0)", "avro (>=1.11.1,<2)", "avro (>=1.11.1,<2)", "azure-identity", "azure-identity", "azure-keyvault-keys", "azure-keyvault-keys", "boto3", "boto3 (>=1.35)", "cachetools", "cachetools (>=5.5.0)", "cel-python (>=0.4.0)", "cel-python (>=0.4.0)", "certifi", "confluent-kafka", "fastapi", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "flake8", "google-api-core", "google-api-core", "google-auth", "google-auth", "google-cloud-kms", "google-cloud-kms", "googleapis-common-protos", "googleapis-common-protos", "hkdf (==0.0.3)", "hkdf (==0.0.3)", "httpx (>=0.26)", "httpx (>=0.26)", "hvac", "hvac", "jsonata-python", "jsonata-python", "jsonschema", "jsonschema", "opentelemetry-distro", "opentelemetry-exporter-otlp", "orjson", "orjson (>=3.10)", "orjson (>=3.10)", "pandoc", "pluggy (<1.6.0)", "protobuf", "protobuf", "psutil", "pydantic", "pyrsistent", "pyrsistent", "pytest", "pytest-asyncio", "pytest-timeout", "pytest_cov", "pyyaml (>=6.0.0)", "pyyaml (>=6.0.0)", "requests", "requests", "requests-mock", "respx", "six", "sphinx", "sphinx-rtd-theme", "tink", "tink", "tomli ; python_version < \"3.13\"", "urllib3 (<3)", "uvicorn"]
+avro = ["attrs (>=21.2.0)", "authlib (>=1.0.0)", "avro (>=1.11.1,<2)", "cachetools (>=5.5.0)", "certifi", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "httpx (>=0.26)", "requests"]
+dev = ["async-timeout", "attrs", "attrs (>=21.2.0)", "authlib (>=1.0.0)", "authlib (>=1.0.0)", "avro (>=1.11.1,<2)", "avro (>=1.11.1,<2)", "azure-identity", "azure-identity", "azure-keyvault-keys", "azure-keyvault-keys", "boto3", "boto3 (>=1.35)", "cachetools", "cachetools (>=5.5.0)", "cel-python (>=0.4.0)", "cel-python (>=0.4.0)", "certifi", "confluent-kafka", "fastapi", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "flake8", "google-api-core", "google-api-core", "google-auth", "google-auth", "google-cloud-kms", "google-cloud-kms", "googleapis-common-protos", "googleapis-common-protos", "hkdf (==0.0.3)", "hkdf (==0.0.3)", "httpx (>=0.26)", "httpx (>=0.26)", "hvac", "hvac", "jsonata-python", "jsonata-python", "jsonschema", "jsonschema", "orjson", "orjson (>=3.10)", "orjson (>=3.10)", "pandoc", "pluggy (<1.6.0)", "protobuf", "protobuf", "pydantic", "pyrsistent", "pyrsistent", "pytest", "pytest-asyncio", "pytest-timeout", "pytest_cov", "pyyaml (>=6.0.0)", "pyyaml (>=6.0.0)", "requests", "requests", "requests-mock", "respx", "six", "sphinx", "sphinx-rtd-theme", "tink", "tink", "tomli ; python_version < \"3.13\"", "urllib3 (<3)", "uvicorn"]
+docs = ["attrs (>=21.2.0)", "authlib (>=1.0.0)", "avro (>=1.11.1,<2)", "azure-identity", "azure-keyvault-keys", "boto3 (>=1.35)", "cachetools (>=5.5.0)", "cel-python (>=0.4.0)", "certifi", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "google-api-core", "google-auth", "google-cloud-kms", "googleapis-common-protos", "hkdf (==0.0.3)", "httpx (>=0.26)", "hvac", "jsonata-python", "jsonschema", "orjson (>=3.10)", "pandoc", "protobuf", "pyrsistent", "pyyaml (>=6.0.0)", "requests", "sphinx", "sphinx-rtd-theme", "tink", "tomli ; python_version < \"3.13\""]
+examples = ["attrs", "authlib (>=1.0.0)", "avro (>=1.11.1,<2)", "azure-identity", "azure-keyvault-keys", "boto3", "cachetools", "cel-python (>=0.4.0)", "confluent-kafka", "fastapi", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "google-api-core", "google-auth", "google-cloud-kms", "googleapis-common-protos", "hkdf (==0.0.3)", "httpx (>=0.26)", "hvac", "jsonata-python", "jsonschema", "orjson (>=3.10)", "protobuf", "pydantic", "pyrsistent", "pyyaml (>=6.0.0)", "requests", "six", "tink", "uvicorn"]
+json = ["attrs (>=21.2.0)", "authlib (>=1.0.0)", "cachetools (>=5.5.0)", "certifi", "httpx (>=0.26)", "jsonschema", "orjson (>=3.10)", "pyrsistent"]
+protobuf = ["attrs (>=21.2.0)", "authlib (>=1.0.0)", "cachetools (>=5.5.0)", "certifi", "googleapis-common-protos", "httpx (>=0.26)", "protobuf"]
+rules = ["attrs (>=21.2.0)", "authlib (>=1.0.0)", "azure-identity", "azure-keyvault-keys", "boto3 (>=1.35)", "cachetools (>=5.5.0)", "cel-python (>=0.4.0)", "certifi", "google-api-core", "google-auth", "google-cloud-kms", "hkdf (==0.0.3)", "httpx (>=0.26)", "hvac", "jsonata-python", "pyyaml (>=6.0.0)", "tink"]
+schema-registry = ["attrs (>=21.2.0)", "authlib (>=1.0.0)", "cachetools (>=5.5.0)", "certifi", "httpx (>=0.26)"]
+schemaregistry = ["attrs (>=21.2.0)", "authlib (>=1.0.0)", "cachetools (>=5.5.0)", "certifi", "httpx (>=0.26)"]
 soaktest = ["opentelemetry-distro", "opentelemetry-exporter-otlp", "psutil"]
-tests = ["attrs", "authlib", "avro (>=1.11.1,<2)", "azure-identity", "azure-keyvault-keys", "boto3 (>=1.35)", "cachetools", "cel-python (>=0.1.5)", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "flake8", "google-api-core", "google-auth", "google-cloud-kms", "googleapis-common-protos", "hkdf (==0.0.3)", "httpx (>=0.26)", "hvac", "jsonata-python", "jsonschema", "orjson", "protobuf", "pyrsistent", "pytest", "pytest-timeout", "pytest_cov", "pyyaml (>=6.0.0)", "requests", "requests-mock", "respx", "tink", "urllib3 (<2) ; python_version <= \"3.7\"", "urllib3 (<3) ; python_version > \"3.7\""]
+tests = ["async-timeout", "attrs (>=21.2.0)", "authlib (>=1.0.0)", "avro (>=1.11.1,<2)", "azure-identity", "azure-keyvault-keys", "boto3 (>=1.35)", "cachetools (>=5.5.0)", "cel-python (>=0.4.0)", "certifi", "fastavro (<1.8.0) ; python_version == \"3.7\"", "fastavro (<2) ; python_version > \"3.7\"", "flake8", "google-api-core", "google-auth", "google-cloud-kms", "googleapis-common-protos", "hkdf (==0.0.3)", "httpx (>=0.26)", "hvac", "jsonata-python", "jsonschema", "orjson", "orjson (>=3.10)", "pluggy (<1.6.0)", "protobuf", "pyrsistent", "pytest", "pytest-asyncio", "pytest-timeout", "pytest_cov", "pyyaml (>=6.0.0)", "requests", "requests-mock", "respx", "tink", "urllib3 (<3)"]
 
 [[package]]
 name = "coverage"
@@ -3563,8 +3566,7 @@ version = "2.2.1"
 description = "A lil' TOML parser"
 optional = false
 python-versions = ">=3.8"
-groups = ["dev", "docs"]
-markers = "python_version == \"3.10\""
+groups = ["main", "dev", "docs"]
 files = [
     {file = "tomli-2.2.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:678e4fa69e4575eb77d103de3df8a895e1591b48e740211bd1067378c69e8249"},
     {file = "tomli-2.2.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:023aa114dd824ade0100497eb2318602af309e5a55595f76b626d6d9f3b7b0a6"},
@@ -3599,6 +3601,7 @@ files = [
     {file = "tomli-2.2.1-py3-none-any.whl", hash = "sha256:cb55c73c5f4408779d0cf3eef9f762b9c9f147a77de7b258bef0a5628adc85cc"},
     {file = "tomli-2.2.1.tar.gz", hash = "sha256:cd45e1dc79c835ce60f7404ec8119f2eb06d38b1deba146f07ced3bbc44505ff"},
 ]
+markers = {main = "python_version <= \"3.12\"", dev = "python_version == \"3.10\"", docs = "python_version == \"3.10\""}
 
 [[package]]
 name = "tornado"
@@ -3606,7 +3609,7 @@ version = "6.5"
 description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
 optional = false
 python-versions = ">=3.9"
-groups = ["dev", "docs"]
+groups = ["docs"]
 files = [
     {file = "tornado-6.5-cp39-abi3-macosx_10_9_universal2.whl", hash = "sha256:f81067dad2e4443b015368b24e802d0083fecada4f0a4572fdb72fc06e54a9a6"},
     {file = "tornado-6.5-cp39-abi3-macosx_10_9_x86_64.whl", hash = "sha256:9ac1cbe1db860b3cbb251e795c701c41d343f06a96049d6274e7c77559117e41"},
