@@ -109,6 +109,7 @@
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
+    
       <!-- Test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

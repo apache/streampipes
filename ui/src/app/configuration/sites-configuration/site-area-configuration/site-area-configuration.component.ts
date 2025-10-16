@@ -26,6 +26,7 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { ManageSiteDialogComponent } from '../../dialog/manage-site/manage-site-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-site-area-configuration',
@@ -44,6 +45,7 @@ export class SiteAreaConfigurationComponent implements OnInit {
     constructor(
         private genericStorageService: GenericStorageService,
         private dialogService: DialogService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit() {
@@ -72,7 +74,7 @@ export class SiteAreaConfigurationComponent implements OnInit {
     openManageSitesDialog(site: AssetSiteDesc): void {
         const dialogRef = this.dialogService.open(ManageSiteDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Manage site',
+            title: this.translateService.instant('Manage site'),
             width: '50vw',
             data: {
                 site,

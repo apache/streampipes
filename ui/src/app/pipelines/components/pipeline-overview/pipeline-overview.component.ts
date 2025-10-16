@@ -53,7 +53,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         'start',
         'name',
         'lastModified',
-        'action',
+        'actions',
     ];
 
     dataSource: MatTableDataSource<Pipeline>;

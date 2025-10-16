@@ -24,7 +24,8 @@
             color="accent"
             (click)="createRole()"
         >
-            <i class="material-icons">add</i><span>&nbsp;New Role</span>
+            <i class="material-icons">add</i
+            ><span>&nbsp;{{ 'New Role' | translate }}</span>
         </button>
     </div>
     <div fxFlex="100" fxLayout="column">
@@ -37,7 +38,7 @@
         >
             <ng-container matColumnDef="roleName">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    Role name
+                    {{ 'Role name' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let role">
                     <b>{{ role.label }}</b>
@@ -45,7 +46,9 @@
             </ng-container>
 
             <ng-container matColumnDef="roleType">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>Type</th>
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{ 'Type' | translate }}
+                </th>
                 <td
                     mat-cell
                     *matCellDef="let role"
@@ -54,14 +57,14 @@
                     <sp-label
                         *ngIf="role.defaultRole"
                         size="small"
-                        labelText="Default Role"
+                        [labelText]="'Default Role' | translate"
                     ></sp-label>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="edit">
                 <th mat-header-cell *matHeaderCellDef class="text-right">
-                    Actions
+                    {{ 'Actions' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let role">
                     <div fxLayout="row">
@@ -75,26 +78,26 @@
                                 <button
                                     color="accent"
                                     mat-flat-button
-                                    matTooltip="Edit user"
+                                    [matTooltip]="'Edit user' | translate"
                                     matTooltipPosition="above"
                                     data-cy="role-edit-btn"
                                     (click)="editRole(role)"
                                 >
                                     <i class="material-icons">edit</i>
-                                    <span>&nbsp;Edit</span>
+                                    <span>&nbsp;{{ 'Edit' | translate }}</span>
                                 </button>
                             </div>
                             <button
                                 class="btn-warn"
                                 mat-flat-button
-                                matTooltip="Delete service"
+                                [matTooltip]="'Delete service' | translate"
                                 matTooltipPosition="above"
                                 data-cy="role-delete-btn"
                                 [disabled]="role.defaultRole"
                                 (click)="deleteRole(role)"
                             >
                                 <i class="material-icons">delete</i>
-                                <span>&nbsp;Delete</span>
+                                <span>&nbsp;{{ 'Delete' | translate }}</span>
                             </button>
                         </span>
                     </div>

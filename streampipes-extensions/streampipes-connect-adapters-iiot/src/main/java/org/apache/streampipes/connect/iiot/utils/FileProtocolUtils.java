@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.iiot.utils;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
@@ -86,7 +87,12 @@ public class FileProtocolUtils {
   }
 
   private static String makeServiceStorageDir() {
-    return System.getProperty("user.home")
+    var storageDir = Environments
+        .getEnvironment()
+        .getExtAssetBaseDir()
+        .getValueOrReturn(System.getProperty("user.home"));
+
+    return storageDir
         + File.separator
         + ".streampipes"
         + File.separator

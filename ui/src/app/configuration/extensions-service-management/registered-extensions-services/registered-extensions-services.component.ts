@@ -23,6 +23,7 @@ import { SpServiceRegistration } from '@streampipes/platform-services';
 import { ConfigurationService } from '../../shared/configuration.service';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpExtensionsServiceDetailsDialogComponent } from '../../dialog/extensions-service-details/extensions-service-details-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-registered-extensions-services',
@@ -38,6 +39,7 @@ export class SpRegisteredExtensionsServiceComponent {
     constructor(
         private configurationService: ConfigurationService,
         private dialogService: DialogService,
+        private translateService: TranslateService,
     ) {
         this.getRegisteredServices();
     }
@@ -53,7 +55,7 @@ export class SpRegisteredExtensionsServiceComponent {
     openServiceDetails(serviceReg: SpServiceRegistration) {
         this.dialogService.open(SpExtensionsServiceDetailsDialogComponent, {
             panelType: PanelType.STANDARD_PANEL,
-            title: 'Service details',
+            title: this.translateService.instant('Service details'),
             width: '70vw',
             data: {
                 serviceReg,

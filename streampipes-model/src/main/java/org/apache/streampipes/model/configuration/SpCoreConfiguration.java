@@ -20,6 +20,8 @@ package org.apache.streampipes.model.configuration;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class SpCoreConfiguration {
 
   public static final String ID = "core";
@@ -39,6 +41,8 @@ public class SpCoreConfiguration {
 
   private String assetDir;
   private String filesDir;
+
+  private List<ExportProviderSettings> exportProviderSettings;
 
   public SpCoreConfiguration() {
     this.locationConfig = new LocationConfig(false, "", "");
@@ -138,5 +142,13 @@ public class SpCoreConfiguration {
 
   public void setLocationConfig(LocationConfig locationConfig) {
     this.locationConfig = locationConfig;
+  }
+
+  public List<ExportProviderSettings> getExportProviderSettings() {
+    return exportProviderSettings;
+  }
+
+  public void setExportProviderSettings(List<ExportProviderSettings> exportProviderSettings) {
+    this.exportProviderSettings = exportProviderSettings;
   }
 }

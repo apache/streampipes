@@ -54,6 +54,7 @@ export * from './lib/components/pipeline-element-documentation/pipeline-element-
 export * from './lib/components/pipeline-element/pipeline-element.component';
 export * from './lib/components/input-schema-panel/input-schema-panel.component';
 export * from './lib/components/sidebar-resize/sidebar-resize.component';
+export * from './lib/components/asset-link-configuration/asset-link-configuration.component';
 
 export * from './lib/models/sp-navigation.model';
 
@@ -66,3 +67,4 @@ export * from './lib/services/time-selection.service';
 export * from './lib/components/asset-browser/asset-browser.service';
 export * from './lib/services/date-format.service';
 export * from './lib/services/pipeline-element-schema.service';
+export * from './lib/services/asset-configuration.service';

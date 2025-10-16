@@ -17,31 +17,37 @@
  */
 package org.apache.streampipes.service.core.scheduler;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.ExportProviderFactory;
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.IObjectStorage;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
+import org.apache.streampipes.model.configuration.ExportProviderSettings;
+import org.apache.streampipes.model.configuration.ProviderType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.ExportProviderSettings;
 import org.apache.streampipes.model.datalake.RetentionAction;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
-public class DataLakeScheduler {
+@Configuration
+public class DataLakeScheduler implements SchedulingConfigurer {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataLakeScheduler.class);
 
@@ -60,16 +66,18 @@ public class DataLakeScheduler {
         }
 
         var outputFormat = OutputFormat
-                .fromString(dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().format());
+                .fromString(dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
 
         Map<String, String> params = new HashMap<>();
 
-        params.put("delimiter", dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().csvDelimiter());
-        params.put("format", dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().format());
+        params.put("delimiter",
+                dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().csvDelimiter());
+        params.put("format", dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
         params.put("headerColumnName",
-                dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().headerColumnName());
+                dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().headerColumnName());
         params.put("missingValueBehaviour",
-                dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour());
+                dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig()
+                        .missingValueBehaviour());
         params.put("endDate", Long.toString(endDate));
 
         ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(dataLakeMeasure.getMeasureName(), params);
@@ -77,23 +85,60 @@ public class DataLakeScheduler {
                 sanitizedParams,
                 outputFormat,
                 "ignore".equals(
-                        dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().missingValueBehaviour()),
+                        dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig()
+                                .missingValueBehaviour()),
                 output);
+
+        String exportProviderId = dataLakeMeasure.getRetentionTime().getRetentionExportConfig()
+                .getExportProviderId();
+        // FInd Item in Document
+
+        List<ExportProviderSettings> exportProviders = StorageDispatcher.INSTANCE
+                .getNoSqlStore()
+                .getSpCoreConfigurationStorage()
+                .get()
+                .getExportProviderSettings();
+
+        ExportProviderSettings exportProviderSetting = null;
+
+        for (int i = 0; i < exportProviders.size(); i++) {
+            ExportProviderSettings existing = exportProviders.get(i);
+            if (existing != null && existing.getProviderId().equals(exportProviderId)) {
+                exportProviderSetting = existing;
+            }
+        }
+
+        if (exportProviderSetting == null) {
+            LOG.error("The desired export provider was not found. No export has been done.");
+            return;
+        }
+
+        ProviderType providerType = exportProviderSetting.getProviderType();
+
+        LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
+
         try {
-            ExportProviderSettings exportProviderSettings = dataLakeMeasure.getRetentionTime().exportConfig()
-                    .exportProviderSettings();
-
-            String providerType = exportProviderSettings.providerType();
-
-            LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
 
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
-                    providerType, dataLakeMeasure.getMeasureName(), exportProviderSettings,
-                    dataLakeMeasure.getRetentionTime().exportConfig().exportConfig().format());
+                    providerType, dataLakeMeasure.getMeasureName(), exportProviderSetting,
+                    dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
             exportProvider.store(streamingOutput);
 
+        } catch (IllegalArgumentException e) {
+
+            LOG.error("Export provider could not be created. Unsupported provider type: {}. Error: {}", providerType,
+                    e.getMessage(), e);
+        } catch (IOException e) {
+
+            LOG.error("I/O error occurred while trying to store data. Provider Type: {}. Error: {}", providerType,
+                    e.getMessage(), e);
+        } catch (RuntimeException e) {
+            LOG.error("Runtime exception occurred while attempting to store data. Provider Type: {}. Error: {}",
+                    providerType, e.getMessage(), e);
         } catch (Exception e) {
-            e.printStackTrace();
+
+            LOG.error("An unexpected error occurred during export. Provider Type: {}. Error: {}", providerType,
+                    e.getMessage(), e);
         }
     }
 
@@ -117,8 +162,6 @@ public class DataLakeScheduler {
         return result;
     }
 
-    @Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (6) 00:01 //@Scheduled(cron = "0 */2 * * *
-                                     // *") //Cron Job in Dev Setting; Running every 2 min
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");
@@ -127,21 +170,36 @@ public class DataLakeScheduler {
             if (dataLakeMeasure.getRetentionTime() != null) {
 
                 var result = getStartAndEndTime(
-                        dataLakeMeasure.getRetentionTime().dataRetentionConfig().olderThanDays());
+                        dataLakeMeasure.getRetentionTime().getDataRetentionConfig().olderThanDays());
                 Instant now = (Instant) result.get("now");
                 long endDate = (Long) result.get("endDate");
 
-                if (dataLakeMeasure.getRetentionTime().dataRetentionConfig().action() != RetentionAction.DELETE) {
+                if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.DELETE) {
                     LOG.info("Start saving Measurement " + dataLakeMeasure.getMeasureName());
                     exportMeasurement(dataLakeMeasure, now, endDate);
                     LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully saved");
                 }
-                if (dataLakeMeasure.getRetentionTime().dataRetentionConfig().action() != RetentionAction.SAVE) {
+                if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.SAVE) {
                     LOG.info("Start delete Measurement " + dataLakeMeasure.getMeasureName());
                     deleteMeasurement(dataLakeMeasure, now, endDate);
                     LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully deleted");
                 }
             }
         }
+    }
+
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+        var env = Environments.getEnvironment(); 
+        taskRegistrar.addTriggerTask(
+
+                this::cleanupMeasurements,
+
+
+                triggerContext -> new CronTrigger(env.getDatalakeSchedulerCron().getValueOrDefault())
+                        .nextExecution(triggerContext)
+
+        );
+
     }
 }

@@ -21,7 +21,7 @@
     <div fxLayout="row" fxLayoutGap="15px">
         <div>
             <mat-form-field class="form-field" fxFlex="100" color="accent">
-                <mat-label>Host</mat-label>
+                <mat-label>{{ 'Host' | translate }}</mat-label>
                 <input
                     matInput
                     [(ngModel)]="host"
@@ -32,7 +32,7 @@
         </div>
         <div>
             <mat-form-field class="form-field" fxFlex="100" color="accent">
-                <mat-label>Port</mat-label>
+                <mat-label>{{ 'Port' | translate }}</mat-label>
                 <input
                     matInput
                     [(ngModel)]="port"

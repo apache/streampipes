@@ -19,6 +19,11 @@
 <sp-table
     [dataSource]="dataSource"
     [columns]="displayedColumns"
+    [showActionsMenu]="true"
+    [rowsClickable]="true"
+    (rowClicked)="
+        pipelineOperationsService.showPipelineDetails($event.elementId)
+    "
     matSort
     data-cy="all-pipelines-table"
 >
@@ -58,7 +63,10 @@
                             class="ml-10"
                             mat-icon-button
                             [disabled]="!hasPipelineWritePrivileges"
-                            (click)="openPipelineNotificationsDialog(pipeline)"
+                            (click)="
+                                openPipelineNotificationsDialog(pipeline);
+                                $event.stopPropagation()
+                            "
                             *ngIf="pipeline.pipelineNotifications.length > 0"
                             matTooltip="{{
                                 pipeline.pipelineNotifications.length
@@ -95,44 +103,50 @@
     <ng-container matColumnDef="start">
         <th mat-header-cell *matHeaderCellDef>{{ 'Start' | translate }}</th>
         <td mat-cell *matCellDef="let pipeline">
-            <button
-                color="accent"
-                mat-icon-button
-                [matTooltip]="'Start pipeline' | translate"
-                matTooltipPosition="above"
-                data-cy="start-pipeline-button"
-                (click)="
-                    pipelineOperationsService.startPipeline(
-                        pipeline._id,
-                        refreshPipelinesEmitter,
-                        toggleRunningOperation
-                    )
-                "
-                [disabled]="
-                    !hasPipelineWritePrivileges || starting || !pipeline.valid
-                "
-                *ngIf="!pipeline.running"
-            >
-                <i class="material-icons">play_arrow</i>
-            </button>
-            <button
-                color="accent"
-                mat-icon-button
-                [matTooltip]="'Stop pipeline' | translate"
-                matTooltipPosition="above"
-                data-cy="stop-pipeline-button"
-                (click)="
-                    pipelineOperationsService.stopPipeline(
-                        pipeline._id,
-                        refreshPipelinesEmitter,
-                        toggleRunningOperation
-                    )
-                "
-                [disabled]="!hasPipelineWritePrivileges || stopping"
-                *ngIf="pipeline.running"
-            >
-                <i class="material-icons">stop</i>
-            </button>
+            <div fxLayoutAlign="start start">
+                <button
+                    color="accent"
+                    mat-icon-button
+                    [matTooltip]="'Start pipeline' | translate"
+                    matTooltipPosition="above"
+                    data-cy="start-pipeline-button"
+                    (click)="
+                        pipelineOperationsService.startPipeline(
+                            pipeline._id,
+                            refreshPipelinesEmitter,
+                            toggleRunningOperation
+                        );
+                        $event.stopPropagation()
+                    "
+                    [disabled]="
+                        !hasPipelineWritePrivileges ||
+                        starting ||
+                        !pipeline.valid
+                    "
+                    *ngIf="!pipeline.running"
+                >
+                    <i class="material-icons">play_arrow</i>
+                </button>
+                <button
+                    color="accent"
+                    mat-icon-button
+                    [matTooltip]="'Stop pipeline' | translate"
+                    matTooltipPosition="above"
+                    data-cy="stop-pipeline-button"
+                    (click)="
+                        pipelineOperationsService.stopPipeline(
+                            pipeline._id,
+                            refreshPipelinesEmitter,
+                            toggleRunningOperation
+                        );
+                        $event.stopPropagation()
+                    "
+                    [disabled]="!hasPipelineWritePrivileges || stopping"
+                    *ngIf="pipeline.running"
+                >
+                    <i class="material-icons">stop</i>
+                </button>
+            </div>
         </td>
     </ng-container>
 
@@ -140,11 +154,9 @@
         <th mat-header-cell mat-sort-header *matHeaderCellDef>
             {{ 'Name' | translate }}
         </th>
-        <td mat-cell *matCellDef="let pipeline">
-            <div>
+        <td mat-cell *matCellDef="let pipeline" class="truncate">
+            <div fxLayout="column" fxLayoutAlign="start start">
                 <b>{{ pipeline.name }}</b>
-            </div>
-            <div>
                 <small> {{ pipeline.description }}</small>
             </div>
         </td>
@@ -159,68 +171,115 @@
         </td>
     </ng-container>
 
-    <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let pipeline">
-            <div fxLayout="row" fxLayoutAlign="end center">
-                <button
-                    mat-icon-button
-                    [matTooltip]="'Show pipeline' | translate"
-                    matTooltipPosition="above"
-                    (click)="
-                        pipelineOperationsService.showPipelineDetails(
-                            pipeline._id
-                        )
-                    "
-                >
-                    <i class="material-icons">search</i>
-                </button>
-                <button
-                    color="accent"
-                    mat-icon-button
-                    [matTooltip]="'Modify pipeline' | translate"
-                    matTooltipPosition="above"
-                    *ngIf="hasPipelineWritePrivileges"
-                    (click)="
-                        pipelineOperationsService.modifyPipeline(pipeline._id)
-                    "
-                    data-cy="modify-pipeline-btn"
-                >
-                    <i class="material-icons">mode_edit</i>
-                </button>
-                <button
-                    color="accent"
-                    mat-icon-button
-                    [matTooltip]="'Permissions' | translate"
-                    matTooltipPosition="above"
-                    *ngIf="isAdmin"
-                    (click)="
-                        pipelineOperationsService.showPermissionsDialog(
-                            pipeline,
-                            refreshPipelinesEmitter
-                        )
-                    "
-                    data-cy="open-manage-permissions"
-                >
-                    <i class="material-icons">share</i>
-                </button>
-                <button
-                    color="accent"
-                    mat-icon-button
-                    [matTooltip]="'Delete pipeline' | translate"
-                    matTooltipPosition="above"
-                    *ngIf="hasPipelineWritePrivileges"
-                    (click)="
-                        pipelineOperationsService.showDeleteDialog(
-                            pipeline,
-                            refreshPipelinesEmitter
-                        )
-                    "
-                    data-cy="delete-pipeline"
-                >
-                    <i class="material-icons">delete</i>
-                </button>
-            </div>
-        </td>
-    </ng-container>
+    <ng-template spTableActions let-element>
+        <button
+            mat-menu-item
+            (click)="pipelineOperationsService.showPipelineDetails(element._id)"
+        >
+            <mat-icon>search</mat-icon>
+            <span>{{ 'Show' | translate }}</span>
+        </button>
+        <button
+            mat-menu-item
+            *ngIf="hasPipelineWritePrivileges"
+            (click)="pipelineOperationsService.modifyPipeline(element._id)"
+            data-cy="modify-pipeline-btn"
+        >
+            <mat-icon>mode_edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+        <button
+            mat-menu-item
+            *ngIf="isAdmin"
+            (click)="
+                pipelineOperationsService.showPermissionsDialog(
+                    element,
+                    refreshPipelinesEmitter
+                )
+            "
+            data-cy="open-manage-permissions"
+        >
+            <mat-icon>share</mat-icon>
+            <span>{{ 'Manage permissions' | translate }}</span>
+        </button>
+        <button
+            mat-menu-item
+            *ngIf="hasPipelineWritePrivileges"
+            (click)="
+                pipelineOperationsService.showDeleteDialog(
+                    element,
+                    refreshPipelinesEmitter
+                )
+            "
+            data-cy="delete-pipeline"
+        >
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </ng-template>
+
+    <!--    <ng-container matColumnDef="action">-->
+    <!--        <th mat-header-cell *matHeaderCellDef></th>-->
+    <!--        <td mat-cell *matCellDef="let pipeline">-->
+    <!--            <div fxLayout="row" fxLayoutAlign="end center">-->
+    <!--                <button-->
+    <!--                    mat-icon-button-->
+    <!--                    [matTooltip]="'Show pipeline' | translate"-->
+    <!--                    matTooltipPosition="above"-->
+    <!--                    (click)="-->
+    <!--                        pipelineOperationsService.showPipelineDetails(-->
+    <!--                            pipeline._id-->
+    <!--                        )-->
+    <!--                    "-->
+    <!--                >-->
+    <!--                    <i class="material-icons">search</i>-->
+    <!--                </button>-->
+    <!--                <button-->
+    <!--                    color="accent"-->
+    <!--                    mat-icon-button-->
+    <!--                    [matTooltip]="'Modify pipeline' | translate"-->
+    <!--                    matTooltipPosition="above"-->
+    <!--                    *ngIf="hasPipelineWritePrivileges"-->
+    <!--                    (click)="-->
+    <!--                        pipelineOperationsService.modifyPipeline(pipeline._id)-->
+    <!--                    "-->
+    <!--                    data-cy="modify-pipeline-btn"-->
+    <!--                >-->
+    <!--                    <i class="material-icons">mode_edit</i>-->
+    <!--                </button>-->
+    <!--                <button-->
+    <!--                    color="accent"-->
+    <!--                    mat-icon-button-->
+    <!--                    [matTooltip]="'Permissions' | translate"-->
+    <!--                    matTooltipPosition="above"-->
+    <!--                    *ngIf="isAdmin"-->
+    <!--                    (click)="-->
+    <!--                        pipelineOperationsService.showPermissionsDialog(-->
+    <!--                            pipeline,-->
+    <!--                            refreshPipelinesEmitter-->
+    <!--                        )-->
+    <!--                    "-->
+    <!--                    data-cy="open-manage-permissions"-->
+    <!--                >-->
+    <!--                    <i class="material-icons">share</i>-->
+    <!--                </button>-->
+    <!--                <button-->
+    <!--                    color="accent"-->
+    <!--                    mat-icon-button-->
+    <!--                    [matTooltip]="'Delete pipeline' | translate"-->
+    <!--                    matTooltipPosition="above"-->
+    <!--                    *ngIf="hasPipelineWritePrivileges"-->
+    <!--                    (click)="-->
+    <!--                        pipelineOperationsService.showDeleteDialog(-->
+    <!--                            pipeline,-->
+    <!--                            refreshPipelinesEmitter-->
+    <!--                        )-->
+    <!--                    "-->
+    <!--                    data-cy="delete-pipeline"-->
+    <!--                >-->
+    <!--                    <i class="material-icons">delete</i>-->
+    <!--                </button>-->
+    <!--            </div>-->
+    <!--        </td>-->
+    <!--    </ng-container>-->
 </sp-table>

@@ -20,43 +20,59 @@
     <div fxLayout="column" class="page-container-padding">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section
-                title="User Accounts"
-                subtitle="Add and edit user accounts"
+                [title]="'User Accounts' | translate"
+                [subtitle]="'Add and edit user accounts' | translate"
             >
-                <div class="subsection-title">Existing user accounts</div>
+                <div class="subsection-title">
+                    {{ 'Existing user accounts' | translate }}
+                </div>
                 <sp-security-user-config></sp-security-user-config>
             </sp-split-section>
         </div>
         <mat-divider></mat-divider>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section
-                title="Service Accounts"
-                subtitle="Add and edit service accounts"
+                [title]="'Service Accounts' | translate"
+                [subtitle]="'Add and edit service accounts' | translate"
             >
-                <div class="subsection-title">Existing service accounts</div>
+                <div class="subsection-title">
+                    {{ 'Existing service accounts' | translate }}
+                </div>
                 <sp-security-service-config></sp-security-service-config>
             </sp-split-section>
         </div>
         <mat-divider></mat-divider>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section title="Groups" subtitle="Manage user groups">
-                <div class="subsection-title">Existing groups</div>
+            <sp-split-section
+                [title]="'Groups' | translate"
+                [subtitle]="'Manage user groups' | translate"
+            >
+                <div class="subsection-title">
+                    {{ 'Existing groups' | translate }}
+                </div>
                 <sp-security-user-group-config></sp-security-user-group-config>
             </sp-split-section>
         </div>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section title="Roles" subtitle="Manage roles">
-                <div class="subsection-title">Existing roles</div>
+            <sp-split-section
+                [title]="'Roles' | translate"
+                [subtitle]="'Manage roles' | translate"
+            >
+                <div class="subsection-title">
+                    {{ 'Existing roles' | translate }}
+                </div>
                 <sp-security-role-config></sp-security-role-config>
             </sp-split-section>
         </div>
         <mat-divider></mat-divider>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section
-                title="Authentication"
-                subtitle="Auth & token settings"
+                [title]="'Authentication' | translate"
+                [subtitle]="'Auth & token settings' | translate"
             >
-                <div class="subsection-title">JWT Signature</div>
+                <div class="subsection-title">
+                    {{ 'JWT Signature' | translate }}
+                </div>
                 <sp-authentication-configuration></sp-authentication-configuration>
             </sp-split-section>
         </div>

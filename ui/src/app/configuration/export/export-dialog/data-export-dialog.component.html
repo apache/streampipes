@@ -25,34 +25,37 @@
             *ngIf="preview && !exportInProgress"
         >
             <div *ngFor="let config of preview.assetExportConfiguration">
-                <h4>Exported items {{ config.assetName }}</h4>
+                <h4>
+                    {{ 'Exported items {{assetName}}' | translate:{ assetName :
+                    config.assetName} }}
+                </h4>
                 <sp-data-export-item
                     [exportItems]="config.adapters"
-                    sectionTitle="Adapters"
+                    [sectionTitle]="'Adapters' | translate"
                 ></sp-data-export-item>
                 <sp-data-export-item
                     [exportItems]="config.dashboards"
-                    sectionTitle="Dashboards"
+                    [sectionTitle]="'Dashboards' | translate"
                 ></sp-data-export-item>
                 <sp-data-export-item
                     [exportItems]="config.dataViews"
-                    sectionTitle="Charts"
+                    [sectionTitle]="'Charts' | translate"
                 ></sp-data-export-item>
                 <sp-data-export-item
                     [exportItems]="config.dataSources"
-                    sectionTitle="Data Streams"
+                    [sectionTitle]="'Data Streams' | translate"
                 ></sp-data-export-item>
                 <sp-data-export-item
                     [exportItems]="config.dataLakeMeasures"
-                    sectionTitle="Data Lake Storage"
+                    [sectionTitle]="'Data Lake Storage' | translate"
                 ></sp-data-export-item>
                 <sp-data-export-item
                     [exportItems]="config.files"
-                    sectionTitle="Files"
+                    [sectionTitle]="'Files' | translate"
                 ></sp-data-export-item>
                 <sp-data-export-item
                     [exportItems]="config.pipelines"
-                    sectionTitle="Pipelines"
+                    [sectionTitle]="'Pipelines' | translate"
                 ></sp-data-export-item>
                 <sp-generic-storage-items
                     [exportItems]="config.genericStorageDocuments"
@@ -68,10 +71,12 @@
             fxLayoutAlign="center center"
         >
             <mat-spinner [diameter]="50" color="accent"></mat-spinner>
-            <h4 class="mt-10">Exporting resources...</h4>
+            <h4 class="mt-10">{{ 'Exporting resources...' | translate }}</h4>
             <h5 class="mt-10">
-                Depending on number and size of exported files, this might take
-                a while...
+                {{
+                    'Depending on number and size of exported files, this might take a while...'
+                        | translate
+                }}
             </h5>
         </div>
     </div>
@@ -88,7 +93,7 @@
                     data-cy="download-export-button"
                 >
                     <i class="material-icons">file_download</i
-                    ><span>&nbsp;Download export</span>
+                    ><span>&nbsp;{{ 'Download export' | translate }}</span>
                 </button>
                 <button
                     mat-button
@@ -96,7 +101,7 @@
                     class="mat-basic"
                     (click)="close()"
                 >
-                    Cancel
+                    {{ 'Cancel' | translate }}
                 </button>
             </div>
         </div>

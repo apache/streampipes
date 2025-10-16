@@ -36,7 +36,9 @@
                 data-cy="connect-create-new-adapter-button"
                 (click)="createNewAdapter()"
             >
-                <i class="material-icons">add</i>&nbsp;New adapter
+                <i class="material-icons">add</i>&nbsp;{{
+                    'New adapter' | translate
+                }}
             </button>
             <button
                 mat-flat-button
@@ -46,7 +48,7 @@
                 (click)="startAllAdapters(true)"
             >
                 <mat-icon>play_arrow</mat-icon>
-                <span>Start all adapters</span>
+                <span>{{ 'Start all adapters' | translate }}</span>
             </button>
             <button
                 mat-flat-button
@@ -56,7 +58,7 @@
                 (click)="startAllAdapters(false)"
             >
                 <mat-icon>stop</mat-icon>
-                <span>Stop all adapters</span>
+                <span>{{ 'Stop all adapters' | translate }}</span>
             </button>
             <div fxFlex fxLayout="row" fxLayoutAlign="end center">
                 <sp-connect-filter-toolbar
@@ -101,12 +103,15 @@
                     fxFlex="100"
                     [columns]="displayedColumns"
                     [dataSource]="dataSource"
+                    [showActionsMenu]="true"
+                    [rowsClickable]="true"
+                    (rowClicked)="navigateToDetailsOverviewPage($event)"
                     data-cy="all-adapters-table"
                     matSort
                 >
                     <ng-container matColumnDef="status">
                         <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                            Status
+                            {{ 'Status' | translate }}
                         </th>
                         <td mat-cell *matCellDef="let adapter">
                             <sp-adapter-status-light
@@ -141,7 +146,10 @@
                                     matTooltip="Start adapter"
                                     matTooltipPosition="above"
                                     data-cy="start-adapter"
-                                    (click)="startAdapter(adapter)"
+                                    (click)="
+                                        startAdapter(adapter);
+                                        $event.stopPropagation()
+                                    "
                                 >
                                     <i class="material-icons">play_arrow</i>
                                 </button>
@@ -152,7 +160,10 @@
                                     matTooltip="Stop adapter"
                                     matTooltipPosition="above"
                                     data-cy="stop-adapter"
-                                    (click)="stopAdapter(adapter)"
+                                    (click)="
+                                        stopAdapter(adapter);
+                                        $event.stopPropagation()
+                                    "
                                 >
                                     <i class="material-icons">stop</i>
                                 </button>
@@ -162,13 +173,15 @@
 
                     <ng-container matColumnDef="name">
                         <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                            Name
+                            {{ 'Name' | translate }}
                         </th>
                         <td mat-cell *matCellDef="let adapter">
-                            <div>
+                            <div
+                                fxLayout="column"
+                                fxLayoutAlign="start start"
+                                class="truncate"
+                            >
                                 <b data-cy="adapter-name">{{ adapter.name }}</b>
-                            </div>
-                            <div>
                                 <small> {{ adapter.description }}</small>
                             </div>
                         </td>
@@ -191,7 +204,9 @@
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="lastModified">
-                        <th mat-header-cell *matHeaderCellDef>Created</th>
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{ 'Created' | translate }}
+                        </th>
                         <td mat-cell *matCellDef="let adapter">
                             <h5>
                                 {{
@@ -207,7 +222,7 @@
                             *matHeaderCellDef
                             matTooltip="Messages sent since last start"
                         >
-                            #Messages
+                            #{{ 'Messages' | translate }}
                         </th>
                         <td mat-cell *matCellDef="let adapter">
                             <sp-label
@@ -221,7 +236,9 @@
                     </ng-container>
 
                     <ng-container matColumnDef="lastMessage">
-                        <th mat-header-cell *matHeaderCellDef>Last message</th>
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{ 'Last message' | translate }}
+                        </th>
                         <td mat-cell *matCellDef="let adapter">
                             <h5>
                                 {{
@@ -237,57 +254,93 @@
                         </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let adapter">
-                            <div fxLayout="row" fxLayoutAlign="end center">
-                                <button
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="Show details"
-                                    matTooltipPosition="above"
-                                    data-cy="details-adapter"
-                                    (click)="
-                                        navigateToDetailsOverviewPage(adapter)
-                                    "
-                                >
-                                    <i class="material-icons">search</i>
-                                </button>
+                    <ng-template spTableActions let-element>
+                        <button
+                            mat-menu-item
+                            data-cy="details-adapter"
+                            (click)="navigateToDetailsOverviewPage(element)"
+                        >
+                            <mat-icon>search</mat-icon>
+                            <span>{{ 'Show' | translate }}</span>
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-cy="edit-adapter"
+                            (click)="editAdapter(element)"
+                        >
+                            <mat-icon>edit</mat-icon>
+                            <span>{{ 'Edit' | translate }}</span>
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-cy="open-manage-permissions"
+                            *ngIf="isAdmin"
+                            (click)="showPermissionsDialog(element)"
+                        >
+                            <mat-icon>share</mat-icon>
+                            <span>{{ 'Manage permissions' | translate }}</span>
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-cy="delete-adapter"
+                            (click)="deleteAdapter(element)"
+                        >
+                            <mat-icon>delete</mat-icon>
+                            <span>{{ 'Delete' | translate }}</span>
+                        </button>
+                    </ng-template>
 
-                                <button
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="Edit adapter"
-                                    data-cy="edit-adapter"
-                                    matTooltipPosition="above"
-                                    (click)="editAdapter(adapter)"
-                                >
-                                    <i class="material-icons">edit</i>
-                                </button>
-                                <button
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="Manage permissions"
-                                    matTooltipPosition="above"
-                                    data-cy="open-manage-permissions"
-                                    *ngIf="isAdmin"
-                                    (click)="showPermissionsDialog(adapter)"
-                                >
-                                    <i class="material-icons">share</i>
-                                </button>
-                                <button
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="Delete adapter"
-                                    data-cy="delete-adapter"
-                                    matTooltipPosition="above"
-                                    (click)="deleteAdapter(adapter)"
-                                >
-                                    <i class="material-icons">delete</i>
-                                </button>
-                            </div>
-                        </td>
-                    </ng-container>
+                    <!--                    <ng-container matColumnDef="action">-->
+                    <!--                        <th mat-header-cell *matHeaderCellDef></th>-->
+                    <!--                        <td mat-cell *matCellDef="let adapter">-->
+                    <!--                            <div fxLayout="row" fxLayoutAlign="end center">-->
+                    <!--                                <button-->
+                    <!--                                    color="accent"-->
+                    <!--                                    mat-icon-button-->
+                    <!--                                    matTooltip="Show details"-->
+                    <!--                                    matTooltipPosition="above"-->
+                    <!--                                    data-cy="details-adapter"-->
+                    <!--                                    (click)="-->
+                    <!--                                        navigateToDetailsOverviewPage(adapter)-->
+                    <!--                                    "-->
+                    <!--                                >-->
+                    <!--                                    <i class="material-icons">search</i>-->
+                    <!--                                </button>-->
+
+                    <!--                                <button-->
+                    <!--                                    color="accent"-->
+                    <!--                                    mat-icon-button-->
+                    <!--                                    matTooltip="Edit adapter"-->
+                    <!--                                    data-cy="edit-adapter"-->
+                    <!--                                    matTooltipPosition="above"-->
+                    <!--                                    (click)="editAdapter(adapter)"-->
+                    <!--                                >-->
+                    <!--                                    <i class="material-icons">edit</i>-->
+                    <!--                                </button>-->
+                    <!--                                <button-->
+                    <!--                                    color="accent"-->
+                    <!--                                    mat-icon-button-->
+                    <!--                                    matTooltip="Manage permissions"-->
+                    <!--                                    matTooltipPosition="above"-->
+                    <!--                                    data-cy="open-manage-permissions"-->
+                    <!--                                    *ngIf="isAdmin"-->
+                    <!--                                    (click)="showPermissionsDialog(adapter)"-->
+                    <!--                                >-->
+                    <!--                                    <i class="material-icons">share</i>-->
+                    <!--                                </button>-->
+                    <!--                                <button-->
+                    <!--                                    color="accent"-->
+                    <!--                                    mat-icon-button-->
+                    <!--                                    matTooltip="Delete adapter"-->
+                    <!--                                    data-cy="delete-adapter"-->
+                    <!--                                    matTooltipPosition="above"-->
+                    <!--                                    (click)="deleteAdapter(adapter)"-->
+                    <!--                                >-->
+                    <!--                                    <i class="material-icons">delete</i>-->
+                    <!--                                </button>-->
+                    <!--                            </div>-->
+                    <!--                        </td>-->
+                    <!--                    </ng-container>-->
                 </sp-table>
             </div>
         </div>

@@ -30,21 +30,13 @@
             (rowClicked)="onRowClicked($event)"
         >
             <ng-container matColumnDef="name">
-                <th
-                    fxFlex="40"
-                    fxLayoutAlign="start center"
-                    mat-header-cell
-                    *matHeaderCellDef
-                >
+                <th mat-header-cell *matHeaderCellDef>
                     {{ 'Dashboards' | translate }}
                 </th>
                 <td
-                    fxFlex="40"
-                    fxLayoutAlign="center start"
                     mat-cell
                     data-cy="dashboard-table-overview"
                     *matCellDef="let element"
-                    fxLayout="column"
                 >
                     <div>
                         <b>{{ element.name }}</b>
@@ -56,19 +48,10 @@
             </ng-container>
 
             <ng-container matColumnDef="lastModified">
-                <th
-                    fxLayoutAlign="start center"
-                    mat-header-cell
-                    *matHeaderCellDef
-                >
+                <th mat-header-cell *matHeaderCellDef>
                     {{ 'Last modified' | translate }}
                 </th>
-                <td
-                    fxLayoutAlign="center start"
-                    mat-cell
-                    *matCellDef="let element"
-                    fxLayout="column"
-                >
+                <td mat-cell *matCellDef="let element">
                     <div *ngIf="element.metadata">
                         {{
                             this.formatDate(
@@ -81,19 +64,10 @@
             </ng-container>
 
             <ng-container matColumnDef="createdAt">
-                <th
-                    fxLayoutAlign="start center"
-                    mat-header-cell
-                    *matHeaderCellDef
-                >
+                <th mat-header-cell *matHeaderCellDef>
                     {{ 'Created' | translate }}
                 </th>
-                <td
-                    fxLayoutAlign="center start"
-                    mat-cell
-                    *matCellDef="let element"
-                    fxLayout="column"
-                >
+                <td mat-cell *matCellDef="let element">
                     <div *ngIf="element.metadata">
                         {{ this.formatDate(element.metadata.createdAtEpochMs) }}
                     </div>

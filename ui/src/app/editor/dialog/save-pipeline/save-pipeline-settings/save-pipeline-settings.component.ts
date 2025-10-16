@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import {
     UntypedFormControl,
@@ -27,6 +34,7 @@ import {
     CompactPipeline,
     Pipeline,
     PipelineService,
+    SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { PipelineStorageOptions } from '../../../model/editor.model';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
@@ -50,12 +58,22 @@ export class SavePipelineSettingsComponent implements OnInit {
     @Input()
     currentPipelineName: string;
 
+    private shepherdService = inject(ShepherdService);
+    private pipelineService = inject(PipelineService);
+
     compactPipeline: CompactPipeline;
 
-    constructor(
-        private shepherdService: ShepherdService,
-        private pipelineService: PipelineService,
-    ) {}
+    addToAssets: boolean = false;
+    @Input()
+    selectedAssets: SpAssetTreeNode[];
+    @Input()
+    deselectedAssets: SpAssetTreeNode[];
+    @Input()
+    originalAssets: SpAssetTreeNode[];
+
+    @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() originalAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
 
     ngOnInit() {
         this.submitPipelineForm.addControl(
@@ -88,6 +106,21 @@ export class SavePipelineSettingsComponent implements OnInit {
         this.pipelineService
             .convertToCompactPipeline(this.pipeline)
             .subscribe(p => (this.compactPipeline = p));
+    }
+
+    onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.selectedAssets = updatedAssets;
+        this.selectedAssetsChange.emit(this.selectedAssets);
+    }
+
+    onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.deselectedAssets = updatedAssets;
+        this.deselectedAssetsChange.emit(this.deselectedAssets);
+    }
+
+    onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
+        this.originalAssets = updatedAssets;
+        this.originalAssetsChange.emit(this.originalAssets);
     }
 
     triggerTutorial() {

@@ -26,6 +26,7 @@ import {
 } from '@streampipes/shared-ui';
 import { EditGroupDialogComponent } from '../edit-group-dialog/edit-group-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-security-user-group-config',
@@ -42,6 +43,7 @@ export class SecurityUserGroupConfigComponent implements OnInit {
         private userGroupService: UserGroupService,
         private dialogService: DialogService,
         private dialog: MatDialog,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -64,10 +66,14 @@ export class SecurityUserGroupConfigComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
-                title: 'Are you sure you want to delete this group?',
-                subtitle: 'This action cannot be reversed!',
-                cancelTitle: 'Cancel',
-                okTitle: 'Delete Group',
+                title: this.translateService.instant(
+                    'Are you sure you want to delete this group?',
+                ),
+                subtitle: this.translateService.instant(
+                    'This action cannot be reversed!',
+                ),
+                cancelTitle: this.translateService.instant('Cancel'),
+                okTitle: this.translateService.instant('Delete Group'),
                 confirmAndCancel: true,
             },
         });
@@ -87,7 +93,11 @@ export class SecurityUserGroupConfigComponent implements OnInit {
     openGroupEditDialog(group: Group, editMode: boolean) {
         const dialogRef = this.dialogService.open(EditGroupDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: editMode ? 'Edit group ' + group.groupName : 'Add group',
+            title: editMode
+                ? this.translateService.instant('Edit group {{groupName}}', {
+                      groupName: group.groupName,
+                  })
+                : this.translateService.instant('Add group'),
             width: '50vw',
             data: {
                 group: group,

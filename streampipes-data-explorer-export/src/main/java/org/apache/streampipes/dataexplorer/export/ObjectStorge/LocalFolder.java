@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.FileOutputStream;
@@ -31,9 +32,11 @@ public class LocalFolder implements IObjectStorage {
 
     private final Path filePath;
 
-    public LocalFolder(String measurementName, String format) throws Exception {
+    public LocalFolder(String measurementName, String format) throws RuntimeException, IOException {
 
-        Files.createDirectories(Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName));
+        var env = Environments.getEnvironment(); 
+
+        Files.createDirectories(Paths.get(env.getRetentionLocalDir().getValueOrDefault() + "/" + measurementName));   
 
         this.filePath = Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName + "/dump_"
                 + Instant.now().toString() + "." + format);

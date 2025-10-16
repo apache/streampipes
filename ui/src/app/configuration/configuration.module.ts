@@ -107,10 +107,12 @@ import { UserAcknowledgmentComponent } from './general-configuration/user-acknow
 import { QuillEditorComponent } from 'ngx-quill';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DataRetentionDialogComponent } from './dialog/data-retention-dialog/data-retention-dialog.component';
+import { ExportProviderComponent } from './dialog/export-provider-dialog/export-provider-dialog.component';
 import { SelectDataComponent } from './dialog/data-retention-dialog/components/select-retention/select-data.component';
 import { SelectDataRetentionComponent } from './dialog/data-retention-dialog/components/select-retention/select-data-retention/select-data-retention.component';
 import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/components/select-retention/select-retention-action/select-retention-action.component';
 import { SelectDataExportComponent } from './dialog/data-retention-dialog/components/select-export/select-format.component';
+import { DeleteExportProviderComponent } from './dialog/delete-export-provider/delete-export-provider-dialog.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -261,6 +263,7 @@ import { SelectDataExportComponent } from './dialog/data-retention-dialog/compon
         SpRegisteredExtensionsServiceComponent,
         SpExtensionsServiceConfigurationComponent,
         DataRetentionDialogComponent,
+        ExportProviderComponent,
         SpExtensionsInstallationComponent,
         SpExtensionsInstallationDialogComponent,
         EndpointItemComponent,
@@ -276,6 +279,7 @@ import { SelectDataExportComponent } from './dialog/data-retention-dialog/compon
         SelectDataRetentionComponent,
         SelectRetentionActionComponent,
         SelectDataExportComponent,
+        DeleteExportProviderComponent,
     ],
     providers: [
         OrderByPipe,

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl;
+package org.apache.streampipes.rest.impl.runtime;
 
 import org.apache.streampipes.manager.preview.PipelinePreview;
 import org.apache.streampipes.manager.runtime.DataStreamRuntimeInfoProvider;
@@ -27,7 +27,6 @@ import org.apache.streampipes.rest.shared.exception.BadRequestException;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,8 +38,8 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/api/v2/pipeline-element-preview")
-public class PipelineElementPreview extends AbstractAuthGuardedRestResource {
+@RequestMapping("/api/v2/pipeline-preview")
+public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
 
 
   @PostMapping(
@@ -54,26 +53,24 @@ public class PipelineElementPreview extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(path = "{previewId}",
-      produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+              produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   public StreamingResponseBody getPipelinePreviewResult(
       HttpServletResponse response,
-      @PathVariable("previewId") String previewId) {
+      @PathVariable("previewId") String previewId
+  ) {
     try {
       // deactivate nginx proxy buffering for better performance of streaming output
       response.addHeader("X-Accel-Buffering", "no");
       var spDataStreams = new PipelinePreview().getPipelineElementPreviewStreams(previewId);
       var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStreams);
-      var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(runtimeInfoFetcher);
+      var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(
+          runtimeInfoFetcher,
+          () -> new PipelinePreview().deletePreview(previewId)
+      );
       return runtimeInfoProvider::streamOutput;
     } catch (IllegalArgumentException e) {
       throw new BadRequestException("Could not generate preview", e);
     }
-  }
-
-  @DeleteMapping(path = "{previewId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> deletePipelinePreviewRequest(@PathVariable("previewId") String previewId) {
-    new PipelinePreview().deletePreview(previewId);
-    return ok();
   }
 
 }
