@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
     UntypedFormBuilder,
     UntypedFormControl,
@@ -27,6 +27,7 @@ import { EmailConfig, MailConfigService } from '@streampipes/platform-services';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-email-configuration',
@@ -53,6 +54,7 @@ export class EmailConfigurationComponent implements OnInit {
         private mailConfigService: MailConfigService,
         private breadcrumbService: SpBreadcrumbService,
         private tabService: SpConfigurationTabsService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -202,7 +204,13 @@ export class EmailConfigurationComponent implements OnInit {
             error => {
                 this.sendingTestMailInProgress = false;
                 this.sendingTestMailSuccess = false;
-                this.sendingEmailErrorMessage = `Error: ${error.error.localizedMessage} with cause ${error.error.cause.localizedMessage}`;
+                this.sendingEmailErrorMessage = this.translateService.instant(
+                    `Error: {{message}} with cause {{cause}}`,
+                    {
+                        message: error.error.localizedMessage,
+                        cause: error.error.cause.localizedMessage,
+                    },
+                );
             },
         );
     }

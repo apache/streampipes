@@ -21,6 +21,7 @@ import { FileManagementUtils } from '../../../support/utils/FileManagementUtils'
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
+import { GeneralUtils } from '../../../support/utils/GeneralUtils';
 
 describe('Connect schema rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -61,6 +62,7 @@ describe('Connect schema rule transformations', () => {
         );
 
         ConnectUtils.goToConnect();
+        GeneralUtils.openMenuForRow(adapterConfiguration.adapterName);
         ConnectBtns.editAdapter().click();
         // This waiting time is required to ensure that the file is loaded correctly before the next button is clicked
         cy.wait(1000);

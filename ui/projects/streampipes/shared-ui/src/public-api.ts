@@ -42,6 +42,7 @@ export * from './lib/components/sp-exception-message/exception-details-dialog/ex
 export * from './lib/components/sp-exception-message/exception-details/exception-details.component';
 export * from './lib/components/sp-label/sp-label.component';
 export * from './lib/components/sp-table/sp-table.component';
+export * from './lib/components/sp-table/sp-table-actions.directive';
 export * from './lib/components/warning-box/warning-box.component';
 export * from './lib/components/time-selector/time-selector.model';
 export * from './lib/components/time-selector/time-range-selector.component';
@@ -53,6 +54,7 @@ export * from './lib/components/pipeline-element-documentation/pipeline-element-
 export * from './lib/components/pipeline-element/pipeline-element.component';
 export * from './lib/components/input-schema-panel/input-schema-panel.component';
 export * from './lib/components/sidebar-resize/sidebar-resize.component';
+export * from './lib/components/asset-link-configuration/asset-link-configuration.component';
 
 export * from './lib/models/sp-navigation.model';
 
@@ -65,3 +67,4 @@ export * from './lib/services/time-selection.service';
 export * from './lib/components/asset-browser/asset-browser.service';
 export * from './lib/services/date-format.service';
 export * from './lib/services/pipeline-element-schema.service';
+export * from './lib/services/asset-configuration.service';

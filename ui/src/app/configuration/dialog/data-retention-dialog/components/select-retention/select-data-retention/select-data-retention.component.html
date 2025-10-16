@@ -19,7 +19,7 @@
 <sp-configuration-box [title]="'Data Retention Intervals' | translate">
     <div class="mt-10 p-10">
         <mat-form-field class="w-100">
-            <mat-label>Everything older than </mat-label>
+            <mat-label>{{ 'Everything older than' | translate }} </mat-label>
             <input
                 matInput
                 type="number"
@@ -29,7 +29,7 @@
                 min="1"
                 step="1"
             />
-            <span matSuffix>days</span>
+            <span matSuffix>{{ 'days' | translate }}</span>
         </mat-form-field>
     </div>
 </sp-configuration-box>

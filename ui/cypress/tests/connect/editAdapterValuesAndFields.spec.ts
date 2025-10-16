@@ -70,6 +70,7 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.closeAdapterPreview();
 
         // Edit adapter and check if given values and added property still provided
+        ConnectBtns.openActionsMenu('Test Adapter');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
         cy.contains('Next').click();
@@ -106,6 +107,7 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.closeAdapterPreview();
 
         // Configure adapter with pressure instead of flowrate
+        ConnectBtns.openActionsMenu('Test Adapter');
         ConnectBtns.editAdapter().click();
         const newUserConfiguration = AdapterBuilder.create(
             'Machine_Data_Simulator',

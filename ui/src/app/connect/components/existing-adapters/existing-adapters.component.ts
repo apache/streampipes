@@ -70,7 +70,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         'lastModified',
         'messagesSent',
         'lastMessage',
-        'action',
+        'actions',
     ];
 
     dataSource: MatTableDataSource<AdapterDescription> =

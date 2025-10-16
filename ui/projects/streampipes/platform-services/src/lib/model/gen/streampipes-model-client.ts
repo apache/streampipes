@@ -19,9 +19,9 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-09-09 16:10:12.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-09 16:21:15.
 
-import { Storable } from '.streampipes-model';
+import { Storable } from './platform-services';
 
 export class Group implements Storable {
     alternateIds: string[];
@@ -240,11 +240,13 @@ export class ServiceAccount extends Principal {
 }
 
 export class UserAccount extends Principal {
+    createdAtMillis: number;
     darkMode: boolean;
     externallyManagedRoles: boolean;
     fullName: string;
     hasAcknowledged: boolean;
     hideTutorial: boolean;
+    lastLoginAtMillis: number;
     password: string;
     preferredDataProcessors: string[];
     preferredDataSinks: string[];
@@ -258,11 +260,13 @@ export class UserAccount extends Principal {
         }
         const instance = target || new UserAccount();
         super.fromData(data, instance);
+        instance.createdAtMillis = data.createdAtMillis;
         instance.darkMode = data.darkMode;
         instance.externallyManagedRoles = data.externallyManagedRoles;
         instance.fullName = data.fullName;
         instance.hasAcknowledged = data.hasAcknowledged;
         instance.hideTutorial = data.hideTutorial;
+        instance.lastLoginAtMillis = data.lastLoginAtMillis;
         instance.password = data.password;
         instance.preferredDataProcessors = __getCopyArrayFn(
             __identity<string>(),

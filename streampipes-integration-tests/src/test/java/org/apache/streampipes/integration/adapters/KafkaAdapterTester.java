@@ -23,8 +23,8 @@ import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.connectors.kafka.adapter.KafkaProtocol;
 import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider;
-import org.apache.streampipes.integration.containers.KafkaContainer;
 import org.apache.streampipes.integration.containers.KafkaDevContainer;
+import org.apache.streampipes.integration.containers.SpKafkaTestContainer;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -44,7 +44,7 @@ import java.util.Objects;
 
 public class KafkaAdapterTester extends AdapterTesterBase {
 
-  KafkaContainer kafkaContainer;
+  SpKafkaTestContainer kafkaContainer;
 
   private static final String TOPIC = "test-topic";
 
@@ -53,7 +53,7 @@ public class KafkaAdapterTester extends AdapterTesterBase {
     if (Objects.equals(System.getenv("TEST_MODE"), "dev")) {
       kafkaContainer = new KafkaDevContainer();
     } else {
-      kafkaContainer = new KafkaContainer();
+      kafkaContainer = new SpKafkaTestContainer();
     }
 
     kafkaContainer.start();
@@ -144,7 +144,7 @@ public class KafkaAdapterTester extends AdapterTesterBase {
   }
 
   @Override
-  public void publishEvents(List<Map<String, Object>> events) throws Exception {
+  public void publishEvents(List<Map<String, Object>> events) {
     var publisher = getSpKafkaProducer();
     var objectMapper = new ObjectMapper();
 

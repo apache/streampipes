@@ -16,21 +16,6 @@
  *
  */
 
-package org.apache.streampipes.service.core;
-
-
-import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
-
-import io.prometheus.client.CollectorRegistry;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-public class StreamPipesPrometheusConfig {
-
-  @Bean
-  public CollectorRegistry collectorRegistry() {
-    return StreamPipesCollectorRegistry.getCollectorRegistry();
-  }
-
-}
+import { Directive } from '@angular/core';
+@Directive({ selector: 'ng-template[spTableActions]', standalone: false })
+export class SpTableActionsDirective {}

@@ -53,7 +53,7 @@ describe('Delete data in datalake', () => {
     before('Setup Test', () => {
         cy.initStreamPipesTest();
         DataLakeUtils.loadRandomDataSetIntoDataLake();
-        PipelineUtils.deletePipeline();
+        PipelineUtils.deletePipeline('Persist prepared_data');
     });
 
     it('Perform Test', () => {

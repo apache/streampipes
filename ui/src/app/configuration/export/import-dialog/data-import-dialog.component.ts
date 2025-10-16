@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -24,6 +24,7 @@ import {
     AssetExportConfiguration,
     ExportItem,
 } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-import-dialog',
@@ -32,6 +33,7 @@ import {
     standalone: false,
 })
 export class SpDataImportDialogComponent {
+    private translateService = inject(TranslateService);
     currentImportStep = 0;
 
     inputValue: string;
@@ -41,7 +43,7 @@ export class SpDataImportDialogComponent {
     importConfiguration: AssetExportConfiguration;
 
     hasInput = false;
-    errorMessage = 'Please enter a value';
+    errorMessage = this.translateService.instant('Please enter a value');
 
     uploadStatus = 0;
 

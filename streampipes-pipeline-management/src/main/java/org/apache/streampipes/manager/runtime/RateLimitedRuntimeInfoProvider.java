@@ -31,10 +31,14 @@ public class RateLimitedRuntimeInfoProvider {
 
   private final DataStreamRuntimeInfoProvider runtimeInfoProvider;
   private final ObjectMapper objectMapper;
+  private final ClientDisconnectCallback callback;
 
-  public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider) {
+
+  public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
+                                        ClientDisconnectCallback callback) {
     this.runtimeInfoProvider = runtimeInfoProvider;
     this.objectMapper = new ObjectMapper();
+    this.callback = callback;
   }
 
   public void streamOutput(OutputStream outputStream) {
@@ -47,6 +51,7 @@ public class RateLimitedRuntimeInfoProvider {
             outputStream.write((objectMapper.writeValueAsString(messages) + "\n").getBytes());
             outputStream.flush();
           } catch (IOException ignored) {
+            callback.onClientDisconnect();
           }
         }
         TimeUnit.MILLISECONDS.sleep(MAX_FREQUENCY);

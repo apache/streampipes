@@ -98,6 +98,8 @@ public interface Environment {
 
   StringEnvironmentVariable getCoreAssetBaseDir();
 
+  StringEnvironmentVariable getExtAssetBaseDir();
+
   // Flink Wrapper
   StringEnvironmentVariable getFlinkJarFileLoc();
 
@@ -166,4 +168,5 @@ public interface Environment {
   StringEnvironmentVariable getFileLoggingPattern();
 
   StringEnvironmentVariable getRetentionLocalDir();
+  StringEnvironmentVariable getDatalakeSchedulerCron();
 }

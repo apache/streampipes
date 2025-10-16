@@ -15,8 +15,36 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.datalake;
 
-public record ExportProviderSettings(
-      String providerType
-) {}
+package org.apache.streampipes.integration.containers;
+
+import org.testcontainers.kafka.KafkaContainer;
+
+
+public class SpKafkaTestContainer {
+
+  private KafkaContainer kafka;
+
+  public SpKafkaTestContainer() {
+    kafka = new KafkaContainer("apache/kafka");
+  }
+
+  public void start() {
+    kafka.start();
+  }
+
+  public String getBrokerHost() {
+    return kafka.getHost();
+  }
+
+  public Integer getBrokerPort() {
+    return kafka.getFirstMappedPort();
+  }
+
+  public void stop() {
+    if (kafka != null) {
+      kafka.stop();
+    }
+  }
+
+}

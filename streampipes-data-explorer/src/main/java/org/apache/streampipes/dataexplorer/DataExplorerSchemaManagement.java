@@ -51,7 +51,8 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   }
 
   /**
-   * For new measurements an entry is generated in the database. For existing measurements the schema is updated
+   * For new measurements an entry is generated in the database. For existing
+   * measurements the schema is updated
    * according to the update strategy defined by the measurement.
    */
   @Override
@@ -75,28 +76,28 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    */
   private void handleExistingMeasurement(
       DataLakeMeasure measure,
-      DataLakeMeasure existingMeasure
-  ) {
+      DataLakeMeasure existingMeasure) {
     measure.setElementId(existingMeasure.getElementId());
     if (DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA.equals(measure.getSchemaUpdateStrategy())) {
       // For the update schema strategy the old schema is overwritten with the new one
       updateMeasurement(measure);
     } else {
-      // For the extent existing schema strategy the old schema is merged with the new one
+      // For the extent existing schema strategy the old schema is merged with the new
+      // one
       unifyEventSchemaAndUpdateMeasure(measure, existingMeasure);
     }
   }
 
-
   /**
    * Returns the existing measure that has the provided measure name
    */
-  private Optional<DataLakeMeasure> getExistingMeasureByName(String measureName) {
+  @Override
+  public Optional<DataLakeMeasure> getExistingMeasureByName(String measureName) {
     return dataLakeStorage.findAll()
-                          .stream()
-                          .filter(m -> m.getMeasureName()
-                                        .equals(measureName))
-                          .findFirst();
+        .stream()
+        .filter(m -> m.getMeasureName()
+            .equals(measureName))
+        .findFirst();
   }
 
   private static void setDefaultUpdateStrategyIfNoneProvided(DataLakeMeasure measure) {
@@ -117,16 +118,15 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   @Override
   public boolean deleteMeasurementByName(String measureName) {
     var measureToDeleteOpt = dataLakeStorage.findAll()
-                                            .stream()
-                                            .filter(measurement -> measurement.getMeasureName()
-                                                                               .equals(measureName))
-                                            .findFirst();
+        .stream()
+        .filter(measurement -> measurement.getMeasureName()
+            .equals(measureName))
+        .findFirst();
 
     return measureToDeleteOpt.map(measure -> {
       dataLakeStorage.deleteElementById(measure.getElementId());
       return true;
-    }
-    ).orElse(false);
+    }).orElse(false);
   }
 
   @Override
@@ -146,16 +146,15 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   }
 
   /**
-   * First the event schemas of the measurements are merged and then the measure is updated in the database
+   * First the event schemas of the measurements are merged and then the measure
+   * is updated in the database
    */
   private void unifyEventSchemaAndUpdateMeasure(
       DataLakeMeasure measure,
-      DataLakeMeasure existingMeasure
-  ) {
+      DataLakeMeasure existingMeasure) {
     var properties = getUnifiedEventProperties(
         existingMeasure,
-        measure
-    );
+        measure);
 
     measure
         .getEventSchema()
@@ -170,17 +169,15 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    */
   private List<EventProperty> getUnifiedEventProperties(
       DataLakeMeasure measure1,
-      DataLakeMeasure measure2
-  ) {
-// Combine the event properties from both measures into a single Stream
+      DataLakeMeasure measure2) {
+    // Combine the event properties from both measures into a single Stream
     var allMeasurementProperties = Stream.concat(
         measure1.getEventSchema()
-                .getEventProperties()
-                .stream(),
+            .getEventProperties()
+            .stream(),
         measure2.getEventSchema()
-                .getEventProperties()
-                .stream()
-    );
+            .getEventProperties()
+            .stream());
 
     // Filter event properties by removing duplicate runtime names
     // If there are duplicate keys, choose the first occurrence
@@ -188,8 +185,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
         .collect(Collectors.toMap(
             EventProperty::getRuntimeName,
             Function.identity(),
-            (eventProperty, eventProperty2) -> eventProperty
-        ))
+            (eventProperty, eventProperty2) -> eventProperty))
         .values();
     return new ArrayList<>(unifiedEventProperties);
   }

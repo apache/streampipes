@@ -18,13 +18,13 @@
 
 <sp-table fxFlex="100" [columns]="displayedColumns" [dataSource]="dataSource">
     <ng-container matColumnDef="filename">
-        <th mat-header-cell *matHeaderCellDef>Filename</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'Filename' | translate }}</th>
         <td mat-cell *matCellDef="let fileMetadata">
             <h4>{{ fileMetadata.filename }}</h4>
         </td>
     </ng-container>
     <ng-container matColumnDef="filetype">
-        <th mat-header-cell *matHeaderCellDef>Filetype</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'Filetype' | translate }}</th>
         <td mat-cell *matCellDef="let fileMetadata">
             <span
                 class="filetype-container"
@@ -34,7 +34,7 @@
         </td>
     </ng-container>
     <ng-container matColumnDef="uploaded">
-        <th mat-header-cell *matHeaderCellDef>Uploaded</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'Uploaded' | translate }}</th>
         <td mat-cell *matCellDef="let fileMetadata">
             <h5>
                 {{ fileMetadata.createdAt | date: 'dd.MM.yyyy HH:mm' }}
@@ -49,7 +49,7 @@
                 <button
                     color="accent"
                     mat-icon-button
-                    matTooltip="Download File"
+                    [matTooltip]="'Download File' | translate"
                     matTooltipPosition="above"
                     (click)="downloadFile(fileMetadata)"
                     data-cy="download"
@@ -59,7 +59,7 @@
                 <button
                     color="accent"
                     mat-icon-button
-                    matTooltip="Delete file"
+                    [matTooltip]="'Delete file' | translate"
                     matTooltipPosition="above"
                     (click)="deleteFile(fileMetadata)"
                     data-cy="delete"

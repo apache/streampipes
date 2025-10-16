@@ -25,6 +25,7 @@ import { ConnectUtils } from '../connect/ConnectUtils';
 import { ConnectBtns } from '../connect/ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { differenceInMonths } from 'date-fns';
+import { GeneralUtils } from '../GeneralUtils';
 
 export class DataLakeUtils {
     public static goToDatalake() {
@@ -174,14 +175,14 @@ export class DataLakeUtils {
     }
 
     public static editDashboard(dashboardName: string) {
-        // Click edit button
-        // following only works if single view is available
+        GeneralUtils.openMenuForRow(dashboardName);
         cy.dataCy('edit-dashboard-' + dashboardName).click();
     }
 
     public static editDataView(dataViewName: string) {
         // Click edit button
         // following only works if single view is available
+        GeneralUtils.openMenuForRow(dataViewName);
         cy.dataCy('edit-data-view-' + dataViewName).click();
     }
 
@@ -200,6 +201,7 @@ export class DataLakeUtils {
     }
 
     public static deleteDashboard(dashboardName: string) {
+        GeneralUtils.openMenuForRow(dashboardName);
         cy.dataCy('delete-dashboard-' + dashboardName, {
             timeout: 10000,
         }).click();
@@ -207,6 +209,7 @@ export class DataLakeUtils {
     }
 
     public static deleteDataView(dataViewName: string) {
+        GeneralUtils.openMenuForRow(dataViewName);
         cy.dataCy('delete-data-view-' + dataViewName, {
             timeout: 10000,
         }).click();
@@ -214,6 +217,7 @@ export class DataLakeUtils {
     }
 
     public static cancelDeleteDashboard(dashboardName: string) {
+        GeneralUtils.openMenuForRow(dashboardName);
         cy.dataCy('delete-dashboard-' + dashboardName, {
             timeout: 10000,
         }).click();
@@ -221,6 +225,7 @@ export class DataLakeUtils {
     }
 
     public static cancelDeleteDataView(dataViewName: string) {
+        GeneralUtils.openMenuForRow(dataViewName);
         cy.dataCy('delete-data-view-' + dataViewName, {
             timeout: 10000,
         }).click();
@@ -364,7 +369,7 @@ export class DataLakeUtils {
             .click();
     }
 
-    public static clickOrderBy(order: String) {
+    public static clickOrderBy(order: string) {
         if (order == 'ascending') {
             cy.dataCy('ascending-radio-button').click();
         } else {

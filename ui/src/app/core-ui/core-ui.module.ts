@@ -67,7 +67,6 @@ import { PipelineElementTemplatePipe } from './pipeline-element-template-config/
 import { StatusWidgetComponent } from './status/status-widget.component';
 import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-metrics.component';
 import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
-//import { HelpComponent } from '../../../projects/streampipes/shared-ui/src/lib/dialog/pipeline-element-help/help.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -108,6 +107,7 @@ import { JsonPrettyPrintPipe } from './pipes/json-pretty-print.pipe';
 import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
 import { TopicsComponent } from './topics/topics.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 @NgModule({
     imports: [
@@ -159,6 +159,7 @@ import { TranslateModule } from '@ngx-translate/core';
         MatTreeModule,
         TranslateModule.forChild(),
         LeafletModule,
+        TextFieldModule,
     ],
     declarations: [
         ConfigurationCodePanelComponent,

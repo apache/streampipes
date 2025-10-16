@@ -48,6 +48,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatMenuItem } from '@angular/material/menu';
 
 @NgModule({
     imports: [
@@ -100,6 +101,7 @@ import { TranslateModule } from '@ngx-translate/core';
                 ],
             },
         ]),
+        MatMenuItem,
     ],
     declarations: [
         DeletePipelineDialogComponent,

@@ -40,6 +40,7 @@ describe('Test Edit Adapter', () => {
 
         // click edit adapter
         ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+        ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
 
@@ -68,7 +69,7 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.closeAdapterPreview();
 
-        ConnectUtils.startAndValidateAdapter(3);
+        ConnectUtils.startAndValidateAdapter('Edited Adapter', 3);
         ConnectUtils.goToConnect();
 
         // Validate that name of adapter and data stream
@@ -76,12 +77,13 @@ describe('Test Edit Adapter', () => {
     });
 
     it('Successfully edit adapter with persistence pipeline', () => {
-        ConnectUtils.addMachineDataSimulator('simulator', true, '100');
+        ConnectUtils.addMachineDataSimulator('simulator', true, '1000');
 
         ConnectUtils.goToConnect();
 
         // stop adapter and edit adapter
         ConnectBtns.stopAdapter().click();
+        ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().click();
 
         // change data type of density to integer
@@ -91,6 +93,7 @@ describe('Test Edit Adapter', () => {
             'Integer',
             true,
         );
+        ConnectEventSchemaUtils.renameProperty('density', 'density2');
 
         ConnectUtils.storeAndStartEditedAdapter();
 
@@ -105,7 +108,7 @@ describe('Test Edit Adapter', () => {
             initialValue = value;
         });
 
-        cy.wait(5000);
+        cy.wait(3000);
 
         DataLakeBtns.refreshDataLakeMeasures().click();
 

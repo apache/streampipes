@@ -83,6 +83,7 @@ import { DroppedPipelineElementComponent } from './components/pipeline/dropped-p
 import { AddTemplateDialogComponent } from './dialog/add-template-dialog/add-template-dialog.component';
 import { TemplateSelectionComponent } from './dialog/add-template-dialog/template-selection/template-selection.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -122,6 +123,8 @@ import { SharedUiModule } from '@streampipes/shared-ui';
         MatProgressSpinnerModule,
         ReactiveFormsModule,
         PlatformServicesModule,
+        SharedUiModule,
+        TranslatePipe,
         SharedUiModule,
     ],
     declarations: [

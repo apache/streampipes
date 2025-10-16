@@ -24,23 +24,18 @@ describe('Test update of running pipeline', () => {
     });
 
     it('Perform Test', () => {
+        const pipelineName = 'Pipeline Test';
         PipelineUtils.addSampleAdapterAndPipeline();
-        PipelineUtils.editPipeline();
+        PipelineUtils.editPipeline(pipelineName);
         cy.wait(1000);
         PipelineUtils.startPipeline();
-        cy.dataCy('modify-pipeline-btn', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
+        cy.dataCy('more-options', { timeout: 10000 }).should('have.length', 1);
 
-        PipelineUtils.editPipeline();
+        PipelineUtils.editPipeline(pipelineName);
         cy.wait(1000);
         cy.dataCy('sp-editor-save-pipeline').click();
         PipelineUtils.clonePipeline('Pipeline Test 2');
         PipelineUtils.finalizePipelineStart();
-        cy.dataCy('modify-pipeline-btn', { timeout: 10000 }).should(
-            'have.length',
-            2,
-        );
+        cy.dataCy('more-options', { timeout: 10000 }).should('have.length', 2);
     });
 });

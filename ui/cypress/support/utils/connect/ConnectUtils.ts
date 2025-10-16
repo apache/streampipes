@@ -24,6 +24,7 @@ import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { UserUtils } from '../UserUtils';
 import { PipelineUtils } from '../pipeline/PipelineUtils';
+import { GeneralUtils } from '../GeneralUtils';
 
 export class ConnectUtils {
     public static testAdapter(
@@ -83,6 +84,21 @@ export class ConnectUtils {
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
     }
 
+    public static addAdapterWithLinkedAssets(
+        adapterConfiguration: AdapterInput,
+        assetNameList,
+    ) {
+        ConnectUtils.addAdapter(adapterConfiguration);
+
+        ConnectUtils.startAdapter(
+            adapterConfiguration,
+            false,
+            false,
+            true,
+            assetNameList,
+        );
+    }
+
     private static configureDimensionProperties(
         adapterConfiguration: AdapterInput,
     ) {
@@ -97,6 +113,10 @@ export class ConnectUtils {
         }
     }
 
+    public static renameAdapter(newName: string) {
+        cy.dataCy('sp-adapter-name').clear().type(newName);
+        cy.dataCy('sp-adapter-name').should('have.value', newName);
+    }
     public static addMachineDataSimulator(
         name: string,
         persist: boolean = false,
@@ -127,6 +147,7 @@ export class ConnectUtils {
 
     public static goToConnect() {
         cy.visit('#/connect');
+        cy.dataCy('connect-create-new-adapter-button').should('be.visible');
     }
 
     public static goToNewAdapterPage() {
@@ -180,6 +201,8 @@ export class ConnectUtils {
         adapterInput: AdapterInput,
         noLiveDataView = false,
         adapterStartFails = false,
+        addToAsset = false,
+        assetNameList = [],
     ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
@@ -203,6 +226,12 @@ export class ConnectUtils {
             ConnectBtns.startAdapterNowCheckbox().click();
         }
 
+        //add the Adapter to an Asset
+
+        if (addToAsset) {
+            this.addToAsset(assetNameList);
+        }
+
         ConnectBtns.adapterSettingsStartAdapter().click();
 
         if (adapterStartFails) {
@@ -224,15 +253,41 @@ export class ConnectUtils {
         this.closeAdapterPreview();
     }
 
+    public static addToAsset(assetNameList = []) {
+        cy.dataCy('show-asset-checkbox').click();
+        cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
+
+        assetNameList.forEach(assetName => {
+            cy.get('mat-tree.asset-tree')
+                .find('.mat-tree-node')
+                .contains(assetName)
+                .click();
+        });
+    }
+
+    public static editAsset(assetNameList = []) {
+        //cy.dataCy('show-asset-checkbox').click();
+        cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
+
+        assetNameList.forEach(assetName => {
+            console.log(assetName);
+            cy.get('mat-tree.asset-tree')
+                .find('.mat-tree-node')
+                .contains(assetName)
+                .click();
+        });
+    }
+
     // Close adapter preview
     public static closeAdapterPreview() {
         cy.get('button').contains('Close').parent().click();
     }
 
-    public static deleteAdapter() {
+    public static deleteAdapter(adapterName: string) {
         // Delete adapter
         this.goToConnect();
 
+        GeneralUtils.openMenuForRow(adapterName);
         cy.dataCy('delete-adapter').should('have.length', 1);
         this.clickDelete();
         cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should(
@@ -255,6 +310,7 @@ export class ConnectUtils {
     public static deleteAdapterAndAssociatedPipelines(switchUserCheck = false) {
         // Delete adapter and associated pipelines
         this.goToConnect();
+        ConnectBtns.openActionsMenu('simulator');
         cy.dataCy('delete-adapter').should('have.length', 1);
         this.clickDelete();
         cy.dataCy('delete-adapter-and-associated-pipelines-confirmation', {
@@ -279,6 +335,7 @@ export class ConnectUtils {
     public static deleteAdapterAndAssociatedPipelinesPermissionDenied() {
         // Associated pipelines not owned by the user (unless admin) should not be deleted during adapter deletion
         this.goToConnect();
+        ConnectBtns.openActionsMenu('simulator');
         cy.dataCy('delete-adapter').should('have.length', 1);
         this.clickDelete();
         cy.dataCy('delete-adapter-and-associated-pipelines-confirmation', {
@@ -363,12 +420,15 @@ export class ConnectUtils {
         return adapterConfiguration;
     }
 
-    public static startAndValidateAdapter(amountOfProperties: number) {
+    public static startAndValidateAdapter(
+        adapterName: string,
+        amountOfProperties: number,
+    ) {
         ConnectBtns.startAdapter().should('not.be.disabled');
 
         ConnectBtns.startAdapter().click();
 
-        ConnectUtils.validateEventsInPreview(amountOfProperties);
+        ConnectUtils.validateEventsInPreview(adapterName, amountOfProperties);
     }
 
     public static getLivePreviewValue(runtimeName: string) {
@@ -377,8 +437,12 @@ export class ConnectUtils {
         });
     }
 
-    public static validateEventsInPreview(amountOfProperties: number) {
+    public static validateEventsInPreview(
+        adapterName: string,
+        amountOfProperties: number,
+    ) {
         // View data
+        ConnectBtns.openActionsMenu(adapterName);
         ConnectBtns.detailsAdapter().click();
 
         // Validate resulting event
@@ -400,9 +464,14 @@ export class ConnectUtils {
      * Validates the event schema for an adapter by checking the amount of properties
      * and the runtime names of the event properties
      * @param runtimeNames runtime names of the event properties
+     * @param adapterName name of the adapter
      */
-    public static validateEventSchema(runtimeNames: string[]) {
+    public static validateEventSchema(
+        adapterName: string,
+        runtimeNames: string[],
+    ) {
         ConnectUtils.goToConnect();
+        GeneralUtils.openMenuForRow(adapterName);
         ConnectBtns.detailsAdapter().click();
 
         cy.get('tr.mat-mdc-row').should('have.length', runtimeNames.length);
@@ -459,7 +528,7 @@ export class ConnectUtils {
             cy.wait(1000);
             cy.dataCy('no-table-entries').should('be.visible');
         } else {
-            ConnectBtns.deleteAdapter().should('have.length', amount);
+            ConnectBtns.moreOptions().should('have.length', amount);
         }
     }
 }
