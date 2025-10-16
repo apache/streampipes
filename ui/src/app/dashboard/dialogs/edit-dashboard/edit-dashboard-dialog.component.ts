@@ -27,9 +27,10 @@ import {
 import {
     Dashboard,
     DashboardService,
+    LinkageData,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
-import { DialogRef } from '@streampipes/shared-ui';
+import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-edit-dashboard-dialog-component',
@@ -50,6 +51,7 @@ export class EditDashboardDialogComponent implements OnInit {
 
     private dialogRef = inject(DialogRef<EditDashboardDialogComponent>);
     private dashboardService = inject(DashboardService);
+    private assetSaveService = inject(AssetSaveService);
 
     addToAssets: boolean = false;
 
@@ -84,18 +86,55 @@ export class EditDashboardDialogComponent implements OnInit {
         this.originalAssetsChange.emit(this.originalAssets);
     }
 
+    saveToAssets(data): void {
+        let linkageData: LinkageData[];
+        try {
+            linkageData = this.createLinkageData(data);
+
+            this.saveAssets(linkageData);
+        } catch (err) {
+            console.error('Error in addToAsset:', err);
+        }
+    }
+
+    private createLinkageData(data): LinkageData[] {
+        console.log('data', data);
+        return [
+            {
+                type: 'dashboard',
+                id: data.elementId,
+                name: data.name,
+            },
+        ];
+    }
+
+    private async saveAssets(linkageData: LinkageData[]): Promise<void> {
+        await this.assetSaveService.saveSelectedAssets(
+            this.selectedAssets,
+            linkageData,
+            this.deselectedAssets,
+            this.originalAssets,
+        );
+        this.dialogRef.close(true);
+    }
+
     onSave(): void {
         this.dashboard.metadata.lastModifiedEpochMs = Date.now();
         if (this.createMode) {
             this.dashboardService
                 .saveDashboard(this.dashboard)
-                .subscribe(() => {
+                .subscribe(data => {
+                    console.log('From Call');
+                    console.log(data);
+                    console.log(this.dashboard);
+                    this.saveToAssets(data);
                     this.dialogRef.close();
                 });
         } else {
             this.dashboardService
                 .updateDashboard(this.dashboard)
-                .subscribe(() => {
+                .subscribe(data => {
+                    this.saveToAssets(data);
                     this.dialogRef.close();
                 });
         }
