@@ -217,7 +217,6 @@ export class DataExplorerUtils {
     }
 
     public static addToAsset(assetNameList = []) {
-        //cy.dataCy('show-asset-checkbox').click();
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
 
         assetNameList.forEach(assetName => {
