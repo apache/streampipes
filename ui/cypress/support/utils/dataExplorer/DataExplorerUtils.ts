@@ -599,4 +599,13 @@ export class DataLakeUtils {
     public static checkIfConfirmationDialogIsShowing(): void {
         cy.get('confirmation-dialog').should('be.visible');
     }
+    public static createDataViewWithAssets(assetNames) {
+        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
+
+        // Create Diagram
+        DataLakeUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
+        //Save
+        DataLakeUtils.saveToAddAssets();
+        DataLakeUtils.addToAsset(assetNames);
+    }
 }
