@@ -101,7 +101,6 @@ export class EditDashboardDialogComponent implements OnInit {
     }
 
     private createLinkageData(data): LinkageData[] {
-        console.log('data', data);
         return [
             {
                 type: 'dashboard',

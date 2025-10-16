@@ -27,6 +27,10 @@ export class DataLakeBtns {
         return cy.dataCy('save-data-view-btn').click();
     }
 
+    public static saveDashboard() {
+        return cy.dataCy('save-data-view').click();
+    }
+
     public static editDataViewButton(widgetName: string) {
         GeneralUtils.openMenuForRow(widgetName);
         return cy
