@@ -18,7 +18,7 @@
 
 import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataLakeWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
+import { DataExplorerWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 
 describe('Test Table View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
@@ -33,7 +33,7 @@ describe('Test Table View in Data Explorer', () => {
         DataExplorerUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
 
         // Validate that X lines are available
-        DataLakeWidgetTableUtils.checkAmountOfRows(10);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(10);
 
         // Go back to data configuration
         DataExplorerUtils.selectDataConfig();
@@ -44,7 +44,7 @@ describe('Test Table View in Data Explorer', () => {
         // Test number
         let filterConfig = new DataLakeFilterConfig('randomnumber', '22', '=');
         DataExplorerUtils.dataConfigAddFilter(filterConfig);
-        DataLakeWidgetTableUtils.checkAmountOfRows(2);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(2);
         DataExplorerUtils.validateFilterOptions([
             '=',
             '<',
@@ -54,12 +54,12 @@ describe('Test Table View in Data Explorer', () => {
             '!=',
         ]);
         DataExplorerUtils.dataConfigRemoveFilter();
-        DataLakeWidgetTableUtils.checkAmountOfRows(10);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(10);
 
         // Test number greater then
         filterConfig = new DataLakeFilterConfig('randomnumber', '50', '>');
         DataExplorerUtils.dataConfigAddFilter(filterConfig);
-        DataLakeWidgetTableUtils.checkAmountOfRows(5);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(5);
         DataExplorerUtils.validateFilterOptions([
             '=',
             '<',
@@ -73,13 +73,13 @@ describe('Test Table View in Data Explorer', () => {
         // Test number smaller then
         filterConfig = new DataLakeFilterConfig('randomnumber', '50', '<');
         DataExplorerUtils.dataConfigAddFilter(filterConfig);
-        DataLakeWidgetTableUtils.checkAmountOfRows(5);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(5);
         DataExplorerUtils.dataConfigRemoveFilter();
 
         // Test boolean
         filterConfig = new DataLakeFilterConfig('randombool', 'true', '=');
         DataExplorerUtils.dataConfigAddFilter(filterConfig);
-        DataLakeWidgetTableUtils.checkAmountOfRows(6);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(6);
         DataExplorerUtils.validateFilterOptions(['=', '!=']);
         DataExplorerUtils.validateAutoCompleteOptions(['true', 'false']);
         DataExplorerUtils.dataConfigRemoveFilter();
@@ -89,12 +89,12 @@ describe('Test Table View in Data Explorer', () => {
         DataExplorerUtils.checkIfFilterIsSet(0);
         DataExplorerUtils.dataConfigAddFilter(filterConfig);
         DataExplorerUtils.checkIfFilterIsSet(1);
-        DataLakeWidgetTableUtils.checkAmountOfRows(4);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(4);
         DataExplorerUtils.validateFilterOptions(['=', '!=']);
         DataExplorerUtils.validateAutoCompleteOptions(['a', 'b', 'c']);
         DataExplorerUtils.saveAndReEditWidget('NewWidget');
         DataExplorerUtils.checkIfFilterIsSet(1);
-        DataLakeWidgetTableUtils.checkAmountOfRows(4);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(4);
         DataExplorerUtils.dataConfigRemoveFilter();
 
         /**
@@ -109,7 +109,7 @@ describe('Test Table View in Data Explorer', () => {
         cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 })
             .first({ timeout: 10000 })
             .contains('c', { timeout: 10000 });
-        DataLakeWidgetTableUtils.checkAmountOfRows(10);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(10);
         DataExplorerUtils.saveAndReEditWidget('NewWidget');
         cy.dataCy('data-explorer-group-by-randomtext')
             .find('input')

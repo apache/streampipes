@@ -17,7 +17,7 @@
  */
 
 import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataLakeWidgetTableUtils } from '../../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
+import { DataExplorerWidgetTableUtils } from '../../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 import { DataExplorerWidget } from '../../../support/model/DataExplorerWidget';
 
 describe('Test Table View in Data Explorer', () => {
@@ -33,6 +33,6 @@ describe('Test Table View in Data Explorer', () => {
         );
 
         // Check if table is displayed correctly
-        DataLakeWidgetTableUtils.checkAmountOfRows(10);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(10);
     });
 });

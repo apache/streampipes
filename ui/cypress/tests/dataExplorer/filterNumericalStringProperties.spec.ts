@@ -17,7 +17,7 @@
  */
 
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataLakeWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
+import { DataExplorerWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
@@ -61,7 +61,7 @@ describe('Validate that filter works for numerical dimension property', () => {
         cy.wait(1000);
 
         // validate data in table
-        DataLakeWidgetTableUtils.checkAmountOfRows(2);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(2);
 
         // select filter for tag
         DataExplorerUtils.selectDataConfig();
@@ -69,7 +69,7 @@ describe('Validate that filter works for numerical dimension property', () => {
         DataExplorerUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered
-        DataLakeWidgetTableUtils.checkAmountOfRows(1);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(1);
 
         // remove filter
         DataExplorerUtils.dataConfigRemoveFilter();
@@ -80,12 +80,12 @@ describe('Validate that filter works for numerical dimension property', () => {
         DataExplorerUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered
-        DataLakeWidgetTableUtils.checkAmountOfRows(1);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(1);
 
         // remove filter
         DataExplorerUtils.dataConfigRemoveFilter();
 
         // validate data again
-        DataLakeWidgetTableUtils.checkAmountOfRows(2);
+        DataExplorerWidgetTableUtils.checkAmountOfRows(2);
     });
 });

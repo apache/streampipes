@@ -16,7 +16,7 @@
  *
  */
 
-export class DataLakeWidgetTableUtils {
+export class DataExplorerWidgetTableUtils {
     public static dataExplorerTableRowTimestamp() {
         return cy.dataCy('data-explorer-table-row-timestamp', {
             timeout: 10000,
