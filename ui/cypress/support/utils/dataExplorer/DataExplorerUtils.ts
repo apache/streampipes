@@ -27,7 +27,7 @@ import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { differenceInMonths } from 'date-fns';
 import { GeneralUtils } from '../GeneralUtils';
 
-export class DataLakeUtils {
+export class DataExplorerUtils {
     public static goToDatalake() {
         cy.visit('#/dataexplorer');
     }
@@ -39,7 +39,7 @@ export class DataLakeUtils {
 
     public static initDataLakeTests() {
         cy.initStreamPipesTest();
-        DataLakeUtils.loadRandomDataSetIntoDataLake();
+        DataExplorerUtils.loadRandomDataSetIntoDataLake();
     }
 
     public static getDataLakeTestSetAdapter(
@@ -95,22 +95,22 @@ export class DataLakeUtils {
         dataSet: string,
         widgetType: string,
     ) {
-        DataLakeUtils.goToDatalake();
-        DataLakeUtils.createAndEditDataView();
+        DataExplorerUtils.goToDatalake();
+        DataExplorerUtils.createAndEditDataView();
 
-        DataLakeUtils.selectTimeRange(
+        DataExplorerUtils.selectTimeRange(
             new Date(2020, 10, 20, 22, 44),
-            DataLakeUtils.getFutureDate(),
+            DataExplorerUtils.getFutureDate(),
         );
-        // DataLakeUtils.addNewWidget();
-        DataLakeUtils.selectDataSet(dataSet);
-        DataLakeUtils.dataConfigSelectAllFields();
+        // DataExplorerUtils.addNewWidget();
+        DataExplorerUtils.selectDataSet(dataSet);
+        DataExplorerUtils.dataConfigSelectAllFields();
 
-        DataLakeUtils.selectAppearanceConfig();
-        DataLakeUtils.selectDataViewName(dataViewName);
+        DataExplorerUtils.selectAppearanceConfig();
+        DataExplorerUtils.selectDataViewName(dataViewName);
 
-        DataLakeUtils.openVisualizationConfig();
-        DataLakeUtils.selectVisualizationType(widgetType);
+        DataExplorerUtils.openVisualizationConfig();
+        DataExplorerUtils.selectVisualizationType(widgetType);
 
         cy.wait(1000);
     }
@@ -275,14 +275,14 @@ export class DataLakeUtils {
 
     public static saveAndReEditWidget(dataViewName: string) {
         // Save data view configuration
-        DataLakeUtils.saveDataViewConfiguration();
-        DataLakeUtils.editDataView(dataViewName);
+        DataExplorerUtils.saveDataViewConfiguration();
+        DataExplorerUtils.editDataView(dataViewName);
     }
 
     public static saveAndReEditDashboard(dashboardName: string) {
         // Save dashboard configuration
-        DataLakeUtils.saveDashboardConfiguration();
-        DataLakeUtils.editDashboard(dashboardName);
+        DataExplorerUtils.saveDashboardConfiguration();
+        DataExplorerUtils.editDashboard(dashboardName);
     }
 
     public static clickTab(tabName: string) {
@@ -515,19 +515,19 @@ export class DataLakeUtils {
     }
 
     public static selectTimeRange(from: Date, to: Date) {
-        DataLakeUtils.openTimeSelectorMenu();
+        DataExplorerUtils.openTimeSelectorMenu();
         const monthsBack = Math.abs(differenceInMonths(from, new Date())) + 1;
-        DataLakeUtils.navigateCalendar('previous', monthsBack);
-        DataLakeUtils.selectDay(from.getDate());
+        DataExplorerUtils.navigateCalendar('previous', monthsBack);
+        DataExplorerUtils.selectDay(from.getDate());
 
         const monthsForward = Math.abs(differenceInMonths(from, to));
-        DataLakeUtils.navigateCalendar('next', monthsForward);
+        DataExplorerUtils.navigateCalendar('next', monthsForward);
 
-        DataLakeUtils.selectDay(to.getDate());
+        DataExplorerUtils.selectDay(to.getDate());
 
-        DataLakeUtils.setTimeInput('time-selector-start-time', from);
-        DataLakeUtils.setTimeInput('time-selector-end-time', to);
-        DataLakeUtils.applyCustomTimeSelection();
+        DataExplorerUtils.setTimeInput('time-selector-start-time', from);
+        DataExplorerUtils.setTimeInput('time-selector-end-time', to);
+        DataExplorerUtils.applyCustomTimeSelection();
     }
 
     public static navigateCalendar(direction: string, numberOfMonths: number) {
@@ -553,7 +553,7 @@ export class DataLakeUtils {
     }
 
     public static setTimeInput(field: string, date: Date) {
-        cy.dataCy(field).type(DataLakeUtils.makeTimeString(date));
+        cy.dataCy(field).type(DataExplorerUtils.makeTimeString(date));
     }
 
     public static makeTimeString(date: Date) {
@@ -600,12 +600,12 @@ export class DataLakeUtils {
         cy.get('confirmation-dialog').should('be.visible');
     }
     public static createDataViewWithAssets(assetNames) {
-        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
+        DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
 
         // Create Diagram
-        DataLakeUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
         //Save
-        DataLakeUtils.saveToAddAssets();
-        DataLakeUtils.addToAsset(assetNames);
+        DataExplorerUtils.saveToAddAssets();
+        DataExplorerUtils.addToAsset(assetNames);
     }
 }
