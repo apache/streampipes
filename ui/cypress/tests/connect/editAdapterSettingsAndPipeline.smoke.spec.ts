@@ -23,7 +23,7 @@ import { PipelineElementBuilder } from '../../support/builder/PipelineElementBui
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
-import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
 describe('Test Edit Adapter and Pipeline', () => {
@@ -102,8 +102,8 @@ describe('Test Edit Adapter and Pipeline', () => {
 
         // Visit dashboard
         cy.wait(5000);
-        DataLakeUtils.goToDatalake();
-        DataLakeUtils.createAndEditDataView();
+        DataExplorerUtils.goToDatalake();
+        DataExplorerUtils.createAndEditDataView();
 
         cy.dataCy('data-explorer-field-selection-panel').should(
             'include.text',
