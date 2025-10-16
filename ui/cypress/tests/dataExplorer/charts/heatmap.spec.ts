@@ -16,18 +16,18 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Test Heatmap View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        DataLakeUtils.initDataLakeTests();
+        DataExplorerUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'heatmap');
+        DataExplorerUtils.addDataViewAndWidget('view', 'Persist', 'heatmap');
 
         // Check checkbox
-        DataLakeUtils.openVisualizationConfig();
+        DataExplorerUtils.openVisualizationConfig();
 
         // Check if heatmap chart is visible
         cy.dataCy('heatmap').should('be.visible');

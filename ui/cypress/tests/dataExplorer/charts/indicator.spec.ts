@@ -16,22 +16,22 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Test Indicator View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        DataLakeUtils.initDataLakeTests();
+        DataExplorerUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget(
+        DataExplorerUtils.addDataViewAndWidget(
             'view',
             'Persist',
             'indicator-chart',
         );
 
         // Check checkbox
-        DataLakeUtils.openVisualizationConfig();
+        DataExplorerUtils.openVisualizationConfig();
         cy.dataCy('data-explorer-select-delta-checkbox').click();
 
         cy.dataCy('indicator-chart').should('be.visible');

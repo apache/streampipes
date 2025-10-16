@@ -16,15 +16,19 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Test Scatter View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        DataLakeUtils.initDataLakeTests();
+        DataExplorerUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'scatter-chart');
+        DataExplorerUtils.addDataViewAndWidget(
+            'view',
+            'Persist',
+            'scatter-chart',
+        );
 
         // Check if scatter plot is displayed
         cy.dataCy('scatter-chart').should('be.visible');

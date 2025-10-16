@@ -16,7 +16,7 @@
  *
  */
 
-import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import {
     subDays,
     subHours,
@@ -46,20 +46,20 @@ describe('Test Time Range Selectors in Data Explorer', () => {
 
     before('Setup Tests', () => {
         cy.initStreamPipesTest();
-        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
+        DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalake();
-        DataLakeUtils.createAndEditDataView();
+        DataExplorerUtils.goToDatalake();
+        DataExplorerUtils.createAndEditDataView();
 
         periods.forEach(period => {
             cy.log('Testing period: ' + period.selector);
-            DataLakeUtils.openTimeSelectorMenu();
+            DataExplorerUtils.openTimeSelectorMenu();
             // Choosing time period and saving initial start and end dates
             cy.dataCy(`time-selector-quick-${period.selector}`).click();
             const expectedEndDate = new Date();
-            DataLakeUtils.openTimeSelectorMenu();
+            DataExplorerUtils.openTimeSelectorMenu();
             // check if dates can differ from the selected dates
             const expectedStartDate = getExpectedStartDate(
                 expectedEndDate,
@@ -101,7 +101,7 @@ describe('Test Time Range Selectors in Data Explorer', () => {
                     ).to.be.true;
                 });
 
-            DataLakeUtils.applyCustomTimeSelection();
+            DataExplorerUtils.applyCustomTimeSelection();
         });
     });
 });

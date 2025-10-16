@@ -17,77 +17,91 @@
  */
 
 import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
-import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { DataLakeWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 
 describe('Test Table View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
+        DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
     });
 
     it('Perform Test', () => {
         /**
          * Prepare tests
          */
-        DataLakeUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
 
         // Validate that X lines are available
         DataLakeWidgetTableUtils.checkAmountOfRows(10);
 
         // Go back to data configuration
-        DataLakeUtils.selectDataConfig();
+        DataExplorerUtils.selectDataConfig();
 
         /**
          * Test filter configuration
          */
         // Test number
         let filterConfig = new DataLakeFilterConfig('randomnumber', '22', '=');
-        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataExplorerUtils.dataConfigAddFilter(filterConfig);
         DataLakeWidgetTableUtils.checkAmountOfRows(2);
-        DataLakeUtils.validateFilterOptions(['=', '<', '<=', '>=', '>', '!=']);
-        DataLakeUtils.dataConfigRemoveFilter();
+        DataExplorerUtils.validateFilterOptions([
+            '=',
+            '<',
+            '<=',
+            '>=',
+            '>',
+            '!=',
+        ]);
+        DataExplorerUtils.dataConfigRemoveFilter();
         DataLakeWidgetTableUtils.checkAmountOfRows(10);
 
         // Test number greater then
         filterConfig = new DataLakeFilterConfig('randomnumber', '50', '>');
-        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataExplorerUtils.dataConfigAddFilter(filterConfig);
         DataLakeWidgetTableUtils.checkAmountOfRows(5);
-        DataLakeUtils.validateFilterOptions(['=', '<', '<=', '>=', '>', '!=']);
-        DataLakeUtils.dataConfigRemoveFilter();
+        DataExplorerUtils.validateFilterOptions([
+            '=',
+            '<',
+            '<=',
+            '>=',
+            '>',
+            '!=',
+        ]);
+        DataExplorerUtils.dataConfigRemoveFilter();
 
         // Test number smaller then
         filterConfig = new DataLakeFilterConfig('randomnumber', '50', '<');
-        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataExplorerUtils.dataConfigAddFilter(filterConfig);
         DataLakeWidgetTableUtils.checkAmountOfRows(5);
-        DataLakeUtils.dataConfigRemoveFilter();
+        DataExplorerUtils.dataConfigRemoveFilter();
 
         // Test boolean
         filterConfig = new DataLakeFilterConfig('randombool', 'true', '=');
-        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataExplorerUtils.dataConfigAddFilter(filterConfig);
         DataLakeWidgetTableUtils.checkAmountOfRows(6);
-        DataLakeUtils.validateFilterOptions(['=', '!=']);
-        DataLakeUtils.validateAutoCompleteOptions(['true', 'false']);
-        DataLakeUtils.dataConfigRemoveFilter();
+        DataExplorerUtils.validateFilterOptions(['=', '!=']);
+        DataExplorerUtils.validateAutoCompleteOptions(['true', 'false']);
+        DataExplorerUtils.dataConfigRemoveFilter();
 
         // Test string & if filter is persisted correctly
         filterConfig = new DataLakeFilterConfig('randomtext', 'a', '=');
-        DataLakeUtils.checkIfFilterIsSet(0);
-        DataLakeUtils.dataConfigAddFilter(filterConfig);
-        DataLakeUtils.checkIfFilterIsSet(1);
+        DataExplorerUtils.checkIfFilterIsSet(0);
+        DataExplorerUtils.dataConfigAddFilter(filterConfig);
+        DataExplorerUtils.checkIfFilterIsSet(1);
         DataLakeWidgetTableUtils.checkAmountOfRows(4);
-        DataLakeUtils.validateFilterOptions(['=', '!=']);
-        DataLakeUtils.validateAutoCompleteOptions(['a', 'b', 'c']);
-        DataLakeUtils.saveAndReEditWidget('NewWidget');
-        DataLakeUtils.checkIfFilterIsSet(1);
+        DataExplorerUtils.validateFilterOptions(['=', '!=']);
+        DataExplorerUtils.validateAutoCompleteOptions(['a', 'b', 'c']);
+        DataExplorerUtils.saveAndReEditWidget('NewWidget');
+        DataExplorerUtils.checkIfFilterIsSet(1);
         DataLakeWidgetTableUtils.checkAmountOfRows(4);
-        DataLakeUtils.dataConfigRemoveFilter();
+        DataExplorerUtils.dataConfigRemoveFilter();
 
         /**
          * Test groupBy configuration and if it is persisted correctly
          */
         cy.wait(1000);
-        DataLakeUtils.clickGroupBy('randomtext');
+        DataExplorerUtils.clickGroupBy('randomtext');
         cy.wait(1000);
         cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 })
             .last({ timeout: 10000 })
@@ -96,10 +110,10 @@ describe('Test Table View in Data Explorer', () => {
             .first({ timeout: 10000 })
             .contains('c', { timeout: 10000 });
         DataLakeWidgetTableUtils.checkAmountOfRows(10);
-        DataLakeUtils.saveAndReEditWidget('NewWidget');
+        DataExplorerUtils.saveAndReEditWidget('NewWidget');
         cy.dataCy('data-explorer-group-by-randomtext')
             .find('input')
             .should('be.checked');
-        DataLakeUtils.clickGroupBy('randomtext');
+        DataExplorerUtils.clickGroupBy('randomtext');
     });
 });

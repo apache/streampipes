@@ -16,17 +16,17 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 import { DataLakeWidgetTableUtils } from '../../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 import { DataExplorerWidget } from '../../../support/model/DataExplorerWidget';
 
 describe('Test Table View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        DataLakeUtils.initDataLakeTests();
+        DataExplorerUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget(
+        DataExplorerUtils.addDataViewAndWidget(
             'view',
             'Persist',
             DataExplorerWidget.TABLE,

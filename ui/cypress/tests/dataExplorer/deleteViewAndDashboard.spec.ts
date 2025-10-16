@@ -15,62 +15,62 @@
  * limitations under the License.
  *
  */
-import { DataLakeUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Test Deletion of Data View and Dashboard', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
+        DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
     });
 
     it('Perform Test', () => {
         const dashboard = 'TestDashboard';
         const dataView = 'TestView';
 
-        DataLakeUtils.goToDatalake();
+        DataExplorerUtils.goToDatalake();
 
-        DataLakeUtils.addDataViewAndTableWidget(dataView, 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget(dataView, 'Persist');
 
-        DataLakeUtils.saveDataViewConfiguration();
+        DataExplorerUtils.saveDataViewConfiguration();
 
-        DataLakeUtils.checkRowsViewsTable(1);
+        DataExplorerUtils.checkRowsViewsTable(1);
 
-        DataLakeUtils.goToDashboard();
+        DataExplorerUtils.goToDashboard();
 
-        DataLakeUtils.createAndEditDashboard(dashboard);
+        DataExplorerUtils.createAndEditDashboard(dashboard);
 
-        DataLakeUtils.addDataViewToDashboard(dataView, true);
+        DataExplorerUtils.addDataViewToDashboard(dataView, true);
 
-        DataLakeUtils.saveDashboardConfiguration();
+        DataExplorerUtils.saveDashboardConfiguration();
 
-        DataLakeUtils.checkRowsDashboardTable(1);
+        DataExplorerUtils.checkRowsDashboardTable(1);
 
         // Click "Delete" but cancel action and check if dashboard and view are still displayed
-        DataLakeUtils.cancelDeleteDashboard(dashboard);
+        DataExplorerUtils.cancelDeleteDashboard(dashboard);
 
-        DataLakeUtils.checkRowsDashboardTable(1);
+        DataExplorerUtils.checkRowsDashboardTable(1);
 
-        DataLakeUtils.goToDatalake();
+        DataExplorerUtils.goToDatalake();
 
-        DataLakeUtils.cancelDeleteDataView(dataView);
+        DataExplorerUtils.cancelDeleteDataView(dataView);
 
-        DataLakeUtils.checkRowsViewsTable(1);
+        DataExplorerUtils.checkRowsViewsTable(1);
 
-        DataLakeUtils.deleteDataView(dataView);
+        DataExplorerUtils.deleteDataView(dataView);
 
-        DataLakeUtils.checkRowsViewsTable(0);
+        DataExplorerUtils.checkRowsViewsTable(0);
 
-        DataLakeUtils.goToDashboard();
+        DataExplorerUtils.goToDashboard();
 
-        DataLakeUtils.editDashboard(dashboard);
+        DataExplorerUtils.editDashboard(dashboard);
 
         // Validate that data view is removed from dashboard
-        DataLakeUtils.getEmptyDashboardInformation().should('be.visible');
+        DataExplorerUtils.getEmptyDashboardInformation().should('be.visible');
 
-        DataLakeUtils.saveDashboardConfiguration();
+        DataExplorerUtils.saveDashboardConfiguration();
 
-        DataLakeUtils.deleteDashboard(dashboard);
+        DataExplorerUtils.deleteDashboard(dashboard);
 
-        DataLakeUtils.checkRowsDashboardTable(0);
+        DataExplorerUtils.checkRowsDashboardTable(0);
     });
 });

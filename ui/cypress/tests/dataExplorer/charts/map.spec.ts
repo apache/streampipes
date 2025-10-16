@@ -16,18 +16,18 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Test Map View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        DataLakeUtils.initDataLakeTests();
+        DataExplorerUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'map');
+        DataExplorerUtils.addDataViewAndWidget('view', 'Persist', 'map');
 
         // Change marker positions
-        DataLakeUtils.openVisualizationConfig();
+        DataExplorerUtils.openVisualizationConfig();
         cy.dataCy('data-view-map-select-latitude')
             .click()
             .get('mat-option')
@@ -48,7 +48,7 @@ describe('Test Map View in Data Explorer', () => {
         );
 
         // Change from markers to trace
-        DataLakeUtils.openVisualizationConfig();
+        DataExplorerUtils.openVisualizationConfig();
         cy.dataCy('data-view-map-select-marker-or-trace')
             .click()
             .get('mat-option')
