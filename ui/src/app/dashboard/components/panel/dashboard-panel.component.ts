@@ -52,7 +52,6 @@ import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/model
 import { TranslateService } from '@ngx-translate/core';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
-import { AssetDialogComponent } from '../../dialogs/asset-configuration/asset-dialog.component';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -174,8 +173,6 @@ export class DashboardPanelComponent
         this.dashboardService
             .updateDashboard(this.dashboard)
             .subscribe(result => {
-                //TODO Asset Save Service Needs to be called from here
-
                 this.routingService.navigateToDashboardOverview(true);
             });
     }
