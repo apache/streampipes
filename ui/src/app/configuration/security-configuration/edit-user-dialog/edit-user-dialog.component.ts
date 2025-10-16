@@ -44,6 +44,7 @@ import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-user-dialog',
@@ -85,6 +86,7 @@ export class EditUserDialogComponent implements OnInit {
         private authService: AuthService,
         private router: Router,
         private mailConfigService: MailConfigService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -100,7 +102,7 @@ export class EditUserDialogComponent implements OnInit {
         const errorCallback = (error: any) => {
             this.registrationError = error.error.notifications
                 ? error.error.notifications[0].title
-                : 'Unknown error';
+                : this.translateService.instant('Unknown error');
         };
 
         if (!this.isUserAccount || !this.isExternalProvider) {

@@ -22,8 +22,11 @@ import {
     Component,
     ContentChild,
     ContentChildren,
+    EventEmitter,
     Input,
+    Output,
     QueryList,
+    TemplateRef,
     ViewChild,
 } from '@angular/core';
 import {
@@ -35,6 +38,8 @@ import {
     MatTableDataSource,
 } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { SpTableActionsDirective } from './sp-table-actions.directive';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
     selector: 'sp-table',
@@ -51,12 +56,20 @@ export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
     @ViewChild(MatTable, { static: true }) table: MatTable<T>;
 
     @Input() columns: string[];
+    @Input() rowsClickable = false;
+    @Input() showActionsMenu = false;
 
     @Input() dataSource: MatTableDataSource<T>;
 
+    @Output() rowClicked = new EventEmitter<T>();
+
     @ViewChild('paginator') paginator: MatPaginator;
+    @ContentChild(SpTableActionsDirective, { read: TemplateRef })
+    actionsTemplate?: TemplateRef<any>;
 
     pageSize = 1;
+    timedOutCloser: any;
+    trigger: MatMenuTrigger | undefined = undefined;
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
@@ -71,5 +84,23 @@ export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
             this.table.addHeaderRowDef(headerRowDef),
         );
         this.table.setNoDataRow(this.noDataRow);
+    }
+
+    mouseEnter(trigger) {
+        if (this.timedOutCloser) {
+            clearTimeout(this.timedOutCloser);
+        }
+        if (this.trigger !== undefined) {
+            this.trigger.closeMenu();
+        }
+        trigger.openMenu();
+        this.trigger = trigger;
+    }
+
+    mouseLeave(trigger) {
+        this.timedOutCloser = setTimeout(() => {
+            trigger.closeMenu();
+            this.trigger = undefined;
+        }, 50);
     }
 }

@@ -21,22 +21,24 @@
         <div fxFlex="100" fxLayout="column" class="p-15">
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                 <div class="general-options-panel" fxLayout="column">
-                    <span class="general-options-header">Basics</span>
+                    <span class="general-options-header">{{
+                        'Basics' | translate
+                    }}</span>
                     <mat-form-field color="accent">
-                        <mat-label>Role ID</mat-label>
+                        <mat-label>{{ 'Role ID' | translate }}</mat-label>
                         <input
                             formControlName="elementId"
                             fxFlex
                             matInput
                             required
                         />
-                        <mat-error
-                            >Role ID must start with ROLE_ and must only include
-                            capital letters or underscore</mat-error
-                        >
+                        <mat-error>{{
+                            'Role ID must start with ROLE_ and must only include capital letters or underscore'
+                                | translate
+                        }}</mat-error>
                     </mat-form-field>
                     <mat-form-field color="accent">
-                        <mat-label>Role Name</mat-label>
+                        <mat-label>{{ 'Role Name' | translate }}</mat-label>
                         <input
                             formControlName="label"
                             fxFlex
@@ -46,7 +48,9 @@
                     </mat-form-field>
                 </div>
                 <div fxLayout="column" class="general-options-panel">
-                    <span class="general-options-header">Privileges</span>
+                    <span class="general-options-header">{{
+                        'Privileges' | translate
+                    }}</span>
                     <div
                         fxLayout="row"
                         fxLayoutGap="10px"
@@ -54,7 +58,7 @@
                     >
                         <div class="list-section" fxFlex="50">
                             <div class="privilege-header">
-                                Available Privileges
+                                {{ 'Available Privileges' | translate }}
                             </div>
                             <div *ngFor="let privilege of allPrivileges">
                                 <div fxLayoutAlign="start center">
@@ -75,7 +79,7 @@
                         </div>
                         <div class="list-section" fxFlex="50">
                             <div class="privilege-header">
-                                Selected Privileges
+                                {{ 'Selected Privileges' | translate }}
                             </div>
                             <div *ngFor="let privilege of selectedPrivileges">
                                 <div fxLayoutAlign="start center">
@@ -95,7 +99,9 @@
                 </div>
 
                 <div fxLayout="column" class="general-options-panel">
-                    <span class="general-options-header">Alternate IDs</span>
+                    <span class="general-options-header">{{
+                        'Alternate IDs' | translate
+                    }}</span>
                     <sp-alternate-id-configuration
                         [alternateIds]="clonedRole.alternateIds"
                     >
@@ -118,7 +124,8 @@
                 "
                 data-cy="sp-edit-role-save"
             >
-                <i class="material-icons">save</i><span>&nbsp;Save</span>
+                <i class="material-icons">save</i
+                ><span>&nbsp;{{ 'Save' | translate }}</span>
             </button>
             <button
                 mat-button
@@ -126,7 +133,7 @@
                 class="mat-basic"
                 (click)="close(false)"
             >
-                Cancel
+                {{ 'Cancel' | translate }}
             </button>
         </div>
     </div>

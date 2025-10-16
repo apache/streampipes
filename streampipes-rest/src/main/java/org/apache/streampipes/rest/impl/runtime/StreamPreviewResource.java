@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl;
+
+package org.apache.streampipes.rest.impl.runtime;
 
 import org.apache.streampipes.manager.runtime.DataStreamRuntimeInfoProvider;
 import org.apache.streampipes.manager.runtime.RateLimitedRuntimeInfoProvider;
@@ -34,8 +35,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v2/pipeline-element/runtime")
-public class PipelineElementRuntimeInfo extends AbstractRestResource {
+@RequestMapping("/api/v2/stream-preview")
+public class StreamPreviewResource extends AbstractRestResource {
 
   @PostMapping(
       produces = MediaType.APPLICATION_OCTET_STREAM_VALUE,
@@ -46,7 +47,7 @@ public class PipelineElementRuntimeInfo extends AbstractRestResource {
     // deactivate nginx proxy buffering for better performance of streaming output
     response.addHeader("X-Accel-Buffering", "no");
     var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(Map.of("adapter", spDataStream));
-    var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(runtimeInfoFetcher);
+    var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(runtimeInfoFetcher, () -> {});
     return runtimeInfoProvider::streamOutput;
   }
 }

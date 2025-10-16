@@ -16,6 +16,8 @@
  *
  */
 
+import { GeneralUtils } from '../GeneralUtils';
+
 export class DataLakeBtns {
     public static refreshDataLakeMeasures() {
         return cy.dataCy('refresh-data-lake-measures');
@@ -26,6 +28,9 @@ export class DataLakeBtns {
     }
 
     public static editDataViewButton(widgetName: string) {
-        return cy.dataCy('edit-data-view-' + widgetName).click();
+        GeneralUtils.openMenuForRow(widgetName);
+        return cy
+            .dataCy('edit-data-view-' + widgetName.replaceAll(' ', ''))
+            .click();
     }
 }

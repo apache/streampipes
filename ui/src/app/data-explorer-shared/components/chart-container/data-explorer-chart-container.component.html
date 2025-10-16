@@ -42,25 +42,23 @@
             </div>
             @if (!kioskMode) {
                 <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-                    <mat-spinner
-                        [diameter]="20"
-                        color="primary"
-                        class="mr-10"
-                        *ngIf="timerActive"
-                    >
-                    </mat-spinner>
-                    <div
-                        class="time-counter"
-                        *ngIf="editMode"
-                        [ngStyle]="{
-                            background:
-                                configuredWidget.baseAppearanceConfig.textColor,
-                            color: configuredWidget.baseAppearanceConfig
-                                .backgroundColor
-                        }"
-                    >
-                        {{ loadingTime }}s
-                    </div>
+                    @if (editMode) {
+                        <mat-spinner
+                            [diameter]="20"
+                            color="primary"
+                            class="mr-10"
+                            *ngIf="timerActive"
+                        >
+                        </mat-spinner>
+                        <sp-label
+                            size="small"
+                            [labelBackground]="
+                                configuredWidget.baseAppearanceConfig.textColor
+                            "
+                            [labelText]="loadingTime + 's'"
+                            class="mr-10"
+                        ></sp-label>
+                    }
                     <button
                         mat-icon-button
                         [matMenuTriggerFor]="menu"

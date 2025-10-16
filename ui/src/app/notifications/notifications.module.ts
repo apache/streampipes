@@ -25,6 +25,7 @@ import { NotificationsComponent } from './notifications.component';
 import { NotificationItemComponent } from './components/notification-item.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PlatformServicesModule } from '@streampipes/platform-services';
+import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         FlexLayoutModule,
         FormsModule,
         PlatformServicesModule,
+        SharedUiModule,
     ],
     declarations: [NotificationsComponent, NotificationItemComponent],
     providers: [],

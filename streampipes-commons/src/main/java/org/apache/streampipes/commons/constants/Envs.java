@@ -23,6 +23,7 @@ public enum Envs {
   SP_PORT("SP_PORT"),
 
   SP_CORE_ASSET_BASE_DIR("SP_CORE_ASSET_BASE_DIR"),
+  SP_EXT_ASSET_BASE_DIR("SP_EXT_ASSET_BASE_DIR"),
 
   SP_CORE_SCHEME("SP_CORE_SCHEME", "http", "http"),
   SP_CORE_HOST("SP_CORE_HOST", "backend", "localhost"),
@@ -141,6 +142,8 @@ public enum Envs {
 
   // Retention Local File 
   SP_RETENTION_LOCAL_DIR("SP_RETENTION_LOCAL_DIR", "./ArchivedData"),
+  SP_DATALAKE_SCHEDULER_CRON("SP_DATALAKE_SCHEDULER_CRON", "0 1 0 * * 6"),// CronJob Scheduled every Saturday (6) 00:01 //@Scheduled(cron = "0 */2 * * *
+                                     // *") //Cron Job in Dev Setting; Running every 2 min
 
   // Logging
   SP_LOGGING_FILE_ENABLED("SP_LOGGING_FILE_ENABLED", "false"),

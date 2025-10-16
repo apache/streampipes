@@ -16,9 +16,9 @@
   ~
   -->
 
-<div fxLayout="column" class="page-container">
-    <div fxLayout="row" class="border sp-tab-bg">
-        <div fxFlex="100" class="page-container-nav">
+<sp-basic-view>
+    <div fxLayout="row" nav>
+        <div fxFlex="100">
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
                     <mat-tab-group
@@ -60,4 +60,4 @@
             ></sp-token-management-settings>
         </div>
     </div>
-</div>
+</sp-basic-view>

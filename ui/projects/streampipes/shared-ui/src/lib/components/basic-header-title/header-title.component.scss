@@ -16,12 +16,16 @@
  *
  */
 
-.title-left-border {
-    border-left: 4px solid var(--color-primary);
-    padding-left: 8px;
-}
-
 .header-title {
-    font-size: 20pt;
-    font-weight: bold;
+    font-size: 1.7rem;
+    font-weight: 700;
+    display: inline-block;
+    padding-left: 12px; /* space so text doesn't overlap border */
+    border-left: 4px solid transparent; /* thickness of the border */
+    border-image: linear-gradient(
+            to bottom,
+            var(--color-primary),
+            var(--color-primary-dark)
+        )
+        1;
 }

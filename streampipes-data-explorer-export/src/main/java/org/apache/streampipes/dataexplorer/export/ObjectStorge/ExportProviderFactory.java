@@ -17,14 +17,25 @@
  */
 package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
-import org.apache.streampipes.model.datalake.ExportProviderSettings;
+import org.apache.streampipes.model.configuration.ExportProviderSettings;
+import org.apache.streampipes.model.configuration.ProviderType;
 
 public class ExportProviderFactory {
-    public static IObjectStorage createExportProvider(String providerType, String measurementName, ExportProviderSettings settings, String format) throws Exception {
+
+    
+    public static IObjectStorage createExportProvider(
+            ProviderType providerType, 
+            String measurementName, 
+            ExportProviderSettings settings, 
+            String format) throws Exception {
+
         switch (providerType) {
-            case "local":
+            case FOLDER: 
                 return new LocalFolder(measurementName, format);
-            //Additional Providers can be added here 
+                
+            case S3: 
+                return new S3(measurementName, format, settings); 
+
             default:
                 throw new IllegalArgumentException("Unsupported provider: " + providerType);
         }
