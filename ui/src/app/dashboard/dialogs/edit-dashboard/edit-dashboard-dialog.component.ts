@@ -16,8 +16,19 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { Dashboard, DashboardService } from '@streampipes/platform-services';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
+import {
+    Dashboard,
+    DashboardService,
+    SpAssetTreeNode,
+} from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
@@ -29,9 +40,18 @@ import { DialogRef } from '@streampipes/shared-ui';
 export class EditDashboardDialogComponent implements OnInit {
     @Input() createMode: boolean;
     @Input() dashboard: Dashboard;
+    @Input() selectedAssets: SpAssetTreeNode[];
+    @Input() deselectedAssets: SpAssetTreeNode[];
+    @Input() originalAssets: SpAssetTreeNode[];
+
+    @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() originalAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
 
     private dialogRef = inject(DialogRef<EditDashboardDialogComponent>);
     private dashboardService = inject(DashboardService);
+
+    addToAssets: boolean = false;
 
     ngOnInit() {
         if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {
@@ -47,6 +67,21 @@ export class EditDashboardDialogComponent implements OnInit {
 
     onCancel(): void {
         this.dialogRef.close();
+    }
+
+    onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.selectedAssets = updatedAssets;
+        this.selectedAssetsChange.emit(this.selectedAssets);
+    }
+
+    onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.deselectedAssets = updatedAssets;
+        this.deselectedAssetsChange.emit(this.deselectedAssets);
+    }
+
+    onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
+        this.originalAssets = updatedAssets;
+        this.originalAssetsChange.emit(this.originalAssets);
     }
 
     onSave(): void {

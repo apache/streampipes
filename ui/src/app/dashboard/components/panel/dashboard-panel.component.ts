@@ -174,28 +174,10 @@ export class DashboardPanelComponent
         this.dashboardService
             .updateDashboard(this.dashboard)
             .subscribe(result => {
-                console.log('result ', result);
-
-                const dialogRef = this.dialog.open(AssetDialogComponent, {
-                    width: '500px',
-                    data: {
-                        title: this.translateService.instant(
-                            'Do you want to link the dashboard to an Asset?',
-                        ),
-                        subtitle: this.translateService.instant(
-                            'Update asset links or close.',
-                        ),
-                        cancelTitle: this.translateService.instant('Close'),
-                        okTitle: this.translateService.instant('Update'),
-                        confirmAndCancel: true,
-                        editMode: this.editMode,
-                        dataInput: result,
-                    },
-                });
+                //TODO Asset Save Service Needs to be called from here
 
                 this.routingService.navigateToDashboardOverview(true);
             });
-        console.log('Persist is called!');
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {
