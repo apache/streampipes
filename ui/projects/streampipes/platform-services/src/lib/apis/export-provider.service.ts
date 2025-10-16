@@ -20,7 +20,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import { ExportProviderSettings } from '@streampipes/platform-services';
+import { ExportProviderSettings } from '../model/gen/streampipes-model';
 
 @Injectable({
     providedIn: 'root',
