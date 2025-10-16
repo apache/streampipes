@@ -115,7 +115,7 @@
                     @if (addToAssets) {
                         <div class="mt-10">
                             <sp-asset-link-configuration
-                                [isEdit]="createMode"
+                                [isEdit]="!createMode"
                                 [itemId]="dashboard.elementId"
                                 (selectedAssetsChange)="
                                     onSelectedAssetsChange($event)
