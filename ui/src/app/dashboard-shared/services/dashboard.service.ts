@@ -30,6 +30,7 @@ export class DataExplorerDashboardService {
     ) {}
 
     openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
+        console.log('createMode', createMode);
         return this.dialogService.open(EditDashboardDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: createMode

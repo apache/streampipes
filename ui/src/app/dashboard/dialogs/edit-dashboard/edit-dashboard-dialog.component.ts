@@ -56,6 +56,8 @@ export class EditDashboardDialogComponent implements OnInit {
     addToAssets: boolean = false;
 
     ngOnInit() {
+        console.log('Dashboard ', this.dashboard);
+        console.log(this.createMode);
         if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {
             this.dashboard.dashboardGeneralSettings.defaultViewMode = 'grid';
         }
@@ -64,6 +66,9 @@ export class EditDashboardDialogComponent implements OnInit {
             undefined
         ) {
             this.dashboard.dashboardGeneralSettings.globalTimeEnabled = true;
+        }
+        if (!this.createMode) {
+            this.addToAssets = true;
         }
     }
 
