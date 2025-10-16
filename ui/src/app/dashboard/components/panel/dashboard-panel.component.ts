@@ -52,6 +52,7 @@ import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/model
 import { TranslateService } from '@ngx-translate/core';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
+import { AssetDialogComponent } from '../../dialogs/asset-configuration/asset-dialog.component';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -173,8 +174,28 @@ export class DashboardPanelComponent
         this.dashboardService
             .updateDashboard(this.dashboard)
             .subscribe(result => {
+                console.log('result ', result);
+
+                const dialogRef = this.dialog.open(AssetDialogComponent, {
+                    width: '500px',
+                    data: {
+                        title: this.translateService.instant(
+                            'Do you want to link the dashboard to an Asset?',
+                        ),
+                        subtitle: this.translateService.instant(
+                            'Update asset links or close.',
+                        ),
+                        cancelTitle: this.translateService.instant('Close'),
+                        okTitle: this.translateService.instant('Update'),
+                        confirmAndCancel: true,
+                        editMode: this.editMode,
+                        dataInput: result,
+                    },
+                });
+
                 this.routingService.navigateToDashboardOverview(true);
             });
+        console.log('Persist is called!');
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {

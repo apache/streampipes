@@ -71,6 +71,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DashboardSharedModule } from '../dashboard-shared/dashboard-shared.module';
 import { CloneDashboardDialogComponent } from './dialogs/clone-dashboard/clone-dashboard-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AssetDialogComponent } from './dialogs/asset-configuration/asset-dialog.component';
 
 @NgModule({
     imports: [
@@ -149,6 +150,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         EditDashboardDialogComponent,
         DashboardOverviewTableComponent,
         CloneDashboardDialogComponent,
+        AssetDialogComponent,
     ],
     providers: [],
     exports: [],
