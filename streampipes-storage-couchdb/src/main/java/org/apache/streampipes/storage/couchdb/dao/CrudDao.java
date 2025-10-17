@@ -21,6 +21,7 @@ import org.apache.streampipes.model.Tuple2;
 
 import org.lightcouch.CouchDbClient;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -60,6 +61,12 @@ public class CrudDao {
     DbCommand<List<T>, T> cmd = new FindAllCommand<>(couchDbClientSupplier, clazz, viewName);
     return cmd.execute();
   }
+public <T> List<T> findDocs(String query, Class<T> clazz) {
+    DbCommand<Optional<List<T>>, T> cmd = new FindDocsCommand<T>(couchDbClientSupplier, query, clazz);
+    Optional<List<T>> result = cmd.execute();
+    return result.orElse(Collections.emptyList());
+  }
+
 
   public <T> T findWithNullIfEmpty(String id, Class<T> clazz) {
     DbCommand<Optional<T>, T> cmd = new FindCommand<>(couchDbClientSupplier, id, clazz);

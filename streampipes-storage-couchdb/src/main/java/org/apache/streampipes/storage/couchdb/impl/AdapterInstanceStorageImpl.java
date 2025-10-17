@@ -27,6 +27,7 @@ import java.util.NoSuchElementException;
 
 public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
 
+
   public AdapterInstanceStorageImpl() {
     super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
   }
@@ -49,6 +50,11 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
   }
     @Override
   public boolean validateUniqueName(String name){
-    return this.findAll().stream().noneMatch(p -> p.getName().equalsIgnoreCase(name));
+    String selectorJson = String.format(
+    "{\"selector\": {\"properties.name\": \"%s\"}, \"limit\": 1}",
+    name
+);
+ List<AdapterDescription> result = this.findDocs(selectorJson, AdapterDescription.class);
+ return result.isEmpty();
   }
 }

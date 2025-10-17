@@ -17,55 +17,30 @@
  */
 package org.apache.streampipes.storage.couchdb.dao;
 
-import org.apache.streampipes.model.Tuple2;
-
 import org.lightcouch.CouchDbClient;
+import org.lightcouch.NoDocumentException;
+
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class AbstractDao<T> extends CrudDao {
+public class FindDocsCommand<T> extends DbCommand<Optional<List<T>>, T> {
 
-  private static final String ALL_DOCS = "_all_docs";
+  private String query;
 
-  protected Class<T> clazz;
-
-  public AbstractDao(Supplier<CouchDbClient> couchDbClientSupplier, Class<T> clazz) {
-    super(couchDbClientSupplier);
-    this.clazz = clazz;
+  public FindDocsCommand(Supplier<CouchDbClient> couchDbClient, String query, Class<T> clazz) {
+    super(couchDbClient, clazz);
+    this.query = query;
   }
 
-  public Tuple2<Boolean, String> persist(T objToPersist) {
-    return persist(objToPersist, clazz);
+  @Override
+  protected Optional<List<T>> executeCommand(CouchDbClient couchDbClient) {
+    try {
+      List<T> result = couchDbClient.findDocs(this.query, clazz);
+      return Optional.ofNullable(result);
+    } catch (NoDocumentException e) {
+      return Optional.empty();
+    }
   }
-
-  public Boolean delete(String key) {
-    return delete(key, clazz);
-  }
-
-  public Boolean update(T objToUpdate) {
-    return update(objToUpdate, clazz);
-  }
-
-  public Optional<T> find(String id) {
-    return find(id, clazz);
-  }
-
-  public List<T> findAll() {
-    return findAll(ALL_DOCS, clazz);
-  }
-
-  public List<T> findAll(String viewName) {
-    return findAll(viewName, clazz);
-  }
-
-    public List<T> findDocs(String query) {
-    return findDocs(query, clazz);
-  }
-
-  public T findWithNullIfEmpty(String id) {
-    return findWithNullIfEmpty(id, clazz);
-  }
-
 }
