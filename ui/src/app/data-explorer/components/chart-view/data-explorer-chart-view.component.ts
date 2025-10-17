@@ -192,13 +192,11 @@ export class DataExplorerChartViewComponent
                 ? this.dataViewService.updateChart(this.dataView)
                 : this.dataViewService.saveChart(this.dataView);
         observable.subscribe(data => {
-            console.log(data);
             if (
                 this.selectedAssets.length > 0 ||
                 this.deselectedAssets.length > 0 ||
                 this.originalAssets.length > 0
             ) {
-                console.log('saveToAssets');
                 this.saveToAssets(data);
             }
             this.routingService.navigateToDataViewOverview(true);
@@ -222,13 +220,12 @@ export class DataExplorerChartViewComponent
                 selectedAssets: this.selectedAssets,
                 deselectedAssets: this.deselectedAssets,
                 originalAssets: this.originalAssets,
-                dataViewId: this.dataView.widgetId,
+                dataViewId: this.route.snapshot.params.id,
                 //dataInput: data,
             },
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            console.log('results', result);
             if (result) {
                 this.selectedAssets = result.selectedAssets;
                 this.deselectedAssets = result.deselectedAssets;

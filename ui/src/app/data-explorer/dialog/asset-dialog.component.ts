@@ -48,7 +48,6 @@ export class AssetDialogComponent {
         public dialogRef: MatDialogRef<AssetDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
     ) {
-        console.log(data);
         this.selectedAssets = data.selectedAssets || [];
         this.deselectedAssets = data.deselectedAssets || [];
         this.originalAssets = data.originalAssets || [];
