@@ -40,6 +40,8 @@ import {
 import {
     AssetSaveService,
     ConfirmDialogComponent,
+    DialogService,
+    PanelType,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
@@ -88,6 +90,7 @@ export class DataExplorerChartViewComponent
     private dataViewService = inject(ChartService);
     private timeSelectionService = inject(TimeSelectionService);
     private translateService = inject(TranslateService);
+    private dialogService = inject(DialogService);
 
     private assetSaveService = inject(AssetSaveService);
 
@@ -204,12 +207,13 @@ export class DataExplorerChartViewComponent
     }
 
     addAssetDialog(): void {
-        const dialogRef = this.dialog.open(AssetDialogComponent, {
+        const dialogRef = this.dialogService.open(AssetDialogComponent, {
+            panelType: PanelType.STANDARD_PANEL,
             width: '500px',
+            title: this.translateService.instant(
+                'Do you want to link the chart to an Asset?',
+            ),
             data: {
-                title: this.translateService.instant(
-                    'Do you want to link the chart to an Asset?',
-                ),
                 subtitle: this.translateService.instant(
                     'Update asset links or close.',
                 ),
@@ -221,7 +225,6 @@ export class DataExplorerChartViewComponent
                 deselectedAssets: this.deselectedAssets,
                 originalAssets: this.originalAssets,
                 dataViewId: this.route.snapshot.params.id,
-                //dataInput: data,
             },
         });
 

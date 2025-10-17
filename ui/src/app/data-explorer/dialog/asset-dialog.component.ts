@@ -16,44 +16,31 @@
  *
  */
 
-import {
-    Component,
-    EventEmitter,
-    inject,
-    Inject,
-    Input,
-    Output,
-} from '@angular/core';
+import { Component, inject, Inject, Input, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-    DataExplorerWidgetModel,
-    LinkageData,
-    SpAssetTreeNode,
-} from '@streampipes/platform-services';
+import { SpAssetTreeNode } from '@streampipes/platform-services';
+import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-asset-dialog',
     templateUrl: './asset-dialog.component.html',
     standalone: false,
 })
-export class AssetDialogComponent {
+export class AssetDialogComponent implements OnInit {
     @Input() selectedAssets: SpAssetTreeNode[];
     @Input() deselectedAssets: SpAssetTreeNode[];
     @Input() originalAssets: SpAssetTreeNode[];
     @Input() dataViewId: string;
+    @Input() editMode: string;
+    @Input() cancelTitle: string;
+    @Input() okTitle: string;
+
+    private dialogRef = inject<DialogRef<AssetDialogComponent>>(DialogRef);
 
     addToAssets = false;
 
-    constructor(
-        public dialogRef: MatDialogRef<AssetDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
-    ) {
-        this.selectedAssets = data.selectedAssets || [];
-        this.deselectedAssets = data.deselectedAssets || [];
-        this.originalAssets = data.originalAssets || [];
-        this.dataViewId = data.dataViewId;
-
-        if (data.editMode) {
+    ngOnInit(): void {
+        if (this.editMode) {
             this.addToAssets = true;
         }
     }
