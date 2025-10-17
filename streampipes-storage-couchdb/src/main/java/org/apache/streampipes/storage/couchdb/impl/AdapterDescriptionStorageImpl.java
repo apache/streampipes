@@ -55,6 +55,19 @@ public class AdapterDescriptionStorageImpl extends DefaultCrudStorage<AdapterDes
     update(element);
     return getElementById(element.getElementId());
   }
+  @Override
+  public boolean validateUniqueName(String name){
+    return this.findAll().stream().noneMatch(p -> p.getName().equalsIgnoreCase(name));
+  }
+
+  //TODO This is supposed to be more efficient
+  //public boolean isNameTaken(String name) {
+   // String selectorJson = String.format("{\"selector\": {\"name\": \"%s\"}, \"limit\": 1}", name);
+
+  //  List<MyEntity> result = dbClient.findDocs(selectorJson, MyEntity.class);
+
+ //   return !result.isEmpty();
+//}
 
   private String getCurrentRev(String elementId) {
     return find(elementId).get().getRev();

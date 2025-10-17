@@ -99,6 +99,14 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return ok(Notifications.success(adapterId));
   }
 
+  @GetMapping(path = "/namevalidation/{name}")
+@PreAuthorize("this.hasReadAuthority()")
+public ResponseEntity<Boolean> validateAdapterName(@PathVariable String name) {
+    boolean nameValidationSuccess = managementService.validateName(name);
+    return ResponseEntity.ok(nameValidationSuccess);
+}
+
+
   @PostMapping(path = "compact", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
       MediaType.APPLICATION_JSON_VALUE,
       SpMediaType.YAML,

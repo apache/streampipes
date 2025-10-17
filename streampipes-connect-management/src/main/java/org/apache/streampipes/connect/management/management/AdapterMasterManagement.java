@@ -202,4 +202,9 @@ public class AdapterMasterManagement {
       throw new AdapterException();
     }
   }
+
+  public boolean validateName(String name) {
+  return this.adapterInstanceStorage.validateUniqueName(name);
+
+  }
 }

@@ -80,6 +80,6 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
     SecretProvider.getEncryptionService()
                   .apply(encryptedAdapterDescription);
     return encryptedAdapterDescription;
-  }
+  } 
 
 }

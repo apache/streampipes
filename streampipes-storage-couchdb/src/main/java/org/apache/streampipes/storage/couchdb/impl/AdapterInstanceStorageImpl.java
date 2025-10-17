@@ -47,4 +47,8 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         .filter(p -> p.getAppId().equals(appId))
         .toList();
   }
+    @Override
+  public boolean validateUniqueName(String name){
+    return this.findAll().stream().noneMatch(p -> p.getName().equalsIgnoreCase(name));
+  }
 }

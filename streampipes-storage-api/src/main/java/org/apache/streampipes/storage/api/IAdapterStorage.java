@@ -27,4 +27,6 @@ public interface IAdapterStorage extends CRUDStorage<AdapterDescription> {
   AdapterDescription getFirstAdapterByAppId(String appId);
 
   List<AdapterDescription> getAdaptersByAppId(String appId);
+
+  boolean validateUniqueName(String name);
 }
