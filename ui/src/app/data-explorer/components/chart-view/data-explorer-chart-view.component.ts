@@ -25,8 +25,10 @@ import {
 } from '@angular/core';
 import {
     ChartService,
+    DashboardConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    LinkageData,
     TimeSettings,
 } from '@streampipes/platform-services';
 import {
@@ -36,6 +38,7 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import {
+    AssetSaveService,
     ConfirmDialogComponent,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
@@ -70,6 +73,10 @@ export class DataExplorerChartViewComponent
     drawerWidth = 450;
     panelWidth = '100%';
 
+    selectedAssets = [];
+    deselectedAssets = [];
+    originalAssets = [];
+
     resizeEchartsService = inject(ResizeEchartsService);
 
     private dataExplorerSharedService = inject(DataExplorerSharedService);
@@ -81,6 +88,8 @@ export class DataExplorerChartViewComponent
     private dataViewService = inject(ChartService);
     private timeSelectionService = inject(TimeSelectionService);
     private translateService = inject(TranslateService);
+
+    private assetSaveService = inject(AssetSaveService);
 
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
@@ -183,23 +192,46 @@ export class DataExplorerChartViewComponent
                 ? this.dataViewService.updateChart(this.dataView)
                 : this.dataViewService.saveChart(this.dataView);
         observable.subscribe(data => {
-            const dialogRef = this.dialog.open(AssetDialogComponent, {
-                width: '500px',
-                data: {
-                    title: this.translateService.instant(
-                        'Do you want to link the chart to an Asset?',
-                    ),
-                    subtitle: this.translateService.instant(
-                        'Update asset links or close.',
-                    ),
-                    cancelTitle: this.translateService.instant('Close'),
-                    okTitle: this.translateService.instant('Update'),
-                    confirmAndCancel: true,
-                    editMode: this.editMode,
-                    dataInput: data,
-                },
-            });
+            if (
+                this.selectedAssets.length > 0 ||
+                this.deselectedAssets.length > 0 ||
+                this.originalAssets.length > 0
+            ) {
+                this.saveToAssets(data);
+            }
             this.routingService.navigateToDataViewOverview(true);
+        });
+    }
+
+    addAssetDialog(): void {
+        const dialogRef = this.dialog.open(AssetDialogComponent, {
+            width: '500px',
+            data: {
+                title: this.translateService.instant(
+                    'Do you want to link the chart to an Asset?',
+                ),
+                subtitle: this.translateService.instant(
+                    'Update asset links or close.',
+                ),
+                cancelTitle: this.translateService.instant('Close'),
+                okTitle: this.translateService.instant('Update'),
+                confirmAndCancel: true,
+                editMode: this.editMode,
+                selectedAssets: this.selectedAssets,
+                deselectedAssets: this.deselectedAssets,
+                originalAssets: this.originalAssets,
+                dataViewId: this.dataView.widgetId,
+                //dataInput: data,
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('results', result);
+            if (result) {
+                this.selectedAssets = result.selectedAssets;
+                this.deselectedAssets = result.deselectedAssets;
+                this.originalAssets = result.originalAssets;
+            }
         });
     }
 
@@ -279,5 +311,38 @@ export class DataExplorerChartViewComponent
                 this.outerPanel.nativeElement.offsetWidth,
             );
         }, 100);
+    }
+
+    private async saveAssets(
+        linkageData: LinkageData[],
+        data: DashboardConfig,
+    ): Promise<void> {
+        await this.assetSaveService.saveSelectedAssets(
+            this.selectedAssets,
+            linkageData,
+            this.deselectedAssets,
+            this.originalAssets,
+        );
+        //this.dialogRef.close(true);
+    }
+
+    saveToAssets(data: DashboardConfig): void {
+        let linkageData: LinkageData[];
+        try {
+            linkageData = this.createLinkageData(data);
+
+            this.saveAssets(linkageData, data);
+        } catch (err) {
+            console.error('Error in addToAsset:', err);
+        }
+    }
+    private createLinkageData(data: DashboardConfig): LinkageData[] {
+        return [
+            {
+                type: 'chart',
+                id: data.dataInput.elementId,
+                name: data.dataInput.baseAppearanceConfig.widgetTitle,
+            },
+        ];
     }
 }

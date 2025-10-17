@@ -31,7 +31,7 @@
                 <div class="mt-10">
                     <sp-asset-link-configuration
                         [isEdit]="data.editMode"
-                        [itemId]="data.dataInput.elementId"
+                        [itemId]="data.dataViewId"
                         (selectedAssetsChange)="onSelectedAssetsChange($event)"
                         (deselectedAssetsChange)="
                             onDeselectedAssetsChange($event)
@@ -58,7 +58,7 @@
             <button
                 mat-flat-button
                 color="accent"
-                (click)="saveToAssets()"
+                (click)="onAddAsset()"
                 cdkFocusInitial
                 data-cy="asset-dialog-confirm-delete"
             >

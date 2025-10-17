@@ -30,7 +30,6 @@ import {
     LinkageData,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
-import { AssetSaveService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-asset-dialog',
@@ -38,11 +37,10 @@ import { AssetSaveService } from '@streampipes/shared-ui';
     standalone: false,
 })
 export class AssetDialogComponent {
-    private assetSaveService = inject(AssetSaveService);
-
-    selectedAssets: SpAssetTreeNode[];
-    deselectedAssets: SpAssetTreeNode[];
-    originalAssets: SpAssetTreeNode[];
+    @Input() selectedAssets: SpAssetTreeNode[];
+    @Input() deselectedAssets: SpAssetTreeNode[];
+    @Input() originalAssets: SpAssetTreeNode[];
+    @Input() dataViewId: string;
 
     addToAssets = false;
 
@@ -50,7 +48,13 @@ export class AssetDialogComponent {
         public dialogRef: MatDialogRef<AssetDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
     ) {
-        if (this.data.editMode) {
+        console.log(data);
+        this.selectedAssets = data.selectedAssets || [];
+        this.deselectedAssets = data.deselectedAssets || [];
+        this.originalAssets = data.originalAssets || [];
+        this.dataViewId = data.dataViewId;
+
+        if (data.editMode) {
             this.addToAssets = true;
         }
     }
@@ -67,37 +71,15 @@ export class AssetDialogComponent {
         this.originalAssets = updatedAssets;
     }
 
-    saveToAssets(): void {
-        let linkageData: LinkageData[];
-        try {
-            linkageData = this.createLinkageData();
-
-            this.saveAssets(linkageData);
-        } catch (err) {
-            console.error('Error in addToAsset:', err);
-        }
-    }
-    private createLinkageData(): LinkageData[] {
-        return [
-            {
-                type: 'chart',
-                id: this.data.dataInput.elementId,
-                name: this.data.dataInput.baseAppearanceConfig.widgetTitle,
-            },
-        ];
-    }
-
-    private async saveAssets(linkageData: LinkageData[]): Promise<void> {
-        await this.assetSaveService.saveSelectedAssets(
-            this.selectedAssets,
-            linkageData,
-            this.deselectedAssets,
-            this.originalAssets,
-        );
-        this.dialogRef.close(true);
-    }
-
     onCancel(): void {
-        this.dialogRef.close();
+        this.dialogRef.close({});
+    }
+
+    onAddAsset(): void {
+        this.dialogRef.close({
+            selectedAssets: this.selectedAssets,
+            deselectedAssets: this.deselectedAssets,
+            originalAssets: this.originalAssets,
+        });
     }
 }
