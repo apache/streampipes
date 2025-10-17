@@ -343,7 +343,7 @@ export class DataExplorerChartViewComponent
             {
                 type: 'chart',
                 id: data.elementId,
-                name: data.elementId,
+                name: data.baseAppearanceConfig.widgetTitle,
             },
         ];
     }
