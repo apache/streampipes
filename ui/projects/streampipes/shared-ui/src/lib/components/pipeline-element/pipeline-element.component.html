@@ -16,7 +16,12 @@
   ~
   -->
 
-<img [src]="image" *ngIf="showImage" style="{{ iconSizeCss() }}" />
+<img
+    [src]="image"
+    *ngIf="showImage"
+    style="{{ iconSizeCss() }}"
+    class="pipeline-element-image"
+/>
 <span
     *ngIf="!showImage"
     [ngClass]="iconStandSize ? 'text-small' : 'element-text-icon'"

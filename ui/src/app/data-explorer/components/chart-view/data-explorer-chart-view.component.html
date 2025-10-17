@@ -68,22 +68,24 @@
             </mat-drawer>
             <mat-drawer-content class="h-100 dashboard-grid">
                 <div #panel fxFlex="100" fxLayout="column">
-                    <sp-data-explorer-dashboard-widget
+                    <sp-data-explorer-chart-container
                         *ngIf="
                             dataView &&
                             gridsterItemComponent &&
                             dataView.dataConfig?.sourceConfigs?.length > 0
                         "
                         [dataViewMode]="true"
+                        [editMode]="editMode"
                         [configuredWidget]="dataView"
                         [gridsterItemComponent]="gridsterItemComponent"
                         [timeSettings]="timeSettings"
+                        [observableGenerator]="observableGenerator"
                         [dataLakeMeasure]="
                             dataView.dataConfig.sourceConfigs[0].measure
                         "
                         (startEditModeEmitter)="editDataView()"
                     >
-                    </sp-data-explorer-dashboard-widget>
+                    </sp-data-explorer-chart-container>
                 </div>
             </mat-drawer-content>
         </mat-drawer-container>

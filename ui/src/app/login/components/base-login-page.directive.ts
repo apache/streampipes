@@ -16,16 +16,16 @@
  *
  */
 
-import { Directive, OnInit } from '@angular/core';
+import { Directive, inject, OnInit } from '@angular/core';
 import { LoginService } from '../services/login.service';
 import { LoginModel } from './login/login.model';
 
 @Directive()
 export abstract class BaseLoginPageDirective implements OnInit {
-    protected loginSettings: LoginModel;
+    public loginSettings: LoginModel;
     protected configReady = false;
 
-    protected constructor(protected loginService: LoginService) {}
+    protected loginService = inject(LoginService);
 
     ngOnInit(): void {
         this.loginService.fetchLoginSettings().subscribe(result => {

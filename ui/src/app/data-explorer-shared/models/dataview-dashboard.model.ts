@@ -22,7 +22,8 @@ import {
     GridsterItemComponent,
 } from 'angular-gridster2';
 import {
-    DashboardItem,
+    ClientDashboardItem,
+    DataExplorerDataConfig,
     DataExplorerField,
     DataExplorerWidgetModel,
     SpLogMessage,
@@ -47,16 +48,28 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     gridsterItem: GridsterItem;
     gridsterItemComponent: GridsterItemComponent;
     editMode: boolean;
+    kioskMode: boolean;
+    observableGenerator: ObservableGenerator;
 
     timeSettings: TimeSettings;
 
-    dataViewDashboardItem: DashboardItem;
+    dataViewDashboardItem: ClientDashboardItem;
     dataExplorerWidget: T;
     previewMode: boolean;
     gridMode: boolean;
     widgetIndex?: number;
 
     cleanupSubscriptions(): void;
+}
+
+export interface ObservableGenerator {
+    generateObservables(
+        startTime: number,
+        endTime: number,
+        dataConfig: DataExplorerDataConfig,
+        widgetId: string,
+        maxRowCountPerTag: number,
+    ): Observable<SpQueryResult>[];
 }
 
 export interface SpEchartsRenderer<T extends DataExplorerWidgetModel> {
@@ -80,6 +93,8 @@ export interface IWidget<T extends DataExplorerWidgetModel> {
     widgetAppearanceConfigurationComponent?: any;
     chartRenderer?: SpEchartsRenderer<T>;
     alias?: string;
+    icon?: string;
+    description?: string;
 }
 
 export interface WidgetChartAppearanceConfig {

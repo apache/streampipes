@@ -21,8 +21,15 @@
     [showBackLink]="true"
     *ngIf="dashboardLoaded"
 >
-    <div nav fxFlex="100" class="ml-10">
+    <div
+        nav
+        fxFlex="100"
+        class="ml-10"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+    >
         <sp-dashboard-toolbar
+            fxFlex="100"
             [dashboard]="dashboard"
             [editMode]="editMode"
             [(viewMode)]="viewMode"
@@ -50,11 +57,13 @@
                 class="designer-panel"
             >
                 <div fxLayout="column" fxFlex="100">
-                    <sp-dashboard-chart-selection-panel
-                        (addChartEmitter)="addChartToDashboard($event)"
-                        fxFlex="100"
-                    >
-                    </sp-dashboard-chart-selection-panel>
+                    @if (editMode) {
+                        <sp-dashboard-chart-selection-panel
+                            (addChartEmitter)="addChartToDashboard($event)"
+                            fxFlex="100"
+                        >
+                        </sp-dashboard-chart-selection-panel>
+                    }
                 </div>
             </mat-drawer>
             <mat-drawer-content class="h-100 dashboard-grid">
@@ -77,6 +86,8 @@
                     *ngIf="dashboard.widgets.length > 0 && viewMode === 'grid'"
                     [editMode]="editMode"
                     [dashboard]="dashboard"
+                    [widgets]="widgets"
+                    [observableGenerator]="observableGenerator"
                     [timeSettings]="timeSettings"
                     (deleteCallback)="removeChartFromDashboard($event)"
                     (startEditModeEmitter)="startEditMode($event)"
@@ -88,6 +99,8 @@
                     #dashboardSlide
                     [editMode]="editMode"
                     [dashboard]="dashboard"
+                    [widgets]="widgets"
+                    [observableGenerator]="observableGenerator"
                     [timeSettings]="timeSettings"
                     (deleteCallback)="removeChartFromDashboard($event)"
                     (startEditModeEmitter)="startEditMode($event)"

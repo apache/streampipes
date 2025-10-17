@@ -16,30 +16,38 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { MeasurementUnit } from '../model/measurement-unit/MeasurementUnit';
 
 @Injectable({
     providedIn: 'root',
 })
 export class MeasurementUnitsService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
-    getAllMeasurementUnits(): Observable<any> {
-        return this.http
-            .get(
-                this.platformServicesCommons.apiBasePath + '/measurement-units',
-            )
-            .pipe(
-                map(response => {
-                    return response;
-                }),
+    getAllMeasurementUnits(): Observable<MeasurementUnit[]> {
+        return this.http.get<MeasurementUnit[]>(
+            `${this.platformServicesCommons.apiBasePath}/measurement-units`,
+        );
+    }
+
+    getMeasurementUnitInfo(
+        measurementResourceUri: string,
+    ): Observable<MeasurementUnit> {
+        const unitIdentifier = measurementResourceUri.split('#').pop();
+
+        if (!unitIdentifier) {
+            throw new Error(
+                'Invalid measurementResourceUri: missing unit identifier',
             );
+        }
+
+        return this.http.get<MeasurementUnit>(
+            `${this.platformServicesCommons.apiBasePath}/measurement-units/${unitIdentifier}`,
+        );
     }
 }

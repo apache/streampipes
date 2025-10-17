@@ -18,25 +18,25 @@
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.genericclassification;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImagePropertyConstants;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import boofcv.abst.scene.ImageClassifier;
 import boofcv.factory.scene.ClassifierAndSource;
@@ -52,45 +52,44 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class GenericImageClassificationProcessor extends StreamPipesDataProcessor {
+public class GenericImageClassificationProcessor implements IStreamPipesDataProcessor {
 
   private String imagePropertyName;
-
-  private ClassifierAndSource cs;
 
   private ImageClassifier<Planar<GrayF32>> classifier;
 
   private List<String> categories;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processor.imageclassification.jvm.generic-image-classification", 0)
-        .category(DataProcessorType.IMAGE_PROCESSING)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements
-                .semanticTypeReq("https://image.com"), Labels.withId(
-                ImagePropertyConstants.IMAGE_MAPPING.getProperty()), PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.doubleEp(Labels.empty(), "score", "https://schema.org/score"),
-            EpProperties.stringEp(Labels.empty(), "category", "https://schema.org/category")
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        GenericImageClassificationProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processor.imageclassification.jvm.generic-image-classification", 0)
+            .category(DataProcessorType.IMAGE_PROCESSING)
+            .withAssets(ExtensionAssetType.DOCUMENTATION)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithUnaryMapping(EpRequirements
+                    .semanticTypeReq("https://image.com"), Labels.withId(
+                    ImagePropertyConstants.IMAGE_MAPPING.getProperty()), PropertyScope.NONE)
+                .build())
+            .outputStrategy(OutputStrategies.append(
+                EpProperties.doubleEp(Labels.empty(), "score", "https://schema.org/score"),
+                EpProperties.stringEp(Labels.empty(), "category", "https://schema.org/category")
 
-        ))
-        .build();
+            ))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    ProcessingElementParameterExtractor extractor = parameters.extractor();
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+    var extractor = params.extractor();
 
     imagePropertyName = extractor.mappingPropertyValue(ImagePropertyConstants.IMAGE_MAPPING.getProperty());
-    // this.cs = FactoryImageClassifier.vgg_cifar10();  // Test set 89.9% for 10 categories
-    ClassifierAndSource cs = FactoryImageClassifier.nin_imagenet(); // Test set 62.6% for 1000 categories
+    ClassifierAndSource cs = FactoryImageClassifier.nin_imagenet();
 
     File path = DeepBoofDataBaseOps.downloadModel(cs.getSource(), new File("download_data"));
 
@@ -128,7 +127,6 @@ public class GenericImageClassificationProcessor extends StreamPipesDataProcesso
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }

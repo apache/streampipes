@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.model;
 
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.management.connect.adapter.AdapterPipelineGenerator;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -26,19 +27,28 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import java.util.Map;
 
 public class EventCollector implements IEventCollector {
-  private final AdapterPipeline adapterPipeline;
 
-  public EventCollector(AdapterPipeline adapterPipeline) {
+  private final AdapterPipeline adapterPipeline;
+  private final IAdapterRuntimeContext runtimeContext;
+
+  public EventCollector(AdapterPipeline adapterPipeline,
+                        IAdapterRuntimeContext runtimeContext) {
     this.adapterPipeline = adapterPipeline;
+    this.runtimeContext = runtimeContext;
   }
 
-  public static IEventCollector from(AdapterDescription adapterDescription) {
+  public static IEventCollector from(AdapterDescription adapterDescription,
+                                     IAdapterRuntimeContext runtimeContext) {
     var adapterPipeline = new AdapterPipelineGenerator().generatePipeline(adapterDescription);
-    return new EventCollector(adapterPipeline);
+    return new EventCollector(adapterPipeline, runtimeContext);
   }
 
   @Override
   public void collect(Map<String, Object> event) {
-    adapterPipeline.process(event);
+    try {
+      adapterPipeline.process(event);
+    } catch (RuntimeException e) {
+      runtimeContext.getLogger().error(e);
+    }
   }
 }

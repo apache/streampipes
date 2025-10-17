@@ -42,6 +42,7 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
+import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.storage.api.IPipelineStorage;
@@ -56,6 +57,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -67,6 +69,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableAutoConfiguration
+@EnableScheduling
 @Import({
     OpenApiConfiguration.class,
     SpPermissionEvaluator.class,
@@ -77,7 +80,8 @@ import java.util.concurrent.TimeUnit;
 })
 @ComponentScan({
     "org.apache.streampipes.rest.*",
-    "org.apache.streampipes.service.core.oauth2"
+    "org.apache.streampipes.service.core.oauth2",
+    "org.apache.streampipes.service.core.scheduler"
 })
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 

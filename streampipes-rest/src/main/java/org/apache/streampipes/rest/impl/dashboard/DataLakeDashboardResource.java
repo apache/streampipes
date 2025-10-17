@@ -21,9 +21,12 @@ package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.resource.management.AbstractCRUDResourceManager;
+import org.apache.streampipes.resource.management.DataExplorerResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.storage.api.IPermissionStorage;
 
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
@@ -34,14 +37,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v3/datalake/dashboard")
 public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
+
+  private final IPermissionStorage permissionStorage;
+
+  public DataLakeDashboardResource() {
+    this.permissionStorage = getNoSqlStorage().getPermissionStorage();
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
@@ -54,6 +65,27 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#dashboardId, 'READ')")
   public DashboardModel getDashboard(@PathVariable("dashboardId") String dashboardId) {
     return getResourceManager().find(dashboardId);
+  }
+
+  @GetMapping(path = "/{dashboardId}/composite", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthorityOrAnonymous(#dashboardId) and hasPermission(#dashboardId, 'READ')")
+  public ResponseEntity<?> getCompositeDashboardModel(@PathVariable("dashboardId") String dashboardId,
+                                                      @RequestHeader(value = "If-None-Match", required = false) String ifNoneMatch) {
+    var dashboard = getResourceManager().getCompositeDashboard(dashboardId);
+    var currentEtag = "\"" + dashboard.getRevisionHash() + "\"";
+    if (Objects.nonNull(ifNoneMatch)) {
+      if (currentEtag.equals(ifNoneMatch)) {
+        return ResponseEntity
+            .status(HttpStatus.NOT_MODIFIED)
+            .eTag(currentEtag)
+            .build();
+      }
+    }
+    return ResponseEntity
+        .ok()
+        .eTag(currentEtag)
+        .cacheControl(CacheControl.noCache())
+        .body(dashboard);
   }
 
   @PutMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -77,7 +109,7 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
     return ok();
   }
 
-  private AbstractCRUDResourceManager<DashboardModel> getResourceManager() {
+  private DataExplorerResourceManager getResourceManager() {
     return getSpResourceManager().manageDataExplorer();
   }
 
@@ -87,5 +119,15 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
 
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE);
+  }
+
+  public boolean hasReadAuthorityOrAnonymous(String dashboardId) {
+    return hasReadAuthority()
+        || hasAnonymousAccessAuthority(dashboardId);
+  }
+
+  private boolean hasAnonymousAccessAuthority(String dashboardId) {
+    var perms = permissionStorage.getUserPermissionsForObject(dashboardId);
+    return !perms.isEmpty() && perms.get(0).isReadAnonymous();
   }
 }

@@ -21,33 +21,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestConfigurationBuilder{
+public class TestConfigurationBuilder {
   private Map<String, Object> fieldConfiguration = new HashMap<>();
   private List<String> eventPrefixes = List.of("");
+  private List<String> customOutputProperties = List.of();
 
-  public TestConfigurationBuilder config(String key, Object value){
+  public TestConfigurationBuilder config(String key, Object value) {
     this.fieldConfiguration.put(key, value);
     return this;
   }
-  public TestConfigurationBuilder configWithPrefix(String key, Object value, String prefix){
+
+  public TestConfigurationBuilder configWithPrefix(String key, Object value, String prefix) {
     this.fieldConfiguration.put(key, prefix + "::" + value);
     return this;
   }
 
-  public TestConfigurationBuilder configWithDefaultPrefix(String key, Object value){
+  public TestConfigurationBuilder configWithDefaultPrefix(String key, Object value) {
     return this.configWithPrefix(key, value, "");
   }
 
-  public TestConfigurationBuilder config(Map<String, Object> config){
+  public TestConfigurationBuilder config(Map<String, Object> config) {
     this.fieldConfiguration = config;
     return this;
   }
 
-  public TestConfigurationBuilder prefixStrategy(PrefixStrategy strategy){
-    this.eventPrefixes = switch (strategy){
+  public TestConfigurationBuilder prefixStrategy(PrefixStrategy strategy) {
+    this.eventPrefixes = switch (strategy) {
       case SAME_PREFIX -> List.of(StreamPrefix.S0);
       case ALTERNATE -> List.of(StreamPrefix.S0, StreamPrefix.S1);
     };
+    return this;
+  }
+
+  public TestConfigurationBuilder customOutputStrategy(List<String> properties) {
+    // This is required to match the runtime names in the processor
+    this.customOutputProperties = properties.stream()
+                                            .map(p -> "::" + p)
+                                            .toList();
     return this;
   }
 
@@ -56,7 +66,9 @@ public class TestConfigurationBuilder{
     return this;
   }
 
-  public TestConfiguration build(){
-    return new TestConfiguration(this.fieldConfiguration, this.eventPrefixes);
+  public TestConfiguration build() {
+    var testConfiguration = new TestConfiguration(this.fieldConfiguration, this.eventPrefixes);
+    testConfiguration.setCustomOutputProperties(this.customOutputProperties);
+    return testConfiguration;
   }
 }

@@ -18,20 +18,23 @@
 
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'files'">
     <sp-split-section
-        title="Files"
-        subtitle="Upload and manage files that are used by adapters or pipeline elements."
+        [title]="'Files' | translate"
+        [subtitle]="
+            'Upload and manage files that are used by adapters or pipeline elements.'
+                | translate
+        "
     >
         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 (click)="openFileUploadDialog()"
                 data-cy="sp-open-file-upload-dialog"
                 class="mr-10"
             >
                 <i class="material-icons">cloud_upload</i>
-                &nbsp;Upload new file
+                &nbsp;{{ 'Upload new file' | translate }}
             </button>
         </div>
 

@@ -29,6 +29,7 @@ import {
 } from '@streampipes/platform-services';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-location-features-configuration',
@@ -49,6 +50,7 @@ export class LocationFeaturesConfigurationComponent
         private fb: UntypedFormBuilder,
         private snackBar: MatSnackBar,
         private locationConfigService: LocationConfigService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -96,9 +98,15 @@ export class LocationFeaturesConfigurationComponent
         this.locationConfigService
             .updateLocationConfig(this.locationConfig)
             .subscribe(() => {
-                this.snackBar.open('Location configuration updated', 'Ok', {
-                    duration: 3000,
-                });
+                this.snackBar.open(
+                    this.translateService.instant(
+                        'Location configuration updated',
+                    ),
+                    this.translateService.instant('Ok'),
+                    {
+                        duration: 3000,
+                    },
+                );
             });
     }
 

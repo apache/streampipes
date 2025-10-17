@@ -16,10 +16,11 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UserAccount } from '@streampipes/platform-services';
 import { AbstractSecurityPrincipalConfig } from '../abstract-security-principal-config';
 import { Observable } from 'rxjs';
+import { DateFormatService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-security-user-config',
@@ -28,7 +29,16 @@ import { Observable } from 'rxjs';
     standalone: false,
 })
 export class SecurityUserConfigComponent extends AbstractSecurityPrincipalConfig<UserAccount> {
-    displayedColumns: string[] = ['username', 'provider', 'fullName', 'edit'];
+    displayedColumns: string[] = [
+        'username',
+        'provider',
+        'fullName',
+        'createdAtMillis',
+        'lastLoginAtMillis',
+        'edit',
+    ];
+
+    public dateFormatService = inject(DateFormatService);
 
     getObservable(): Observable<UserAccount[]> {
         return this.userAdminService.getAllUserAccounts();
@@ -42,5 +52,9 @@ export class SecurityUserConfigComponent extends AbstractSecurityPrincipalConfig
         const user = new UserAccount();
         user.provider = 'local';
         return user;
+    }
+
+    formatDate(timestamp?: number): string {
+        return this.dateFormatService.formatDate(timestamp);
     }
 }

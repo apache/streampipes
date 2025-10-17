@@ -28,6 +28,7 @@ export interface DataExplorerFieldCharacteristics {
 export interface DataExplorerField {
     runtimeName: string;
     aggregation?: string;
+    measurementUnitResourceId?: string;
     measure: string;
     fullDbName: string;
     sourceIndex: number;

@@ -47,12 +47,17 @@
                 fxLayout
                 fxLayoutAlign="end center"
                 *ngIf="authenticated"
+                fxLayoutGap="10px"
                 style="height: 100%"
             >
                 <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
-                <!--            <div>-->
-                <!--                <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>-->
-                <!--            </div>-->
+                <!--                <div>-->
+                <!--                    <mat-slide-toggle-->
+                <!--                        color="accent"-->
+                <!--                        [formControl]="appearanceControl"-->
+                <!--                        >Dark Mode</mat-slide-toggle-->
+                <!--                    >-->
+                <!--                </div>-->
                 <div
                     [ngClass]="
                         'notifications' === activePage
@@ -125,7 +130,7 @@
                         </button>
                     </div>
                 </div>
-                <mat-menu #menu="matMenu" id="account">
+                <mat-menu #menu="matMenu" id="account" class="toolbar-menu">
                     <div class="current-user">
                         <span class="user-email">{{
                             userEmail | shorten: 30

@@ -18,11 +18,13 @@
 package org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
@@ -33,21 +35,20 @@ import org.apache.streampipes.processors.geo.jvm.jts.helper.buffer.JoinStyle;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.buffer.SpBufferBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.util.FactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BufferGeomProcessor extends StreamPipesDataProcessor {
+public class BufferGeomProcessor implements IStreamPipesDataProcessor {
   public static final String GEOM_KEY = "geometry-key";
   public static final String EPSG_KEY = "epsg-key";
   public static final String CAP_KEY = "cap-style-key";
@@ -72,80 +73,92 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(BufferGeomProcessor.class);
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.semanticTypeReq("http://www.opengis.net/ont/geosparql#Geometry"),
-                Labels.withId(GEOM_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.semanticTypeReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                Labels.withId(EPSG_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-                EpProperties.stringEp(
-                    Labels.withId(GEOM_KEY),
-                    GEOM_RUNTIME,
-                    "http://www.opengis.net/ont/geosparql#Geometry"
-                ),
-                EpProperties.numberEp(
-                    Labels.withId(EPSG_KEY),
-                    EPSG_RUNTIME,
-                    "http://data.ign.fr/def/ignf#CartesianCS"
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        BufferGeomProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry", 0)
+            .category(DataProcessorType.GEO)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.semanticTypeReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                                    Labels.withId(GEOM_KEY),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.semanticTypeReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                                    Labels.withId(EPSG_KEY),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .build())
+            .outputStrategy(OutputStrategies.append(
+                                EpProperties.stringEp(
+                                    Labels.withId(GEOM_KEY),
+                                    GEOM_RUNTIME,
+                                    "http://www.opengis.net/ont/geosparql#Geometry"
+                                ),
+                                EpProperties.numberEp(
+                                    Labels.withId(EPSG_KEY),
+                                    EPSG_RUNTIME,
+                                    "http://data.ign.fr/def/ignf#CartesianCS"
+                                )
+                            )
+            )
+            .requiredSingleValueSelection(
+                Labels.withId(CAP_KEY),
+                Options.from(
+                    CapStyle.Square.name(),
+                    CapStyle.Flat.name(),
+                    CapStyle.Round.name()
                 )
             )
-        )
-        .requiredSingleValueSelection(
-            Labels.withId(CAP_KEY),
-            Options.from(
-                CapStyle.Square.name(),
-                CapStyle.Flat.name(),
-                CapStyle.Round.name())
-        )
-        .requiredSingleValueSelection(
-            Labels.withId(JOIN_KEY),
-            Options.from(
-                JoinStyle.Bevel.name(),
-                JoinStyle.Mitre.name(),
-                JoinStyle.Round.name())
-        )
-        .requiredSingleValueSelection(
-            Labels.withId(SIDE_KEY),
-            Options.from(
-                BufferSide.Both.name(),
-                BufferSide.Left.name(),
-                BufferSide.Right.name())
-        )
-        .requiredIntegerParameter(
-            Labels.withId(MITRE_LIMIT_KEY),
-            5)
-        .requiredIntegerParameter(
-            Labels.withId(SEGMENTS_KEY),
-            8
-        )
-        .requiredFloatParameter(
-            Labels.withId(SIMPLIFY_FACTOR_KEY),
-            0.01f
-        )
-        .requiredFloatParameter(
-            Labels.withId(DISTANCE_KEY)
-        )
-        .build();
+            .requiredSingleValueSelection(
+                Labels.withId(JOIN_KEY),
+                Options.from(
+                    JoinStyle.Bevel.name(),
+                    JoinStyle.Mitre.name(),
+                    JoinStyle.Round.name()
+                )
+            )
+            .requiredSingleValueSelection(
+                Labels.withId(SIDE_KEY),
+                Options.from(
+                    BufferSide.Both.name(),
+                    BufferSide.Left.name(),
+                    BufferSide.Right.name()
+                )
+            )
+            .requiredIntegerParameter(
+                Labels.withId(MITRE_LIMIT_KEY),
+                5
+            )
+            .requiredIntegerParameter(
+                Labels.withId(SEGMENTS_KEY),
+                8
+            )
+            .requiredFloatParameter(
+                Labels.withId(SIMPLIFY_FACTOR_KEY),
+                0.01f
+            )
+            .requiredFloatParameter(
+                Labels.withId(DISTANCE_KEY)
+            )
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector collector,
+      EventProcessorRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
 
     try {
-      if (SpReprojectionBuilder.isSisConfigurationValid()){
+      if (SpReprojectionBuilder.isSisConfigurationValid()) {
         LOG.info("SIS DB Settings successful checked ");
       } else {
         LOG.warn("The required EPSG database is not imported");
@@ -155,15 +168,24 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
       throw new SpRuntimeException("Something unexpected happened " + e);
     }
 
-    this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
-    this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);
-    String readCapStyle = parameters.extractor().selectedSingleValue(CAP_KEY, String.class);
-    String readJoinStyle = parameters.extractor().selectedSingleValue(JOIN_KEY, String.class);
-    String readSide = parameters.extractor().selectedSingleValue(SIDE_KEY, String.class);
-    this.mitreLimit = parameters.extractor().singleValueParameter(MITRE_LIMIT_KEY, Double.class);
-    this.segments = parameters.extractor().singleValueParameter(SEGMENTS_KEY, Integer.class);
-    this.simplifyFactor = parameters.extractor().singleValueParameter(SIMPLIFY_FACTOR_KEY, Double.class);
-    this.distance = parameters.extractor().singleValueParameter(DISTANCE_KEY, Double.class);
+    this.geometryMapper = params.extractor()
+                                .mappingPropertyValue(GEOM_KEY);
+    this.epsgMapper = params.extractor()
+                            .mappingPropertyValue(EPSG_KEY);
+    String readCapStyle = params.extractor()
+                                .selectedSingleValue(CAP_KEY, String.class);
+    String readJoinStyle = params.extractor()
+                                 .selectedSingleValue(JOIN_KEY, String.class);
+    String readSide = params.extractor()
+                            .selectedSingleValue(SIDE_KEY, String.class);
+    this.mitreLimit = params.extractor()
+                            .singleValueParameter(MITRE_LIMIT_KEY, Double.class);
+    this.segments = params.extractor()
+                          .singleValueParameter(SEGMENTS_KEY, Integer.class);
+    this.simplifyFactor = params.extractor()
+                                .singleValueParameter(SIMPLIFY_FACTOR_KEY, Double.class);
+    this.distance = params.extractor()
+                          .singleValueParameter(DISTANCE_KEY, Double.class);
     // transform names to numbers
     this.capStyle = 1;
     if (readCapStyle.equals(CapStyle.Square.name())) {
@@ -192,8 +214,12 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
-    String geom = event.getFieldBySelector(geometryMapper).getAsPrimitive().getAsString();
-    Integer epsg = event.getFieldBySelector(epsgMapper).getAsPrimitive().getAsInt();
+    String geom = event.getFieldBySelector(geometryMapper)
+                       .getAsPrimitive()
+                       .getAsString();
+    Integer epsg = event.getFieldBySelector(epsgMapper)
+                        .getAsPrimitive()
+                        .getAsInt();
     Geometry geometry = SpGeometryBuilder.createSPGeom(geom, epsg);
     Geometry bufferGeom =
         SpBufferBuilder.createSpBuffer(
@@ -205,7 +231,8 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
             segments,
             simplifyFactor,
             singleSided,
-            side);
+            side
+        );
 
     if (!bufferGeom.isEmpty()) {
       event.addField(GEOM_RUNTIME, bufferGeom.toText());
@@ -220,6 +247,6 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
   }
 }

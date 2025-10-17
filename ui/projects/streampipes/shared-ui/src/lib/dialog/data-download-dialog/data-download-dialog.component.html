@@ -50,7 +50,7 @@
     <div class="sp-dialog-actions actions-align-right">
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             style="margin-right: 10px"
             (click)="exitDialog()"
@@ -59,7 +59,7 @@
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             style="margin-right: 10px"
             *ngIf="downloadDialogStepper.selectedIndex === 1"
@@ -69,7 +69,7 @@
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             *ngIf="downloadDialogStepper.selectedIndex < 1"
             color="accent"
             (click)="nextStep()"
@@ -79,7 +79,7 @@
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             *ngIf="downloadDialogStepper.selectedIndex === 1"
             color="accent"
             (click)="downloadData()"

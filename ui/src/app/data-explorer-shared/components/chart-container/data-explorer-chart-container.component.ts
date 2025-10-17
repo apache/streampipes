@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import { GridsterItemComponent } from 'angular-gridster2';
 import {
-    DashboardItem,
+    ClientDashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     ExtendedTimeSettings,
@@ -53,12 +53,15 @@ import {
     TimeSelectionService,
     TimeSelectorLabel,
 } from '@streampipes/shared-ui';
-import { BaseWidgetData } from '../../models/dataview-dashboard.model';
+import {
+    BaseWidgetData,
+    ObservableGenerator,
+} from '../../models/dataview-dashboard.model';
 import { DataExplorerSharedService } from '../../services/data-explorer-shared.service';
 import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
-    selector: 'sp-data-explorer-dashboard-widget',
+    selector: 'sp-data-explorer-chart-container',
     templateUrl: './data-explorer-chart-container.component.html',
     styleUrls: ['./data-explorer-chart-container.component.scss'],
     standalone: false,
@@ -70,7 +73,7 @@ export class DataExplorerChartContainerComponent
     @ViewChild('timeSelectorMenu')
     timeSelectorMenu: TimeRangeSelectorMenuComponent;
     @Input()
-    dashboardItem: DashboardItem;
+    dashboardItem: ClientDashboardItem;
 
     @Input()
     configuredWidget: DataExplorerWidgetModel;
@@ -94,6 +97,9 @@ export class DataExplorerChartContainerComponent
     gridMode = true;
 
     @Input()
+    kioskMode = false;
+
+    @Input()
     widgetIndex: number;
 
     /**
@@ -104,6 +110,9 @@ export class DataExplorerChartContainerComponent
 
     @Input()
     globalTimeEnabled = true;
+
+    @Input()
+    observableGenerator: ObservableGenerator;
 
     @Output() deleteCallback: EventEmitter<number> = new EventEmitter<number>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
@@ -252,11 +261,14 @@ export class DataExplorerChartContainerComponent
         this.componentRef.instance.gridsterItemComponent =
             this.gridsterItemComponent;
         this.componentRef.instance.editMode = this.editMode;
+        this.componentRef.instance.kioskMode = this.kioskMode;
         this.componentRef.instance.dataViewDashboardItem = this.dashboardItem;
         this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
         this.componentRef.instance.previewMode = this.previewMode;
         this.componentRef.instance.gridMode = this.gridMode;
         this.componentRef.instance.widgetIndex = this.widgetIndex;
+        this.componentRef.instance.observableGenerator =
+            this.observableGenerator;
         const removeSub =
             this.componentRef.instance.removeWidgetCallback.subscribe(ev =>
                 this.removeWidget(),

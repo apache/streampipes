@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
     CompactPipelineTemplate,
@@ -30,7 +30,7 @@ import { Observable } from 'rxjs';
     providedIn: 'root',
 })
 export class PipelineTemplateService {
-    constructor(private http: HttpClient) {}
+    private http = inject(HttpClient);
 
     getServerUrl() {
         return '/streampipes-backend';

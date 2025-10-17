@@ -28,6 +28,7 @@ import { AppConstants } from '../../../services/app.constants';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { ExtensionsInstallationService } from '../extensions-installation.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-endpoint-item',
@@ -66,6 +67,7 @@ export class EndpointItemComponent implements OnInit {
         private sanitizer: DomSanitizer,
         public appConstants: AppConstants,
         private dialogService: DialogService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -109,13 +111,14 @@ export class EndpointItemComponent implements OnInit {
 
     findItemTypeTitle() {
         if (this.item.serviceTagPrefix === 'ADAPTER') {
-            this.itemTypeTitle = 'Adapter';
+            this.itemTypeTitle = this.translateService.instant('Adapter');
         } else if (this.item.serviceTagPrefix === 'DATA_STREAM') {
-            this.itemTypeTitle = 'Data Stream';
+            this.itemTypeTitle = this.translateService.instant('Data Stream');
         } else if (this.item.serviceTagPrefix === 'DATA_PROCESSOR') {
-            this.itemTypeTitle = 'Data Processor';
+            this.itemTypeTitle =
+                this.translateService.instant('Data Processor');
         } else {
-            this.itemTypeTitle = 'Data Sink';
+            this.itemTypeTitle = this.translateService.instant('Data Sink');
         }
     }
 
@@ -167,12 +170,14 @@ export class EndpointItemComponent implements OnInit {
     showPermissionsDialog(elementId: string, elementName: string) {
         this.dialogService.open(ObjectPermissionDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Manage permissions',
+            title: this.translateService.instant('Manage permissions'),
             width: '50vw',
             data: {
                 objectInstanceId: elementId,
-                headerTitle:
-                    'Manage permissions for pipeline element ' + elementName,
+                headerTitle: this.translateService.instant(
+                    'Manage permissions for pipeline element {{name}}',
+                    { name: elementName },
+                ),
             },
         });
     }

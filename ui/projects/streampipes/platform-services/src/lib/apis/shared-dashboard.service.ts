@@ -17,7 +17,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Dashboard } from '../model/dashboard/dashboard.model';
@@ -26,7 +26,7 @@ import { Dashboard } from '../model/dashboard/dashboard.model';
     providedIn: 'root',
 })
 export class SharedDatalakeRestService {
-    constructor(private http: HttpClient) {}
+    private http = inject(HttpClient);
 
     getDashboards(dashboardUrl: string): Observable<Dashboard[]> {
         return this.http.get(dashboardUrl).pipe(

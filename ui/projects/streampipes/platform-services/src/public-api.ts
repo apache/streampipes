@@ -27,8 +27,10 @@ export * from './lib/apis/adapter.service';
 export * from './lib/apis/adapter-monitoring.service';
 export * from './lib/apis/asset-management.service';
 export * from './lib/apis/compact-pipeline.service';
+export * from './lib/apis/certificate.service';
 export * from './lib/apis/chart.service';
 export * from './lib/apis/dashboard.service';
+export * from './lib/apis/dashboard-kiosk.service';
 export * from './lib/apis/datalake-rest.service';
 export * from './lib/apis/files.service';
 export * from './lib/apis/functions.service';
@@ -56,6 +58,7 @@ export * from './lib/apis/user-group.service';
 export * from './lib/apis/shared-dashboard.service';
 export * from './lib/apis/pipeline-element-runtime-info.service';
 export * from './lib/apis/pipeline-element-asset.service';
+export * from './lib/apis/export-provider.service';
 
 export * from './lib/model/datalake/DateRange';
 export * from './lib/model/datalake/DatalakeQueryParameters';

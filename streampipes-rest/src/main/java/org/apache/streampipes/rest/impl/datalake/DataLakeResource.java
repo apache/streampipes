@@ -18,17 +18,20 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
+import org.apache.streampipes.model.datalake.RetentionTimeConfig;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,10 +41,13 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,6 +90,7 @@ import static org.apache.streampipes.model.datalake.param.SupportedRestQueryPara
 @RequestMapping("/api/v4/datalake")
 public class DataLakeResource extends AbstractRestResource {
 
+  private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
@@ -356,6 +363,33 @@ public class DataLakeResource extends AbstractRestResource {
     }
   }
 
+  @PostMapping(
+      path = "/measurements/{measurementID}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Store a measurement series to a data lake with the given id", tags = {"Data Lake"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "Can't store the given data to this data lake"),
+          @ApiResponse(
+              responseCode = "200",
+              description = "Successfully stored data")})
+  public ResponseEntity<?> storeDataToMeasurement(
+      @PathVariable String measurementID,
+      @RequestBody SpQueryResult queryResult,
+      @Parameter(in = ParameterIn.QUERY, description = "should not identical schemas be stored")
+      @RequestParam(value = "ignoreSchemaMismatch", required = false) boolean ignoreSchemaMismatch) {
+    var dataWriter = new DataLakeDataWriter(ignoreSchemaMismatch);
+    try {
+      dataWriter.writeData(measurementID, queryResult);
+    } catch (SpRuntimeException e) {
+      LOG.warn("Could not store event", e);
+      return badRequest(Notifications.error("Could not store event for measurement " + measurementID, e.getMessage()));
+    }
+    return ok();
+  }
+
   @DeleteMapping(path = "/measurements")
   @Operation(summary = "Remove all stored measurement series from Data Lake", tags = {"Data Lake"},
       responses = {
@@ -368,6 +402,45 @@ public class DataLakeResource extends AbstractRestResource {
   private boolean checkProvidedQueryParams(Map<String, String> providedParams) {
     return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
   }
+
+    @PostMapping(
+      path = "/{elementId}/cleanup",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+      @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @Operation(summary = "Sets the retention mechanism for a certain measurement", tags = {"Data Lake"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "Can't store the given data to this data lake"),
+          @ApiResponse(
+              responseCode = "200",
+              description = "Successfully stored data")})
+  public ResponseEntity<?> setDataLakeRetention(
+      @PathVariable String elementId,
+      @RequestBody RetentionTimeConfig retention){
+        var measure = this.dataExplorerSchemaManagement.getById(elementId);
+        measure.setRetentionTime(retention);
+      try {
+        this.dataExplorerSchemaManagement.updateMeasurement(measure);
+      } catch (IllegalArgumentException e) {
+        return badRequest(e.getMessage());
+    }
+  
+    return ok();
+  }
+
+@DeleteMapping(path = "/{elementId}/cleanup")
+public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId) {
+    var measure = this.dataExplorerSchemaManagement.getById(elementId);
+    measure.deleteRetentionTime();
+    try {
+        this.dataExplorerSchemaManagement.updateMeasurement(measure);
+    } catch (IllegalArgumentException e) {
+        return badRequest(e.getMessage());
+    }
+    return ok();
+}
 
   private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {
     Map<String, String> queryParamMap = new HashMap<>();

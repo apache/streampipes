@@ -137,11 +137,18 @@ public class Authentication extends AbstractRestResource {
       produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> getAuthSettings() {
     GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
+    var termsAcknowledgmentRequired = config.getUserAcknowledgment() != null
+        && config.getUserAcknowledgment().required();
     Map<String, Object> response = new HashMap<>();
     response.put("allowSelfRegistration", config.isAllowSelfRegistration());
     response.put("allowPasswordRecovery", config.isAllowPasswordRecovery());
     response.put("linkSettings", config.getLinkSettings());
     response.put("oAuthSettings", makeOAuthSettings());
+    response.put("termsAcknowledgmentRequired", termsAcknowledgmentRequired);
+    if (termsAcknowledgmentRequired) {
+      response.put("termsAcknowledgmentTitle", config.getUserAcknowledgment().title());
+      response.put("termsAcknowledgmentText", config.getUserAcknowledgment().text());
+    }
 
     return ok(response);
   }
@@ -150,6 +157,8 @@ public class Authentication extends AbstractRestResource {
     Principal principal = ((PrincipalUserDetails<?>) auth.getPrincipal()).getDetails();
     if (principal instanceof UserAccount) {
       JwtAuthenticationResponse tokenResp = makeJwtResponse(auth);
+      ((UserAccount) principal).setLastLoginAtMillis(System.currentTimeMillis());
+      getSpResourceManager().manageUsers().updateUser(principal);
       return ok(tokenResp);
     } else {
       throw new BadCredentialsException("Could not create auth token");

@@ -19,24 +19,25 @@
 package org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.config.ConfigKeys;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.vocabulary.Geo;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
@@ -45,7 +46,7 @@ import com.google.maps.model.GeocodingResult;
 
 import java.io.IOException;
 
-public class GoogleMapsGeocoderProcessor extends StreamPipesDataProcessor {
+public class GoogleMapsGeocoderProcessor implements IStreamPipesDataProcessor {
   private static final String GEOCODER_REQUEST_KEY = "geocoder-request-key";
   private static final String LAT_RUNTIME_NAME = "geocoder-latitude";
   private static final String LONG_RUNTIME_NAME = "geocoder-longitude";
@@ -53,33 +54,43 @@ public class GoogleMapsGeocoderProcessor extends StreamPipesDataProcessor {
   private GeoApiContext apiContext;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                Labels.withId(GEOCODER_REQUEST_KEY),
-                PropertyScope.NONE)
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        GoogleMapsGeocoderProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps", 0)
+            .category(DataProcessorType.GEO)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.stringReq(),
+                                    Labels.withId(GEOCODER_REQUEST_KEY),
+                                    PropertyScope.NONE
+                                )
+                                .build()
+            )
+            .outputStrategy(OutputStrategies.append(
+                                EpProperties.doubleEp(Labels.empty(), LAT_RUNTIME_NAME, Geo.LAT),
+                                EpProperties.stringEp(Labels.empty(), LONG_RUNTIME_NAME, Geo.LNG)
+                            )
+            )
             .build()
-        )
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.doubleEp(Labels.empty(), LAT_RUNTIME_NAME, Geo.LAT),
-            EpProperties.stringEp(Labels.empty(), LONG_RUNTIME_NAME, Geo.LNG))
-        )
-        .build();
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
+    this.geocoderRequest = params.extractor()
+                                 .mappingPropertyValue(GEOCODER_REQUEST_KEY);
 
-    this.geocoderRequest = parameters.extractor().mappingPropertyValue(GEOCODER_REQUEST_KEY);
-
-    String googleMapsApiKey = runtimeContext.getConfigStore().getString(ConfigKeys.GOOGLE_API_KEY);
+    String googleMapsApiKey = runtimeContext.getConfigStore()
+                                            .getString(ConfigKeys.GOOGLE_API_KEY);
 
     if (googleMapsApiKey == null || googleMapsApiKey.equals("")) {
       throw new SpRuntimeException("Could not start Geocoder. Did you forget to add a Google Maps API key?");
@@ -88,18 +99,17 @@ public class GoogleMapsGeocoderProcessor extends StreamPipesDataProcessor {
           .apiKey(googleMapsApiKey)
           .build();
     }
-    // TODO: RequestDeniedException
-    //  You must enable Billing on the Google Cloud Project at
-    //  https://console.cloud.google.com/project/_/billing/enable
-    //  Learn more at https://developers.google.com/maps/gmp
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
-    String request = event.getFieldBySelector(geocoderRequest).getAsPrimitive().getAsString();
+    String request = event.getFieldBySelector(geocoderRequest)
+                          .getAsPrimitive()
+                          .getAsString();
 
     try {
-      GeocodingResult[] results = GeocodingApi.geocode(apiContext, request).await();
+      GeocodingResult[] results = GeocodingApi.geocode(apiContext, request)
+                                              .await();
 
       Double latitude = results[0].geometry.location.lat;
       Double longitude = results[0].geometry.location.lng;
@@ -116,7 +126,6 @@ public class GoogleMapsGeocoderProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }

@@ -20,7 +20,10 @@ package org.apache.streampipes.sinks.databases.jvm.qdrant;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -28,13 +31,12 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.vocabulary.XSD;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import io.qdrant.client.PointIdFactory;
 import io.qdrant.client.QdrantClient;
@@ -54,7 +56,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class QdrantSink extends StreamPipesDataSink {
+public class QdrantSink implements IStreamPipesDataSink {
   public static final String QDRANT_HOST_KEY = "qdrant_host";
   public static final String QDRANT_PORT_KEY = "qdrant_port";
   public static final String QDRANT_API_KEY_KEY = "qdrant_api_key";
@@ -90,7 +92,6 @@ public class QdrantSink extends StreamPipesDataSink {
         }
       };
 
-  @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.qdrant", 0)
         .withLocales(Locales.EN)
@@ -116,9 +117,9 @@ public class QdrantSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext)
-      throws SpRuntimeException {
-    var extractor = parameters.extractor();
+  public void onPipelineStarted(
+      IDataSinkParameters params, EventSinkRuntimeContext runtimeContext) {
+    var extractor = params.extractor();
 
     final String host = validateAndExtractHost(extractor);
     final Integer port = validateAndExtractPort(extractor);
@@ -139,6 +140,18 @@ public class QdrantSink extends StreamPipesDataSink {
         client.close();
       }
       throw new SpRuntimeException("Failed to initialize Qdrant connection: " + e.getMessage());
+    }
+  }
+
+  @Override
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(QdrantSink::new, declareModel());
+  }
+
+  @Override
+  public void onPipelineStopped() {
+    if (client != null) {
+      client.close();
     }
   }
 
@@ -236,13 +249,6 @@ public class QdrantSink extends StreamPipesDataSink {
       }
     } catch (Exception e) {
       throw new SpRuntimeException("Failed to create or validate collection: " + e.getMessage());
-    }
-  }
-
-  @Override
-  public void onDetach() {
-    if (client != null) {
-      client.close();
     }
   }
 

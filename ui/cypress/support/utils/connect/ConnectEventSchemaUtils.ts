@@ -17,6 +17,8 @@
  */
 
 import { ConnectBtns } from './ConnectBtns';
+import { DataTypeString } from '../../model/DataTypeString';
+import { PropertyDataTypeChange } from '../../model/PropertyDataTypeChange';
 
 export class ConnectEventSchemaUtils {
     public static markPropertyAsMeasurement(propertyName: string) {
@@ -46,7 +48,7 @@ export class ConnectEventSchemaUtils {
         ConnectBtns.markAsTimestampBtn().click();
 
         // Close
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
 
         this.eventSchemaNextBtnEnabled();
     }
@@ -78,7 +80,6 @@ export class ConnectEventSchemaUtils {
         }).click({ force: true });
         ConnectBtns.timestampStringRegex().should('have.value', timestampRegex);
 
-        ConnectBtns.saveEditProperty().should('have.length', 1);
         ConnectBtns.saveEditProperty().click();
     }
 
@@ -120,7 +121,7 @@ export class ConnectEventSchemaUtils {
             .contains('Multiply')
             .click();
 
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
         cy.dataCy('edit-' + propertyName.toLowerCase(), {
             timeout: 10000,
         }).click({ force: true });
@@ -128,11 +129,7 @@ export class ConnectEventSchemaUtils {
             'have.value',
             value,
         );
-        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
     }
 
     public static renameProperty(
@@ -194,7 +191,7 @@ export class ConnectEventSchemaUtils {
             propertyValue,
         );
 
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
 
         // validate that static value is persisted
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
@@ -203,7 +200,7 @@ export class ConnectEventSchemaUtils {
             'have.value',
             propertyValue,
         );
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
     }
 
     public static deleteProperty(propertyName: string) {
@@ -222,9 +219,22 @@ export class ConnectEventSchemaUtils {
         }).click({ force: true });
     }
 
+    public static changePropertyDataTypes(
+        dataTypeChanges: PropertyDataTypeChange[],
+    ) {
+        if (dataTypeChanges.length > 0) {
+            dataTypeChanges.forEach(dataTypeChange => {
+                ConnectEventSchemaUtils.changePropertyDataType(
+                    dataTypeChange.propertyName,
+                    dataTypeChange.dataType,
+                );
+            });
+        }
+    }
+
     public static changePropertyDataType(
         propertyName: string,
-        dataType: string,
+        dataType: DataTypeString,
         warningIsShown: boolean = false,
     ) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
@@ -236,7 +246,7 @@ export class ConnectEventSchemaUtils {
             .get('mat-option')
             .contains(dataType)
             .click();
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
         // validate that static value is persisted
         cy.dataCy('edit-' + propertyName.toLowerCase(), {
             timeout: 10000,
@@ -244,8 +254,7 @@ export class ConnectEventSchemaUtils {
             force: true,
         });
         ConnectBtns.changeRuntimeType().contains(dataType);
-        cy.wait(1000);
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
     }
 
     private static checkIfWarningIsShown(warningIsShown: boolean) {

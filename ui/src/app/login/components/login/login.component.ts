@@ -16,8 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
-import { LoginService } from '../../services/login.service';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import {
@@ -36,24 +35,16 @@ import { BaseLoginPageDirective } from '../base-login-page.directive';
 })
 export class LoginComponent extends BaseLoginPageDirective {
     parentForm: UntypedFormGroup;
-    loading: boolean;
-    authenticationFailed: boolean;
-    credentials: any;
+    loading = false;
+    authenticationFailed = false;
+    credentials: any = {};
 
     returnUrl: string;
 
-    constructor(
-        loginService: LoginService,
-        private router: Router,
-        private route: ActivatedRoute,
-        private authService: AuthService,
-        private fb: UntypedFormBuilder,
-    ) {
-        super(loginService);
-        this.loading = false;
-        this.authenticationFailed = false;
-        this.credentials = {};
-    }
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
+    private authService = inject(AuthService);
+    private fb = inject(UntypedFormBuilder);
 
     doLogin() {
         this.authenticationFailed = false;
@@ -63,7 +54,9 @@ export class LoginComponent extends BaseLoginPageDirective {
                 // success
                 this.authService.login(response);
                 this.loading = false;
-                this.router.navigateByUrl(this.returnUrl);
+                this.router.navigate(['terms'], {
+                    queryParams: { returnUrl: this.returnUrl },
+                });
             },
             response => {
                 // error
@@ -78,7 +71,9 @@ export class LoginComponent extends BaseLoginPageDirective {
         if (token) {
             this.authService.oauthLogin(token);
             this.loading = false;
-            this.router.navigate(['']);
+            this.router.navigate(['terms'], {
+                queryParams: { returnUrl: this.returnUrl },
+            });
         }
         this.parentForm = this.fb.group({});
         this.parentForm.addControl(

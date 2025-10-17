@@ -40,9 +40,15 @@ public class MeasurementUnitResource extends AbstractRestResource {
     return ok(UnitProvider.INSTANCE.getAvailableUnits());
   }
 
-  @GetMapping(path = "/{measurementResourceUri}", produces = MediaType.APPLICATION_JSON_VALUE)
+  /**
+   * Returns the measurement unit information for a given unit identifier.
+   * @param unitIdentifier The identifier of the measurement unit to retrieve,
+   *                       consisting of the unit's ID without the QUDT URI prefix.
+   * @return ResponseEntity containing the Unit object if found, or an error response if not found.
+   */
+  @GetMapping(path = "/{unitIdentifier}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Unit> getMeasurementUnitInfo(
-      @PathVariable("measurementResourceUri") String measurementResourceUri) {
-    return ok(UnitProvider.INSTANCE.getUnit(measurementResourceUri));
+      @PathVariable("unitIdentifier") String unitIdentifier) {
+    return ok(UnitProvider.INSTANCE.getUnitByIdentifier(unitIdentifier));
   }
 }

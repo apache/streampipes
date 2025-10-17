@@ -23,6 +23,7 @@ public enum Envs {
   SP_PORT("SP_PORT"),
 
   SP_CORE_ASSET_BASE_DIR("SP_CORE_ASSET_BASE_DIR"),
+  SP_EXT_ASSET_BASE_DIR("SP_EXT_ASSET_BASE_DIR"),
 
   SP_CORE_SCHEME("SP_CORE_SCHEME", "http", "http"),
   SP_CORE_HOST("SP_CORE_HOST", "backend", "localhost"),
@@ -137,7 +138,25 @@ public enum Envs {
 
   // PLC4X connection cache
   SP_PLC4X_CONN_MAX_WAIT_TIME_MS("SP_PLC4X_CONN_MAX_WAIT_TIME_MS", "20000"),
-  SP_PLC4X_CONN_MAX_LEASE_TIME_MS("SP_PLC4X_CONN_MAX_LEASE_TIME_MS", "4000");
+  SP_PLC4X_CONN_MAX_LEASE_TIME_MS("SP_PLC4X_CONN_MAX_LEASE_TIME_MS", "4000"),
+
+  // Retention Local File 
+  SP_RETENTION_LOCAL_DIR("SP_RETENTION_LOCAL_DIR", "./ArchivedData"),
+  SP_DATALAKE_SCHEDULER_CRON("SP_DATALAKE_SCHEDULER_CRON", "0 1 0 * * 6"),// CronJob Scheduled every Saturday (6) 00:01 //@Scheduled(cron = "0 */2 * * *
+                                     // *") //Cron Job in Dev Setting; Running every 2 min
+
+  // Logging
+  SP_LOGGING_FILE_ENABLED("SP_LOGGING_FILE_ENABLED", "false"),
+  SP_LOGGING_CONSOLE_ENABLED("SP_LOGGING_CONSOLE_ENABLED", "true"),
+  SP_LOGGING_FILE_PREFIX("SP_LOGGING_FILE_PREFIX", "streampipes"),
+  SP_LOGGING_FILE_DIR("SP_LOGGING_FILE_DIR", "logs"),
+  SP_LOGGING_FILE_PATTERN(
+      "SP_LOGGING_FILE_PATTERN",
+      "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  );
+
+
+
 
   private final String envVariableName;
   private String defaultValue;

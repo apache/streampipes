@@ -125,6 +125,18 @@ fs.writeFileSync(
     fs.readFileSync('deployment/app-constants.ts', 'utf8'),
 );
 
+// Move themes
+fs.writeFileSync(
+    'src/scss/custom-theme/_custom-variables.scss',
+    fs.readFileSync('deployment/theme/_custom-variables.scss', 'utf8'),
+);
+
+fs.writeFileSync(
+    'src/scss/custom-theme/_theme-colors.scss',
+    fs.readFileSync('deployment/theme/_theme-colors.scss', 'utf8'),
+);
+console.log(`Moved: Theme colors and custom theme variables`);
+
 // Move Images
 fs.writeFileSync(
     'src/assets/img/sp/logo.png',
@@ -145,22 +157,26 @@ fs.writeFileSync(
 console.log('Moved: favicon');
 
 fs.writeFileSync(
-    'src/scss/_variables.scss',
-    fs.readFileSync('deployment/_variables.scss', 'utf8'),
-);
-console.log('Moved: styling variables file');
-
-fs.writeFileSync(
     'src/proxy.conf.json',
     fs.readFileSync('deployment/proxy.conf.json', 'utf8'),
 );
 console.log('Moved: webpack dev config');
 
-if (process.env.THEME_LOC !== undefined) {
-    console.log(`Using custom-provided theme ${process.env.THEME_LOC}`);
+if (process.env.THEME_VARIABLES !== undefined) {
+    console.log(
+        `Using custom-provided variables ${process.env.THEME_VARIABLES}`,
+    );
     fs.writeFileSync(
-        'src/scss/_variables.scss',
-        fs.readFileSync(process.env.THEME_LOC, 'utf8'),
+        'src/scss/custom-theme/_custom-variables.scss',
+        fs.readFileSync(process.env.THEME_VARIABLES, 'utf8'),
+    );
+}
+
+if (process.env.THEME_COLORS !== undefined) {
+    console.log(`Using custom-provided variables ${process.env.THEME_COLORS}`);
+    fs.writeFileSync(
+        'src/scss/custom-theme/_theme-colors.scss',
+        fs.readFileSync(process.env.THEME_COLORS, 'utf8'),
     );
 }
 

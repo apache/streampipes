@@ -40,11 +40,16 @@ public class UserAccount extends Principal {
 
   protected boolean hideTutorial;
   protected boolean darkMode = false;
+  protected boolean hasAcknowledged = false;
+
+  protected long createdAtMillis;
+  protected long lastLoginAtMillis;
 
   /**
    * The authentication provider (LOCAL or one of the configured OAuth providers
    */
   protected String provider;
+  protected boolean externallyManagedRoles = false;
 
   public UserAccount() {
     super(PrincipalType.USER_ACCOUNT);
@@ -53,6 +58,7 @@ public class UserAccount extends Principal {
     this.preferredDataProcessors = new ArrayList<>();
     this.preferredDataSinks = new ArrayList<>();
     this.preferredDataStreams = new ArrayList<>();
+    this.createdAtMillis = System.currentTimeMillis();
     this.provider = UserAccount.LOCAL;
   }
 
@@ -171,5 +177,37 @@ public class UserAccount extends Principal {
 
   public void setProvider(String provider) {
     this.provider = provider;
+  }
+
+  public boolean isExternallyManagedRoles() {
+    return externallyManagedRoles;
+  }
+
+  public void setExternallyManagedRoles(boolean externallyManagedRoles) {
+    this.externallyManagedRoles = externallyManagedRoles;
+  }
+
+  public boolean isHasAcknowledged() {
+    return hasAcknowledged;
+  }
+
+  public void setHasAcknowledged(boolean hasAcknowledged) {
+    this.hasAcknowledged = hasAcknowledged;
+  }
+
+  public long getCreatedAtMillis() {
+    return createdAtMillis;
+  }
+
+  public void setCreatedAtMillis(long createdAtMillis) {
+    this.createdAtMillis = createdAtMillis;
+  }
+
+  public long getLastLoginAtMillis() {
+    return lastLoginAtMillis;
+  }
+
+  public void setLastLoginAtMillis(long lastLoginAtMillis) {
+    this.lastLoginAtMillis = lastLoginAtMillis;
   }
 }

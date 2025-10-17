@@ -19,26 +19,27 @@
 package org.apache.streampipes.processors.filters.jvm.processor.throughputmon;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.apache.commons.lang3.time.StopWatch;
 
-public class ThroughputMonitorProcessor extends StreamPipesDataProcessor {
+public class ThroughputMonitorProcessor implements IStreamPipesDataProcessor {
 
   private static final String BATCH_WINDOW_KEY = "batch-window-key";
 
@@ -55,31 +56,33 @@ public class ThroughputMonitorProcessor extends StreamPipesDataProcessor {
   private long eventCount = 0;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.throughputmon", 0)
-        .category(DataProcessorType.STRUCTURE_ANALYTICS)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty()).build())
-        .outputStrategy(OutputStrategies.fixed(
-            EpProperties.timestampProperty(TIMESTAMP_FIELD),
-            EpProperties.longEp(Labels.withId(START_TIME_FIELD), START_TIME_FIELD, SO.DATE_TIME),
-            EpProperties.longEp(Labels.withId(END_TIME_FIELD), END_TIME_FIELD, SO.DATE_TIME),
-            EpProperties.longEp(Labels.withId(DURATION_FIELD), DURATION_FIELD, SO.NUMBER),
-            EpProperties.longEp(Labels.withId(EVENT_COUNT_FIELD), EVENT_COUNT_FIELD, SO.NUMBER),
-            EpProperties.doubleEp(Labels.withId(THROUGHPUT_FIELD), THROUGHPUT_FIELD, SO.NUMBER)))
-        .requiredIntegerParameter(Labels.withId(BATCH_WINDOW_KEY))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        ThroughputMonitorProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.filters.jvm.throughputmon", 0)
+            .category(DataProcessorType.STRUCTURE_ANALYTICS)
+            .withAssets(ExtensionAssetType.DOCUMENTATION)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredProperty(EpRequirements.anyProperty()).build())
+            .outputStrategy(OutputStrategies.fixed(
+                EpProperties.timestampProperty(TIMESTAMP_FIELD),
+                EpProperties.longEp(Labels.withId(START_TIME_FIELD), START_TIME_FIELD, SO.DATE_TIME),
+                EpProperties.longEp(Labels.withId(END_TIME_FIELD), END_TIME_FIELD, SO.DATE_TIME),
+                EpProperties.longEp(Labels.withId(DURATION_FIELD), DURATION_FIELD, SO.NUMBER),
+                EpProperties.longEp(Labels.withId(EVENT_COUNT_FIELD), EVENT_COUNT_FIELD, SO.NUMBER),
+                EpProperties.doubleEp(Labels.withId(THROUGHPUT_FIELD), THROUGHPUT_FIELD, SO.NUMBER)))
+            .requiredIntegerParameter(Labels.withId(BATCH_WINDOW_KEY))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    this.batchSize = parameters.extractor().singleValueParameter(BATCH_WINDOW_KEY, Integer.class);
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    this.batchSize = params.extractor().singleValueParameter(BATCH_WINDOW_KEY, Integer.class);
     this.stopWatch = new StopWatch();
     this.restartTimer();
   }
@@ -91,24 +94,22 @@ public class ThroughputMonitorProcessor extends StreamPipesDataProcessor {
       this.stopWatch.stop();
       Event outEvent = buildEvent();
       collector.collect(outEvent);
-      this.eventCount = 0;
       this.restartTimer();
     }
   }
 
-  @Override
-  public void onDetach() throws SpRuntimeException {
-    this.stopWatch.stop();
-  }
-
   private Event buildEvent() {
     Event event = new Event();
-    event.addField(TIMESTAMP_FIELD, System.currentTimeMillis());
-    event.addField(START_TIME_FIELD, this.stopWatch.getStartTime());
-    event.addField(END_TIME_FIELD, this.stopWatch.getStopTime());
-    event.addField(DURATION_FIELD, this.stopWatch.getTime());
-    event.addField(EVENT_COUNT_FIELD, this.eventCount);
-    event.addField(THROUGHPUT_FIELD, (this.eventCount / (((double) this.stopWatch.getTime()) / 1000)));
+    long endTime = System.currentTimeMillis();
+    long duration = this.stopWatch.getTime();
+    double throughput = (double) this.batchSize / (duration / 1000.0);
+
+    event.addField(TIMESTAMP_FIELD, endTime);
+    event.addField(START_TIME_FIELD, endTime - duration);
+    event.addField(END_TIME_FIELD, endTime);
+    event.addField(DURATION_FIELD, duration);
+    event.addField(EVENT_COUNT_FIELD, this.batchSize);
+    event.addField(THROUGHPUT_FIELD, throughput);
 
     return event;
   }
@@ -117,5 +118,10 @@ public class ThroughputMonitorProcessor extends StreamPipesDataProcessor {
     this.stopWatch.reset();
     this.eventCount = 0;
     this.stopWatch.start();
+  }
+
+  @Override
+  public void onPipelineStopped() throws SpRuntimeException {
+    this.stopWatch.stop();
   }
 }

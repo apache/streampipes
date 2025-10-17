@@ -16,22 +16,22 @@
  *
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
-    CurrentUserService,
-    DialogService,
+    DateFormatService,
+    PanelType,
 } from '@streampipes/shared-ui';
-import { AuthService } from '../../../../services/auth.service';
 import { SpDataExplorerOverviewDirective } from '../../../../data-explorer/components/overview/data-explorer-overview.directive';
-import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DataExplorerDashboardService } from '../../../services/dashboard.service';
+import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 import { TranslateService } from '@ngx-translate/core';
-import { DateFormatService } from '@streampipes/shared-ui';
+import { Router } from '@angular/router';
+import { CloneDashboardDialogComponent } from '../../../dialogs/clone-dashboard/clone-dashboard-dialog.component';
+import { EditDashboardDialogComponent } from '../../../dialogs/edit-dashboard/edit-dashboard-dialog.component';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
@@ -50,20 +50,13 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
     @Output()
     resourceCountEmitter: EventEmitter<number> = new EventEmitter();
 
-    constructor(
-        private dashboardService: DashboardService,
-        private dataExplorerDashboardService: DataExplorerDashboardService,
-        private dataExplorerSharedService: DataExplorerSharedService,
-        public dialogService: DialogService,
-        routingService: DataExplorerRoutingService,
-        authService: AuthService,
-        currentUserService: CurrentUserService,
-        private dialog: MatDialog,
-        protected translateService: TranslateService,
-        protected dateFormatService: DateFormatService,
-    ) {
-        super(dialogService, authService, currentUserService, routingService);
-    }
+    private dashboardService = inject(DashboardService);
+    private dataExplorerDashboardService = inject(DataExplorerDashboardService);
+    private dataExplorerSharedService = inject(DataExplorerSharedService);
+    private dialog = inject(MatDialog);
+    protected translateService = inject(TranslateService);
+    protected dateFormatService = inject(DateFormatService);
+    private router = inject(Router);
 
     afterInit(): void {
         this.displayedColumns = [
@@ -81,6 +74,8 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
             this.translateService.instant(
                 `Manage permissions for dashboard ${dashboard.name}`,
             ),
+            true,
+            this.makeDashboardKioskUrl(dashboard.elementId),
         );
 
         dialogRef.afterClosed().subscribe(refresh => {
@@ -157,5 +152,36 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
 
     formatDate(timestamp?: number): string {
         return this.dateFormatService.formatDate(timestamp);
+    }
+
+    openDashboardInKioskMode(dashboard: Dashboard) {
+        this.router.navigate(['dashboard-kiosk', dashboard.elementId]);
+    }
+
+    makeDashboardKioskUrl(dashboardId: string): string {
+        return `${window.location.protocol}//${window.location.host}/#/dashboard-kiosk/${dashboardId}`;
+    }
+
+    openCloneDialog(dashboard: Dashboard): void {
+        const dialogRef = this.dialogService.open(
+            CloneDashboardDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Clone dashboard'),
+                width: '50vw',
+                data: {
+                    dashboard: dashboard,
+                },
+            },
+        );
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.getDashboards();
+            }
+        });
+    }
+
+    onRowClicked(dashboard: Dashboard) {
+        this.showDashboard(dashboard);
     }
 }

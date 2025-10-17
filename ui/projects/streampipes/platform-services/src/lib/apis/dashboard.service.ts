@@ -16,30 +16,44 @@
  *
  */
 
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { SharedDatalakeRestService } from './shared-dashboard.service';
-import { Dashboard } from '../model/dashboard/dashboard.model';
+import {
+    CompositeDashboard,
+    Dashboard,
+} from '../model/dashboard/dashboard.model';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DashboardService {
-    constructor(
-        private http: HttpClient,
-        private sharedDatalakeRestService: SharedDatalakeRestService,
-    ) {}
+    private http = inject(HttpClient);
+    private sharedDatalakeRestService = inject(SharedDatalakeRestService);
 
     getDashboards(): Observable<Dashboard[]> {
         return this.sharedDatalakeRestService.getDashboards(this.dashboardUrl);
     }
 
     getDashboard(dashboardId: string): Observable<Dashboard> {
-        return this.http
-            .get(`${this.dashboardUrl}/${dashboardId}`)
-            .pipe(map(data => data as Dashboard));
+        return this.http.get<Dashboard>(`${this.dashboardUrl}/${dashboardId}`);
+    }
+
+    getCompositeDashboard(
+        dashboardId: string,
+        eTag = undefined,
+    ): Observable<HttpResponse<any>> {
+        const headers = eTag ? { 'If-None-Match': eTag } : {};
+        return this.http.get<CompositeDashboard>(
+            `${this.dashboardUrl}/${dashboardId}/composite`,
+            {
+                headers,
+                observe: 'response',
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            },
+        );
     }
 
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {

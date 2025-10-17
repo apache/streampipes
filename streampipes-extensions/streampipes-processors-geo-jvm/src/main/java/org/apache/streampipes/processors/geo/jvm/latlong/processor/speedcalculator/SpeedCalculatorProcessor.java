@@ -19,17 +19,20 @@
 package org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.latlong.helper.HaversineDistanceUtil;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -37,14 +40,12 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 
 import java.net.URI;
 
-public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
+public class SpeedCalculatorProcessor implements IStreamPipesDataProcessor {
   private static final String TIMESTAMP_KEY = "timestamp-key";
   private static final String LATITUDE_KEY = "latitude-key";
   private static final String LONGITUDE_KEY = "longitude-key";
@@ -57,39 +58,55 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
   private CircularFifoBuffer buffer;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMP_KEY), PropertyScope.HEADER_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LAT)
-                , Labels.withId(LATITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LNG)
-                , Labels.withId(LONGITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .requiredIntegerParameter(Labels.withId(COUNT_WINDOW_KEY))
-        .outputStrategy(
-            OutputStrategies.append(PrimitivePropertyBuilder
-                .create(Datatypes.Float, SPEED_RUNTIME_NAME)
-                .semanticType(SO.NUMBER)
-                .measurementUnit(URI.create("http://qudt.org/vocab/unit#KilometerPerHour"))
-                .build())
-        )
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        SpeedCalculatorProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator", 0)
+            .category(DataProcessorType.GEO)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.timestampReq(),
+                                    Labels.withId(TIMESTAMP_KEY), PropertyScope.HEADER_PROPERTY
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.semanticTypeReq(Geo.LAT),
+                                    Labels.withId(LATITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.semanticTypeReq(Geo.LNG),
+                                    Labels.withId(LONGITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .build())
+            .requiredIntegerParameter(Labels.withId(COUNT_WINDOW_KEY))
+            .outputStrategy(
+                OutputStrategies.append(PrimitivePropertyBuilder
+                                            .create(Datatypes.Float, SPEED_RUNTIME_NAME)
+                                            .semanticType(SO.NUMBER)
+                                            .measurementUnit(URI.create("http://qudt.org/vocab/unit#KilometerPerHour"))
+                                            .build())
+            )
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    this.latitudeFieldMapper = parameters.extractor().mappingPropertyValue(LATITUDE_KEY);
-    this.longitudeFieldMapper = parameters.extractor().mappingPropertyValue(LONGITUDE_KEY);
-    this.timestampFieldMapper = parameters.extractor().mappingPropertyValue(TIMESTAMP_KEY);
-    this.countWindowSize = parameters.extractor().singleValueParameter(COUNT_WINDOW_KEY, Integer.class);
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
+    this.latitudeFieldMapper = params.extractor()
+                                     .mappingPropertyValue(LATITUDE_KEY);
+    this.longitudeFieldMapper = params.extractor()
+                                      .mappingPropertyValue(LONGITUDE_KEY);
+    this.timestampFieldMapper = params.extractor()
+                                      .mappingPropertyValue(TIMESTAMP_KEY);
+    this.countWindowSize = params.extractor()
+                                 .singleValueParameter(COUNT_WINDOW_KEY, Integer.class);
     this.buffer = new CircularFifoBuffer(countWindowSize);
   }
 
@@ -105,8 +122,7 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 
   private double calculateSpeed(Event firstEvent, Event currentEvent) {
@@ -118,8 +134,10 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
     Float currentLongitude = getFloat(currentEvent, this.longitudeFieldMapper);
     Long currentTimestamp = getLong(currentEvent, this.timestampFieldMapper);
 
-    Float distanceInKm = HaversineDistanceUtil.dist(firstLatitude, firstLongitude, currentLatitude,
-        currentLongitude);
+    Float distanceInKm = HaversineDistanceUtil.dist(
+        firstLatitude, firstLongitude, currentLatitude,
+        currentLongitude
+    );
 
     Double durationInSeconds = Double.valueOf((currentTimestamp - firstTimestamp) / 1000.0);
 
@@ -130,10 +148,14 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
   }
 
   private Long getLong(Event event, String fieldName) {
-    return event.getFieldBySelector(fieldName).getAsPrimitive().getAsLong();
+    return event.getFieldBySelector(fieldName)
+                .getAsPrimitive()
+                .getAsLong();
   }
 
   private Float getFloat(Event event, String fieldName) {
-    return event.getFieldBySelector(fieldName).getAsPrimitive().getAsFloat();
+    return event.getFieldBySelector(fieldName)
+                .getAsPrimitive()
+                .getAsFloat();
   }
 }

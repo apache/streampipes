@@ -60,6 +60,10 @@
     margin-top: 0;
 }
 
+.mt-5 {
+    margin-top: 5px;
+}
+
 .mt-10 {
     margin-top: 10px;
 }
@@ -70,6 +74,10 @@
 
 .mt-30 {
     margin-top: 30px;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
 }
 
 .mb-10 {
@@ -211,7 +219,7 @@ img {
 
 .small-select .mat-mdc-select-value {
     font-size: 16px;
-    color: var(--color-accent);
+    color: var(--color-primary);
 }
 
 .small-select .mat-mdc-form-field-underline {

@@ -95,5 +95,19 @@ public class StreamPipesCollectorRegistry {
       .register(collectorRegistry);
   }
 
+  public static void removeGauge(Gauge gauge) {
+    collectorRegistry.unregister(gauge);
+  }
 
+  public static void removeCounter(Counter counter) {
+    collectorRegistry.unregister(counter);
+  }
+
+  public static void removeHistogram(Histogram histogram) {
+    collectorRegistry.unregister(histogram);
+  }
+
+  public static void removeSummary(Summary summary) {
+    collectorRegistry.unregister(summary);
+  }
 }

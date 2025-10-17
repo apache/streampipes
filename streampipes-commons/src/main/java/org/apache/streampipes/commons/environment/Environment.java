@@ -98,6 +98,8 @@ public interface Environment {
 
   StringEnvironmentVariable getCoreAssetBaseDir();
 
+  StringEnvironmentVariable getExtAssetBaseDir();
+
   // Flink Wrapper
   StringEnvironmentVariable getFlinkJarFileLoc();
 
@@ -158,4 +160,13 @@ public interface Environment {
 
   IntEnvironmentVariable getPlc4xMaxWaitTimeMs();
   IntEnvironmentVariable getPlc4xMaxLeaseTimeMs();
+
+  BooleanEnvironmentVariable getFileLoggingEnabled();
+  BooleanEnvironmentVariable getConsoleLoggingEnabled();
+  StringEnvironmentVariable getFileLoggingPrefix();
+  StringEnvironmentVariable getFileLoggingDir();
+  StringEnvironmentVariable getFileLoggingPattern();
+
+  StringEnvironmentVariable getRetentionLocalDir();
+  StringEnvironmentVariable getDatalakeSchedulerCron();
 }

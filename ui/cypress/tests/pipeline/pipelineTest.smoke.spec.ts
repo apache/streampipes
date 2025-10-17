@@ -25,6 +25,6 @@ describe('Test Random Data Simulator Stream Adapter', () => {
 
     it('Perform Test', () => {
         PipelineUtils.addSampleAdapterAndPipeline();
-        PipelineUtils.deletePipeline();
+        PipelineUtils.deletePipeline(`Pipeline Test`);
     });
 });

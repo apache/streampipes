@@ -22,14 +22,14 @@
 }
 
 .badge-key {
-    background: var(--color-accent);
+    background: var(--color-primary);
     color: var(--color-bg-0);
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px;
 }
 
 .badge-value {
-    background: var(--color-primary);
+    background: var(--color-secondary);
     border-bottom-right-radius: 3px;
     border-top-right-radius: 3px;
 }

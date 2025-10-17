@@ -54,6 +54,9 @@ export class AssetBrowserHierarchyComponent implements OnChanges {
     filteredAssetLinkType: string;
 
     @Input()
+    hideAssetChildren = false;
+
+    @Input()
     resourceCount = 0;
 
     @Output()
@@ -102,8 +105,21 @@ export class AssetBrowserHierarchyComponent implements OnChanges {
             ),
             assetDescription: '',
             assetLinks: [],
-            assets: this.assetBrowserData.assets,
+            assets: this.makeAssets(),
             assetType: undefined,
         };
+    }
+
+    private cloneWithoutChildren(assets: SpAsset[]): SpAsset[] {
+        return assets.map(a => ({
+            ...a,
+            assets: [],
+        }));
+    }
+
+    makeAssets(): SpAsset[] {
+        return this.hideAssetChildren
+            ? this.cloneWithoutChildren(this.assetBrowserData.assets)
+            : this.assetBrowserData.assets;
     }
 }

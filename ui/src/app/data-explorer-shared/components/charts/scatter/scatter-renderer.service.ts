@@ -66,11 +66,27 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
                 type: 'value',
                 min: 'dataMin',
                 max: 'dataMax',
+                name:
+                    widgetConfig.visualizationConfig.labelX ||
+                    `${xField.fullDbName}${xField.measurementUnitResourceId ? ` (${xField.measurementUnitResourceId.split('#').pop()})` : ''}`,
+                nameLocation: 'center',
+                nameTextStyle: {
+                    fontSize: 14,
+                },
+                nameGap: 40,
             },
             yAxis: {
                 type: 'value',
                 min: 'dataMin',
                 max: 'dataMax',
+                name:
+                    widgetConfig.visualizationConfig.labelY ||
+                    `${yField.fullDbName}${yField.measurementUnitResourceId ? ` (${yField.measurementUnitResourceId.split('#').pop()})` : ''}`,
+                nameLocation: 'center',
+                nameTextStyle: {
+                    fontSize: 14,
+                },
+                nameGap: 40,
             },
             series,
         });

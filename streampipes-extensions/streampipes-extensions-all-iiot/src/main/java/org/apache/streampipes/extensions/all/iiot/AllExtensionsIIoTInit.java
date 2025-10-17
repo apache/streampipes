@@ -81,7 +81,6 @@ public class AllExtensionsIIoTInit extends StreamPipesExtensionsServiceBase {
             new EnricherExtensionModuleExport(),
             new FilterExtensionModuleExport(),
             new SiddhiFilterExtensionModuleExport(),
-            new FilterExtensionModuleExport(),
             new TransformationExtensionModuleExport(),
             new BrokerSinksExtensionModuleExport(),
             new DatabaseSinksExtensionModuleExport(),

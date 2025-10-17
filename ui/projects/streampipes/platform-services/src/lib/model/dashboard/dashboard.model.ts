@@ -18,7 +18,12 @@
 
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { TimeSettings } from '../datalake/DateRange';
-import { ResourceMetadata } from '../gen/streampipes-model';
+import {
+    DashboardModel,
+    DataExplorerWidgetModel,
+    DataLakeMeasure,
+    ResourceMetadata,
+} from '../gen/streampipes-model';
 
 // tslint:disable-next-line:no-empty-interface
 export interface DashboardConfig extends GridsterConfig {}
@@ -47,5 +52,13 @@ export interface Dashboard {
     dashboardLiveSettings: DashboardLiveSettings;
     elementId?: string;
     metadata: ResourceMetadata;
+    gridColumns: number;
     rev?: string;
+}
+
+export interface CompositeDashboard {
+    dashboard: Dashboard;
+    dataLakeMeasures: DataLakeMeasure[];
+    widgets: DataExplorerWidgetModel[];
+    revisionHash: string;
 }

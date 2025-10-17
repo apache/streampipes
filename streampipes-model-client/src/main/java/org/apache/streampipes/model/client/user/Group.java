@@ -37,6 +37,7 @@ public class Group implements Storable {
   @JsonIgnore
   private String type = "group";
 
+  private Set<String> alternateIds = new HashSet<>();
   private String groupName;
 
   private Set<String> roles;
@@ -93,5 +94,13 @@ public class Group implements Storable {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public Set<String> getAlternateIds() {
+    return alternateIds;
+  }
+
+  public void setAlternateIds(Set<String> alternateIds) {
+    this.alternateIds = alternateIds;
   }
 }

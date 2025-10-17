@@ -18,99 +18,133 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.threshold;
 
-import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
-import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
+import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.TestConfiguration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.List;
+import java.util.Map;
 
 class TestThresholdDetectionProcessor {
 
+  private static final String FIELD_NAME = "field1";
+
   private ThresholdDetectionProcessor processor;
-
-  @Mock
-  private ProcessorParams processorParams;
-
-  @Mock
-  private SpOutputCollector outputCollector;
-
-  @Mock
-  private EventProcessorRuntimeContext runtimeContext;
-
-  @Mock
-  private ProcessingElementParameterExtractor extractor;
 
   @BeforeEach
   void setUp() {
-    MockitoAnnotations.openMocks(this);
     processor = new ThresholdDetectionProcessor();
-
-    when(processorParams.extractor()).thenReturn(extractor);
-  }
-
-  private void initializeProcessor(double threshold, String operator, String property) {
-    when(extractor.singleValueParameter("value", Double.class)).thenReturn(threshold);
-    when(extractor.selectedSingleValue("operation", String.class)).thenReturn(operator);
-    when(extractor.mappingPropertyValue("number-mapping")).thenReturn(property);
-
-    assertDoesNotThrow(() -> processor.onInvocation(processorParams, outputCollector, runtimeContext));
   }
 
   @Test
-  void testOnInvocation() {
-    initializeProcessor(10.0, ">=", "value");
+  void onEvent_ThresholdGreaterThanOrEqual() {
+    var configuration = createConfiguration(
+        ">=",
+        5.0
+    );
+    var inputEvent = createInputEvent(10.0);
+    var expectedEvents = createOutputEvent(10.0, true);
+
+    executeTest(configuration, inputEvent, expectedEvents);
   }
 
   @Test
-  void testOnEventThresholdExceeded() {
-    initializeProcessor(10.0, ">", "value");
+  void onEvent_ThresholdLessThan() {
+    var configuration = createConfiguration(
+        "<",
+        5.0
+    );
+    var inputEvent = createInputEvent(3.0);
+    var expectedEvents = createOutputEvent(3.0, true);
 
-    Event event = new Event();
-    event.addField("value", 15.0);
-
-    processor.onEvent(event, outputCollector);
-
-    assertTrue(event.getFieldBySelector("thresholdDetected").getAsPrimitive().getAsBoolean());
-    verify(outputCollector, times(1)).collect(event);
+    executeTest(configuration, inputEvent, expectedEvents);
   }
 
   @Test
-  void testOnEventThresholdNotExceeded() {
-    initializeProcessor(10.0, "<", "value");
+  void onEvent_Equal() {
+    var configuration = createConfiguration(
+        "==",
+        5.0
+    );
+    var inputEvent = createInputEvent(5.0);
+    var expectedEvents = createOutputEvent(5.0, true);
 
-    Event event = new Event();
-    event.addField("value", 15.0);
-
-    processor.onEvent(event, outputCollector);
-
-    assertFalse(event.getFieldBySelector("thresholdDetected").getAsPrimitive().getAsBoolean());
-    verify(outputCollector, times(1)).collect(event);
+    executeTest(configuration, inputEvent, expectedEvents);
   }
 
   @Test
-  void testOnEventEqualThreshold() {
-    initializeProcessor(10.0, "==", "value");
+  void onEvent_EqualFail() {
+    var configuration = createConfiguration(
+        "==",
+        5.0
+    );
+    var inputEvent = createInputEvent(6.0);
+    var expectedEvents = createOutputEvent(6.0, false);
 
-    Event event = new Event();
-    event.addField("value", 10.0);
+    executeTest(configuration, inputEvent, expectedEvents);
+  }
 
-    processor.onEvent(event, outputCollector);
 
-    assertNotNull(event.getFieldBySelector("thresholdDetected"), "Field 'thresholdDetected' should be present");
-    assertTrue(event.getFieldBySelector("thresholdDetected").getAsPrimitive().getAsBoolean(),
-        "Threshold should be detected as true");
+  @Test
+  void onEvent_ThresholdNotEqual() {
+    var configuration = createConfiguration(
+        "!=",
+        5.0
+    );
+    var inputEvent = createInputEvent(3.0);
+    var expectedEvents = createOutputEvent(3.0, true);
+
+    executeTest(configuration, inputEvent, expectedEvents);
+  }
+
+  @Test
+  void onEvent_ThresholdGreaterThan() {
+    var configuration = createConfiguration(
+        ">",
+        5.0
+    );
+    var inputEvent = createInputEvent(6.0);
+    var expectedEvents = createOutputEvent(6.0, true);
+
+    executeTest(configuration, inputEvent, expectedEvents);
+  }
+
+  @Test
+  void onEvent_ThresholdLessThanOrEqual() {
+    var configuration = createConfiguration(
+        "<=",
+        5.0
+    );
+    var inputEvent = createInputEvent(5.0);
+    var expectedEvents = createOutputEvent(5.0, true);
+
+    executeTest(configuration, inputEvent, expectedEvents);
+  }
+
+  private TestConfiguration createConfiguration(String operation, double value) {
+    return TestConfiguration.builder()
+        .configWithDefaultPrefix(ThresholdDetectionProcessor.NUMBER_MAPPING, FIELD_NAME)
+        .config(ThresholdDetectionProcessor.OPERATION, operation)
+        .config(ThresholdDetectionProcessor.VALUE, value)
+        .build();
+  }
+
+  private List<Map<String, Object>> createInputEvent(double value) {
+    return List.of(Map.of(FIELD_NAME, value));
+  }
+
+  private List<Map<String, Object>> createOutputEvent(double value, boolean thresholdDetected) {
+    return List.of(Map.of(FIELD_NAME, value, ThresholdDetectionProcessor.RESULT_FIELD, thresholdDetected));
+  }
+
+  private void executeTest(
+      TestConfiguration configuration,
+      List<Map<String, Object>> inputEvent,
+      List<Map<String, Object>> expectedEvents
+  ) {
+    var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+    testExecutor.run(inputEvent, expectedEvents);
   }
 }

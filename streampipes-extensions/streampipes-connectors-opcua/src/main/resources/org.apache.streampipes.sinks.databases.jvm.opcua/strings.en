@@ -68,3 +68,12 @@ userAuthentication.description=Choose an authentication method for the user
 
 anonymous.title=Anonymous
 anonymous.description=
+
+x509Group.title=X.509 Certificate
+x509Group.description=
+
+x509PrivateKeyPem.title=Private Key PEM
+x509PrivateKeyPem.description=Private key in PEM format
+
+x509PublicKeyPem.title=Certificate PEM
+x509PublicKeyPem.description=Public key in PEM format

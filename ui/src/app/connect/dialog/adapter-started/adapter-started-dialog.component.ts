@@ -16,22 +16,35 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    EventEmitter,
+    Output,
+    inject,
+} from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
     AdapterService,
+    SpAssetTreeNode,
     CompactPipeline,
     CompactPipelineElement,
+    DatalakeRestService,
     ErrorMessage,
     Message,
     PipelineOperationStatus,
     PipelineTemplateService,
     PipelineUpdateInfo,
     SpLogMessage,
+    LinkageData,
+    CompactPipelineService,
 } from '@streampipes/platform-services';
-import { DialogRef } from '@streampipes/shared-ui';
-import { CompactPipelineService } from '@streampipes/platform-services';
+import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
+
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -39,14 +52,30 @@ import { CompactPipelineService } from '@streampipes/platform-services';
     standalone: false,
 })
 export class AdapterStartedDialog implements OnInit {
+    translateService = inject(TranslateService);
+    public dialogRef = inject(DialogRef<AdapterStartedDialog>);
+    private adapterService = inject(AdapterService);
+    private shepherdService = inject(ShepherdService);
+    private pipelineTemplateService = inject(PipelineTemplateService);
+    private compactPipelineService = inject(CompactPipelineService);
+    private assetSaveService = inject(AssetSaveService);
+    private dataLakeService = inject(DatalakeRestService);
+
     adapterInstalled = false;
-    pollingActive = false;
+
     public pipelineOperationStatus: PipelineOperationStatus;
 
     /**
      * AdapterDescription that should be persisted and started
      */
     @Input() adapter: AdapterDescription;
+
+    /**
+     * Assets selectedAsset to link the adapter tp
+     */
+    @Input() selectedAssets: SpAssetTreeNode[];
+    @Input() deselectedAssets: SpAssetTreeNode[];
+    @Input() originalAssets: SpAssetTreeNode[];
 
     /**
      * Indicates if a pipeline to store the adapter events should be started
@@ -68,6 +97,12 @@ export class AdapterStartedDialog implements OnInit {
      */
     @Input() startAdapterNow = true;
 
+    @Input()
+    allResourcesAlias = this.translateService.instant('Resources');
+
+    @Output() linkageDataEmitter: EventEmitter<LinkageData[]> =
+        new EventEmitter<LinkageData[]>();
+
     templateErrorMessage: ErrorMessage;
     adapterUpdatePreflight = false;
     adapterPipelineUpdateInfos: PipelineUpdateInfo[];
@@ -77,14 +112,8 @@ export class AdapterStartedDialog implements OnInit {
     adapterInstallationSuccessMessage = '';
     adapterElementId = '';
     adapterErrorMessage: SpLogMessage;
-
-    constructor(
-        public dialogRef: DialogRef<AdapterStartedDialog>,
-        private adapterService: AdapterService,
-        private shepherdService: ShepherdService,
-        private pipelineTemplateService: PipelineTemplateService,
-        private compactPipelineService: CompactPipelineService,
-    ) {}
+    addToAssetText = '';
+    deletedFromAssetText = '';
 
     ngOnInit() {
         if (this.editMode) {
@@ -111,7 +140,20 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     updateAdapter(): void {
-        this.loadingText = `Updating adapter ${this.adapter.name}`;
+        this.loadingText = this.translateService.instant(
+            'Updating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
+
+        this.loadingText = this.translateService.instant(
+            'Updating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
+
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe({
             next: status => {
@@ -124,6 +166,8 @@ export class AdapterStartedDialog implements OnInit {
 
                     this.onAdapterFailure(errorLogMessage);
                 }
+
+                this.addToAsset();
             },
             error: error => {
                 this.onAdapterFailure(error.error);
@@ -132,16 +176,30 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     addAdapter() {
-        this.loadingText = `Creating adapter ${this.adapter.name}`;
+        this.loadingText = this.translateService.instant(
+            'Creating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
+        this.loadingText = this.translateService.instant(
+            'Creating adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
         this.loading = true;
         this.adapterService.addAdapter(this.adapter).subscribe(
             status => {
                 if (status.success) {
                     const adapterElementId = status.notifications[0].title;
+                    this.adapterElementId = adapterElementId;
+                    this.adapterElementId = adapterElementId;
                     if (this.saveInDataLake) {
                         this.startSaveInDataLakePipeline(adapterElementId);
                     } else {
                         this.startAdapter(adapterElementId, true);
+                        this.addToAsset();
                     }
                 } else {
                     const errorMsg: SpLogMessage =
@@ -175,11 +233,22 @@ export class AdapterStartedDialog implements OnInit {
             'Your new data stream is now available in the pipeline editor.';
         if (this.startAdapterNow) {
             this.adapterElementId = adapterElementId;
-            this.loadingText = `Starting adapter ${this.adapter.name}`;
+            this.loadingText = this.translateService.instant(
+                'Starting adapter {{adapterName}}',
+                {
+                    adapterName: this.adapter.name,
+                },
+            );
+            this.loadingText = this.translateService.instant(
+                'Starting adapter {{adapterName}}',
+                {
+                    adapterName: this.adapter.name,
+                },
+            );
             this.adapterService
                 .startAdapterByElementId(adapterElementId)
                 .subscribe(
-                    startStatus => {
+                    () => {
                         this.onAdapterReady(successMessage, showPreview);
                     },
                     error => {
@@ -209,9 +278,122 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     onCloseConfirm() {
-        this.pollingActive = false;
         this.dialogRef.close('Confirm');
         this.shepherdService.trigger('confirm_adapter_started_button');
+    }
+
+    async addToAsset(): Promise<void> {
+        let linkageData: LinkageData[];
+        try {
+            if (!this.editMode) {
+                const adapter = await this.getAdapter();
+                linkageData = this.createLinkageData(adapter);
+
+                if (this.saveInDataLake) {
+                    await this.addDataLakeLinkageData(adapter, linkageData);
+                }
+            } else {
+                linkageData = this.createLinkageData(this.adapter);
+            }
+
+            await this.saveAssets(linkageData);
+
+            this.setSuccessMessage(linkageData);
+        } catch (err) {
+            console.error('Error in addToAsset:', err);
+        }
+    }
+
+    private async getAdapter(): Promise<AdapterDescription> {
+        return await firstValueFrom(
+            this.adapterService.getAdapter(this.adapterElementId),
+        );
+    }
+
+    private createLinkageData(adapter: AdapterDescription): LinkageData[] {
+        return [
+            {
+                type: 'adapter',
+                id:
+                    this.adapterElementId !== ''
+                        ? this.adapterElementId
+                        : adapter.elementId,
+                name: adapter.name,
+            },
+            {
+                type: 'data-source',
+                id: adapter.correspondingDataStreamElementId,
+                name: adapter.name,
+            },
+        ];
+    }
+
+    private async addDataLakeLinkageData(
+        adapter: AdapterDescription,
+        linkageData: LinkageData[],
+    ): Promise<void> {
+        const pipelineId = `persist-${this.adapter.name.replaceAll(' ', '-')}`;
+        linkageData.push({
+            type: 'pipeline',
+            id: pipelineId,
+            name: pipelineId,
+        });
+
+        const res = await lastValueFrom(
+            this.dataLakeService.getMeasurementByName(adapter.name),
+        );
+
+        linkageData.push({
+            type: 'measurement',
+            id: res.elementId,
+            name: adapter.name,
+        });
+    }
+
+    private async saveAssets(linkageData: LinkageData[]): Promise<void> {
+        await this.assetSaveService.saveSelectedAssets(
+            this.selectedAssets,
+            linkageData,
+            this.deselectedAssets,
+            this.originalAssets,
+        );
+    }
+
+    private setSuccessMessage(linkageData: LinkageData[]): void {
+        const assetTypesList = this.formatWithAnd(
+            linkageData.map(data => data.type),
+        );
+        if (this.selectedAssets.length > 0) {
+            const assetIdsList = this.formatWithAnd(
+                this.selectedAssets.map(asset => asset.assetName),
+            );
+
+            this.addToAssetText = this.translateService.instant(
+                'Your {{assetTypes}} were successfully added to {{assetIds}}.',
+                {
+                    assetTypes: assetTypesList,
+                    assetIds: assetIdsList,
+                },
+            );
+        }
+        if (this.deselectedAssets && this.deselectedAssets.length > 0) {
+            const assetIdsRemovedList = this.formatWithAnd(
+                this.deselectedAssets.map(asset => asset.assetName),
+            );
+            this.deletedFromAssetText = this.translateService.instant(
+                'Your {{assetTypes}} were successfully deleted from {{assetIds}}.',
+                {
+                    assetTypes: assetTypesList,
+                    assetIds: assetIdsRemovedList,
+                },
+            );
+        }
+    }
+
+    private formatWithAnd(list: string[]): string {
+        if (list.length === 1) return list[0];
+        const lastItem = list.pop();
+        return `${list.join(', ')}, and ${lastItem}`;
     }
 
     private startSaveInDataLakePipeline(adapterElementId: string) {
@@ -241,6 +423,7 @@ export class AdapterStartedDialog implements OnInit {
                                 this.pipelineOperationStatus =
                                     pipelineOperationStatus;
                                 this.startAdapter(adapterElementId, true);
+                                this.addToAsset();
                             },
                             error => {
                                 this.onAdapterFailure(error.error);

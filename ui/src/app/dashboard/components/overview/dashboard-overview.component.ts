@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
     CurrentUserService,
@@ -27,7 +27,7 @@ import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.routes';
 import { Dashboard } from '@streampipes/platform-services';
-import { DataExplorerDashboardService } from '../../services/dashboard.service';
+import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -47,14 +47,12 @@ export class DashboardOverviewComponent implements OnInit {
     @ViewChild(DashboardOverviewTableComponent)
     dashboardOverview: DashboardOverviewTableComponent;
 
-    constructor(
-        public dialog: MatDialog,
-        private dataExplorerDashboardService: DataExplorerDashboardService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private breadcrumbService: SpBreadcrumbService,
-        private translateService: TranslateService,
-    ) {}
+    public dialog = inject(MatDialog);
+    private dataExplorerDashboardService = inject(DataExplorerDashboardService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private translateService = inject(TranslateService);
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb(
@@ -83,6 +81,7 @@ export class DashboardOverviewComponent implements OnInit {
                 createdAtEpochMs: Date.now(),
                 lastModifiedEpochMs: Date.now(),
             },
+            gridColumns: 12,
         };
 
         this.openDashboardModificationDialog(true, dataViewDashboard);

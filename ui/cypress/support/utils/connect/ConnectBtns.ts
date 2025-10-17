@@ -15,6 +15,8 @@
  *  limitations under the License.
  *
  */
+import { GeneralUtils } from '../GeneralUtils';
+
 export class ConnectBtns {
     public static detailsAdapter() {
         return cy.dataCy('details-adapter', { timeout: 10000 });
@@ -23,6 +25,11 @@ export class ConnectBtns {
     public static deleteAdapter() {
         return cy.dataCy('delete-adapter', { timeout: 10000 });
     }
+
+    public static moreOptions() {
+        return cy.dataCy('more-options', { timeout: 10000 });
+    }
+
     public static editAdapter() {
         return cy.dataCy('edit-adapter');
     }
@@ -39,6 +46,10 @@ export class ConnectBtns {
         return cy.dataCy('adapter-operation-in-progress-spinner', {
             timeout: 10000,
         });
+    }
+
+    public static openActionsMenu(adapterName: string) {
+        GeneralUtils.openMenuForRow(adapterName);
     }
 
     public static refreshSchema() {
@@ -99,6 +110,10 @@ export class ConnectBtns {
     }
 
     public static saveEditProperty() {
+        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
+            'have.length',
+            1,
+        );
         return cy.dataCy('sp-save-edit-property', { timeout: 10000 });
     }
 

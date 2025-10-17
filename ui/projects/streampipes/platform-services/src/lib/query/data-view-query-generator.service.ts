@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DatalakeRestService } from '../apis/datalake-rest.service';
 import {
@@ -26,12 +26,14 @@ import {
 import { SpQueryResult } from '../model/gen/streampipes-model';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
 import { DatalakeQueryParameterBuilder } from './DatalakeQueryParameterBuilder';
+import { DashboardKioskRestService } from '../apis/dashboard-kiosk.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DataViewQueryGeneratorService {
-    constructor(protected dataLakeRestService: DatalakeRestService) {}
+    protected dataLakeRestService = inject(DatalakeRestService);
+    protected dashboardKioskRestService = inject(DashboardKioskRestService);
 
     generateObservables(
         startTime: number,
@@ -56,19 +58,45 @@ export class DataViewQueryGeneratorService {
         });
     }
 
+    generateObservablesForKioskMode(
+        startTime: number,
+        endTime: number,
+        dataConfig: DataExplorerDataConfig,
+        dashboardId: string,
+        widgetId: string,
+        maximumResultingEvents = -1,
+    ): Observable<SpQueryResult>[] {
+        return dataConfig.sourceConfigs.map(sourceConfig => {
+            const dataLakeConfiguration = this.generateQuery(
+                startTime,
+                endTime,
+                sourceConfig,
+                dataConfig.ignoreMissingValues,
+                maximumResultingEvents,
+                true,
+            );
+
+            return this.dashboardKioskRestService.getData(
+                dashboardId,
+                widgetId,
+                dataLakeConfiguration,
+            );
+        });
+    }
+
     generateQuery(
         startTime: number,
         endTime: number,
         sourceConfig: SourceConfig,
         ignoreEventsWithMissingValues: boolean,
         maximumResultingEvents: number = -1,
+        includeMeasureName = false,
     ): DatalakeQueryParameters {
         const queryBuilder = DatalakeQueryParameterBuilder.create(
             startTime,
             endTime,
         );
         const queryConfig = sourceConfig.queryConfig;
-
         queryBuilder.withColumnFilter(
             queryConfig.fields.filter(f => f.selected),
             sourceConfig.queryType === 'aggregated' ||
@@ -120,6 +148,10 @@ export class DataViewQueryGeneratorService {
 
         if (maximumResultingEvents !== -1) {
             queryBuilder.withMaximumAmountOfEvents(maximumResultingEvents);
+        }
+
+        if (includeMeasureName) {
+            dataLakeQueryParameter.measureName = sourceConfig.measureName;
         }
 
         return dataLakeQueryParameter;

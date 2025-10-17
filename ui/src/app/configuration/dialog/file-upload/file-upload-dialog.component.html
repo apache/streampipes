@@ -30,7 +30,7 @@
                 >
                     <input
                         matInput
-                        placeholder="File"
+                        [placeholder]="'File' | translate"
                         disabled
                         (value)="(fileNames)"
                     />
@@ -77,11 +77,11 @@
                 </mat-form-field>
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     class="mat-basic"
                     (click)="removeFilesFromUpload()"
                 >
-                    Clear
+                    {{ 'Clear' | translate }}
                 </button>
             </div>
         </div>
@@ -93,7 +93,10 @@
             <div fxFlex="100" fxLayoutAlign="center" fxLayout="column">
                 <b>
                     <h4>
-                        The following files already exist. Please rename them.
+                        {{
+                            'The following files already exist. Please rename them.'
+                                | translate
+                        }}
                     </h4>
                 </b>
                 <div
@@ -118,35 +121,35 @@
         <button
             *ngIf="this.duplicateFileNames.length === 0"
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             (click)="store()"
             [disabled]="fileNames.length === 0"
             data-cy="sp-file-management-store-file"
             style="margin-right: 10px"
         >
-            Import files
+            {{ 'Import files' | translate }}
         </button>
 
         <button
             *ngIf="this.duplicateFileNames.length !== 0"
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             (click)="renameDuplicateFiles()"
             [disabled]="fileNames.length === 0"
             style="margin-right: 10px"
         >
-            Rename files
+            {{ 'Rename files' | translate }}
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             (click)="cancel()"
             style="margin-right: 10px"
         >
-            Cancel
+            {{ 'Cancel' | translate }}
         </button>
     </div>
 </div>

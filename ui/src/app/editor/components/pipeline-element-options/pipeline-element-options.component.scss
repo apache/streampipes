@@ -22,11 +22,10 @@
     height: 30%;
     width: 30%;
     border-radius: 20%;
-    box-shadow: 0 0 3px var(--color-accent);
+    box-shadow: 0 0 3px var(--color-primary);
     text-align: center;
     padding: 1px 1px;
-    background-color: var(--color-accent);
-    color: rgba(255, 255, 255, 0.75);
+    background-color: var(--mat-sys-primary);
 }
 
 .mat-mdc-icon-button.options-icon-button {
@@ -35,6 +34,7 @@
     line-height: 25px;
     border-radius: 0;
     padding: 0;
+    color: var(--mat-sys-on-primary);
 }
 
 .options-icon-size {

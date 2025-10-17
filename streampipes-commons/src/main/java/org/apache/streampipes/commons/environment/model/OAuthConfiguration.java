@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.commons.environment.model;
 
+import java.util.Set;
+
 public class OAuthConfiguration {
 
   private String authorizationUri;
@@ -34,7 +36,8 @@ public class OAuthConfiguration {
   private String userInfoUri;
   private String emailAttributeName;
   private String userIdAttributeName;
-
+  private String roleAttributeName;
+  private Set<String> defaultRoles;
 
   public String getRegistrationId() {
     return registrationId;
@@ -136,6 +139,14 @@ public class OAuthConfiguration {
     return userIdAttributeName;
   }
 
+  public String getRoleAttributeName() {
+    return roleAttributeName;
+  }
+
+  public void setRoleAttributeName(String roleAttributeName) {
+    this.roleAttributeName = roleAttributeName;
+  }
+
   public void setUserIdAttributeName(String userIdAttributeName) {
     this.userIdAttributeName = userIdAttributeName;
   }
@@ -146,5 +157,13 @@ public class OAuthConfiguration {
 
   public void setRegistrationName(String registrationName) {
     this.registrationName = registrationName;
+  }
+
+  public Set<String> getDefaultRoles() {
+    return defaultRoles;
+  }
+
+  public void setDefaultRoles(Set<String> defaultRoles) {
+    this.defaultRoles = defaultRoles;
   }
 }

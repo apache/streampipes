@@ -19,8 +19,9 @@
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
-import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
+import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
+import { GeneralUtils } from '../../../support/utils/GeneralUtils';
 
 describe('Connect schema rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -54,13 +55,14 @@ describe('Connect schema rule transformations', () => {
 
         cy.wait(1000);
 
-        DataLakeUtils.checkResults(
+        DataExplorerUtils.checkResults(
             'Adapter to test rules',
             'cypress/fixtures/connect/addNumericalStaticValue/expected.json',
             true,
         );
 
         ConnectUtils.goToConnect();
+        GeneralUtils.openMenuForRow(adapterConfiguration.adapterName);
         ConnectBtns.editAdapter().click();
         // This waiting time is required to ensure that the file is loaded correctly before the next button is clicked
         cy.wait(1000);

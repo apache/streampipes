@@ -18,7 +18,7 @@
 <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
     <div fxLayoutAlign="start center">
         <button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             class="small-button"
             (click)="onResetOptionsAndReload()"
@@ -30,13 +30,14 @@
             <span>{{ 'Clear selection & reload' | translate }}</span>
         </button>
         <button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             class="small-button"
             (click)="onReload()"
             style="margin-right: 10px"
             *ngIf="editorMode === 'tree'"
             [disabled]="!showOptions"
+            data-cy="reload-tree-node-selection-btn"
         >
             <span>{{ 'Reload' | translate }}</span>
         </button>

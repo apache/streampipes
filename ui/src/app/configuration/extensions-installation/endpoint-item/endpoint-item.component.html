@@ -39,9 +39,15 @@
         <span fxFlex></span>
         <span
             class="{{ itemTypeStyle }}"
-            matTooltip="Endpoint {{
-                item.available ? 'available' : 'not available'
-            }}"
+            [matTooltip]="
+                'Endpoint {{status}}'
+                    | translate
+                        : {
+                              status: item.available
+                                  ? ('available' | translate)
+                                  : ('not available' | translate)
+                          }
+            "
             >{{ itemTypeTitle }}</span
         >
     </div>
@@ -63,36 +69,37 @@
         <div fxFlex fxLayout="column">
             <div class="ml-5">
                 <small *ngIf="!item.editable"
-                    >Internally managed by {{ appConstants.APP_NAME }}</small
-                >
+                    >{{ 'Internally managed by {{appName}}' | translate: {
+                    appName: appConstants.APP_NAME } }}
+                </small>
             </div>
             <div fxFlex fxLayoutAlign="start end" class="ml-5">
                 <button
                     class="small-button-add"
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     [disabled]="!item.editable"
                     (click)="installSingleElement($event, item)"
                     *ngIf="!item.installed"
                 >
-                    <span>&nbsp;Install</span>
+                    <span>&nbsp;{{ 'Install' | translate }}</span>
                 </button>
                 <button
                     class="small-button-add-inverted"
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     [disabled]="!item.editable"
                     (click)="uninstallSingleElement($event, item)"
                     *ngIf="item.installed"
                 >
-                    <span>&nbsp;Uninstall</span>
+                    <span>&nbsp;{{ 'Uninstall' | translate }}</span>
                 </button>
                 <div *ngIf="item.installed" style="margin-left: 5px">
                     <button
                         class="small-button-add mat-basic no-min-width"
                         [disabled]="!item.editable"
-                        mat-raised-button
+                        mat-flat-button
                         mat-button
                         [matMenuTriggerFor]="menu"
                     >
@@ -105,7 +112,7 @@
                             [disabled]="!item.available"
                         >
                             <mat-icon>refresh</mat-icon>
-                            <span>&nbsp;Update</span>
+                            <span>&nbsp;{{ 'Update' | translate }}</span>
                         </button>
                         <button
                             mat-menu-item
@@ -115,7 +122,11 @@
                             [disabled]="!item.available"
                         >
                             <mat-icon>share</mat-icon>
-                            <span>&nbsp;Manage permissions</span>
+                            <span
+                                >&nbsp;{{
+                                    'Manage permissions' | translate
+                                }}</span
+                            >
                         </button>
                     </mat-menu>
                 </div>

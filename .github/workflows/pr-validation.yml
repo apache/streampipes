@@ -23,10 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -34,94 +34,116 @@ jobs:
 
       - name: Validate java code
         run: mvn clean verify
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
 
   run-format-and-lint-ui:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '18.x'
+          node-version: '22.x'
           cache: 'npm'
           cache-dependency-path: ui/package-lock.json
+
+      - name: Set up Develocity npm agent
+        run: |
+          npm exec -y -- pacote extract @gradle-tech/develocity-agent ~/.node_libraries/@gradle-tech/develocity-agent
 
       - name: Install dependencies
         working-directory: ./ui
         run: |
           npm install
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
+          NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'
 
       - name: Format and Lint all files
         working-directory: ./ui
         run: |
           npm run format
           npm run lint
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
+          NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'
 
   run-cypress-e2e-tests:
     runs-on: ubuntu-latest
     needs: [python-quality-checks, python-unit-tests, run-format-and-lint-ui]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '18.x'
+          node-version: '22.x'
           cache: 'npm'
           cache-dependency-path: ui/package-lock.json
+
+      - name: Set up Develocity npm agent
+        run: |
+          npm exec -y -- pacote extract @gradle-tech/develocity-agent ~/.node_libraries/@gradle-tech/develocity-agent
 
       - name: Install NPM dependencies
         working-directory: ./ui
         run: |
           rm -rf node_modules package-lock.json
           npm install
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
+          NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'
 
       - name: Build UI
         working-directory: ./ui
         run: |
           npm run build
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
+          NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'
 
       - name: Build with Maven
         run: mvn clean package
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
 
       - name: Build and run streampipes
         run: docker compose up --build -d
 
-      - name: Wait 70 seconds
+      - name: Wait 80 seconds
         working-directory: ./installer/compose
-        run: sleep 70
+        run: sleep 80
 
       - name: 'UI Tests'
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          wait-on: 'http://localhost/#/login'
-          wait-on-timeout: 120
-          spec: cypress/tests/**/*.smoke.spec.ts
-          working-directory: ui
+        working-directory: ./ui
+        run: npx cypress run --spec "cypress/tests/**/*.smoke.spec.ts"
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
+          NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'
 
   python-quality-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.9
+          python-version: "3.10"
 
       - name: Install and configure Poetry
-        uses: snok/install-poetry@v1
+        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a
         with:
           version: 1.5.1
           virtualenvs-create: true
@@ -142,14 +164,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: [3.9, "3.10", "3.11"]
+        python: ["3.10", "3.11", "3.12", "3.13"]
         os: [ubuntu-latest, macos-latest, windows-latest]
     defaults:
       run:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python v${{ matrix.python }}
         uses: actions/setup-python@v5
@@ -157,7 +179,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install and configure Poetry
-        uses: snok/install-poetry@v1
+        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a
         with:
           version: 1.5.1
           virtualenvs-create: true
@@ -177,15 +199,15 @@ jobs:
   python-doc-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.9
+          python-version: "3.10"
 
       - name: Install and configure Poetry
-        uses: snok/install-poetry@v1
+        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a
         with:
           version: 1.5.1
           virtualenvs-create: true

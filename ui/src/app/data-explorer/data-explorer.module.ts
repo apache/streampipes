@@ -51,7 +51,11 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDialogModule } from '@angular/material/dialog';
+import {
+    MatDialogActions,
+    MatDialogContent,
+    MatDialogModule,
+} from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -82,6 +86,7 @@ import { FilterSelectionPanelRowValueAutocompleteComponent } from './components/
 import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
 import { AggregateConfigurationComponent } from './components/chart-view/designer-panel/data-settings/aggregate-configuration/aggregate-configuration.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { AssetDialogComponent } from './dialog/asset-dialog.component';
 
 @NgModule({
     imports: [
@@ -89,6 +94,8 @@ import { TranslateModule } from '@ngx-translate/core';
         MatCardModule,
         MatCheckboxModule,
         MatDialogModule,
+        MatDialogContent,
+        MatDialogActions,
         MatIconModule,
         MatInputModule,
         MatListModule,
@@ -173,6 +180,7 @@ import { TranslateModule } from '@ngx-translate/core';
         FilterSelectionPanelRowOperationSelectionComponent,
         FilterSelectionPanelRowValueInputComponent,
         FilterSelectionPanelRowValueAutocompleteComponent,
+        AssetDialogComponent,
     ],
     exports: [],
 })

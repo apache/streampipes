@@ -16,14 +16,13 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
-import { LoginService } from '../../services/login.service';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
 
 @Component({
@@ -39,12 +38,7 @@ export class RestorePasswordComponent extends BaseLoginPageDirective {
 
     username: string;
 
-    constructor(
-        private fb: UntypedFormBuilder,
-        protected loginService: LoginService,
-    ) {
-        super(loginService);
-    }
+    private fb = inject(UntypedFormBuilder);
 
     sendRestorePasswordLink() {
         this.restoreCompleted = false;

@@ -16,121 +16,122 @@
   ~
   -->
 
-<div
-    class="data-explorer-options-item"
-    fxLayoutAlign="start center"
-    fxLayout="row"
-    *ngIf="editMode"
->
-    <button
-        mat-raised-button
-        color="accent"
-        [matTooltip]="'Save' | translate"
-        class="edit-menu-btn"
-        (click)="saveDashboardEmitter.emit()"
-        data-cy="save-dashboard-btn"
+<div fxLayout="row" fxFlex="100">
+    <div
+        class="data-explorer-options-item"
+        fxLayoutAlign="start center"
+        fxLayout="row"
+        fxLayoutGap="10px"
+        *ngIf="editMode"
     >
-        <mat-icon>save</mat-icon>
-        <span>{{ 'Save' | translate }}</span>
-    </button>
-    <button
-        mat-raised-button
-        color="accent"
-        [matTooltip]="'Discard' | translate"
-        class="mat-basic mr-10 edit-menu-btn"
-        (click)="discardDashboardEmitter.emit()"
-    >
-        <i class="material-icons">undo</i>
-        <span>&nbsp;{{ 'Discard' | translate }}</span>
-    </button>
-</div>
-<div
-    class="data-explorer-options-item"
-    fxLayoutAlign="start center"
-    fxLayout="row"
->
-    <button
-        mat-icon-button
-        [matMenuTriggerFor]="menu"
-        [attr.aria-label]="'View mode' | translate"
-        [matTooltip]="'View mode' | translate"
-    >
-        <mat-icon
-            >{{ viewMode === 'grid' ? 'grid_view' : 'web_asset' }}
-        </mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="viewModeChange.emit('grid')">
-            <mat-icon>grid_view</mat-icon>
-            <span>{{ 'Grid' | translate }}</span>
-        </button>
-        <button mat-menu-item (click)="viewModeChange.emit('slide')">
-            <mat-icon>web_asset</mat-icon>
-            <span>{{ 'Slides' | translate }}</span>
-        </button>
-    </mat-menu>
-</div>
-<div
-    class="data-explorer-options-item"
-    style="margin-right: 0"
-    fxLayoutAlign="end center"
-    fxFlex
-    fxLayout="row"
->
-    <sp-time-range-selector
-        [showTimeSelector]="
-            (editMode || timeRangeVisible) &&
-            dashboard.dashboardGeneralSettings.globalTimeEnabled
-        "
-        (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
-        [timeSettings]="timeSettings"
-        [liveSettings]="dashboard.dashboardLiveSettings"
-        (intervalSettingsChangedEmitter)="
-            intervalSettingsChangedEmitter.emit($event)
-        "
-    >
-    </sp-time-range-selector>
-    <button
-        mat-icon-button
-        [matMenuTriggerFor]="optMenu"
-        [attr.aria-label]="'Options' | translate"
-        data-cy="options-data-explorer"
-    >
-        <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #optMenu="matMenu">
         <button
-            mat-menu-item
-            (click)="triggerEditModeEmitter.emit()"
-            *ngIf="!editMode && hasDataExplorerWritePrivileges"
-            data-cy="options-edit-dashboard"
+            mat-flat-button
+            [matTooltip]="'Save' | translate"
+            class="edit-menu-btn"
+            (click)="saveDashboardEmitter.emit()"
+            data-cy="save-dashboard-btn"
         >
-            <mat-icon>edit</mat-icon>
-            <span>{{ 'Edit dashboard' | translate }}</span>
+            <mat-icon>save</mat-icon>
+            <span>{{ 'Save' | translate }}</span>
         </button>
         <button
-            mat-menu-item
-            (click)="timeRangeVisible = true"
-            *ngIf="!editMode && !timeRangeVisible"
+            mat-flat-button
+            [matTooltip]="'Discard' | translate"
+            class="mat-basic mr-10 edit-menu-btn"
+            (click)="discardDashboardEmitter.emit()"
         >
-            <mat-icon>alarm_on</mat-icon>
-            <span>{{ 'Show time range selector' | translate }}</span>
+            <i class="material-icons">undo</i>
+            <span>&nbsp;{{ 'Discard' | translate }}</span>
         </button>
+    </div>
+    <div
+        class="data-explorer-options-item"
+        fxLayoutAlign="start center"
+        fxLayout="row"
+    >
         <button
-            mat-menu-item
-            (click)="timeRangeVisible = false"
-            *ngIf="!editMode && timeRangeVisible"
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            [attr.aria-label]="'View mode' | translate"
+            [matTooltip]="'View mode' | translate"
         >
-            <mat-icon>alarm_off</mat-icon>
-            <span>{{ 'Hide time range selector' | translate }}</span>
+            <mat-icon
+                >{{ viewMode === 'grid' ? 'grid_view' : 'web_asset' }}
+            </mat-icon>
         </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="viewModeChange.emit('grid')">
+                <mat-icon>grid_view</mat-icon>
+                <span>{{ 'Grid' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="viewModeChange.emit('slide')">
+                <mat-icon>web_asset</mat-icon>
+                <span>{{ 'Slides' | translate }}</span>
+            </button>
+        </mat-menu>
+    </div>
+    <div
+        class="data-explorer-options-item"
+        style="margin-right: 0"
+        fxLayoutAlign="end center"
+        fxFlex
+        fxLayout="row"
+    >
+        <sp-time-range-selector
+            [showTimeSelector]="
+                (editMode || timeRangeVisible) &&
+                dashboard.dashboardGeneralSettings.globalTimeEnabled
+            "
+            (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
+            [timeSettings]="timeSettings"
+            [liveSettings]="dashboard.dashboardLiveSettings"
+            (intervalSettingsChangedEmitter)="
+                intervalSettingsChangedEmitter.emit($event)
+            "
+        >
+        </sp-time-range-selector>
         <button
-            mat-menu-item
-            *ngIf="hasDataExplorerWritePrivileges"
-            (click)="deleteDashboardEmitter.emit()"
+            mat-icon-button
+            [matMenuTriggerFor]="optMenu"
+            [attr.aria-label]="'Options' | translate"
+            data-cy="options-data-explorer"
         >
-            <mat-icon>clear</mat-icon>
-            <span>{{ 'Delete dashboard' | translate }}</span>
+            <mat-icon>more_vert</mat-icon>
         </button>
-    </mat-menu>
+        <mat-menu #optMenu="matMenu">
+            <button
+                mat-menu-item
+                (click)="triggerEditModeEmitter.emit()"
+                *ngIf="!editMode && hasDataExplorerWritePrivileges"
+                data-cy="options-edit-dashboard"
+            >
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Edit dashboard' | translate }}</span>
+            </button>
+            <button
+                mat-menu-item
+                (click)="timeRangeVisible = true"
+                *ngIf="!editMode && !timeRangeVisible"
+            >
+                <mat-icon>alarm_on</mat-icon>
+                <span>{{ 'Show time range selector' | translate }}</span>
+            </button>
+            <button
+                mat-menu-item
+                (click)="timeRangeVisible = false"
+                *ngIf="!editMode && timeRangeVisible"
+            >
+                <mat-icon>alarm_off</mat-icon>
+                <span>{{ 'Hide time range selector' | translate }}</span>
+            </button>
+            <button
+                mat-menu-item
+                *ngIf="hasDataExplorerWritePrivileges"
+                (click)="deleteDashboardEmitter.emit()"
+            >
+                <mat-icon>clear</mat-icon>
+                <span>{{ 'Delete dashboard' | translate }}</span>
+            </button>
+        </mat-menu>
+    </div>
 </div>

@@ -17,12 +17,9 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
+    <div class="sp-dialog-content p-15 mt-10">
         <div fxFlex="100" fxLayout="column" *ngIf="clonedAssetLink">
-            <div
-                fxLayout="column"
-                class="link-configuration link-type-selection"
-            >
+            <div fxLayout="column" class="link-configuration">
                 <mat-form-field color="accent">
                     <mat-label>Link Type</mat-label>
                     <mat-select
@@ -234,6 +231,7 @@
                     <input
                         matInput
                         [(ngModel)]="clonedAssetLink.linkLabel"
+                        [disabled]="true"
                         required
                     />
                 </mat-form-field>
@@ -256,7 +254,7 @@
     <div class="sp-dialog-actions">
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             (click)="store()"
             style="margin-right: 10px"
@@ -266,7 +264,7 @@
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             (click)="cancel()"
             style="margin-right: 10px"

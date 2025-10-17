@@ -1,3 +1,6 @@
+import { RetentionTimeConfig } from '@streampipes/platform-services';
+import { RetentionConfig } from '../dialog/data-retention-dialog/model/retention-config.model';
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,6 +23,8 @@ export class DataLakeConfigurationEntry {
     public pipelines: string[] = [];
     public events = 0;
     public remove = true;
+    public elementId: string;
+    public retention: RetentionTimeConfig;
 
     constructor() {}
 }

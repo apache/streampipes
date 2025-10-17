@@ -18,30 +18,17 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { AppConstants } from '../../../services/app.constants';
-import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-iconbar',
     templateUrl: './iconbar.component.html',
-    styleUrls: ['./iconbar.component.scss'],
+    styleUrls: ['./iconbar.component.scss', '../bars.scss'],
     standalone: false,
 })
 export class IconbarComponent
     extends BaseNavigationComponent
     implements OnInit
 {
-    constructor(
-        router: Router,
-        authService: AuthService,
-        currentUserService: CurrentUserService,
-        appConstants: AppConstants,
-    ) {
-        super(authService, currentUserService, router, appConstants);
-    }
-
     ngOnInit(): void {
         super.onInit();
     }

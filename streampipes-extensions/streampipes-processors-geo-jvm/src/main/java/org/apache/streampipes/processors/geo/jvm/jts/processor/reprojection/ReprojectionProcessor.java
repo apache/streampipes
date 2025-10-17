@@ -19,11 +19,13 @@
 package org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.jts.exceptions.SpNotSupportedGeometryException;
@@ -31,19 +33,18 @@ import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpReprojectionBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.util.FactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ReprojectionProcessor extends StreamPipesDataProcessor {
+public class ReprojectionProcessor implements IStreamPipesDataProcessor {
   public static final String GEOM_KEY = "geom-key";
   public static final String SOURCE_EPSG_KEY = "source-epsg-key";
   public static final String TARGET_EPSG_KEY = "target-epsg-key";
@@ -55,39 +56,49 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(ReprojectionProcessor.class);
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.semanticTypeReq("http://www.opengis.net/ont/geosparql#Geometry"),
-                Labels.withId(GEOM_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.semanticTypeReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                Labels.withId(SOURCE_EPSG_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .outputStrategy(OutputStrategies.keep())
-        .requiredIntegerParameter(Labels.withId(TARGET_EPSG_KEY), 32632)
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        ReprojectionProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection", 0)
+            .category(DataProcessorType.GEO)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.semanticTypeReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                                    Labels.withId(GEOM_KEY),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.semanticTypeReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                                    Labels.withId(SOURCE_EPSG_KEY),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .build())
+            .outputStrategy(OutputStrategies.keep())
+            .requiredIntegerParameter(Labels.withId(TARGET_EPSG_KEY), 32632)
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-
-    this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
-    this.sourceEpsgMapper = parameters.extractor().mappingPropertyValue(SOURCE_EPSG_KEY);
-    this.targetEpsg = parameters.extractor().singleValueParameter(TARGET_EPSG_KEY, Integer.class);
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector collector,
+      EventProcessorRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
+    this.geometryMapper = params.extractor()
+                                .mappingPropertyValue(GEOM_KEY);
+    this.sourceEpsgMapper = params.extractor()
+                                  .mappingPropertyValue(SOURCE_EPSG_KEY);
+    this.targetEpsg = params.extractor()
+                            .singleValueParameter(TARGET_EPSG_KEY, Integer.class);
 
     // check if SIS DB is set up with imported data or is null
     try {
-      if (SpReprojectionBuilder.isSisConfigurationValid()){
+      if (SpReprojectionBuilder.isSisConfigurationValid()) {
         LOG.info("SIS DB Settings successful checked ");
       } else {
         LOG.warn("The required EPSG database is not imported");
@@ -102,7 +113,7 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
       if (!SpReprojectionBuilder.isSisDbCorrectVersion()) {
         LOG.warn("Not supported EPSG DB is used.");
         throw new SpRuntimeException("Your current EPSG DB version " + SpReprojectionBuilder.getSisDbVersion()
-            + " is not the supported 9.9.1 version. ");
+                                         + " is not the supported 9.9.1 version. ");
       }
     } catch (FactoryException e) {
       throw new SpRuntimeException("Something unexpected happened " + e);
@@ -111,14 +122,18 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
     // checks if Input EPSG in valid and exists in EPSG DB
     if (!SpReprojectionBuilder.isSisEpsgValid(this.targetEpsg)) {
       throw new SpRuntimeException("Your chosen EPSG Code " + this.targetEpsg + " is not valid. "
-          + "Check EPSG on https://spatialreference.org");
+                                       + "Check EPSG on https://spatialreference.org");
     }
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
-    String geom = event.getFieldBySelector(geometryMapper).getAsPrimitive().getAsString();
-    Integer sourceEpsg = event.getFieldBySelector(sourceEpsgMapper).getAsPrimitive().getAsInt();
+    String geom = event.getFieldBySelector(geometryMapper)
+                       .getAsPrimitive()
+                       .getAsString();
+    Integer sourceEpsg = event.getFieldBySelector(sourceEpsgMapper)
+                              .getAsPrimitive()
+                              .getAsInt();
 
     Geometry geometry = SpGeometryBuilder.createSPGeom(geom, sourceEpsg);
 
@@ -136,12 +151,11 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
       collector.collect(event);
     } else {
       LOG.warn("An empty point geometry is created"
-          + " due invalid input values. Check used epsg Code:" + targetEpsg);
+                   + " due invalid input values. Check used epsg Code:" + targetEpsg);
     }
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }

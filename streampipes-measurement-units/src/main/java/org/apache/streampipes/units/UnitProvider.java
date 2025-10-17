@@ -30,6 +30,8 @@ public enum UnitProvider {
 
   INSTANCE;
 
+  private static final String RESOURCE_URI_PREFIX = "http://qudt.org/vocab/unit#";
+
   private final List<Unit> availableUnitTypes = new ArrayList<>();
   private final List<Unit> availableUnits = new ArrayList<>();
 
@@ -52,6 +54,10 @@ public enum UnitProvider {
 
   public Unit getUnit(String resourceUri) {
     return factory.getUnit(resourceUri);
+  }
+
+  public Unit getUnitByIdentifier(String unitIdentifier) {
+    return getUnit(RESOURCE_URI_PREFIX + unitIdentifier);
   }
 
   public List<Unit> getUnitsByType(URI type) {

@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -27,10 +27,8 @@ import { Group } from '../model/gen/streampipes-model-client';
     providedIn: 'root',
 })
 export class UserGroupService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     public getAllUserGroups(): Observable<Group[]> {
         return this.http.get(`${this.userGroupPath}`).pipe(

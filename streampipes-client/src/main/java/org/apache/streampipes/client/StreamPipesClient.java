@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.client;
 
+import org.apache.streampipes.client.api.AdapterApi;
 import org.apache.streampipes.client.api.AdminApi;
 import org.apache.streampipes.client.api.CustomRequestApi;
 import org.apache.streampipes.client.api.DataLakeMeasureApi;
@@ -24,6 +25,7 @@ import org.apache.streampipes.client.api.DataProcessorApi;
 import org.apache.streampipes.client.api.DataSinkApi;
 import org.apache.streampipes.client.api.DataStreamApi;
 import org.apache.streampipes.client.api.FileApi;
+import org.apache.streampipes.client.api.IAdapterApi;
 import org.apache.streampipes.client.api.IAdminApi;
 import org.apache.streampipes.client.api.ICustomRequestApi;
 import org.apache.streampipes.client.api.IPipelineElementTemplateApi;
@@ -156,6 +158,11 @@ public class StreamPipesClient implements
   @Override
   public IPipelineElementTemplateApi pipelineElementTemplates() {
     return new PipelineElementTemplateApi(config);
+  }
+
+  @Override
+  public IAdapterApi adapters() {
+    return new AdapterApi(config);
   }
 
   /**

@@ -21,8 +21,9 @@
 }
 
 .warning {
-    border: 1px solid #dea843;
-    background: #f1f1e6;
+    border: 1px solid var(--mat-sys-error);
+    background: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
     padding: 5px;
     font-size: 10pt;
 }

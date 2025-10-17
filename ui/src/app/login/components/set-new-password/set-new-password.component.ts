@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RestorePasswordService } from '../../services/restore-password.service';
 import {
     UntypedFormBuilder,
@@ -28,7 +28,6 @@ import { checkPasswords } from '../../utils/check-password';
 import { RegistrationModel } from '../register/registration.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
-import { LoginService } from '../../services/login.service';
 
 @Component({
     selector: 'sp-set-new-password',
@@ -45,15 +44,10 @@ export class SetNewPasswordComponent extends BaseLoginPageDirective {
     resetInProgress = false;
     resetSuccess = false;
 
-    constructor(
-        private fb: UntypedFormBuilder,
-        private restorePasswordService: RestorePasswordService,
-        private route: ActivatedRoute,
-        private router: Router,
-        protected loginService: LoginService,
-    ) {
-        super(loginService);
-    }
+    private fb = inject(UntypedFormBuilder);
+    private restorePasswordService = inject(RestorePasswordService);
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
 
     onSettingsAvailable(): void {
         this.route.queryParams.subscribe(params => {

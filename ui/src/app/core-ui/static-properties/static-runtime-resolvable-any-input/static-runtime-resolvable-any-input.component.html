@@ -17,10 +17,10 @@
   -->
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
-    <div fxLayout="row" class="mb-10">
+    <div fxLayout="row" class="mb-10" fxLayoutGap="10px">
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             class="small-button"
             (click)="selectAll(true)"
@@ -30,7 +30,7 @@
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic small-button"
             (click)="selectAll(false)"
             [disabled]="!showOptions"
@@ -39,7 +39,7 @@
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             class="small-button"
             (click)="loadOptionsFromRestApi()"

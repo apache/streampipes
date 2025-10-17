@@ -37,12 +37,12 @@
 .status-container {
     height: 150px;
     width: 100%;
-    color: var(--color-accent);
+    color: var(--color-primary);
     border-radius: 5px;
     margin-bottom: 20px;
     border: 2px solid var(--color-bg-2);
     background: var(--color-bg-2);
-    border-bottom: 5px solid var(--color-accent);
+    border-bottom: 5px solid var(--color-primary);
 }
 
 .status-container-value {

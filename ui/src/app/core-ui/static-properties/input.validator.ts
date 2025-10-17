@@ -79,7 +79,14 @@ export function ValidateName(): ValidatorFn {
             return { whiteSpaceOnly: { value } };
         }
 
-        const regex = /^[a-zA-Z0-9 _-]+$/;
+        // value starts or ends with whitespace
+        if (/^\s|\s$/.test(value)) {
+            return { leadingOrTrailingWhitespace: { value } };
+        }
+
+        // Matches strings containing only Unicode letters, numbers,
+        // punctuation, symbols, and whitespace (including spaces)
+        const regex = /^[\p{L}\p{N}\p{P}\p{S}\s]+$/u;
         const valid = regex.test(trimmed);
 
         return valid ? null : { invalidName: { value } };

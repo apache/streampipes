@@ -18,26 +18,26 @@
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import boofcv.abst.fiducial.QrCodeDetector;
 import boofcv.alg.fiducial.qrcode.QrCode;
@@ -51,7 +51,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Optional;
 
-public class QrCodeReaderProcessor extends StreamPipesDataProcessor {
+public class QrCodeReaderProcessor implements IStreamPipesDataProcessor {
 
   private static final String PLACEHOLDER_VALUE = "placeholder-value";
   private static final String SEND_IF_NO_RESULT = "send-if-no-result";
@@ -62,28 +62,30 @@ public class QrCodeReaderProcessor extends StreamPipesDataProcessor {
   private Boolean sendIfNoResult;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processor.imageclassification.qrcode", 0)
-        .category(DataProcessorType.IMAGE_PROCESSING)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq("https://image.com"),
-                Labels.withId(RequiredBoxStream.IMAGE_PROPERTY), PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(SEND_IF_NO_RESULT), Options.from("Yes", "No"))
-        .requiredTextParameter(Labels.withId(PLACEHOLDER_VALUE))
-        .outputStrategy(OutputStrategies.fixed(
-            EpProperties.timestampProperty("timestamp"),
-            EpProperties.stringEp(Labels.withId(QR_VALUE), "qrvalue", "http://schema.org/text")))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        QrCodeReaderProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processor.imageclassification.qrcode", 0)
+            .category(DataProcessorType.IMAGE_PROCESSING)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq("https://image.com"),
+                    Labels.withId(RequiredBoxStream.IMAGE_PROPERTY), PropertyScope.NONE)
+                .build())
+            .requiredSingleValueSelection(Labels.withId(SEND_IF_NO_RESULT), Options.from("Yes", "No"))
+            .requiredTextParameter(Labels.withId(PLACEHOLDER_VALUE))
+            .outputStrategy(OutputStrategies.fixed(
+                EpProperties.timestampProperty("timestamp"),
+                EpProperties.stringEp(Labels.withId(QR_VALUE), "qrvalue", "http://schema.org/text")))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    ProcessingElementParameterExtractor extractor = parameters.extractor();
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+    var extractor = params.extractor();
 
     imagePropertyName = extractor.mappingPropertyValue(RequiredBoxStream.IMAGE_PROPERTY);
     placeholderValue = extractor.singleValueParameter(PLACEHOLDER_VALUE, String.class);
@@ -128,7 +130,6 @@ public class QrCodeReaderProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }

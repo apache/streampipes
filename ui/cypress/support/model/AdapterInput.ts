@@ -16,6 +16,7 @@
  *
  */
 
+import { PropertyDataTypeChange } from './PropertyDataTypeChange';
 import { UserInput } from './UserInput';
 
 export class AdapterInput {
@@ -32,4 +33,6 @@ export class AdapterInput {
     adapterConfiguration: UserInput[];
     format: string;
     formatConfiguration: UserInput[];
+
+    dataTypeChanges: PropertyDataTypeChange[] = [];
 }

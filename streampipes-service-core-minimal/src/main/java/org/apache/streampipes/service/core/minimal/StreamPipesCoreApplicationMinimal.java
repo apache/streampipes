@@ -21,10 +21,10 @@ package org.apache.streampipes.service.core.minimal;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
+import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.core.OpenApiConfiguration;
 import org.apache.streampipes.service.core.StreamPipesCoreApplication;
 import org.apache.streampipes.service.core.StreamPipesPasswordEncoder;
-import org.apache.streampipes.service.core.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.core.WebSecurityConfig;
 import org.apache.streampipes.service.core.WelcomePageController;
 

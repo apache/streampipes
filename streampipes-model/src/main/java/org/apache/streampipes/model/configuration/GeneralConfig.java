@@ -32,6 +32,7 @@ public class GeneralConfig {
 
   private List<String> defaultUserRoles;
   private LinkSettings linkSettings;
+  private UserAcknowledgment userAcknowledgment;
 
   public GeneralConfig() {
   }
@@ -112,5 +113,13 @@ public class GeneralConfig {
 
   public void setLinkSettings(LinkSettings linkSettings) {
     this.linkSettings = linkSettings;
+  }
+
+  public UserAcknowledgment getUserAcknowledgment() {
+    return userAcknowledgment;
+  }
+
+  public void setUserAcknowledgment(UserAcknowledgment userAcknowledgment) {
+    this.userAcknowledgment = userAcknowledgment;
   }
 }

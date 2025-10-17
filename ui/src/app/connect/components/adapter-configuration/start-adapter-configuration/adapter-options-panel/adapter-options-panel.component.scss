@@ -17,28 +17,29 @@
  */
 
 .options-panel {
-    border-left: 4px solid var(--color-accent);
+    border-left: 1px solid var(--color-primary);
+    border-radius: 5px;
     border-bottom: 1px solid var(--color-bg-2);
     border-top: 1px solid var(--color-bg-2);
     border-right: 1px solid var(--color-bg-2);
     padding: 8px;
-    background: var(--color-bg-1);
     margin-top: 6px;
     margin-bottom: 6px;
 }
 
 .title {
     color: var(--color-default-text);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 13pt;
 }
 
 .description {
     font-size: 10pt;
+    font-weight: 300;
 }
 
 .icon {
     margin-right: 10px;
-    color: var(--color-accent);
+    color: var(--color-primary);
     font-size: 20pt;
 }

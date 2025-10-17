@@ -136,8 +136,7 @@ class StreamPipesClient:
         # set up a requests session
         # this allows to centrally determine the behavior of all requests made
         self.request_session = Session()
-        self.request_session.headers.update(self.http_headers)
-        self.request_session.headers.update(self.client_config.additional_headers)
+        self.refresh_headers()
 
         self.logging_level = logging_level
         self._set_up_logging(logging_level=self.logging_level)  # type: ignore
@@ -176,6 +175,12 @@ class StreamPipesClient:
         )
 
         return sp_version
+
+    def refresh_headers(self):
+        """Updates the header of the request session"""
+        self.request_session.headers.clear()
+        self.request_session.headers.update(self.http_headers)
+        self.request_session.headers.update(self.client_config.additional_headers)
 
     @staticmethod
     def _set_up_logging(logging_level: int) -> None:

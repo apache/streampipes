@@ -30,7 +30,7 @@
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Status
+                {{ 'Status' | translate }}
             </th>
             <td
                 fxFlex="10"
@@ -55,15 +55,15 @@
 
         <ng-container matColumnDef="group">
             <th
-                fxFlex="40"
+                fxFlex="45"
                 fxLayoutAlign="start center"
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Service Group
+                {{ 'Service Group' | translate }}
             </th>
             <td
-                fxFlex="40"
+                fxFlex="45"
                 fxLayoutAlign="start center"
                 mat-cell
                 *matCellDef="let element"
@@ -74,15 +74,15 @@
 
         <ng-container matColumnDef="name">
             <th
-                fxFlex="40"
+                fxFlex="35"
                 fxLayoutAlign="start center"
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Service ID
+                {{ 'Service ID' | translate }}
             </th>
             <td
-                fxFlex="40"
+                fxFlex="35"
                 fxLayoutAlign="start center"
                 mat-cell
                 *matCellDef="let element"
@@ -94,14 +94,14 @@
         <ng-container matColumnDef="action">
             <th
                 fxFlex="10"
-                fxLayoutAlign="start center"
+                fxLayoutAlign="end center"
                 mat-header-cell
                 *matHeaderCellDef
             >
                 <button
                     mat-icon-button
                     color="accent"
-                    matTooltip="Refresh"
+                    [matTooltip]="'Refresh' | translate"
                     (click)="getRegisteredServices()"
                 >
                     <mat-icon>refresh</mat-icon>
@@ -109,14 +109,14 @@
             </th>
             <td
                 fxFlex="10"
-                fxLayoutAlign="start center"
+                fxLayoutAlign="end center"
                 mat-cell
                 *matCellDef="let element"
             >
                 <button
                     mat-icon-button
                     color="accent"
-                    matTooltip="View service details"
+                    [matTooltip]="'View service details' | translate"
                     (click)="openServiceDetails(element)"
                 >
                     <mat-icon>search</mat-icon>

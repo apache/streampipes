@@ -70,8 +70,8 @@ public class AdapterWorkerManagement {
 
       var registeredParsers = newAdapterInstance.declareConfig().getSupportedParsers();
       var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
-      var eventCollector = EventCollector.from(adapterDescription);
       var runtimeContext = makeRuntimeContext(adapterDescription.getElementId());
+      var eventCollector = EventCollector.from(adapterDescription, runtimeContext);
 
       newAdapterInstance.onAdapterStarted(extractor, eventCollector, runtimeContext);
     } else {

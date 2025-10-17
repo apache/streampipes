@@ -26,6 +26,8 @@ import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.mod
 export interface CorrelationChartVisConfig extends DataExplorerVisConfig {
     firstField: DataExplorerField;
     secondField: DataExplorerField;
+    labelX: string;
+    labelY: string;
 }
 
 export interface CorrelationChartWidgetModel extends DataExplorerWidgetModel {
