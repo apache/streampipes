@@ -192,11 +192,13 @@ export class DataExplorerChartViewComponent
                 ? this.dataViewService.updateChart(this.dataView)
                 : this.dataViewService.saveChart(this.dataView);
         observable.subscribe(data => {
+            console.log(data);
             if (
                 this.selectedAssets.length > 0 ||
                 this.deselectedAssets.length > 0 ||
                 this.originalAssets.length > 0
             ) {
+                console.log('saveToAssets');
                 this.saveToAssets(data);
             }
             this.routingService.navigateToDataViewOverview(true);
@@ -326,7 +328,7 @@ export class DataExplorerChartViewComponent
         //this.dialogRef.close(true);
     }
 
-    saveToAssets(data: DashboardConfig): void {
+    saveToAssets(data: DataExplorerWidgetModel): void {
         let linkageData: LinkageData[];
         try {
             linkageData = this.createLinkageData(data);
@@ -336,12 +338,12 @@ export class DataExplorerChartViewComponent
             console.error('Error in addToAsset:', err);
         }
     }
-    private createLinkageData(data: DashboardConfig): LinkageData[] {
+    private createLinkageData(data: DataExplorerWidgetModel): LinkageData[] {
         return [
             {
                 type: 'chart',
-                id: data.dataInput.elementId,
-                name: data.dataInput.baseAppearanceConfig.widgetTitle,
+                id: data.elementId,
+                name: data.elementId,
             },
         ];
     }
