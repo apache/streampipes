@@ -254,15 +254,6 @@ export class DataExplorerUtils {
         cy.dataCy('save-data-view-btn', { timeout: 10000 }).click({
             force: true,
         });
-        cy.dataCy('asset-dialog-cancel-delete', { timeout: 10000 }).click({
-            force: true,
-        });
-    }
-
-    public static saveToAddAssets() {
-        cy.dataCy('save-data-view-btn', { timeout: 10000 }).click({
-            force: true,
-        });
     }
 
     public static saveDashboardConfiguration() {
@@ -273,7 +264,19 @@ export class DataExplorerUtils {
         return cy.dataCy('empty-dashboard');
     }
 
-    public static addToAsset(assetNameList = []) {
+    public static addChartsToAsset(assetNameList = []) {
+        //Click on Button
+        cy.dataCy('add-to-Asset-data-view-btn', { timeout: 10000 })
+            .should('exist')
+            .click();
+
+        // Click checkbox
+        cy.dataCy('sp-show-chart-asset-checkbox').then($checkbox => {
+            if (!$checkbox.is(':checked')) {
+                cy.wrap($checkbox).click({ force: true });
+            }
+        });
+
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
 
         assetNameList.forEach(assetName => {
@@ -282,12 +285,9 @@ export class DataExplorerUtils {
                 .contains(assetName)
                 .click();
         });
-    }
 
-    public static saveAssetLinkFromChart() {
-        cy.dataCy('asset-dialog-confirm-delete', { timeout: 10000 }).click({
-            force: true,
-        });
+        // Click Aktualiesierem
+        cy.dataCy('asset-dialog-confirm-delete', { timeout: 10000 }).click();
     }
 
     public static deleteDashboard(dashboardName: string) {
@@ -663,8 +663,9 @@ export class DataExplorerUtils {
         // Create Diagram
         DataExplorerUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
         //Save
-        DataExplorerUtils.saveToAddAssets();
-        DataExplorerUtils.addToAsset(assetNames);
-        DataExplorerUtils.saveAssetLinkFromChart();
+        DataExplorerUtils.addChartsToAsset(assetNames);
+        DataExplorerUtils.saveDataViewConfiguration();
+        //Necessary for the background task to finish otherwise it steps back to charts from the following task
+        cy.wait(500);
     }
 }

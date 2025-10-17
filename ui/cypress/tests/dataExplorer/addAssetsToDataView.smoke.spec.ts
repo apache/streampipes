@@ -34,6 +34,8 @@ describe('Creates a new adapter with a linked asset', () => {
 
     it('Add Assets during Chart generation', () => {
         DataExplorerUtils.createDataViewWithAssets([assetName1, assetName2]);
+        AssetUtils.goToAssets();
+        AssetUtils.checkAmountOfAssets(3);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
@@ -41,6 +43,8 @@ describe('Creates a new adapter with a linked asset', () => {
 
     it('Edit Assets during Chart generation', () => {
         DataExplorerUtils.createDataViewWithAssets([assetName1, assetName2]);
+        AssetUtils.goToAssets();
+        AssetUtils.checkAmountOfAssets(3);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
@@ -49,11 +53,13 @@ describe('Creates a new adapter with a linked asset', () => {
         DataExplorerUtils.goToDatalake();
         DataExplorerUtils.editDataView('NewWidget');
         DataExplorerUtils.renameWidget('Rename');
+        DataExplorerUtils.addChartsToAsset([assetName1, assetName3]);
+        DataExplorerUtils.saveDataViewConfiguration();
+        //Neceassary for Background Task to finish
+        cy.wait(500);
 
-        DataExplorerUtils.saveToAddAssets();
-        DataExplorerUtils.addToAsset([assetName1, assetName3]);
-        DataExplorerUtils.saveAssetLinkFromChart();
-
+        AssetUtils.goToAssets();
+        AssetUtils.checkAmountOfAssets(3);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);
         AssetUtils.checkResourceNamingByAssetName(assetName2, 'Rename');
