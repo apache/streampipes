@@ -125,7 +125,6 @@ export class DataExplorerUtils {
 
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
         assetNameList.forEach(assetName => {
-            console.log(assetName);
             cy.get('mat-tree.asset-tree')
                 .find('.mat-tree-node')
                 .contains(assetName)
