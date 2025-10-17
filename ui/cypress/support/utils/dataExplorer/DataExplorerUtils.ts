@@ -276,7 +276,13 @@ export class DataExplorerUtils {
                 cy.wrap($checkbox).click({ force: true });
             }
         });
+        this.addToAsset(assetNameList);
 
+        // Click Aktualiesierem
+        cy.dataCy('asset-dialog-confirm-delete', { timeout: 10000 }).click();
+    }
+
+    public static addToAsset(assetNameList = []) {
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
 
         assetNameList.forEach(assetName => {
@@ -285,9 +291,6 @@ export class DataExplorerUtils {
                 .contains(assetName)
                 .click();
         });
-
-        // Click Aktualiesierem
-        cy.dataCy('asset-dialog-confirm-delete', { timeout: 10000 }).click();
     }
 
     public static deleteDashboard(dashboardName: string) {
