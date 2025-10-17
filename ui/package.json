@@ -71,7 +71,7 @@
     "material-icons": "^1.13.1",
     "ngx-color-picker": "^19.0.0",
     "ngx-echarts": "^19.0.0",
-    "ngx-markdown": "^20.1.0",
+    "ngx-markdown": "^19.1.1",
     "ngx-quill": "^27.0.2",
     "quill": "^2.0.3",
     "roboto-fontface": "0.10.0",
