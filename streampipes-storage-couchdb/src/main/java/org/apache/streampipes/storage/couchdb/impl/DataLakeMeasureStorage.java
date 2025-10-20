@@ -57,4 +57,16 @@ public class DataLakeMeasureStorage extends DefaultCrudStorage<DataLakeMeasure> 
         .includeDocs(true)
         .query(DataLakeMeasure.class);
   }
+
+   @Override
+  public boolean validateUniqueName(String name){
+    String selectorJson = String.format(
+    "{\"selector\": {\"measureName\": \"%s\"}, \"limit\": 1}",
+    name
+);
+ List<DataLakeMeasure> result = this.findDocs(selectorJson, DataLakeMeasure.class);
+ return result.isEmpty();
+  }
+
+
 }

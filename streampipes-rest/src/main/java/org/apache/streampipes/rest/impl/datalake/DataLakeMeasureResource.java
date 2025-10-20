@@ -22,6 +22,7 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -89,6 +90,12 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
       return notFound();
     }
   }
+
+  @GetMapping(path = "/namevalidation/{name}")
+  public ResponseEntity<Boolean> validateAdapterName(@PathVariable String name) {
+      boolean nameValidationSuccess = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage().validateUniqueName(name);
+      return ResponseEntity.ok(nameValidationSuccess);
+}
 
   @GetMapping(path = "byName/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getDataLakeMeasureName(@PathVariable("measureName") String measureName) {

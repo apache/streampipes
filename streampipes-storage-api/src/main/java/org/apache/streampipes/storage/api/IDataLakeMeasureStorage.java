@@ -23,4 +23,6 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 public interface IDataLakeMeasureStorage extends CRUDStorage<DataLakeMeasure> {
 
   DataLakeMeasure getByMeasureName(String measureName);
+
+  boolean validateUniqueName(String name);
 }
