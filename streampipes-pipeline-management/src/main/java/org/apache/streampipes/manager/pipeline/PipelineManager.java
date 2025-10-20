@@ -135,6 +135,11 @@ public class PipelineManager {
   }
 
 
+  public static boolean validateName(String name) {
+  return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().validateUniqueName(name);
+
+  }
+
   /**
    * Checks for the pipelines that contain the processing element
    *

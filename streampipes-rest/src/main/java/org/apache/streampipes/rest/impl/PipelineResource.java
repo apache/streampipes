@@ -133,6 +133,13 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     }
   }
 
+  @GetMapping(path = "/namevalidation/{name}")
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResponseEntity<Boolean> validateAdapterName(@PathVariable String name) {
+      boolean nameValidationSuccess = PipelineManager.validateName(name);
+      return ResponseEntity.ok(nameValidationSuccess);
+}
+
   @GetMapping(path = "/{pipelineId}/start", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Start the pipeline with the given id", tags = {"Pipeline"})
   @PreAuthorize("this.hasWriteAuthority() and hasPermission('#pipelineId', 'WRITE')")
