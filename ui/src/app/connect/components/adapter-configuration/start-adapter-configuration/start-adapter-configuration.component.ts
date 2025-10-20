@@ -45,7 +45,7 @@ import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import {
     ValidateName,
-    adapterNameAsyncValidator,
+    nameAsyncValidator,
 } from '../../../../core-ui/static-properties/input.validator';
 
 @Component({
@@ -136,7 +136,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                     Validators.maxLength(40),
                     ValidateName(),
                 ],
-                [adapterNameAsyncValidator(this.adapterService)],
+                [nameAsyncValidator(this.adapterService)],
             ),
         );
         this.startAdapterForm.valueChanges.subscribe(

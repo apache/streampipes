@@ -108,7 +108,7 @@ export function ValidateName(): ValidatorFn {
     };
 }
 
-export function adapterNameAsyncValidator(
+export function nameAsyncValidator(
     adapterService: AdapterService,
 ): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
@@ -122,7 +122,7 @@ export function adapterNameAsyncValidator(
             debounceTime(300),
             distinctUntilChanged(),
             switchMap(adapterName =>
-                adapterService.validateAdapterName(adapterName).pipe(
+                adapterService.validateName(adapterName).pipe(
                     map((isUnique: boolean) =>
                         isUnique ? null : { nameNotUnique: true },
                     ),

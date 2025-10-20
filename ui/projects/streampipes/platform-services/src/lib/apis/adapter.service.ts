@@ -56,7 +56,7 @@ export class AdapterService {
             );
     }
 
-    validateAdapterName(name: string): Observable<boolean> {
+    validateName(name: string): Observable<boolean> {
         return this.http.get<boolean>(
             this.connectPath + `/master/adapters/namevalidation/${name}`,
         );
