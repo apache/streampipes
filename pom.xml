@@ -134,7 +134,7 @@
         <springdoc.version>2.8.4</springdoc.version>
         <spring.version>6.2.2</spring.version>
         <spring-boot.version>3.4.2</spring-boot.version>
-        <spring-security.version>6.4.10</spring-security.version>
+        <spring-security.version>6.5.5</spring-security.version>
         <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
         <tsfile.version>1.1.0</tsfile.version>
