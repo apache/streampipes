@@ -106,6 +106,9 @@ export class SavePipelineSettingsComponent implements OnInit {
         this.pipelineService
             .convertToCompactPipeline(this.pipeline)
             .subscribe(p => (this.compactPipeline = p));
+        if (this.storageOptions.updateModeActive) {
+            this.addToAssets = true;
+        }
     }
 
     onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
