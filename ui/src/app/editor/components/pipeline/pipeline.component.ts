@@ -358,6 +358,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                 );
 
                 pe.settings.loadingStatus = true;
+                console.log('PipelineModel ', this.currentPipelineModel);
                 this.objectProvider
                     .updatePipeline(this.currentPipelineModel)
                     .subscribe(

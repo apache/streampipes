@@ -24,6 +24,7 @@ import {
 } from '@angular/forms';
 import {
     AdapterService,
+    DatalakeRestService,
     PipelineService,
 } from '@streampipes/platform-services';
 import {
@@ -112,7 +113,7 @@ export function ValidateName(): ValidatorFn {
 }
 
 export function nameAsyncValidator(
-    service: AdapterService | PipelineService,
+    service: AdapterService | PipelineService | DatalakeRestService,
 ): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
         const name = control.value;

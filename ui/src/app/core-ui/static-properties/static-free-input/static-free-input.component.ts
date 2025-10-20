@@ -20,11 +20,13 @@ import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import {
+    DatalakeRestService,
     DataType,
     FreeTextStaticProperty,
     SemanticType,
 } from '@streampipes/platform-services';
 import {
+    nameAsyncValidator,
     ValidateNumber,
     ValidateString,
     ValidateUrl,
@@ -45,6 +47,7 @@ export class StaticFreeInputComponent
     implements OnInit
 {
     translateService = inject(TranslateService);
+    datalakeService = inject(DatalakeRestService);
     quillModules: any = {
         toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
@@ -73,10 +76,13 @@ export class StaticFreeInputComponent
         this.enableValidators();
         this.emitUpdate();
         console.log(this.staticProperty);
+        console.log(this.staticProperty.value);
     }
 
     collectValidators() {
         const validators: ValidatorFn[] = [];
+        console.log(this.staticProperties);
+        //console.log('FROM VALIDATORS ', this.staticProperties["internalName"])
         if (!this.staticProperty.optional) {
             validators.push(Validators.required);
         }
@@ -96,11 +102,23 @@ export class StaticFreeInputComponent
                 'Please enter a valid URL',
             );
         } else if (this.staticProperty.requiredDatatype === DataType.STRING) {
+            console.log('String', this.staticProperty);
             validators.push(ValidateString);
             this.errorMessage = this.translateService.instant(
                 'Please enter a valid String',
             );
+
+            if (this.staticProperty['internalName'] === 'db_measurement') {
+                console.log('Set the validator');
+
+                validators.push(nameAsyncValidator(this.datalakeService));
+
+                this.errorMessage = this.translateService.instant(
+                    ' Adapter name already exists. Please choose a different name.',
+                );
+            }
         }
+        //this.staticProperty["internalName"] === 'db_measurement' &&
 
         return validators;
     }

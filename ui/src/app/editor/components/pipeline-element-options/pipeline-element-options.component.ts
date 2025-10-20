@@ -120,7 +120,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
                     }
                 },
             );
-
         this.isDataSource = this.pipelineElement.type === 'stream';
 
         if (
