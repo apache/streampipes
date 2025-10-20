@@ -56,7 +56,8 @@ html {
             surface-container-high: light-dark(#eeeeee, #1c1c1c),
             on-surface: light-dark(#1a1a1a, #e6e6e6),
             on-surface-variant: light-dark(#5e5e5e, #b5b5b5),
-            surface-tint: transparent
+            surface-tint: transparent,
+            background: light-dark(#fafafa, #121212)
         )
     );
 

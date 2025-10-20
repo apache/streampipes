@@ -52,6 +52,7 @@ export interface Dashboard {
     dashboardLiveSettings: DashboardLiveSettings;
     elementId?: string;
     metadata: ResourceMetadata;
+    gridColumns: number;
     rev?: string;
 }
 

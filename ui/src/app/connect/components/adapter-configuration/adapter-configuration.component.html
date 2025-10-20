@@ -36,10 +36,13 @@
         </button>
     </div>
     <div fxLayout="column" fxLayoutAlign="center stretch" *ngIf="adapter">
-        <sp-adapter-configuration-header
-            [displayName]="displayName"
-            [isEditMode]="isEditMode"
-        ></sp-adapter-configuration-header>
+        <sp-basic-header-title-component
+            [title]="
+                isEditMode
+                    ? 'Edit adapter: ' + displayName
+                    : 'New adapter: ' + displayName
+            "
+        ></sp-basic-header-title-component>
 
         <mat-horizontal-stepper
             [linear]="true"

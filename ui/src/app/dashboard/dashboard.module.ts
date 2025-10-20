@@ -69,6 +69,8 @@ import { EditDashboardDialogComponent } from './dialogs/edit-dashboard/edit-dash
 import { DashboardOverviewTableComponent } from './components/overview/dashboard-overview-table/dashboard-overview-table.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { DashboardSharedModule } from '../dashboard-shared/dashboard-shared.module';
+import { CloneDashboardDialogComponent } from './dialogs/clone-dashboard/clone-dashboard-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
     imports: [
@@ -114,6 +116,7 @@ import { DashboardSharedModule } from '../dashboard-shared/dashboard-shared.modu
         DataExplorerSharedModule,
         DashboardSharedModule,
         TranslateModule.forChild(),
+        MatProgressSpinnerModule,
         RouterModule.forChild([
             {
                 path: '',
@@ -145,6 +148,7 @@ import { DashboardSharedModule } from '../dashboard-shared/dashboard-shared.modu
         ChartSelectionComponent,
         EditDashboardDialogComponent,
         DashboardOverviewTableComponent,
+        CloneDashboardDialogComponent,
     ],
     providers: [],
     exports: [],

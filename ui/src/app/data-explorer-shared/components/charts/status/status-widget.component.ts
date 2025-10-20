@@ -135,7 +135,7 @@ export class StatusWidgetComponent
     }
 
     onResize(width: number, heigth: number): void {
-        this.containerHeight = heigth * 0.3;
+        this.containerHeight = heigth * 0.7;
         this.containerWidth = this.containerHeight;
         this.lightWidth = this.containerHeight;
         this.lightHeight = this.lightWidth;

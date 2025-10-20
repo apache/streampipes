@@ -24,7 +24,10 @@
         <sp-table
             fxFlex="100"
             [columns]="displayedColumns"
+            [showActionsMenu]="true"
+            [rowsClickable]="true"
             [dataSource]="dataSource"
+            (rowClicked)="onRowClicked($event)"
         >
             <ng-container matColumnDef="name">
                 <th
@@ -98,77 +101,73 @@
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="actions">
-                <th
-                    fxFlex
-                    fxLayoutAlign="center center"
-                    mat-header-cell
-                    *matHeaderCellDef
-                ></th>
-                <td
-                    fxFlex
-                    fxLayoutAlign="start center"
-                    mat-cell
-                    *matCellDef="let element"
+            <ng-template spTableActions let-element>
+                <button
+                    mat-menu-item
+                    (click)="showDashboard(element); $event.stopPropagation()"
                 >
-                    <div fxLayout="row" fxFlex="100" fxLayoutAlign="end center">
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Show dashboard' | translate"
-                            (click)="showDashboard(element)"
-                        >
-                            <i class="material-icons">visibility</i>
-                        </button>
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Edit dashboard' | translate"
-                            *ngIf="hasDataExplorerWritePrivileges"
-                            [attr.data-cy]="'edit-dashboard-' + element.name"
-                            (click)="editDashboard(element)"
-                        >
-                            <i class="material-icons">edit</i>
-                        </button>
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Kiosk mode' | translate"
-                            (click)="openDashboardInKioskMode(element)"
-                        >
-                            <i class="material-icons">open_in_new</i>
-                        </button>
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Dashboard settings' | translate"
-                            *ngIf="hasDataExplorerWritePrivileges"
-                            (click)="openEditDashboardDialog(element)"
-                        >
-                            <i class="material-icons">settings</i>
-                        </button>
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Manage permissions' | translate"
-                            *ngIf="isAdmin"
-                            (click)="showPermissionsDialog(element)"
-                        >
-                            <i class="material-icons">share</i>
-                        </button>
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Delete chart' | translate"
-                            *ngIf="hasDataExplorerWritePrivileges"
-                            [attr.data-cy]="'delete-dashboard-' + element.name"
-                            (click)="openDeleteDashboardDialog(element)"
-                        >
-                            <i class="material-icons">delete</i>
-                        </button>
-                    </div>
-                </td>
-            </ng-container>
+                    <mat-icon>visibility</mat-icon>
+                    <span>{{ 'Show' | translate }}</span>
+                </button>
+                @if (hasDataExplorerWritePrivileges) {
+                    <button
+                        mat-menu-item
+                        [attr.data-cy]="'edit-dashboard-' + element.name"
+                        (click)="editDashboard(element)"
+                    >
+                        <mat-icon>edit</mat-icon>
+                        <span>{{ 'Edit' | translate }}</span>
+                    </button>
+                    <button
+                        mat-menu-item
+                        [attr.data-cy]="'clone-dashboard-' + element.name"
+                        (click)="openCloneDialog(element)"
+                    >
+                        <mat-icon>flip_to_front</mat-icon>
+                        <span>{{ 'Clone' | translate }}</span>
+                    </button>
+                }
+                <button
+                    mat-menu-item
+                    [attr.data-cy]="'kiosk-mode-dashboard-' + element.name"
+                    (click)="openDashboardInKioskMode(element)"
+                >
+                    <mat-icon>open_in_new</mat-icon>
+                    <span>{{ 'Kiosk mode' | translate }}</span>
+                </button>
+                @if (hasDataExplorerWritePrivileges) {
+                    <button
+                        mat-menu-item
+                        [attr.data-cy]="
+                            'edit-dashboard-settings-' + element.name
+                        "
+                        (click)="openEditDashboardDialog(element)"
+                    >
+                        <mat-icon>settings</mat-icon>
+                        <span>{{ 'Settings' | translate }}</span>
+                    </button>
+                }
+                <button
+                    mat-menu-item
+                    [attr.data-cy]="
+                        'manage-dashboard-permissions-' + element.name
+                    "
+                    (click)="showPermissionsDialog(element)"
+                >
+                    <mat-icon>share</mat-icon>
+                    <span>{{ 'Manage permissions' | translate }}</span>
+                </button>
+                @if (hasDataExplorerWritePrivileges) {
+                    <button
+                        mat-menu-item
+                        [attr.data-cy]="'delete-dashboard-' + element.name"
+                        (click)="openDeleteDashboardDialog(element)"
+                    >
+                        <mat-icon>delete</mat-icon>
+                        <span>{{ 'Delete' | translate }}</span>
+                    </button>
+                }
+            </ng-template>
         </sp-table>
     </div>
 </div>

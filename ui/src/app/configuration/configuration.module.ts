@@ -82,7 +82,7 @@ import { SpConfigurationLinkSettingsComponent } from './general-configuration/li
 import { SitesConfigurationComponent } from './sites-configuration/sites-configuration.component';
 import { LocationFeaturesConfigurationComponent } from './sites-configuration/location-features-configuration/location-features-configuration.component';
 import { SiteAreaConfigurationComponent } from './sites-configuration/site-area-configuration/site-area-configuration.component';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ManageSiteDialogComponent } from './dialog/manage-site/manage-site-dialog.component';
 import { EditAssetLocationComponent } from './dialog/manage-site/edit-location/edit-location.component';
 import { EditAssetLocationAreaComponent } from './dialog/manage-site/edit-location/edit-location-area/edit-location-area.component';
@@ -129,6 +129,7 @@ import { SelectDataExportComponent } from './dialog/data-retention-dialog/compon
         MatPaginatorModule,
         MatRadioModule,
         MatSelectModule,
+        MatSortModule,
         FormsModule,
         DragDropModule,
         CoreUiModule,

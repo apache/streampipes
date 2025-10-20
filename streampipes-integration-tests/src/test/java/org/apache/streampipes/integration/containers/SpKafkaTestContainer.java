@@ -16,34 +16,35 @@
  *
  */
 
-.sp-bg-lightgray {
-    background-color: var(--color-bg-1);
-}
+package org.apache.streampipes.integration.containers;
 
-.sp-tab-bg {
-    background-color: var(--color-bg-1);
-}
+import org.testcontainers.kafka.KafkaContainer;
 
-.page-container {
-    margin: 10px;
-    border: 1px solid var(--color-bg-3);
-    min-height: calc(100% - 50px);
-    border-radius: 10px;
-}
 
-.page-container-nav {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
+public class SpKafkaTestContainer {
 
-.page-container-padding-inner {
-    margin: 10px;
-}
+  private KafkaContainer kafka;
 
-.upper-case {
-    text-transform: uppercase;
-}
+  public SpKafkaTestContainer() {
+    kafka = new KafkaContainer("apache/kafka");
+  }
 
-.pr-5 {
-    padding-right: 5px;
+  public void start() {
+    kafka.start();
+  }
+
+  public String getBrokerHost() {
+    return kafka.getHost();
+  }
+
+  public Integer getBrokerPort() {
+    return kafka.getFirstMappedPort();
+  }
+
+  public void stop() {
+    if (kafka != null) {
+      kafka.stop();
+    }
+  }
+
 }
