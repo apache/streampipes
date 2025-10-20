@@ -71,6 +71,16 @@
                     Pipeline name can only contain letters, numbers, dashes (-),
                     and underscores (_).
                 </mat-error>
+
+                <mat-error
+                    *ngIf="
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('nameNotUnique')
+                    "
+                >
+                    Adapter name already exists. Please choose a different name.
+                </mat-error>
             </mat-form-field>
             <mat-form-field fxFlex color="accent">
                 <mat-label>Description</mat-label>

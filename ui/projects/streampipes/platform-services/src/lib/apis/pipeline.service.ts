@@ -108,6 +108,12 @@ export class PipelineService {
         );
     }
 
+    validateName(name: string): Observable<boolean> {
+        return this.http.get<boolean>(
+            this.apiBasePath + `/pipelines/namevalidation/${name}`,
+        );
+    }
+
     deleteOwnPipeline(pipelineId): Observable<any> {
         return this.http.delete(`${this.apiBasePath}/pipelines/${pipelineId}`);
     }

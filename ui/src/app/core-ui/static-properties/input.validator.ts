@@ -22,7 +22,10 @@ import {
     ValidationErrors,
     ValidatorFn,
 } from '@angular/forms';
-import { AdapterService } from '@streampipes/platform-services';
+import {
+    AdapterService,
+    PipelineService,
+} from '@streampipes/platform-services';
 import {
     catchError,
     debounceTime,
@@ -109,7 +112,7 @@ export function ValidateName(): ValidatorFn {
 }
 
 export function nameAsyncValidator(
-    adapterService: AdapterService,
+    service: AdapterService | PipelineService,
 ): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
         const name = control.value;
@@ -122,7 +125,7 @@ export function nameAsyncValidator(
             debounceTime(300),
             distinctUntilChanged(),
             switchMap(adapterName =>
-                adapterService.validateName(adapterName).pipe(
+                service.validateName(adapterName).pipe(
                     map((isUnique: boolean) =>
                         isUnique ? null : { nameNotUnique: true },
                     ),

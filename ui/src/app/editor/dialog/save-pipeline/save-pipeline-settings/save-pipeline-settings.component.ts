@@ -37,7 +37,10 @@ import {
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { PipelineStorageOptions } from '../../../model/editor.model';
-import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
+import {
+    nameAsyncValidator,
+    ValidateName,
+} from '../../../../core-ui/static-properties/input.validator';
 
 @Component({
     selector: 'sp-save-pipeline-settings',
@@ -78,12 +81,16 @@ export class SavePipelineSettingsComponent implements OnInit {
     ngOnInit() {
         this.submitPipelineForm.addControl(
             'pipelineName',
-            new UntypedFormControl(this.pipeline.name, [
-                Validators.required,
-                Validators.minLength(3),
-                Validators.maxLength(50),
-                ValidateName(),
-            ]),
+            new UntypedFormControl(
+                this.pipeline.name,
+                [
+                    Validators.required,
+                    Validators.minLength(3),
+                    Validators.maxLength(50),
+                    ValidateName(),
+                ],
+                [nameAsyncValidator(this.pipelineService)],
+            ),
         );
         this.submitPipelineForm.addControl(
             'pipelineDescription',
