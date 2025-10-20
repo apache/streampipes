@@ -81,8 +81,6 @@ export class StaticFreeInputComponent
 
     collectValidators() {
         const validators: ValidatorFn[] = [];
-        console.log(this.staticProperties);
-        //console.log('FROM VALIDATORS ', this.staticProperties["internalName"])
         if (!this.staticProperty.optional) {
             validators.push(Validators.required);
         }
@@ -114,11 +112,10 @@ export class StaticFreeInputComponent
                 validators.push(nameAsyncValidator(this.datalakeService));
 
                 this.errorMessage = this.translateService.instant(
-                    ' Adapter name already exists. Please choose a different name.',
+                    'Datalake name already exists.',
                 );
             }
         }
-        //this.staticProperty["internalName"] === 'db_measurement' &&
 
         return validators;
     }
