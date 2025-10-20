@@ -15,13 +15,21 @@
  * limitations under the License.
  *
  */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import {
     AdapterDescription,
     EventRateTransformationRuleDescription,
     EventSchema,
     SpAssetTreeNode,
     RemoveDuplicatesTransformationRuleDescription,
+    AdapterService,
 } from '@streampipes/platform-services';
 import {
     UntypedFormBuilder,
@@ -35,7 +43,10 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
-import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
+import {
+    ValidateName,
+    adapterNameAsyncValidator,
+} from '../../../../core-ui/static-properties/input.validator';
 
 @Component({
     selector: 'sp-start-adapter-configuration',
@@ -48,6 +59,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
         'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription' as const;
     static RemoveDuplicatesTransformationRuleId =
         'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription' as const;
+
+    adapterService = inject(AdapterService);
 
     /**
      * Adapter description the selected format is added to
@@ -115,12 +128,16 @@ export class StartAdapterConfigurationComponent implements OnInit {
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
-            new UntypedFormControl(this.adapterDescription.name, [
-                Validators.required,
-                Validators.minLength(3),
-                Validators.maxLength(40),
-                ValidateName(),
-            ]),
+            new UntypedFormControl(
+                this.adapterDescription.name,
+                [
+                    Validators.required,
+                    Validators.minLength(3),
+                    Validators.maxLength(40),
+                    ValidateName(),
+                ],
+                [adapterNameAsyncValidator(this.adapterService)],
+            ),
         );
         this.startAdapterForm.valueChanges.subscribe(
             v => (this.adapterDescription.name = v.adapterName),

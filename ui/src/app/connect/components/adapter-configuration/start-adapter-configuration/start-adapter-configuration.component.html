@@ -77,6 +77,17 @@
                     >
                         Adapter name must have between 3 and 40 characters.
                     </mat-error>
+
+                    <mat-error
+                        *ngIf="
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('nameNotUnique')
+                        "
+                    >
+                        Adapter name already exists. Please choose a different
+                        name.
+                    </mat-error>
                 </mat-form-field>
                 <mat-form-field color="accent">
                     <input

@@ -16,7 +16,22 @@
  *
  */
 
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+    AbstractControl,
+    AsyncValidatorFn,
+    ValidationErrors,
+    ValidatorFn,
+} from '@angular/forms';
+import { AdapterService } from '@streampipes/platform-services';
+import {
+    catchError,
+    debounceTime,
+    distinctUntilChanged,
+    map,
+    Observable,
+    of,
+    switchMap,
+} from 'rxjs';
 
 export function ValidateUrl(control: AbstractControl) {
     if (control.value == null) {
@@ -90,5 +105,30 @@ export function ValidateName(): ValidatorFn {
         const valid = regex.test(trimmed);
 
         return valid ? null : { invalidName: { value } };
+    };
+}
+
+export function adapterNameAsyncValidator(
+    adapterService: AdapterService,
+): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+        const name = control.value;
+
+        if (!name || !name.trim()) {
+            return of(null); // skip validation if empty
+        }
+
+        return of(name).pipe(
+            debounceTime(300),
+            distinctUntilChanged(),
+            switchMap(adapterName =>
+                adapterService.validateAdapterName(adapterName).pipe(
+                    map((isUnique: boolean) =>
+                        isUnique ? null : { nameNotUnique: true },
+                    ),
+                    catchError(() => of(null)), // avoid failing the form on HTTP errors
+                ),
+            ),
+        );
     };
 }
