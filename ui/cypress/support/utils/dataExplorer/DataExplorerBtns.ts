@@ -18,7 +18,7 @@
 
 import { GeneralUtils } from '../GeneralUtils';
 
-export class DataLakeBtns {
+export class DataExplorerBtns {
     public static refreshDataLakeMeasures() {
         return cy.dataCy('refresh-data-lake-measures');
     }
@@ -30,7 +30,21 @@ export class DataLakeBtns {
     public static saveDashboard() {
         return cy.dataCy('save-data-view').click();
     }
+    public static saveChartsToAssetBtn() {
+        return cy
+            .dataCy('add-to-Asset-data-view-btn', { timeout: 10000 })
+            .should('exist')
+            .click();
+    }
 
+    public static chartAssetCheckboxBtn() {
+        return cy.dataCy('sp-show-chart-asset-checkbox');
+    }
+    public static confirmAssetSelectionBtn() {
+        return cy
+            .dataCy('asset-dialog-confirm-delete', { timeout: 10000 })
+            .click();
+    }
     public static editDataViewButton(widgetName: string) {
         GeneralUtils.openMenuForRow(widgetName);
         return cy

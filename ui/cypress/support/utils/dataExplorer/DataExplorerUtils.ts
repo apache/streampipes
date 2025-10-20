@@ -26,6 +26,7 @@ import { ConnectBtns } from '../connect/ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { differenceInMonths } from 'date-fns';
 import { GeneralUtils } from '../GeneralUtils';
+import { DataExplorerBtns } from './DataExplorerBtns';
 
 export class DataExplorerUtils {
     public static goToDatalake() {
@@ -264,21 +265,15 @@ export class DataExplorerUtils {
     }
 
     public static addChartsToAsset(assetNameList = []) {
-        //Click on Button
-        cy.dataCy('add-to-Asset-data-view-btn', { timeout: 10000 })
-            .should('exist')
-            .click();
+        DataExplorerBtns.saveChartsToAssetBtn();
 
-        // Click checkbox
         cy.dataCy('sp-show-chart-asset-checkbox').then($checkbox => {
             if (!$checkbox.is(':checked')) {
                 cy.wrap($checkbox).click({ force: true });
             }
         });
         this.addToAsset(assetNameList);
-
-        // Click Aktualiesierem
-        cy.dataCy('asset-dialog-confirm-delete', { timeout: 10000 }).click();
+        DataExplorerBtns.confirmAssetSelectionBtn();
     }
 
     public static addToAsset(assetNameList = []) {
