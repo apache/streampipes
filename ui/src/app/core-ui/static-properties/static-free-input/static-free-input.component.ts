@@ -106,7 +106,12 @@ export class StaticFreeInputComponent
             );
 
             if (this.staticProperty['internalName'] === 'db_measurement') {
-                asyncValidators.push(nameAsyncValidator(this.datalakeService));
+                asyncValidators.push(
+                    nameAsyncValidator(
+                        this.datalakeService,
+                        this.staticProperty.value,
+                    ),
+                );
 
                 this.errorMessage = this.translateService.instant(
                     'Datalake name already exists.',
