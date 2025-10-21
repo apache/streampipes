@@ -267,8 +267,6 @@ export class DatalakeConfigurationComponent implements OnInit {
             });
 
         dialogRef.afterClosed().subscribe(data => {
-            console.log(data);
-
             if (data) {
                 setTimeout(() => {
                     this.loadAvailableMeasurements();
