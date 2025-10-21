@@ -21,7 +21,7 @@ import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataLakeBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
+import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -110,7 +110,7 @@ describe('Test Edit Adapter', () => {
 
         cy.wait(3000);
 
-        DataLakeBtns.refreshDataLakeMeasures().click();
+        DataExplorerBtns.refreshDataLakeMeasures().click();
 
         DataExplorerUtils.waitForCountingResults();
 

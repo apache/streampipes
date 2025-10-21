@@ -97,20 +97,47 @@
                         }}
                     </mat-checkbox>
                 </div>
+
+                <div class="mt-10" fxLayout="column">
+                    <label>{{ 'Add Dashboard to Assets' | translate }}</label>
+
+                    <mat-checkbox
+                        [(ngModel)]="addToAssets"
+                        color="accent"
+                        data-cy="sp-show-dashboard-asset-checkbox"
+                    >
+                        {{
+                            'Add the current dashboard to an existing asset'
+                                | translate
+                        }}
+                    </mat-checkbox>
+
+                    @if (addToAssets) {
+                        <div class="mt-10">
+                            <sp-asset-link-configuration
+                                [isEdit]="!createMode"
+                                [itemId]="dashboard.elementId"
+                                (selectedAssetsChange)="
+                                    onSelectedAssetsChange($event)
+                                "
+                                (deselectedAssetsChange)="
+                                    onDeselectedAssetsChange($event)
+                                "
+                                (originalAssetsEmitter)="
+                                    onOriginalAssetsEmitted($event)
+                                "
+                            >
+                            </sp-asset-link-configuration>
+                        </div>
+                    }
+                </div>
+
                 <!--<mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard</mat-checkbox>-->
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions actions-align-right">
-        <button
-            mat-button
-            mat-flat-button
-            class="mat-basic mr-10"
-            (click)="onCancel()"
-        >
-            {{ 'Close' | translate }}
-        </button>
+    <div class="sp-dialog-actions actions-align-left">
         <button
             [disabled]="dvname.invalid"
             mat-button
@@ -120,6 +147,14 @@
             (click)="onSave()"
         >
             {{ (createMode ? 'Create' : 'Save') | translate }}
+        </button>
+        <button
+            mat-button
+            mat-flat-button
+            class="mat-basic mr-10"
+            (click)="onCancel()"
+        >
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

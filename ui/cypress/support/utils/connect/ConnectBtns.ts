@@ -31,7 +31,7 @@ export class ConnectBtns {
     }
 
     public static editAdapter() {
-        return cy.dataCy('edit-adapter');
+        return cy.dataCy('edit-adapter', { timeout: 10000 });
     }
 
     public static stopAdapter() {

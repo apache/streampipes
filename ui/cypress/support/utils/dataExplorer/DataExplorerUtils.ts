@@ -26,6 +26,7 @@ import { ConnectBtns } from '../connect/ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { differenceInMonths } from 'date-fns';
 import { GeneralUtils } from '../GeneralUtils';
+import { DataExplorerBtns } from './DataExplorerBtns';
 
 export class DataExplorerUtils {
     public static goToDatalake() {
@@ -114,7 +115,53 @@ export class DataExplorerUtils {
 
         cy.wait(1000);
     }
+    public static addAssetsToDashboard(assetNameList) {
+        cy.dataCy('sp-show-dashboard-asset-checkbox')
+            .find('input[type="checkbox"]')
+            .then($checkbox => {
+                if (!$checkbox.prop('checked')) {
+                    cy.wrap($checkbox).click();
+                }
+            });
 
+        cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
+        assetNameList.forEach(assetName => {
+            cy.get('mat-tree.asset-tree')
+                .find('.mat-tree-node')
+                .contains(assetName)
+                .click();
+        });
+    }
+
+    public static createDashboard(name) {
+        // Create new data view
+        cy.dataCy('open-new-dashboard-dialog').click();
+
+        // Configure data view
+        cy.dataCy('data-view-name').type(name);
+    }
+    public static createDashboardWithLinkedAssets(
+        dataView,
+        name,
+        assetNameList,
+    ) {
+        DataExplorerUtils.goToDatalake();
+
+        DataExplorerUtils.addDataViewAndTableWidget(dataView, 'Persist');
+
+        DataExplorerUtils.saveDataViewConfiguration();
+
+        DataExplorerUtils.goToDashboard();
+
+        //ADD Assets
+        DataExplorerUtils.createDashboard(name);
+        DataExplorerUtils.addAssetsToDashboard(assetNameList);
+        DataExplorerUtils.saveDashboard();
+    }
+
+    public static saveDashboard() {
+        return cy.dataCy('save-data-view').click();
+    }
     public static addDataViewAndTableWidget(
         dataViewName: string,
         dataSet: string,
@@ -142,6 +189,11 @@ export class DataExplorerUtils {
             'have.value',
             newName,
         );
+    }
+
+    public static renameDashboard(newName: string) {
+        cy.dataCy('data-view-name').clear().type(newName);
+        cy.dataCy('data-view-name').should('have.value', newName);
     }
 
     public static loadRandomDataSetIntoDataLake() {
@@ -186,6 +238,11 @@ export class DataExplorerUtils {
         cy.dataCy('edit-dashboard-' + dashboardName).click();
     }
 
+    public static editDashboardSettings(dashboardName: string) {
+        GeneralUtils.openMenuForRow(dashboardName);
+        cy.dataCy('edit-dashboard-settings-' + dashboardName).click();
+    }
+
     public static editDataView(dataViewName: string) {
         // Click edit button
         // following only works if single view is available
@@ -194,15 +251,6 @@ export class DataExplorerUtils {
     }
 
     public static saveDataViewConfiguration() {
-        cy.dataCy('save-data-view-btn', { timeout: 10000 }).click({
-            force: true,
-        });
-        cy.dataCy('asset-dialog-cancel-delete', { timeout: 10000 }).click({
-            force: true,
-        });
-    }
-
-    public static saveToAddAssets() {
         cy.dataCy('save-data-view-btn', { timeout: 10000 }).click({
             force: true,
         });
@@ -216,6 +264,18 @@ export class DataExplorerUtils {
         return cy.dataCy('empty-dashboard');
     }
 
+    public static addChartsToAsset(assetNameList = []) {
+        DataExplorerBtns.saveChartsToAssetBtn();
+
+        cy.dataCy('sp-show-chart-asset-checkbox').then($checkbox => {
+            if (!$checkbox.is(':checked')) {
+                cy.wrap($checkbox).click({ force: true });
+            }
+        });
+        this.addToAsset(assetNameList);
+        DataExplorerBtns.confirmAssetSelectionBtn();
+    }
+
     public static addToAsset(assetNameList = []) {
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
 
@@ -224,10 +284,6 @@ export class DataExplorerUtils {
                 .find('.mat-tree-node')
                 .contains(assetName)
                 .click();
-        });
-
-        cy.dataCy('asset-dialog-confirm-delete', { timeout: 10000 }).click({
-            force: true,
         });
     }
 
@@ -604,7 +660,9 @@ export class DataExplorerUtils {
         // Create Diagram
         DataExplorerUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
         //Save
-        DataExplorerUtils.saveToAddAssets();
-        DataExplorerUtils.addToAsset(assetNames);
+        DataExplorerUtils.addChartsToAsset(assetNames);
+        DataExplorerUtils.saveDataViewConfiguration();
+        //Necessary for the background task to finish otherwise it steps back to charts from the following task
+        cy.wait(500);
     }
 }
