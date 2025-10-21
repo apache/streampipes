@@ -89,7 +89,7 @@ export class SavePipelineSettingsComponent implements OnInit {
                     Validators.maxLength(50),
                     ValidateName(),
                 ],
-                [nameAsyncValidator(this.pipelineService)],
+                [nameAsyncValidator(this.pipelineService, this.pipeline.name)],
             ),
         );
         this.submitPipelineForm.addControl(
