@@ -128,13 +128,8 @@ export function nameAsyncValidator(
             distinctUntilChanged(),
             switchMap(adapterName =>
                 service.validateName(adapterName).pipe(
-                    tap(response =>
-                        console.log('Validation Response:', response),
-                    ),
                     map((isUnique: boolean) => {
                         if (!isUnique) {
-                            // Set the error message here when validation fails
-                            console.log('NAME IS NOT UNIQUE');
                             return { nameNotUnique: true };
                         }
                         return null; // no error
@@ -144,29 +139,3 @@ export function nameAsyncValidator(
         );
     };
 }
-
-/**function nameAsyncValidatorDataLake(
-    service: DatalakeRestService,
-): AsyncValidatorFn {
-    return asy  (control: AbstractControl): ValidationErrors | null => {
-        const name = control.value;
-
-        console.log('Name from actual Validator', name);
-
-        if (!name || !name.trim()) {
-            console.log('Skip');
-            return null; 
-        }
-
-        try {
-            const isValid = await service.validateName(name).toPromise();
-            console.log('Validation result:', isValid);
-
-            return isValid ? null : { nameNotUnique: { value: true } };
-        } catch (error) {
-            console.error('Validation error:', error);
-            return { nameNotUnique: { value: name } };
-        }
-    };
-}
-*/

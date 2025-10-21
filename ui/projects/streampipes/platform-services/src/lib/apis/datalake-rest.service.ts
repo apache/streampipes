@@ -76,13 +76,6 @@ export class DatalakeRestService {
     }
 
     validateName(name: string): Observable<boolean> {
-        console.log('name', name);
-        console.log(this.dataLakeMeasureUrl + `/namevalidation/${name}`);
-        console.log(
-            this.http.get<boolean>(
-                this.dataLakeMeasureUrl + `/namevalidation/${name}`,
-            ),
-        );
         return this.http.get<boolean>(
             this.dataLakeMeasureUrl + `/namevalidation/${name}`,
         );
