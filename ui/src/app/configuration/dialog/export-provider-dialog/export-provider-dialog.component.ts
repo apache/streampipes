@@ -24,8 +24,10 @@ import {
     Validators,
 } from '@angular/forms';
 import { DialogRef } from '@streampipes/shared-ui';
-import { ExportProviderSettings } from '@streampipes/platform-services';
-import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
+import {
+    ExportProviderService,
+    ExportProviderSettings,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-export-provider-dialog',

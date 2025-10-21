@@ -22,12 +22,13 @@
 }
 
 .general-panel {
-    border: 1px solid var(--color-bg-2);
+    border-bottom: 1px solid var(--color-bg-2);
+    border-left: 1px solid var(--color-bg-2);
+    border-right: 1px solid var(--color-bg-2);
 }
 
 .general-panel-header {
     margin-top: -1px;
-    background: var(--color-bg-2);
     height: 40px;
     min-height: 40px;
     max-height: 40px;
@@ -36,11 +37,20 @@
     padding: 10px 12px;
 }
 
+.bg-highlight {
+    background: var(--color-bg-2);
+}
+
+.bg-no-highlight {
+    border-left: 1px solid var(--color-bg-2);
+    border-right: 1px solid var(--color-bg-2);
+    border-top: 1px solid var(--color-bg-2);
+}
+
 .content-box-title {
     margin-left: 5px;
     padding-left: 5px;
     border-left: 3px solid var(--color-primary);
-    font-weight: 500;
-    font-size: 13pt;
+    font-weight: 400;
     white-space: nowrap;
 }
