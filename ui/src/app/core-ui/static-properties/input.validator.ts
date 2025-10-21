@@ -115,9 +115,14 @@ export function ValidateName(): ValidatorFn {
 
 export function nameAsyncValidator(
     service: AdapterService | PipelineService | DatalakeRestService,
+    orgName: string = '',
 ): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
         const name = control.value;
+
+        if (name === orgName && orgName != '') {
+            return of(null);
+        }
 
         if (!name || !name.trim()) {
             return of(null); // skip validation if empty

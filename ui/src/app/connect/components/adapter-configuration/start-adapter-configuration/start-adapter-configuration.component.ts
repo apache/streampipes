@@ -124,6 +124,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        const orgname = this.adapterDescription.name;
         this.showAsset = this.isEditMode;
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
@@ -136,7 +137,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                     Validators.maxLength(40),
                     ValidateName(),
                 ],
-                [nameAsyncValidator(this.adapterService)],
+                [nameAsyncValidator(this.adapterService, orgname)],
             ),
         );
         this.startAdapterForm.valueChanges.subscribe(
