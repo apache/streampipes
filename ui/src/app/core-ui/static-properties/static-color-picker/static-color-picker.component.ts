@@ -48,10 +48,10 @@ export class StaticColorPickerComponent
     ];
 
     ngOnInit() {
-        this.addValidator(
-            this.staticProperty.selectedColor,
-            Validators.required,
-        );
+        this.addValidator(this.staticProperty.selectedColor, {
+            validators: [Validators.required],
+            asyncValidators: [],
+        });
         this.enableValidators();
     }
 

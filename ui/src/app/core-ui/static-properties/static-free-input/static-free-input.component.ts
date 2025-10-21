@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { ValidatorFn, Validators } from '@angular/forms';
+import { AsyncValidatorFn, ValidatorFn, Validators } from '@angular/forms';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import {
     DatalakeRestService,
@@ -81,6 +81,8 @@ export class StaticFreeInputComponent
 
     collectValidators() {
         const validators: ValidatorFn[] = [];
+        const asyncValidators: AsyncValidatorFn[] = [];
+
         if (!this.staticProperty.optional) {
             validators.push(Validators.required);
         }
@@ -100,16 +102,13 @@ export class StaticFreeInputComponent
                 'Please enter a valid URL',
             );
         } else if (this.staticProperty.requiredDatatype === DataType.STRING) {
-            console.log('String', this.staticProperty);
             validators.push(ValidateString);
             this.errorMessage = this.translateService.instant(
                 'Please enter a valid String',
             );
 
             if (this.staticProperty['internalName'] === 'db_measurement') {
-                console.log('Set the validator');
-
-                validators.push(nameAsyncValidator(this.datalakeService));
+                asyncValidators.push(nameAsyncValidator(this.datalakeService));
 
                 this.errorMessage = this.translateService.instant(
                     'Datalake name already exists.',
@@ -117,7 +116,7 @@ export class StaticFreeInputComponent
             }
         }
 
-        return validators;
+        return { validators, asyncValidators };
     }
 
     emitUpdate() {

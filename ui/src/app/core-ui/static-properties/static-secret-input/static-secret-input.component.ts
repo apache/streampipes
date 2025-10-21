@@ -38,7 +38,10 @@ export class StaticSecretInputComponent
     }
 
     ngOnInit() {
-        this.addValidator(this.staticProperty.value, Validators.required);
+        this.addValidator(this.staticProperty.value, {
+            validators: [Validators.required],
+            asyncValidators: [],
+        });
         this.enableValidators();
     }
 

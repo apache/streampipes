@@ -42,10 +42,10 @@ export class StaticMappingUnaryComponent
                 this.availableProperties[0].propertySelector;
             this.applyCompletedConfiguration(true);
         }
-        this.addValidator(
-            this.staticProperty.selectedProperty,
-            Validators.required,
-        );
+        this.addValidator(this.staticProperty.selectedProperty, {
+            validators: [Validators.required],
+            asyncValidators: [],
+        });
         this.enableValidators();
     }
 

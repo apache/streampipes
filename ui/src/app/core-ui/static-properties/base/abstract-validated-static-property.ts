@@ -44,6 +44,8 @@ export abstract class AbstractValidatedStaticPropertyRenderer<
     enableValidators() {
         this.parentForm.controls[this.fieldName].valueChanges.subscribe(
             value => {
+                console.log('FN', this.fieldName);
+                console.log('V', value);
                 this.onValueChange(value);
             },
         );
@@ -57,12 +59,25 @@ export abstract class AbstractValidatedStaticPropertyRenderer<
 
     addValidator(
         defaultValue: any,
-        validators: ValidatorFn | ValidatorFn[] | AsyncValidatorFn,
+        validators: {
+            validators: ValidatorFn[];
+            asyncValidators?: AsyncValidatorFn[];
+        },
     ) {
+        // Destructure the sync and async validators
+        const { validators: syncValidators, asyncValidators } = validators;
+
+        // Add the form control with both sync and async validators
         this.parentForm.addControl(
             this.fieldName,
-            new UntypedFormControl(defaultValue, validators),
+            new UntypedFormControl(
+                defaultValue,
+                syncValidators,
+                asyncValidators,
+            ),
         );
+
+        // Update the form's validity
         this.parentForm.updateValueAndValidity();
     }
 

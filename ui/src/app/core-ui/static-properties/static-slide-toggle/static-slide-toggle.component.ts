@@ -32,7 +32,10 @@ export class StaticSlideToggleComponent
     implements OnInit
 {
     ngOnInit(): void {
-        this.addValidator(this.staticProperty.selected, Validators.required);
+        this.addValidator(this.staticProperty.selected, {
+            validators: [Validators.required],
+            asyncValidators: [],
+        });
         this.enableValidators();
         this.emitUpdate();
     }

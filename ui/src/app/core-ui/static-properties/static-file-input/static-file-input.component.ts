@@ -69,10 +69,10 @@ export class StaticFileInputComponent
 
     ngOnInit() {
         this.fetchFileMetadata();
-        this.addValidator(
-            this.staticProperty.locationPath,
-            this.collectValidators(),
-        );
+        this.addValidator(this.staticProperty.locationPath, {
+            validators: [Validators.required],
+            asyncValidators: [],
+        });
         this.enableValidators();
 
         this.chooseExistingFileControl.setValue(true);
