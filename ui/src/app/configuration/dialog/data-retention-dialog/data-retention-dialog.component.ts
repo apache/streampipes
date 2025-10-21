@@ -93,8 +93,13 @@ export class DataRetentionDialogComponent implements OnInit {
     setCleanUp() {
         this.datalakeRestService
             .cleanup(this.measurementIndex, this.retentionConfig)
-            .subscribe(data => {
-                this.close(true);
+            .subscribe({
+                next: data => {
+                    this.close(true);
+                },
+                error: err => {
+                    this.close(false);
+                },
             });
     }
 
@@ -116,6 +121,7 @@ export class DataRetentionDialogComponent implements OnInit {
             this.retentionConfig?.retentionExportConfig?.exportConfig;
         const providerId =
             this.retentionConfig?.retentionExportConfig?.exportProviderId;
+
         if (!exportConfig?.format) {
             console.error('Export format is required.');
             return false;

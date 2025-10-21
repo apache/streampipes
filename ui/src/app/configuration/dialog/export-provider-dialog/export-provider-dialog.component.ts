@@ -64,7 +64,7 @@ export class ExportProviderComponent implements OnInit {
             secretKey: ['', Validators.required],
             endPoint: ['', [Validators.required, this.uriValidator]],
             bucketName: ['', Validators.required],
-            awsRegion: ['US_EAST_1', Validators.required],
+            awsRegion: ['us-east-1', Validators.required],
             providerId: [''],
             secretEncrypted: [false],
         });
