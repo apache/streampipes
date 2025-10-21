@@ -61,6 +61,7 @@
             mat-flat-button
             color="accent"
             data-cy="download-configuration-download-btn"
+            [disabled]="!disableDelete"
             (click)="deleteCleanUp()"
         >
             {{ 'Delete Sync' | translate }}

@@ -41,6 +41,8 @@ export class DataRetentionDialogComponent implements OnInit {
     @Input()
     measurementIndex: string;
 
+    disableDelete = false;
+
     dialogRef = inject(DialogRef<DataRetentionDialogComponent>);
     datalakeRestService = inject(DatalakeRestService);
 
@@ -53,6 +55,7 @@ export class DataRetentionDialogComponent implements OnInit {
                         measure?.retentionTime ||
                         measure.retentionTime != null
                     ) {
+                        this.disableDelete = true;
                         this.retentionConfig ??= measure.retentionTime;
                     } else {
                         this.retentionConfig ??= RetentionTimeConfig.fromData({
