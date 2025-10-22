@@ -41,6 +41,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
@@ -92,6 +93,8 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
 
   @Override
   public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+
+    LOG.info(parameters.toString());
     var extractor = parameters.extractor();
     var timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
     var measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
@@ -106,7 +109,11 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
 
     this.ensureMeasurementPropertiesExist(eventSchema);
 
-    var measure = new DataLakeMeasure(measureName, timestampField, eventSchema);
+    var retentionTime = CouchDbStorageManager.INSTANCE.getDataLakeStorage().getByMeasureName(measureName).getRetentionTime();
+
+
+
+    var measure = new DataLakeMeasure(measureName, timestampField, eventSchema, retentionTime);
 
     var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 

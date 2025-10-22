@@ -77,7 +77,7 @@ public class DataLakeMeasure implements Storable {
   }
 
 
-  public DataLakeMeasure(String measureName, String timestampField, RetentionTimeConfig retentionTime) {
+  public DataLakeMeasure(String measureName, String timestampField, EventSchema eventSchema, RetentionTimeConfig retentionTime) {
     this.measureName = measureName;
     this.eventSchema = eventSchema;
     this.timestampField = timestampField;
