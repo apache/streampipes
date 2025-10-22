@@ -67,6 +67,10 @@ export abstract class SpAbstractAdapterDetailsDirective {
                 }),
             )
             .subscribe(res => {
+                if (!res) {
+                    return;
+                }
+
                 this.adapter = res;
                 this.onAdapterLoaded();
             });
