@@ -22,7 +22,7 @@
             mat-icon-button
             color="accent"
             (click)="openDocumentation()"
-            matTooltip="Show documentation"
+            [matTooltip]="'Show documentation' | translate"
         >
             <i class="material-icons">menu_book</i>
         </button>
@@ -30,18 +30,14 @@
             mat-icon-button
             color="accent"
             (click)="removeSelection()"
-            matTooltip="Cancel"
+            [matTooltip]="'Cancel' | translate"
         >
             <i class="material-icons">close</i>
         </button>
     </div>
     <div fxLayout="column" fxLayoutAlign="center stretch" *ngIf="adapter">
         <sp-basic-header-title-component
-            [title]="
-                isEditMode
-                    ? 'Edit adapter: ' + displayName
-                    : 'New adapter: ' + displayName
-            "
+            [title]="pageTitle"
         ></sp-basic-header-title-component>
 
         <mat-horizontal-stepper
@@ -51,7 +47,9 @@
             class="stepper"
         >
             <mat-step>
-                <ng-template matStepLabel>Settings</ng-template>
+                <ng-template matStepLabel>{{
+                    'Settings' | translate
+                }}</ng-template>
                 <sp-adapter-settings
                     [adapterDescription]="adapter"
                     (updateAdapterDescriptionEmitter)="adapter = $event"
@@ -62,7 +60,9 @@
             </mat-step>
 
             <mat-step>
-                <ng-template matStepLabel>Configure fields</ng-template>
+                <ng-template matStepLabel>{{
+                    'Configure fields' | translate
+                }}</ng-template>
                 <sp-event-schema
                     fxLayout="column"
                     fxFlex="100"
@@ -76,7 +76,9 @@
             </mat-step>
 
             <mat-step>
-                <ng-template matStepLabel>Start Adapter</ng-template>
+                <ng-template matStepLabel>{{
+                    'Start adapter' | translate
+                }}</ng-template>
                 <sp-start-adapter-configuration
                     [adapterDescription]="adapter"
                     [eventSchema]="adapter.dataStream.eventSchema"

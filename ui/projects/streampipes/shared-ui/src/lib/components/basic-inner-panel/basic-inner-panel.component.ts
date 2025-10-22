@@ -39,4 +39,7 @@ export class SpBasicInnerPanelComponent {
 
     @Input()
     hideToolbar = false;
+
+    @Input()
+    headerBackground = true;
 }

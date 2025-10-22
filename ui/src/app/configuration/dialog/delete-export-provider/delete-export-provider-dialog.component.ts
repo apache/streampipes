@@ -18,7 +18,7 @@
 
 import { Component, inject, Input } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
-import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
+import { ExportProviderService } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-delete-export-provider-dialog',

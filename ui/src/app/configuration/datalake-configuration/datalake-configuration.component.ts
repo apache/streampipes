@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    inject,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
@@ -42,6 +48,7 @@ import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/da
 import { ExportProviderComponent } from '../dialog/export-provider-dialog/export-provider-dialog.component';
 import { DeleteExportProviderComponent } from '../dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { delay } from 'rxjs';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -62,6 +69,7 @@ export class DatalakeConfigurationComponent implements OnInit {
     private tabService = inject(SpConfigurationTabsService);
     private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
+    private cdr = inject(ChangeDetectorRef);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
@@ -245,16 +253,25 @@ export class DatalakeConfigurationComponent implements OnInit {
     }
 
     openRetentionDialog(measurementId: string) {
-        this.dialogService.open(DataRetentionDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('Set Data Retention'),
-            width: '50vw',
-            data: {
-                dataRetentionDialogModel: {
-                    measureName: measurementId,
+        const dialogRef: DialogRef<DataRetentionDialogComponent> =
+            this.dialogService.open(DataRetentionDialogComponent, {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Set Data Retention'),
+                width: '50vw',
+                data: {
+                    dataRetentionDialogModel: {
+                        measureName: measurementId,
+                    },
+                    measurementIndex: measurementId,
                 },
-                measurementIndex: measurementId,
-            },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                setTimeout(() => {
+                    this.loadAvailableMeasurements();
+                }, 1000);
+            }
         });
     }
 

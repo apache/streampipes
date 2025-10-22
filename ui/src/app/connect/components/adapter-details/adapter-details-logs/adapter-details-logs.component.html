@@ -27,7 +27,7 @@
             mat-icon-button
             color="accent"
             class="mr-10"
-            matTooltip="Refresh"
+            [matTooltip]="'Refresh' | translate"
             (click)="triggerUpdate()"
         >
             <i class="material-icons">refresh</i>

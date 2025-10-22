@@ -166,8 +166,9 @@ public class DataLakeScheduler implements SchedulingConfigurer {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");
         for (DataLakeMeasure dataLakeMeasure : allMeasurements) {
-            LOG.info("Measurement " + dataLakeMeasure.getMeasureName());
+            
             if (dataLakeMeasure.getRetentionTime() != null) {
+                LOG.info("Measurement " + dataLakeMeasure.getMeasureName());
 
                 var result = getStartAndEndTime(
                         dataLakeMeasure.getRetentionTime().getDataRetentionConfig().olderThanDays());
@@ -191,6 +192,7 @@ public class DataLakeScheduler implements SchedulingConfigurer {
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         var env = Environments.getEnvironment(); 
+         LOG.info("Retention CRON Job triggered.");
         taskRegistrar.addTriggerTask(
 
                 this::cleanupMeasurements,
@@ -200,6 +202,8 @@ public class DataLakeScheduler implements SchedulingConfigurer {
                         .nextExecution(triggerContext)
 
         );
+
+         LOG.info("Retention CRON Job finished.");
 
     }
 }

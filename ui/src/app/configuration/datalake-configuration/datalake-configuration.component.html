@@ -472,7 +472,12 @@
                     </table>
                 </div>
 
-                <div *ngIf="availableExportProvider.length === 0">
+                <div
+                    *ngIf="
+                        !availableExportProvider ||
+                        availableExportProvider.length === 0
+                    "
+                >
                     <h5>{{ 'no stored export providers' | translate }}</h5>
                 </div>
             </sp-split-section>

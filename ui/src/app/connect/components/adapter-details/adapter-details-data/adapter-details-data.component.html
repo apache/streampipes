@@ -31,11 +31,11 @@
                 <div fxFlex fxLayoutAlign="end center">
                     @if (adapter.running) {
                         <div class="adapter-status status-running">
-                            Adapter running
+                            {{ 'Adapter running' | translate }}
                         </div>
                     } @else {
                         <div class="adapter-status status-stopped">
-                            Adapter stopped
+                            {{ 'Adapter stopped' | translate }}
                         </div>
                     }
                 </div>

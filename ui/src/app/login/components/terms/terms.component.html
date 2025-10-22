@@ -31,14 +31,14 @@
             <mat-divider></mat-divider>
             <div fxLayout="row" fxLayoutGap="10px" fxFlex="none" class="mt-10">
                 <button mat-flat-button (click)="onTermsAcknowledged()">
-                    Accept
+                    {{ 'Accept' | translate }}
                 </button>
                 <button
                     mat-flat-button
                     class="mat-basic"
                     (click)="onTermsRejected()"
                 >
-                    Reject
+                    {{ 'Reject' | translate }}
                 </button>
             </div>
         </div>
