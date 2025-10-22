@@ -99,7 +99,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return ok(Notifications.success(adapterId));
   }
 
-  @GetMapping(path = "/namevalidation/{name}")
+  @GetMapping(path = "/uniqueNameValidation/{name}")
 @PreAuthorize("this.hasReadAuthority()")
 public ResponseEntity<Boolean> validateAdapterName(@PathVariable String name) {
     boolean nameValidationSuccess = managementService.uniqueNameValidation(name);
