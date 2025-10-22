@@ -127,7 +127,6 @@ export class DataExplorerChartViewComponent
             .subscribe(res => {
                 if (!res) {
                     this.dataViewLoaded = true;
-                    console.log(this.chartNotFound);
                     return;
                 }
                 this.dataView = res;
