@@ -20,6 +20,7 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import org.lightcouch.CouchDbClient;
 
@@ -60,10 +61,8 @@ public class DataLakeMeasureStorage extends DefaultCrudStorage<DataLakeMeasure> 
 
    @Override
   public boolean uniqueNameValidation(String name){
-    String selectorJson = String.format(
-    "{\"selector\": {\"measureName\": \"%s\"}, \"limit\": 1}",
-    name
-);
+
+String selectorJson = Utils.getJsonSelectorForUniqueNameValidation("measureName", name);
  List<DataLakeMeasure> result = this.findDocs(selectorJson, DataLakeMeasure.class);
  return result.isEmpty();
   }

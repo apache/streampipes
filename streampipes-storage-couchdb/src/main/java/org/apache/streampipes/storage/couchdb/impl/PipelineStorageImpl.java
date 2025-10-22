@@ -63,10 +63,8 @@ public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements
 
   @Override
   public boolean uniqueNameValidation(String name){
-    String selectorJson = String.format(
-    "{\"selector\": {\"name\": \"%s\"}, \"limit\": 1}",
-    name
-);
+String selectorJson = Utils.getJsonSelectorForUniqueNameValidation("name", name);
+
  List<Pipeline> result = this.findDocs(selectorJson, Pipeline.class);
  return result.isEmpty();
   }

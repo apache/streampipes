@@ -58,10 +58,7 @@ public class AdapterDescriptionStorageImpl extends DefaultCrudStorage<AdapterDes
   @Override
   public boolean uniqueNameValidation(String name){
 
-String selectorJson = String.format(
-    "{\"selector\": {\"properties.name\": \"%s\"}, \"limit\": 1}",
-    name
-);
+  String selectorJson = Utils.getJsonSelectorForUniqueNameValidation("properties.name", name);
  List<AdapterDescription> result = this.findDocs(selectorJson, AdapterDescription.class);
  return result.isEmpty();
 

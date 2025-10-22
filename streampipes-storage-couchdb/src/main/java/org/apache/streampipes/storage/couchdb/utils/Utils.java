@@ -199,4 +199,12 @@ public class Utils {
         + ":"
         + env.getCouchDbPassword().getValueOrDefault();
   }
+  public static String getJsonSelectorForUniqueNameValidation(String parameter, String name){
+     return String.format(
+        "{\"selector\": {\"%s\": \"%s\"}, \"limit\": 1}",
+        parameter,
+        name
+    );
+
+  }
 }
