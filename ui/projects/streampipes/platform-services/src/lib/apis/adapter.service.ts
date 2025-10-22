@@ -58,7 +58,7 @@ export class AdapterService {
 
     uniqueNameValidation(name: string): Observable<boolean> {
         return this.http.get<boolean>(
-            this.connectPath + `/master/adapters/namevalidation/${name}`,
+            this.connectPath + `/master/adapters/uniqueNameValidation/${name}`,
         );
     }
 

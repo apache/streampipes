@@ -77,7 +77,7 @@ export class DatalakeRestService {
 
     uniqueNameValidation(name: string): Observable<boolean> {
         return this.http.get<boolean>(
-            this.dataLakeMeasureUrl + `/namevalidation/${name}`,
+            this.dataLakeMeasureUrl + `/uniqueNameValidation/${name}`,
         );
     }
 

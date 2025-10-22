@@ -110,7 +110,7 @@ export class PipelineService {
 
     uniqueNameValidation(name: string): Observable<boolean> {
         return this.http.get<boolean>(
-            this.apiBasePath + `/pipelines/namevalidation/${name}`,
+            this.apiBasePath + `/pipelines/uniqueNameValidation/${name}`,
         );
     }
 
