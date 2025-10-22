@@ -35,9 +35,9 @@
     </div>
     <div fxFlex="100" fxLayout="column">
         <div *ngIf="pipelineNotFound">
-            <sp-warning-box color="primary"
-                >The desired Pipeline could not be found!</sp-warning-box
-            >
+            <sp-warning-box color="primary">{{
+                'The desired pipeline was not found!' | translate
+            }}</sp-warning-box>
         </div>
 
         <sp-pipeline-preview
