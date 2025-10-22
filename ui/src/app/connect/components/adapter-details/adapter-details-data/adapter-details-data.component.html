@@ -25,7 +25,7 @@
     <div fxLayout="column">
         @if (adapterNotFound) {
             <sp-warning-box>
-                The desired adapter was not found!
+                {{ 'The desired adapter was not found!' | translate }}
             </sp-warning-box>
         } @else {
             @if (adapter) {

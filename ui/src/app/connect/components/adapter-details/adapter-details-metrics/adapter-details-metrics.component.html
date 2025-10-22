@@ -34,7 +34,11 @@
         </button>
     </div>
     @if (adapterNotFound) {
-        <sp-warning-box> The desired adapter was not found! </sp-warning-box>
+        <sp-warning-box>
+            {{
+                'The desired adapter was not found!' | translate
+            }}</sp-warning-box
+        >
     } @else {
         <div fxFlex="100" fxLayout="column" *ngIf="adapter && adapterMetrics">
             <sp-simple-metrics
