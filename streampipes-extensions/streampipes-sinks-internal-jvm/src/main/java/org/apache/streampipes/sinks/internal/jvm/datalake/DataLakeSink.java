@@ -110,9 +110,9 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
 
     this.ensureMeasurementPropertiesExist(eventSchema);
 
-    var retentionTime = getRetentionTime(measureName, runtimeContext.getStreamPipesClient());
+    var retentionTimeConfig = getRetentionTime(measureName, runtimeContext.getStreamPipesClient());
 
-    var measure = new DataLakeMeasure(measureName, timestampField, eventSchema, retentionTime);
+    var measure = new DataLakeMeasure(measureName, timestampField, eventSchema, retentionTimeConfig);
 
     var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
@@ -159,7 +159,7 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
 
   private RetentionTimeConfig getRetentionTime(String measureName, IStreamPipesClient client){
 
-    IDataExplorerSchemaManagement dataExplorerSchemaManagement=new DataExplorerDispatcher().getDataExplorerManager()
+    IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher().getDataExplorerManager()
         .getSchemaManagement();
 
     var originalMeasure = dataExplorerSchemaManagement.getExistingMeasureByName(measureName);
