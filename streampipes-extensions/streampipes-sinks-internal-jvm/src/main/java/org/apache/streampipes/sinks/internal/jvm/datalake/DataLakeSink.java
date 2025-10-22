@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.sinks.internal.jvm.datalake;
 
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStore;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -28,6 +30,7 @@ import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
+import org.apache.streampipes.model.datalake.RetentionTimeConfig;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
@@ -41,7 +44,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
@@ -93,8 +95,7 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
 
   @Override
   public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-
-    LOG.info(parameters.toString());
+  
     var extractor = parameters.extractor();
     var timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
     var measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
@@ -109,9 +110,7 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
 
     this.ensureMeasurementPropertiesExist(eventSchema);
 
-    var retentionTime = CouchDbStorageManager.INSTANCE.getDataLakeStorage().getByMeasureName(measureName).getRetentionTime();
-
-
+    var retentionTime = getRetentionTime(measureName, runtimeContext.getStreamPipesClient());
 
     var measure = new DataLakeMeasure(measureName, timestampField, eventSchema, retentionTime);
 
@@ -156,6 +155,21 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
     var inputFields = extractor.getInputEventProperties(0);
     new DataLakeDimensionProvider().applyOptions(inputFields, staticProperty);
     return staticProperty;
+  }
+
+  private RetentionTimeConfig getRetentionTime(String measureName, IStreamPipesClient client){
+
+    IDataExplorerSchemaManagement dataExplorerSchemaManagement=new DataExplorerDispatcher().getDataExplorerManager()
+        .getSchemaManagement();
+
+    var originalMeasure = dataExplorerSchemaManagement.getExistingMeasureByName(measureName);
+
+    RetentionTimeConfig retentionTime = null;
+
+    if (originalMeasure.isPresent()){
+      retentionTime = originalMeasure.get().getRetentionTime();
+    }
+  return retentionTime;
   }
 
   /**
