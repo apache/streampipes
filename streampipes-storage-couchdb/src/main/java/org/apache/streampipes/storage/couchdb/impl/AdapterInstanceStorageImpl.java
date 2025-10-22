@@ -49,7 +49,7 @@ public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescri
         .toList();
   }
     @Override
-  public boolean validateUniqueName(String name){
+  public boolean uniqueNameValidation(String name){
     String selectorJson = String.format(
     "{\"selector\": {\"properties.name\": \"%s\"}, \"limit\": 1}",
     name

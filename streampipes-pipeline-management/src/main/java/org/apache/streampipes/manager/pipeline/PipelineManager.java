@@ -135,8 +135,8 @@ public class PipelineManager {
   }
 
 
-  public static boolean validateName(String name) {
-  return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().validateUniqueName(name);
+  public static boolean uniqueNameValidation(String name) {
+  return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().uniqueNameValidation(name);
 
   }
 

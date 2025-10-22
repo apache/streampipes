@@ -56,7 +56,7 @@ public class AdapterDescriptionStorageImpl extends DefaultCrudStorage<AdapterDes
     return getElementById(element.getElementId());
   }
   @Override
-  public boolean validateUniqueName(String name){
+  public boolean uniqueNameValidation(String name){
 
 String selectorJson = String.format(
     "{\"selector\": {\"properties.name\": \"%s\"}, \"limit\": 1}",

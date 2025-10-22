@@ -44,7 +44,7 @@ import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import {
-    ValidateName,
+    uniqueNameValidation,
     nameAsyncValidator,
 } from '../../../../core-ui/static-properties/input.validator';
 
@@ -135,7 +135,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                     Validators.required,
                     Validators.minLength(3),
                     Validators.maxLength(40),
-                    ValidateName(),
+                    uniqueNameValidation(),
                 ],
                 [nameAsyncValidator(this.adapterService, orgname)],
             ),

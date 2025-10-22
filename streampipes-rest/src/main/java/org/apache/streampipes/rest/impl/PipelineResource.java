@@ -133,10 +133,10 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @GetMapping(path = "/namevalidation/{name}")
+  @GetMapping(path = "/uniqueNameValidation/{name}")
   @PreAuthorize("this.hasReadAuthority()")
-  public ResponseEntity<Boolean> validateAdapterName(@PathVariable String name) {
-      boolean nameValidationSuccess = PipelineManager.validateName(name);
+  public ResponseEntity<Boolean> vuniqueAdapterNameValidation(@PathVariable String name) {
+      boolean nameValidationSuccess = PipelineManager.uniqueNameValidation(name);
       return ResponseEntity.ok(nameValidationSuccess);
 }
 

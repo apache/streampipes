@@ -203,8 +203,8 @@ public class AdapterMasterManagement {
     }
   }
 
-  public boolean validateName(String name) {
-  return this.adapterInstanceStorage.validateUniqueName(name);
+  public boolean uniqueNameValidation(String name) {
+  return this.adapterInstanceStorage.uniqueNameValidation(name);
 
   }
 }

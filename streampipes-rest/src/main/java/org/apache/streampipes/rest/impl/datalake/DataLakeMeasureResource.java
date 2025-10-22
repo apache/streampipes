@@ -91,9 +91,9 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @GetMapping(path = "/namevalidation/{name}")
+  @GetMapping(path = "/uniqueNameValidation/{name}")
   public ResponseEntity<Boolean> validateAdapterName(@PathVariable String name) {
-      boolean nameValidationSuccess = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage().validateUniqueName(name);
+      boolean nameValidationSuccess = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage().uniqueNameValidation(name);
       return ResponseEntity.ok(nameValidationSuccess);
 }
 

@@ -24,5 +24,5 @@ public interface IDataLakeMeasureStorage extends CRUDStorage<DataLakeMeasure> {
 
   DataLakeMeasure getByMeasureName(String measureName);
 
-  boolean validateUniqueName(String name);
+  boolean uniqueNameValidation(String name);
 }

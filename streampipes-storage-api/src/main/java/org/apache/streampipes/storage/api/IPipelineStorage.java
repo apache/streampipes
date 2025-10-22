@@ -25,6 +25,6 @@ import java.util.List;
 public interface IPipelineStorage extends CRUDStorage<Pipeline> {
 
   List<String> getPipelinesUsingAdapter(String adapterId);
-    boolean validateUniqueName(String name);
+    boolean uniqueNameValidation(String name);
 
 }

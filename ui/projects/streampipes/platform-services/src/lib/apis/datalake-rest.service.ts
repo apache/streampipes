@@ -75,7 +75,7 @@ export class DatalakeRestService {
             .pipe(map(res => res as DataLakeMeasure));
     }
 
-    validateName(name: string): Observable<boolean> {
+    uniqueNameValidation(name: string): Observable<boolean> {
         return this.http.get<boolean>(
             this.dataLakeMeasureUrl + `/namevalidation/${name}`,
         );

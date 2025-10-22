@@ -85,7 +85,7 @@ export function checkForDuplicatesValidator(
     };
 }
 
-export function ValidateName(): ValidatorFn {
+export function uniqueNameValidation(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
         const value = control.value;
 
@@ -132,7 +132,7 @@ export function nameAsyncValidator(
             debounceTime(300),
             distinctUntilChanged(),
             switchMap(adapterName =>
-                service.validateName(adapterName).pipe(
+                service.uniqueNameValidation(adapterName).pipe(
                     map((isUnique: boolean) => {
                         if (!isUnique) {
                             return { nameNotUnique: true };

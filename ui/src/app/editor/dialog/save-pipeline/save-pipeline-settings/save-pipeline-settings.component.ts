@@ -39,7 +39,7 @@ import {
 import { PipelineStorageOptions } from '../../../model/editor.model';
 import {
     nameAsyncValidator,
-    ValidateName,
+    uniqueNameValidation,
 } from '../../../../core-ui/static-properties/input.validator';
 
 @Component({
@@ -87,7 +87,7 @@ export class SavePipelineSettingsComponent implements OnInit {
                     Validators.required,
                     Validators.minLength(3),
                     Validators.maxLength(50),
-                    ValidateName(),
+                    uniqueNameValidation(),
                 ],
                 [nameAsyncValidator(this.pipelineService, this.pipeline.name)],
             ),

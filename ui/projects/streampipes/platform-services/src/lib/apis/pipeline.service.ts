@@ -108,7 +108,7 @@ export class PipelineService {
         );
     }
 
-    validateName(name: string): Observable<boolean> {
+    uniqueNameValidation(name: string): Observable<boolean> {
         return this.http.get<boolean>(
             this.apiBasePath + `/pipelines/namevalidation/${name}`,
         );

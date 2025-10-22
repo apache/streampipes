@@ -59,7 +59,7 @@ public class DataLakeMeasureStorage extends DefaultCrudStorage<DataLakeMeasure> 
   }
 
    @Override
-  public boolean validateUniqueName(String name){
+  public boolean uniqueNameValidation(String name){
     String selectorJson = String.format(
     "{\"selector\": {\"measureName\": \"%s\"}, \"limit\": 1}",
     name
