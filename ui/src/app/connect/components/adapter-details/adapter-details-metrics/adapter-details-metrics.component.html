@@ -27,7 +27,7 @@
             mat-icon-button
             color="accent"
             class="mr-10"
-            matTooltip="Refresh"
+            [matTooltip]="'Refresh' | translate"
             (click)="triggerUpdate()"
         >
             <i class="material-icons">refresh</i>
@@ -36,8 +36,8 @@
     <div fxFlex="100" fxLayout="column" *ngIf="adapter && adapterMetrics">
         <sp-simple-metrics
             [elementName]="adapter.name"
-            lastPublishedLabel="Last published message"
-            statusValueLabel="Published messages"
+            [lastPublishedLabel]="'Last published message' | translate"
+            [statusValueLabel]="'Published messages' | translate"
             [lastTimestamp]="adapterMetrics.lastTimestamp"
             [statusValue]="adapterMetrics.messagesOut.counter"
         >

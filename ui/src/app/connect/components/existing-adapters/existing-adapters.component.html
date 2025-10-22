@@ -18,7 +18,7 @@
 
 <sp-asset-browser
     filteredAssetLinkType="adapter"
-    allResourcesAlias="Adapters"
+    [allResourcesAlias]="'Adapters' | translate"
     [resourceCount]="existingAdapters.length"
     (filterIdsEmitter)="applyAdapterFilters($event)"
 >
@@ -85,7 +85,7 @@
                 </div>
                 <button
                     mat-icon-button
-                    matTooltip="Refresh adapters"
+                    [matTooltip]="'Refresh adapters' | translate"
                     matTooltipPosition="below"
                     color="accent"
                     (click)="getAdaptersRunning()"
@@ -96,7 +96,7 @@
         </div>
         <div fxFlex="100" fxLayout="column">
             <sp-basic-header-title-component
-                title="Adapters"
+                [title]="'Adapters' | translate"
             ></sp-basic-header-title-component>
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
                 <sp-table

@@ -17,7 +17,7 @@
   -->
 
 <sp-basic-view
-    showBackLink="true"
+    [showBackLink]="true"
     [backLinkTarget]="['connect']"
     [padding]="true"
 >
@@ -30,7 +30,7 @@
     </div>
     <div fxLayout="column" fxFlex="100">
         <sp-basic-header-title-component
-            title="Select Adapter"
+            [title]="'Select Adapter' | translate"
         ></sp-basic-header-title-component>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
             <div

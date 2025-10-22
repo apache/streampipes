@@ -19,10 +19,10 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import {
     DataExplorerDataConfig,
+    ExportProviderService,
     ExportProviderSettings,
 } from '@streampipes/platform-services';
 import { RetentionTimeConfig } from '@streampipes/platform-services';
-import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
 
 @Component({
     selector: 'sp-data-export',

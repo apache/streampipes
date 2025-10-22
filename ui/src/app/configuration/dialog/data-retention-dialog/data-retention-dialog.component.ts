@@ -24,7 +24,6 @@ import {
     ExportProviderSettings,
     RetentionTimeConfig,
 } from '@streampipes/platform-services';
-import { ExportProviderService } from 'projects/streampipes/platform-services/src/lib/apis/export-provider.service';
 
 @Component({
     selector: 'sp-data-retention-dialog',
