@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.model.nodename;
 
-import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
+import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
 
 public class ParsedNodeIdResolver implements NamingStrategyResolver {
 
   @Override
-  public String resolveName(BaseDataVariableTypeNode node,
+  public String resolveName(VariableNode node,
                             String fieldAppendix) {
     var nodeIdStr = node.getNodeId().toParseableString();
     var sanitizedNodeIdStr = removeSpecialChars(nodeIdStr);
