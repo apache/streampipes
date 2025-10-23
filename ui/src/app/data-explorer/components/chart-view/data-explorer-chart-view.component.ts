@@ -50,7 +50,7 @@ import { DataExplorerDetectChangesService } from '../../services/data-explorer-d
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../data-explorer-shared/services/resize-echarts.service';
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
@@ -94,6 +94,8 @@ export class DataExplorerChartViewComponent
 
     private assetSaveService = inject(AssetSaveService);
 
+    chartNotFound = false;
+
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
 
@@ -114,21 +116,36 @@ export class DataExplorerChartViewComponent
 
     loadDataView(dataViewId: string): void {
         this.dataViewLoaded = false;
-        this.dataViewService.getChart(dataViewId).subscribe(res => {
-            this.dataView = res;
-            this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
-            if (!this.dataView.timeSettings?.startTime) {
-                this.timeSettings = this.makeDefaultTimeSettings();
-            } else {
-                this.timeSelectionService.updateTimeSettings(
-                    this.timeSelectionService.defaultQuickTimeSelections,
-                    this.dataView.timeSettings as TimeSettings,
-                    new Date(),
+        this.dataViewService
+            .getChart(dataViewId)
+            .pipe(
+                catchError(() => {
+                    this.chartNotFound = true;
+                    return of(null);
+                }),
+            )
+            .subscribe(res => {
+                if (!res) {
+                    this.dataViewLoaded = true;
+                    return;
+                }
+                this.dataView = res;
+                this.originalDataView = JSON.parse(
+                    JSON.stringify(this.dataView),
                 );
-                this.timeSettings = this.dataView.timeSettings as TimeSettings;
-            }
-            this.afterDataViewLoaded();
-        });
+                if (!this.dataView.timeSettings?.startTime) {
+                    this.timeSettings = this.makeDefaultTimeSettings();
+                } else {
+                    this.timeSelectionService.updateTimeSettings(
+                        this.timeSelectionService.defaultQuickTimeSelections,
+                        this.dataView.timeSettings as TimeSettings,
+                        new Date(),
+                    );
+                    this.timeSettings = this.dataView
+                        .timeSettings as TimeSettings;
+                }
+                this.afterDataViewLoaded();
+            });
     }
 
     afterDataViewLoaded(): void {

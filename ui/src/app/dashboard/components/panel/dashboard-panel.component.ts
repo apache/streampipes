@@ -44,7 +44,7 @@ import {
     TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { SpDashboardRoutes } from '../../dashboard.routes';
 import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
 import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
@@ -66,6 +66,7 @@ export class DashboardPanelComponent
     originalDashboard: Dashboard;
     dashboard: Dashboard;
     widgets: DataExplorerWidgetModel[] = [];
+    dashboardNotFound = false;
 
     /**
      * This is the date range (start, end) to view the data and is set in data-explorer.ts
@@ -217,7 +218,16 @@ export class DashboardPanelComponent
     getDashboard(dashboardId: string, startTime: number, endTime: number) {
         this.dashboardService
             .getCompositeDashboard(dashboardId)
+            .pipe(
+                catchError(() => {
+                    this.dashboardNotFound = true;
+                    return of(null);
+                }),
+            )
             .subscribe(resp => {
+                if (!resp) {
+                    return;
+                }
                 if (resp.ok) {
                     const compositeDashboard = resp.body;
                     compositeDashboard.dashboard.widgets.forEach(w => {

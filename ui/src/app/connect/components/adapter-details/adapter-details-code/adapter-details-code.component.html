@@ -23,16 +23,22 @@
     [backLinkTarget]="['connect']"
 >
     <div fxLayout="column">
-        @if (adapter) {
-            <div fxLayout="column">
-                <sp-basic-header-title-component
-                    [title]="adapter.name + ' - ' + 'Data' | translate"
-                ></sp-basic-header-title-component>
-                <sp-adapter-code-panel
-                    [adapterDescription]="adapter"
-                    maxHeight="none"
-                ></sp-adapter-code-panel>
-            </div>
+        @if (adapterNotFound) {
+            <sp-warning-box>
+                {{ 'The desired adapter was not found!' | translate }}
+            </sp-warning-box>
+        } @else {
+            @if (adapter) {
+                <div fxLayout="column">
+                    <sp-basic-header-title-component
+                        [title]="adapter.name + ' - ' + 'Data' | translate"
+                    ></sp-basic-header-title-component>
+                    <sp-adapter-code-panel
+                        [adapterDescription]="adapter"
+                        maxHeight="none"
+                    ></sp-adapter-code-panel>
+                </div>
+            }
         }
     </div>
 </sp-basic-nav-tabs>

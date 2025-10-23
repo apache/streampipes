@@ -64,6 +64,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     metricsInfo: Record<string, SpMetricsEntry> = {};
     logInfo: Record<string, SpLogEntry[]> = {};
     previewModeActive = false;
+    pipelineNotFound = false;
 
     currentUserSub: Subscription;
     autoRefreshSub: Subscription;
@@ -101,7 +102,10 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
             this.pipelineCanvasService
                 .getPipelineCanvasMetadata(this.currentPipelineId)
                 .pipe(
-                    catchError(() => {
+                    catchError(error => {
+                        this.pipelineAvailable = false;
+                        this.pipelineNotFound = true;
+
                         return of(new PipelineCanvasMetadata());
                     }),
                 ),

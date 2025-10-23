@@ -33,12 +33,18 @@
             <i class="material-icons">refresh</i>
         </button>
     </div>
-    <div fxFlex="100" fxLayout="column" *ngIf="adapter">
-        <sp-simple-logs
-            [elementName]="adapter.name"
-            [logs]="adapterLogs"
-            fxFlex="100"
-            fxLayout="column"
-        ></sp-simple-logs>
-    </div>
+    @if (adapterNotFound) {
+        <sp-warning-box>
+            {{ 'The desired adapter was not found!' | translate }}
+        </sp-warning-box>
+    } @else {
+        <div fxFlex="100" fxLayout="column" *ngIf="adapter">
+            <sp-simple-logs
+                [elementName]="adapter.name"
+                [logs]="adapterLogs"
+                fxFlex="100"
+                fxLayout="column"
+            ></sp-simple-logs>
+        </div>
+    }
 </sp-basic-nav-tabs>
