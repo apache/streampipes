@@ -41,6 +41,7 @@ public class UserAccount extends Principal {
   protected boolean hideTutorial;
   protected boolean darkMode = false;
   protected boolean hasAcknowledged = false;
+  protected String language;
 
   protected long createdAtMillis;
   protected long lastLoginAtMillis;
@@ -209,5 +210,13 @@ public class UserAccount extends Principal {
 
   public void setLastLoginAtMillis(long lastLoginAtMillis) {
     this.lastLoginAtMillis = lastLoginAtMillis;
+  }
+
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
   }
 }

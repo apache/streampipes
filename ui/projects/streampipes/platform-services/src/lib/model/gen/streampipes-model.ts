@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-10-09 16:21:10.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-23 20:03:42.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -4209,6 +4210,7 @@ export class UserInfo {
     darkMode: boolean;
     displayName: string;
     hasAcknowledged: boolean;
+    language: string;
     roles: string[];
     showTutorial: boolean;
     username: string;
@@ -4221,6 +4223,7 @@ export class UserInfo {
         instance.darkMode = data.darkMode;
         instance.displayName = data.displayName;
         instance.hasAcknowledged = data.hasAcknowledged;
+        instance.language = data.language;
         instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         instance.showTutorial = data.showTutorial;
         instance.username = data.username;
