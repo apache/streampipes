@@ -62,14 +62,4 @@ public class DefaultCrudStorage<T extends Storable> extends AbstractDao<T> imple
     }
     delete(element.getElementId());
   }
-
-    @Override
-  public void deleteElementById(String id) {
-        try {
-      CouchDbStorageManager.INSTANCE.getGenericStorage().deleteAssetLinkToResource(id);
-    } catch (IOException e) {
-      LOG.error("Asset link for " + id + " could not be deleted.");
-    }
-    deleteElementById(id);
-  }
 }
