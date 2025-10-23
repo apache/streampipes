@@ -180,7 +180,7 @@ public class GenericStorageImpl implements IGenericStorage {
   }
 
     @Override
-  public void deleteAssetLinkToResource(String id) throws IOException{
+  public void deleteAssetLinkToResource(String id) throws IOException {
     
       var assets = this.findAll("asset-management");
       for (Map<String, Object>  asset :assets){
