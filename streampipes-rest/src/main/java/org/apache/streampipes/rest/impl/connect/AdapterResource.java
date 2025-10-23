@@ -224,17 +224,20 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
 
     IGenericStorage genericStorageAPI = StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
 
+      try {
+      genericStorageAPI.deleteAssetLinkToResource(elementId);
+      LOG.error("Delete Asset Link for " + elementId);
+    } catch (IOException e) {
+      LOG.error("Asset Link for element " + elementId + " could not be deleted.");
+    }
+
 
 
     if (pipelinesUsingAdapter.isEmpty()) {
       try {
         managementService.deleteAdapter(elementId);
-            try {
-      genericStorageAPI.deleteAssetLinkToResource(elementId);
-    } catch (IOException e) {
-      LOG.error("Asset Link for element " + elementId + " could not be deleted.");
-    }
-        return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
+          
+        return ok(Notifications.success("Adapter with id: " + elementId + " is dexleted."));
       } catch (AdapterException e) {
         LOG.error("Error while deleting adapter with id {}", elementId, e);
         return ok(Notifications.error(e.getMessage()));
