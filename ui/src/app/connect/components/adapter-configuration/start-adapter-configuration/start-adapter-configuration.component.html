@@ -18,7 +18,7 @@
 
 <div [formGroup]="startAdapterForm" fxLayout="column" fxFlex="100">
     <sp-basic-inner-panel
-        panelTitle="Adapter settings"
+        [panelTitle]="'Adapter settings' | translate"
         outerMargin="20px 0px 10px 0px"
     >
         <div fxFlex="100">
@@ -28,7 +28,7 @@
                         formControlName="adapterName"
                         matInput
                         id="input-AdapterName"
-                        placeholder="Adapter Name"
+                        [placeholder]="'Adapter Name' | translate"
                         data-cy="sp-adapter-name"
                         required
                         (blur)="triggerTutorialAdapterNameAssigned()"
@@ -83,7 +83,7 @@
                         matInput
                         id="input-AdapterDescription"
                         [ngModelOptions]="{ standalone: true }"
-                        placeholder="Adapter Description"
+                        [placeholder]="'Adapter Description' | translate"
                         [(ngModel)]="adapterDescription.description"
                     />
                 </mat-form-field>
@@ -93,8 +93,8 @@
 
     <div fxFlex="100" fxLayout="column">
         <sp-adapter-options-panel
-            optionTitle="Run adapter"
-            optionDescription="Start adapter now"
+            [optionTitle]="'Run adapter' | translate"
+            [optionDescription]="'Start adapter now' | translate"
             optionIcon="play_arrow"
             dataCy="start-adapter-now-checkbox"
             *ngIf="!isEditMode"
