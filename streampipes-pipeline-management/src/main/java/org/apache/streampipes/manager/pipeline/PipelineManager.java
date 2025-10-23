@@ -31,6 +31,10 @@ import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +44,9 @@ import java.util.stream.Stream;
 
 public class PipelineManager {
 
+
+
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineManager.class);
   /**
    * Returns all pipelines
    *
@@ -117,6 +124,11 @@ public class PipelineManager {
     var pipeline = getPipeline(pipelineId);
     if (Objects.nonNull(pipeline)) {
       getPipelineStorage().deleteElementById(pipelineId);
+      try {
+        StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().deleteAssetLinkToResource(pipelineId);
+      } catch (IOException e) {
+        LOG.error("Asset Link for element " + pipelineId + " could not be deleted.");
+      }
       new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
     }
   }
