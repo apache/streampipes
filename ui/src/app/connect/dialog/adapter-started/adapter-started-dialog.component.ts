@@ -124,7 +124,12 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     initAdapterUpdatePreflight(): void {
-        this.loadingText = `Checking migrations for adapter ${this.adapter.name}`;
+        this.loadingText = this.translateService.instant(
+            'Checking migrations for adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
         this.loading = true;
         this.adapterService
             .performPipelineMigrationPreflight(this.adapter)
@@ -379,7 +384,9 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     private startSaveInDataLakePipeline(adapterElementId: string) {
-        this.loadingText = 'Creating pipeline to persist data stream';
+        this.loadingText = this.translateService.instant(
+            'Creating pipeline to persist data stream',
+        );
         this.adapterService.getAdapter(adapterElementId).subscribe(adapter => {
             this.pipelineTemplateService
                 .findById('sp-internal-persist')
