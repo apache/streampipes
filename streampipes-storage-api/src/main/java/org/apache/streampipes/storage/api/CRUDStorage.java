@@ -23,8 +23,6 @@ import java.util.List;
 
 public interface CRUDStorage<T> {
 
-
-
   List<T> findAll();
 
   Tuple2<Boolean, String> persist(T element);

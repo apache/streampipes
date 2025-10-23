@@ -40,7 +40,6 @@ import java.util.stream.Stream;
 
 public class PipelineManager {
 
-
   /**
    * Returns all pipelines
    *
@@ -68,7 +67,7 @@ public class PipelineManager {
    * @return pipelineId of the stored pipeline
    */
   public static String addPipeline(String principalSid,
-                                   Pipeline pipeline) {
+      Pipeline pipeline) {
 
     String pipelineId = Objects.isNull(pipeline.getPipelineId())
         ? UUIDGenerator.generateUuid()
@@ -82,7 +81,6 @@ public class PipelineManager {
     return pipelineId;
   }
 
-
   /**
    * Starts all processing elements of the pipeline with the pipelineId
    *
@@ -95,15 +93,16 @@ public class PipelineManager {
   }
 
   /**
-   * Stops all  processing elements of the pipeline
+   * Stops all processing elements of the pipeline
    *
    * @param pipelineId of pipeline to be stopped
-   * @param forceStop  when it is true, the pipeline is stopped, even if not all processing element
+   * @param forceStop  when it is true, the pipeline is stopped, even if not all
+   *                   processing element
    *                   containers could be reached
    * @return pipeline status of the start operation
    */
   public static PipelineOperationStatus stopPipeline(String pipelineId,
-                                                     boolean forceStop) {
+      boolean forceStop) {
     Pipeline pipeline = getPipeline(pipelineId);
 
     return new PipelineExecutor(pipeline).stopPipeline(forceStop);
@@ -124,8 +123,7 @@ public class PipelineManager {
 
   public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop) {
     List<PipelineOperationStatus> status = new ArrayList<>();
-    List<Pipeline> pipelines =
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
+    List<Pipeline> pipelines = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
 
     pipelines.forEach(p -> {
       if (p.isRunning()) {
@@ -135,7 +133,6 @@ public class PipelineManager {
     return status;
   }
 
-
   /**
    * Checks for the pipelines that contain the processing element
    *
@@ -144,9 +141,8 @@ public class PipelineManager {
    */
   public static List<Pipeline> getPipelinesContainingElements(String elementId) {
     return PipelineManager.getAllPipelines().stream()
-        .filter(pipeline ->
-            mergePipelineElement(pipeline)
-                .anyMatch(el -> el.getElementId().equals(elementId)))
+        .filter(pipeline -> mergePipelineElement(pipeline)
+            .anyMatch(el -> el.getElementId().equals(elementId)))
         .collect(Collectors.toList());
   }
 
@@ -154,15 +150,13 @@ public class PipelineManager {
     return Stream.concat(
         Stream.concat(
             pipeline.getStreams().stream(),
-            pipeline.getSepas().stream()
-        ),
-        pipeline.getActions().stream()
-    );
+            pipeline.getSepas().stream()),
+        pipeline.getActions().stream());
   }
 
   private static void preparePipelineBasics(String username,
-                                            Pipeline pipeline,
-                                            String pipelineId) {
+      Pipeline pipeline,
+      String pipelineId) {
     pipeline.setPipelineId(pipelineId);
     pipeline.setRunning(false);
     pipeline.setCreatedByUser(username);
