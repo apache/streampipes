@@ -20,9 +20,15 @@ package org.apache.streampipes.storage.api;
 import org.apache.streampipes.model.Tuple2;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 import java.util.List;
 
 public interface CRUDStorage<T> {
+
+  Logger LOG = LoggerFactory.getLogger(CRUDStorage.class);
 
   List<T> findAll();
 
@@ -35,15 +41,14 @@ public interface CRUDStorage<T> {
   void deleteElement(T element);
 
   default void deleteElementById(String id) {
-        try {
+    try {
       StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().deleteAssetLinkToResource(id);
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    } catch (IOException e) {
+      LOG.error("Asset link for " + id + " could not be deleted.");
     }
     var element = getElementById(id);
     if (element != null) {
-      deleteElement(element); 
+      deleteElement(element);
     }
   }
 }
