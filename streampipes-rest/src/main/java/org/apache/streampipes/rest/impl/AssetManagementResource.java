@@ -112,21 +112,6 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
       throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
-
-    @PutMapping(
-      path = "/removeAssetLinkToResource/{resourceId}")
-  @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
-  public ResponseEntity<Void>  deleteAssetLinkToResource(@PathVariable("resourceId") String assetId) {
-    try {
-       getGenericStorage().deleteAssetLinkToResource(assetId);
-      return ok();
-    } catch (IOException e) {
-      LOG.error("Could not connect to storage", e);
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
-    }
-  }
-
-
   private IGenericStorage getGenericStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
   }
