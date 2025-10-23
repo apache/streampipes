@@ -47,6 +47,12 @@ export class AssetManagementService {
     deleteAsset(assetId: string, rev: string): Observable<any> {
         return this.http.delete(`${this.assetBasePath}/${assetId}/${rev}`);
     }
+    deleteResourceAssetLink(resourceId: string): Observable<any> {
+        return this.http.put(
+            `${this.assetBasePath}/removeAssetLinkToResource/${resourceId}`,
+            null,
+        );
+    }
 
     private get assetBasePath() {
         return this.platformServicesCommons.apiBasePath + '/assets';

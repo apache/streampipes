@@ -38,6 +38,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
+import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -60,6 +61,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -220,9 +222,18 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     IPipelineStorage pipelineStorageAPI = StorageDispatcher.INSTANCE.getNoSqlStore()
                                                                     .getPipelineStorageAPI();
 
+    IGenericStorage genericStorageAPI = StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
+
+
+
     if (pipelinesUsingAdapter.isEmpty()) {
       try {
         managementService.deleteAdapter(elementId);
+            try {
+      genericStorageAPI.deleteAssetLinkToResource(elementId);
+    } catch (IOException e) {
+      LOG.error("Asset Link for element " + elementId + " could not be deleted.");
+    }
         return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
       } catch (AdapterException e) {
         LOG.error("Error while deleting adapter with id {}", elementId, e);
@@ -273,8 +284,19 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
           for (String pipelineId : pipelinesUsingAdapter) {
             PipelineManager.stopPipeline(pipelineId, false);
             PipelineManager.deletePipeline(pipelineId);
+                try {
+      genericStorageAPI.deleteAssetLinkToResource(pipelineId);
+    } catch (IOException e) {
+      LOG.error("Asset Link for element " + pipelineId + " could not be deleted.");
+    }
           }
           managementService.deleteAdapter(elementId);
+
+              try {
+      genericStorageAPI.deleteAssetLinkToResource(elementId);
+    } catch (IOException e) {
+      LOG.error("Asset Link for element " + elementId + " could not be deleted.");
+    }
           return ok(Notifications.success("Adapter with id: " + elementId
                                               + " and all pipelines using the adapter are deleted."));
         } catch (Exception e) {
