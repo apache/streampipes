@@ -16,12 +16,16 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.MemoryManager;
+package org.apache.streampipes.extensions.api.memorymanager;
 
-import org.apache.streampipes.commons.prometheus.spMemoryManager.SpMemoryManagerStats;
+import org.apache.streampipes.commons.prometheus.spmemorymanager.SpMemoryManagerStats;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -74,18 +78,18 @@ public enum SpMemoryManager {
       synchronized (SpMemoryManager.class) {
         if (!schedulerInitialized) {
           scheduler = Executors.newScheduledThreadPool(1);
-          scheduler.scheduleAtFixedRate(this::ScheduledTask, SCHEDULER_INITIAL_DELAY_SECONDS, SCHEDULER_PERIOD_SECONDS, java.util.concurrent.TimeUnit.SECONDS);
+          scheduler.scheduleAtFixedRate(this::scheduledTask, SCHEDULER_INITIAL_DELAY_SECONDS, SCHEDULER_PERIOD_SECONDS, java.util.concurrent.TimeUnit.SECONDS);
           schedulerInitialized = true;
         }
       }
     }
   }
 
-  public void ScheduledTask() {
+  public void scheduledTask() {
     this.stats = new SpMemoryManagerStats();
     stats.setAllocationRate(this.getMEMORY_ALLOCATION_RATE());
     stats.setMemoryUsedBytes(this.getMEMORY_USED_BYTES());
-    stats.updateAllMetrics(DEFAULT_INITIAL_MEMORY);
+    stats.updateAllMetrics();
     
     // Check memory usage thresholds
     checkMemoryThresholds();
@@ -112,8 +116,8 @@ public enum SpMemoryManager {
     }
     
     // Update warning state
-    memoryWarningActive = memoryUsageRatio >= MEMORY_WARNING_THRESHOLD && 
-                         memoryUsageRatio < MEMORY_USAGE_THRESHOLD;
+    memoryWarningActive = memoryUsageRatio >= MEMORY_WARNING_THRESHOLD
+                          && memoryUsageRatio < MEMORY_USAGE_THRESHOLD;
   }
 
   /**
@@ -132,8 +136,8 @@ public enum SpMemoryManager {
     
     // Check if memory is blocked due to threshold
     if (memoryBlocked) {
-      LOG.warn("Memory allocation blocked due to high memory usage threshold. " +
-               "Current usage: {}%", getMemoryUsagePercentage());
+      LOG.warn("Memory allocation blocked due to high memory usage threshold. "
+              + "Current usage: {}%", getMemoryUsagePercentage());
       return;
     }
 
@@ -192,6 +196,42 @@ public enum SpMemoryManager {
 
       // Notify all waiting threads
       notifyAll();
+    }
+  }
+
+  public void allocateForMap(Map<?, ?> map) {
+    if (map == null || map.isEmpty()) {
+      return;
+    }
+    long sizeInBytes = getMapSizeInBytes(map);
+    if (sizeInBytes < 0) {
+      LOG.warn("Could not determine size of map for memory allocation");
+      return;
+    }
+    allocate(sizeInBytes);
+  }
+
+  public void freeForMap(Map<?, ?> map) {
+    if (map == null || map.isEmpty()) {
+      return;
+    }
+    long sizeInBytes = getMapSizeInBytes(map);
+    if (sizeInBytes < 0) {
+      LOG.warn("Could not determine size of map for memory deallocation");
+      return;
+    }
+    free(sizeInBytes);
+  }
+
+  public static long getMapSizeInBytes(Map<?, ?> map) {
+    try {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ObjectOutputStream oos = new ObjectOutputStream(baos);
+      oos.writeObject(map);
+      oos.close();
+      return baos.size();
+    } catch (Exception e) {
+      return -1;
     }
   }
 

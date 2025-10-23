@@ -55,7 +55,7 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
             try {
                 eventProcessor.onEvent(bs.getData());
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
             }
         }
 

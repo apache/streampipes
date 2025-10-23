@@ -20,7 +20,7 @@ package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.extensions.api.Limiter.SpRateLimiter;
+import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;

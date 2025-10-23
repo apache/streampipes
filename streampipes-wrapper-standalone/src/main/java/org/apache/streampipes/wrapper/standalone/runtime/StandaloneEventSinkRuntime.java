@@ -19,8 +19,8 @@
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.Limiter.SpRateLimiter;
-import org.apache.streampipes.extensions.api.MemoryManager.SpMemoryManager;
+import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
+import org.apache.streampipes.extensions.api.memorymanager.SpMemoryManager;
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -53,8 +53,8 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
   @Override
   public void process(Map<String, Object> rawEvent, String sourceInfo) {
     try {
-      SpRateLimiter.INSTANCE.limit();
-      SpMemoryManager.INSTANCE.allocate(rawEvent.size());
+      SpRateLimiter.INSTANCE.limitForMap(rawEvent);
+      SpMemoryManager.INSTANCE.allocateForMap(rawEvent);
       monitoringManager.increaseInCounter(instanceId, sourceInfo, System.currentTimeMillis());
       pipelineElement.onEvent(internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo));
     } catch (RuntimeException e) {
@@ -63,7 +63,7 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
     } catch (InterruptedException e) {
         throw new SpRuntimeException(e);
     } finally {
-        SpMemoryManager.INSTANCE.free(rawEvent.size());
+        SpMemoryManager.INSTANCE.freeForMap(rawEvent);
     }
   }
 

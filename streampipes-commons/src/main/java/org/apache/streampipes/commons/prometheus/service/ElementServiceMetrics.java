@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.commons.prometheus.service;
 
-import io.prometheus.client.Gauge;
 import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
+
+import io.prometheus.client.Gauge;
 
 /**
  * Service Metrics Manager

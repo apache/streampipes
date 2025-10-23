@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.commons.prometheus.spRateLimiter;
+package org.apache.streampipes.commons.prometheus.spratelimiter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -19,8 +19,8 @@
 package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.Limiter.SpRateLimiter;
-import org.apache.streampipes.extensions.api.MemoryManager.SpMemoryManager;
+import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
+import org.apache.streampipes.extensions.api.memorymanager.SpMemoryManager;
 import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
 import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
 import org.apache.streampipes.messaging.EventConsumer;
@@ -45,7 +45,7 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
 
   @Override
   public void onEvent(byte[] event) throws InterruptedException {
-    SpRateLimiter.INSTANCE.limit();
+    SpRateLimiter.INSTANCE.limit(event.length);
     SpMemoryManager.INSTANCE.allocate(event.length);
     if (singletonEngine) {
       send(consumers.get(consumers.keySet().toArray()[0]), event);

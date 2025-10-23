@@ -16,10 +16,11 @@
  *
  */
 
-package org.apache.streampipes.commons.prometheus.spRateLimiter;
+package org.apache.streampipes.commons.prometheus.spratelimiter;
+
+import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
 
 import io.prometheus.client.Gauge;
-import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
 
 /**
  * Rate Limiter Metrics Manager
@@ -37,10 +38,7 @@ public class SpRateLimiterMetrics {
   );
 
   public static void updateCoreMetrics(double queueSize, double averageWaitTime) {
-    double safeQueueSize = Math.max(0.0, Math.min(queueSize, 10000.0));
-    double safeWaitTime = Math.max(0.0, Math.min(averageWaitTime, 3600.0));
-
-    RATE_LIMITER_QUEUE_SIZE.set(safeQueueSize);
-    RATE_LIMITER_AVERAGE_WAIT_TIME.set(safeWaitTime);
+    RATE_LIMITER_QUEUE_SIZE.set(queueSize);
+    RATE_LIMITER_AVERAGE_WAIT_TIME.set(averageWaitTime);
   }
 }

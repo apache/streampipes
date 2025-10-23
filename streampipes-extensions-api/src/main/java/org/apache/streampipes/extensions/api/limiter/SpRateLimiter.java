@@ -16,16 +16,21 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.Limiter;
+package org.apache.streampipes.extensions.api.limiter;
+
+import org.apache.streampipes.commons.prometheus.spratelimiter.SpRateLimiterStats;
 
 import com.google.common.util.concurrent.RateLimiter;
-import org.apache.streampipes.commons.prometheus.spRateLimiter.SpRateLimiterStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A singleton rate limiter implementation for StreamPipes extensions.
@@ -49,16 +54,17 @@ public enum SpRateLimiter {
   private static final int STATS_RESET_FACTOR = 999;
   private static final int STATS_RESET_DIVISOR = 1000;
   private static final int SHUTDOWN_TIMEOUT_SECONDS = 5;
+  private static final long TIMEOUT_MS = 1000;
+  private static final int PERMITS_PER_REQUEST = 1;
 
   private RateLimiter rateLimiter;
 
-  private double rateLimiterQueueSize = 0.0;
   private double rateLimiterAverageWaitTime = 0.0;
   
   private long totalWaitTime = 0L;
-  private int waitTimeCount = 0;
+  private AtomicInteger waitTimeCount = new AtomicInteger(0);
   
-  private volatile int currentQueueSize = 0;
+  private AtomicInteger currentQueueSize = new AtomicInteger(0);
 
   private SpRateLimiterStats stats;
   private static volatile boolean schedulerInitialized = false;
@@ -91,17 +97,17 @@ public enum SpRateLimiter {
       synchronized (SpRateLimiter.class) {
         if (!schedulerInitialized) {
           scheduler = Executors.newSingleThreadScheduledExecutor();
-          scheduler.scheduleAtFixedRate(this::ScheduledTask, SCHEDULER_INITIAL_DELAY_SECONDS, SCHEDULER_PERIOD_SECONDS, TimeUnit.SECONDS);
+          scheduler.scheduleAtFixedRate(this::scheduledTask, SCHEDULER_INITIAL_DELAY_SECONDS, SCHEDULER_PERIOD_SECONDS, TimeUnit.SECONDS);
           schedulerInitialized = true;
         }
       }
     }
   }
 
-  public void ScheduledTask() {
+  public void scheduledTask() {
     this.stats = new SpRateLimiterStats();
     stats.setAverageWaitTime(this.rateLimiterAverageWaitTime);
-    stats.setQueueSize(this.rateLimiterQueueSize);
+    stats.setQueueSize(this.currentQueueSize.get());
     stats.updateAllMetrics();
   }
 
@@ -125,42 +131,84 @@ public enum SpRateLimiter {
   }
 
   /**
-   * Acquires a permit from the rate limiter, blocking if necessary.
-   * If the rate limiter is not initialized, logs a warning and returns immediately.
-   * If the rate is zero or negative, logs a warning and sleeps for 1 second.
+   * Acquires a permit from the rate limiter for processing data, with timeout.
+   * Each request consumes exactly 1 permit regardless of data size.
+   * This provides simple and fair rate limiting based on request count.
    *
+   * @param bytes The number of bytes to process (for logging purposes only)
+   * @return true if permit was acquired successfully, false if timeout occurred
    * @throws InterruptedException if the current thread is interrupted while waiting
    */
-  public void limit() throws InterruptedException {
+  public boolean limit(long bytes) throws InterruptedException {
     if (this.rateLimiter == null) {
       LOG.warn("RateLimiter has not been initialized. Please call createRateLimiter() first.");
-      return;
+      return false;
     }
 
     long startTime = System.currentTimeMillis();
     
     synchronized (this) {
-      currentQueueSize++;
-      rateLimiterQueueSize = currentQueueSize;
+      currentQueueSize.incrementAndGet();
     }
     
     try {
       if (rateLimiter.getRate() <= 0) {
         LOG.warn("RateLimiter is set to zero or negative rate. No permits will be acquired.");
-          updateAverageWaitTime(ZERO_RATE_WAIT_TIME_MS);
-        Thread.sleep(ZERO_RATE_WAIT_TIME_MS);
-      } else {
-        this.rateLimiter.acquire();
-        long waitTime = System.currentTimeMillis() - startTime;
+        updateAverageWaitTime(ZERO_RATE_WAIT_TIME_MS);
+        try {
+          Thread.sleep(ZERO_RATE_WAIT_TIME_MS);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          return false;
+        }
+        return false;
+        } else {
+          // Each request consumes exactly 1 permit regardless of data size
+          long timeoutMs = TIMEOUT_MS;
+          boolean acquired = rateLimiter.tryAcquire(PERMITS_PER_REQUEST, timeoutMs, TimeUnit.MILLISECONDS);
         
+        long waitTime = System.currentTimeMillis() - startTime;
         updateAverageWaitTime(waitTime);
+        
+        if (!acquired) {
+          LOG.warn("Failed to acquire permit for {} bytes within {} ms timeout (rate: {} requests/sec)", 
+                   bytes, timeoutMs, rateLimiter.getRate());
+        } else {
+          LOG.debug("Successfully acquired permit for {} bytes in {} ms (rate: {} requests/sec)", 
+                   bytes, waitTime, rateLimiter.getRate());
+        }
+        
+        return acquired;
       }
     } finally {
       synchronized (this) {
-        currentQueueSize = Math.max(0, currentQueueSize - 1);
-        rateLimiterQueueSize = currentQueueSize;
-        
+        currentQueueSize.updateAndGet(current -> Math.max(0, current - 1));
       }
+    }
+  }
+
+  public void limitForMap(Map<?, ?> map) throws InterruptedException {
+    if (map == null || map.isEmpty()) {
+      return;
+    }
+    long mapDataSize = getMapSizeInBytes(map);
+    if (mapDataSize < 0) {
+      LOG.warn("Could not determine map size for rate limiting.");
+      return;
+    }
+    limit(mapDataSize);
+  }
+
+  public static long getMapSizeInBytes(Map<?, ?> map) {
+    try {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ObjectOutputStream oos = new ObjectOutputStream(baos);
+      oos.writeObject(map);
+      oos.close();
+      LOG.info("Calculated map size: {} bytes", baos.size());
+      return baos.size();
+    } catch (Exception e) {
+      return -1;
     }
   }
 
@@ -218,16 +266,7 @@ public enum SpRateLimiter {
    * @return The current queue size
    */
   public double getRATE_LIMITER_QUEUE_SIZE() {
-    return rateLimiterQueueSize;
-  }
-
-  /**
-   * Sets the rate limiter queue size metric.
-   *
-   * @param queueSize The queue size to set
-   */
-  public void setRATE_LIMITER_QUEUE_SIZE(double queueSize) {
-    this.rateLimiterQueueSize = queueSize;
+    return currentQueueSize.get();
   }
 
   /**
@@ -263,13 +302,13 @@ public enum SpRateLimiter {
 
   private void updateAverageWaitTime(long waitTimeMs) {
     totalWaitTime += waitTimeMs;
-    waitTimeCount++;
+    int currentCount = waitTimeCount.incrementAndGet();
     
-    rateLimiterAverageWaitTime = (double) totalWaitTime / waitTimeCount / 1000.0;
+    rateLimiterAverageWaitTime = (double) totalWaitTime / currentCount / 1000.0;
     
-    if (waitTimeCount > STATS_RESET_THRESHOLD) {
+    if (currentCount > STATS_RESET_THRESHOLD) {
       totalWaitTime = totalWaitTime * STATS_RESET_FACTOR / STATS_RESET_DIVISOR;
-      waitTimeCount = STATS_RESET_FACTOR;
+      waitTimeCount.set(STATS_RESET_FACTOR);
     }
   }
 
@@ -278,12 +317,11 @@ public enum SpRateLimiter {
   }
   
   public int getCurrentQueueSize() {
-    return currentQueueSize;
+    return currentQueueSize.get();
   }
   
   public void resetQueueSize() {
-    currentQueueSize = 0;
-    rateLimiterQueueSize = 0.0;
+    currentQueueSize.set(0);
     LOG.info("Queue size has been reset");
   }
 

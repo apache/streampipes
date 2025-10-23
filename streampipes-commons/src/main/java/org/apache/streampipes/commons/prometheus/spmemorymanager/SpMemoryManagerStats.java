@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.commons.prometheus.spMemoryManager;
+package org.apache.streampipes.commons.prometheus.spmemorymanager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +40,8 @@ public class SpMemoryManagerStats {
   /**
    * Update all metrics with custom total memory
    */
-  public void updateAllMetrics(double totalMemory) {
-    SpMemoryManagerMetrics.updateCoreMetrics(memoryUsedBytes, totalMemory, allocationRate);
+  public void updateAllMetrics() {
+    SpMemoryManagerMetrics.updateCoreMetrics(memoryUsedBytes, allocationRate);
   }
 
   public double getMemoryUsedBytes() {

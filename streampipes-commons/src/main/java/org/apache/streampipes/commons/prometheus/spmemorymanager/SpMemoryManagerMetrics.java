@@ -16,10 +16,11 @@
  *
  */
 
-package org.apache.streampipes.commons.prometheus.spMemoryManager;
+package org.apache.streampipes.commons.prometheus.spmemorymanager;
+
+import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
 
 import io.prometheus.client.Gauge;
-import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
 
 /**
  * Memory Manager Metrics Manager
@@ -36,11 +37,8 @@ public class SpMemoryManagerMetrics {
         "Memory allocation rate in bytes per second"
   );
 
-  public static void updateCoreMetrics(double usedMemory, double totalMemory, double allocationRate) {
-    double safeUsedMemory = Math.max(0.0, Math.min(usedMemory, totalMemory));
-    double safeAllocationRate = Math.max(0.0, Math.min(allocationRate, 1e12));
-
-    MEMORY_USED_BYTES.set(safeUsedMemory);
-    MEMORY_ALLOCATION_RATE.set(safeAllocationRate);
+  public static void updateCoreMetrics(double memoryUsedBytes, double allocationRate) {
+    MEMORY_USED_BYTES.set(memoryUsedBytes);
+    MEMORY_ALLOCATION_RATE.set(allocationRate);
   }
 }
