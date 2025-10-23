@@ -18,11 +18,9 @@
 
 package org.apache.streampipes.resource.management;
 
-import java.io.IOException;
-
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+
 
 public class DataExplorerWidgetResourceManager extends AbstractCRUDResourceManager<DataExplorerWidgetModel> {
 
@@ -38,12 +36,6 @@ public class DataExplorerWidgetResourceManager extends AbstractCRUDResourceManag
   public void delete(String elementId) {
     deleteDataViewsFromDashboard(elementId);
     super.delete(elementId);
-    try {
-      StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().deleteAssetLinkToResource(elementId);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
   }
 
   private void deleteDataViewsFromDashboard(String widgetElementId) {
