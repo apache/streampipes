@@ -47,8 +47,7 @@ export class StreampipesComponent implements OnInit {
     ngOnInit(): void {
         this.currentUserService.darkMode$.subscribe(dm => (this.darkMode = dm));
         this.currentUserService.user$.subscribe(user => {
-            console.log(user);
-            if (user.language !== 'browser') {
+            if (user.language !== null && user.language !== 'browser') {
                 this.translate.use(user.language);
             }
         });

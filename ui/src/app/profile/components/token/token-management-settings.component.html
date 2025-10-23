@@ -53,7 +53,8 @@
                         "
                     >
                         {{
-                            'Token name must be at least 3 characters long and contain only alphanumeric characters, hyphens, or underscores.'
+                            'Token name must be at least 3 characters long and contain only alphanumeric ' +
+                            'characters, hyphens, or underscores.'
                                 | translate
                         }}
                     </mat-error>
@@ -111,7 +112,7 @@
                     {{ 'Existing API keys' | translate }}
                 </div>
                 <div *ngIf="userData.userApiTokens.length === 0">
-                    ({{ 'no keys available | translate' }})
+                    ({{ 'no keys available' | translate }})
                 </div>
                 <table
                     mat-table

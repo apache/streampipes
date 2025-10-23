@@ -25,10 +25,13 @@
     >
         <sp-split-section
             [title]="'Profile' | translate"
-            [subtitle]="'Manage your basic profile settings here.' | translate"
+            [subtitle]="'Manage your basic profile settings here' | translate"
         >
             <sp-warning-box *ngIf="isExternalUser">
-                {{ 'Settings for externally-managed users can't be changed.' | translate }}
+                {{
+                    'Settings for externally-managed users cannot be changed'
+                        | translate
+                }}
             </sp-warning-box>
             <div fxLayout="row" fxLayoutAlign="start center">
                 <span>{{ userData.username }}</span>
