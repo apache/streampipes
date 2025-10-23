@@ -16,31 +16,29 @@
  *
  */
 
-import { TranslateService } from '@ngx-translate/core';
 import { SpNavigationItem } from '@streampipes/shared-ui';
 
 export class SpAdapterDetailsTabs {
-    constructor(private translateService: TranslateService) {}
     public getTabs(elementId: string): SpNavigationItem[] {
         return [
             {
                 itemId: 'data',
-                itemTitle: this.translateService.instant('Data'),
+                itemTitle: 'Data',
                 itemLink: ['connect', 'details', elementId, 'data'],
             },
             {
                 itemId: 'metrics',
-                itemTitle: this.translateService.instant('Metrics'),
+                itemTitle: 'Metrics',
                 itemLink: ['connect', 'details', elementId, 'metrics'],
             },
             {
                 itemId: 'logs',
-                itemTitle: this.translateService.instant('Logs'),
+                itemTitle: 'Logs',
                 itemLink: ['connect', 'details', elementId, 'logs'],
             },
             {
                 itemId: 'code',
-                itemTitle: this.translateService.instant('Code'),
+                itemTitle: 'Code',
                 itemLink: ['connect', 'details', elementId, 'code'],
             },
         ];
