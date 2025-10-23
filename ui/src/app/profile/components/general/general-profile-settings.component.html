@@ -55,7 +55,7 @@
                 />
             </mat-form-field>
             <mat-form-field fxFlex color="accent" class="mt-10 mb-10">
-                <mat-label>Language</mat-label>
+                <mat-label>{{ 'Language' | translate }}</mat-label>
                 <mat-select [(ngModel)]="selectedLanguage">
                     <mat-option
                         *ngFor="let lang of availableLanguages"
