@@ -234,8 +234,9 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     startAdapter(adapterElementId: string, showPreview = false) {
-        const successMessage =
-            'Your new data stream is now available in the pipeline editor.';
+        const successMessage = this.translateService.instant(
+            'Your new data stream is now available in the pipeline editor.',
+        );
         if (this.startAdapterNow) {
             this.adapterElementId = adapterElementId;
             this.loadingText = this.translateService.instant(
