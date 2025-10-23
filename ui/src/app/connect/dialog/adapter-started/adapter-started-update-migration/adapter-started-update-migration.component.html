@@ -17,10 +17,16 @@
   -->
 
 <div fxLayout="column" fxLayoutAlign="start center">
-    <h4>
+    @if (adapterPipelineUpdateInfos.length > 1) {
+        <h4>
+            {{ 'This adapter is used by' | translate }}
+            {{ adapterPipelineUpdateInfos.length }}
+            {{ 'pipeline' | translate }}.
+        </h4>
+    } @else {
         {{ 'This adapter is used by' | translate }}
-        {{ adapterPipelineUpdateInfos.length }} {{ 'pipelines' | translate }}.
-    </h4>
+        {{ adapterPipelineUpdateInfos.length }} {{ 'pipelines' | translate }}. ‚
+    }
     <div class="migration-infos">
         <div *ngFor="let updateInfo of adapterPipelineUpdateInfos">
             <div *ngIf="updateInfo.canAutoMigrate" fxLayoutAlign="start center">

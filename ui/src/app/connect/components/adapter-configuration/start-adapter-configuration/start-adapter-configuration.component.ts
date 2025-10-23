@@ -178,7 +178,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
         this.checkAndApplyStreamRules();
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
-            title: 'Adapter edit',
+            title: this.translateService.instant('Adapter edit'),
             width: '70vw',
             data: {
                 adapter: this.adapterDescription,
