@@ -18,6 +18,7 @@
 package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.Tuple2;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
@@ -34,9 +35,15 @@ public interface CRUDStorage<T> {
   void deleteElement(T element);
 
   default void deleteElementById(String id) {
+        try {
+      StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().deleteAssetLinkToResource(id);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     var element = getElementById(id);
     if (element != null) {
-      deleteElement(element);
+      deleteElement(element); 
     }
   }
 }
