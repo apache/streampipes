@@ -18,7 +18,7 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <form [formGroup]="exportForm">
-            <mat-form-field class="sp-select-field">
+            <mat-form-field class="sp-select-field w-100">
                 <mat-label>{{ 'Select Provider' | translate }}</mat-label>
                 <mat-select
                     formControlName="providerType"
@@ -52,7 +52,7 @@
                         />
                     </mat-form-field>
 
-                    <mat-form-field class="w-100">
+                    <mat-form-field class="w-100 mb-10">
                         <mat-label>{{ 'Endpoint' | translate }}</mat-label>
                         <input
                             matInput
@@ -92,30 +92,25 @@
             }
 
             <mat-divider></mat-divider>
-
-            <div class="sp-dialog-actions actions-align-right">
-                <button
-                    mat-button
-                    mat-flat-button
-                    class="mat-basic"
-                    type="button"
-                    (click)="addData()"
-                    [disabled]="exportForm.invalid"
-                >
-                    Save
-                </button>
-
-                <button
-                    mat-button
-                    mat-flat-button
-                    class="mat-basic"
-                    style="margin-left: 12px"
-                    type="button"
-                    (click)="close(false)"
-                >
-                    Close
-                </button>
-            </div>
         </form>
+    </div>
+    <div class="sp-dialog-actions actions-align-right" fxLayoutGap="10px">
+        <button
+            mat-flat-button
+            type="button"
+            (click)="addData()"
+            [disabled]="exportForm.invalid"
+        >
+            {{ 'Save' | translate }}
+        </button>
+
+        <button
+            mat-flat-button
+            class="mat-basic"
+            type="button"
+            (click)="close(false)"
+        >
+            {{ 'Close' | translate }}
+        </button>
     </div>
 </div>
