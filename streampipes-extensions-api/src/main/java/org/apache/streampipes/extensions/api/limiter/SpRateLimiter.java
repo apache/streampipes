@@ -205,7 +205,6 @@ public enum SpRateLimiter {
       ObjectOutputStream oos = new ObjectOutputStream(baos);
       oos.writeObject(map);
       oos.close();
-      LOG.info("Calculated map size: {} bytes", baos.size());
       return baos.size();
     } catch (Exception e) {
       return -1;
