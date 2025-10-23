@@ -35,7 +35,7 @@ public class AddDefaultExportProviderMigration implements Migration {
 
     try {
 
-      boolean shouldExecute = storage.getAll().get(0).getExportProviderSettings() == null  || storage.getAll().get(0).getExportProviderSettings().isEmpty();
+      boolean shouldExecute = storage.get().getExportProviderSettings() == null  || storage.get().getExportProviderSettings().isEmpty();
 
       return shouldExecute;
     } catch (Exception e) {
@@ -47,7 +47,7 @@ public class AddDefaultExportProviderMigration implements Migration {
   @Override
   public void executeMigration() throws IOException {
 
-    var coreCfg = storage.getAll().get(0);
+    var coreCfg = storage.get();
 
     coreCfg.setExportProviderSettings(new DefaultExportProviderConfig().make());
 
