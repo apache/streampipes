@@ -38,7 +38,7 @@ import {
 import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
-import { catchError, filter, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
 import { HttpContext } from '@angular/common/http';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
@@ -103,15 +103,32 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
                     if (error.status === 404) {
                         this.pipelineNotFound = true;
                     }
-
                     return of(null);
                 }),
             ),
-        ]).subscribe(res => {
-            this.pipeline = res[0];
-            this.pipelineCanvasMetadata = new PipelineCanvasMetadata();
-            this.pipelineAvailable = true;
-            this.onPipelineAvailable();
+            this.pipelineCanvasService
+                .getPipelineCanvasMetadata(this.currentPipelineId)
+                .pipe(
+                    map(response => {
+                        if (response === null) {
+                            this.pipelineAvailable = false;
+                            return new PipelineCanvasMetadata();
+                        }
+                        return response;
+                    }),
+                    catchError(error => {
+                        this.pipelineAvailable = false;
+                        return of(new PipelineCanvasMetadata());
+                    }),
+                ),
+        ]).subscribe(([pipeline, metadata]) => {
+            this.pipeline = pipeline;
+            this.pipelineCanvasMetadata = metadata;
+
+            if (pipeline && !this.pipelineNotFound) {
+                this.pipelineAvailable = true;
+                this.onPipelineAvailable();
+            }
         });
     }
 
