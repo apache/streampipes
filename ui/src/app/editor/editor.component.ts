@@ -112,7 +112,6 @@ export class EditorComponent implements OnInit {
             .getPipelineCanvasMetadata(pipelineId)
             .pipe(
                 catchError(() => {
-                    console.log('Catch Error ', pipelineId);
                     this.handleCanvasMetadataResponse(undefined);
                     return of(undefined);
                 }),
