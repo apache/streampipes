@@ -32,7 +32,7 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of, zip } from 'rxjs';
 import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { EditorService } from './services/editor.service';
 import { JsplumbService } from './services/jsplumb.service';
 
@@ -109,24 +109,40 @@ export class EditorComponent implements OnInit {
     loadPipelineToModify(pipelineId: string) {
         const pipelineReq = this.pipelineService.getPipelineById(pipelineId);
 
-        forkJoin([pipelineReq]).subscribe(([pipelineResp]) => {
-            if (pipelineResp) {
-                this.originalPipeline = pipelineResp;
-                this.breadcrumbService.updateBreadcrumb([
-                    SpPipelineRoutes.BASE,
-                    { label: this.originalPipeline.name },
-                    { label: 'Modify' },
-                ]);
-                this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
-                    this.originalPipeline,
-                    false,
-                );
-            }
+        const canvasMetadataReq = this.pipelineCanvasMetadataService
+            .getPipelineCanvasMetadata(pipelineId)
+            .pipe(
+                map(response => {
+                    if (response === null) {
+                        this.handleCanvasMetadataResponse(undefined);
+                        return undefined;
+                    }
+                    return response;
+                }),
+                catchError(() => {
+                    this.handleCanvasMetadataResponse(undefined);
+                    return of(undefined);
+                }),
+            );
 
-            this.pipelineCanvasMetadataAvailable = false;
-            this.pipelineCanvasMetadata = new PipelineCanvasMetadata();
-            this.allMetadataLoaded = true;
-        });
+        forkJoin([pipelineReq, canvasMetadataReq]).subscribe(
+            ([pipelineResp, canvasResp]) => {
+                if (pipelineResp) {
+                    this.originalPipeline = pipelineResp;
+                    this.breadcrumbService.updateBreadcrumb([
+                        SpPipelineRoutes.BASE,
+                        { label: this.originalPipeline.name },
+                        { label: 'Modify' },
+                    ]);
+                    this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
+                        this.originalPipeline,
+                        false,
+                    );
+                }
+                this.handleCanvasMetadataResponse(canvasResp);
+                this.allMetadataLoaded = true;
+            },
+        );
     }
 
     handleCanvasMetadataResponse(canvasMetadata: PipelineCanvasMetadata) {
