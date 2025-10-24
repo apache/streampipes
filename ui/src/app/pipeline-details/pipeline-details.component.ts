@@ -98,16 +98,22 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
 
     loadPipeline(): void {
         forkJoin([
-            this.pipelineService.getPipelineById(this.currentPipelineId),
+            this.pipelineService.getPipelineById(this.currentPipelineId).pipe(
+                catchError(error => {
+                    if (error.status === 404) {
+                        this.pipelineNotFound = true;
+                    }
+
+                    return of(null);
+                }),
+            ),
             this.pipelineCanvasService
                 .getPipelineCanvasMetadata(this.currentPipelineId)
                 .pipe(
                     catchError(error => {
+                        console.log(this.currentPipelineId);
                         console.log(error);
                         this.pipelineAvailable = false;
-
-                        this.pipelineNotFound = true;
-
                         return of(new PipelineCanvasMetadata());
                     }),
                 ),
@@ -116,7 +122,6 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
             this.pipelineCanvasMetadata = res[1];
             this.pipelineAvailable = true;
             this.onPipelineAvailable();
-            this.pipelineNotFound = false;
         });
     }
 
