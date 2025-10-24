@@ -107,19 +107,9 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
                     return of(null);
                 }),
             ),
-            this.pipelineCanvasService
-                .getPipelineCanvasMetadata(this.currentPipelineId)
-                .pipe(
-                    catchError(error => {
-                        console.log(this.currentPipelineId);
-                        console.log(error);
-                        this.pipelineAvailable = false;
-                        return of(new PipelineCanvasMetadata());
-                    }),
-                ),
         ]).subscribe(res => {
             this.pipeline = res[0];
-            this.pipelineCanvasMetadata = res[1];
+            this.pipelineCanvasMetadata = new PipelineCanvasMetadata();
             this.pipelineAvailable = true;
             this.onPipelineAvailable();
         });
