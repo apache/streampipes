@@ -108,33 +108,25 @@ export class EditorComponent implements OnInit {
 
     loadPipelineToModify(pipelineId: string) {
         const pipelineReq = this.pipelineService.getPipelineById(pipelineId);
-        const canvasMetadataReq = this.pipelineCanvasMetadataService
-            .getPipelineCanvasMetadata(pipelineId)
-            .pipe(
-                catchError(() => {
-                    this.handleCanvasMetadataResponse(undefined);
-                    return of(undefined);
-                }),
-            );
 
-        forkJoin([pipelineReq, canvasMetadataReq]).subscribe(
-            ([pipelineResp, canvasResp]) => {
-                if (pipelineResp) {
-                    this.originalPipeline = pipelineResp;
-                    this.breadcrumbService.updateBreadcrumb([
-                        SpPipelineRoutes.BASE,
-                        { label: this.originalPipeline.name },
-                        { label: 'Modify' },
-                    ]);
-                    this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
-                        this.originalPipeline,
-                        false,
-                    );
-                }
-                this.handleCanvasMetadataResponse(canvasResp);
-                this.allMetadataLoaded = true;
-            },
-        );
+        forkJoin([pipelineReq]).subscribe(([pipelineResp]) => {
+            if (pipelineResp) {
+                this.originalPipeline = pipelineResp;
+                this.breadcrumbService.updateBreadcrumb([
+                    SpPipelineRoutes.BASE,
+                    { label: this.originalPipeline.name },
+                    { label: 'Modify' },
+                ]);
+                this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
+                    this.originalPipeline,
+                    false,
+                );
+            }
+
+            this.pipelineCanvasMetadataAvailable = false;
+            this.pipelineCanvasMetadata = new PipelineCanvasMetadata();
+            this.allMetadataLoaded = true;
+        });
     }
 
     handleCanvasMetadataResponse(canvasMetadata: PipelineCanvasMetadata) {
