@@ -32,3 +32,8 @@
 .cursor-pointer {
     cursor: pointer;
 }
+
+.right-column {
+    text-align: right; /* align contents inside cell */
+    margin-left: auto; /* push this column to the far right */
+}

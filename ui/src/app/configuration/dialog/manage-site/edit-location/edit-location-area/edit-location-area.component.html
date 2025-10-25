@@ -43,7 +43,9 @@
         </div>
     </div>
     <div *ngIf="site.areas.length === 0" fxLayoutAlign="start center">
-        <div class="no-areas-defined">No areas defined yet.</div>
+        <div class="no-areas-defined">
+            {{ 'No areas defined yet.' | translate }}
+        </div>
     </div>
     <div fxLayout="row" fxLayoutGap="10px" class="w-100 mt-10">
         <div fxFlex fxLayoutAlign="start center">

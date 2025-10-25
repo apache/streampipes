@@ -25,13 +25,16 @@
             *ngIf="page === 'preview'"
         >
             <h4>
-                You are about to {{ install ? 'install' : 'uninstall' }} the
-                following elements:
+                {{ 'You are about to {{ action }} the following elements:' |
+                translate:{ action: (install ? ('install' | translate) :
+                ('uninstall' | translate)) } }}
             </h4>
             <div *ngFor="let endpointItem of endpointItemsToInstall">
                 <h5>{{ endpointItem.name }}</h5>
             </div>
-            <h5><b>Press 'Next' to start the process.</b></h5>
+            <h5>
+                <b>{{ "Press 'Next' to start the process." | translate }}</b>
+            </h5>
         </div>
         <div
             fxFlex="100"
@@ -41,15 +44,17 @@
         >
             <div *ngFor="let status of installationStatus">
                 <h4>
-                    {{ install ? 'Installing' : 'Uninstalling' }}
-                    {{ status.id + 1 }} of
-                    {{ endpointItemsToInstall.length }} ({{ status.name }})...{{
-                        status.status
-                    }}
+                    {{ '{{action}} {{ current }} of {{ total }} ({{
+                        name
+                    }})...{{ status }}' | translate:{ action: (install ?
+                    ('Installing' | translate) : ('Uninstalling' | translate)),
+                    current: (status.id + 1), total:
+                    endpointItemsToInstall.length, name: status.name, status:
+                    status.status } }}
                 </h4>
                 <div>
                     <div fxFlex fxLayout="column" *ngIf="status.details">
-                        <b>More Details:</b>
+                        <b>{{ 'More Details:' | translate }}</b>
                         <div class="error-message">{{ status.details }}</div>
                     </div>
                 </div>
@@ -62,7 +67,9 @@
             class="mr-15"
             [(ngModel)]="installAsPublicElement"
             *ngIf="install"
-            >Make available to all users with appropriate role
+            >{{
+                'Make available to all users with appropriate role' | translate
+            }}
         </mat-checkbox>
         <button
             mat-button
@@ -72,7 +79,7 @@
             style="margin-right: 10px"
             *ngIf="nextButton !== 'Close'"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
         <button
             mat-button

@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-10-01 08:36:50.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-23 20:03:42.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1162,6 +1162,7 @@ export class DashboardModel implements Storable, SpResource {
     description: string;
     displayHeader: boolean;
     elementId: string;
+    gridColumns: number;
     id: string;
     metadata: ResourceMetadata;
     name: string;
@@ -1189,6 +1190,7 @@ export class DashboardModel implements Storable, SpResource {
         instance.description = data.description;
         instance.displayHeader = data.displayHeader;
         instance.elementId = data.elementId;
+        instance.gridColumns = data.gridColumns;
         instance.id = data.id;
         instance.metadata = ResourceMetadata.fromData(data.metadata);
         instance.name = data.name;
@@ -1875,7 +1877,14 @@ export class ExportItem {
 }
 
 export class ExportProviderSettings {
-    providerType: string;
+    accessKey: string;
+    awsRegion: string;
+    bucketName: string;
+    endPoint: string;
+    providerId: string;
+    providerType: ProviderType;
+    secretEncrypted: boolean;
+    secretKey: string;
 
     static fromData(
         data: ExportProviderSettings,
@@ -1885,7 +1894,14 @@ export class ExportProviderSettings {
             return data;
         }
         const instance = target || new ExportProviderSettings();
+        instance.accessKey = data.accessKey;
+        instance.awsRegion = data.awsRegion;
+        instance.bucketName = data.bucketName;
+        instance.endPoint = data.endPoint;
+        instance.providerId = data.providerId;
         instance.providerType = data.providerType;
+        instance.secretEncrypted = data.secretEncrypted;
+        instance.secretKey = data.secretKey;
         return instance;
     }
 }
@@ -3356,7 +3372,7 @@ export class ResourceMetadata {
 
 export class RetentionExportConfig {
     exportConfig: ExportConfig;
-    exportProviderSettings: ExportProviderSettings;
+    exportProviderId: string;
 
     static fromData(
         data: RetentionExportConfig,
@@ -3367,16 +3383,14 @@ export class RetentionExportConfig {
         }
         const instance = target || new RetentionExportConfig();
         instance.exportConfig = ExportConfig.fromData(data.exportConfig);
-        instance.exportProviderSettings = ExportProviderSettings.fromData(
-            data.exportProviderSettings,
-        );
+        instance.exportProviderId = data.exportProviderId;
         return instance;
     }
 }
 
 export class RetentionTimeConfig {
     dataRetentionConfig: DataRetentionConfig;
-    exportConfig: RetentionExportConfig;
+    retentionExportConfig: RetentionExportConfig;
 
     static fromData(
         data: RetentionTimeConfig,
@@ -3389,8 +3403,8 @@ export class RetentionTimeConfig {
         instance.dataRetentionConfig = DataRetentionConfig.fromData(
             data.dataRetentionConfig,
         );
-        instance.exportConfig = RetentionExportConfig.fromData(
-            data.exportConfig,
+        instance.retentionExportConfig = RetentionExportConfig.fromData(
+            data.retentionExportConfig,
         );
         return instance;
     }
@@ -4196,6 +4210,7 @@ export class UserInfo {
     darkMode: boolean;
     displayName: string;
     hasAcknowledged: boolean;
+    language: string;
     roles: string[];
     showTutorial: boolean;
     username: string;
@@ -4208,6 +4223,7 @@ export class UserInfo {
         instance.darkMode = data.darkMode;
         instance.displayName = data.displayName;
         instance.hasAcknowledged = data.hasAcknowledged;
+        instance.language = data.language;
         instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         instance.showTutorial = data.showTutorial;
         instance.username = data.username;
@@ -4300,6 +4316,8 @@ export type PropertyScope =
     | 'DIMENSION_PROPERTY'
     | 'MEASUREMENT_PROPERTY'
     | 'NONE';
+
+export type ProviderType = 'FOLDER' | 'S3';
 
 export type RetentionAction = 'DELETE' | 'SAVE' | 'SAVEDELETE';
 

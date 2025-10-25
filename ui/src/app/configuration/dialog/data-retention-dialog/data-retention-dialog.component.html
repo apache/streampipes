@@ -19,7 +19,6 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100">
-            <!-- Stepper removed, content displayed directly -->
             <div
                 class="retention-step-content"
                 *ngIf="retentionConfig?.dataRetentionConfig"
@@ -52,8 +51,19 @@
             color="accent"
             data-cy="download-configuration-download-btn"
             (click)="setCleanUp()"
+            [disabled]="requiresExportValidation() && !isExportValid()"
         >
             {{ 'Start Sync' | translate }}
+        </button>
+
+        <button
+            mat-flat-button
+            color="accent"
+            data-cy="download-configuration-download-btn"
+            [disabled]="!disableDelete"
+            (click)="deleteCleanUp()"
+        >
+            {{ 'Delete Sync' | translate }}
         </button>
         <button
             mat-flat-button

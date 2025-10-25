@@ -23,6 +23,7 @@ import { TreeStaticPropertyUtils } from '../../../support/utils/userInput/TreeSt
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 import { AdapterInput } from '../../../support/model/AdapterInput';
 import { OpcUaUtils } from '../../../support/utils/connect/OpcUaUtils';
+import { GeneralUtils } from '../../../support/utils/GeneralUtils';
 
 describe('Test starting and editing OPC-UA Adapters in different configurations', () => {
     beforeEach('Setup Test', () => {
@@ -66,7 +67,7 @@ describe('Test starting and editing OPC-UA Adapters in different configurations'
  */
 const startAdapterTest = (adapterInput: AdapterInput) => {
     ConnectUtils.testAdapter(adapterInput);
-    ConnectUtils.validateEventsInPreview(5);
+    ConnectUtils.validateEventsInPreview(adapterInput.adapterName, 5);
 };
 
 /**
@@ -76,6 +77,7 @@ const startAdapterTest = (adapterInput: AdapterInput) => {
 const editAdapterTest = (adapterInput: AdapterInput) => {
     ConnectUtils.testAdapter(adapterInput);
 
+    GeneralUtils.openMenuForRow(adapterInput.adapterName);
     ConnectBtns.editAdapter().click();
 
     // Validate that browse nodes are shown
@@ -87,7 +89,7 @@ const editAdapterTest = (adapterInput: AdapterInput) => {
     ConnectEventSchemaUtils.finishEventSchemaConfiguration();
     ConnectBtns.storeEditAdapter().click();
     ConnectUtils.closeAdapterPreview();
-    ConnectUtils.validateEventsInPreview(4);
+    ConnectUtils.validateEventsInPreview(adapterInput.adapterName, 4);
 };
 
 const getAdapterBuilderWithTextNodes = (pullMode: boolean) => {

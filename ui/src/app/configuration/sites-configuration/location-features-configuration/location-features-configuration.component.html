@@ -24,18 +24,22 @@
         *ngIf="locationConfig"
     >
         <sp-split-section
-            title="Geo features"
-            subtitle="Geo features are used to better organize assets."
+            [title]="'Geo features' | translate"
+            [subtitle]="
+                'Geo features are used to better organize assets.' | translate
+            "
         >
             <mat-checkbox
                 formControlName="locationFeaturesEnabled"
                 data-cy="sites-enable-location-features-checkbox"
-                >Enable geo features
+                >{{ 'Enable geo features' | translate }}
             </mat-checkbox>
             <div *ngIf="showLocationDetails" class="mt-10">
                 <div class="subsection-title">
-                    Tile server URL (use placeholders for x, y and z
-                    coordinates)
+                    {{
+                        'Tile server URL(use placeholders for x, y and z coordinates)'
+                            | translate
+                    }}
                 </div>
                 <mat-form-field
                     color="accent"
@@ -50,7 +54,10 @@
                     />
                 </mat-form-field>
                 <div class="subsection-title mt-10">
-                    Attribution text if required by the tile server
+                    {{
+                        'Copyright notice if required by the tile server'
+                            | translate
+                    }}
                 </div>
                 <mat-form-field
                     color="accent"
@@ -75,7 +82,7 @@
                     [disabled]="!locationForm.valid"
                     (click)="save()"
                 >
-                    Save
+                    {{ 'Save' | translate }}
                 </button>
             </div>
         </sp-split-section>

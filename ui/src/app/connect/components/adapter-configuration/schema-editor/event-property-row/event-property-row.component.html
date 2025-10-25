@@ -124,15 +124,17 @@
                     class="small-select"
                     [attr.data-cy]="'property-scope-' + label"
                 >
-                    <mat-option value="MEASUREMENT_PROPERTY"
-                        >Measurement</mat-option
-                    >
+                    <mat-option value="MEASUREMENT_PROPERTY">{{
+                        'Measurement' | translate
+                    }}</mat-option>
                     <mat-option
                         *ngIf="runtimeType !== 'FLOAT'"
                         value="DIMENSION_PROPERTY"
-                        >Dimension</mat-option
+                        >{{ 'Dimension' | translate }}</mat-option
                     >
-                    <mat-option value="HEADER_PROPERTY">Header</mat-option>
+                    <mat-option value="HEADER_PROPERTY">{{
+                        'Header' | translate
+                    }}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
@@ -144,7 +146,9 @@
                 mat-button
                 (click)="addNestedProperty(node.data)"
             >
-                <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
+                <mat-icon [matTooltip]="'Add a Nested Property' | translate"
+                    >queue</mat-icon
+                >
             </button>
         </div>
         <div
@@ -159,7 +163,7 @@
                 (click)="openEditDialog(node.data)"
                 [attr.data-cy]="'edit-' + label.toLowerCase()"
             >
-                <mat-icon>edit</mat-icon>&nbsp;Edit field
+                <mat-icon>edit</mat-icon>&nbsp;{{ 'Edit field' | translate }}
             </button>
         </div>
         <div fxLayoutAlign="end center">

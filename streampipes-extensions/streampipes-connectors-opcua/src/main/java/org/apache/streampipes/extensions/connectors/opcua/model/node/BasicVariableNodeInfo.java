@@ -20,23 +20,23 @@ package org.apache.streampipes.extensions.connectors.opcua.model.node;
 
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaNamingStrategy;
 
-import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
+import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 
 public class BasicVariableNodeInfo {
 
-  private final BaseDataVariableTypeNode node;
+  private final VariableNode node;
   private final OpcUaNamingStrategy namingStrategy;
   private final String baseNodeName;
 
-  public BasicVariableNodeInfo(BaseDataVariableTypeNode node,
+  public BasicVariableNodeInfo(VariableNode node,
                                OpcUaNamingStrategy namingStrategy) {
     this.node = node;
     this.namingStrategy = namingStrategy;
     this.baseNodeName = namingStrategy.getDesiredName(node, "");
   }
 
-  public BaseDataVariableTypeNode getNode() {
+  public VariableNode getNode() {
     return node;
   }
 

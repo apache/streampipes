@@ -31,6 +31,7 @@ public class UserInfo {
   private boolean showTutorial;
   private boolean darkMode;
   private boolean hasAcknowledged;
+  private String language;
 
   public UserInfo() {
   }
@@ -81,5 +82,13 @@ public class UserInfo {
 
   public void setHasAcknowledged(boolean hasAcknowledged) {
     this.hasAcknowledged = hasAcknowledged;
+  }
+
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
   }
 }

@@ -20,7 +20,7 @@ package org.apache.streampipes.extensions.connectors.opcua.utils;
 
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
+import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
 import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 
@@ -82,7 +82,7 @@ public class OpcUaTypes {
    * @param node a data variable node
    * @return true if the node is an ExtensionObject or custom data type
    */
-  public static boolean isExtensionOrCustom(BaseDataVariableTypeNode node) {
+  public static boolean isExtensionOrCustom(VariableNode node) {
     return !BuiltinDataType.isBuiltin(node.getDataType())
         || Objects.equals(node.getDataType(), BuiltinDataType.ExtensionObject.getNodeId());
   }

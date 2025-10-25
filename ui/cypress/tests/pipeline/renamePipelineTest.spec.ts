@@ -29,7 +29,7 @@ describe('Test rename of running pipeline', () => {
         PipelineUtils.verifyPipelineCount(1);
         PipelineUtils.verifyPipelineName('Pipeline Test');
 
-        PipelineUtils.editPipeline();
+        PipelineUtils.editPipeline('Pipeline Test');
         cy.wait(1000);
         cy.dataCy('sp-editor-save-pipeline').click();
         cy.dataCy('sp-editor-pipeline-name').clear();
@@ -39,7 +39,7 @@ describe('Test rename of running pipeline', () => {
         PipelineUtils.verifyPipelineCount(1);
         PipelineUtils.verifyPipelineName('Renamed Pipeline');
 
-        PipelineUtils.editPipeline();
+        PipelineUtils.editPipeline('Renamed Pipeline');
         cy.dataCy('sp-editor-save-pipeline').click();
         cy.dataCy('sp-editor-pipeline-name').clear();
         PipelineUtils.clonePipeline('Cloned Renamed Pipeline');

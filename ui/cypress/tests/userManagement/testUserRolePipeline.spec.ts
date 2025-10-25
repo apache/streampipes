@@ -57,7 +57,7 @@ describe('Test User Roles for Pipelines', () => {
 
         // Add new authorized user to pipeline
         PipelineUtils.goToPipelines();
-        PermissionUtils.markElementAsPublic();
+        PermissionUtils.markElementAsPublic('Persist simulator');
 
         // Login as user and check if pipeline is visible to user
         UserUtils.switchUser(newUser);
@@ -74,8 +74,8 @@ describe('Test User Roles for Pipelines', () => {
 
         // Add new authorized user to pipeline
         PipelineUtils.goToPipelines();
-        PermissionUtils.markElementAsPublic();
-        PermissionUtils.authorizeUser(newUser.email);
+        PermissionUtils.markElementAsPublic('Persist simulator');
+        PermissionUtils.authorizeUser('Persist simulator', newUser.email);
 
         // Login as user and check if pipeline is visible to user
         UserUtils.switchUser(newUser);
@@ -93,7 +93,7 @@ describe('Test User Roles for Pipelines', () => {
         // Add new authorized user to pipeline
         PipelineUtils.goToPipelines();
         // PermissionUtils.markElementAsPublic();
-        PermissionUtils.authorizeUser(newUser.email);
+        PermissionUtils.authorizeUser('Persist simulator', newUser.email);
 
         // Login as user and check if pipeline is visible to user
         UserUtils.switchUser(newUser);

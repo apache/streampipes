@@ -44,6 +44,9 @@ export class DataExplorerChartViewToolbarComponent {
     saveDataViewEmitter: EventEmitter<void> = new EventEmitter();
 
     @Output()
+    addToAssetEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
     discardDataViewEmitter: EventEmitter<void> = new EventEmitter();
 
     @Output()

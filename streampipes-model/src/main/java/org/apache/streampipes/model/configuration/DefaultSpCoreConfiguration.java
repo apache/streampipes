@@ -36,6 +36,7 @@ public class DefaultSpCoreConfiguration {
     coreCfg.setFilesDir(makeFileLocation());
     coreCfg.setAssetDir(makeAssetLocation());
     coreCfg.setLocalAuthConfig(LocalAuthConfig.fromDefaults(getJwtSecret()));
+    coreCfg.setExportProviderSettings(new DefaultExportProviderConfig().make());
 
     return coreCfg;
   }

@@ -29,6 +29,10 @@ export class AssetBtns {
         return cy.dataCy('save-asset', { timeout: 10000 });
     }
 
+    public static createAssetPanelBtn() {
+        return cy.dataCy('create-asset-panel', { timeout: 10000 });
+    }
+
     public static editAssetBtn(assetName: string) {
         return cy.dataCy('edit-asset-' + assetName, { timeout: 10000 });
     }

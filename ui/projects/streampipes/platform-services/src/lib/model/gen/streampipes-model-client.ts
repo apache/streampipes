@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-10-01 08:36:56.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-23 20:03:54.
 
 import { Storable } from './streampipes-model';
 
@@ -247,6 +247,7 @@ export class UserAccount extends Principal {
     fullName: string;
     hasAcknowledged: boolean;
     hideTutorial: boolean;
+    language: string;
     lastLoginAtMillis: number;
     password: string;
     preferredDataProcessors: string[];
@@ -267,6 +268,7 @@ export class UserAccount extends Principal {
         instance.fullName = data.fullName;
         instance.hasAcknowledged = data.hasAcknowledged;
         instance.hideTutorial = data.hideTutorial;
+        instance.language = data.language;
         instance.lastLoginAtMillis = data.lastLoginAtMillis;
         instance.password = data.password;
         instance.preferredDataProcessors = __getCopyArrayFn(

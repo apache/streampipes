@@ -32,6 +32,7 @@ import {
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { QuillEditorComponent } from 'ngx-quill';
 import { TranslateService } from '@ngx-translate/core';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 
 @Component({
     selector: 'sp-app-static-free-input',
@@ -61,6 +62,8 @@ export class StaticFreeInputComponent
     @ViewChild('textEditor', { static: false })
     quillEditorComponent: QuillEditorComponent;
 
+    @ViewChild('autosize') autosize: CdkTextareaAutosize;
+
     constructor() {
         super();
     }
@@ -69,6 +72,7 @@ export class StaticFreeInputComponent
         this.addValidator(this.staticProperty.value, this.collectValidators());
         this.enableValidators();
         this.emitUpdate();
+        console.log(this.staticProperty);
     }
 
     collectValidators() {

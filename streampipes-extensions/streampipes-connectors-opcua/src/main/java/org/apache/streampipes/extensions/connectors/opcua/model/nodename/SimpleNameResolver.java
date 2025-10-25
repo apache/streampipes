@@ -18,20 +18,20 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.model.nodename;
 
-import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
+import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
 
 import java.util.function.Function;
 
 public class SimpleNameResolver implements NamingStrategyResolver {
 
-  private final Function<BaseDataVariableTypeNode, String> nameFn;
+  private final Function<VariableNode, String> nameFn;
 
-  public SimpleNameResolver(Function<BaseDataVariableTypeNode, String> nameFn) {
+  public SimpleNameResolver(Function<VariableNode, String> nameFn) {
     this.nameFn = nameFn;
   }
 
   @Override
-  public String resolveName(BaseDataVariableTypeNode node, String fieldAppendix) {
+  public String resolveName(VariableNode node, String fieldAppendix) {
     return nameFn.apply(node) + (!fieldAppendix.isEmpty() ? "_" + fieldAppendix : "");
   }
 }

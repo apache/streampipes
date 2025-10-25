@@ -21,14 +21,16 @@
         [(ngModel)]="deploymentMode"
         (change)="handleSelectionChange($event)"
     >
-        <mat-radio-button value="all">Any available service</mat-radio-button>
+        <mat-radio-button value="all">{{
+            'Any available service' | translate
+        }}</mat-radio-button>
         <mat-radio-button
             value="filter"
             [disabled]="
                 deploymentMode === 'all' && availableServiceTags.length === 0
             "
         >
-            Restrict to service tags
+            {{ 'Restrict to service tags' | translate }}
         </mat-radio-button>
     </mat-radio-group>
 

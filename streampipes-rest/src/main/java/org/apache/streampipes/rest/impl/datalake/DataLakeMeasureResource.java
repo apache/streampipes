@@ -49,42 +49,33 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
 
   public DataLakeMeasureResource() {
     this.dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
-                                                                 .getSchemaManagement();
+        .getSchemaManagement();
   }
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<DataLakeMeasure> addDataLake(@RequestBody DataLakeMeasure dataLakeMeasure) {
     DataLakeMeasure result = this.dataLakeMeasureManagement.createOrUpdateMeasurement(dataLakeMeasure);
     return ok(result);
   }
 
   /**
-   * Handles HTTP GET requests to retrieve the entry counts of specified measurements.
+   * Handles HTTP GET requests to retrieve the entry counts of specified
+   * measurements.
    *
    * @param measurementNames A list of measurement names to return the count.
-   * @return A ResponseEntity containing a map of measurement names and their corresponding entry counts.
+   * @return A ResponseEntity containing a map of measurement names and their
+   *         corresponding entry counts.
    */
-  @Operation(
-      summary = "Retrieve measurement counts",
-      description = "Retrieves the entry counts for the specified measurements from the data lake.")
-  @GetMapping(
-      path = "/count",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Retrieve measurement counts", description = "Retrieves the entry counts for the specified measurements from the data lake.")
+  @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Integer>> getEntryCountsOfMeasurments(
-      @Parameter(description = "A list of measurement names to return the count.")
-      @RequestParam(value = "measurementNames")
-      List<String> measurementNames
-  ) {
+      @Parameter(description = "A list of measurement names to return the count.") @RequestParam(value = "measurementNames") List<String> measurementNames) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
     var result = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getMeasurementCounter(
             allMeasurements,
-            measurementNames
-        )
+            measurementNames)
         .countMeasurementSizes();
     return ok(result);
   }
@@ -99,11 +90,20 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
     }
   }
 
+  @GetMapping(path = "byName/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getDataLakeMeasureName(@PathVariable("measureName") String measureName) {
+    var measure = this.dataLakeMeasureManagement.getExistingMeasureByName(measureName);
+    if (Objects.nonNull(measure)) {
+      return ok(measure);
+    } else {
+      return notFound();
+    }
+  }
+
   @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> updateDataLakeMeasure(
       @PathVariable("id") String elementId,
-      @RequestBody DataLakeMeasure measure
-  ) {
+      @RequestBody DataLakeMeasure measure) {
     if (elementId.equals(measure.getElementId())) {
       try {
         this.dataLakeMeasureManagement.updateMeasurement(measure);
@@ -114,7 +114,6 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
     }
     return badRequest();
   }
-
 
   @DeleteMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deleteDataLakeMeasure(@PathVariable("id") String elementId) {

@@ -105,9 +105,13 @@ import { AdapterDetailsDataComponent } from './components/adapter-details/adapte
 import { EditRegexTransformationComponent } from './dialog/edit-event-property/components/edit-regex-transformation/edit-regex-transformation.component';
 import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapter-code-panel.component';
 import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
+import { MatTreeModule } from '@angular/material/tree';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
+        MatTreeModule,
         MatCardModule,
         MatCheckboxModule,
         MatDialogModule,
@@ -145,6 +149,7 @@ import { AdapterDetailsCodeComponent } from './components/adapter-details/adapte
         MatSnackBarModule,
         PlatformServicesModule,
         TreeModule,
+        TranslateModule.forChild(),
         RouterModule.forChild([
             {
                 path: '',
@@ -195,6 +200,7 @@ import { AdapterDetailsCodeComponent } from './components/adapter-details/adapte
             },
         ]),
         SharedUiModule,
+        TranslatePipe,
     ],
     exports: [ErrorMessageComponent],
     declarations: [

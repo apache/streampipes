@@ -76,6 +76,14 @@ public class DataLakeMeasure implements Storable {
     this.timestampField = timestampField;
   }
 
+
+  public DataLakeMeasure(String measureName, String timestampField, EventSchema eventSchema, RetentionTimeConfig retentionTime) {
+    this.measureName = measureName;
+    this.eventSchema = eventSchema;
+    this.timestampField = timestampField;
+    this.retentionTime = retentionTime;
+  }
+
   public String getMeasureName() {
     return measureName;
   }
@@ -144,6 +152,10 @@ public class DataLakeMeasure implements Storable {
 
   public void setRetentionTime(RetentionTimeConfig retentionTime) {
     this.retentionTime = retentionTime;
+  }
+
+  public void deleteRetentionTime() {
+    this.retentionTime = null;
   }
 
   public RetentionTimeConfig getRetentionTime() {

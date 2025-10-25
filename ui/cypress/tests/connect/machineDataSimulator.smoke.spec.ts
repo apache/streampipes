@@ -31,6 +31,6 @@ describe('Test Machine Data Simulator Adapter', () => {
             .build();
 
         ConnectUtils.testAdapter(adapterInput);
-        ConnectUtils.deleteAdapter();
+        ConnectUtils.deleteAdapter(adapterInput.adapterName);
     });
 });

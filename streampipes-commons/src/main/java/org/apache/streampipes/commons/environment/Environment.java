@@ -96,6 +96,8 @@ public interface Environment {
 
   StringEnvironmentVariable getCoreAssetBaseDir();
 
+  StringEnvironmentVariable getExtAssetBaseDir();
+
   // Flink Wrapper
   StringEnvironmentVariable getFlinkJarFileLoc();
 
@@ -185,4 +187,5 @@ public interface Environment {
   IntEnvironmentVariable getMemoryManagerShutdownTimeoutSeconds();
   DoubleEnvironmentVariable getMemoryManagerUsageThreshold();
   DoubleEnvironmentVariable getMemoryWarningThreshold();
+  StringEnvironmentVariable getDatalakeSchedulerCron();
 }

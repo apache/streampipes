@@ -46,18 +46,18 @@
                         fxFlex
                         mat-flat-button
                         (click)="createEmitter.emit(adapter.appId)"
-                        matTooltip="Create adapter"
+                        [matTooltip]="'Create adapter' | translate"
                     >
-                        <span>Create</span>
+                        <span>{{ 'Create' | translate }}</span>
                         <mat-icon>add</mat-icon>
                     </button>
                     <button
                         mat-flat-button
                         class="mat-basic"
                         (click)="openDocumentation($event)"
-                        matTooltip="Show documentation"
+                        [matTooltip]="'Show documentation' | translate"
                     >
-                        <span>Docs</span>
+                        <span>{{ 'Docs' | translate }}</span>
                         <mat-icon>menu_book</mat-icon>
                     </button>
                 </div>

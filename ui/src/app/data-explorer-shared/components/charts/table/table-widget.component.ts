@@ -144,10 +144,7 @@ export class TableWidgetComponent
 
     onResize(width: number, height: number) {}
 
-    beforeDataFetched() {
-        this.setShownComponents(false, false, true, false);
-        this.dataSource.data = [];
-    }
+    beforeDataFetched() {}
 
     onDataReceived(spQueryResults: SpQueryResult[]) {
         this.regenerateColumnNames();
