@@ -66,12 +66,9 @@ public class ExtensionsServiceLogExecutor implements Runnable {
         LOG.info("Could not fetch log info from endpoint {}", serviceEndpoint);
       }
     });
+
     try {
-      ExtensionsLogProvider.INSTANCE.update(new ExtensionsServiceReportExecutor().run());
-      LoadManager.updateAll();
-      synchronized (ResourceUnitMigration.class) {
         LoadManager.doLoadShedding();
-      }
     }catch (Exception e){
       LOG.info("Could not doShedding");
     }

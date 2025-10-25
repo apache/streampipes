@@ -20,78 +20,156 @@ package org.apache.streampipes.manager.loadbalance;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.manager.loadbalance.impl.*;
+import org.apache.streampipes.manager.loadbalance.unit.PipelineElementPartitioner;
+import org.apache.streampipes.manager.loadbalance.unit.ResourceUnitScanner;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * Load manager for handling load balancing operations
+ */
 public class LoadManager {
 
     private static LoadBalancer loadBalancer;
-    public static void init(){
-        Environment e= Environments.getEnvironment();
+
+    private static ReadWriteLock lock;
+    
+    /**
+     * Initialize the load balancer with configuration from environment
+     */
+    public static void initialize() {
+        Environment environment = Environments.getEnvironment();
         ExtensionServiceSelector selector;
         PipelineMigrator migrator;
 
-        LoadBalancerConfig.LoadTargetStd = e.getLoadTargetStd().getValueOrDefault();
-        LoadBalancerConfig.CPUResourceWeigh = e.getCpuResourceWeight().getValueOrDefault();
-        LoadBalancerConfig.ThresholdMigratorPercentage = e.getThresholdMigratorPercentage().getValueOrDefault();
-        LoadBalancerConfig.MinMigratorPercentage = e.getMinMigratorPercentage().getValueOrDefault();
-        LoadBalancerConfig.OverloadedThresholdPercentage = e.getOverloadedThresholdPercentage().getValueOrDefault();
-        LoadBalancerConfig.HistoryResourcePercentage = e.getHistoryResourcePercentage().getValueOrDefault();
-        LoadBalancerConfig.MemoryResourceWeight = e.getMemoryResourceWeight().getValueOrDefault();
-        LoadBalancerConfig.DirMemoryResourceWeight = e.getDirMemoryResourceWeight().getValueOrDefault();
+        LoadBalancerConfig.LoadTargetStd = environment.getLoadTargetStd().getValueOrDefault();
+        LoadBalancerConfig.CPUResourceWeight = environment.getCpuResourceWeight().getValueOrDefault();
+        LoadBalancerConfig.ThresholdMigratorPercentage = environment.getThresholdMigratorPercentage().getValueOrDefault();
+        LoadBalancerConfig.MinMigratorPercentage = environment.getMinMigratorPercentage().getValueOrDefault();
+        LoadBalancerConfig.OverloadedThresholdPercentage = environment.getOverloadedThresholdPercentage().getValueOrDefault();
+        LoadBalancerConfig.HistoryResourcePercentage = environment.getHistoryResourcePercentage().getValueOrDefault();
+        LoadBalancerConfig.MemoryResourceWeight = environment.getMemoryResourceWeight().getValueOrDefault();
+        LoadBalancerConfig.DirMemoryResourceWeight = environment.getDirMemoryResourceWeight().getValueOrDefault();
 
 
-        if(e.getSelector().getValueOrDefault().equals("WeightedRandomSelector")){
-            selector=new WeightedRandomSelector();
-        }else if (e.getSelector().getValueOrDefault().equals("MinimumLoadSelector")){
+        if (environment.getSelector().getValueOrDefault().equals("WeightedRandomSelector")) {
+            selector = new WeightedRandomSelector();
+        } else if (environment.getSelector().getValueOrDefault().equals("MinimumLoadSelector")) {
             selector = new MinimumLoadSelector();
-        }else {
+        } else {
             selector = new WeightedFirstSelector();
         }
 
-        if (e.getMigrator().getValueOrDefault().equals("TransferMigrator")){
+        if (environment.getMigrator().getValueOrDefault().equals("TransferMigrator")) {
             migrator = new TransferMigrator();
-        }else if(e.getMigrator().getValueOrDefault().equals("OverloadMigrator")) {
+        } else if (environment.getMigrator().getValueOrDefault().equals("OverloadMigrator")) {
             migrator = new OverloadMigrator();
-        }else {
+        } else {
             migrator = new ThresholdMigrator();
         }
-        LoadManager.loadBalancer=new ExtensibleLoadManager(selector,migrator);
+        LoadManager.loadBalancer = new ExtensibleLoadManager(selector, migrator);
+
+        LoadManager.lock = new ReentrantReadWriteLock();
     }
-    public static SpServiceRegistration allocation(LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit, List<SpServiceRegistration> serviceRegistrations, List<String> label){
-        return loadBalancer.allocation(loadBalanceResourceUnit,serviceRegistrations,label);
+    
+    /**
+     * Allocate a service for pipeline processing
+     * @param serviceRegistrations Available service registrations
+     * @param labels Labels for service selection
+     * @return Selected service registration
+     */
+    public static SpServiceRegistration allocation(List<SpServiceRegistration> serviceRegistrations, List<String> labels) {
+        return loadBalancer.allocation(serviceRegistrations, labels);
     }
 
-    public static SpServiceRegistration allocation(LoadBalanceResourceUnit<AdapterDescription> loadBalanceResourceUnit, List<SpServiceRegistration> serviceRegistrations){
-        return loadBalancer.allocationPe(loadBalanceResourceUnit,serviceRegistrations, loadBalanceResourceUnit.getLabels());
+    public static void tryLockForAdapter() {
+        if (lock != null) {
+            lock.readLock().lock();
+        }
     }
 
-    public static LoadData getLoadData(){
-        return loadBalancer.getLoadData();
+    public static void unLockForAdapter() {
+        if (lock != null) {
+            lock.readLock().unlock();
+        }
     }
 
-    public static LoadData getHistoricalLoadData(){
-        return loadBalancer.getHistoricalLoadData();
+    public static void tryLockForPipeline() {
+        if (lock != null) {
+            lock.readLock().lock();
+        }
     }
 
-    public static void stopPipeline(String pipId) {
-        loadBalancer.stopPipeline(pipId);
+    public static void unLockForPipeline() {
+        if (lock != null) {
+            lock.readLock().unlock();
+        }
     }
 
-    public static void stopAdapter(String pipId) {
-        loadBalancer.stopAdapter(pipId);
+    /**
+     * Perform load shedding operations
+     */
+    public static void doLoadShedding() {
+        if (lock != null) {
+            lock.writeLock().lock();
+            try {
+                loadBalancer.doLoadShedding();
+            } finally {
+                lock.writeLock().unlock();
+            }
+        }
     }
 
-    public static void doLoadShedding(){
-        loadBalancer.doLoadShedding();
-    }
+    public static void migrateForHealthCheck(List<SpServiceRegistration> needDeletedServices)  {
+        if (lock != null) {
+            lock.writeLock().lock();
+            try {
+                for (SpServiceRegistration service : needDeletedServices) {
+                    ResourceUnitScanner.ServiceResourceUnits serviceResourceUnits = ResourceUnitScanner.scanAndPartitionService(service);
+                    List<PipelineElementPartitioner.PartitionResult> resourceUnits =
+                            serviceResourceUnits.getPipelineUnits();
 
-    public static void updateAll(){
-        loadBalancer.updateAll();
+                    for (PipelineElementPartitioner.PartitionResult resourceUnit : resourceUnits) {
+                        if (resourceUnit.isEmpty()) {
+                            continue;
+                        }
+
+                        for (PipelineElementPartitioner.ResourceUnitWithServices resourceUnitWithServices : resourceUnit.getResourceUnits()) {
+                            LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit = resourceUnitWithServices.getResourceUnit();
+                            if (loadBalanceResourceUnit.getElements() == null || loadBalanceResourceUnit.getElements().isEmpty()) {
+                                continue;
+                            }
+
+                            SpServiceRegistration targetService =LoadManager.allocation(resourceUnitWithServices.getCompatibleServices(), loadBalanceResourceUnit.getLabels());
+                            if (targetService != null) {
+                                ResourceUnitMigration.migrationForHealth(loadBalanceResourceUnit, targetService);
+                            }
+                        }
+                    }
+
+                    List<PipelineElementPartitioner.AdapterResourceUnitWithServices> adapterResourceUnits =
+                            serviceResourceUnits.getAdapterUnits();
+
+                    for (PipelineElementPartitioner.AdapterResourceUnitWithServices resourceUnit : adapterResourceUnits) {
+
+                        SpServiceRegistration targetService = LoadManager.allocation(resourceUnit.getCompatibleServices(), Collections.EMPTY_LIST);
+                        if (targetService != null) {
+                            // Migrate resource unit to a healthy service
+                            ResourceUnitMigration.migrateAdapterForHealth(resourceUnit.getResourceUnit(), targetService);
+                        }
+                    }
+                }
+            } finally {
+                lock.writeLock().unlock();
+            }
+        }
     }
 }
 

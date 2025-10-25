@@ -1,58 +1,114 @@
 package org.apache.streampipes.manager.loadbalance.impl;
 
-import org.apache.streampipes.commons.prometheus.service.ElementServiceStats;
 import org.apache.streampipes.manager.loadbalance.LoadBalancerConfig;
-import org.apache.streampipes.manager.loadbalance.PipelineMigrator;
-import org.apache.streampipes.manager.loadbalance.ResourceUnitMigration;
-import org.apache.streampipes.manager.loadbalance.ServiceLoadCalculator;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class ThresholdMigrator implements PipelineMigrator{
-
-
+/**
+ * Threshold-based pipeline migrator for load balancing
+ * Migrates pipelines when services exceed average load by a threshold
+ */
+public class ThresholdMigrator extends AbstractPipelineMigrator {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ThresholdMigrator.class);
+    private static final float LOAD_DIFFERENCE_THRESHOLD = 20.0f;
 
     @Override
-    public void doLoadShedding(List<SpServiceRegistration> spServiceRegistrations) {
-        if(spServiceRegistrations.size()<=1){
+    public void doLoadShedding(List<SpServiceRegistration> services) {
+        if (!shouldMigrate(services)) {
             return;
         }
-        List<Float> floats = new ArrayList<>();
-        PriorityQueue<Map.Entry<SpServiceRegistration, Float>> queue = new PriorityQueue<>((a,b)-> Float.compare(b.getValue(),a.getValue()));
-
-        PriorityQueue<Map.Entry<SpServiceRegistration, Float>> minQueue = new PriorityQueue<>((a,b)-> Float.compare(a.getValue(),b.getValue()));
-
-        for (SpServiceRegistration spServiceRegistration : spServiceRegistrations) {
-            float a=ServiceLoadCalculator. calculateLoad(spServiceRegistration.getSvcId());
-            floats.add(a);
-            queue.offer(Map.entry(spServiceRegistration,a));
-            minQueue.offer(Map.entry(spServiceRegistration,a));
+        
+        // Calculate loads for all services
+        ServiceLoadQueues queues = calculateServiceLoads(services);
+        float averageLoad = calculateAverageLoad(queues.getLoadValues());
+        
+        // Phase 1: Migrate from services exceeding average + threshold
+        migrateOverloadedServices(queues, averageLoad, services.size());
+        
+        // Phase 2: Balance underutilized and high-load services
+        balanceUnderutilizedServices(queues, services.size());
+        
+        logger.debug("Threshold-based load shedding completed");
+    }
+    
+    /**
+     * Migrate from services that exceed average load by threshold
+     * @param queues Service load queues
+     * @param averageLoad Average load across all services
+     * @param totalServices Total number of services
+     */
+    private void migrateOverloadedServices(ServiceLoadQueues queues, float averageLoad, int totalServices) {
+        Queue<Map.Entry<SpServiceRegistration, Float>> overloadedServices = new LinkedList<>();
+        PriorityQueue<Map.Entry<SpServiceRegistration, Float>> maxLoadQueue = queues.getMaxLoadQueue();
+        
+        // Identify services exceeding threshold
+        float thresholdLoad = averageLoad + LoadBalancerConfig.ThresholdMigratorPercentage;
+        while (!maxLoadQueue.isEmpty() 
+                && maxLoadQueue.peek().getValue() > thresholdLoad
+                && overloadedServices.size() < totalServices / 2) {
+            overloadedServices.offer(maxLoadQueue.poll());
         }
-        ElementServiceStats.metrics();
-        float avg = ServiceLoadCalculator.calculateAVG(floats);
-        Queue<Map.Entry<SpServiceRegistration, Float>> over = new LinkedList<>();
-        while (!queue.isEmpty() &&queue.peek().getValue()> avg+LoadBalancerConfig.ThresholdMigratorPercentage
-                &&over.size()<spServiceRegistrations.size()/2){
-            over.offer(queue.poll());
+        
+        if (overloadedServices.isEmpty()) {
+            logger.debug("No overloaded services found (threshold: {})", thresholdLoad);
+            return;
         }
-
-        while (!over.isEmpty()&&!minQueue.isEmpty()) {
-            System.out.println("service "+over.peek().getKey().getSvcId()+" to "+minQueue.peek().getKey().getSvcId());
-            Map.Entry<SpServiceRegistration,Float> source= over.poll();
-            Map.Entry<SpServiceRegistration,Float> target= minQueue.poll();
-            ResourceUnitMigration.migration(source.getKey(),source.getValue(),target.getKey(),target.getValue());
+        
+        logger.info("Found {} overloaded services above threshold {}", 
+                   overloadedServices.size(), thresholdLoad);
+        
+        // Migrate to less loaded services
+        PriorityQueue<Map.Entry<SpServiceRegistration, Float>> minLoadQueue = queues.getMinLoadQueue();
+        while (!overloadedServices.isEmpty() && !minLoadQueue.isEmpty()) {
+            if (overloadedServices.peek().getKey().equals(minLoadQueue.peek().getKey())) {
+                break;
+            }
+            executeMigration(overloadedServices.poll(), minLoadQueue.poll());
         }
-
-        while (!queue.isEmpty()&&!minQueue.isEmpty()
-                &&minQueue.peek().getValue()<LoadBalancerConfig.MinMigratorPercentage
-                &&queue.peek().getValue()>minQueue.peek().getValue()+20
-                &&queue.size()>spServiceRegistrations.size()/2){
-            System.out.println("service "+queue.peek().getKey().getSvcId()+" to "+minQueue.peek().getKey().getSvcId());
-            Map.Entry<SpServiceRegistration,Float> source= queue.poll();
-            Map.Entry<SpServiceRegistration,Float> target= minQueue.poll();
-            ResourceUnitMigration.migration(source.getKey(),source.getValue(),target.getKey(),target.getValue());
+    }
+    
+    /**
+     * Balance services with significant load differences
+     * @param queues Service load queues
+     * @param totalServices Total number of services
+     */
+    private void balanceUnderutilizedServices(ServiceLoadQueues queues, int totalServices) {
+        PriorityQueue<Map.Entry<SpServiceRegistration, Float>> maxLoadQueue = queues.getMaxLoadQueue();
+        PriorityQueue<Map.Entry<SpServiceRegistration, Float>> minLoadQueue = queues.getMinLoadQueue();
+        
+        int migrationsPerformed = 0;
+        
+        while (!maxLoadQueue.isEmpty() && !minLoadQueue.isEmpty()
+                && maxLoadQueue.size() > totalServices / 2) {
+            
+            float minLoad = minLoadQueue.peek().getValue();
+            float maxLoad = maxLoadQueue.peek().getValue();
+            
+            // Check if migration is beneficial
+            if (minLoad >= LoadBalancerConfig.MinMigratorPercentage) {
+                logger.debug("Min load {} exceeds threshold, skipping balance", minLoad);
+                break;
+            }
+            
+            if (maxLoad <= minLoad + LOAD_DIFFERENCE_THRESHOLD) {
+                logger.debug("Load difference {} too small, skipping balance", maxLoad - minLoad);
+                break;
+            }
+            
+            if (maxLoadQueue.peek().getKey().equals(minLoadQueue.peek().getKey())) {
+                break;
+            }
+            
+            executeMigration(maxLoadQueue.poll(), minLoadQueue.poll());
+            migrationsPerformed++;
         }
-        System.out.println("end");
+        
+        if (migrationsPerformed > 0) {
+            logger.info("Balanced {} underutilized services", migrationsPerformed);
+        }
     }
 }

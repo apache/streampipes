@@ -19,6 +19,10 @@ package org.apache.streampipes.manager.execution.endpoint;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.manager.loadbalance.LoadManager;
+import org.apache.streampipes.manager.loadbalance.unit.PipelineElementPartitioner;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
@@ -27,6 +31,9 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.desktop.PreferencesEvent;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -54,9 +61,9 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
   private String selectService(String appId,
                                SpServiceUrlProvider spServiceUrlProvider,
                                Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException {
-    List<String> serviceEndpoints = getServiceEndpoints(appId, spServiceUrlProvider, customServiceTags);
-    if (!serviceEndpoints.isEmpty()) {
-      return serviceEndpoints.get(0);
+    String url = getServiceURL(appId, spServiceUrlProvider, customServiceTags);
+    if (url!=null) {
+      return url;
     } else {
       LOG.error("Could not find any service endpoints for appId {}, serviceTag {}", appId,
           spServiceUrlProvider.getServiceTag(appId).asString());
@@ -75,6 +82,24 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
             true,
             getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags)
         );
+  }
+
+  private String getServiceURL(String appId,
+                               SpServiceUrlProvider spServiceUrlProvider,
+                               Set<SpServiceTag> customServiceTags) {
+    List<SpServiceRegistration> services = SpServiceDiscovery.getServiceDiscovery().getService(true).stream()
+            .filter(s->filtersSupported(s,spServiceUrlProvider.getServiceTag(appId).asString())).toList();
+    if(services.isEmpty()){
+      return null;
+    }
+    return LoadManager.allocation(services, Collections.EMPTY_LIST).getServiceUrl();
+  }
+
+  public static boolean filtersSupported(SpServiceRegistration service,
+                                         String tag) {
+    return new HashSet<>(service.getTags())
+            .stream()
+            .anyMatch(t -> t.asString().equals(tag));
   }
 
   private List<String> getDesiredServiceTags(String appId,

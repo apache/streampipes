@@ -1,43 +1,70 @@
 package org.apache.streampipes.manager.loadbalance.impl;
 
-import org.apache.streampipes.commons.prometheus.service.ElementServiceStats;
 import org.apache.streampipes.manager.loadbalance.LoadBalancerConfig;
-import org.apache.streampipes.manager.loadbalance.PipelineMigrator;
-import org.apache.streampipes.manager.loadbalance.ResourceUnitMigration;
-import org.apache.streampipes.manager.loadbalance.ServiceLoadCalculator;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class OverloadMigrator implements PipelineMigrator {
+/**
+ * Overload-based pipeline migrator for load balancing
+ * Migrates pipelines from services exceeding absolute load threshold
+ */
+public class OverloadMigrator extends AbstractPipelineMigrator {
 
+    private static final Logger logger = LoggerFactory.getLogger(OverloadMigrator.class);
 
     @Override
-    public void doLoadShedding(List<SpServiceRegistration> spServiceRegistrations) {
-        if(spServiceRegistrations.isEmpty()){
+    public void doLoadShedding(List<SpServiceRegistration> services) {
+        if (!shouldMigrate(services)) {
             return;
         }
 
-        PriorityQueue<Map.Entry<SpServiceRegistration, Float>> maxQueue = new PriorityQueue<>((a, b)-> Float.compare(b.getValue(),a.getValue()));
-
-        PriorityQueue<Map.Entry<SpServiceRegistration, Float>> minQueue = new PriorityQueue<>((a,b)-> Float.compare(a.getValue(),b.getValue()));
-
-        for (SpServiceRegistration spServiceRegistration : spServiceRegistrations) {
-            float a=ServiceLoadCalculator.calculateLoad(spServiceRegistration.getSvcId());
-            System.out.println(spServiceRegistration.getSvcId()+":"+a);
-            maxQueue.offer(Map.entry(spServiceRegistration,a));
-            minQueue.offer(Map.entry(spServiceRegistration,a));
+        // Calculate loads for all services
+        ServiceLoadQueues queues = calculateServiceLoads(services);
+        
+        // Identify and migrate from overloaded services
+        migrateOverloadedServices(queues);
+        
+        logger.debug("Overload-based load shedding completed");
+    }
+    
+    /**
+     * Migrate from services exceeding absolute overload threshold
+     * @param queues Service load queues
+     */
+    private void migrateOverloadedServices(ServiceLoadQueues queues) {
+        Queue<Map.Entry<SpServiceRegistration, Float>> overloadedServices = new LinkedList<>();
+        PriorityQueue<Map.Entry<SpServiceRegistration, Float>> maxLoadQueue = queues.getMaxLoadQueue();
+        
+        // Identify services exceeding absolute threshold
+        while (!maxLoadQueue.isEmpty() 
+                && maxLoadQueue.peek().getValue() > LoadBalancerConfig.OverloadedThresholdPercentage) {
+            overloadedServices.offer(maxLoadQueue.poll());
         }
-        ElementServiceStats.metrics();
-        Queue<Map.Entry<SpServiceRegistration,Float>> over = new LinkedList<>();
-        while (!maxQueue.isEmpty() &&maxQueue.peek().getValue()> LoadBalancerConfig.OverloadedThresholdPercentage){
-            over.offer(maxQueue.poll());
+        
+        if (overloadedServices.isEmpty()) {
+            logger.debug("No overloaded services found (threshold: {})", 
+                        LoadBalancerConfig.OverloadedThresholdPercentage);
+            return;
         }
-
-        while (!over.isEmpty()&&!minQueue.isEmpty()&&over.peek().getKey()!=minQueue.peek().getKey()) {
-            Map.Entry<SpServiceRegistration,Float> source= over.poll();
-            Map.Entry<SpServiceRegistration,Float> target= minQueue.poll();
-            ResourceUnitMigration.migration(source.getKey(),source.getValue(),target.getKey(),target.getValue());
+        
+        logger.info("Found {} overloaded services above {}%", 
+                   overloadedServices.size(), LoadBalancerConfig.OverloadedThresholdPercentage);
+        
+        // Migrate to less loaded services
+        PriorityQueue<Map.Entry<SpServiceRegistration, Float>> minLoadQueue = queues.getMinLoadQueue();
+        int migrationsPerformed = 0;
+        
+        while (!overloadedServices.isEmpty() && !minLoadQueue.isEmpty()) {
+            if (overloadedServices.peek().getKey().equals(minLoadQueue.peek().getKey())) {
+                break;
+            }
+            executeMigration(overloadedServices.poll(), minLoadQueue.poll());
+            migrationsPerformed++;
         }
+        
+        logger.info("Migrated {} resource units from overloaded services", migrationsPerformed);
     }
 }

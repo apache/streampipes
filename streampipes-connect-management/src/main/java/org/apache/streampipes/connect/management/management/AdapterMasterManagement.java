@@ -123,23 +123,27 @@ public class AdapterMasterManagement {
    * @throws AdapterException when adapter can not be stopped
    */
   public void deleteAdapter(String elementId) throws AdapterException {
-
-    // Stop stream adapter
+    LoadManager.tryLockForAdapter();
     try {
-      stopStreamAdapter(elementId, true);
-    } catch (AdapterException e) {
-      LOG.info("Could not stop adapter: " + elementId, e);
+      // Stop stream adapter
+      try {
+        stopStreamAdapter(elementId, true);
+      } catch (AdapterException e) {
+        LOG.info("Could not stop adapter: " + elementId, e);
+      }
+
+      AdapterDescription adapter = adapterInstanceStorage.getElementById(elementId);
+      // Delete adapter
+      adapterResourceManager.delete(elementId);
+      ExtensionsLogProvider.INSTANCE.remove(elementId);
+      LOG.info("Successfully deleted adapter: " + elementId);
+
+      // Delete data stream
+      this.dataStreamResourceManager.delete(adapter.getCorrespondingDataStreamElementId());
+      LOG.info("Successfully deleted data stream: " + adapter.getCorrespondingDataStreamElementId());
+    }finally {
+      LoadManager.unLockForAdapter();
     }
-
-    AdapterDescription adapter = adapterInstanceStorage.getElementById(elementId);
-    // Delete adapter
-    adapterResourceManager.delete(elementId);
-    ExtensionsLogProvider.INSTANCE.remove(elementId);
-    LOG.info("Successfully deleted adapter: " + elementId);
-
-    // Delete data stream
-    this.dataStreamResourceManager.delete(adapter.getCorrespondingDataStreamElementId());
-    LOG.info("Successfully deleted data stream: " + adapter.getCorrespondingDataStreamElementId());
   }
 
   public List<AdapterDescription> getAllAdapterInstances() {
@@ -148,32 +152,38 @@ public class AdapterMasterManagement {
 
   public void stopStreamAdapter(String elementId,
                                 boolean forceStop) throws AdapterException {
-    AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
-
+    LoadManager.tryLockForAdapter();
     try {
-      WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
-    } catch (AdapterException e) {
-      if (!forceStop) {
-        throw new AdapterException("Could not stop adapter", e);
-      } else {
-        ad.setRunning(false);
-        ad.setSelectedEndpointUrl(null);
-        adapterInstanceStorage.updateElement(ad);
+      AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
+
+      try {
+        WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
+      } catch (AdapterException e) {
+        if (!forceStop) {
+          throw new AdapterException("Could not stop adapter", e);
+        } else {
+          ad.setRunning(false);
+          ad.setSelectedEndpointUrl(null);
+          adapterInstanceStorage.updateElement(ad);
+        }
       }
-    }
-    ExtensionsLogProvider.INSTANCE.reset(elementId);
+      ExtensionsLogProvider.INSTANCE.reset(elementId);
 
-    // remove the adapter from the metrics manager so that
-    // no metrics for this adapter are exposed anymore
-    try {
-      adapterMetrics.remove(ad.getElementId(), ad.getName());
-    } catch (NoSuchElementException e) {
-      LOG.error("Could not remove adapter metrics for adapter {}", ad.getName());
+      // remove the adapter from the metrics manager so that
+      // no metrics for this adapter are exposed anymore
+      try {
+        adapterMetrics.remove(ad.getElementId(), ad.getName());
+      } catch (NoSuchElementException e) {
+        LOG.error("Could not remove adapter metrics for adapter {}", ad.getName());
+      }
+    }finally {
+      LoadManager.unLockForAdapter();
     }
   }
 
   public void startStreamAdapter(String elementId) throws AdapterException {
-
+    LoadManager.tryLockForAdapter();
+    try {
     var ad = adapterInstanceStorage.getElementById(elementId);
 
     try {
@@ -198,6 +208,9 @@ public class AdapterMasterManagement {
       LOG.info("Started adapter " + elementId + " on: " + baseUrl);
     } catch (NoServiceEndpointsAvailableException e) {
       throw new AdapterException("Could not start adapter due to unavailable service endpoint", e);
+    }
+    }finally {
+      LoadManager.unLockForAdapter();
     }
   }
 

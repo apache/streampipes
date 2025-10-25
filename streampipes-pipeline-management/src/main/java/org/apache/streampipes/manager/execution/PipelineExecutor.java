@@ -38,7 +38,6 @@ public class PipelineExecutor {
   }
 
   public PipelineOperationStatus stopPipeline(boolean forceStop) {
-    LoadManager.stopPipeline(pipeline.getPipelineId());
     return executeOperation(PipelineExecutionTaskFactory.makeStopPipelineTasks(pipeline, forceStop));
   }
 

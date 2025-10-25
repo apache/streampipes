@@ -23,30 +23,25 @@ import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.loadbalance.LoadManager;
-import org.apache.streampipes.manager.loadbalance.ResourceUnitGenerator;
+import org.apache.streampipes.manager.loadbalance.unit.PipelineElementPartitioner;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DiscoverEndpointsTask implements PipelineExecutionTask {
   @Override
   public void executeTask(Pipeline pipeline,
                           PipelineExecutionInfo executionInfo) {
-    for (Map.Entry<LoadBalanceResourceUnit<InvocableStreamPipesEntity>, List<SpServiceRegistration>> e :ResourceUnitGenerator.unitGeneration(pipeline.getActions(),pipeline.getSepas()).entrySet()){
-      e.getKey().setPipelineId(pipeline.getPipelineId());
-      e.getKey().setLabels(pipeline.getLabels());
-      SpServiceRegistration registration = LoadManager.allocation(e.getKey(),e.getValue(), pipeline.getLabels());
-      e.getKey().setServiceId(registration.getSvcId());
+    for (PipelineElementPartitioner.ResourceUnitWithServices unit : PipelineElementPartitioner.partitionPipeline(pipeline).getResourceUnits()){
+      SpServiceRegistration registration = LoadManager.allocation(unit.getCompatibleServices(), pipeline.getLabels());
       String url = registration.getServiceUrl();
-      for (InvocableStreamPipesEntity el : e.getKey().getElements()) {
+      for (InvocableStreamPipesEntity el : unit.getResourceUnit().getElements()) {
         try {
           var endpointUrl = getSelectedEndpoint(el, url);
           applyEndpointAndPipeline(pipeline.getPipelineId(), el, endpointUrl);

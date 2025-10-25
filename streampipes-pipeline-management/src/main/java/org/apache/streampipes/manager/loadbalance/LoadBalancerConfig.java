@@ -3,7 +3,7 @@ package org.apache.streampipes.manager.loadbalance;
 public class LoadBalancerConfig {
 
     // CPU usage weight when calculating new resource usage
-    public static double CPUResourceWeigh = 1.0;
+    public static double CPUResourceWeight = 1.0;
 
     // Memory usage weight when calculating new resource usage
     public static double MemoryResourceWeight = 1.0;

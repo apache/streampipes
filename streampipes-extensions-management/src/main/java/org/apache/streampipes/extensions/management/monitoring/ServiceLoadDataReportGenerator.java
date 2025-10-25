@@ -62,6 +62,7 @@ public class ServiceLoadDataReportGenerator {
   private volatile boolean initialized = false;
 
   private volatile ServiceLoadDataReport currentReport = new ServiceLoadDataReport();
+  private volatile ServiceLoadDataReport previousReport = new ServiceLoadDataReport();
 
   // Singleton instance
   private static volatile ServiceLoadDataReportGenerator instance;
@@ -151,6 +152,14 @@ public class ServiceLoadDataReportGenerator {
   }
 
   /**
+   * Get previous load report (historical data)
+   * @return Previous service load data report
+   */
+  public ServiceLoadDataReport getPreviousReport() {
+    return previousReport;
+  }
+
+  /**
    * Calculate initial usage
    */
   private void calculateInitialUsage() {
@@ -180,26 +189,45 @@ public class ServiceLoadDataReportGenerator {
   }
 
   /**
-   * Calculate usage
+   * Calculate usage and update reports with historical data
    */
   public void calculateUsages() {
     try {
-      ServiceLoadDataReport newReport = new ServiceLoadDataReport();
-      newReport.setCpu(getCpuUsage());
-      newReport.setMemory(getMemoryUsage());
-      newReport.setWeight(
-        (int) newReport.getCpu().percentUsage(),
-        (int) newReport.getMemory().percentUsage()
-      );
+      // Create current snapshot
+      ServiceLoadDataReport.ResourceSnapshot currentSnapshot = 
+          new ServiceLoadDataReport.ResourceSnapshot(getCpuUsage(), getMemoryUsage());
+      
+      // Create historical snapshot from previous current
+      ServiceLoadDataReport.ResourceSnapshot historicalSnapshot;
+      if (currentReport != null && currentReport.isComplete()) {
+        historicalSnapshot = currentReport.getCurrent();
+      } else {
+        // For first report, use current as historical
+        historicalSnapshot = currentSnapshot;
+      }
+      
+      // Create new report
+      ServiceLoadDataReport newReport = new ServiceLoadDataReport(currentSnapshot, historicalSnapshot, 0);
+      
+      // Calculate and set weight
+      newReport.calculateWeight();
 
-      serviceStats.setCpuUsage(newReport.getCpu().getUsage());
-      serviceStats.setMemoryUsage(newReport.getMemory().getUsage());
-      serviceStats.setSystemLoad(newReport.getTotalUsagePercent());
-      serviceStats.setHistoricalSystemLoad(systemBean.getSystemLoadAverage());
+      // Update service stats
+      serviceStats.setCpuUsage(currentSnapshot.getCpu().getUsage());
+      serviceStats.setMemoryUsage(currentSnapshot.getMemory().getUsage());
+      serviceStats.setSystemLoad(currentSnapshot.getAverageUsagePercent());
+      serviceStats.setHistoricalSystemLoad(historicalSnapshot.getAverageUsagePercent());
       serviceStats.updateAllMetrics();
+      
+      // Store previous and update current
+      previousReport = currentReport;
       currentReport = newReport;
 
-      log.debug("Successfully calculated usage and collected metrics");
+      log.debug("Successfully calculated usage - Current: CPU={}%, Memory={}%, Historical: CPU={}%, Memory={}%",
+               currentSnapshot.getCpu().percentUsage(),
+               currentSnapshot.getMemory().percentUsage(),
+               historicalSnapshot.getCpu().percentUsage(),
+               historicalSnapshot.getMemory().percentUsage());
     } catch (Exception e) {
       log.error("Error calculating usage", e);
     }

@@ -44,6 +44,8 @@ public interface ISpServiceDiscovery {
                                    boolean restrictToHealthy,
                                    List<String> filterByTags);
 
+  List<SpServiceRegistration> getService(boolean restrictToHealthy);
+
   /**
    * Get all service
    * @return list of services

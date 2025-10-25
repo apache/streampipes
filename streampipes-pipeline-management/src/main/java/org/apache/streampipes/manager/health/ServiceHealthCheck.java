@@ -20,16 +20,10 @@ package org.apache.streampipes.manager.health;
 
 
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.commons.prometheus.service.ElementServiceStats;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
-import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.loadbalance.LoadManager;
-import org.apache.streampipes.manager.loadbalance.PipelineRuntimeData;
-import org.apache.streampipes.manager.loadbalance.ResourceUnitMigration;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
-import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.http.HttpStatus;
@@ -49,7 +43,7 @@ public class ServiceHealthCheck implements Runnable {
   private final ServiceRegistrationManager serviceRegistrationManager;
   private final int maxUnhealthyDurationBeforeRemovalMs;
 
-  private final List<SpServiceRegistration> serviceRegistrations =new ArrayList<>();
+  private final List<SpServiceRegistration> needDeletedServices =new ArrayList<>();
 
   public ServiceHealthCheck() {
     var storage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
@@ -61,35 +55,17 @@ public class ServiceHealthCheck implements Runnable {
 
   @Override
   public void run() {
-    synchronized (ResourceUnitMigration.class) {
       try {
-        PipelineRuntimeData.clearAll();
-        PipelineRuntimeData.loadAll();
         var registeredServices = getRegisteredServices();
         registeredServices.forEach(this::checkServiceHealth);
-        for (SpServiceRegistration service : serviceRegistrations) {
-          System.out.println(service.getServiceUrl());
-          List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> loadBalanceResourceUnits =
-                  PipelineRuntimeData.getSinksAndProcess().getOrDefault(service.getSvcId(), new ArrayList<>());
-          for (LoadBalanceResourceUnit<InvocableStreamPipesEntity> entityLoadBalanceResourceUnit : loadBalanceResourceUnits) {
-            if (entityLoadBalanceResourceUnit.getElements() == null || entityLoadBalanceResourceUnit.getElements().isEmpty()) {
-              continue;
-            }
-            ResourceUnitMigration.migrationForHealth(entityLoadBalanceResourceUnit, LoadManager.allocation(entityLoadBalanceResourceUnit, getService(
-                    ExtensionsServiceEndpointUtils.getPipelineElementType(
-                                    entityLoadBalanceResourceUnit.getElements().get(0))
-                            .getServiceTag(entityLoadBalanceResourceUnit.getElements().get(0).getAppId())
-                            .asString(), getRegisteredServices()), new ArrayList<>()));
-          }
-          PipelineRuntimeData.removeServiceResourceUnit(service.getSvcId());
-        }
-        serviceRegistrations.clear();
+        LoadManager.migrateForHealthCheck(needDeletedServices);
       } catch (Exception e) {
-        e.printStackTrace();
+        LOG.error("Error while checking service health", e);
+      }finally {
+        needDeletedServices.clear();
       }
       new PipelineHealthCheck().run();
     }
-  }
 
 
   private void checkServiceHealth(SpServiceRegistration service) {
@@ -121,12 +97,7 @@ public class ServiceHealthCheck implements Runnable {
       LOG.info("Removing service {} which has been unhealthy for more than {} milliseconds.",
               service.getSvcId(), maxUnhealthyDurationBeforeRemovalMs);
       serviceRegistrationManager.removeService(service.getSvcId());
-      if(!serviceRegistrations.contains(service)) {
-        serviceRegistrations.add(service);
-        if(ElementServiceStats.containsKey(service.getSvcId())) {
-          ElementServiceStats.get(service.getSvcId()).remove();
-        }
-      }
+      needDeletedServices.add(service);
     }
   }
 

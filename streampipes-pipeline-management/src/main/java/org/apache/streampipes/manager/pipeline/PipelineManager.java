@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
+import org.apache.streampipes.manager.loadbalance.LoadManager;
 import org.apache.streampipes.manager.permission.PermissionManager;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -89,8 +90,13 @@ public class PipelineManager {
    * @return pipeline status of the start operation
    */
   public static PipelineOperationStatus startPipeline(String pipelineId) {
-    Pipeline pipeline = getPipeline(pipelineId);
-    return new PipelineExecutor(pipeline).startPipeline();
+    LoadManager.tryLockForPipeline();
+    try {
+      Pipeline pipeline = getPipeline(pipelineId);
+      return new PipelineExecutor(pipeline).startPipeline();
+    }finally {
+      LoadManager.unLockForPipeline();
+    }
   }
 
   /**
@@ -103,9 +109,14 @@ public class PipelineManager {
    */
   public static PipelineOperationStatus stopPipeline(String pipelineId,
                                                      boolean forceStop) {
-    Pipeline pipeline = getPipeline(pipelineId);
+    LoadManager.tryLockForPipeline();
+    try {
+      Pipeline pipeline = getPipeline(pipelineId);
 
-    return new PipelineExecutor(pipeline).stopPipeline(forceStop);
+      return new PipelineExecutor(pipeline).stopPipeline(forceStop);
+    }finally {
+      LoadManager.unLockForPipeline();
+    }
   }
 
   /**
@@ -114,10 +125,15 @@ public class PipelineManager {
    * @param pipelineId of pipeline to be deleted
    */
   public static void deletePipeline(String pipelineId) {
-    var pipeline = getPipeline(pipelineId);
-    if (Objects.nonNull(pipeline)) {
-      getPipelineStorage().deleteElementById(pipelineId);
-      new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
+    LoadManager.tryLockForPipeline();
+    try {
+      var pipeline = getPipeline(pipelineId);
+      if (Objects.nonNull(pipeline)) {
+        getPipelineStorage().deleteElementById(pipelineId);
+        new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
+      }
+    }finally {
+      LoadManager.unLockForPipeline();
     }
   }
 

@@ -1,180 +1,301 @@
 package org.apache.streampipes.manager.loadbalance;
 
 import org.apache.streampipes.commons.exceptions.SpException;
-import org.apache.streampipes.commons.prometheus.migration.MigrationStats;
-import org.apache.streampipes.extensions.api.locker.impl.SpStateLocker;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
-import org.apache.streampipes.manager.execution.http.DetachHttpRequest;
 import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
+import org.apache.streampipes.manager.loadbalance.unit.ResourceUnitStatsScanner;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
-import org.apache.streampipes.model.loadbalancer.PipelineInfo;
-import org.apache.streampipes.model.loadbalancer.PipelineStates;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnitStats;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class ResourceUnitMigration {
 
-    private static final Logger log = LoggerFactory.getLogger(ResourceUnitMigration.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResourceUnitMigration.class);
 
-    public static void migration(LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit, SpServiceRegistration registration) {
-        loadBalanceResourceUnit.setServiceId(registration.getSvcId());
-        String pipelineId = loadBalanceResourceUnit.getPipelineId();
-        MigrationStats stats = MigrationStats.get(pipelineId);
-        if(stats==null){
-            stats= new MigrationStats(pipelineId);
-        }
-        long t0 = System.nanoTime();
-        PipelineInfo currentPipelineInfo = SpStateLocker.INSTANCE.setPipelineInfo(pipelineId, PipelineStates.START);
-        stats.migrationStatus = 1;
-        MigrationStats.metrics();
-
-        currentPipelineInfo.setPipelineState(PipelineStates.SEPARATING);
-        stats.migrationStatus = 2;
-        MigrationStats.metrics();
-        for (InvocableStreamPipesEntity pipesEntity : loadBalanceResourceUnit.getElements()) {
-            String endpointUrl = pipesEntity.getSelectedEndpointUrl() + pipesEntity.getDetachPath();
-            new DetachHttpRequest().execute(pipesEntity, endpointUrl, pipelineId);
-        }
-        currentPipelineInfo.setPipelineState(PipelineStates.SEPARATED);
-        stats.migrationStatus = 3;
-        MigrationStats.metrics();
-
-        currentPipelineInfo.setPipelineState(PipelineStates.MIGRATING);
-        stats.migrationStatus = 4;
-        MigrationStats.metrics();
-        for (InvocableStreamPipesEntity pipesEntity : loadBalanceResourceUnit.getElements()) {
-            pipesEntity.setSelectedEndpointUrl(getSelectedEndpoint(pipesEntity, registration.getServiceUrl()));
-            String endpointUrl = pipesEntity.getSelectedEndpointUrl();
-            new InvokeHttpRequest().execute(pipesEntity, endpointUrl, pipelineId);
-        }
-        currentPipelineInfo.setPipelineState(PipelineStates.MIGRATED);
-        stats.migrationStatus = 5;
-        MigrationStats.metrics();
-
-        Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipelineId);
-
-        for (DataSinkInvocation dataSinkInvocation : pipeline.getActions()) {
-            for (InvocableStreamPipesEntity entity : loadBalanceResourceUnit.getElements()) {
-                if (dataSinkInvocation.getElementId().equals(entity.getElementId())) {
-                    dataSinkInvocation.setSelectedEndpointUrl(entity.getSelectedEndpointUrl());
-                }
-            }
-        }
-        for (DataProcessorInvocation processorInvocation : pipeline.getSepas()) {
-            for (InvocableStreamPipesEntity entity : loadBalanceResourceUnit.getElements()) {
-                if (processorInvocation.getElementId().equals(entity.getElementId())) {
-                    processorInvocation.setSelectedEndpointUrl(entity.getSelectedEndpointUrl());
-                }
-            }
-        }
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
-        currentPipelineInfo.setPipelineState(PipelineStates.FINISH);
-        stats.migrationStatus = 6;
-        stats.migrationDuration = (System.nanoTime() - t0) / 1_000_000_000.0;
-        stats.migrationCount++;
-        stats.migrationStatus = 0;
-        MigrationStats.metrics();
-    }
-
-    public static void migrationForHealth(LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit, SpServiceRegistration registration) {
-        System.out.println("update loadBalanceResourceUnit to:"+registration.getHost());
-        loadBalanceResourceUnit.setServiceId(registration.getSvcId());
+    /**
+     * Migrate pipeline resource unit for health recovery
+     * Updates the service endpoint for all elements in the unit
+     * @param resourceUnit Resource unit to migrate
+     * @param targetService Target service registration
+     */
+    public static void migrationForHealth(
+            LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit, 
+            SpServiceRegistration targetService) {
+        
+        logger.info("Migrating pipeline resource unit {} to service {} for health recovery",
+                   resourceUnit.getId(), targetService.getSvcId());
+        
+        resourceUnit.setServiceId(targetService.getSvcId());
+        
         try {
-            for (InvocableStreamPipesEntity pipesEntity : loadBalanceResourceUnit.getElements()) {
-                pipesEntity.setSelectedEndpointUrl(getSelectedEndpoint(pipesEntity, registration.getServiceUrl()));
-                String endpointUrl = pipesEntity.getSelectedEndpointUrl();
-                new InvokeHttpRequest().execute(pipesEntity, endpointUrl, loadBalanceResourceUnit.getPipelineId());
+            // Update endpoint URL for all elements and invoke them on new service
+            for (InvocableStreamPipesEntity element : resourceUnit.getElements()) {
+                String newEndpointUrl = getSelectedEndpoint(element, targetService.getServiceUrl());
+                element.setSelectedEndpointUrl(newEndpointUrl);
+                
+                logger.debug("Invoking element {} on new endpoint {}", 
+                           element.getElementId(), newEndpointUrl);
+                
+                new InvokeHttpRequest().execute(element, newEndpointUrl, resourceUnit.getPipelineId());
             }
 
-            Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(loadBalanceResourceUnit.getPipelineId());
+            // Update pipeline in storage with new endpoints
+            updatePipelineEndpoints(resourceUnit);
+            
+            logger.info("Successfully migrated pipeline resource unit {} to service {}", 
+                       resourceUnit.getId(), targetService.getSvcId());
+            
+        } catch (Exception e) {
+            logger.error("Failed to migrate pipeline resource unit {} to service {}: {}", 
+                        resourceUnit.getId(), targetService.getSvcId(), e.getMessage(), e);
+            throw new RuntimeException("Migration failed for unit " + resourceUnit.getId(), e);
+        }
+    }
 
-            for (DataProcessorInvocation processorInvocation : pipeline.getSepas()) {
-                for (InvocableStreamPipesEntity entity : loadBalanceResourceUnit.getElements()) {
-                    if (processorInvocation.getElementId().equals(entity.getElementId())) {
-                        processorInvocation.setSelectedEndpointUrl(entity.getSelectedEndpointUrl());
-                    }
-                }
+    /**
+     * Migrate adapter resource unit for health recovery
+     * Updates the service endpoint for the adapter
+     * @param resourceUnit Adapter resource unit to migrate
+     * @param targetService Target service registration
+     */
+    public static void migrateAdapterForHealth(
+            LoadBalanceResourceUnit<AdapterDescription> resourceUnit,
+            SpServiceRegistration targetService) {
+        
+        logger.info("Migrating adapter resource unit {} to service {} for health recovery",
+                   resourceUnit.getId(), targetService.getSvcId());
+        
+        resourceUnit.setServiceId(targetService.getSvcId());
+        
+        try {
+            for (AdapterDescription adapter : resourceUnit.getElements()) {
+                String oldEndpointUrl = adapter.getSelectedEndpointUrl();
+                String newEndpointUrl = targetService.getServiceUrl();
+                
+                logger.debug("Updating adapter {} endpoint from {} to {}",
+                           adapter.getElementId(), oldEndpointUrl, newEndpointUrl);
+                
+                // Update adapter endpoint
+                adapter.setSelectedEndpointUrl(newEndpointUrl);
+                
+                // Update adapter in storage
+                StorageDispatcher.INSTANCE.getNoSqlStore()
+                    .getAdapterDescriptionStorage()
+                    .updateElement(adapter);
+                
+                logger.debug("Successfully updated adapter {} in storage", adapter.getElementId());
             }
+            
+            logger.info("Successfully migrated adapter resource unit {} to service {}", 
+                       resourceUnit.getId(), targetService.getSvcId());
+            
+        } catch (Exception e) {
+            logger.error("Failed to migrate adapter resource unit {} to service {}: {}", 
+                        resourceUnit.getId(), targetService.getSvcId(), e.getMessage(), e);
+            throw new RuntimeException("Adapter migration failed for unit " + resourceUnit.getId(), e);
+        }
+    }
 
-            for (DataSinkInvocation dataSinkInvocation : pipeline.getActions()) {
-                for (InvocableStreamPipesEntity entity : loadBalanceResourceUnit.getElements()) {
-                    if (dataSinkInvocation.getElementId().equals(entity.getElementId())) {
-                        dataSinkInvocation.setSelectedEndpointUrl(entity.getSelectedEndpointUrl());
-                    }
-                }
-            }
-            StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
-        } catch (Exception e){
-            e.printStackTrace();
+    /**
+     * Update pipeline endpoints in storage
+     * @param resourceUnit Resource unit with updated elements
+     */
+    private static void updatePipelineEndpoints(LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit) {
+        Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore()
+            .getPipelineStorageAPI()
+            .getPipeline(resourceUnit.getPipelineId());
+        
+        if (pipeline == null) {
+            logger.warn("Pipeline {} not found in storage", resourceUnit.getPipelineId());
+            return;
         }
 
+        // Update processors
+        if (pipeline.getSepas() != null) {
+            for (DataProcessorInvocation processor : pipeline.getSepas()) {
+                updateElementEndpoint(processor, resourceUnit.getElements());
+            }
+        }
+
+        // Update sinks
+        if (pipeline.getActions() != null) {
+            for (DataSinkInvocation sink : pipeline.getActions()) {
+                updateElementEndpoint(sink, resourceUnit.getElements());
+            }
+        }
+        
+        // Save updated pipeline
+        StorageDispatcher.INSTANCE.getNoSqlStore()
+            .getPipelineStorageAPI()
+            .updatePipeline(pipeline);
+        
+        logger.debug("Updated pipeline {} endpoints in storage", pipeline.getPipelineId());
+    }
+
+    /**
+     * Update element endpoint if it's in the resource unit
+     * @param pipelineElement Element in pipeline
+     * @param resourceElements Elements in resource unit
+     */
+    private static void updateElementEndpoint(
+            InvocableStreamPipesEntity pipelineElement,
+            List<InvocableStreamPipesEntity> resourceElements) {
+        
+        for (InvocableStreamPipesEntity resourceElement : resourceElements) {
+            if (pipelineElement.getElementId().equals(resourceElement.getElementId())) {
+                pipelineElement.setSelectedEndpointUrl(resourceElement.getSelectedEndpointUrl());
+                logger.debug("Updated endpoint for element {}: {}", 
+                           pipelineElement.getElementId(), 
+                           resourceElement.getSelectedEndpointUrl());
+                break;
+            }
+        }
     }
 
 
 
-    public static void migration(SpServiceRegistration sourceService, double source, SpServiceRegistration targetService,double target) {
-        PipelineRuntimeData.loadAll();
-        List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> units = PipelineRuntimeData.getSinksAndProcess().get(sourceService.getSvcId());
-        PipelineRuntimeData.clearAll();
-        LoadData loadData = LoadManager.getLoadData();
-        List<LoadBalanceResourceUnitStats> list = loadData.getResourceUnitStats(sourceService.getSvcId());
-        if(list==null){
-            list=new ArrayList<>();
-        }
-        list.sort((a, b) -> Double.compare(  b.eventRateOut, a.eventRateOut));
+    /**
+     * Migrate resource units from source to target service to balance load
+     * @param sourceService Source service to migrate from
+     * @param sourceLoad Current load of source service
+     * @param targetService Target service to migrate to
+     * @param targetLoad Current load of target service
+     */
+    public static void migration(SpServiceRegistration sourceService, double sourceLoad, 
+                                 SpServiceRegistration targetService, double targetLoad) {
+        
+        logger.info("Starting migration from service {} (load: {}%) to service {} (load: {}%)",
+                   sourceService.getSvcId(), sourceLoad, targetService.getSvcId(), targetLoad);
+        
+        // Generate statistics for both services (on-demand, no cache)
+        List<LoadBalanceResourceUnitStats> sourceStats = 
+            ResourceUnitStatsScanner.generateStatsForService(sourceService);
+        List<LoadBalanceResourceUnitStats> targetStats = 
+            ResourceUnitStatsScanner.generateStatsForService(targetService);
 
-        List<LoadBalanceResourceUnitStats> list1 = loadData.getResourceUnitStats(targetService.getSvcId());
-        if(list1==null){
-            list1=new ArrayList<>();
+        if (sourceStats.isEmpty()) {
+            logger.info("No resource units found on source service {}", sourceService.getSvcId());
+            return;
         }
-        double all =0;
-        for(LoadBalanceResourceUnitStats stats:list){
-            all +=  stats.eventRateOut;
-        }
-        double num=0;
-        for(LoadBalanceResourceUnitStats stats:list1){
-            num+=  stats.eventRateOut;
-
-        }
-        all += num;
-
-        double tar=0;
-        for(LoadBalanceResourceUnitStats loadBalanceResourceUnitStats : list){
-            if(tar>=(((all-num)*(source-target)/(2*source)))){
-                System.out.println("target:out "+tar);
-                System.out.println("target:neet Tran:" + (((all-num)*(source-target)/(2*source))));
+        
+        // Sort by event rate (highest first) to migrate busy units first
+        sourceStats.sort((a, b) -> Double.compare(b.getEventRateOut()+b.getEventRateIn(), a.getEventRateOut()+b.getEventRateIn()));
+        
+        // Calculate how much load to transfer
+        double transferTarget = calculateTransferTarget(sourceStats, targetStats, sourceLoad, targetLoad);
+        
+        logger.debug("Transfer target: {} event rate", transferTarget);
+        
+        // Migrate units until we reach the transfer target
+        migrateUnitsToTarget(sourceStats, targetService, transferTarget);
+    }
+    
+    /**
+     * Calculate how much load should be transferred
+     * @param sourceStats Source service statistics
+     * @param targetStats Target service statistics
+     * @param sourceLoad Source service load percentage
+     * @param targetLoad Target service load percentage
+     * @return Transfer target in terms of event rate
+     */
+    private static double calculateTransferTarget(
+            List<LoadBalanceResourceUnitStats> sourceStats,
+            List<LoadBalanceResourceUnitStats> targetStats,
+            double sourceLoad, double targetLoad) {
+        
+        // Calculate total event rates
+        double sourceEventRate = sourceStats.stream()
+                .mapToDouble(stats -> stats.getEventRateOut()+stats.getEventRateIn())
+                .sum();
+        
+        double targetEventRate = targetStats.stream()
+                .mapToDouble(stats -> stats.getEventRateOut()+stats.getEventRateOut())
+                .sum();
+        
+        double totalEventRate = sourceEventRate + targetEventRate;
+        
+        // Calculate how much to transfer to balance loads
+        // Transfer = (sourceEventRate) * (sourceLoad - targetLoad) / (2 * sourceLoad)
+        double transferAmount = (totalEventRate - targetEventRate) * (sourceLoad - targetLoad) / (2 * sourceLoad);
+        
+        return Math.max(0, transferAmount);
+    }
+    
+    /**
+     * Migrate units from source to target until transfer target is reached
+     * @param sourceStats Source statistics sorted by event rate
+     * @param targetService Target service
+     * @param transferTarget Target transfer amount
+     */
+    private static void migrateUnitsToTarget(
+            List<LoadBalanceResourceUnitStats> sourceStats,
+            SpServiceRegistration targetService,
+            double transferTarget) {
+        
+        double transferredAmount = 0;
+        int migratedCount = 0;
+        
+        // Iterate through stats (sorted by event rate)
+        for (LoadBalanceResourceUnitStats stats : sourceStats) {
+            if (transferredAmount >= transferTarget) {
+                logger.info("Transfer target reached: {} >= {}", transferredAmount, transferTarget);
                 break;
             }
 
-            for(LoadBalanceResourceUnit<InvocableStreamPipesEntity> unit : units){
-                if(unit.getId().equals(loadBalanceResourceUnitStats.getResourceId())){
-                    try {
-                        String tryLockPipelineId = unit.getPipelineId();
-                        SpStateLocker.INSTANCE.tryLock(tryLockPipelineId, TimeUnit.SECONDS);
-                        try {
-                            migration(unit,targetService);
-                            tar+= loadBalanceResourceUnitStats.eventRateOut;
-                        } finally {
-                            SpStateLocker.INSTANCE.unlock(tryLockPipelineId);
-                        }
-                    } catch (SpException e){
-                        log.info(e.getMessage());
-                    }
-
+            if (stats == null||stats.getUnit()==null)  {
+                continue;
+            }
+            LoadBalanceResourceUnit matchingUnit = stats.getUnit();
+            if (matchingUnit.getElements().isEmpty()) {
+                continue;
+            }
+            boolean isAdapter = matchingUnit.getElements().get(0) instanceof AdapterDescription;
+            
+            // Migrate the unit
+            try {
+                if (isAdapter) {
+                    migrateAdapterForHealth(matchingUnit, targetService);
+                } else {
+                    migrationForHealth(matchingUnit, targetService);
                 }
+                    transferredAmount += stats.getEventRateOut()+stats.getEventRateIn();
+                    migratedCount++;
+                    
+                    logger.debug("Migrated unit {} with event rate {}, total transferred: {}",
+                               matchingUnit.getId(), stats.getEventRateOut(), transferredAmount);
+            } catch (SpException e) {
+                logger.warn("Failed to migrate unit {}: {}", matchingUnit.getId(), e.getMessage());
             }
         }
+        
+        logger.info("Migration completed: {} units migrated, total event rate transferred: {}",
+                   migratedCount, transferredAmount);
+    }
+    
+    /**
+     * Find resource unit by ID
+     * @param units List of resource units
+     * @param resourceId Resource ID to find
+     * @return Matching resource unit or null
+     */
+    private static LoadBalanceResourceUnit<InvocableStreamPipesEntity> findUnitById(
+            List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> units,
+            String resourceId) {
+        
+        return units.stream()
+                .filter(unit -> unit.getId().equals(resourceId))
+                .findFirst()
+                .orElse(null);
     }
 
     private static String getSelectedEndpoint(InvocableStreamPipesEntity pipelineElement, String url) {

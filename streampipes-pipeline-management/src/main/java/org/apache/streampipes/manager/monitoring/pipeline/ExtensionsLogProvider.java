@@ -42,21 +42,9 @@ public enum ExtensionsLogProvider {
 
   private final Map<String, List<SpLogEntry>> allLogInfos = new HashMap<>();
   private final Map<String, SpMetricsEntry> allMetricsInfos = new HashMap<>();
-  private final Map<String, ServiceLoadDataReport> ServiceLoadDataReports = new HashMap<>();
-
-  private long lastUpdateTime = System.currentTimeMillis();
-
-  private long timeInterval = 0L;
-
-  public void update(Map<String, ServiceLoadDataReport> ServiceLoadDataReports){
-    this.ServiceLoadDataReports.putAll(ServiceLoadDataReports);
-  }
 
   public void addMonitoringInfos(SpEndpointMonitoringInfo monitoringInfo) {
     allMetricsInfos.putAll(monitoringInfo.getMetricsInfos());
-    long time = System.currentTimeMillis();
-    timeInterval = lastUpdateTime - time;
-    lastUpdateTime = time;
     monitoringInfo.getLogInfos().forEach((key, value) -> {
       if (!allLogInfos.containsKey(key)) {
         allLogInfos.put(key, new ArrayList<>());
@@ -135,20 +123,8 @@ public enum ExtensionsLogProvider {
     this.allLogInfos.remove(resourceId);
   }
 
-  public void removeService(String serviceId) {
-    this.ServiceLoadDataReports.remove(serviceId);
-  }
-
   public Map<String, SpMetricsEntry> getAllMetricsInfos(){
     return this.allMetricsInfos;
-  }
-
-  public ServiceLoadDataReport getServiceLoadDataReports(String serviceId) {
-    return ServiceLoadDataReports.get(serviceId);
-  }
-
-  public long getTimeInterval() {
-    return timeInterval;
   }
 
   private List<String> collectPipelineElementIds(Pipeline pipeline) {

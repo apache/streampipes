@@ -130,7 +130,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
     var env = Environments.getEnvironment();
-    LoadManager.init();
+    LoadManager.initialize();
     if (!isConfigured()) {
       CoreInitialInstallationProgress.INSTANCE.triggerInitiallyInstallingMode();
       doInitialSetup(env.getInitialWaitTimeBeforeInstallationInMillis().getValueOrDefault());

@@ -28,60 +28,28 @@ public class ExtensionsServiceReportExecutor {
 
     private static final Map<String, ServiceLoadDataReport> map = new ConcurrentHashMap<>();
 
-    public Map<String, ServiceLoadDataReport> run(){
-        List<SpServiceRegistration> serviceEndpoints = getActiveExtensionsEndpoints();
-        Map<String,ServiceLoadDataReport> serviceLoadDataReportMap = new HashMap<>();
-        serviceEndpoints.forEach(serviceEndpoint -> {
+    public static ServiceLoadDataReport getServiceLoadDataReport(SpServiceRegistration serviceRegistration) {
             try {
-                String response = makeRequest(serviceEndpoint.getServiceUrl())
+                String response = makeRequest(serviceRegistration.getServiceUrl())
                         .execute()
                         .returnContent()
                         .asString();
-                ServiceLoadDataReport serviceLoadDataReport = parseLogResponse(response);
-                serviceLoadDataReportMap.put(serviceEndpoint.getSvcId(),serviceLoadDataReport);
-                System.out.println("serviceLoadDataReportMap" + serviceLoadDataReportMap);
+                return parseLogResponse(response);
             } catch (IOException e) {
-                e.printStackTrace();
-                LOG.info("Could not fetch info from endpoint {}", serviceEndpoint);
+                LOG.info("Could not fetch info from endpoint {}", serviceRegistration.getServiceUrl());
             }
-        });
-        return serviceLoadDataReportMap;
+        return new ServiceLoadDataReport();
     }
 
-    private List<SpServiceRegistration> getActiveExtensionsEndpoints() {
-        return getServiceEndpoints(
-                DefaultSpServiceTypes.EXT,
-                true,
-                List.of(DefaultSpServiceTags.PE.asString(), DefaultSpServiceTags.CONNECT_WORKER.asString())
-        );
-    }
-
-    private List<SpServiceRegistration> getServiceEndpoints(String serviceGroup,boolean restrictToHealthy,List<String> filterByTags) {
-        List<SpServiceRegistration> activeServices = SpServiceDiscovery.getServiceDiscovery().findAll();
-        return activeServices
-                .stream()
-                .filter(service -> allFiltersSupported(service, filterByTags))
-                .filter(service -> !restrictToHealthy
-                        || service.getStatus() != SpServiceStatus.UNHEALTHY)
-                .collect(Collectors.toList());
-    }
-
-    private boolean allFiltersSupported(SpServiceRegistration service,
-                                        List<String> filterByTags) {
-        return new HashSet<>(service.getTags())
-                .stream()
-                .anyMatch(tag -> filterByTags.contains(tag.asString()));
-    }
-
-    private Request makeRequest(String serviceEndpointUrl) {
+    private static Request makeRequest(String serviceEndpointUrl) {
         return ExtensionServiceExecutions.extServiceGetRequest(makeLogUrl(serviceEndpointUrl));
     }
 
-    private String makeLogUrl(String baseUrl) {
+    private static String makeLogUrl(String baseUrl) {
         return baseUrl + LOG_PATH;
     }
 
-    private ServiceLoadDataReport parseLogResponse(String response) throws JsonProcessingException {
+    private static ServiceLoadDataReport parseLogResponse(String response) throws JsonProcessingException {
         return JacksonSerializer.getObjectMapper().readValue(response, ServiceLoadDataReport.class);
     }
 

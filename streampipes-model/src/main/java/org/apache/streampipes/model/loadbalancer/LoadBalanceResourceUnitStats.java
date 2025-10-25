@@ -1,16 +1,18 @@
 package org.apache.streampipes.model.loadbalancer;
 
-public class LoadBalanceResourceUnitStats {
+public class LoadBalanceResourceUnitStats<T> {
 
-    public double eventRateIn;
+    private double eventRateIn;
 
-    public double eventThroughputIn;
+    private double eventThroughputIn;
 
-    public double eventRateOut;
+    private double eventRateOut;
 
-    public double eventThroughputOut;
+    private double eventThroughputOut;
 
-    public long lastUpdate;
+    private long lastUpdate;
+
+    private LoadBalanceResourceUnit<T> unit;
 
     public LoadBalanceResourceUnitStats() {
         this.lastUpdate = System.currentTimeMillis();
@@ -54,5 +56,13 @@ public class LoadBalanceResourceUnitStats {
 
     public void setLastUpdate(long lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public LoadBalanceResourceUnit<T> getUnit() {
+        return unit;
+    }
+
+    public void setUnit(LoadBalanceResourceUnit<T> unit) {
+        this.unit = unit;
     }
 }

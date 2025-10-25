@@ -61,8 +61,6 @@ public class PipelineHealthCheck implements Runnable {
   }
 
   public void checkAndRestorePipelineElements() {
-
-    synchronized (ResourceUnitMigration.class) {
       List<Pipeline> allPipelines = getAllPipelines();
       List<Pipeline> runningPipelines = getRunningPipelines(allPipelines);
 
@@ -136,7 +134,6 @@ public class PipelineHealthCheck implements Runnable {
         pipelinesStats.setElementCount(getElementsCount(allPipelines));
       }
       pipelinesStats.metrics();
-    }
   }
 
   private String findEndpointUrl(InvocableStreamPipesEntity graph) throws NoServiceEndpointsAvailableException {
