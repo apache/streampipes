@@ -153,9 +153,8 @@ public class AdapterMasterManagement {
   public void stopStreamAdapter(String elementId,
                                 boolean forceStop) throws AdapterException {
     LoadManager.tryLockForAdapter();
+    AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
     try {
-      AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
-
       try {
         WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
       } catch (AdapterException e) {
@@ -176,7 +175,7 @@ public class AdapterMasterManagement {
       } catch (NoSuchElementException e) {
         LOG.error("Could not remove adapter metrics for adapter {}", ad.getName());
       }
-    }finally {
+    } finally {
       LoadManager.unLockForAdapter();
     }
   }
