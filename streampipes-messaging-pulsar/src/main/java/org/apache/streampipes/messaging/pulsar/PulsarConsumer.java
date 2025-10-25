@@ -60,7 +60,7 @@ public class PulsarConsumer implements EventConsumer {
                 try {
                     eventProcessor.onEvent(msg.getData());
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                  Thread.currentThread().interrupt();
                 }
             }
           })

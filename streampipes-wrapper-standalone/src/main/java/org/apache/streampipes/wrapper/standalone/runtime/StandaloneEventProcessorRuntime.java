@@ -79,7 +79,7 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
       LOG.error("RuntimeException while processing event in {}", pipelineElement.getClass().getCanonicalName(), e);
       addLogEntry(e);
     } catch (InterruptedException e) {
-        throw new SpRuntimeException(e);
+      Thread.currentThread().interrupt();
     } finally {
       SpMemoryManager.INSTANCE.freeForMap(rawEvent);
     }

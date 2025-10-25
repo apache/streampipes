@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.extensions.api.memorymanager;
 
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.spmemorymanager.SpMemoryManagerStats;
 
 import org.slf4j.Logger;
@@ -28,6 +30,8 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * A singleton memory manager implementation for StreamPipes extensions.
@@ -39,20 +43,9 @@ public enum SpMemoryManager {
   INSTANCE;
 
   private static final Logger LOG = LoggerFactory.getLogger(SpMemoryManager.class);
+  private final Environment env = Environments.getEnvironment();
 
-  // Configuration constants
-  private static final long DEFAULT_INITIAL_MEMORY = 10L * 1024 * 1024 * 1024; // 10 GB
-  private static final long WAIT_TIMEOUT_MS = 1000L;
-  private static final int SCHEDULER_INITIAL_DELAY_SECONDS = 0;
-  private static final int SCHEDULER_PERIOD_SECONDS = 15;
-  private static final int BYTES_TO_MB = 1024 * 1024;
-  private static final int SHUTDOWN_TIMEOUT_SECONDS = 5;
-  
-  // Memory control thresholds
-  private static final double MEMORY_USAGE_THRESHOLD = 0.9; // 90% threshold for blocking
-  private static final double MEMORY_WARNING_THRESHOLD = 0.8; // 80% warning threshold
-
-  private long freeMemory;
+  private AtomicLong freeMemory;
 
   private double memoryUsedBytes = 0.0;
   private double memoryAllocationRate = 0.0;
@@ -69,7 +62,7 @@ public enum SpMemoryManager {
   private static ScheduledExecutorService scheduler;
 
   SpMemoryManager() {
-    this.freeMemory = DEFAULT_INITIAL_MEMORY;
+    this.freeMemory = new AtomicLong(env.getMemoryManagerDefaultInitialMemory().getValueOrDefault());
     initScheduledTask();
   }
 
@@ -78,7 +71,9 @@ public enum SpMemoryManager {
       synchronized (SpMemoryManager.class) {
         if (!schedulerInitialized) {
           scheduler = Executors.newScheduledThreadPool(1);
-          scheduler.scheduleAtFixedRate(this::scheduledTask, SCHEDULER_INITIAL_DELAY_SECONDS, SCHEDULER_PERIOD_SECONDS, java.util.concurrent.TimeUnit.SECONDS);
+          scheduler.scheduleAtFixedRate(this::scheduledTask, env.getMemorySchedulerInitialDelaySeconds().getValueOrDefault(),
+                  env.getMemorySchedulerPeriodSeconds().getValueOrDefault(),
+                  java.util.concurrent.TimeUnit.SECONDS);
           schedulerInitialized = true;
         }
       }
@@ -87,8 +82,8 @@ public enum SpMemoryManager {
 
   public void scheduledTask() {
     this.stats = new SpMemoryManagerStats();
-    stats.setAllocationRate(this.getMEMORY_ALLOCATION_RATE());
-    stats.setMemoryUsedBytes(this.getMEMORY_USED_BYTES());
+    stats.setAllocationRate(this.getMemoryAllocationRate());
+    stats.setMemoryUsedBytes(this.getMemoryUsedBytes());
     stats.updateAllMetrics();
     
     // Check memory usage thresholds
@@ -98,26 +93,27 @@ public enum SpMemoryManager {
   /**
    * Checks memory usage against configured thresholds and updates blocking state.
    */
-  private void checkMemoryThresholds() {
-    double memoryUsageRatio = (double) getAllocatedMemory() / DEFAULT_INITIAL_MEMORY;
+  private void checkMemoryThresholds() {;
+    double memoryUsageRatio = (double) getAllocatedMemory()
+            /  env.getMemoryManagerDefaultInitialMemory().getValueOrDefault();
     
-    if (memoryUsageRatio >= MEMORY_USAGE_THRESHOLD) {
+    if (memoryUsageRatio >= env.getMemoryManagerUsageThreshold().getValueOrDefault()) {
       if (!memoryBlocked) {
         memoryBlocked = true;
         LOG.warn("Memory usage reached {}% threshold. Blocking data consumption.", 
-            (int)(MEMORY_USAGE_THRESHOLD * 100));
+            (int)(env.getMemoryManagerUsageThreshold().getValueOrDefault() * 100));
       }
-    } else if (memoryUsageRatio <= MEMORY_WARNING_THRESHOLD) {
+    } else if (memoryUsageRatio <= env.getMemoryWarningThreshold().getValueOrDefault()) {
       if (memoryBlocked) {
         memoryBlocked = false;
         LOG.info("Memory usage dropped below {}% threshold. Resuming data consumption.", 
-            (int)(MEMORY_WARNING_THRESHOLD * 100));
+            (int)(env.getMemoryWarningThreshold().getValueOrDefault() * 100));
       }
     }
     
     // Update warning state
-    memoryWarningActive = memoryUsageRatio >= MEMORY_WARNING_THRESHOLD
-                          && memoryUsageRatio < MEMORY_USAGE_THRESHOLD;
+    memoryWarningActive = memoryUsageRatio >= env.getMemoryWarningThreshold().getValueOrDefault()
+                          && memoryUsageRatio < env.getMemoryManagerUsageThreshold().getValueOrDefault();
   }
 
   /**
@@ -143,30 +139,30 @@ public enum SpMemoryManager {
 
     // Loop until enough memory is available
     while (true) {
-      long currentFree = freeMemory;
+      long currentFree = freeMemory.get();
       long newFreeMemory = currentFree - bytes;
 
       if (newFreeMemory >= 0) {
-        // Sufficient memory available, perform allocation
-        freeMemory = newFreeMemory;
-        
-        long allocatedMemory = DEFAULT_INITIAL_MEMORY - freeMemory;
-        memoryUsedBytes = (double) allocatedMemory;
-        
-        updateAllocationRate(bytes);
-
-        return;
+        // Try to atomically update the free memory
+        if (freeMemory.compareAndSet(currentFree, newFreeMemory)) {
+          // Successfully allocated memory
+          long allocatedMemory = env.getMemoryManagerDefaultInitialMemory().getValueOrDefault() - newFreeMemory;
+          memoryUsedBytes = (double) allocatedMemory;
+          
+          updateAllocationRate(bytes);
+          return;
+        }
       } else {
         // Insufficient memory, block and wait
         LOG.warn("Not enough free memory to allocate {} bytes. Current free memory: {} bytes. "
             + "Blocking allocation.", bytes, currentFree);
 
-        synchronized (this) {
-          try {
-            // Block and wait for memory to be freed
-            wait(WAIT_TIMEOUT_MS);
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        // Use LockSupport for non-blocking wait
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime
+                < env.getMemoryManagerWaitTimeoutMs().getValueOrDefault()) {
+          LockSupport.parkNanos(1_000_000); // 1ms
+          if (Thread.currentThread().isInterrupted()) {
             LOG.warn("Memory allocation blocking was interrupted");
             return;
           }
@@ -188,15 +184,10 @@ public enum SpMemoryManager {
       return;
     }
 
-    synchronized (this) {
-      freeMemory += bytes;
-      
-      long allocatedMemory = DEFAULT_INITIAL_MEMORY - freeMemory;
-      memoryUsedBytes = (double) allocatedMemory;
-
-      // Notify all waiting threads
-      notifyAll();
-    }
+    long newFreeMemory = freeMemory.addAndGet(bytes);
+    
+    long allocatedMemory = env.getMemoryManagerDefaultInitialMemory().getValueOrDefault() - newFreeMemory;
+    memoryUsedBytes = (double) allocatedMemory;
   }
 
   public void allocateForMap(Map<?, ?> map) {
@@ -241,7 +232,7 @@ public enum SpMemoryManager {
    * @return The current free memory in bytes
    */
   public long getFreeMemory() {
-    return freeMemory;
+    return freeMemory.get();
   }
 
   /**
@@ -250,7 +241,7 @@ public enum SpMemoryManager {
    * @return The total allocated memory in bytes
    */
   public long getAllocatedMemory() {
-    return DEFAULT_INITIAL_MEMORY - freeMemory;
+    return env.getMemoryManagerDefaultInitialMemory().getValueOrDefault() - freeMemory.get();
   }
 
   /**
@@ -258,7 +249,7 @@ public enum SpMemoryManager {
    *
    * @return The memory used in bytes
    */
-  public double getMEMORY_USED_BYTES() {
+  public double getMemoryUsedBytes() {
     return memoryUsedBytes;
   }
 
@@ -267,7 +258,7 @@ public enum SpMemoryManager {
    *
    * @param usedBytes The memory used in bytes
    */
-  public void setMEMORY_USED_BYTES(double usedBytes) {
+  public void setMemoryUsedBytes(double usedBytes) {
     this.memoryUsedBytes = usedBytes;
   }
 
@@ -276,7 +267,7 @@ public enum SpMemoryManager {
    *
    * @return The allocation rate in bytes per second
    */
-  public double getMEMORY_ALLOCATION_RATE() {
+  public double getMemoryAllocationRate() {
     return memoryAllocationRate;
   }
 
@@ -285,7 +276,7 @@ public enum SpMemoryManager {
    *
    * @param allocationRate The allocation rate in bytes per second
    */
-  public void setMEMORY_ALLOCATION_RATE(double allocationRate) {
+  public void setMemoryAllocationRate(double allocationRate) {
     this.memoryAllocationRate = allocationRate;
   }
 
@@ -318,7 +309,7 @@ public enum SpMemoryManager {
      * @return The memory usage percentage (0.0 to 1.0)
      */
     public double getMemoryUsagePercentage() {
-        return (double) getAllocatedMemory() / DEFAULT_INITIAL_MEMORY;
+        return (double) getAllocatedMemory() / env.getMemoryManagerDefaultInitialMemory().getValueOrDefault();
     }
     
     /**
@@ -345,7 +336,7 @@ public enum SpMemoryManager {
      * @return The memory usage in MB
      */
     public double getMemoryUsageMB() {
-        return getAllocatedMemory() / (double) BYTES_TO_MB;
+        return getAllocatedMemory() / (double) env.getMemoryBytesToMb().getValueOrDefault();
     }
     
     /**
@@ -354,14 +345,19 @@ public enum SpMemoryManager {
      * @return The total available memory in MB
      */
     public double getTotalMemoryMB() {
-        return DEFAULT_INITIAL_MEMORY / (double) BYTES_TO_MB;
+        return env.getMemoryManagerDefaultInitialMemory().getValueOrDefault() /
+                (double) env.getMemoryBytesToMb().getValueOrDefault();
     }
     
     public static void shutdown() {
         if (scheduler != null && !scheduler.isShutdown()) {
             scheduler.shutdown();
             try {
-                if (!scheduler.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, java.util.concurrent.TimeUnit.SECONDS)) {
+                if (!scheduler.awaitTermination(Environments.
+                                getEnvironment().
+                                getMemoryManagerShutdownTimeoutSeconds().
+                                getValueOrDefault(),
+                        java.util.concurrent.TimeUnit.SECONDS)) {
                     scheduler.shutdownNow();
                 }
             } catch (InterruptedException e) {

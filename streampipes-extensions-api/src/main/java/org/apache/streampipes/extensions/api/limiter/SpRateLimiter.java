@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.extensions.api.limiter;
 
+import com.sun.management.OperatingSystemMXBean;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.spratelimiter.SpRateLimiterStats;
 
 import com.google.common.util.concurrent.RateLimiter;
@@ -44,27 +47,17 @@ public enum SpRateLimiter {
   private static final Logger LOG = LoggerFactory.getLogger(SpRateLimiter.class);
 
   // Configuration constants
-  private static final double DEFAULT_PERMITS_PER_SECOND = 100.0;
-  private static final long DEFAULT_WARMUP_PERIOD = 1000L;
   private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.MILLISECONDS;
-  private static final int SCHEDULER_INITIAL_DELAY_SECONDS = 0;
-  private static final int SCHEDULER_PERIOD_SECONDS = 15;
-  private static final long ZERO_RATE_WAIT_TIME_MS = 1000L;
-  private static final int STATS_RESET_THRESHOLD = 1000;
-  private static final int STATS_RESET_FACTOR = 999;
-  private static final int STATS_RESET_DIVISOR = 1000;
-  private static final int SHUTDOWN_TIMEOUT_SECONDS = 5;
-  private static final long TIMEOUT_MS = 1000;
-  private static final int PERMITS_PER_REQUEST = 1;
+  private final Environment env = Environments.getEnvironment();
 
   private RateLimiter rateLimiter;
 
   private double rateLimiterAverageWaitTime = 0.0;
   
   private long totalWaitTime = 0L;
-  private AtomicInteger waitTimeCount = new AtomicInteger(0);
+  private final AtomicInteger waitTimeCount = new AtomicInteger(0);
   
-  private AtomicInteger currentQueueSize = new AtomicInteger(0);
+  private final AtomicInteger currentQueueSize = new AtomicInteger(0);
 
   private SpRateLimiterStats stats;
   private static volatile boolean schedulerInitialized = false;
@@ -72,12 +65,14 @@ public enum SpRateLimiter {
 
     /**
    * Creates a rate limiter with default parameters.
-   * Default: 100 permits per second, 1000ms warmup period.
+   * Default: calculated permits per second based on memory, 1000ms warmup period.
    */
   public void createRateLimiter() {
-    createRateLimiter(DEFAULT_PERMITS_PER_SECOND, DEFAULT_WARMUP_PERIOD, DEFAULT_TIME_UNIT);
+    var defaultPermits = setPermit();
+    var defaultWarmupPeriod = env.getRateLimiterDefaultWarmupPeriod().getValueOrDefault();
+    createRateLimiter(defaultPermits, defaultWarmupPeriod, DEFAULT_TIME_UNIT);
     initScheduledTasks();
-    LOG.info("RateLimiter created and scheduler initialized");
+    LOG.info("RateLimiter created with {} permits/sec and scheduler initialized", defaultPermits);
   }
 
   /**
@@ -87,17 +82,20 @@ public enum SpRateLimiter {
    * @param permitsPerSecond The number of permits per second
    */
   public void createRateLimiter(double permitsPerSecond) {
-    createRateLimiter(permitsPerSecond, DEFAULT_WARMUP_PERIOD, DEFAULT_TIME_UNIT);
+    var defaultWarmupPeriod = env.getRateLimiterDefaultWarmupPeriod().getValueOrDefault();
+    createRateLimiter(permitsPerSecond, defaultWarmupPeriod, DEFAULT_TIME_UNIT);
     initScheduledTasks();
     LOG.info("RateLimiter created with {} permits/sec and scheduler initialized", permitsPerSecond);
   }
 
   public void initScheduledTasks() {
+    var schedulerInitialDelay = env.getRateLimiterSchedulerInitialDelaySeconds().getValueOrDefault();
+    var schedulerPeriod = env.getRateLimiterSchedulerPeriodSeconds().getValueOrDefault();
     if (!schedulerInitialized) {
       synchronized (SpRateLimiter.class) {
         if (!schedulerInitialized) {
           scheduler = Executors.newSingleThreadScheduledExecutor();
-          scheduler.scheduleAtFixedRate(this::scheduledTask, SCHEDULER_INITIAL_DELAY_SECONDS, SCHEDULER_PERIOD_SECONDS, TimeUnit.SECONDS);
+          scheduler.scheduleAtFixedRate(this::scheduledTask, schedulerInitialDelay, schedulerPeriod, TimeUnit.SECONDS);
           schedulerInitialized = true;
         }
       }
@@ -140,50 +138,34 @@ public enum SpRateLimiter {
    * @throws InterruptedException if the current thread is interrupted while waiting
    */
   public boolean limit(long bytes) throws InterruptedException {
+    var timeOutMs = env.getRateLimiterTimeoutMs().getValueOrDefault();
     if (this.rateLimiter == null) {
       LOG.warn("RateLimiter has not been initialized. Please call createRateLimiter() first.");
       return false;
     }
 
     long startTime = System.currentTimeMillis();
-    
-    synchronized (this) {
-      currentQueueSize.incrementAndGet();
-    }
+
+    currentQueueSize.incrementAndGet();
     
     try {
-      if (rateLimiter.getRate() <= 0) {
-        LOG.warn("RateLimiter is set to zero or negative rate. No permits will be acquired.");
-        updateAverageWaitTime(ZERO_RATE_WAIT_TIME_MS);
-        try {
-          Thread.sleep(ZERO_RATE_WAIT_TIME_MS);
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-          return false;
-        }
-        return false;
-        } else {
-          // Each request consumes exactly 1 permit regardless of data size
-          long timeoutMs = TIMEOUT_MS;
-          boolean acquired = rateLimiter.tryAcquire(PERMITS_PER_REQUEST, timeoutMs, TimeUnit.MILLISECONDS);
-        
-        long waitTime = System.currentTimeMillis() - startTime;
-        updateAverageWaitTime(waitTime);
-        
-        if (!acquired) {
-          LOG.warn("Failed to acquire permit for {} bytes within {} ms timeout (rate: {} requests/sec)", 
-                   bytes, timeoutMs, rateLimiter.getRate());
-        } else {
-          LOG.debug("Successfully acquired permit for {} bytes in {} ms (rate: {} requests/sec)", 
-                   bytes, waitTime, rateLimiter.getRate());
-        }
-        
-        return acquired;
+      int permits = (int) bytes;
+      long timeoutMs = timeOutMs;
+      boolean acquired = rateLimiter.tryAcquire(permits, timeoutMs, TimeUnit.MILLISECONDS);
+
+      long waitTime = System.currentTimeMillis() - startTime;
+      updateAverageWaitTime(waitTime);
+
+      if (!acquired) {
+        LOG.warn("Failed to acquire permit for {} bytes within {} ms timeout (rate: {} requests/sec)",
+                 bytes, timeoutMs, rateLimiter.getRate());
+      } else {
+        LOG.debug("Successfully acquired permit for {} bytes in {} ms (rate: {} requests/sec)",
+                 bytes, waitTime, rateLimiter.getRate()); 
       }
+      return acquired;
     } finally {
-      synchronized (this) {
-        currentQueueSize.updateAndGet(current -> Math.max(0, current - 1));
-      }
+      currentQueueSize.updateAndGet(current -> Math.max(0, current - 1));
     }
   }
 
@@ -209,6 +191,17 @@ public enum SpRateLimiter {
     } catch (Exception e) {
       return -1;
     }
+  }
+
+    /**
+     * Sets the number of permits based on a percentage of the JVM's maximum memory.
+     *
+     * @return The calculated number of permits
+     */
+  public static double setPermit() {
+    var permitsSetPercentage = Environments.getEnvironment().getRateLimiterPermitsSetPercentage().getValueOrDefault();
+    OperatingSystemMXBean systemMXBean = (OperatingSystemMXBean) java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+    return systemMXBean.getTotalMemorySize() * permitsSetPercentage;
   }
 
   /**
@@ -264,7 +257,7 @@ public enum SpRateLimiter {
    *
    * @return The current queue size
    */
-  public double getRATE_LIMITER_QUEUE_SIZE() {
+  public int getCurrentQueueSize() {
     return currentQueueSize.get();
   }
 
@@ -273,7 +266,7 @@ public enum SpRateLimiter {
    *
    * @return The average wait time in seconds
    */
-  public double getRATE_LIMITER_AVERAGE_WAIT_TIME() {
+  public double getRateLimiterAverageWaitTime() {
     return rateLimiterAverageWaitTime;
   }
 
@@ -282,7 +275,7 @@ public enum SpRateLimiter {
    *
    * @param averageWaitTime The average wait time in seconds
    */
-  public void setRATE_LIMITER_AVERAGE_WAIT_TIME(double averageWaitTime) {
+  public void setRateLimiterAverageWaitTime(double averageWaitTime) {
     this.rateLimiterAverageWaitTime = averageWaitTime;
   }
 
@@ -300,14 +293,17 @@ public enum SpRateLimiter {
   }
 
   private void updateAverageWaitTime(long waitTimeMs) {
+    var statsResetThreshold = env.getRateLimiterStatsResetThreshold().getValueOrDefault();
+    var statsResetFactor = env.getRateLimiterStatsResetFactor().getValueOrDefault();
+    var statsResetDivisor = env.getRateLimiterStatsResetDivisor().getValueOrDefault();
     totalWaitTime += waitTimeMs;
     int currentCount = waitTimeCount.incrementAndGet();
     
     rateLimiterAverageWaitTime = (double) totalWaitTime / currentCount / 1000.0;
     
-    if (currentCount > STATS_RESET_THRESHOLD) {
-      totalWaitTime = totalWaitTime * STATS_RESET_FACTOR / STATS_RESET_DIVISOR;
-      waitTimeCount.set(STATS_RESET_FACTOR);
+    if (currentCount > statsResetThreshold) {
+      totalWaitTime = totalWaitTime * statsResetFactor / statsResetDivisor;
+      waitTimeCount.set(statsResetFactor);
     }
   }
 
@@ -315,20 +311,17 @@ public enum SpRateLimiter {
     return stats;
   }
   
-  public int getCurrentQueueSize() {
-    return currentQueueSize.get();
-  }
-  
   public void resetQueueSize() {
     currentQueueSize.set(0);
     LOG.info("Queue size has been reset");
   }
 
-  public static void shutdown() {
+  public void shutdown() {
+    var shutdownTimeoutSeconds = env.getRateLimiterShutdownTimeoutSeconds().getValueOrDefault();
     if (scheduler != null && !scheduler.isShutdown()) {
       scheduler.shutdown();
       try {
-        if (!scheduler.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+        if (!scheduler.awaitTermination(shutdownTimeoutSeconds, TimeUnit.SECONDS)) {
           scheduler.shutdownNow();
         }
       } catch (InterruptedException e) {

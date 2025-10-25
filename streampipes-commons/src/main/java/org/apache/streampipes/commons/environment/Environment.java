@@ -19,9 +19,7 @@
 package org.apache.streampipes.commons.environment;
 
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
-import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
-import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
-import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.*;
 
 import java.util.List;
 
@@ -166,4 +164,25 @@ public interface Environment {
   StringEnvironmentVariable getFileLoggingPattern();
 
   StringEnvironmentVariable getRetentionLocalDir();
+
+  //SpRateLimiter
+  LongEnvironmentVariable getRateLimiterDefaultWarmupPeriod();
+  IntEnvironmentVariable getRateLimiterSchedulerInitialDelaySeconds();
+  IntEnvironmentVariable getRateLimiterSchedulerPeriodSeconds();
+  IntEnvironmentVariable getRateLimiterStatsResetThreshold();
+  IntEnvironmentVariable getRateLimiterStatsResetFactor();
+  IntEnvironmentVariable getRateLimiterStatsResetDivisor();
+  IntEnvironmentVariable getRateLimiterShutdownTimeoutSeconds();
+  LongEnvironmentVariable getRateLimiterTimeoutMs();
+  DoubleEnvironmentVariable getRateLimiterPermitsSetPercentage();
+
+  //SpMemoryManager
+  LongEnvironmentVariable getMemoryManagerDefaultInitialMemory();
+  LongEnvironmentVariable getMemoryManagerWaitTimeoutMs();
+  IntEnvironmentVariable getMemorySchedulerInitialDelaySeconds();
+  IntEnvironmentVariable getMemorySchedulerPeriodSeconds();
+  LongEnvironmentVariable getMemoryBytesToMb();
+  IntEnvironmentVariable getMemoryManagerShutdownTimeoutSeconds();
+  DoubleEnvironmentVariable getMemoryManagerUsageThreshold();
+  DoubleEnvironmentVariable getMemoryWarningThreshold();
 }

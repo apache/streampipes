@@ -51,7 +51,7 @@ public class RocketMQConsumer implements Runnable {
           try {
               eventProcessor.onEvent(messageView.getBody().array());
           } catch (InterruptedException e) {
-              throw new RuntimeException(e);
+            Thread.currentThread().interrupt();
           }
           return ConsumeResult.SUCCESS;
       });

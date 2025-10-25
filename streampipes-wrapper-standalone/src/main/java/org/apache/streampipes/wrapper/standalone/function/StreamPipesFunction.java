@@ -110,22 +110,13 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   @Override
   public void process(Map<String, Object> rawEvent, String topicName) {
     try {
-      SpRateLimiter.INSTANCE.limitForMap(rawEvent);
-      SpMemoryManager.INSTANCE.allocateForMap(rawEvent);
-
       var sourceInfo = sourceInfoMapper.get(topicName);
-
       var event = EventFactory
           .fromMap(rawEvent, sourceInfo, schemaInfoMapper.get(topicName));
-
       this.onEvent(event, sourceInfo.getSourceId());
       increaseCounter(sourceInfo.getSourceId());
     } catch (RuntimeException e) {
       addError(e);
-    } catch (InterruptedException e) {
-        throw new SpRuntimeException(e);
-    } finally {
-        SpMemoryManager.INSTANCE.freeForMap(rawEvent);
     }
   }
 

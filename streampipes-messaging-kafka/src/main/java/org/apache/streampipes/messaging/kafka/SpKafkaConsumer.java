@@ -78,7 +78,7 @@ public class SpKafkaConsumer implements EventConsumer, Runnable,
           try {
               eventProcessor.onEvent(record.value());
           } catch (InterruptedException e) {
-              throw new RuntimeException(e);
+            Thread.currentThread().interrupt();
           }
       });
     }
