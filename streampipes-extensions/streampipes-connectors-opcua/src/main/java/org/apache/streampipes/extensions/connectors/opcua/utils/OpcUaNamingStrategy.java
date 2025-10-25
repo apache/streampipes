@@ -23,13 +23,13 @@ import org.apache.streampipes.extensions.connectors.opcua.model.nodename.ParsedN
 import org.apache.streampipes.extensions.connectors.opcua.model.nodename.SimpleNameResolver;
 import org.apache.streampipes.model.staticproperty.Option;
 
-import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
+import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
 
 public enum OpcUaNamingStrategy {
   DISPLAY_NAME("Display Name",
-      new SimpleNameResolver((BaseDataVariableTypeNode node) -> node.getDisplayName().getText())),
+      new SimpleNameResolver((VariableNode node) -> node.getDisplayName().getText())),
   BROWSE_NAME("Browse Name",
-      new SimpleNameResolver((BaseDataVariableTypeNode node) -> "_" + node.getBrowseName().toParseableString())),
+      new SimpleNameResolver((VariableNode node) -> "_" + node.getBrowseName().toParseableString())),
   PARSED_NODE_ID("Parsed Node ID",
       new ParsedNodeIdResolver());
 
@@ -46,7 +46,7 @@ public enum OpcUaNamingStrategy {
     return new Option(optionLabel, this.name());
   }
 
-  public String getDesiredName(BaseDataVariableTypeNode node,
+  public String getDesiredName(VariableNode node,
                                String fieldAppendix) {
     return resolver.resolveName(node, fieldAppendix);
   }

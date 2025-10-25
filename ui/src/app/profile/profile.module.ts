@@ -36,6 +36,8 @@ import { SharedUiModule } from '@streampipes/shared-ui';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -54,6 +56,8 @@ import { MatTableModule } from '@angular/material/table';
         PlatformServicesModule,
         SharedUiModule,
         RouterLink,
+        MatSelectModule,
+        TranslatePipe,
     ],
     declarations: [
         ChangeEmailDialogComponent,

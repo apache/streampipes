@@ -58,6 +58,7 @@ export * from './lib/apis/user-group.service';
 export * from './lib/apis/shared-dashboard.service';
 export * from './lib/apis/pipeline-element-runtime-info.service';
 export * from './lib/apis/pipeline-element-asset.service';
+export * from './lib/apis/export-provider.service';
 
 export * from './lib/model/datalake/DateRange';
 export * from './lib/model/datalake/DatalakeQueryParameters';

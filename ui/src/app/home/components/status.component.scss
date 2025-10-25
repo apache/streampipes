@@ -20,11 +20,10 @@
     height: 150px;
     width: 100%;
     color: var(--color-secondary);
-    border-radius: 5px;
+    border-radius: 10px;
     margin-bottom: 20px;
-    border: 2px solid var(--color-bg-2);
-    background: var(--color-bg-2);
-    border-bottom: 5px solid var(--color-primary);
+    border: 1px solid var(--color-bg-2);
+    background: var(--color-bg-1);
 }
 
 .status-container-number {

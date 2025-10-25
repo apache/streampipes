@@ -18,7 +18,7 @@
 
 import { ExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/export-config.model';
 import { DataDownloadDialogUtils } from '../../support/utils/DataDownloadDialogUtils';
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 
 describe('Test data explorer data download dialog', () => {
@@ -29,8 +29,8 @@ describe('Test data explorer data download dialog', () => {
             'json_array',
         );
 
-        DataLakeUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
-        DataLakeUtils.saveDataViewConfiguration();
+        DataExplorerUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
+        DataExplorerUtils.saveDataViewConfiguration();
     });
 
     beforeEach('Setup Test', () => {

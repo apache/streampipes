@@ -57,7 +57,7 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    var builder = DataSinkBuilder.create(ID, 0)
+    var builder = DataSinkBuilder.create(ID, 2)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .category(DataSinkType.FORWARD)

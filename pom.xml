@@ -68,7 +68,7 @@
         <graalvm.js.version>23.0.0</graalvm.js.version>
         <gson.version>2.12.1</gson.version>
         <guava.version>33.4.0-jre</guava.version>
-        <grpc.version>1.59.1</grpc.version>
+        <grpc.version>1.76.0</grpc.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <hadoop.version>3.4.1</hadoop.version>
@@ -84,7 +84,7 @@
         <jakarta-servlet-api.version>6.0.0</jakarta-servlet-api.version>
         <jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
         <javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
-        <java-websocket.version>1.5.6</java-websocket.version>
+        <java-websocket.version>1.6.0</java-websocket.version>
         <jaxb-runtime.version>2.3.2</jaxb-runtime.version>
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
@@ -98,7 +98,7 @@
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jjwt.version>0.11.2</jjwt.version>
         <jts-core.version>1.19.0</jts-core.version>
-        <kafka.version>3.7.1</kafka.version>
+        <kafka.version>3.9.1</kafka.version>
         <lightcouch.version>0.2.0</lightcouch.version>
         <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
         <mailapi.version>1.4.3</mailapi.version>
@@ -118,12 +118,13 @@
         <postgresql.version>42.7.2</postgresql.version>
         <protobuf.version>4.28.2</protobuf.version>
         <pulsar.version>3.2.2</pulsar.version>
-        <parquet.version>1.12.0</parquet.version>
+        <parquet.version>1.16.0</parquet.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
         <rdf4j.version>3.7.7</rdf4j.version>
         <rendersnake.version>1.9.0</rendersnake.version>
         <rocketmq.version>5.0.2</rocketmq.version>
+        <s3.version>2.25.14</s3.version>
         <siddhi.version>5.1.27</siddhi.version>
         <simple-java-mail.version>8.10.0</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
@@ -133,7 +134,7 @@
         <springdoc.version>2.8.4</springdoc.version>
         <spring.version>6.2.2</spring.version>
         <spring-boot.version>3.4.2</spring-boot.version>
-        <spring-security.version>6.4.10</spring-security.version>
+        <spring-security.version>6.5.5</spring-security.version>
         <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
         <tsfile.version>1.1.0</tsfile.version>
@@ -448,6 +449,11 @@
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-streaming-java_2.11</artifactId>
                 <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3</artifactId>
+                <version>${s3.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>

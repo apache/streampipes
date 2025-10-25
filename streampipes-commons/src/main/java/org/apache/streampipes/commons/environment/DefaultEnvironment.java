@@ -232,6 +232,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getExtAssetBaseDir() {
+    return new StringEnvironmentVariable(Envs.SP_EXT_ASSET_BASE_DIR);
+  }
+
+  @Override
   public StringEnvironmentVariable getFlinkJarFileLoc() {
     return new StringEnvironmentVariable(Envs.SP_FLINK_JAR_FILE_LOC);
   }
@@ -500,5 +505,10 @@ public class DefaultEnvironment implements Environment {
   @Override
   public StringEnvironmentVariable getMigrator() {
     return new StringEnvironmentVariable(Envs.MIGRATOR);
+  }
+}
+  @Override
+  public StringEnvironmentVariable getDatalakeSchedulerCron() {
+    return new StringEnvironmentVariable(Envs.SP_DATALAKE_SCHEDULER_CRON);
   }
 }

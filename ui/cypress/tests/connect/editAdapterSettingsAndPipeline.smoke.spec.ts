@@ -23,7 +23,8 @@ import { PipelineElementBuilder } from '../../support/builder/PipelineElementBui
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
 describe('Test Edit Adapter and Pipeline', () => {
     beforeEach('Setup Test', () => {
@@ -52,6 +53,7 @@ describe('Test Edit Adapter and Pipeline', () => {
     it('Edit adapter and test Pipeline behaviour', () => {
         // Edit Apater and select pressure
         ConnectUtils.goToConnect();
+        ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
         const newUserConfiguration = AdapterBuilder.create(
@@ -86,6 +88,7 @@ describe('Test Edit Adapter and Pipeline', () => {
             timeout: 60000,
         }).should('be.visible');
 
+        GeneralUtils.openMenuForRow('Pipeline Test');
         cy.dataCy('modify-pipeline-btn').click();
         cy.dataCy('settings-pipeline-element-button').eq(0).click();
         cy.dataCy('number-mapping').contains('pressure').click({ force: true });
@@ -99,8 +102,8 @@ describe('Test Edit Adapter and Pipeline', () => {
 
         // Visit dashboard
         cy.wait(5000);
-        DataLakeUtils.goToDatalake();
-        DataLakeUtils.createAndEditDataView();
+        DataExplorerUtils.goToDatalake();
+        DataExplorerUtils.createAndEditDataView();
 
         cy.dataCy('data-explorer-field-selection-panel').should(
             'include.text',

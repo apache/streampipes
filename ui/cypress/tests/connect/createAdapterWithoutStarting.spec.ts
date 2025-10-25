@@ -33,6 +33,7 @@ describe('Creates a new adapter without starting it', () => {
 
         ConnectUtils.testAdapter(adapterInput);
 
-        ConnectUtils.startAndValidateAdapter(7);
+        // Start adapter manually to validate that it starts
+        ConnectUtils.startAndValidateAdapter(adapterInput.adapterName, 7);
     });
 });

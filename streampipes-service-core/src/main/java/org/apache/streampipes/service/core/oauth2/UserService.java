@@ -92,11 +92,13 @@ public class UserService {
           );
         }
         applyRoles(user, oAuthConfig, attributes, false);
+        user.setLastLoginAtMillis(System.currentTimeMillis());
         userStorage.updateUser(user);
       } else {
         user = toUserAccount(registrationId, principalId, email, fullName);
+        user.setLastLoginAtMillis(System.currentTimeMillis());
         applyRoles(user, oAuthConfig, attributes, true);
-        new UserResourceManager().registerOauthUser(user);
+        new UserResourceManager().storeUser(user);
       }
 
       user = (UserAccount) userStorage.getUserById(principalId);

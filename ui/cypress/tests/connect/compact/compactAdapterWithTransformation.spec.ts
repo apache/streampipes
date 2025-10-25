@@ -19,6 +19,7 @@
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { CompactAdapterUtils } from '../../../support/utils/connect/CompactAdapterUtils';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
+import { GeneralUtils } from '../../../support/utils/GeneralUtils';
 
 describe('Add Compact Adapters', () => {
     beforeEach('Setup Test', () => {
@@ -43,7 +44,7 @@ describe('Add Compact Adapters', () => {
                 'volume_flow',
             ];
 
-            ConnectUtils.validateEventSchema(runtimeNames);
+            ConnectUtils.validateEventSchema(compactAdapter.name, runtimeNames);
         });
     });
 
@@ -58,6 +59,7 @@ describe('Add Compact Adapters', () => {
 
         CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
             ConnectUtils.goToConnect();
+            GeneralUtils.openMenuForRow(compactAdapter.name);
             ConnectBtns.detailsAdapter().click();
 
             // This assertion works because the original value is below 100

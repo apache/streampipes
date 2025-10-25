@@ -37,6 +37,12 @@ export class SpAdapterStartedSuccessComponent {
     adapterInstallationSuccessMessage = '';
 
     @Input()
+    saveInAsset = '';
+
+    @Input()
+    deletedFromAsset = '';
+
+    @Input()
     pipelineOperationStatus: PipelineOperationStatus;
 
     @Input()

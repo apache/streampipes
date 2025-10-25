@@ -40,7 +40,7 @@
                             matInput
                             type="text"
                             (keyup)="makeDraggable()"
-                            placeholder="Find element"
+                            [placeholder]="'Find element' | translate"
                             [(ngModel)]="elementFilter"
                         />
                         <mat-icon matPrefix color="accent">search</mat-icon>
@@ -79,7 +79,7 @@
                     <span fxFlex></span>
                     <button
                         mat-icon-button
-                        matTooltip="Create new source"
+                        [matTooltip]="'Create new source' | translate"
                         (click)="navigateToConnect()"
                         *ngIf="availableType.title === availableTypes[0].title"
                     >
@@ -112,7 +112,7 @@
                         class="panel-options"
                     >
                         <small
-                            >Sort:&nbsp;<a
+                            >{{ 'Sort' | translate }}:&nbsp;<a
                                 (click)="changeSorting(availableType, 'group')"
                                 class="sort-option"
                                 [ngClass]="
@@ -120,7 +120,7 @@
                                         ? 'sort-selected'
                                         : 'sort-unselected'
                                 "
-                                >Group</a
+                                >{{ 'Group' | translate }}</a
                             >&nbsp;|&nbsp;
                             <a
                                 (click)="changeSorting(availableType, 'name')"
@@ -130,7 +130,7 @@
                                         ? 'sort-selected'
                                         : 'sort-unselected'
                                 "
-                                >Name</a
+                                >{{ 'Name' | translate }}</a
                             ></small
                         >
                     </div>

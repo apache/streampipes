@@ -19,13 +19,13 @@
 @if (configReady) {
     <sp-auth-box [linkSettings]="loginSettings.linkSettings">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
-            <h1>Login</h1>
+            <h1>{{ 'Login' | translate }}</h1>
         </div>
         <div fxFlex="100" fxLayout="column" class="mt-10">
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                 <div fxFlex="100" fxLayout="column">
                     <mat-form-field fxFlex color="accent">
-                        <mat-label>Email</mat-label>
+                        <mat-label>{{ 'Email ' | translate }}</mat-label>
                         <input
                             formControlName="username"
                             matInput
@@ -36,7 +36,7 @@
                         />
                     </mat-form-field>
                     <mat-form-field fxFlex color="accent">
-                        <mat-label>Password</mat-label>
+                        <mat-label>{{ 'Password' | translate }}</mat-label>
                         <input
                             formControlName="password"
                             matInput
@@ -55,8 +55,10 @@
                         (click)="doLogin()"
                         [disabled]="!parentForm.valid || loading"
                     >
-                        <span *ngIf="loading">Logging in...</span>
-                        <span *ngIf="!loading">Login</span>
+                        <span *ngIf="loading"
+                            >{{ 'Logging in' | translate }}...</span
+                        >
+                        <span *ngIf="!loading">{{ 'Login' | translate }}</span>
                     </button>
                     <mat-spinner
                         [mode]="'indeterminate'"
@@ -66,15 +68,18 @@
                     ></mat-spinner>
                     <div class="md-warn" *ngIf="authenticationFailed">
                         <h5 class="login-error">
-                            User not found or incorrect password provided.<br />Please
-                            try again.
+                            {{
+                                'User not found or incorrect password provided.'
+                                    | translate
+                            }}<br />
+                            {{ 'Please try again' | translate }}
                         </h5>
                     </div>
                     <div fxLayout="row" class="mt-10">
                         <div *ngIf="loginSettings.allowPasswordRecovery">
-                            <a [routerLink]="['/restore-password']"
-                                >Forgot password?</a
-                            >
+                            <a [routerLink]="['/restore-password']">{{
+                                'Forgot password?' | translate
+                            }}</a>
                         </div>
                         <span
                             style="margin-left: 5px; margin-right: 5px"
@@ -86,9 +91,9 @@
                             |
                         </span>
                         <div *ngIf="loginSettings.allowSelfRegistration">
-                            <a [routerLink]="['/register']"
-                                >Create new account</a
-                            >
+                            <a [routerLink]="['/register']">{{
+                                'Create new account' | translate
+                            }}</a>
                         </div>
                     </div>
                     <div
@@ -97,7 +102,7 @@
                         *ngIf="loginSettings.oAuthSettings?.enabled"
                     >
                         <div class="separator">
-                            <span>or</span>
+                            <span>{{ 'or' | translate }}</span>
                         </div>
                         <div
                             fxLayout="column"
@@ -113,7 +118,8 @@
                                 (click)="doOAuthLogin(provider.registrationId)"
                             >
                                 <span *ngIf="!loading"
-                                    >Login with {{ provider.name }}</span
+                                    >{{ 'Login with' | translate }}
+                                    {{ provider.name }}</span
                                 >
                             </button>
                         </div>

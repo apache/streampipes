@@ -20,8 +20,8 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
-import { DataLakeBtns } from '../../support/utils/datalake/DataLakeBtns';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -40,6 +40,7 @@ describe('Test Edit Adapter', () => {
 
         // click edit adapter
         ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+        ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
 
@@ -68,7 +69,7 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.closeAdapterPreview();
 
-        ConnectUtils.startAndValidateAdapter(3);
+        ConnectUtils.startAndValidateAdapter('Edited Adapter', 3);
         ConnectUtils.goToConnect();
 
         // Validate that name of adapter and data stream
@@ -76,12 +77,13 @@ describe('Test Edit Adapter', () => {
     });
 
     it('Successfully edit adapter with persistence pipeline', () => {
-        ConnectUtils.addMachineDataSimulator('simulator', true, '100');
+        ConnectUtils.addMachineDataSimulator('simulator', true, '1000');
 
         ConnectUtils.goToConnect();
 
         // stop adapter and edit adapter
         ConnectBtns.stopAdapter().click();
+        ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().click();
 
         // change data type of density to integer
@@ -91,27 +93,28 @@ describe('Test Edit Adapter', () => {
             'Integer',
             true,
         );
+        ConnectEventSchemaUtils.renameProperty('density', 'density2');
 
         ConnectUtils.storeAndStartEditedAdapter();
 
         // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
-        DataLakeUtils.goToDatalakeConfiguration();
+        DataExplorerUtils.goToDatalakeConfiguration();
 
-        DataLakeUtils.waitForCountingResults();
+        DataExplorerUtils.waitForCountingResults();
 
         let initialValue;
 
-        DataLakeUtils.getDatalakeNumberOfEvents().then(value => {
+        DataExplorerUtils.getDatalakeNumberOfEvents().then(value => {
             initialValue = value;
         });
 
-        cy.wait(5000);
+        cy.wait(3000);
 
-        DataLakeBtns.refreshDataLakeMeasures().click();
+        DataExplorerBtns.refreshDataLakeMeasures().click();
 
-        DataLakeUtils.waitForCountingResults();
+        DataExplorerUtils.waitForCountingResults();
 
-        DataLakeUtils.getDatalakeNumberOfEvents().then(newValue => {
+        DataExplorerUtils.getDatalakeNumberOfEvents().then(newValue => {
             expect(newValue).not.equal(initialValue);
         });
     });

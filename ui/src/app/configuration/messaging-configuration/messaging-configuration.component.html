@@ -19,8 +19,10 @@
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'messaging'">
     <div fxLayout="column" class="page-container-padding">
         <sp-split-section
-            title="Kafka Settings"
-            subtitle="Manage Kafka settings for pipeline communication"
+            [title]="'Kafka Settings' | translate"
+            [subtitle]="
+                'Manage Kafka settings for pipeline communication' | translate
+            "
         >
             <div
                 fxFlex="100"
@@ -39,7 +41,7 @@
                         <input
                             matInput
                             [(ngModel)]="messagingSettings.batchSize"
-                            [placeholder]="'Batch Size'"
+                            [placeholder]="'Batch Size' | translate"
                             type="text"
                             [ngModelOptions]="{ standalone: true }"
                         />
@@ -48,7 +50,7 @@
                         <input
                             matInput
                             [(ngModel)]="messagingSettings.messageMaxBytes"
-                            [placeholder]="'Message Max Bytes'"
+                            [placeholder]="'Message Max Bytes' | translate"
                             type="text"
                             [ngModelOptions]="{ standalone: true }"
                         />
@@ -57,7 +59,7 @@
                         <input
                             matInput
                             [(ngModel)]="messagingSettings.acks"
-                            [placeholder]="'Acks'"
+                            [placeholder]="'Acks' | translate"
                             type="text"
                             [ngModelOptions]="{ standalone: true }"
                         />
@@ -66,7 +68,7 @@
                         <input
                             matInput
                             [(ngModel)]="messagingSettings.lingerMs"
-                            [placeholder]="'Linger MS'"
+                            [placeholder]="'Linger MS' | translate"
                             type="text"
                             [ngModelOptions]="{ standalone: true }"
                         />
@@ -78,7 +80,7 @@
                             type="submit"
                             class="md-raised md-primary submit-button"
                         >
-                            Update
+                            {{ 'Update' | translate }}
                         </button>
                     </div>
                 </form>
@@ -87,8 +89,8 @@
         <mat-divider></mat-divider>
 
         <sp-split-section
-            title="Protocols"
-            subtitle="Manage the priority of protocols used"
+            [title]="'Protocols' | translate"
+            [subtitle]="'Manage the priority of protocols used' | translate"
         >
             <div
                 fxFlex="100"
@@ -120,15 +122,15 @@
                         class="md-raised md-primary submit-button"
                         (click)="updateMessagingSettings()"
                     >
-                        Update
+                        {{ 'Update' | translate }}
                     </button>
                 </div>
             </div>
         </sp-split-section>
         <mat-divider></mat-divider>
         <sp-split-section
-            title="Messaging layers"
-            subtitle="Manage messaging layer connectivity"
+            [title]="'Broker Configuration' | translate"
+            [subtitle]="'Manage broker connectivity' | translate"
             *ngIf="loadingCompleted"
         >
             <sp-messaging-broker-config
@@ -170,7 +172,7 @@
                     class="md-raised md-primary submit-button"
                     (click)="updateMessagingSettings()"
                 >
-                    Update
+                    {{ 'Update' | translate }}
                 </button>
             </div>
         </sp-split-section>

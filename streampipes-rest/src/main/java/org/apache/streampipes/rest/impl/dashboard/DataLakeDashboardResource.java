@@ -104,10 +104,11 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<Void> createDashboard(@RequestBody DashboardModel dashboardModel) {
-    getResourceManager().create(dashboardModel, getAuthenticatedUserSid());
-    return ok();
+  public ResponseEntity<DashboardModel> createDashboard(@RequestBody DashboardModel dashboardModel) {
+    var response = getResourceManager().create(dashboardModel, getAuthenticatedUserSid());
+    return ok(response);
   }
+
 
   private DataExplorerResourceManager getResourceManager() {
     return getSpResourceManager().manageDataExplorer();

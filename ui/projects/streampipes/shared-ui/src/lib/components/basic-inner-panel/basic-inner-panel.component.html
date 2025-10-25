@@ -24,6 +24,7 @@
 >
     <div
         class="general-panel-header"
+        [ngClass]="headerBackground ? 'bg-highlight' : 'bg-no-highlight'"
         fxLayout="row"
         fxLayoutAlign="start center"
         *ngIf="!hideToolbar"

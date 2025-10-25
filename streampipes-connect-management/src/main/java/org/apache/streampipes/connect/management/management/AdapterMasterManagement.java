@@ -17,7 +17,6 @@
  */
 
 package org.apache.streampipes.connect.management.management;
-
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -42,7 +41,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * This class is responsible for managing all the adapter instances which are executed on worker nodes
+ * This class is responsible for managing all the adapter instances which are
+ * executed on worker nodes
  */
 public class AdapterMasterManagement {
 
@@ -58,8 +58,7 @@ public class AdapterMasterManagement {
       IAdapterStorage adapterInstanceStorage,
       AdapterResourceManager adapterResourceManager,
       DataStreamResourceManager dataStreamResourceManager,
-      AdapterMetrics adapterMetrics
-  ) {
+      AdapterMetrics adapterMetrics) {
     this.adapterInstanceStorage = adapterInstanceStorage;
     this.adapterMetrics = adapterMetrics;
     this.adapterResourceManager = adapterResourceManager;
@@ -69,8 +68,7 @@ public class AdapterMasterManagement {
   public void addAdapter(
       AdapterDescription adapterDescription,
       String adapterId,
-      String principalSid
-  )
+      String principalSid)
       throws AdapterException {
 
     // Create elementId for datastream
@@ -93,8 +91,7 @@ public class AdapterMasterManagement {
       AdapterDescription adapterDescription,
       String adapterId,
       String streamId,
-      String principalSid
-  ) throws AdapterException {
+      String principalSid) throws AdapterException {
     var storedDescription = new SourcesManagement()
         .createAdapterDataStream(adapterDescription, streamId);
     storedDescription.setCorrespondingAdapterId(adapterId);
@@ -103,21 +100,16 @@ public class AdapterMasterManagement {
   }
 
   public AdapterDescription getAdapter(String elementId) throws AdapterException {
-    List<AdapterDescription> allAdapters = adapterInstanceStorage.findAll();
-
-    if (allAdapters != null && elementId != null) {
-      for (AdapterDescription ad : allAdapters) {
-        if (elementId.equals(ad.getElementId())) {
-          return ad;
-        }
-      }
+    AdapterDescription adapter = adapterInstanceStorage.getElementById(elementId);
+    if (adapter == null) {
+        throw new AdapterException("Adapter with ID " + elementId + " not found");
     }
-
-    throw new AdapterException("Could not find adapter with id: " + elementId);
+    return adapter;
   }
 
   /**
-   * First the adapter is stopped removed, then the corresponding data source is deleted
+   * First the adapter is stopped removed, then the corresponding data source is
+   * deleted
    *
    * @param elementId The elementId of the adapter instance
    * @throws AdapterException when adapter can not be stopped
@@ -191,8 +183,7 @@ public class AdapterMasterManagement {
           ad.getAppId(),
           SpServiceUrlProvider.ADAPTER,
           ad.getDeploymentConfiguration()
-            .getDesiredServiceTags()
-      );
+              .getDesiredServiceTags());
 
       // Update selected endpoint URL of adapter
       ad.setSelectedEndpointUrl(baseUrl);
@@ -201,7 +192,8 @@ public class AdapterMasterManagement {
       // Invoke adapter instance
       WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
 
-      // register the adapter at the metrics manager so that the AdapterHealthCheck can send metrics
+      // register the adapter at the metrics manager so that the AdapterHealthCheck
+      // can send metrics
       adapterMetrics.register(ad.getElementId(), ad.getName());
 
       LOG.info("Started adapter " + elementId + " on: " + baseUrl);
@@ -215,8 +207,7 @@ public class AdapterMasterManagement {
 
   private void installDataSource(
       SpDataStream stream,
-      String principalSid
-  ) throws AdapterException {
+      String principalSid) throws AdapterException {
     try {
       new DataStreamVerifier(stream).verifyAndAdd(principalSid, false);
     } catch (SepaParseException e) {

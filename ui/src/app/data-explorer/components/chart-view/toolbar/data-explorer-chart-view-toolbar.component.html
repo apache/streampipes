@@ -69,6 +69,16 @@
         </button>
         <button
             mat-flat-button
+            [matTooltip]="'Add to Asset' | translate"
+            class="edit-menu-btn"
+            (click)="addToAssetEmitter.emit()"
+            data-cy="add-to-Asset-data-view-btn"
+        >
+            <mat-icon>precision_manufacturing</mat-icon>
+            {{ 'Add To Asset' | translate }}
+        </button>
+        <button
+            mat-flat-button
             [matTooltip]="'Discard' | translate"
             class="mat-basic mr-10 edit-menu-btn"
             (click)="discardDataViewEmitter.emit()"
@@ -88,6 +98,7 @@
         >
             <mat-icon>get_app</mat-icon>
         </button>
+
         <span fxFlex></span>
         <div
             class="data-explorer-options-item"

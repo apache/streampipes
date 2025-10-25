@@ -19,20 +19,20 @@
     <sp-basic-field-description
         fxFlex="100"
         descriptionPanelWidth="30"
-        label="Label"
-        description="A label which describes the location"
+        [label]="'Site' | translate"
+        [description]="'Choose a name for your site' | translate"
     >
         <mat-form-field color="accent" class="w-100" subscriptSizing="dynamic">
             <input
                 data-cy="sites-dialog-site-input"
                 matInput
                 formControlName="label"
-                placeholder="New site"
+                [placeholder]="'New site' | translate"
             />
             <mat-error
                 *ngIf="siteAreaControl.get('label').hasError('required')"
             >
-                {{ 'Site label is required' | translate }}
+                {{ 'Site name is required' | translate }}
             </mat-error>
         </mat-form-field>
     </sp-basic-field-description>
@@ -40,8 +40,11 @@
         fxFlex="100"
         descriptionPanelWidth="30"
         class="mt-10"
-        label="Areas"
-        description="Available areas within the location"
+        [label]="'Areas' | translate"
+        [description]="
+            'Available areas within the site (e.g. plants or facilities)'
+                | translate
+        "
     >
         <sp-edit-asset-location-area-component [site]="site" fxFlex="100">
         </sp-edit-asset-location-area-component>
@@ -51,8 +54,8 @@
         fxFlex="100"
         descriptionPanelWidth="30"
         class="mt-10"
-        label="Location"
-        description="Exact location of the site"
+        [label]="'Location' | translate"
+        [description]="'Exact location of the site' | translate"
     >
         <sp-single-marker-map
             fxFlex="100"
