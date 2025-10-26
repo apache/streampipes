@@ -25,6 +25,7 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { CertificateDetailsDialogComponent } from '../../dialog/certificate-details/certificate-details-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-certificate-configuration',
@@ -34,6 +35,7 @@ import { CertificateDetailsDialogComponent } from '../../dialog/certificate-deta
 export class CertificateConfigurationComponent implements OnInit {
     private certificateService = inject(CertificateService);
     private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
 
     displayedColumns: string[] = ['issuer', 'expires', 'actions'];
     dataSource: MatTableDataSource<Certificate> =
@@ -69,7 +71,7 @@ export class CertificateConfigurationComponent implements OnInit {
 
     openDetailsDialog(certificate: Certificate): void {
         this.dialogService.open(CertificateDetailsDialogComponent, {
-            title: 'Certificate details',
+            title: this.translateService.instant('Certificate details'),
             panelType: PanelType.STANDARD_PANEL,
             width: '60vw',
             data: {

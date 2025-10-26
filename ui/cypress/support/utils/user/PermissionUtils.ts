@@ -17,20 +17,22 @@
  */
 
 import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
+import { GeneralUtils } from '../GeneralUtils';
 
 export class PermissionUtils {
-    public static openManagePermissions() {
+    public static openManagePermissions(resourceName: string) {
+        GeneralUtils.openMenuForRow(resourceName);
         cy.dataCy('open-manage-permissions').click();
     }
 
-    public static markElementAsPublic() {
-        PermissionUtils.openManagePermissions();
+    public static markElementAsPublic(resourceName: string) {
+        PermissionUtils.openManagePermissions(resourceName);
         StaticPropertyUtils.clickCheckbox('permission-public-element');
         PermissionUtils.save();
     }
 
-    public static authorizeUser(email: string) {
-        PermissionUtils.openManagePermissions();
+    public static authorizeUser(resourceName: string, email: string) {
+        PermissionUtils.openManagePermissions(resourceName);
 
         cy.dataCy('authorized-user').type(email);
         cy.get(`[data-cy="user-option-${email}"]`).click();

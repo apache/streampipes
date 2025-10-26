@@ -31,7 +31,7 @@
             >
                 <input
                     matInput
-                    placeholder="Find Element"
+                    [placeholder]="'Search' | translate"
                     value=""
                     (input)="updateFilterTerm($event.target.value)"
                     name="something"

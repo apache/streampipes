@@ -29,19 +29,28 @@
             </button>
         </div>
     }
-    <div fxLayout="row" fxLayoutAlign="start center" class="alternate-id-row">
+    <div
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        class="alternate-id-row"
+        fxLayoutGap="10px"
+    >
         <mat-form-field color="accent" fxFlex subscriptSizing="dynamic">
-            <mat-label>New Alternate ID</mat-label>
+            <mat-label>{{ 'New Alternate ID' | translate }}</mat-label>
             <input
                 matInput
                 [(ngModel)]="newAlternateId"
                 (keyup.enter)="addAlternateId()"
-                placeholder="Enter new alternate ID"
+                [placeholder]="'Enter new alternate ID' | translate"
             />
         </mat-form-field>
         <div fxLayoutAlign="start center">
-            <button mat-button class="mat-basic" (click)="addAlternateId()">
-                <mat-icon>add</mat-icon><span>Add</span>
+            <button
+                mat-flat-button
+                class="mat-basic"
+                (click)="addAlternateId()"
+            >
+                <mat-icon>add</mat-icon><span>{{ 'Add' | translate }}</span>
             </button>
         </div>
     </div>

@@ -16,12 +16,20 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    inject,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
     ChartService,
     DatalakeRestService,
+    ExportProviderSettings,
+    ExportProviderService,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -37,6 +45,10 @@ import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/de
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/data-retention-dialog.component';
+import { ExportProviderComponent } from '../dialog/export-provider-dialog/export-provider-dialog.component';
+import { DeleteExportProviderComponent } from '../dialog/delete-export-provider/delete-export-provider-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
+
 @Component({
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
@@ -49,9 +61,22 @@ export class DatalakeConfigurationComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
+    private datalakeRestService = inject(DatalakeRestService);
+    private dataViewDataExplorerService = inject(ChartService);
+    private dialogService = inject(DialogService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private tabService = inject(SpConfigurationTabsService);
+    private exportProviderRestService = inject(ExportProviderService);
+    private translateService = inject(TranslateService);
+    private cdr = inject(ChangeDetectorRef);
+
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
     availableMeasurements: DataLakeConfigurationEntry[] = [];
+    availableExportProvider: ExportProviderSettings[] = [];
+
+    dataSourceExport: MatTableDataSource<ExportProviderSettings> =
+        new MatTableDataSource([]);
 
     displayedColumns: string[] = [
         'name',
@@ -63,16 +88,16 @@ export class DatalakeConfigurationComponent implements OnInit {
         'retention',
     ];
 
+    displayedColumnsExport: string[] = [
+        'providertype',
+        'endpoint',
+        'bucket',
+        'editExportProvider',
+        'delete',
+    ];
+
     pageSize = 15;
     pageIndex = 0;
-
-    constructor(
-        private datalakeRestService: DatalakeRestService,
-        private dataViewDataExplorerService: ChartService,
-        private dialogService: DialogService,
-        private breadcrumbService: SpBreadcrumbService,
-        private tabService: SpConfigurationTabsService,
-    ) {}
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();
@@ -81,6 +106,17 @@ export class DatalakeConfigurationComponent implements OnInit {
             { label: this.tabService.getTabTitle('datalake') },
         ]);
         this.loadAvailableMeasurements();
+        this.loadAvailableExportProvider();
+    }
+
+    loadAvailableExportProvider() {
+        this.availableExportProvider = [];
+        this.exportProviderRestService
+            .getAllExportProviders()
+            .subscribe(allExportProviders => {
+                this.availableExportProvider = allExportProviders;
+                this.dataSourceExport.data = this.availableExportProvider;
+            });
     }
 
     loadAvailableMeasurements() {
@@ -130,11 +166,27 @@ export class DatalakeConfigurationComponent implements OnInit {
             });
     }
 
+    createExportProvider(provider: ExportProviderSettings | null) {
+        const dialogRef: DialogRef<ExportProviderComponent> =
+            this.dialogService.open(ExportProviderComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant('New Export Provider'),
+                width: '70vw',
+                data: {
+                    provider: provider,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(() => {
+            this.loadAvailableExportProvider();
+        });
+    }
+
     cleanDatalakeIndex(measurementIndex: string) {
         const dialogRef: DialogRef<DeleteDatalakeIndexComponent> =
             this.dialogService.open(DeleteDatalakeIndexComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: 'Truncate data',
+                title: this.translateService.instant('Truncate data'),
                 width: '70vw',
                 data: {
                     measurementIndex: measurementIndex,
@@ -153,7 +205,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         const dialogRef: DialogRef<DeleteDatalakeIndexComponent> =
             this.dialogService.open(DeleteDatalakeIndexComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: 'Delete data',
+                title: this.translateService.instant('Delete data'),
                 width: '70vw',
                 data: {
                     measurementIndex: measurementIndex,
@@ -168,10 +220,28 @@ export class DatalakeConfigurationComponent implements OnInit {
         });
     }
 
+    deleteExportProvider(providerId: string) {
+        const dialogRef: DialogRef<DeleteExportProviderComponent> =
+            this.dialogService.open(DeleteExportProviderComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant('Delete Export Provider'),
+                width: '70vw',
+                data: {
+                    providerId: providerId,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.loadAvailableExportProvider();
+            }
+        });
+    }
+
     openDownloadDialog(measurementName: string) {
         this.dialogService.open(DataDownloadDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Download data',
+            title: this.translateService.instant('Download data'),
             width: '50vw',
             data: {
                 dataDownloadDialogModel: {
@@ -182,16 +252,25 @@ export class DatalakeConfigurationComponent implements OnInit {
     }
 
     openRetentionDialog(measurementId: string) {
-        this.dialogService.open(DataRetentionDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Set Data Retention',
-            width: '50vw',
-            data: {
-                dataRetentionDialogModel: {
-                    measureName: measurementId,
+        const dialogRef: DialogRef<DataRetentionDialogComponent> =
+            this.dialogService.open(DataRetentionDialogComponent, {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Set Data Retention'),
+                width: '50vw',
+                data: {
+                    dataRetentionDialogModel: {
+                        measureName: measurementId,
+                    },
+                    measurementIndex: measurementId,
                 },
-                measurementIndex: measurementId,
-            },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                setTimeout(() => {
+                    this.loadAvailableMeasurements();
+                }, 1000);
+            }
         });
     }
 

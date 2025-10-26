@@ -38,6 +38,7 @@ public class UserInfoUtil {
     UserInfo userInfo = prepareUserInfo(userAccount, roles);
     userInfo.setShowTutorial(!userAccount.isHideTutorial());
     userInfo.setHasAcknowledged(userAccount.isHasAcknowledged());
+    userInfo.setLanguage(userAccount.getLanguage());
     return userInfo;
   }
 

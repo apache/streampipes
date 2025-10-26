@@ -31,6 +31,7 @@ import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,6 +47,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -405,6 +407,7 @@ public class DataLakeResource extends AbstractRestResource {
       path = "/{elementId}/cleanup",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+      @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   @Operation(summary = "Sets the retention mechanism for a certain measurement", tags = {"Data Lake"},
       responses = {
           @ApiResponse(
@@ -426,6 +429,18 @@ public class DataLakeResource extends AbstractRestResource {
   
     return ok();
   }
+
+@DeleteMapping(path = "/{elementId}/cleanup")
+public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId) {
+    var measure = this.dataExplorerSchemaManagement.getById(elementId);
+    measure.deleteRetentionTime();
+    try {
+        this.dataExplorerSchemaManagement.updateMeasurement(measure);
+    } catch (IllegalArgumentException e) {
+        return badRequest(e.getMessage());
+    }
+    return ok();
+}
 
   private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {
     Map<String, String> queryParamMap = new HashMap<>();

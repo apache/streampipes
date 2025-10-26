@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.AnonymousIdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.UsernamePasswordIdentityConfig;
+import org.apache.streampipes.extensions.connectors.opcua.config.identity.X509IdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.security.SecurityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaNamingStrategy;
@@ -44,6 +45,7 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME_GROUP;
 
 public class SpOpcUaConfigExtractor {
 
@@ -128,15 +130,16 @@ public class SpOpcUaConfigExtractor {
       config.setOpcServerURL(serverAddress + ":" + port);
     }
 
-    boolean unauthenticated = selectedAlternativeAuthentication.equals(
-        SharedUserConfiguration.USER_AUTHENTICATION_ANONYMOUS
-    );
-    if (unauthenticated) {
+    if (selectedAlternativeAuthentication.equals(SharedUserConfiguration.USER_AUTHENTICATION_ANONYMOUS)) {
       config.setIdentityConfig(new AnonymousIdentityConfig());
-    } else {
+    } else if (selectedAlternativeAuthentication.equals(USERNAME_GROUP.name())) {
       String username = extractor.singleValueParameter(USERNAME.name(), String.class);
       String password = extractor.secretValue(PASSWORD.name());
       config.setIdentityConfig(new UsernamePasswordIdentityConfig(username, password));
+    } else {
+      String privateKeyPem = extractor.secretValue(SharedUserConfiguration.X509_PRIVATE_KEY_PEM);
+      String publicKeyPem = extractor.textParameter(SharedUserConfiguration.X509_PUBLIC_KEY_PEM);
+      config.setIdentityConfig(new X509IdentityConfig(publicKeyPem, privateKeyPem));
     }
 
     return config;

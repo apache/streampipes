@@ -45,4 +45,15 @@ export class DataType {
     public static isStringType(datatype: string): boolean {
         return datatype === DataType.STRING;
     }
+
+    public static getAllTypes(): { id: string; label: string }[] {
+        return [
+            { id: DataType.STRING, label: 'String' },
+            { id: DataType.INTEGER, label: 'Integer' },
+            { id: DataType.LONG, label: 'Long' },
+            { id: DataType.FLOAT, label: 'Float' },
+            { id: DataType.DOUBLE, label: 'Double' },
+            { id: DataType.BOOLEAN, label: 'Boolean' },
+        ];
+    }
 }

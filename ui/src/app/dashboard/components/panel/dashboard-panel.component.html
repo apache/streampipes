@@ -19,7 +19,7 @@
 <sp-basic-view
     [backLinkTarget]="['dashboard']"
     [showBackLink]="true"
-    *ngIf="dashboardLoaded"
+    *ngIf="dashboardLoaded || dashboardNotFound"
 >
     <div
         nav
@@ -28,86 +28,109 @@
         fxLayout="row"
         fxLayoutAlign="start center"
     >
-        <sp-dashboard-toolbar
-            fxFlex="100"
-            [dashboard]="dashboard"
-            [editMode]="editMode"
-            [(viewMode)]="viewMode"
-            [hasDataExplorerWritePrivileges]="hasDataExplorerWritePrivileges"
-            [timeRangeVisible]="timeRangeVisible"
-            [timeSettings]="timeSettings"
-            (saveDashboardEmitter)="persistDashboardChanges()"
-            (discardDashboardEmitter)="discardChanges()"
-            (deleteDashboardEmitter)="deleteDashboard()"
-            (triggerEditModeEmitter)="triggerEditMode()"
-            (updateDateRangeEmitter)="updateDateRange($event)"
-            (intervalSettingsChangedEmitter)="modifyRefreshInterval($event)"
-        >
-        </sp-dashboard-toolbar>
+        @if (!dashboardNotFound) {
+            <sp-dashboard-toolbar
+                fxFlex="100"
+                [dashboard]="dashboard"
+                [editMode]="editMode"
+                [(viewMode)]="viewMode"
+                [hasDataExplorerWritePrivileges]="
+                    hasDataExplorerWritePrivileges
+                "
+                [timeRangeVisible]="timeRangeVisible"
+                [timeSettings]="timeSettings"
+                (saveDashboardEmitter)="persistDashboardChanges()"
+                (discardDashboardEmitter)="discardChanges()"
+                (deleteDashboardEmitter)="deleteDashboard()"
+                (triggerEditModeEmitter)="triggerEditMode()"
+                (updateDateRangeEmitter)="updateDateRange($event)"
+                (intervalSettingsChangedEmitter)="modifyRefreshInterval($event)"
+            >
+            </sp-dashboard-toolbar>
+        }
     </div>
 
     <div fxFlex="100" fxLayout="column">
-        <mat-drawer-container
-            class="designer-panel-container h-100 dashboard-grid"
-        >
-            <mat-drawer
-                [opened]="editMode"
-                mode="side"
-                position="end"
-                class="designer-panel"
+        @if (dashboardNotFound) {
+            <div
+                *ngIf="dashboardNotFound"
+                fxFlex="100"
+                fxLayout="column"
+                fxLayoutAlign="center center"
+                data-cy="dashboard-not-found"
             >
-                <div fxLayout="column" fxFlex="100">
-                    @if (editMode) {
-                        <sp-dashboard-chart-selection-panel
-                            (addChartEmitter)="addChartToDashboard($event)"
-                            fxFlex="100"
-                        >
-                        </sp-dashboard-chart-selection-panel>
-                    }
-                </div>
-            </mat-drawer>
-            <mat-drawer-content class="h-100 dashboard-grid">
-                <div
-                    *ngIf="dashboard.widgets.length === 0"
-                    fxFlex="100"
-                    fxLayout="column"
-                    fxLayoutAlign="center center"
-                    data-cy="empty-dashboard"
+                <h4>
+                    {{ 'The desired dashboard was not found!' | translate }}
+                </h4>
+            </div>
+        } @else {
+            <mat-drawer-container
+                class="designer-panel-container h-100 dashboard-grid"
+            >
+                <mat-drawer
+                    [opened]="editMode"
+                    mode="side"
+                    position="end"
+                    class="designer-panel"
                 >
-                    <h4>
-                        {{
-                            "This dashboard is empty and doesn't contain any charts."
-                                | translate
-                        }}
-                    </h4>
-                </div>
-                <sp-dashboard-grid-view
-                    #dashboardGrid
-                    *ngIf="dashboard.widgets.length > 0 && viewMode === 'grid'"
-                    [editMode]="editMode"
-                    [dashboard]="dashboard"
-                    [widgets]="widgets"
-                    [observableGenerator]="observableGenerator"
-                    [timeSettings]="timeSettings"
-                    (deleteCallback)="removeChartFromDashboard($event)"
-                    (startEditModeEmitter)="startEditMode($event)"
-                    class="h-100 dashboard-grid"
-                >
-                </sp-dashboard-grid-view>
-                <sp-dashboard-slide-view
-                    class="h-100 dashboard-grid"
-                    #dashboardSlide
-                    [editMode]="editMode"
-                    [dashboard]="dashboard"
-                    [widgets]="widgets"
-                    [observableGenerator]="observableGenerator"
-                    [timeSettings]="timeSettings"
-                    (deleteCallback)="removeChartFromDashboard($event)"
-                    (startEditModeEmitter)="startEditMode($event)"
-                    *ngIf="dashboard.widgets.length > 0 && viewMode === 'slide'"
-                >
-                </sp-dashboard-slide-view>
-            </mat-drawer-content>
-        </mat-drawer-container>
+                    <div fxLayout="column" fxFlex="100">
+                        @if (editMode) {
+                            <sp-dashboard-chart-selection-panel
+                                (addChartEmitter)="addChartToDashboard($event)"
+                                fxFlex="100"
+                            >
+                            </sp-dashboard-chart-selection-panel>
+                        }
+                    </div>
+                </mat-drawer>
+                <mat-drawer-content class="h-100 dashboard-grid">
+                    <div
+                        *ngIf="dashboard.widgets.length === 0"
+                        fxFlex="100"
+                        fxLayout="column"
+                        fxLayoutAlign="center center"
+                        data-cy="empty-dashboard"
+                    >
+                        <h4>
+                            {{
+                                "This dashboard is empty and doesn't contain any charts."
+                                    | translate
+                            }}
+                        </h4>
+                    </div>
+
+                    <sp-dashboard-grid-view
+                        #dashboardGrid
+                        *ngIf="
+                            dashboard.widgets.length > 0 && viewMode === 'grid'
+                        "
+                        [editMode]="editMode"
+                        [dashboard]="dashboard"
+                        [widgets]="widgets"
+                        [observableGenerator]="observableGenerator"
+                        [timeSettings]="timeSettings"
+                        (deleteCallback)="removeChartFromDashboard($event)"
+                        (startEditModeEmitter)="startEditMode($event)"
+                        class="h-100 dashboard-grid"
+                    >
+                    </sp-dashboard-grid-view>
+                    <sp-dashboard-slide-view
+                        class="h-100 dashboard-grid"
+                        #dashboardSlide
+                        [editMode]="editMode"
+                        [dashboard]="dashboard"
+                        [widgets]="widgets"
+                        [observableGenerator]="observableGenerator"
+                        [timeSettings]="timeSettings"
+                        (deleteCallback)="removeChartFromDashboard($event)"
+                        (startEditModeEmitter)="startEditMode($event)"
+                        *ngIf="
+                            dashboard.widgets.length > 0 && viewMode === 'slide'
+                        "
+                    >
+                    </sp-dashboard-slide-view>
+                </mat-drawer-content>
+            </mat-drawer-container>
+        }
     </div>
 </sp-basic-view>

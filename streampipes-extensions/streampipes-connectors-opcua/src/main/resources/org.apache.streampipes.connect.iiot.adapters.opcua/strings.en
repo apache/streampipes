@@ -85,3 +85,12 @@ incomplete-event-handling.description=Select how events with missing values (e.g
 
 NAMING_STRATEGY.title=Naming Strategy
 NAMING_STRATEGY.description=Select how the runtime name of the OPC-UA nodes are generated.
+
+x509Group.title=X.509 Certificate
+x509Group.description=
+
+x509PrivateKeyPem.title=Private Key PEM
+x509PrivateKeyPem.description=Private key in PEM format
+
+x509PublicKeyPem.title=Certificate PEM
+x509PublicKeyPem.description=Public key in PEM format

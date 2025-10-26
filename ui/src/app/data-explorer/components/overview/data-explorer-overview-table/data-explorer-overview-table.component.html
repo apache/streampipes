@@ -25,19 +25,15 @@
             fxFlex="100"
             [columns]="displayedColumns"
             [dataSource]="dataSource"
+            [showActionsMenu]="true"
+            [rowsClickable]="true"
+            (rowClicked)="openDataView($event, true)"
         >
             <ng-container matColumnDef="name">
-                <th
-                    fxFlex="60"
-                    fxLayoutAlign="start center"
-                    mat-header-cell
-                    *matHeaderCellDef
-                >
+                <th mat-header-cell *matHeaderCellDef>
                     {{ 'Chart' | translate }}
                 </th>
                 <td
-                    fxFlex="60"
-                    fxLayoutAlign="start center"
                     mat-cell
                     data-cy="data-views-table-overview"
                     *matCellDef="let element"
@@ -47,21 +43,10 @@
             </ng-container>
 
             <ng-container matColumnDef="lastModified">
-                <th
-                    fxFlex="60"
-                    fxLayoutAlign="start center"
-                    mat-header-cell
-                    *matHeaderCellDef
-                >
+                <th mat-header-cell *matHeaderCellDef>
                     {{ 'Last modified' | translate }}
                 </th>
-                <td
-                    fxFlex="60"
-                    fxLayoutAlign="center start"
-                    mat-cell
-                    *matCellDef="let element"
-                    fxLayout="column"
-                >
+                <td mat-cell *matCellDef="let element">
                     <div *ngIf="element.metadata">
                         {{
                             this.formatDate(
@@ -74,21 +59,10 @@
             </ng-container>
 
             <ng-container matColumnDef="createdAt">
-                <th
-                    fxFlex="60"
-                    fxLayoutAlign="start center"
-                    mat-header-cell
-                    *matHeaderCellDef
-                >
+                <th mat-header-cell *matHeaderCellDef>
                     {{ 'Created' | translate }}
                 </th>
-                <td
-                    fxFlex="60"
-                    fxLayoutAlign="center start"
-                    mat-cell
-                    *matCellDef="let element"
-                    fxLayout="column"
-                >
+                <td mat-cell *matCellDef="let element">
                     <div *ngIf="element.metadata">
                         {{ this.formatDate(element.metadata.createdAtEpochMs) }}
                     </div>
@@ -96,78 +70,56 @@
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="actions">
-                <th
-                    fxFlex="40"
-                    fxLayoutAlign="center center"
-                    mat-header-cell
-                    *matHeaderCellDef
-                ></th>
-                <td
-                    fxFlex="40"
-                    fxLayoutAlign="start center"
-                    mat-cell
-                    *matCellDef="let element"
+            <ng-template spTableActions let-element>
+                <button mat-menu-item (click)="openDataView(element, false)">
+                    <mat-icon>visibility</mat-icon>
+                    <span>{{ 'Show' | translate }}</span>
+                </button>
+                <button
+                    mat-menu-item
+                    *ngIf="hasDataExplorerWritePrivileges"
+                    [attr.data-cy]="
+                        'edit-data-view-' +
+                        element.baseAppearanceConfig.widgetTitle.replaceAll(
+                            ' ',
+                            ''
+                        )
+                    "
+                    (click)="openDataView(element, true)"
                 >
-                    <div fxLayout="row" fxFlex="100" fxLayoutAlign="end center">
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Show chart' | translate"
-                            (click)="openDataView(element, false)"
-                        >
-                            <i class="material-icons">visibility</i>
-                        </button>
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Edit chart' | translate"
-                            *ngIf="hasDataExplorerWritePrivileges"
-                            [attr.data-cy]="
-                                'edit-data-view-' +
-                                element.baseAppearanceConfig.widgetTitle.replaceAll(
-                                    ' ',
-                                    ''
-                                )
-                            "
-                            (click)="openDataView(element, true)"
-                        >
-                            <i class="material-icons">edit</i>
-                        </button>
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Manage permissions' | translate"
-                            *ngIf="isAdmin"
-                            (click)="showPermissionsDialog(element)"
-                        >
-                            <i class="material-icons">share</i>
-                        </button>
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Clone chart' | translate"
-                            *ngIf="hasDataExplorerWritePrivileges"
-                            (click)="cloneDataView(element)"
-                        >
-                            <i class="material-icons">flip_to_front</i>
-                        </button>
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [matTooltip]="'Delete chart' | translate"
-                            *ngIf="hasDataExplorerWritePrivileges"
-                            [attr.data-cy]="
-                                'delete-data-view-' +
-                                element.baseAppearanceConfig.widgetTitle
-                            "
-                            (click)="deleteDataView(element)"
-                        >
-                            <i class="material-icons">delete</i>
-                        </button>
-                    </div>
-                </td>
-            </ng-container>
+                    <mat-icon>edit</mat-icon>
+                    <span>{{ 'Edit chart' | translate }}</span>
+                </button>
+                <button
+                    mat-menu-item
+                    *ngIf="isAdmin"
+                    (click)="showPermissionsDialog(element)"
+                >
+                    <mat-icon>share</mat-icon>
+                    <span>{{ 'Manage permissions' | translate }}</span>
+                </button>
+                <button
+                    mat-menu-item
+                    *ngIf="hasDataExplorerWritePrivileges"
+                    (click)="cloneDataView(element)"
+                >
+                    <mat-icon>flip_to_front</mat-icon>
+                    <span>{{ 'Clone chart' | translate }}</span>
+                </button>
+                <button
+                    mat-menu-item
+                    [matTooltip]=""
+                    *ngIf="hasDataExplorerWritePrivileges"
+                    [attr.data-cy]="
+                        'delete-data-view-' +
+                        element.baseAppearanceConfig.widgetTitle
+                    "
+                    (click)="deleteDataView(element)"
+                >
+                    <mat-icon>delete</mat-icon>
+                    <span>{{ 'Delete chart' | translate }}</span>
+                </button>
+            </ng-template>
         </sp-table>
     </div>
 </div>

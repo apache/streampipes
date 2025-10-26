@@ -46,6 +46,12 @@ export class GeneralProfileSettingsComponent
     darkModeChanged = false;
     isExternalUser = false;
 
+    availableLanguages: { label: string; id: string }[] = [
+        { label: 'Browser language', id: 'browser' },
+        { label: 'English', id: 'en' },
+        { label: 'Deutsch', id: 'de' },
+    ];
+
     constructor(
         authService: AuthService,
         profileService: ProfileService,
@@ -75,6 +81,7 @@ export class GeneralProfileSettingsComponent
     }
 
     onUserDataReceived() {
+        this.selectedLanguage = this.userData.language;
         this.originalDarkMode = this.userData.darkMode;
         this.currentUserService.darkMode$.next(this.userData.darkMode);
         this.isExternalUser = this.userData.provider !== 'local';

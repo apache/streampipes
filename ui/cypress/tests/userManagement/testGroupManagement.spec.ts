@@ -97,7 +97,7 @@ describe('Test Group Management for Pipelines', () => {
 
         // Add user group to pipeline
         PipelineUtils.goToPipelines();
-        PermissionUtils.openManagePermissions();
+        PermissionUtils.openManagePermissions('Pipeline Test');
         ConfigurationBtns.authorizedGroupsLabel().click();
         cy.get('mat-option').contains('User_Group').click();
         PermissionUtils.save();

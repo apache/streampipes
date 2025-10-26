@@ -41,6 +41,7 @@ import { SetNewPasswordComponent } from './components/set-new-password/set-new-p
 import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { TermsComponent } from './components/terms/terms.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -60,6 +61,7 @@ import { TermsComponent } from './components/terms/terms.component';
         ReactiveFormsModule,
         MatProgressBarModule,
         PlatformServicesModule,
+        TranslatePipe,
     ],
     declarations: [
         ActivateAccountComponent,

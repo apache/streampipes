@@ -25,8 +25,10 @@ import {
 } from '@angular/core';
 import {
     ChartService,
+    DashboardConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    LinkageData,
     TimeSettings,
 } from '@streampipes/platform-services';
 import {
@@ -36,7 +38,10 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import {
+    AssetSaveService,
     ConfirmDialogComponent,
+    DialogService,
+    PanelType,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
@@ -45,9 +50,10 @@ import { DataExplorerDetectChangesService } from '../../services/data-explorer-d
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../data-explorer-shared/services/resize-echarts.service';
+import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -69,6 +75,10 @@ export class DataExplorerChartViewComponent
     drawerWidth = 450;
     panelWidth = '100%';
 
+    selectedAssets = [];
+    deselectedAssets = [];
+    originalAssets = [];
+
     resizeEchartsService = inject(ResizeEchartsService);
 
     private dataExplorerSharedService = inject(DataExplorerSharedService);
@@ -80,6 +90,11 @@ export class DataExplorerChartViewComponent
     private dataViewService = inject(ChartService);
     private timeSelectionService = inject(TimeSelectionService);
     private translateService = inject(TranslateService);
+    private dialogService = inject(DialogService);
+
+    private assetSaveService = inject(AssetSaveService);
+
+    chartNotFound = false;
 
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
@@ -101,21 +116,36 @@ export class DataExplorerChartViewComponent
 
     loadDataView(dataViewId: string): void {
         this.dataViewLoaded = false;
-        this.dataViewService.getChart(dataViewId).subscribe(res => {
-            this.dataView = res;
-            this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
-            if (!this.dataView.timeSettings?.startTime) {
-                this.timeSettings = this.makeDefaultTimeSettings();
-            } else {
-                this.timeSelectionService.updateTimeSettings(
-                    this.timeSelectionService.defaultQuickTimeSelections,
-                    this.dataView.timeSettings as TimeSettings,
-                    new Date(),
+        this.dataViewService
+            .getChart(dataViewId)
+            .pipe(
+                catchError(() => {
+                    this.chartNotFound = true;
+                    return of(null);
+                }),
+            )
+            .subscribe(res => {
+                if (!res) {
+                    this.dataViewLoaded = true;
+                    return;
+                }
+                this.dataView = res;
+                this.originalDataView = JSON.parse(
+                    JSON.stringify(this.dataView),
                 );
-                this.timeSettings = this.dataView.timeSettings as TimeSettings;
-            }
-            this.afterDataViewLoaded();
-        });
+                if (!this.dataView.timeSettings?.startTime) {
+                    this.timeSettings = this.makeDefaultTimeSettings();
+                } else {
+                    this.timeSelectionService.updateTimeSettings(
+                        this.timeSelectionService.defaultQuickTimeSelections,
+                        this.dataView.timeSettings as TimeSettings,
+                        new Date(),
+                    );
+                    this.timeSettings = this.dataView
+                        .timeSettings as TimeSettings;
+                }
+                this.afterDataViewLoaded();
+            });
     }
 
     afterDataViewLoaded(): void {
@@ -181,8 +211,46 @@ export class DataExplorerChartViewComponent
             this.dataView.elementId !== undefined
                 ? this.dataViewService.updateChart(this.dataView)
                 : this.dataViewService.saveChart(this.dataView);
-        observable.subscribe(() => {
+        observable.subscribe(data => {
+            if (
+                this.selectedAssets.length > 0 ||
+                this.deselectedAssets.length > 0 ||
+                this.originalAssets.length > 0
+            ) {
+                this.saveToAssets(data);
+            }
             this.routingService.navigateToDataViewOverview(true);
+        });
+    }
+
+    addAssetDialog(): void {
+        const dialogRef = this.dialogService.open(AssetDialogComponent, {
+            panelType: PanelType.STANDARD_PANEL,
+            width: '500px',
+            title: this.translateService.instant(
+                'Do you want to link the chart to an Asset?',
+            ),
+            data: {
+                subtitle: this.translateService.instant(
+                    'Update asset links or close.',
+                ),
+                cancelTitle: this.translateService.instant('Close'),
+                okTitle: this.translateService.instant('Update'),
+                confirmAndCancel: true,
+                editMode: this.editMode,
+                selectedAssets: this.selectedAssets,
+                deselectedAssets: this.deselectedAssets,
+                originalAssets: this.originalAssets,
+                dataViewId: this.route.snapshot.params.id,
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.selectedAssets = result.selectedAssets;
+                this.deselectedAssets = result.deselectedAssets;
+                this.originalAssets = result.originalAssets;
+            }
         });
     }
 
@@ -262,5 +330,38 @@ export class DataExplorerChartViewComponent
                 this.outerPanel.nativeElement.offsetWidth,
             );
         }, 100);
+    }
+
+    private async saveAssets(
+        linkageData: LinkageData[],
+        data: DashboardConfig,
+    ): Promise<void> {
+        await this.assetSaveService.saveSelectedAssets(
+            this.selectedAssets,
+            linkageData,
+            this.deselectedAssets,
+            this.originalAssets,
+        );
+        //this.dialogRef.close(true);
+    }
+
+    saveToAssets(data: DataExplorerWidgetModel): void {
+        let linkageData: LinkageData[];
+        try {
+            linkageData = this.createLinkageData(data);
+
+            this.saveAssets(linkageData, data);
+        } catch (err) {
+            console.error('Error in addToAsset:', err);
+        }
+    }
+    private createLinkageData(data: DataExplorerWidgetModel): LinkageData[] {
+        return [
+            {
+                type: 'chart',
+                id: data.elementId,
+                name: data.baseAppearanceConfig.widgetTitle,
+            },
+        ];
     }
 }

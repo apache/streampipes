@@ -22,17 +22,25 @@
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <b *ngIf="deleteDialog"
                     ><h4>
-                        Do you really want to delete the data index
-                        {{ measurementIndex }}?
+                        {{
+                            confirmDeleteMessage
+                                | translate: { index: measurementIndex }
+                        }}
                     </h4></b
                 >
                 <b *ngIf="!deleteDialog"
                     ><h4>
-                        Do you really want to truncate the data in
-                        {{ measurementIndex }}?
+                        {{
+                            confirmTruncateMessage
+                                | translate: { index: measurementIndex }
+                        }}
                     </h4></b
                 >
-                <b><h5>This operation cannot be undone.</h5></b>
+                <b
+                    ><h5>
+                        {{ 'This operation cannot be undone.' | translate }}
+                    </h5></b
+                >
             </div>
 
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
@@ -44,7 +52,7 @@
                     *ngIf="!deleteDialog"
                     (click)="truncateData()"
                 >
-                    Truncate Data
+                    {{ 'Truncate Data' | translate }}
                 </button>
                 <button
                     mat-button
@@ -54,7 +62,7 @@
                     *ngIf="deleteDialog"
                     (click)="deleteData()"
                 >
-                    Delete Data
+                    {{ 'Delete Data' | translate }}
                 </button>
             </div>
         </div>
@@ -84,7 +92,7 @@
             class="mat-basic"
             (click)="close(false)"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

@@ -42,6 +42,7 @@ describe('Test Compact Adapters', () => {
         ConnectUtils.startAdapter(adapterInput);
 
         // Validate code editor in adapter details
+        GeneralUtils.openMenuForRow(adapterInput.adapterName);
         ConnectBtns.detailsAdapter().click();
         GeneralUtils.tab('Code');
         validateCodeEditor();

@@ -134,6 +134,10 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     }
   }
 
+  public void updateUser(Principal principal) {
+    db.updateUser(principal);
+  }
+
   private void createTokenAndSendActivationMail(String username) throws IOException {
     String activationCode = TokenUtil.generateToken(RECOVERY_TOKEN_LENGTH);
     storeActivationCode(username, activationCode);
@@ -194,7 +198,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
 
-  public void registerOauthUser(UserAccount userAccount) {
+  public void storeUser(UserAccount userAccount) {
     db.storeUser(userAccount);
   }
 }
