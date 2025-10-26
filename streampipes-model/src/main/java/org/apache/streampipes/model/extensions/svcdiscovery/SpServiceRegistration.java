@@ -80,16 +80,16 @@ public class SpServiceRegistration implements Storable {
   }
 
   public int getWeight() {
-      return weight;
+    return weight;
   }
   public void setWeight(int weight) {
-      this.weight = weight;
+    this.weight = weight;
   }
   public Set<String> getLabels() {
-      return labels;
+    return labels;
   }
   public void setLabels(Set<String> labels) {
-      this.labels = labels;
+    this.labels = labels;
   }
 
   public String getSvcGroup() {

@@ -51,6 +51,14 @@ public class StreamPipesCollectorRegistry {
                 .register(collectorRegistry);
   }
 
+  public static Counter registerCounter(String name, String help,  String... labelNames) {
+    return Counter.build()
+      .name(name)
+      .help(help)
+      .labelNames(labelNames)
+      .register(collectorRegistry);
+  }
+
   public static Counter registerCounter(String name, String help) {
     return Counter.build()
       .name(name)

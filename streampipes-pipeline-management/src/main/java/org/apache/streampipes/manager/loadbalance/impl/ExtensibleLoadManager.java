@@ -9,25 +9,25 @@ import java.util.*;
 
 public class ExtensibleLoadManager implements LoadBalancer {
 
-    ExtensionServiceSelector selector;
+  ExtensionServiceSelector selector;
 
-    ServiceRegistrationManager serviceManager;
+  ServiceRegistrationManager serviceManager;
 
-    PipelineMigrator migrator;
+  PipelineMigrator migrator;
 
-    public ExtensibleLoadManager(ExtensionServiceSelector selector, PipelineMigrator pipelineMigrator) {
-        this.selector = selector;
-        this.migrator = pipelineMigrator;
-        serviceManager = new ServiceRegistrationManager(
-                StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage());
-    }
+  public ExtensibleLoadManager(ExtensionServiceSelector selector, PipelineMigrator pipelineMigrator) {
+    this.selector = selector;
+    this.migrator = pipelineMigrator;
+    serviceManager = new ServiceRegistrationManager(
+        StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage());
+  }
 
-    @Override
-    public SpServiceRegistration allocation(List<SpServiceRegistration> serviceRegistrations, List<String> labels) {
-        return selector.select(serviceRegistrations, labels);
-    }
+  @Override
+  public SpServiceRegistration allocation(List<SpServiceRegistration> serviceRegistrations, List<String> labels) {
+    return selector.select(serviceRegistrations, labels);
+  }
 
-    public void doLoadShedding() {
-        migrator.doLoadShedding(serviceManager.getAivServices());
-    }
+  public void doLoadShedding() {
+    migrator.doLoadShedding(serviceManager.getAivServices());
+  }
 }

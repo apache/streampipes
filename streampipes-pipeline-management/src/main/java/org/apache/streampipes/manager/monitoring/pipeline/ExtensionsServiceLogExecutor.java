@@ -68,8 +68,12 @@ public class ExtensionsServiceLogExecutor implements Runnable {
     });
 
     try {
-        LoadManager.doLoadShedding();
-    }catch (Exception e){
+      LoadManager.doLoadShedding();
+
+      if (LoadManager.getLoadBalancerStats() != null) {
+        LoadManager.getLoadBalancerStats().updateAllMetrics();
+      }
+    } catch (Exception e){
       LOG.info("Could not doShedding");
     }
   }

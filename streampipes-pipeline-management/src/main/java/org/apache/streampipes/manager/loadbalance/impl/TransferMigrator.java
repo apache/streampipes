@@ -12,121 +12,121 @@ import java.util.List;
  * Uses multiple strategies based on load variance and distribution
  */
 public class TransferMigrator extends AbstractPipelineMigrator {
-    
-    private static final Logger logger = LoggerFactory.getLogger(TransferMigrator.class);
-    private static final float MIN_LOAD_DIFFERENCE = 10.0f;
 
-    @Override
-    public void doLoadShedding(List<SpServiceRegistration> services) {
-        if (!shouldMigrate(services)) {
-            return;
-        }
-        
-        // Calculate loads for all services
-        ServiceLoadQueues queues = calculateServiceLoads(services);
-        List<Float> loadValues = queues.getLoadValues();
-        float averageLoad = calculateAverageLoad(loadValues);
-        float variance = calculateVariance(loadValues, averageLoad);
-        
-        logger.debug("Load statistics - Average: {}, Variance: {}, Target Std: {}", 
-                    averageLoad, variance, LoadBalancerConfig.LoadTargetStd);
-        
-        // Try different migration strategies based on load distribution
-        if (tryVarianceBasedMigration(queues, variance, services.size())) {
-            return;
-        }
-        
-        if (tryUnderutilizedMigration(queues, services.size())) {
-            return;
-        }
-        
-        tryOverloadMigration(queues, services.size());
+  private static final Logger logger = LoggerFactory.getLogger(TransferMigrator.class);
+  private static final float MIN_LOAD_DIFFERENCE = 10.0f;
+
+  @Override
+  public void doLoadShedding(List<SpServiceRegistration> services) {
+    if (!shouldMigrate(services)) {
+      return;
     }
-    
-    /**
-     * Strategy 1: Migrate when variance exceeds target
-     * @param queues Service load queues
-     * @param variance Current load variance
-     * @param totalServices Total number of services
-     * @return true if migration was performed
-     */
-    private boolean tryVarianceBasedMigration(ServiceLoadQueues queues, float variance, int totalServices) {
-        if (variance <= LoadBalancerConfig.LoadTargetStd) {
-            return false;
-        }
-        
-        logger.info("Variance {} exceeds target {}, performing variance-based migration", 
-                   variance, LoadBalancerConfig.LoadTargetStd);
-        
-        performMigrationBatch(
-            queues.getMaxLoadQueue(), 
-            queues.getMinLoadQueue(), 
-            totalServices,
-            Integer.MAX_VALUE  // No limit on migrations for variance reduction
-        );
-        
-        return true;
+
+    // Calculate loads for all services
+    ServiceLoadQueues queues = calculateServiceLoads(services);
+    List<Float> loadValues = queues.getLoadValues();
+    float averageLoad = calculateAverageLoad(loadValues);
+    float variance = calculateVariance(loadValues, averageLoad);
+
+    logger.debug("Load statistics - Average: {}, Variance: {}, Target Std: {}",
+                averageLoad, variance, LoadBalancerConfig.LoadTargetStd);
+
+    // Try different migration strategies based on load distribution
+    if (tryVarianceBasedMigration(queues, variance, services.size())) {
+      return;
     }
-    
-    /**
-     * Strategy 2: Migrate when services are significantly underutilized
-     * @param queues Service load queues
-     * @param totalServices Total number of services
-     * @return true if migration was performed
-     */
-    private boolean tryUnderutilizedMigration(ServiceLoadQueues queues, int totalServices) {
-        float minLoad = queues.getMinLoadQueue().peek().getValue();
-        float maxLoad = queues.getMaxLoadQueue().peek().getValue();
-        
-        if (minLoad >= LoadBalancerConfig.MinMigratorPercentage) {
-            return false;
-        }
-        
-        if (maxLoad <= minLoad + MIN_LOAD_DIFFERENCE) {
-            return false;
-        }
-        
-        logger.info("Underutilized service detected (min: {}%, max: {}%), migrating from high to low", 
-                   minLoad, maxLoad);
-        
-        performMigrationBatch(
-            queues.getMaxLoadQueue(), 
-            queues.getMinLoadQueue(), 
-            totalServices,
-            totalServices / 2  // Limit migrations for underutilization
-        );
-        
-        return true;
+
+    if (tryUnderutilizedMigration(queues, services.size())) {
+      return;
     }
-    
-    /**
-     * Strategy 3: Migrate when services are overloaded
-     * @param queues Service load queues
-     * @param totalServices Total number of services
-     * @return true if migration was performed
-     */
-    private boolean tryOverloadMigration(ServiceLoadQueues queues, int totalServices) {
-        float maxLoad = queues.getMaxLoadQueue().peek().getValue();
-        float minLoad = queues.getMinLoadQueue().peek().getValue();
-        
-        if (maxLoad <= LoadBalancerConfig.OverloadedThresholdPercentage) {
-            logger.debug("No overloaded services found (max load: {}%)", maxLoad);
-            return false;
-        }
-        
-        if (maxLoad <= minLoad + MIN_LOAD_DIFFERENCE) {
-            return false;
-        }
-        
-        logger.info("Overloaded service detected ({}%), redistributing load", maxLoad);
-        
-        performMigrationBatch(
-            queues.getMaxLoadQueue(), 
-            queues.getMinLoadQueue(), 
-            totalServices,
-            totalServices / 2  // Limit migrations for overload
-        );
-        
-        return true;
+
+    tryOverloadMigration(queues, services.size());
+  }
+
+  /**
+   * Strategy 1: Migrate when variance exceeds target
+   * @param queues Service load queues
+   * @param variance Current load variance
+   * @param totalServices Total number of services
+   * @return true if migration was performed
+   */
+  private boolean tryVarianceBasedMigration(ServiceLoadQueues queues, float variance, int totalServices) {
+    if (variance <= LoadBalancerConfig.LoadTargetStd) {
+      return false;
     }
+
+    logger.info("Variance {} exceeds target {}, performing variance-based migration",
+               variance, LoadBalancerConfig.LoadTargetStd);
+
+    performMigrationBatch(
+      queues.getMaxLoadQueue(),
+      queues.getMinLoadQueue(),
+      totalServices,
+      Integer.MAX_VALUE  // No limit on migrations for variance reduction
+    );
+
+    return true;
+  }
+
+  /**
+   * Strategy 2: Migrate when services are significantly underutilized
+   * @param queues Service load queues
+   * @param totalServices Total number of services
+   * @return true if migration was performed
+   */
+  private boolean tryUnderutilizedMigration(ServiceLoadQueues queues, int totalServices) {
+    float minLoad = queues.getMinLoadQueue().peek().getValue();
+    float maxLoad = queues.getMaxLoadQueue().peek().getValue();
+
+    if (minLoad >= LoadBalancerConfig.MinMigratorPercentage) {
+      return false;
+    }
+
+    if (maxLoad <= minLoad + MIN_LOAD_DIFFERENCE) {
+      return false;
+    }
+
+    logger.info("Underutilized service detected (min: {}%, max: {}%), migrating from high to low",
+               minLoad, maxLoad);
+
+    performMigrationBatch(
+      queues.getMaxLoadQueue(),
+      queues.getMinLoadQueue(),
+      totalServices,
+      totalServices / 2  // Limit migrations for underutilization
+    );
+
+    return true;
+  }
+
+  /**
+   * Strategy 3: Migrate when services are overloaded
+   * @param queues Service load queues
+   * @param totalServices Total number of services
+   * @return true if migration was performed
+   */
+  private boolean tryOverloadMigration(ServiceLoadQueues queues, int totalServices) {
+    float maxLoad = queues.getMaxLoadQueue().peek().getValue();
+    float minLoad = queues.getMinLoadQueue().peek().getValue();
+
+    if (maxLoad <= LoadBalancerConfig.OverloadedThresholdPercentage) {
+      logger.debug("No overloaded services found (max load: {}%)", maxLoad);
+      return false;
+    }
+
+    if (maxLoad <= minLoad + MIN_LOAD_DIFFERENCE) {
+      return false;
+    }
+
+    logger.info("Overloaded service detected ({}%), redistributing load", maxLoad);
+
+    performMigrationBatch(
+      queues.getMaxLoadQueue(),
+      queues.getMinLoadQueue(),
+      totalServices,
+      totalServices / 2  // Limit migrations for overload
+    );
+
+    return true;
+  }
 }

@@ -16,79 +16,122 @@
  *
  */
 
-//package org.apache.streampipes.commons.prometheus.loadbalancer;
-//
-//import io.prometheus.client.Gauge;
-//import org.apache.streampipes.commons.prometheus.core.PrometheusMetrics;
-//
-///**
-// * 负载均衡器指标管理器
-// * 继承统一的指标管理器，消除重复代码
-// */
-//public class LoadBalancerMetrics extends PrometheusMetrics {
-//
-//    // 指标名称常量
-//    private static final String LB_EVALUATION_DURATION_SECONDS = "lb_evaluation_duration_seconds";
-//    private static final String LB_STDDEV = "lb_stddev";
-//    private static final String LB_IMBALANCE_RATIO = "lb_imbalance_ratio";
-//
-//    public LoadBalancerMetrics(String id) {
-//        super(id);
-//    }
-//
-//    @Override
-//    protected void registerGauges() {
-//        registerGauge(LB_EVALUATION_DURATION_SECONDS, "Duration of the load balancer evaluation in seconds");
-//        registerGauge(LB_STDDEV, "Standard deviation of the load across services");
-//        registerGauge(LB_IMBALANCE_RATIO, "Imbalance ratio of the load across services");
-//    }
-//
-//    /**
-//     * 更新评估持续时间指标
-//     * @param duration 持续时间
-//     */
-//    public void updateEvaluationDuration(double duration) {
-//        setGaugeValue(LB_EVALUATION_DURATION_SECONDS, duration);
-//    }
-//
-//    /**
-//     * 更新标准差指标
-//     * @param stddev 标准差
-//     */
-//    public void updateStddev(double stddev) {
-//        setGaugeValue(LB_STDDEV, stddev);
-//    }
-//
-//    /**
-//     * 更新不平衡比率指标
-//     * @param ratio 不平衡比率
-//     */
-//    public void updateImbalanceRatio(double ratio) {
-//        setGaugeValue(LB_IMBALANCE_RATIO, ratio);
-//    }
-//
-//    /**
-//     * 更新所有指标
-//     * @param duration 持续时间
-//     * @param stddev 标准差
-//     * @param ratio 不平衡比率
-//     */
-//    public void updateAllMetrics(double duration, double stddev, double ratio) {
-//        updateEvaluationDuration(duration);
-//        updateStddev(stddev);
-//        updateImbalanceRatio(ratio);
-//    }
-//
-//    // Getters for backward compatibility
-//    public Gauge getLbEvaluationDurationSecondsGauge() {
-//        return getGauge(LB_EVALUATION_DURATION_SECONDS);
-//    }
-//
-//    public Gauge getLbStddevGauge() {
-//        return getGauge(LB_STDDEV);
-//    }
-//
-//    public Gauge getLbImbalanceRadioGauge() {
-//        return getGauge(LB_IMBALANCE_RATIO);
-//    }
-//}
+package org.apache.streampipes.commons.prometheus.loadbalancer;
+
+import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
+
+import io.prometheus.client.Counter;
+import io.prometheus.client.Gauge;
+
+/**
+ * Load Balancer Metrics Manager.
+ * Global static metrics for the load balancer (no instance needed).
+ * Service-specific metrics use labels to distinguish between services.
+ */
+public class LoadBalancerMetrics {
+
+  // Pipeline separation and migration metrics
+  public static final Counter PIPELINE_SEPARATIONS_TOTAL = StreamPipesCollectorRegistry.registerCounter(
+      "lb_pipeline_separations_total",
+      "Total number of pipeline separations performed",
+      "serviceId"
+  );
+
+  public static final Counter PIPELINE_MIGRATIONS_TOTAL = StreamPipesCollectorRegistry.registerCounter(
+      "lb_pipeline_migrations_total",
+      "Total number of pipeline migrations performed",
+      "serviceId"
+  );
+
+  public static final Gauge PIPELINE_SEPARATION_RATE = StreamPipesCollectorRegistry.registerGauge(
+      "lb_pipeline_separation_rate",
+      "Rate of pipeline separations per second",
+      "serviceId"
+  );
+
+  public static final Gauge PIPELINE_MIGRATION_RATE = StreamPipesCollectorRegistry.registerGauge(
+      "lb_pipeline_migration_rate",
+      "Rate of pipeline migrations per second",
+      "serviceId"
+  );
+
+  // Service resource metrics
+  public static final Gauge SERVICE_ADAPTER_COUNT = StreamPipesCollectorRegistry.registerGauge(
+      "lb_service_adapter_count",
+      "Number of adapters in each extension service",
+      "serviceId", "serviceType"
+  );
+
+  public static final Gauge SERVICE_PIPELINE_COUNT = StreamPipesCollectorRegistry.registerGauge(
+      "lb_service_pipeline_count",
+      "Number of pipelines in each extension service",
+      "serviceId", "serviceType"
+  );
+
+  public static final Gauge SERVICE_LOAD_WEIGHT = StreamPipesCollectorRegistry.registerGauge(
+      "lb_service_load_weight",
+      "Load weight of each extension service",
+      "serviceId", "serviceType"
+  );
+
+  // Load shedding metrics
+  public static final Counter LOAD_SHEDDING_OPERATIONS_TOTAL = StreamPipesCollectorRegistry.registerCounter(
+      "lb_load_shedding_operations_total",
+      "Total number of load shedding operations performed"
+  );
+
+  public static final Gauge LOAD_SHEDDING_RATE = StreamPipesCollectorRegistry.registerGauge(
+      "lb_load_shedding_rate",
+      "Rate of load shedding operations per second"
+  );
+
+
+  /**
+   * Report pipeline separation metrics.
+   *
+   * @param serviceId the service identifier
+   * @param rate the separation rate
+   */
+  public static void reportPipelineSeparation(String serviceId, double rate) {
+    PIPELINE_SEPARATIONS_TOTAL.labels(serviceId).inc();
+    PIPELINE_SEPARATION_RATE.labels(serviceId).set(rate);
+  }
+
+  /**
+   * Report pipeline migration metrics.
+   *
+   * @param serviceId the service identifier
+   * @param rate the migration rate
+   */
+  public static void reportPipelineMigration(String serviceId, double rate) {
+    PIPELINE_MIGRATIONS_TOTAL.labels(serviceId).inc();
+    PIPELINE_MIGRATION_RATE.labels(serviceId).set(rate);
+  }
+
+  /**
+   * Report service resource metrics.
+   *
+   * @param serviceId the service identifier
+   * @param serviceType the service type
+   * @param adapterCount the adapter count
+   * @param pipelineCount the pipeline count
+   * @param loadWeight the load weight
+   */
+  public static void reportServiceResources(String serviceId, String serviceType,
+                                          int adapterCount, int pipelineCount, double loadWeight) {
+    SERVICE_ADAPTER_COUNT.labels(serviceId, serviceType).set(adapterCount);
+    SERVICE_PIPELINE_COUNT.labels(serviceId, serviceType).set(pipelineCount);
+    SERVICE_LOAD_WEIGHT.labels(serviceId, serviceType).set(loadWeight);
+  }
+
+  /**
+   * Report load shedding metrics.
+   *
+   * @param rate the load shedding rate
+   */
+  public static void reportLoadShedding(double rate) {
+    LOAD_SHEDDING_OPERATIONS_TOTAL.inc();
+    LOAD_SHEDDING_RATE.set(rate);
+  }
+
+}
