@@ -38,7 +38,6 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
-
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -72,49 +71,36 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableAutoConfiguration
 @EnableScheduling
-@Import({
-    OpenApiConfiguration.class,
-    SpPermissionEvaluator.class,
-    StreamPipesPasswordEncoder.class,
-    StreamPipesPrometheusConfig.class,
-    WebSecurityConfig.class,
-    WelcomePageController.class
-})
-@ComponentScan({
-    "org.apache.streampipes.rest.*",
-    "org.apache.streampipes.service.core.oauth2",
-    "org.apache.streampipes.service.core.scheduler"
-})
+@Import({OpenApiConfiguration.class, SpPermissionEvaluator.class, StreamPipesPasswordEncoder.class,
+    StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class})
+@ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.service.core.oauth2",
+    "org.apache.streampipes.service.core.scheduler"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
-  private static final Logger LOG = LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
+  private static final Logger LOG =
+      LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
 
-  private final ISpCoreConfigurationStorage coreConfigStorage = StorageDispatcher.INSTANCE
-      .getNoSqlStore().getSpCoreConfigurationStorage();
+  private final ISpCoreConfigurationStorage coreConfigStorage =
+      StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();
 
-  private final CoreServiceStatusManager coreStatusManager = new CoreServiceStatusManager(coreConfigStorage);
+  private final CoreServiceStatusManager coreStatusManager =
+      new CoreServiceStatusManager(coreConfigStorage);
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
-    application.initialize(() -> List.of(
-        new SpNatsProtocolFactory(),
-        new SpKafkaProtocolFactory(),
-        new SpMqttProtocolFactory(),
-        new SpJmsProtocolFactory(),
-        new SpPulsarProtocolFactory()
-    ));
+    application.initialize(() -> List.of(new SpNatsProtocolFactory(), new SpKafkaProtocolFactory(),
+                                         new SpMqttProtocolFactory(), new SpJmsProtocolFactory(),
+                                         new SpPulsarProtocolFactory()));
   }
 
   public void initialize(SupportedProtocols supportedProtocols) {
     try {
       registerProtocols(supportedProtocols);
       BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(8030);
-      startStreamPipesService(StreamPipesCoreApplication.class,
-          networkingConfig);
+      startStreamPipesService(StreamPipesCoreApplication.class, networkingConfig);
     } catch (UnknownHostException e) {
-      LOG.error(
-          "Could not auto-resolve host address - please manually provide the hostname"
-              + " using the `SP_HOST` environment variable");
+      LOG.error("Could not auto-resolve host address - please manually provide the hostname"
+          + " using the `SP_HOST` environment variable");
     }
   }
 
@@ -130,7 +116,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
     var env = Environments.getEnvironment();
-    LoadManager.initialize();
+    if (env.getLoadManagerEnable().getValueOrDefault()) {
+      LoadManager.initialize();
+    }
     if (!isConfigured()) {
       CoreInitialInstallationProgress.INSTANCE.triggerInitiallyInstallingMode();
       doInitialSetup(env.getInitialWaitTimeBeforeInstallationInMillis().getValueOrDefault());
@@ -145,50 +133,35 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     new ApplyDefaultRolesAndPrivilegesTask().execute();
     coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.READY);
 
-    executorService.schedule(
-        new PostStartupTask(getPipelineStorage()),
-        env.getInitialHealthCheckDelayInMillis().getValueOrDefault(),
-        TimeUnit.MILLISECONDS);
+    executorService.schedule(new PostStartupTask(getPipelineStorage()),
+                             env.getInitialHealthCheckDelayInMillis().getValueOrDefault(),
+                             TimeUnit.MILLISECONDS);
 
-    scheduleHealthChecks(
-        env.getHealthCheckIntervalInMillis().getValueOrDefault(),
-        List.of(
-            new ServiceHealthCheck(),
-            new PipelineHealthCheck(),
+    scheduleHealthChecks(env.getHealthCheckIntervalInMillis().getValueOrDefault(), List
+        .of(new ServiceHealthCheck(), new PipelineHealthCheck(),
             new AdapterHealthCheck(
                 StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
                 new AdapterMasterManagement(
-                    StorageDispatcher.INSTANCE.getNoSqlStore()
-                        .getAdapterInstanceStorage(),
+                    StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
                     new SpResourceManager().manageAdapters(),
                     new SpResourceManager().manageDataStreams(),
-                    AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-                )
-            ))
-    );
+                    AdapterMetricsManager.INSTANCE.getAdapterMetrics()))));
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
     LOG.info("Extensions logs will be fetched every {} milliseconds", logFetchInterval);
     logCheckExecutorService.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(),
-        logFetchInterval,
-        logFetchInterval,
-        TimeUnit.MILLISECONDS);
+                                                logFetchInterval, logFetchInterval,
+                                                TimeUnit.MILLISECONDS);
   }
 
-  private void scheduleHealthChecks(
-      int healthCheckIntervalInMillis,
-      List<Runnable> checks) {
+  private void scheduleHealthChecks(int healthCheckIntervalInMillis, List<Runnable> checks) {
     var healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
     checks.forEach(check -> {
-      LOG.info(
-          "Health check {} configured to run every {} {}",
-          check.getClass().getCanonicalName(),
-          healthCheckIntervalInMillis,
-          TimeUnit.MILLISECONDS);
-      healthCheckExecutorService.scheduleAtFixedRate(check,
-          healthCheckIntervalInMillis,
-          healthCheckIntervalInMillis,
-          TimeUnit.MILLISECONDS);
+      LOG.info("Health check {} configured to run every {} {}", check.getClass().getCanonicalName(),
+               healthCheckIntervalInMillis, TimeUnit.MILLISECONDS);
+      healthCheckExecutorService.scheduleAtFixedRate(check, healthCheckIntervalInMillis,
+                                                     healthCheckIntervalInMillis,
+                                                     TimeUnit.MILLISECONDS);
     });
   }
 
@@ -199,10 +172,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private void doInitialSetup(int initialSleepBeforeInstallation) {
     LOG.info("\n\n**********\n\nWelcome to Apache StreamPipes!\n\n**********\n\n");
     LOG.info("We will perform the initial setup, grab some coffee and cross your fingers ;-)...");
-    LOG.info(
-        "Auto-setup will start in {} milliseconds to make sure all services are running...",
-        initialSleepBeforeInstallation
-    );
+    LOG.info("Auto-setup will start in {} milliseconds to make sure all services are running...",
+             initialSleepBeforeInstallation);
     try {
       TimeUnit.MILLISECONDS.sleep(initialSleepBeforeInstallation);
       LOG.info("Starting installation procedure");
@@ -216,10 +187,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   public void onExit() {
     LOG.info("Shutting down StreamPipes...");
     LOG.info("Flagging currently running pipelines for restart...");
-    List<Pipeline> pipelinesToStop = getAllPipelines()
-        .stream()
-        .filter(Pipeline::isRunning)
-        .toList();
+    List<Pipeline> pipelinesToStop =
+        getAllPipelines().stream().filter(Pipeline::isRunning).toList();
 
     LOG.info("Found {} running pipelines which will be stopped...", pipelinesToStop.size());
 
@@ -242,15 +211,11 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   }
 
   private List<Pipeline> getAllPipelines() {
-    return getPipelineStorage()
-        .findAll();
+    return getPipelineStorage().findAll();
   }
 
   private IPipelineStorage getPipelineStorage() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getPipelineStorageAPI();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
   }
 
   @Override

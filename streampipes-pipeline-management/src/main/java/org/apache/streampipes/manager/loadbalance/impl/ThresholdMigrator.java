@@ -1,15 +1,33 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package org.apache.streampipes.manager.loadbalance.impl;
 
 import org.apache.streampipes.manager.loadbalance.LoadBalancerConfig;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 /**
- * Threshold-based pipeline migrator for load balancing
- * Migrates pipelines when services exceed average load by a threshold
+ * Threshold-based pipeline migrator for load balancing Migrates pipelines when services exceed
+ * average load by a threshold
  */
 public class ThresholdMigrator extends AbstractPipelineMigrator {
 
@@ -37,18 +55,19 @@ public class ThresholdMigrator extends AbstractPipelineMigrator {
 
   /**
    * Migrate from services that exceed average load by threshold
+   * 
    * @param queues Service load queues
    * @param averageLoad Average load across all services
    * @param totalServices Total number of services
    */
-  private void migrateOverloadedServices(ServiceLoadQueues queues, float averageLoad, int totalServices) {
+  private void migrateOverloadedServices(ServiceLoadQueues queues, float averageLoad,
+                                         int totalServices) {
     Queue<Map.Entry<SpServiceRegistration, Float>> overloadedServices = new LinkedList<>();
     PriorityQueue<Map.Entry<SpServiceRegistration, Float>> maxLoadQueue = queues.getMaxLoadQueue();
 
     // Identify services exceeding threshold
     float thresholdLoad = averageLoad + LoadBalancerConfig.ThresholdMigratorPercentage;
-    while (!maxLoadQueue.isEmpty()
-        && maxLoadQueue.peek().getValue() > thresholdLoad
+    while (!maxLoadQueue.isEmpty() && maxLoadQueue.peek().getValue() > thresholdLoad
         && overloadedServices.size() < totalServices / 2) {
       overloadedServices.offer(maxLoadQueue.poll());
     }
@@ -58,8 +77,8 @@ public class ThresholdMigrator extends AbstractPipelineMigrator {
       return;
     }
 
-    logger.info("Found {} overloaded services above threshold {}",
-               overloadedServices.size(), thresholdLoad);
+    logger.info("Found {} overloaded services above threshold {}", overloadedServices.size(),
+                thresholdLoad);
 
     // Migrate to less loaded services
     PriorityQueue<Map.Entry<SpServiceRegistration, Float>> minLoadQueue = queues.getMinLoadQueue();
@@ -73,6 +92,7 @@ public class ThresholdMigrator extends AbstractPipelineMigrator {
 
   /**
    * Balance services with significant load differences
+   * 
    * @param queues Service load queues
    * @param totalServices Total number of services
    */

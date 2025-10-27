@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.loadbalance;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -23,8 +22,8 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import java.util.List;
 
 /**
- * Interface for load balancing operations.
- * Provides methods for service allocation and load shedding.
+ * Interface for load balancing operations. Provides methods for service allocation and load
+ * shedding.
  */
 public interface LoadBalancer {
 
@@ -35,7 +34,8 @@ public interface LoadBalancer {
    * @param label labels for service selection
    * @return selected service registration
    */
-  SpServiceRegistration allocation(List<SpServiceRegistration> serviceRegistrations, List<String> label);
+  SpServiceRegistration allocation(List<SpServiceRegistration> serviceRegistrations,
+                                   List<String> label);
 
   /**
    * Perform load shedding operations.

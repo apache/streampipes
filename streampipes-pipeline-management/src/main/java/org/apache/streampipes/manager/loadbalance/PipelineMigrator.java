@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.loadbalance;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -23,9 +22,8 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import java.util.List;
 
 /**
- * Pipeline migrator interface for load balancing.
- * Implements strategies to redistribute pipeline elements across services
- * to balance load and prevent service overload.
+ * Pipeline migrator interface for load balancing. Implements strategies to redistribute pipeline
+ * elements across services to balance load and prevent service overload.
  */
 public interface PipelineMigrator {
 

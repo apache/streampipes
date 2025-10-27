@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.monitoring.pipeline;
 
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.pipelines.PipelineFlowStats;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.manager.loadbalance.LoadManager;
-import org.apache.streampipes.manager.loadbalance.ResourceUnitMigration;
-import org.apache.streampipes.manager.monitoring.pipeline.service.ExtensionsServiceReportExecutor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -66,41 +65,33 @@ public class ExtensionsServiceLogExecutor implements Runnable {
         LOG.info("Could not fetch log info from endpoint {}", serviceEndpoint);
       }
     });
-
-    try {
-      LoadManager.doLoadShedding();
-
-      if (LoadManager.getLoadBalancerStats() != null) {
-        LoadManager.getLoadBalancerStats().updateAllMetrics();
+    Environment env = Environments.getEnvironment();
+    if (env.getLoadManagerEnable().getValueOrDefault()) {
+      try {
+        LoadManager.doLoadShedding();
+      } catch (Exception e) {
+        LOG.info("Could not doShedding");
       }
-    } catch (Exception e){
-      LOG.info("Could not doShedding");
     }
   }
 
   private void updatePipelineFlow() {
     pipelineFlowStats.clear();
-    ExtensionsLogProvider.INSTANCE.getAllMetricsInfos().forEach(
-        (k, v) -> {
-        String className = InstanceIdExtractor.getSimpleName(k);
-        if (AdapterDescription.class.getSimpleName().toLowerCase().equals(className)) {
-          pipelineFlowStats.increaseReceivedTotalData(v.getMessagesOut().getCounter());
-        } else if (DataProcessorInvocation.class.getSimpleName().toLowerCase().equals(className)) {
-          v.getMessagesIn().forEach(
-              (k1, v1) -> {
-              pipelineFlowStats.increaseElementInputTotalData(v1.getCounter());
-            }
-          );
-          pipelineFlowStats.increaseElementOutputTotalData(v.getMessagesOut().getCounter());
-        } else if (DataSinkInvocation.class.getSimpleName().toLowerCase().equals(className)) {
-          v.getMessagesIn().forEach(
-              (k1, v1) -> {
-              pipelineFlowStats.increasePipelineProcessedData(v1.getCounter());
-            }
-          );
-        }
+    ExtensionsLogProvider.INSTANCE.getAllMetricsInfos().forEach((k, v) -> {
+      String className = InstanceIdExtractor.getSimpleName(k);
+      if (AdapterDescription.class.getSimpleName().toLowerCase().equals(className)) {
+        pipelineFlowStats.increaseReceivedTotalData(v.getMessagesOut().getCounter());
+      } else if (DataProcessorInvocation.class.getSimpleName().toLowerCase().equals(className)) {
+        v.getMessagesIn().forEach((k1, v1) -> {
+          pipelineFlowStats.increaseElementInputTotalData(v1.getCounter());
+        });
+        pipelineFlowStats.increaseElementOutputTotalData(v.getMessagesOut().getCounter());
+      } else if (DataSinkInvocation.class.getSimpleName().toLowerCase().equals(className)) {
+        v.getMessagesIn().forEach((k1, v1) -> {
+          pipelineFlowStats.increasePipelineProcessedData(v1.getCounter());
+        });
       }
-    );
+    });
     pipelineFlowStats.metrics();
   }
 
@@ -109,18 +100,16 @@ public class ExtensionsServiceLogExecutor implements Runnable {
   }
 
   private List<String> getActiveExtensionsEndpoints() {
-    return SpServiceDiscovery.getServiceDiscovery().getServiceEndpoints(
-        DefaultSpServiceTypes.EXT,
-        true,
-        List.of()
-    );
+    return SpServiceDiscovery.getServiceDiscovery().getServiceEndpoints(DefaultSpServiceTypes.EXT,
+                                                                        true, List.of());
   }
 
   private String makeLogUrl(String baseUrl) {
     return baseUrl + LOG_PATH;
   }
 
-  private SpEndpointMonitoringInfo parseLogResponse(String response) throws JsonProcessingException {
+  private SpEndpointMonitoringInfo parseLogResponse(String response)
+      throws JsonProcessingException {
     return JacksonSerializer.getObjectMapper().readValue(response, SpEndpointMonitoringInfo.class);
   }
 }

@@ -61,84 +61,87 @@ public class PipelineHealthCheck implements Runnable {
   }
 
   public void checkAndRestorePipelineElements() {
-      List<Pipeline> allPipelines = getAllPipelines();
-      List<Pipeline> runningPipelines = getRunningPipelines(allPipelines);
+    List<Pipeline> allPipelines = getAllPipelines();
+    List<Pipeline> runningPipelines = getRunningPipelines(allPipelines);
 
-      pipelinesStats.clear();
-      pipelinesStats.setAllPipelines(allPipelines.size());
-      pipelinesStats.setRunningPipelines(runningPipelines.size());
-      pipelinesStats.setStoppedPipelines(pipelinesStats.getAllPipelines() - pipelinesStats.getRunningPipelines());
+    pipelinesStats.clear();
+    pipelinesStats.setAllPipelines(allPipelines.size());
+    pipelinesStats.setRunningPipelines(runningPipelines.size());
+    pipelinesStats.setStoppedPipelines(pipelinesStats.getAllPipelines()
+        - pipelinesStats.getRunningPipelines());
 
-      if (!runningPipelines.isEmpty()) {
-        Map<String, List<InvocableStreamPipesEntity>> endpointMap = generateEndpointMap();
-        List<String> allRunningInstances = findRunningInstances(endpointMap.keySet());
+    if (!runningPipelines.isEmpty()) {
+      Map<String, List<InvocableStreamPipesEntity>> endpointMap = generateEndpointMap();
+      List<String> allRunningInstances = findRunningInstances(endpointMap.keySet());
 
-        runningPipelines.forEach(pipeline -> {
-          AtomicBoolean shouldUpdatePipeline = new AtomicBoolean(false);
-          List<String> failedInstances = new ArrayList<>();
-          List<String> recoveredInstances = new ArrayList<>();
-          List<String> pipelineNotifications = new ArrayList<>();
-          List<InvocableStreamPipesEntity> graphs = RunningPipelineElementStorage
-                  .runningProcessorsAndSinks
-                  .get(pipeline.getPipelineId());
+      runningPipelines.forEach(pipeline -> {
+        AtomicBoolean shouldUpdatePipeline = new AtomicBoolean(false);
+        List<String> failedInstances = new ArrayList<>();
+        List<String> recoveredInstances = new ArrayList<>();
+        List<String> pipelineNotifications = new ArrayList<>();
+        List<InvocableStreamPipesEntity> graphs =
+            RunningPipelineElementStorage.runningProcessorsAndSinks.get(pipeline.getPipelineId());
 
-          graphs.forEach(graph -> {
-            String instanceId = extractInstanceId(graph);
-            if (allRunningInstances.stream().noneMatch(runningInstanceId -> runningInstanceId.equals(instanceId))) {
-              if (shouldRetry(instanceId)) {
-                String endpointUrl = graph.getSelectedEndpointUrl();
-                shouldUpdatePipeline.set(true);
-                boolean success;
-                try {
-                  endpointUrl = findEndpointUrl(graph);
-                  success = new InvokeHttpRequest().execute(graph, endpointUrl, pipeline.getPipelineId()).isSuccess();
-                } catch (NoServiceEndpointsAvailableException e) {
-                  success = false;
-                }
-                if (!success) {
-                  failedInstances.add(instanceId);
-                  addFailedAttemptNotification(pipelineNotifications, graph);
-                  increaseFailedAttempt(instanceId);
-                  LOG.info("Could not restore pipeline element {} of pipeline {} ({}/{})",
-                          graph.getName(),
-                          pipeline.getName(),
-                          failedRestartAttempts.get(instanceId),
-                          MAX_FAILED_ATTEMPTS);
-                } else {
-                  recoveredInstances.add(instanceId);
-                  addSuccessfulRestoreNotification(pipelineNotifications, graph);
-                  resetFailedAttempts(instanceId);
-                  graph.setSelectedEndpointUrl(endpointUrl);
-                  LOG.info("Successfully restored pipeline element {} of pipeline {}", graph.getName(),
-                          pipeline.getName());
-                }
+        graphs.forEach(graph -> {
+          String instanceId = extractInstanceId(graph);
+          if (allRunningInstances.stream()
+              .noneMatch(runningInstanceId -> runningInstanceId.equals(instanceId))) {
+            if (shouldRetry(instanceId)) {
+              String endpointUrl = graph.getSelectedEndpointUrl();
+              shouldUpdatePipeline.set(true);
+              boolean success;
+              try {
+                endpointUrl = findEndpointUrl(graph);
+                success = new InvokeHttpRequest()
+                    .execute(graph, endpointUrl, pipeline.getPipelineId()).isSuccess();
+              } catch (NoServiceEndpointsAvailableException e) {
+                success = false;
+              }
+              if (!success) {
+                failedInstances.add(instanceId);
+                addFailedAttemptNotification(pipelineNotifications, graph);
+                increaseFailedAttempt(instanceId);
+                LOG.info("Could not restore pipeline element {} of pipeline {} ({}/{})",
+                         graph.getName(), pipeline.getName(), failedRestartAttempts.get(instanceId),
+                         MAX_FAILED_ATTEMPTS);
+              } else {
+                recoveredInstances.add(instanceId);
+                addSuccessfulRestoreNotification(pipelineNotifications, graph);
+                resetFailedAttempts(instanceId);
+                graph.setSelectedEndpointUrl(endpointUrl);
+                LOG.info("Successfully restored pipeline element {} of pipeline {}",
+                         graph.getName(), pipeline.getName());
               }
             }
-          });
-          if (shouldUpdatePipeline.get()) {
-            var currentPipeline = getPipeline(pipeline.getPipelineId());
-            if (!failedInstances.isEmpty()) {
-              currentPipeline.setHealthStatus(PipelineHealthStatus.FAILURE);
-              pipelinesStats.failedIncrease();
-            } else if (!recoveredInstances.isEmpty()) {
-              currentPipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
-              pipelinesStats.attentionRequiredIncrease();
-            }
-            currentPipeline.setPipelineNotifications(pipelineNotifications);
-            StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(currentPipeline);
           }
         });
-        int healthNum = pipelinesStats.getRunningPipelines() - pipelinesStats.getFailedPipelines()
-                - pipelinesStats.getAttentionRequiredPipelines();
-        pipelinesStats.setHealthyPipelines(healthNum);
-        pipelinesStats.setElementCount(getElementsCount(allPipelines));
-      }
-      pipelinesStats.metrics();
+        if (shouldUpdatePipeline.get()) {
+          var currentPipeline = getPipeline(pipeline.getPipelineId());
+          if (!failedInstances.isEmpty()) {
+            currentPipeline.setHealthStatus(PipelineHealthStatus.FAILURE);
+            pipelinesStats.failedIncrease();
+          } else if (!recoveredInstances.isEmpty()) {
+            currentPipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
+            pipelinesStats.attentionRequiredIncrease();
+          }
+          currentPipeline.setPipelineNotifications(pipelineNotifications);
+          StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI()
+              .updatePipeline(currentPipeline);
+        }
+      });
+      int healthNum = pipelinesStats.getRunningPipelines() - pipelinesStats.getFailedPipelines()
+          - pipelinesStats.getAttentionRequiredPipelines();
+      pipelinesStats.setHealthyPipelines(healthNum);
+      pipelinesStats.setElementCount(getElementsCount(allPipelines));
+    }
+    pipelinesStats.metrics();
   }
 
-  private String findEndpointUrl(InvocableStreamPipesEntity graph) throws NoServiceEndpointsAvailableException {
-    SpServiceUrlProvider serviceUrlProvider = ExtensionsServiceEndpointUtils.getPipelineElementType(graph);
-    return serviceUrlProvider.getInvocationUrl(graph.getSelectedEndpointUrl(),graph.getAppId());
+  private String findEndpointUrl(InvocableStreamPipesEntity graph)
+      throws NoServiceEndpointsAvailableException {
+    SpServiceUrlProvider serviceUrlProvider =
+        ExtensionsServiceEndpointUtils.getPipelineElementType(graph);
+    return serviceUrlProvider.getInvocationUrl(graph.getSelectedEndpointUrl(), graph.getAppId());
   }
 
   private boolean shouldRetry(String instanceId) {
@@ -164,18 +167,14 @@ public class PipelineHealthCheck implements Runnable {
 
   private void addSuccessfulRestoreNotification(List<String> pipelineNotifications,
                                                 InvocableStreamPipesEntity graph) {
-    pipelineNotifications.add(getCurrentDatetime()
-            + "Pipeline element '"
-            + graph.getName()
-            + "' was not available and was successfully restored.");
+    pipelineNotifications.add(getCurrentDatetime() + "Pipeline element '" + graph.getName()
+        + "' was not available and was successfully restored.");
   }
 
   private void addFailedAttemptNotification(List<String> pipelineNotifications,
                                             InvocableStreamPipesEntity graph) {
-    pipelineNotifications.add(getCurrentDatetime()
-            + "Pipeline element '"
-            + graph.getName()
-            + "' was not available and could not be restored.");
+    pipelineNotifications.add(getCurrentDatetime() + "Pipeline element '" + graph.getName()
+        + "' was not available and could not be restored.");
   }
 
   private String getCurrentDatetime() {
@@ -193,7 +192,8 @@ public class PipelineHealthCheck implements Runnable {
     List<String> allRunningInstances = new ArrayList<>();
     endpoints.forEach(endpoint -> {
       try {
-        allRunningInstances.addAll(new PipelineElementEndpointHealthCheck(endpoint).checkRunningInstances());
+        allRunningInstances
+            .addAll(new PipelineElementEndpointHealthCheck(endpoint).checkRunningInstances());
       } catch (IOException e) {
         LOG.error("Pipeline element endpoint {} is unavailable", endpoint);
       }
@@ -204,8 +204,8 @@ public class PipelineHealthCheck implements Runnable {
 
   private Map<String, List<InvocableStreamPipesEntity>> generateEndpointMap() {
     Map<String, List<InvocableStreamPipesEntity>> endpointMap = new HashMap<>();
-    RunningPipelineElementStorage.runningProcessorsAndSinks.forEach((pipelineId, graphs) ->
-            graphs.forEach(graph -> addEndpoint(endpointMap, graph)));
+    RunningPipelineElementStorage.runningProcessorsAndSinks
+        .forEach((pipelineId, graphs) -> graphs.forEach(graph -> addEndpoint(endpointMap, graph)));
 
     return endpointMap;
   }
@@ -225,33 +225,23 @@ public class PipelineHealthCheck implements Runnable {
   public void run() {
     try {
       this.checkAndRestorePipelineElements();
-    }catch (Exception e){
+    } catch (Exception e) {
 
     }
 
   }
 
   private List<Pipeline> getRunningPipelines(List<Pipeline> allPipelines) {
-    return allPipelines
-            .stream()
-            .filter(Pipeline::isRunning)
-            .collect(Collectors.toList());
+    return allPipelines.stream().filter(Pipeline::isRunning).collect(Collectors.toList());
 
   }
 
   private List<Pipeline> getAllPipelines() {
-    return StorageDispatcher
-            .INSTANCE
-            .getNoSqlStore()
-            .getPipelineStorageAPI()
-            .getAllPipelines();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
   }
 
-  private int getElementsCount(List<Pipeline> allPipelines){
-    return allPipelines
-            .stream()
-            .mapToInt(pipeline -> pipeline.getActions().size())
-            .sum();
+  private int getElementsCount(List<Pipeline> allPipelines) {
+    return allPipelines.stream().mapToInt(pipeline -> pipeline.getActions().size()).sum();
 
   }
 }

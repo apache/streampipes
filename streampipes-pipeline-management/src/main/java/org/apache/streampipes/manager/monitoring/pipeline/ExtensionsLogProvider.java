@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.monitoring.pipeline;
 
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.loadbalancer.ServiceLoadDataReport;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
@@ -63,13 +61,10 @@ public enum ExtensionsLogProvider {
     });
   }
 
-  private <T> Map<String, T> getInfosForPipeline(Map<String, T> allElements,
-                                                 Pipeline pipeline) {
+  private <T> Map<String, T> getInfosForPipeline(Map<String, T> allElements, Pipeline pipeline) {
     List<String> pipelineElementIds = collectPipelineElementIds(pipeline);
 
-    return allElements.entrySet()
-        .stream()
-        .filter(x -> pipelineElementIds.contains(x.getKey()))
+    return allElements.entrySet().stream().filter(x -> pipelineElementIds.contains(x.getKey()))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
@@ -96,10 +91,7 @@ public enum ExtensionsLogProvider {
   }
 
   public Map<String, SpMetricsEntry> getMetricsInfoForResources(List<String> resourceIds) {
-    return allMetricsInfos
-        .entrySet()
-        .stream()
-        .filter(entry -> resourceIds.contains(entry.getKey()))
+    return allMetricsInfos.entrySet().stream().filter(entry -> resourceIds.contains(entry.getKey()))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
@@ -123,15 +115,15 @@ public enum ExtensionsLogProvider {
     this.allLogInfos.remove(resourceId);
   }
 
-  public Map<String, SpMetricsEntry> getAllMetricsInfos(){
+  public Map<String, SpMetricsEntry> getAllMetricsInfos() {
     return this.allMetricsInfos;
   }
 
   private List<String> collectPipelineElementIds(Pipeline pipeline) {
-    return Stream.concat(
-        pipeline.getSepas().stream().map(NamedStreamPipesEntity::getElementId),
-        pipeline.getActions().stream().map(NamedStreamPipesEntity::getElementId)
-    ).collect(Collectors.toList());
+    return Stream
+        .concat(pipeline.getSepas().stream().map(NamedStreamPipesEntity::getElementId),
+                pipeline.getActions().stream().map(NamedStreamPipesEntity::getElementId))
+        .collect(Collectors.toList());
   }
 
 }

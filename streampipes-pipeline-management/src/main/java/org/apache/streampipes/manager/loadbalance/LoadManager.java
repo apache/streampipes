@@ -24,7 +24,6 @@ import org.apache.streampipes.manager.loadbalance.impl.*;
 import org.apache.streampipes.manager.loadbalance.unit.PipelineElementPartitioner;
 import org.apache.streampipes.manager.loadbalance.unit.ResourceUnitScanner;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 
@@ -43,23 +42,34 @@ public class LoadManager {
   private static ReadWriteLock lock;
 
   private static LoadBalancerStats loadBalancerStats;
-    
+
+  private static final Environment environment = Environments.getEnvironment();
+
   /**
    * Initialize the load balancer with configuration from environment.
    */
   public static void initialize() {
-    Environment environment = Environments.getEnvironment();
+    if (!environment.getLoadManagerEnable().getValueOrDefault()) {
+      return;
+    }
+
     ExtensionServiceSelector selector;
     PipelineMigrator migrator;
 
     LoadBalancerConfig.LoadTargetStd = environment.getLoadTargetStd().getValueOrDefault();
     LoadBalancerConfig.CPUResourceWeight = environment.getCpuResourceWeight().getValueOrDefault();
-    LoadBalancerConfig.ThresholdMigratorPercentage = environment.getThresholdMigratorPercentage().getValueOrDefault();
-    LoadBalancerConfig.MinMigratorPercentage = environment.getMinMigratorPercentage().getValueOrDefault();
-    LoadBalancerConfig.OverloadedThresholdPercentage = environment.getOverloadedThresholdPercentage().getValueOrDefault();
-    LoadBalancerConfig.HistoryResourcePercentage = environment.getHistoryResourcePercentage().getValueOrDefault();
-    LoadBalancerConfig.MemoryResourceWeight = environment.getMemoryResourceWeight().getValueOrDefault();
-    LoadBalancerConfig.DirMemoryResourceWeight = environment.getDirMemoryResourceWeight().getValueOrDefault();
+    LoadBalancerConfig.ThresholdMigratorPercentage =
+        environment.getThresholdMigratorPercentage().getValueOrDefault();
+    LoadBalancerConfig.MinMigratorPercentage =
+        environment.getMinMigratorPercentage().getValueOrDefault();
+    LoadBalancerConfig.OverloadedThresholdPercentage =
+        environment.getOverloadedThresholdPercentage().getValueOrDefault();
+    LoadBalancerConfig.HistoryResourcePercentage =
+        environment.getHistoryResourcePercentage().getValueOrDefault();
+    LoadBalancerConfig.MemoryResourceWeight =
+        environment.getMemoryResourceWeight().getValueOrDefault();
+    LoadBalancerConfig.DirMemoryResourceWeight =
+        environment.getDirMemoryResourceWeight().getValueOrDefault();
 
     if (environment.getSelector().getValueOrDefault().equals("WeightedRandomSelector")) {
       selector = new WeightedRandomSelector();
@@ -80,13 +90,9 @@ public class LoadManager {
 
     LoadManager.lock = new ReentrantReadWriteLock();
 
-    // Initialize load balancer statistics
     LoadManager.loadBalancerStats = new LoadBalancerStats();
-
-    // Immediately update metrics to ensure they are visible in Prometheus
-    loadBalancerStats.updateAllMetrics();
   }
-    
+
   /**
    * Allocate a service for pipeline processing.
    *
@@ -94,47 +100,52 @@ public class LoadManager {
    * @param labels Labels for service selection
    * @return Selected service registration
    */
-  public static SpServiceRegistration allocation(List<SpServiceRegistration> serviceRegistrations, List<String> labels) {
+  public static SpServiceRegistration allocation(List<SpServiceRegistration> serviceRegistrations,
+                                                 List<String> labels) {
+    if (!environment.getLoadManagerEnable().getValueOrDefault() || loadBalancer == null) {
+      return serviceRegistrations.isEmpty() ? null : serviceRegistrations.get(0);
+    }
     return loadBalancer.allocation(serviceRegistrations, labels);
   }
 
   public static void tryLockForAdapter() {
+    if (!environment.getLoadManagerEnable().getValueOrDefault() || loadBalancer == null) {
+      return;
+    }
     if (lock != null) {
       lock.readLock().lock();
     }
   }
 
   public static void unLockForAdapter() {
+    if (!environment.getLoadManagerEnable().getValueOrDefault() || loadBalancer == null) {
+      return;
+    }
     if (lock != null) {
       lock.readLock().unlock();
     }
   }
 
   public static void tryLockForPipeline() {
-    if (lock != null) {
-      lock.readLock().lock();
-    }
+    tryLockForAdapter();
   }
 
   public static void unLockForPipeline() {
-    if (lock != null) {
-      lock.readLock().unlock();
-    }
+    unLockForAdapter();
   }
 
   /**
    * Perform load shedding operations.
    */
   public static void doLoadShedding() {
+    if (!environment.getLoadManagerEnable().getValueOrDefault() || loadBalancer == null) {
+      return;
+    }
+
     if (lock != null) {
       lock.writeLock().lock();
       try {
         loadBalancer.doLoadShedding();
-
-        // Report load shedding metrics
-        if (loadBalancerStats != null) {
-          loadBalancerStats.reportLoadShedding();
-        }
       } finally {
         lock.writeLock().unlock();
       }
@@ -142,11 +153,16 @@ public class LoadManager {
   }
 
   public static void migrateForHealthCheck(List<SpServiceRegistration> needDeletedServices) {
+    if (!environment.getLoadManagerEnable().getValueOrDefault() || loadBalancer == null) {
+      return;
+    }
+
     if (lock != null) {
       lock.writeLock().lock();
       try {
         for (SpServiceRegistration service : needDeletedServices) {
-          ResourceUnitScanner.ServiceResourceUnits serviceResourceUnits = ResourceUnitScanner.scanAndPartitionService(service);
+          ResourceUnitScanner.ServiceResourceUnits serviceResourceUnits =
+              ResourceUnitScanner.scanAndPartitionService(service);
           List<PipelineElementPartitioner.PartitionResult> resourceUnits =
               serviceResourceUnits.getPipelineUnits();
 
@@ -155,15 +171,21 @@ public class LoadManager {
               continue;
             }
 
-            for (PipelineElementPartitioner.ResourceUnitWithServices resourceUnitWithServices : resourceUnit.getResourceUnits()) {
-              LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit = resourceUnitWithServices.getResourceUnit();
-              if (loadBalanceResourceUnit.getElements() == null || loadBalanceResourceUnit.getElements().isEmpty()) {
+            for (PipelineElementPartitioner.ResourceUnitWithServices resourceUnitWithServices : resourceUnit
+                .getResourceUnits()) {
+              LoadBalanceResourceUnit<InvocableStreamPipesEntity> loadBalanceResourceUnit =
+                  resourceUnitWithServices.getResourceUnit();
+              if (loadBalanceResourceUnit.getElements() == null
+                  || loadBalanceResourceUnit.getElements().isEmpty()) {
                 continue;
               }
 
-              SpServiceRegistration targetService = LoadManager.allocation(resourceUnitWithServices.getCompatibleServices(), loadBalanceResourceUnit.getLabels());
+              SpServiceRegistration targetService =
+                  LoadManager.allocation(resourceUnitWithServices.getCompatibleServices(),
+                                         loadBalanceResourceUnit.getLabels());
               if (targetService != null) {
-                ResourceUnitMigration.migrationForHealth(loadBalanceResourceUnit, targetService);
+                ResourceUnitMigration.migrationForHealth(loadBalanceResourceUnit, targetService,
+                                                         service);
               }
             }
           }
@@ -173,10 +195,12 @@ public class LoadManager {
 
           for (PipelineElementPartitioner.AdapterResourceUnitWithServices resourceUnit : adapterResourceUnits) {
 
-            SpServiceRegistration targetService = LoadManager.allocation(resourceUnit.getCompatibleServices(), Collections.EMPTY_LIST);
+            SpServiceRegistration targetService = LoadManager
+                .allocation(resourceUnit.getCompatibleServices(), Collections.EMPTY_LIST);
             if (targetService != null) {
               // Migrate resource unit to a healthy service
-              ResourceUnitMigration.migrateAdapterForHealth(resourceUnit.getResourceUnit(), targetService);
+              ResourceUnitMigration.migrateAdapterForHealth(resourceUnit.getResourceUnit(),
+                                                            targetService, service);
             }
           }
         }
@@ -185,7 +209,7 @@ public class LoadManager {
       }
     }
   }
-    
+
   /**
    * Get load balancer statistics.
    *
@@ -195,4 +219,3 @@ public class LoadManager {
     return loadBalancerStats;
   }
 }
-

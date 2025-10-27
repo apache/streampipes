@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.commons.random.UUIDGenerator;
@@ -64,14 +63,12 @@ public class PipelineManager {
    * Adds a new pipeline for the user with the username to the storage
    *
    * @param principalSid the ID of the owner principal
-   * @param pipeline     to be added
+   * @param pipeline to be added
    * @return pipelineId of the stored pipeline
    */
-  public static String addPipeline(String principalSid,
-                                   Pipeline pipeline) {
+  public static String addPipeline(String principalSid, Pipeline pipeline) {
 
-    String pipelineId = Objects.isNull(pipeline.getPipelineId())
-        ? UUIDGenerator.generateUuid()
+    String pipelineId = Objects.isNull(pipeline.getPipelineId()) ? UUIDGenerator.generateUuid()
         : pipeline.getPipelineId();
     preparePipelineBasics(principalSid, pipeline, pipelineId);
     new PipelineStorageService(pipeline).addPipeline();
@@ -94,27 +91,26 @@ public class PipelineManager {
     try {
       Pipeline pipeline = getPipeline(pipelineId);
       return new PipelineExecutor(pipeline).startPipeline();
-    }finally {
+    } finally {
       LoadManager.unLockForPipeline();
     }
   }
 
   /**
-   * Stops all  processing elements of the pipeline
+   * Stops all processing elements of the pipeline
    *
    * @param pipelineId of pipeline to be stopped
-   * @param forceStop  when it is true, the pipeline is stopped, even if not all processing element
-   *                   containers could be reached
+   * @param forceStop when it is true, the pipeline is stopped, even if not all processing element
+   *        containers could be reached
    * @return pipeline status of the start operation
    */
-  public static PipelineOperationStatus stopPipeline(String pipelineId,
-                                                     boolean forceStop) {
+  public static PipelineOperationStatus stopPipeline(String pipelineId, boolean forceStop) {
     LoadManager.tryLockForPipeline();
     try {
       Pipeline pipeline = getPipeline(pipelineId);
 
       return new PipelineExecutor(pipeline).stopPipeline(forceStop);
-    }finally {
+    } finally {
       LoadManager.unLockForPipeline();
     }
   }
@@ -132,7 +128,7 @@ public class PipelineManager {
         getPipelineStorage().deleteElementById(pipelineId);
         new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
       }
-    }finally {
+    } finally {
       LoadManager.unLockForPipeline();
     }
   }
@@ -159,25 +155,18 @@ public class PipelineManager {
    */
   public static List<Pipeline> getPipelinesContainingElements(String elementId) {
     return PipelineManager.getAllPipelines().stream()
-        .filter(pipeline ->
-            mergePipelineElement(pipeline)
-                .anyMatch(el -> el.getElementId().equals(elementId)))
+        .filter(pipeline -> mergePipelineElement(pipeline)
+            .anyMatch(el -> el.getElementId().equals(elementId)))
         .collect(Collectors.toList());
   }
 
   private static Stream<? extends NamedStreamPipesEntity> mergePipelineElement(Pipeline pipeline) {
-    return Stream.concat(
-        Stream.concat(
-            pipeline.getStreams().stream(),
-            pipeline.getSepas().stream()
-        ),
-        pipeline.getActions().stream()
-    );
+    return Stream
+        .concat(Stream.concat(pipeline.getStreams().stream(), pipeline.getSepas().stream()),
+                pipeline.getActions().stream());
   }
 
-  private static void preparePipelineBasics(String username,
-                                            Pipeline pipeline,
-                                            String pipelineId) {
+  private static void preparePipelineBasics(String username, Pipeline pipeline, String pipelineId) {
     pipeline.setPipelineId(pipelineId);
     pipeline.setRunning(false);
     pipeline.setCreatedByUser(username);

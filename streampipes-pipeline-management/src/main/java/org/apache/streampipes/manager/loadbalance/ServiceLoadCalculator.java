@@ -1,25 +1,41 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package org.apache.streampipes.manager.loadbalance;
 
-import org.apache.streampipes.commons.prometheus.loadbalancer.LoadBalancerStats;
 import org.apache.streampipes.commons.prometheus.service.ElementServiceStats;
-import org.apache.streampipes.manager.loadbalance.LoadManager;
 import org.apache.streampipes.manager.monitoring.pipeline.service.ExtensionsServiceReportExecutor;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.loadbalancer.ServiceLoadDataReport;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 /**
- * Service load calculator for computing service load metrics.
- * Always fetches fresh data from network instead of using cache.
+ * Service load calculator for computing service load metrics. Always fetches fresh data from
+ * network instead of using cache.
  */
 public class ServiceLoadCalculator {
 
   private static final Logger logger = LoggerFactory.getLogger(ServiceLoadCalculator.class);
   private static final String SERVICE_MONITOR_PATH = "/serviceMonitor";
-    
+
   /**
    * Calculate weighted load based on historical and current load.
    *
@@ -44,7 +60,8 @@ public class ServiceLoadCalculator {
     }
 
     double cpuLoad = snapshot.getCpu().percentUsage() * LoadBalancerConfig.CPUResourceWeight;
-    double memoryLoad = snapshot.getMemory().percentUsage() * LoadBalancerConfig.MemoryResourceWeight;
+    double memoryLoad =
+        snapshot.getMemory().percentUsage() * LoadBalancerConfig.MemoryResourceWeight;
 
     return (float) Math.max(cpuLoad, memoryLoad);
   }
@@ -67,8 +84,8 @@ public class ServiceLoadCalculator {
   }
 
   /**
-   * Calculate load for a specific service by fetching fresh data from network.
-   * Combines real-time network data with historical data for smooth load calculation.
+   * Calculate load for a specific service by fetching fresh data from network. Combines real-time
+   * network data with historical data for smooth load calculation.
    *
    * @param service Service registration
    * @return Calculated load value
@@ -78,7 +95,8 @@ public class ServiceLoadCalculator {
     ServiceLoadDataReport report = fetchServiceLoadFromNetwork(service);
 
     if (report == null || !report.isComplete()) {
-      logger.warn("Failed to fetch valid load data for service {}, returning 0", service.getSvcId());
+      logger.warn("Failed to fetch valid load data for service {}, returning 0",
+                  service.getSvcId());
       return 0.0f;
     }
 
@@ -98,15 +116,15 @@ public class ServiceLoadCalculator {
     }
 
     // Apply exponential smoothing: weighted average of historical and current
-    float smoothedLoad = calculate(historicalLoad, currentLoad,
-        LoadBalancerConfig.HistoryResourcePercentage);
+    float smoothedLoad =
+        calculate(historicalLoad, currentLoad, LoadBalancerConfig.HistoryResourcePercentage);
 
-    logger.debug("Service {} load: current={}%, historical={}%, smoothed={}%",
-        service.getSvcId(), currentLoad, historicalLoad, smoothedLoad);
+    logger.debug("Service {} load: current={}%, historical={}%, smoothed={}%", service.getSvcId(),
+                 currentLoad, historicalLoad, smoothedLoad);
 
     return smoothedLoad;
   }
-    
+
   /**
    * Fetch service load data from network in real-time.
    *

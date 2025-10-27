@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.health;
 
 
+import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.manager.loadbalance.LoadManager;
@@ -43,29 +43,32 @@ public class ServiceHealthCheck implements Runnable {
   private final ServiceRegistrationManager serviceRegistrationManager;
   private final int maxUnhealthyDurationBeforeRemovalMs;
 
-  private final List<SpServiceRegistration> needDeletedServices =new ArrayList<>();
+  private final List<SpServiceRegistration> needDeletedServices = new ArrayList<>();
 
   public ServiceHealthCheck() {
     var storage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
     this.serviceRegistrationManager = new ServiceRegistrationManager(storage);
-    this.maxUnhealthyDurationBeforeRemovalMs = Environments
-            .getEnvironment()
-            .getUnhealthyTimeBeforeServiceDeletionInMillis().getValueOrDefault();
+    this.maxUnhealthyDurationBeforeRemovalMs = Environments.getEnvironment()
+        .getUnhealthyTimeBeforeServiceDeletionInMillis().getValueOrDefault();
   }
 
   @Override
   public void run() {
-      try {
+    try {
+      Environment env = Environments.getEnvironment();
+      if (!env.getLoadManagerEnable().getValueOrDefault()) {
         var registeredServices = getRegisteredServices();
         registeredServices.forEach(this::checkServiceHealth);
-        LoadManager.migrateForHealthCheck(needDeletedServices);
-      } catch (Exception e) {
-        LOG.error("Error while checking service health", e);
-      }finally {
-        needDeletedServices.clear();
+        return;
       }
-      new PipelineHealthCheck().run();
+      LoadManager.migrateForHealthCheck(needDeletedServices);
+    } catch (Exception e) {
+      LOG.error("Error while checking service health", e);
+    } finally {
+      needDeletedServices.clear();
     }
+    new PipelineHealthCheck().run();
+  }
 
 
   private void checkServiceHealth(SpServiceRegistration service) {
@@ -78,7 +81,8 @@ public class ServiceHealthCheck implements Runnable {
         processUnhealthyService(service);
       } else {
         if (service.getStatus() == SpServiceStatus.UNHEALTHY) {
-          serviceRegistrationManager.applyServiceStatus(service.getSvcId(), SpServiceStatus.HEALTHY);
+          serviceRegistrationManager.applyServiceStatus(service.getSvcId(),
+                                                        SpServiceStatus.HEALTHY);
         }
       }
     } catch (IOException e) {
@@ -88,14 +92,12 @@ public class ServiceHealthCheck implements Runnable {
 
   private void processUnhealthyService(SpServiceRegistration service) {
     if (service.getStatus() == SpServiceStatus.HEALTHY) {
-      serviceRegistrationManager.applyServiceStatus(
-              service.getSvcId(),
-              SpServiceStatus.UNHEALTHY,
-              System.currentTimeMillis());
+      serviceRegistrationManager.applyServiceStatus(service.getSvcId(), SpServiceStatus.UNHEALTHY,
+                                                    System.currentTimeMillis());
     }
     if (shouldDeleteService(service)) {
       LOG.info("Removing service {} which has been unhealthy for more than {} milliseconds.",
-              service.getSvcId(), maxUnhealthyDurationBeforeRemovalMs);
+               service.getSvcId(), maxUnhealthyDurationBeforeRemovalMs);
       serviceRegistrationManager.removeService(service.getSvcId());
       needDeletedServices.add(service);
     }
@@ -103,7 +105,8 @@ public class ServiceHealthCheck implements Runnable {
 
   private boolean shouldDeleteService(SpServiceRegistration service) {
     var currentTimeMillis = System.currentTimeMillis();
-    return (currentTimeMillis - service.getFirstTimeSeenUnhealthy() > maxUnhealthyDurationBeforeRemovalMs);
+    return (currentTimeMillis
+        - service.getFirstTimeSeenUnhealthy() > maxUnhealthyDurationBeforeRemovalMs);
   }
 
   private String makeHealthCheckUrl(SpServiceRegistration service) {
@@ -114,18 +117,14 @@ public class ServiceHealthCheck implements Runnable {
     return serviceRegistrationManager.getAllServices();
   }
 
-  public static List<SpServiceRegistration> getService(String tag, List<SpServiceRegistration> activeServices) {
-    return activeServices
-            .stream()
-            .filter(service -> filtersSupported(service, tag))
-            .filter(service -> service.getStatus() != SpServiceStatus.UNHEALTHY)
-            .collect(Collectors.toList());
+  public static List<SpServiceRegistration> getService(String tag,
+                                                       List<SpServiceRegistration> activeServices) {
+    return activeServices.stream().filter(service -> filtersSupported(service, tag))
+        .filter(service -> service.getStatus() != SpServiceStatus.HEALTHY)
+        .collect(Collectors.toList());
   }
 
-  private static boolean filtersSupported(SpServiceRegistration service,
-                                          String tag) {
-    return new HashSet<>(service.getTags())
-            .stream()
-            .anyMatch(t -> t.asString().equals(tag));
+  private static boolean filtersSupported(SpServiceRegistration service, String tag) {
+    return new HashSet<>(service.getTags()).stream().anyMatch(t -> t.asString().equals(tag));
   }
 }

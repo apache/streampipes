@@ -37,8 +37,10 @@ public enum Envs {
   SP_INITIAL_ADMIN_EMAIL("SP_INITIAL_ADMIN_EMAIL", DefaultEnvValues.INITIAL_ADMIN_EMAIL_DEFAULT),
   SP_INITIAL_ADMIN_PASSWORD("SP_INITIAL_ADMIN_PASSWORD", DefaultEnvValues.INITIAL_ADMIN_PW_DEFAULT),
   SP_INITIAL_SERVICE_USER("SP_INITIAL_SERVICE_USER", DefaultEnvValues.INITIAL_CLIENT_USER_DEFAULT),
-  SP_INITIAL_SERVICE_USER_SECRET("SP_INITIAL_SERVICE_USER_SECRET", DefaultEnvValues.INITIAL_CLIENT_SECRET_DEFAULT),
-  SP_SETUP_INSTALL_PIPELINE_ELEMENTS("SP_SETUP_INSTALL_PIPELINE_ELEMENTS", DefaultEnvValues.INSTALL_PIPELINE_ELEMENTS),
+  SP_INITIAL_SERVICE_USER_SECRET("SP_INITIAL_SERVICE_USER_SECRET",
+      DefaultEnvValues.INITIAL_CLIENT_SECRET_DEFAULT),
+  SP_SETUP_INSTALL_PIPELINE_ELEMENTS("SP_SETUP_INSTALL_PIPELINE_ELEMENTS",
+      DefaultEnvValues.INSTALL_PIPELINE_ELEMENTS),
   SP_EXT_AUTH_MODE("SP_EXT_AUTH_MODE"),
   SP_CLIENT_USER("SP_CLIENT_USER", DefaultEnvValues.INITIAL_CLIENT_USER_DEFAULT),
   SP_CLIENT_SECRET("SP_CLIENT_SECRET", DefaultEnvValues.INITIAL_CLIENT_SECRET_DEFAULT),
@@ -68,13 +70,13 @@ public enum Envs {
 
   SP_TS_STORAGE_BUCKET("SP_TS_STORAGE_BUCKET", "sp"),
   SP_TS_STORAGE_IOT_DB_SESSION_POOL_SIZE("SP_TS_STORAGE_IOT_DB_SESSION_POOL_SIZE", "10"),
-  SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION("SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION", "false"),
+  SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION(
+      "SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION", "false"),
   SP_TS_STORAGE_IOT_DB_USER("SP_TS_STORAGE_IOT_DB_USER", "root"),
   SP_TS_STORAGE_IOT_DB_PASSWORD("SP_TS_STORAGE_IOT_DB_PASSWORD", "root"),
 
   SP_FLINK_JAR_FILE_LOC(
-      "SP_FLINK_JAR_FILE_LOC",
-      "./streampipes-processing-element-container.jar"),
+      "SP_FLINK_JAR_FILE_LOC", "./streampipes-processing-element-container.jar"),
 
   SP_FLINK_JOBMANAGER_HOST("SP_FLINK_JOBMANAGER_HOST", "jobmanager"),
 
@@ -84,13 +86,13 @@ public enum Envs {
 
   SP_SETUP_PROMETHEUS_ENDPOINT("SP_SETUP_PROMETHEUS_ENDPOINT", "false"),
 
-  SP_HEALTH_CHECK_INTERVAL_MS("SP_HEALTH_CHECK_INTERVAL_MS", "1000"),
+  SP_HEALTH_CHECK_INTERVAL_MS("SP_HEALTH_CHECK_INTERVAL_MS", "30000"),
 
   SP_HEALTH_CHECK_INITIAL_DELAY_MS("SP_HEALTH_CHECK_INITIAL_DELAY", "10000"),
 
   SP_LOG_FETCH_INTERVAL_MS("SP_LOG_FETCH_INTERVAL_MS", "60000"),
 
-  SP_HEALTH_SERVICE_MAX_UNHEALTHY_TIME_MS("SP_HEALTH_SERVICE_MAX_UNHEALTHY_TIME_MS", "1000"),
+  SP_HEALTH_SERVICE_MAX_UNHEALTHY_TIME_MS("SP_HEALTH_SERVICE_MAX_UNHEALTHY_TIME_MS", "60000"),
 
   SP_INITIAL_WAIT_BEFORE_INSTALLATION_MS("SP_INITIAL_WAIT_BEFORE_INSTALLATION_MS", "5000"),
 
@@ -121,6 +123,7 @@ public enum Envs {
   LOAD_TARGET_STD("LOAD_TARGET_STD", "25.0"),
   SELECTOR("SELECTOR", "WeightedRandomSelector"),
   MIGRATOR("MIGRATOR", "ThresholdMigrator"),
+  LOAD_MANAGER_ENABLE("LOAD_MANAGER_ENABLE", "true"),
 
   // expects a comma separated string of service names
   SP_SERVICE_TAGS("SP_SERVICE_TAGS", ""),
@@ -133,20 +136,17 @@ public enum Envs {
   SP_OPCUA_KEYSTORE_TYPE("SP_OPCUA_KEYSTORE_TYPE", "PKCS12"),
   SP_OPCUA_KEYSTORE_ALIAS("SP_OPCUA_KEYSTORE_ALIAS", "apache-streampipes"),
   SP_OPCUA_APPLICATION_URI(
-      "SP_OPCUA_APPLICATION_URI",
-      "urn:org:apache:streampipes:opcua:client"
+      "SP_OPCUA_APPLICATION_URI", "urn:org:apache:streampipes:opcua:client"
   ),
 
   // Default keystore and truststore
   SP_SECURITY_KEYSTORE_FILENAME(
-      "SP_SECURITY_KEYSTORE_FILENAME",
-      "/streampipes-security/keystore.pfx"),
+      "SP_SECURITY_KEYSTORE_FILENAME", "/streampipes-security/keystore.pfx"),
   SP_SECURITY_KEYSTORE_PASSWORD("SP_SECURITY_KEYSTORE_PASSWORD", ""),
   SP_SECURITY_KEYSTORE_TYPE("SP_SECURITY_KEYSTORE_TYPE", "PKCS12"),
   SP_SECURITY_KEY_PASSWORD("SP_SECURITY_KEY_PASSWORD", null),
   SP_SECURITY_TRUSTSTORE_FILENAME(
-      "SP_SECURITY_TRUSTSTORE_FILENAME",
-      "/streampipes-security/truststore.pfx"),
+      "SP_SECURITY_TRUSTSTORE_FILENAME", "/streampipes-security/truststore.pfx"),
   SP_SECURITY_TRUSTSTORE_PASSWORD("SP_SECURITY_TRUSTSTORE_PASSWORD", ""),
   SP_SECURITY_TRUSTSTORE_TYPE("SP_SECURITY_TRUSTSTORE_TYPE", "PKCS12"),
   SP_SECURITY_ALLOW_SELFSIGNED("SP_SECURITY_ALLOW_SELFSIGNED", "false"),
@@ -155,10 +155,14 @@ public enum Envs {
   SP_PLC4X_CONN_MAX_WAIT_TIME_MS("SP_PLC4X_CONN_MAX_WAIT_TIME_MS", "20000"),
   SP_PLC4X_CONN_MAX_LEASE_TIME_MS("SP_PLC4X_CONN_MAX_LEASE_TIME_MS", "4000"),
 
-  // Retention Local File 
+  // Retention Local File
   SP_RETENTION_LOCAL_DIR("SP_RETENTION_LOCAL_DIR", "./ArchivedData"),
-  SP_DATALAKE_SCHEDULER_CRON("SP_DATALAKE_SCHEDULER_CRON", "0 1 0 * * 6"),// CronJob Scheduled every Saturday (6) 00:01 //@Scheduled(cron = "0 */2 * * *
-                                     // *") //Cron Job in Dev Setting; Running every 2 min
+  SP_DATALAKE_SCHEDULER_CRON("SP_DATALAKE_SCHEDULER_CRON", "0 1 0 * * 6"), // CronJob Scheduled
+                                                                           // every Saturday (6)
+                                                                           // 00:01
+                                                                           // //@Scheduled(cron = "0
+                                                                           // */2 * * *
+  // *") //Cron Job in Dev Setting; Running every 2 min
 
   // Logging
   SP_LOGGING_FILE_ENABLED("SP_LOGGING_FILE_ENABLED", "false"),
@@ -166,10 +170,8 @@ public enum Envs {
   SP_LOGGING_FILE_PREFIX("SP_LOGGING_FILE_PREFIX", "streampipes"),
   SP_LOGGING_FILE_DIR("SP_LOGGING_FILE_DIR", "logs"),
   SP_LOGGING_FILE_PATTERN(
-      "SP_LOGGING_FILE_PATTERN",
-      "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+      "SP_LOGGING_FILE_PATTERN", "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
   );
-
 
 
 

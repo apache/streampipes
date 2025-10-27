@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.loadbalance;
 
 /**
@@ -59,7 +58,8 @@ public class LoadBalancerConfig {
   public static float HistoryResourcePercentage = 0.9F;
 
   /**
-   * Message-rate percentage threshold between highest and least loaded service for uniform load migration.
+   * Message-rate percentage threshold between highest and least loaded service for uniform load
+   * migration.
    */
   public static int MsgRateDifferenceMigratorThreshold = 85;
 
@@ -77,5 +77,10 @@ public class LoadBalancerConfig {
    * Pipeline migrator strategy.
    */
   public static String migrator = "ThresholdMigrator";
+
+  /**
+   * Enable dynamic load balancing. Set to false to disable dynamic load balancing features.
+   */
+  public static boolean LoadManagerEnable = false;
 
 }

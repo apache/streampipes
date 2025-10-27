@@ -1,15 +1,28 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package org.apache.streampipes.manager.loadbalance.impl;
 
-import org.apache.streampipes.commons.prometheus.loadbalancer.LoadBalancerStats;
-import org.apache.streampipes.commons.prometheus.service.ElementServiceStats;
 import org.apache.streampipes.manager.loadbalance.ExtensionServiceSelector;
-import org.apache.streampipes.manager.loadbalance.LoadManager;
 import org.apache.streampipes.manager.loadbalance.ServiceLoadCalculator;
-import org.apache.streampipes.manager.loadbalance.unit.ResourceUnitScanner;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +41,8 @@ public class WeightedFirstSelector implements ExtensionServiceSelector {
   private static final Logger log = LoggerFactory.getLogger(WeightedFirstSelector.class);
 
   @Override
-  public SpServiceRegistration select(List<SpServiceRegistration> availableServices, List<String> labels) {
+  public SpServiceRegistration select(List<SpServiceRegistration> availableServices,
+                                      List<String> labels) {
     if (availableServices == null || availableServices.isEmpty()) {
       throw new IllegalArgumentException("Available services list cannot be null or empty");
     }
@@ -56,19 +70,6 @@ public class WeightedFirstSelector implements ExtensionServiceSelector {
         best = service;
       }
     }
-
-    // Report service resource metrics for selected service
-    LoadBalancerStats stats = LoadManager.getLoadBalancerStats();
-    if (stats != null) {
-      // Calculate actual service resource metrics
-      int adapterCount = calculateAdapterCount(best);
-      int pipelineCount = calculatePipelineCount(best);
-      double loadWeight = best.getWeight();
-      String serviceType = "extension"; // Default service type
-      
-      stats.updateServiceResources(best.getSvcId(), serviceType, adapterCount, pipelineCount, loadWeight);
-    }
-
     return best;
   }
 
@@ -78,11 +79,13 @@ public class WeightedFirstSelector implements ExtensionServiceSelector {
 
   /**
    * Filter services that contain any of the specified labels
+   * 
    * @param availableServices List of available services
    * @param labels Labels to filter by
    * @return Filtered list of services
    */
-  private List<SpServiceRegistration> filterServices(List<SpServiceRegistration> availableServices, List<String> labels) {
+  private List<SpServiceRegistration> filterServices(List<SpServiceRegistration> availableServices,
+                                                     List<String> labels) {
     return availableServices.stream()
         .filter(service -> containsAnyLabel(service.getLabels(), labels))
         .collect(Collectors.toList());
@@ -90,6 +93,7 @@ public class WeightedFirstSelector implements ExtensionServiceSelector {
 
   /**
    * Check if any label from the list is contained in the service properties
+   * 
    * @param serviceLabels Service labels
    * @param labels Labels to check
    * @return True if any label matches
@@ -99,9 +103,8 @@ public class WeightedFirstSelector implements ExtensionServiceSelector {
   }
 
   @Override
-  public Map<SpServiceRegistration, List<InvocableStreamPipesEntity>> allocateSinksAndProcessors(
-      List<InvocableStreamPipesEntity> sinksAndProcessors,
-      List<SpServiceRegistration> availableServices) {
+  public Map<SpServiceRegistration, List<InvocableStreamPipesEntity>> allocateSinksAndProcessors(List<InvocableStreamPipesEntity> sinksAndProcessors,
+                                                                                                 List<SpServiceRegistration> availableServices) {
 
     if (sinksAndProcessors == null || sinksAndProcessors.isEmpty()) {
       return new HashMap<>();
@@ -122,9 +125,8 @@ public class WeightedFirstSelector implements ExtensionServiceSelector {
   }
 
   @Override
-  public Map<SpServiceRegistration, List<AdapterDescription>> allocateAdapters(
-      List<AdapterDescription> adapters,
-      List<SpServiceRegistration> availableServices) {
+  public Map<SpServiceRegistration, List<AdapterDescription>> allocateAdapters(List<AdapterDescription> adapters,
+                                                                               List<SpServiceRegistration> availableServices) {
 
     if (adapters == null || adapters.isEmpty()) {
       return new HashMap<>();
@@ -146,6 +148,7 @@ public class WeightedFirstSelector implements ExtensionServiceSelector {
 
   /**
    * Select the best service based on remaining capacity (weight * (1 - load))
+   * 
    * @param availableServices List of available services
    * @return Best service for allocation
    */
@@ -165,51 +168,5 @@ public class WeightedFirstSelector implements ExtensionServiceSelector {
     }
 
     return best;
-  }
-
-  /**
-   * Calculate adapter count for a service
-   * @param service Service registration
-   * @return Number of adapters
-   */
-  private int calculateAdapterCount(SpServiceRegistration service) {
-    try {
-      // Get adapter units for this service
-      List<LoadBalanceResourceUnit<AdapterDescription>> adapterUnits =
-        ResourceUnitScanner.findAdapterUnitsForService(service);
-
-      int totalAdapters = 0;
-      for (LoadBalanceResourceUnit<AdapterDescription> unit : adapterUnits) {
-        totalAdapters += unit.getElements().size();
-      }
-
-      return totalAdapters;
-    } catch (Exception e) {
-      log.warn("Failed to calculate adapter count for service {}: {}", service.getSvcId(), e.getMessage());
-      return 0;
-    }
-  }
-
-  /**
-   * Calculate pipeline count for a service
-   * @param service Service registration
-   * @return Number of pipelines
-   */
-  private int calculatePipelineCount(SpServiceRegistration service) {
-    try {
-      // Get pipeline units for this service
-      List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> pipelineUnits =
-        ResourceUnitScanner.findResourceUnitsForService(service);
-
-      int totalPipelines = 0;
-      for (LoadBalanceResourceUnit<InvocableStreamPipesEntity> unit : pipelineUnits) {
-        totalPipelines += unit.getElements().size();
-      }
-
-      return totalPipelines;
-    } catch (Exception e) {
-      log.warn("Failed to calculate pipeline count for service {}: {}", service.getSvcId(), e.getMessage());
-      return 0;
-    }
   }
 }

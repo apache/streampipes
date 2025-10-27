@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
+
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -41,8 +41,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * This class is responsible for managing all the adapter instances which are
- * executed on worker nodes
+ * This class is responsible for managing all the adapter instances which are executed on worker
+ * nodes
  */
 public class AdapterMasterManagement {
 
@@ -54,21 +54,18 @@ public class AdapterMasterManagement {
 
   private final DataStreamResourceManager dataStreamResourceManager;
 
-  public AdapterMasterManagement(
-      IAdapterStorage adapterInstanceStorage,
-      AdapterResourceManager adapterResourceManager,
-      DataStreamResourceManager dataStreamResourceManager,
-      AdapterMetrics adapterMetrics) {
+  public AdapterMasterManagement(IAdapterStorage adapterInstanceStorage,
+                                 AdapterResourceManager adapterResourceManager,
+                                 DataStreamResourceManager dataStreamResourceManager,
+                                 AdapterMetrics adapterMetrics) {
     this.adapterInstanceStorage = adapterInstanceStorage;
     this.adapterMetrics = adapterMetrics;
     this.adapterResourceManager = adapterResourceManager;
     this.dataStreamResourceManager = dataStreamResourceManager;
   }
 
-  public void addAdapter(
-      AdapterDescription adapterDescription,
-      String adapterId,
-      String principalSid)
+  public void addAdapter(AdapterDescription adapterDescription, String adapterId,
+                         String principalSid)
       throws AdapterException {
 
     // Create elementId for datastream
@@ -87,13 +84,11 @@ public class AdapterMasterManagement {
     createDataStreamForAdapter(adapterDescription, adapterId, dataStreamElementId, principalSid);
   }
 
-  private void createDataStreamForAdapter(
-      AdapterDescription adapterDescription,
-      String adapterId,
-      String streamId,
-      String principalSid) throws AdapterException {
-    var storedDescription = new SourcesManagement()
-        .createAdapterDataStream(adapterDescription, streamId);
+  private void createDataStreamForAdapter(AdapterDescription adapterDescription, String adapterId,
+                                          String streamId, String principalSid)
+      throws AdapterException {
+    var storedDescription =
+        new SourcesManagement().createAdapterDataStream(adapterDescription, streamId);
     storedDescription.setCorrespondingAdapterId(adapterId);
     installDataSource(storedDescription, principalSid);
     LOG.info("Install source (source URL: {} in backend", adapterDescription.getElementId());
@@ -102,14 +97,13 @@ public class AdapterMasterManagement {
   public AdapterDescription getAdapter(String elementId) throws AdapterException {
     AdapterDescription adapter = adapterInstanceStorage.getElementById(elementId);
     if (adapter == null) {
-        throw new AdapterException("Adapter with ID " + elementId + " not found");
+      throw new AdapterException("Adapter with ID " + elementId + " not found");
     }
     return adapter;
   }
 
   /**
-   * First the adapter is stopped removed, then the corresponding data source is
-   * deleted
+   * First the adapter is stopped removed, then the corresponding data source is deleted
    *
    * @param elementId The elementId of the adapter instance
    * @throws AdapterException when adapter can not be stopped
@@ -132,8 +126,9 @@ public class AdapterMasterManagement {
 
       // Delete data stream
       this.dataStreamResourceManager.delete(adapter.getCorrespondingDataStreamElementId());
-      LOG.info("Successfully deleted data stream: " + adapter.getCorrespondingDataStreamElementId());
-    }finally {
+      LOG.info("Successfully deleted data stream: "
+          + adapter.getCorrespondingDataStreamElementId());
+    } finally {
       LoadManager.unLockForAdapter();
     }
   }
@@ -142,8 +137,7 @@ public class AdapterMasterManagement {
     return adapterInstanceStorage.findAll();
   }
 
-  public void stopStreamAdapter(String elementId,
-                                boolean forceStop) throws AdapterException {
+  public void stopStreamAdapter(String elementId, boolean forceStop) throws AdapterException {
     LoadManager.tryLockForAdapter();
     AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
     try {
@@ -175,39 +169,36 @@ public class AdapterMasterManagement {
   public void startStreamAdapter(String elementId) throws AdapterException {
     LoadManager.tryLockForAdapter();
     try {
-    var ad = adapterInstanceStorage.getElementById(elementId);
+      var ad = adapterInstanceStorage.getElementById(elementId);
 
-    try {
-      // Find endpoint to start adapter on
-      var baseUrl = new ExtensionsServiceEndpointGenerator().getEndpointBaseUrl(
-          ad.getAppId(),
-          SpServiceUrlProvider.ADAPTER,
-          ad.getDeploymentConfiguration()
-              .getDesiredServiceTags());
+      try {
+        // Find endpoint to start adapter on
+        var baseUrl = new ExtensionsServiceEndpointGenerator()
+            .getEndpointBaseUrl(ad.getAppId(), SpServiceUrlProvider.ADAPTER,
+                                ad.getDeploymentConfiguration().getDesiredServiceTags());
 
-      // Update selected endpoint URL of adapter
-      ad.setSelectedEndpointUrl(baseUrl);
-      adapterInstanceStorage.updateElement(ad);
+        // Update selected endpoint URL of adapter
+        ad.setSelectedEndpointUrl(baseUrl);
+        adapterInstanceStorage.updateElement(ad);
 
-      // Invoke adapter instance
-      WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
+        // Invoke adapter instance
+        WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
 
-      // register the adapter at the metrics manager so that the AdapterHealthCheck
-      // can send metrics
-      adapterMetrics.register(ad.getElementId(), ad.getName());
+        // register the adapter at the metrics manager so that the AdapterHealthCheck
+        // can send metrics
+        adapterMetrics.register(ad.getElementId(), ad.getName());
 
-      LOG.info("Started adapter " + elementId + " on: " + baseUrl);
-    } catch (NoServiceEndpointsAvailableException e) {
-      throw new AdapterException("Could not start adapter due to unavailable service endpoint", e);
-    }
-    }finally {
+        LOG.info("Started adapter " + elementId + " on: " + baseUrl);
+      } catch (NoServiceEndpointsAvailableException e) {
+        throw new AdapterException("Could not start adapter due to unavailable service endpoint",
+            e);
+      }
+    } finally {
       LoadManager.unLockForAdapter();
     }
   }
 
-  private void installDataSource(
-      SpDataStream stream,
-      String principalSid) throws AdapterException {
+  private void installDataSource(SpDataStream stream, String principalSid) throws AdapterException {
     try {
       new DataStreamVerifier(stream).verifyAndAdd(principalSid, false);
     } catch (SepaParseException e) {

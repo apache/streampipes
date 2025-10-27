@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.loadbalance;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -26,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Service selector interface for load balancing.
- * Provides methods to allocate pipeline elements and adapters to services.
+ * Service selector interface for load balancing. Provides methods to allocate pipeline elements and
+ * adapters to services.
  */
 public interface ExtensionServiceSelector {
 
@@ -47,10 +46,8 @@ public interface ExtensionServiceSelector {
    * @param availableServices List of available services
    * @return Map of service registration to list of allocated elements
    */
-  Map<SpServiceRegistration, List<InvocableStreamPipesEntity>> allocateSinksAndProcessors(
-      List<InvocableStreamPipesEntity> sinksAndProcessors,
-      List<SpServiceRegistration> availableServices
-  );
+  Map<SpServiceRegistration, List<InvocableStreamPipesEntity>> allocateSinksAndProcessors(List<InvocableStreamPipesEntity> sinksAndProcessors,
+                                                                                          List<SpServiceRegistration> availableServices);
 
   /**
    * Allocate adapters to services.
@@ -59,8 +56,6 @@ public interface ExtensionServiceSelector {
    * @param availableServices List of available services
    * @return Map of service registration to list of allocated adapters
    */
-  Map<SpServiceRegistration, List<AdapterDescription>> allocateAdapters(
-      List<AdapterDescription> adapters,
-      List<SpServiceRegistration> availableServices
-  );
+  Map<SpServiceRegistration, List<AdapterDescription>> allocateAdapters(List<AdapterDescription> adapters,
+                                                                        List<SpServiceRegistration> availableServices);
 }
