@@ -157,11 +157,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         const dialogRef: DialogRef<AllAdapterActionsComponent> =
             this.dialogService.open(AllAdapterActionsComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title:
-                    (action
-                        ? this.translate.instant('Start')
-                        : this.translate.instant('Stop')) +
-                    this.translate.instant(' all adapters'),
+                title: action
+                    ? this.translate.instant('Start all adapters')
+                    : this.translate.instant('Stop all adapters'),
                 width: '70vw',
                 data: {
                     adapters: this.existingAdapters,
