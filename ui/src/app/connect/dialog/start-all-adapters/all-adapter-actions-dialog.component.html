@@ -26,9 +26,13 @@
                 *ngIf="page === 'preview'"
             >
                 <h4>
-                    {{ 'You are about to' | translate }}
-                    {{ action ? 'start' : 'stop' }}
-                    {{ 'the following adapters:' | translate }}
+                    {{
+                        action
+                            ? ('You are about to start the following adapters:'
+                              | translate)
+                            : ('You are about to stop the following adapters:'
+                              | translate)
+                    }}
                 </h4>
                 <div *ngFor="let adapter of adaptersToModify">
                     <h5>{{ adapter.name }}</h5>
