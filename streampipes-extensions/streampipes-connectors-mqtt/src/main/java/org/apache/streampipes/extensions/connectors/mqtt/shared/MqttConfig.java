@@ -26,10 +26,18 @@ public class MqttConfig {
   private String username;
   private String password;
 
+  private String caCertificatePath;   
+  private String clientCertificatePath; 
+  private String clientKeyPath;       
+  private Boolean tlsEnabled;          
+  private String tlsVersion;    
+
+
   public MqttConfig(String url, String topic) {
     this.authenticated = false;
     this.url = url;
     this.topic = topic;
+    this.tlsEnabled = false;
   }
 
   public MqttConfig(String url, String topic, String username, String password) {
@@ -37,6 +45,46 @@ public class MqttConfig {
     this.authenticated = true;
     this.username = username;
     this.password = password;
+  }
+
+   public Boolean getTlsEnabled() {
+    return tlsEnabled;
+  }
+
+  public void setTlsEnabled(Boolean tlsEnabled) {
+    this.tlsEnabled = tlsEnabled;
+  }
+
+  public String getCaCertificatePath() {
+    return caCertificatePath;
+  }
+
+  public void setCaCertificatePath(String caCertificatePath) {
+    this.caCertificatePath = caCertificatePath;
+  }
+
+  public String getClientCertificatePath() {
+    return clientCertificatePath;
+  }
+
+  public void setClientCertificatePath(String clientCertificatePath) {
+    this.clientCertificatePath = clientCertificatePath;
+  }
+
+  public String getClientKeyPath() {
+    return clientKeyPath;
+  }
+
+  public void setClientKeyPath(String clientKeyPath) {
+    this.clientKeyPath = clientKeyPath;
+  }
+
+  public String getTlsVersion() {
+    return tlsVersion;
+  }
+
+  public void setTlsVersion(String tlsVersion) {
+    this.tlsVersion = tlsVersion;
   }
 
   public Boolean getAuthenticated() {
