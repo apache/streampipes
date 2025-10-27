@@ -775,7 +775,7 @@
   "Starting adapter {{adapterName}}": "Adapter starten {{adapterName}}",
   "Your Assets were successfully added.": "Assets erfolgreich hinzugefügt.",
   "Your Assets were successfully deleted.": "Assets erfolgreich gelöscht.",
-  "Creating pipeline to persist data stream": "Erstellen einer Pipeline zur Aufrechterhaltung des Datenstroms",
+  "Creating pipeline to persist data stream": "Erstellen einer Pipeline zum Speichern der Daten",
   "Stop": "Stopp",
   " all adapters": " alle Adapter",
   "Adapter Status": "Adapter-Status",
