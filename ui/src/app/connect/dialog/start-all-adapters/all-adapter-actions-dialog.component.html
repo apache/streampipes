@@ -65,13 +65,11 @@
                 <div *ngIf="adaptersToModify.length === 0">
                     <h4>
                         {{
-                            'Sorry, there are no adapters that are currently '
-                                | translate
-                        }}
-                        {{
                             action
-                                ? ('idle' | translate)
-                                : ('running' | translate)
+                                ? ('Sorry, there are no adapters that are currently idle'
+                                  | translate)
+                                : ('Sorry, there are no adapters that are currently running'
+                                  | translate)
                         }}.
                     </h4>
                 </div>
