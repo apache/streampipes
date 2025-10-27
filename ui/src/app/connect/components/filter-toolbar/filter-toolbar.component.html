@@ -40,22 +40,5 @@
             </mat-form-field>
         </div>
     </div>
-    <div class="data-marketplace-options-item">
-        <div class="form-field-small">
-            <mat-form-field color="accent" appearance="outline">
-                <mat-select
-                    [(value)]="currentFilter.selectedCategory"
-                    (selectionChange)="filterAdapter($event)"
-                >
-                    <mat-option
-                        *ngFor="let category of adapterCategories"
-                        [value]="category.code"
-                    >
-                        {{ category.label }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
     <span fxFlex></span>
 </div>

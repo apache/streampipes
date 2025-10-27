@@ -58,10 +58,6 @@ export class SpConnectFilterToolbarComponent implements OnInit {
         });
     }
 
-    filterAdapter(event: MatSelectChange) {
-        this.filterChangedEmitter.emit(this.currentFilter);
-    }
-
     updateFilterTerm(event: string) {
         this.currentFilter.textFilter = event;
         this.filterChangedEmitter.emit(this.currentFilter);
