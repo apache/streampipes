@@ -22,6 +22,7 @@ import {
     AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-start-all-adapters-dialog',
@@ -45,19 +46,20 @@ export class AllAdapterActionsComponent implements OnInit {
     constructor(
         private dialogRef: DialogRef<AllAdapterActionsComponent>,
         private adapterService: AdapterService,
+        private translate: TranslateService,
     ) {
         this.adaptersToModify = [];
         this.actionStatus = [];
         this.actionFinished = false;
         this.page = 'preview';
-        this.nextButton = 'Next';
+        this.nextButton = this.translate.instant('Next');
         this.actionRunning = false;
     }
 
     ngOnInit() {
         this.getAdaptersToModify();
         if (this.adaptersToModify.length === 0) {
-            this.nextButton = 'Close';
+            this.nextButton = this.translate.instant('Close');
             this.page = 'running';
         }
     }
@@ -88,7 +90,7 @@ export class AllAdapterActionsComponent implements OnInit {
         this.actionStatus.push({
             name: adapter.name,
             id: index,
-            status: 'waiting',
+            status: this.translate.instant('waiting'),
         });
         this.runAdapterAction(adapter, index);
     }
@@ -100,15 +102,15 @@ export class AllAdapterActionsComponent implements OnInit {
         observable
             .subscribe(data => {
                 this.actionStatus[index].status = data.success
-                    ? 'success'
-                    : 'error';
+                    ? this.translate.instant('success')
+                    : this.translate.instant('error');
             })
             .add(() => {
                 if (index < this.adaptersToModify.length - 1) {
                     index++;
                     this.initiateAction(this.adaptersToModify[index], index);
                 } else {
-                    this.nextButton = 'Close';
+                    this.nextButton = this.translate.instant('Close');
                     this.actionRunning = false;
                 }
             });

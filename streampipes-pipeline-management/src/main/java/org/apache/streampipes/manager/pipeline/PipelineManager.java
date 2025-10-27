@@ -67,7 +67,7 @@ public class PipelineManager {
    * @return pipelineId of the stored pipeline
    */
   public static String addPipeline(String principalSid,
-                                   Pipeline pipeline) {
+      Pipeline pipeline) {
 
     String pipelineId = Objects.isNull(pipeline.getPipelineId())
             ? UUIDGenerator.generateUuid()
@@ -102,7 +102,7 @@ public class PipelineManager {
    * @return pipeline status of the start operation
    */
   public static PipelineOperationStatus stopPipeline(String pipelineId,
-                                                     boolean forceStop) {
+      boolean forceStop) {
     Pipeline pipeline = getPipeline(pipelineId);
 
     return new PipelineExecutor(pipeline).stopPipeline(forceStop);
@@ -141,22 +141,22 @@ public class PipelineManager {
    */
   public static List<Pipeline> getPipelinesContainingElements(String elementId) {
     return PipelineManager.getAllPipelines().stream()
-            .filter(pipeline -> mergePipelineElement(pipeline)
-                    .anyMatch(el -> el.getElementId().equals(elementId)))
-            .collect(Collectors.toList());
+        .filter(pipeline -> mergePipelineElement(pipeline)
+            .anyMatch(el -> el.getElementId().equals(elementId)))
+        .collect(Collectors.toList());
   }
 
   private static Stream<? extends NamedStreamPipesEntity> mergePipelineElement(Pipeline pipeline) {
     return Stream.concat(
-            Stream.concat(
-                    pipeline.getStreams().stream(),
-                    pipeline.getSepas().stream()),
-            pipeline.getActions().stream());
+        Stream.concat(
+            pipeline.getStreams().stream(),
+            pipeline.getSepas().stream()),
+        pipeline.getActions().stream());
   }
 
   private static void preparePipelineBasics(String username,
-                                            Pipeline pipeline,
-                                            String pipelineId) {
+      Pipeline pipeline,
+      String pipelineId) {
     pipeline.setPipelineId(pipelineId);
     pipeline.setRunning(false);
     pipeline.setCreatedByUser(username);

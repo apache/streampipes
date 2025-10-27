@@ -18,7 +18,10 @@
 
 <div fxFlex="100" fxLayout="row" fxLayoutGap="15px">
     <div fxFlex="50" fxLayout="column">
-        <sp-basic-inner-panel [showTitle]="true" panelTitle="Original (Parsed)">
+        <sp-basic-inner-panel
+            [showTitle]="true"
+            [panelTitle]="'Original (Parsed)' | translate"
+        >
             <pre
                 [innerHTML]="originalField | jsonpretty"
                 class="preview-text"
@@ -30,7 +33,7 @@
     <div fxFlex="50" fxLayout="column">
         <sp-basic-inner-panel
             [showTitle]="true"
-            panelTitle="Result"
+            [panelTitle]="'Result' | translate"
             fxFlex="100"
             data-cy="connect-schema-update-preview"
         >
@@ -43,7 +46,7 @@
                     (click)="updateEventPreview()"
                 >
                     <mat-icon>refresh</mat-icon>
-                    <span>&nbsp;Update result preview</span>
+                    <span>&nbsp;{{ 'Update result preview' | translate }}</span>
                 </button>
             </div>
             <pre

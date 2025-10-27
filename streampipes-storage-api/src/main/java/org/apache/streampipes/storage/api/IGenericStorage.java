@@ -46,4 +46,6 @@ public interface IGenericStorage {
       throws IOException;
 
   GenericStorageAttachment findAttachment(String docId, String attachmentName) throws IOException;
+
+  void deleteAssetLinkToResource(String id) throws IOException;
 }

@@ -36,6 +36,7 @@ import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-start-adapter-configuration',
@@ -108,6 +109,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private timestampPipe: TimestampPipe,
         private transformationRuleService: TransformationRuleService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -176,7 +178,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
         this.checkAndApplyStreamRules();
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
-            title: 'Adapter edit',
+            title: this.translateService.instant('Edit adapter'),
             width: '70vw',
             data: {
                 adapter: this.adapterDescription,
@@ -197,7 +199,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
-            title: 'Adapter generation',
+            title: this.translateService.instant('Adapter generation'),
             width: '70vw',
             data: {
                 adapter: this.adapterDescription,
