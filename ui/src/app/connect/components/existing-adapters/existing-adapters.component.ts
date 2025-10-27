@@ -188,7 +188,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             SpExceptionDetailsDialogComponent,
             {
                 panelType: PanelType.STANDARD_PANEL,
-                title: this.translate.instant('Adapter Status'),
+                title: this.translate.instant('Adapter status'),
                 width: '70vw',
                 data: {
                     message: message,
