@@ -16,10 +16,11 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CurrentUserService } from '@streampipes/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-streampipes',
@@ -39,9 +40,16 @@ import { CurrentUserService } from '@streampipes/shared-ui';
 export class StreampipesComponent implements OnInit {
     darkMode: boolean;
 
+    private translate = inject(TranslateService);
+
     constructor(public currentUserService: CurrentUserService) {}
 
     ngOnInit(): void {
         this.currentUserService.darkMode$.subscribe(dm => (this.darkMode = dm));
+        this.currentUserService.user$.subscribe(user => {
+            if (user.language !== null && user.language !== 'browser') {
+                this.translate.use(user.language);
+            }
+        });
     }
 }

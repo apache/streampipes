@@ -24,11 +24,14 @@
         *ngIf="profileLoaded"
     >
         <sp-split-section
-            title="Main Settings"
-            subtitle="Manage your basic profile settings here."
+            [title]="'Profile' | translate"
+            [subtitle]="'Manage your basic profile settings here' | translate"
         >
             <sp-warning-box *ngIf="isExternalUser">
-                Settings for externally-managed users can't be changed.
+                {{
+                    'Settings for externally-managed users cannot be changed'
+                        | translate
+                }}
             </sp-warning-box>
             <div fxLayout="row" fxLayoutAlign="start center">
                 <span>{{ userData.username }}</span>
@@ -40,26 +43,36 @@
                     class="ml-15"
                     (click)="openChangeEmailDialog()"
                 >
-                    Change email
+                    {{ 'Change email' | translate }}
                 </button>
             </div>
             <mat-form-field fxFlex color="accent" class="mt-10 mb-10">
-                <mat-label>Full Name</mat-label>
+                <mat-label>{{ 'Full name' | translate }}</mat-label>
                 <input
                     [disabled]="isExternalUser"
                     [(ngModel)]="userData.fullName"
                     matInput
                 />
             </mat-form-field>
+            <mat-form-field fxFlex color="accent" class="mt-10 mb-10">
+                <mat-label>{{ 'Language' | translate }}</mat-label>
+                <mat-select [(ngModel)]="selectedLanguage">
+                    <mat-option
+                        *ngFor="let lang of availableLanguages"
+                        [value]="lang.id"
+                    >
+                        {{ lang.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <div fxLayout="row" fxLayoutAlign="start center">
                 <button
-                    [disabled]="isExternalUser"
                     mat-button
                     mat-flat-button
                     color="accent"
                     (click)="saveProfileSettings()"
                 >
-                    Update profile
+                    {{ 'Update profile' | translate }}
                 </button>
                 <button
                     [disabled]="isExternalUser"
@@ -69,17 +82,17 @@
                     class="ml-15"
                     (click)="openChangePasswordDialog()"
                 >
-                    Change password
+                    {{ 'Change password' | translate }}
                 </button>
             </div>
         </sp-split-section>
         <mat-divider></mat-divider>
         <div fxLayout="row" fxFlex="100" class="mt-30">
             <sp-split-section
-                title="Appearance"
-                subtitle="Change the appearance of your {{
-                    appConstants.APP_NAME
-                }} installation"
+                [title]="'Appearance' | translate"
+                [subtitle]="
+                    'Change the look and feel of your installation' | translate
+                "
             >
                 <label id="radio-group-label">Color Scheme</label>
                 <mat-radio-group
@@ -91,12 +104,12 @@
                     <mat-radio-button
                         [value]="false"
                         class="appearance-radio-button"
-                        >Light Mode</mat-radio-button
+                        >{{ 'Light mode' | translate }}</mat-radio-button
                     >
                     <mat-radio-button
                         [value]="true"
                         class="appearance-radio-button"
-                        >Dark Mode</mat-radio-button
+                        >{{ 'Dark mode' | translate }}</mat-radio-button
                     >
                 </mat-radio-group>
                 <div>
@@ -106,7 +119,7 @@
                         color="accent"
                         (click)="updateAppearanceMode()"
                     >
-                        Save color scheme
+                        {{ 'Save color schema' | translate }}
                     </button>
                 </div>
             </sp-split-section>

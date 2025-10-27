@@ -50,10 +50,9 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions">
+    <div class="sp-dialog-actions" fxLayoutGap="10px">
         <button
             mat-flat-button
-            color="accent"
             (click)="hide(false)"
             *ngIf="operationCompleted"
         >
@@ -61,7 +60,7 @@
         </button>
         <button
             mat-flat-button
-            color="accent"
+            class="mat-basic"
             data-cy="sp-navigate-to-pipeline-overview"
             (click)="navigateToPipelineOverview()"
             *ngIf="operationCompleted"
@@ -75,11 +74,9 @@
                 operationProgress ||
                 operationCompleted
             "
-            mat-button
             mat-flat-button
             color="accent"
             (click)="savePipeline()"
-            style="margin-right: 10px"
             data-cy="sp-editor-apply"
         >
             Apply
@@ -88,7 +85,6 @@
             *ngIf="
                 !operationProgress && (!operationCompleted || !operationSuccess)
             "
-            mat-button
             mat-flat-button
             class="mat-basic"
             (click)="hide(true)"

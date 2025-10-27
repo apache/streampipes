@@ -66,6 +66,7 @@ public class AdapterHealthCheck implements Runnable {
    * {@link org.apache.streampipes.manager.health.PipelineHealthCheck}).
    */
   public void checkAndRestoreAdapters() {
+    LOG.info("Adapter health check started");
     // Get all adapters that are supposed to run according to the backend storage
     Map<String, AdapterDescription> adapterInstancesSupposedToRun =
         this.getAllAdaptersSupposedToRun();
@@ -77,6 +78,11 @@ public class AdapterHealthCheck implements Runnable {
     // Get adapters that are not running anymore
     Map<String, AdapterDescription> allAdaptersToRecover =
         this.getAdaptersToRecover(groupByWorker, adapterInstancesSupposedToRun);
+
+    allAdaptersToRecover
+        .keySet()
+        .forEach(adapterId ->
+                     LOG.info("Adapter instance with id {} needs to be recovered", adapterId));
 
     try {
       if (!adapterInstancesSupposedToRun.isEmpty()) {
@@ -96,6 +102,8 @@ public class AdapterHealthCheck implements Runnable {
     } catch (NoSuchElementException e) {
       LOG.error("Could not update adapter metrics due to an invalid state. ({})", e.getMessage());
     }
+
+    LOG.info("Monitoring metrics updated for running adapters.");
 
     // Recover Adapters
     this.recoverAdapters(allAdaptersToRecover);
@@ -242,10 +250,19 @@ public class AdapterHealthCheck implements Runnable {
       // Invoke all adapters that were running when the adapter container was stopped
       try {
         if (adapterDescription.isRunning()) {
+          LOG.info("Start recovering adapter {} ", adapterDescription.getElementId());
           this.adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
+          LOG.info("Adapter {} is recovered", adapterDescription.getElementId());
+
         }
       } catch (AdapterException e) {
         LOG.warn("Could not start adapter {} ({})", adapterDescription.getName(), e.getMessage());
+      } catch (Exception e) {
+        LOG.error(
+            "Unexpected error while recovering adapter {} ({})",
+            adapterDescription.getName(),
+            e.getMessage()
+        );
       }
     }
 

@@ -26,7 +26,9 @@
                         (selectedIndexChange)="selectedIndexChange($event)"
                         color="accent"
                     >
-                        <mat-tab label="General Settings"></mat-tab>
+                        <mat-tab
+                            [label]="'General Settings' | translate"
+                        ></mat-tab>
                         <mat-tab label="API"></mat-tab>
                     </mat-tab-group>
                 </div>
@@ -40,7 +42,7 @@
         fxFlex="100"
     >
         <div
-            class="fixed-height page-container-padding-inner"
+            class="fixed-height"
             fxLayout="column"
             fxFlex="100"
             *ngIf="selectedIndex === 0"
@@ -50,7 +52,7 @@
             ></sp-general-profile-settings>
         </div>
         <div
-            class="fixed-height page-container-padding-inner"
+            class="fixed-height"
             fxLayout="column"
             fxFlex="100"
             *ngIf="selectedIndex === 1"
