@@ -141,13 +141,19 @@ public class LoadManager {
     if (!environment.getLoadManagerEnable().getValueOrDefault() || loadBalancer == null) {
       return;
     }
-
     if (lock != null) {
+      double startTime = System.currentTimeMillis();
       lock.writeLock().lock();
       try {
         loadBalancer.doLoadShedding();
       } finally {
         lock.writeLock().unlock();
+        double endTime = System.currentTimeMillis();
+        double durationSeconds = (endTime - startTime) / 1000.0;
+        LoadBalancerStats stats = LoadManager.getLoadBalancerStats();
+        if (stats != null) {
+          stats.reportMigrationTime(durationSeconds);
+        }
       }
     }
   }
@@ -158,6 +164,7 @@ public class LoadManager {
     }
 
     if (lock != null) {
+      double startTime = System.currentTimeMillis();
       lock.writeLock().lock();
       try {
         for (SpServiceRegistration service : needDeletedServices) {
@@ -206,6 +213,12 @@ public class LoadManager {
         }
       } finally {
         lock.writeLock().unlock();
+        double endTime = System.currentTimeMillis();
+        double durationSeconds = (endTime - startTime) / 1000.0;
+        LoadBalancerStats stats = LoadManager.getLoadBalancerStats();
+        if (stats != null) {
+            stats.reportMigrationTime(durationSeconds);
+        }
       }
     }
   }

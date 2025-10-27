@@ -26,11 +26,11 @@ import io.prometheus.client.Gauge;
  * Load Balancer Metrics Manager. Follows the same pattern as ElementServiceMetrics.
  */
 public class LoadBalancerMetrics {
-  // OK
+
   public static final Counter PIPELINE_SEPARATIONS_TOTAL = StreamPipesCollectorRegistry
       .registerCounter("lb_pipeline_separations_total",
                        "Total number of pipeline separations performed", "serviceId");
-  // OK?
+
   public static final Counter PIPELINE_MIGRATIONS_TOTAL = StreamPipesCollectorRegistry
       .registerCounter("lb_pipeline_migrations_total",
                        "Total number of pipeline migrations performed", "serviceId");
@@ -38,10 +38,13 @@ public class LoadBalancerMetrics {
   public static final Gauge SERVICE_ADAPTER_COUNT = StreamPipesCollectorRegistry
       .registerGauge("lb_service_adapter_count", "Number of adapters in each extension service",
                      "serviceId");
-  // OK
+
   public static final Gauge SERVICE_PIPELINE_COUNT = StreamPipesCollectorRegistry
       .registerGauge("lb_service_pipeline_count", "Number of pipelines in each extension service",
                      "serviceId");
+
+  public static final Gauge MIGRATION_TIME_SECONDS = StreamPipesCollectorRegistry
+      .registerGauge("lb_migration_time_seconds", "Time taken for pipeline migration in seconds");
 
   public LoadBalancerMetrics() {}
 
@@ -62,5 +65,9 @@ public class LoadBalancerMetrics {
    */
   public void reportPipelineMigration(String serviceId) {
     PIPELINE_MIGRATIONS_TOTAL.labels(serviceId).inc();
+  }
+
+  public void reportMigrationTime(double seconds) {
+    MIGRATION_TIME_SECONDS.set(seconds);
   }
 }

@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum ExtensionsLogProvider {
+public enum   ExtensionsLogProvider {
 
   INSTANCE;
 
@@ -120,10 +120,13 @@ public enum ExtensionsLogProvider {
   }
 
   private List<String> collectPipelineElementIds(Pipeline pipeline) {
-    return Stream
-        .concat(pipeline.getSepas().stream().map(NamedStreamPipesEntity::getElementId),
-                pipeline.getActions().stream().map(NamedStreamPipesEntity::getElementId))
-        .collect(Collectors.toList());
+    if (pipeline != null){
+      return Stream.concat(
+              pipeline.getSepas().stream().map(NamedStreamPipesEntity::getElementId),
+              pipeline.getActions().stream().map(NamedStreamPipesEntity::getElementId)
+      ).collect(Collectors.toList());
+    }
+    return List.of();
   }
 
 }

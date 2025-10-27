@@ -60,5 +60,7 @@ public class LoadBalancerStats {
     metrics.reportPipelineMigration(serviceId);
   }
 
-
+  public void reportMigrationTime(double seconds) {
+    metrics.reportMigrationTime(seconds);
+  }
 }
