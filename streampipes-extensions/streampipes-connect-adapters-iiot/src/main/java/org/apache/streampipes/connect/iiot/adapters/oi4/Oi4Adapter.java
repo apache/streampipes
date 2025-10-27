@@ -140,6 +140,9 @@ public class Oi4Adapter implements StreamPipesAdapter {
       IEventCollector collector,
       IAdapterRuntimeContext adapterRuntimeContext
   ) throws AdapterException {
+    LOG.info("Adapter type {} starting", ID);
+    LOG.info("Adapter with id {} starting", extractor.getAdapterDescription().getElementId());
+
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
 
     this.mqttConsumer = new MqttConsumer(
@@ -160,6 +163,9 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
     Thread thread = new Thread(this.mqttConsumer);
     thread.start();
+
+    LOG.info("Adapter {} started", ID);
+    LOG.info("Adapter with id {} started", extractor.getAdapterDescription().getElementId());
   }
 
   private InputStream convertByte(byte[] event) {
