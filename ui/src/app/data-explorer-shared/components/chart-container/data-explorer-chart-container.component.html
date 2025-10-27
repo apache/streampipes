@@ -134,18 +134,21 @@
                             </button>
                         </sp-time-selector-menu>
                     </mat-menu>
-                    <button
-                        mat-icon-button
-                        (click)="removeWidget()"
-                        [matTooltip]="'Delete Chart' | translate"
-                        *ngIf="editMode && hasDataExplorerWritePrivileges"
-                        [attr.data-cy]="
-                            'remove-' +
-                            configuredWidget.baseAppearanceConfig.widgetTitle
-                        "
-                    >
-                        <mat-icon>clear</mat-icon>
-                    </button>
+                    @if (!dataViewMode) {
+                        <button
+                            mat-icon-button
+                            (click)="removeWidget()"
+                            [matTooltip]="'Delete Chart' | translate"
+                            *ngIf="editMode && hasDataExplorerWritePrivileges"
+                            [attr.data-cy]="
+                                'remove-' +
+                                configuredWidget.baseAppearanceConfig
+                                    .widgetTitle
+                            "
+                        >
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                    }
                 </div>
             }
         </div>
