@@ -108,7 +108,7 @@ SP_VERSION=<VERSION>
 If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue i on [GitHub](https://github.com/apache/streampipes/issues).
 
 ## Get help
-Since we purely levarge Docker Compose, please see their [documentation](https://docs.docker.com/compose/) in case you want to find out more about their available [commands](https://docs.docker.com/compose/reference/overview/).
+Since we purely leverage Docker Compose, please see their [documentation](https://docs.docker.com/compose/) in case you want to find out more about their available [commands](https://docs.docker.com/compose/reference/overview/).
 
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
 
