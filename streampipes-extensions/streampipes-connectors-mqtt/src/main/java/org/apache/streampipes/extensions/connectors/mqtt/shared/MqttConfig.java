@@ -26,11 +26,11 @@ public class MqttConfig {
   private String username;
   private String password;
 
-  private String caCertificatePath;   
-  private String clientCertificatePath; 
-  private String clientKeyPath;       
+  //private String caCertificatePath;   
+  //private String clientCertificatePath; 
+  //private String clientKeyPath;       
   private Boolean tlsEnabled;          
-  private String tlsVersion;    
+  //private String tlsVersion;    
 
 
   public MqttConfig(String url, String topic) {
@@ -52,20 +52,20 @@ public class MqttConfig {
     this.url = url;
     this.topic = topic;
     this.tlsEnabled = tlsEnabled;
-    this.caCertificatePath = caCertificatePath;
-    this.clientCertificatePath = clientCertificatePath;
-    this.clientKeyPath = clientKeyPath;
-    this.tlsVersion = tlsVersion;
+    //this.caCertificatePath = caCertificatePath;
+    //this.clientCertificatePath = clientCertificatePath;
+    //this.clientKeyPath = clientKeyPath;
+    //this.tlsVersion = tlsVersion;
 }
 
-public MqttConfig(String url, String topic, String username, String password, Boolean tlsEnabled, 
-                  String caCertificatePath, String clientCertificatePath, String clientKeyPath, String tlsVersion) {
+public MqttConfig(String url, String topic, String username, String password, Boolean tlsEnabled/**, 
+                  String caCertificatePath, String clientCertificatePath, String clientKeyPath, String tlsVersion*/) {
     this(url, topic, username, password); // Calls the other constructor for base fields
     this.tlsEnabled = tlsEnabled;
-    this.caCertificatePath = caCertificatePath;
+    /**this.caCertificatePath = caCertificatePath;
     this.clientCertificatePath = clientCertificatePath;
     this.clientKeyPath = clientKeyPath;
-    this.tlsVersion = tlsVersion;
+    this.tlsVersion = tlsVersion;*/
 }
 
 
@@ -78,7 +78,7 @@ public MqttConfig(String url, String topic, String username, String password, Bo
     this.tlsEnabled = tlsEnabled;
   }
 
-  public String getCaCertificatePath() {
+  /**public String getCaCertificatePath() {
     return caCertificatePath;
   }
 
@@ -108,7 +108,7 @@ public MqttConfig(String url, String topic, String username, String password, Bo
 
   public void setTlsVersion(String tlsVersion) {
     this.tlsVersion = tlsVersion;
-  }
+  }*/
 
   public Boolean getAuthenticated() {
     return authenticated;

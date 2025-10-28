@@ -17,6 +17,10 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import org.apache.streampipes.messaging.InternalEventProcessor;
 
 import org.fusesource.mqtt.client.BlockingConnection;
@@ -58,6 +62,35 @@ public class MqttConsumer implements Runnable {
         mqtt.setUserName(mqttConfig.getUsername());
         mqtt.setPassword(mqttConfig.getPassword());
       }
+     if (mqttConfig.getTlsEnabled()) {
+  try {
+    // Create a TrustManager that trusts all certificates (for development or self-signed certs)
+    TrustManager[] trustAllCerts = new TrustManager[]{
+        new X509TrustManager() {
+          public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return null;
+          }
+          public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) { }
+          public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) { }
+        }
+    };
+
+    // Initialize SSLContext with the trust-all manager
+    SSLContext sslContext = SSLContext.getInstance("TLS");
+    sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+    // Configure MQTT to use SSL/TLS
+    mqtt.setSslContext(sslContext);
+
+    // Optionally: force secure port (usually 8883)
+    if (!mqttConfig.getUrl().startsWith("ssl://")) {
+      mqtt.setHost("ssl://" + mqttConfig.getUrl());
+    }
+
+  } catch (Exception e) {
+    throw new RuntimeException("Failed to initialize TLS for MQTT", e);
+  }
+}
       BlockingConnection connection = mqtt.blockingConnection();
       connection.connect();
       Topic[] topics = {new Topic(mqttConfig.getTopic(), QoS.AT_LEAST_ONCE)};
