@@ -18,12 +18,14 @@
 package org.apache.streampipes.manager.loadbalance.impl;
 
 import org.apache.streampipes.manager.health.ServiceRegistrationManager;
-import org.apache.streampipes.manager.loadbalance.*;
+import org.apache.streampipes.manager.loadbalance.ExtensionServiceSelector;
+import org.apache.streampipes.manager.loadbalance.LoadBalancer;
+import org.apache.streampipes.manager.loadbalance.PipelineMigrator;
 import org.apache.streampipes.manager.loadbalance.unit.ResourceUnitStatsScanner;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import java.util.*;
+import java.util.List;
 
 public class ExtensibleLoadManager implements LoadBalancer {
 

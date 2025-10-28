@@ -20,7 +20,13 @@ package org.apache.streampipes.manager.loadbalance;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.loadbalancer.LoadBalancerStats;
-import org.apache.streampipes.manager.loadbalance.impl.*;
+import org.apache.streampipes.manager.loadbalance.impl.ExtensibleLoadManager;
+import org.apache.streampipes.manager.loadbalance.impl.MinimumLoadSelector;
+import org.apache.streampipes.manager.loadbalance.impl.OverloadMigrator;
+import org.apache.streampipes.manager.loadbalance.impl.ThresholdMigrator;
+import org.apache.streampipes.manager.loadbalance.impl.TransferMigrator;
+import org.apache.streampipes.manager.loadbalance.impl.WeightedFirstSelector;
+import org.apache.streampipes.manager.loadbalance.impl.WeightedRandomSelector;
 import org.apache.streampipes.manager.loadbalance.unit.PipelineElementPartitioner;
 import org.apache.streampipes.manager.loadbalance.unit.ResourceUnitScanner;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -56,19 +62,19 @@ public class LoadManager {
     ExtensionServiceSelector selector;
     PipelineMigrator migrator;
 
-    LoadBalancerConfig.LoadTargetStd = environment.getLoadTargetStd().getValueOrDefault();
-    LoadBalancerConfig.CPUResourceWeight = environment.getCpuResourceWeight().getValueOrDefault();
-    LoadBalancerConfig.ThresholdMigratorPercentage =
+    LoadBalancerConfig.loadTargetStd = environment.getLoadTargetStd().getValueOrDefault();
+    LoadBalancerConfig.cpuResourceWeight = environment.getCpuResourceWeight().getValueOrDefault();
+    LoadBalancerConfig.thresholdMigratorPercentage =
         environment.getThresholdMigratorPercentage().getValueOrDefault();
-    LoadBalancerConfig.MinMigratorPercentage =
+    LoadBalancerConfig.minMigratorPercentage =
         environment.getMinMigratorPercentage().getValueOrDefault();
-    LoadBalancerConfig.OverloadedThresholdPercentage =
+    LoadBalancerConfig.overloadedThresholdPercentage =
         environment.getOverloadedThresholdPercentage().getValueOrDefault();
-    LoadBalancerConfig.HistoryResourcePercentage =
+    LoadBalancerConfig.historyResourcePercentage =
         environment.getHistoryResourcePercentage().getValueOrDefault();
-    LoadBalancerConfig.MemoryResourceWeight =
+    LoadBalancerConfig.memoryResourceWeight =
         environment.getMemoryResourceWeight().getValueOrDefault();
-    LoadBalancerConfig.DirMemoryResourceWeight =
+    LoadBalancerConfig.dirMemoryResourceWeight =
         environment.getDirMemoryResourceWeight().getValueOrDefault();
 
     if (environment.getSelector().getValueOrDefault().equals("WeightedRandomSelector")) {

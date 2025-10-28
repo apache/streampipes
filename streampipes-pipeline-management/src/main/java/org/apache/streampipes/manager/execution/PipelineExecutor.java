@@ -19,7 +19,6 @@
 package org.apache.streampipes.manager.execution;
 
 import org.apache.streampipes.manager.execution.task.PipelineExecutionTask;
-import org.apache.streampipes.manager.loadbalance.LoadManager;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 

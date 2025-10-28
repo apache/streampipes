@@ -23,7 +23,11 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * Threshold-based pipeline migrator for load balancing Migrates pipelines when services exceed
@@ -66,7 +70,7 @@ public class ThresholdMigrator extends AbstractPipelineMigrator {
     PriorityQueue<Map.Entry<SpServiceRegistration, Float>> maxLoadQueue = queues.getMaxLoadQueue();
 
     // Identify services exceeding threshold
-    float thresholdLoad = averageLoad + LoadBalancerConfig.ThresholdMigratorPercentage;
+    float thresholdLoad = averageLoad + LoadBalancerConfig.thresholdMigratorPercentage;
     while (!maxLoadQueue.isEmpty() && maxLoadQueue.peek().getValue() > thresholdLoad
         && overloadedServices.size() < totalServices / 2) {
       overloadedServices.offer(maxLoadQueue.poll());
@@ -109,7 +113,7 @@ public class ThresholdMigrator extends AbstractPipelineMigrator {
       float maxLoad = maxLoadQueue.peek().getValue();
 
       // Check if migration is beneficial
-      if (minLoad >= LoadBalancerConfig.MinMigratorPercentage) {
+      if (minLoad >= LoadBalancerConfig.minMigratorPercentage) {
         logger.debug("Min load {} exceeds threshold, skipping balance", minLoad);
         break;
       }

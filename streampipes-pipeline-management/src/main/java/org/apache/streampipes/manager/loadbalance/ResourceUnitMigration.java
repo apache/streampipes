@@ -18,7 +18,6 @@
 package org.apache.streampipes.manager.loadbalance;
 
 import org.apache.streampipes.commons.exceptions.SpException;
-import org.apache.streampipes.commons.prometheus.loadbalancer.LoadBalancerStats;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
 import org.apache.streampipes.manager.loadbalance.unit.ResourceUnitStatsScanner;

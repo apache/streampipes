@@ -23,7 +23,6 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
-import org.apache.streampipes.manager.loadbalance.ResourceUnitMigration;
 import org.apache.streampipes.manager.storage.RunningPipelineElementStorage;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;

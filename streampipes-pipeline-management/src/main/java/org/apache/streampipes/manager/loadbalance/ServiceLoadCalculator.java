@@ -59,9 +59,9 @@ public class ServiceLoadCalculator {
       return 0.0F;
     }
 
-    double cpuLoad = snapshot.getCpu().percentUsage() * LoadBalancerConfig.CPUResourceWeight;
+    double cpuLoad = snapshot.getCpu().percentUsage() * LoadBalancerConfig.cpuResourceWeight;
     double memoryLoad =
-        snapshot.getMemory().percentUsage() * LoadBalancerConfig.MemoryResourceWeight;
+        snapshot.getMemory().percentUsage() * LoadBalancerConfig.memoryResourceWeight;
 
     return (float) Math.max(cpuLoad, memoryLoad);
   }
@@ -117,7 +117,7 @@ public class ServiceLoadCalculator {
 
     // Apply exponential smoothing: weighted average of historical and current
     float smoothedLoad =
-        calculate(historicalLoad, currentLoad, LoadBalancerConfig.HistoryResourcePercentage);
+        calculate(historicalLoad, currentLoad, LoadBalancerConfig.historyResourcePercentage);
 
     logger.debug("Service {} load: current={}%, historical={}%, smoothed={}%", service.getSvcId(),
                  currentLoad, historicalLoad, smoothedLoad);

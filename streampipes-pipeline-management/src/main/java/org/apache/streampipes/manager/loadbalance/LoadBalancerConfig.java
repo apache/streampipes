@@ -25,48 +25,42 @@ public class LoadBalancerConfig {
   /**
    * CPU usage weight when calculating new resource usage.
    */
-  public static double CPUResourceWeight = 1.0;
+  public static double cpuResourceWeight = 1.0;
 
   /**
    * Memory usage weight when calculating new resource usage.
    */
-  public static double MemoryResourceWeight = 1.0;
+  public static double memoryResourceWeight = 1.0;
 
   /**
    * Directory memory usage weight when calculating new resource usage.
    */
-  public static double DirMemoryResourceWeight = 1.0;
+  public static double dirMemoryResourceWeight = 1.0;
 
   /**
    * Service resource usage threshold for migration.
    */
-  public static float ThresholdMigratorPercentage = 20.0F;
+  public static float thresholdMigratorPercentage = 20.0F;
 
   /**
    * Minimum migrator percentage.
    */
-  public static float MinMigratorPercentage = 20.0F;
+  public static float minMigratorPercentage = 20.0F;
 
   /**
    * Overloaded threshold percentage.
    */
-  public static float OverloadedThresholdPercentage = 85F;
+  public static float overloadedThresholdPercentage = 85F;
 
   /**
    * History usage accounts for when calculating new resource usage.
    */
-  public static float HistoryResourcePercentage = 0.9F;
-
-  /**
-   * Message-rate percentage threshold between highest and least loaded service for uniform load
-   * migration.
-   */
-  public static int MsgRateDifferenceMigratorThreshold = 85;
+  public static float historyResourcePercentage = 0.9F;
 
   /**
    * Target standard deviation range.
    */
-  public static float LoadTargetStd = 25.0F;
+  public static float loadTargetStd = 25.0F;
 
   /**
    * Service selector strategy.
@@ -77,10 +71,5 @@ public class LoadBalancerConfig {
    * Pipeline migrator strategy.
    */
   public static String migrator = "ThresholdMigrator";
-
-  /**
-   * Enable dynamic load balancing. Set to false to disable dynamic load balancing features.
-   */
-  public static boolean LoadManagerEnable = false;
 
 }

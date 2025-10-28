@@ -23,7 +23,11 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * Overload-based pipeline migrator for load balancing Migrates pipelines from services exceeding
@@ -59,18 +63,18 @@ public class OverloadMigrator extends AbstractPipelineMigrator {
 
     // Identify services exceeding absolute threshold
     while (!maxLoadQueue.isEmpty()
-        && maxLoadQueue.peek().getValue() > LoadBalancerConfig.OverloadedThresholdPercentage) {
+        && maxLoadQueue.peek().getValue() > LoadBalancerConfig.overloadedThresholdPercentage) {
       overloadedServices.offer(maxLoadQueue.poll());
     }
 
     if (overloadedServices.isEmpty()) {
       logger.debug("No overloaded services found (threshold: {})",
-                   LoadBalancerConfig.OverloadedThresholdPercentage);
+                   LoadBalancerConfig.overloadedThresholdPercentage);
       return;
     }
 
     logger.info("Found {} overloaded services above {}%", overloadedServices.size(),
-                LoadBalancerConfig.OverloadedThresholdPercentage);
+                LoadBalancerConfig.overloadedThresholdPercentage);
 
     // Migrate to less loaded services
     PriorityQueue<Map.Entry<SpServiceRegistration, Float>> minLoadQueue = queues.getMinLoadQueue();

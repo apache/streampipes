@@ -47,7 +47,7 @@ public class TransferMigrator extends AbstractPipelineMigrator {
     float variance = calculateVariance(loadValues, averageLoad);
 
     logger.debug("Load statistics - Average: {}, Variance: {}, Target Std: {}", averageLoad,
-                 variance, LoadBalancerConfig.LoadTargetStd);
+                 variance, LoadBalancerConfig.loadTargetStd);
 
     // Try different migration strategies based on load distribution
     if (tryVarianceBasedMigration(queues, variance, services.size())) {
@@ -71,12 +71,12 @@ public class TransferMigrator extends AbstractPipelineMigrator {
    */
   private boolean tryVarianceBasedMigration(ServiceLoadQueues queues, float variance,
                                             int totalServices) {
-    if (variance <= LoadBalancerConfig.LoadTargetStd) {
+    if (variance <= LoadBalancerConfig.loadTargetStd) {
       return false;
     }
 
     logger.info("Variance {} exceeds target {}, performing variance-based migration", variance,
-                LoadBalancerConfig.LoadTargetStd);
+                LoadBalancerConfig.loadTargetStd);
 
     performMigrationBatch(queues.getMaxLoadQueue(), queues.getMinLoadQueue(), totalServices,
                           Integer.MAX_VALUE // No limit on migrations for variance reduction
@@ -96,7 +96,7 @@ public class TransferMigrator extends AbstractPipelineMigrator {
     float minLoad = queues.getMinLoadQueue().peek().getValue();
     float maxLoad = queues.getMaxLoadQueue().peek().getValue();
 
-    if (minLoad >= LoadBalancerConfig.MinMigratorPercentage) {
+    if (minLoad >= LoadBalancerConfig.minMigratorPercentage) {
       return false;
     }
 
@@ -125,7 +125,7 @@ public class TransferMigrator extends AbstractPipelineMigrator {
     float maxLoad = queues.getMaxLoadQueue().peek().getValue();
     float minLoad = queues.getMinLoadQueue().peek().getValue();
 
-    if (maxLoad <= LoadBalancerConfig.OverloadedThresholdPercentage) {
+    if (maxLoad <= LoadBalancerConfig.overloadedThresholdPercentage) {
       logger.debug("No overloaded services found (max load: {}%)", maxLoad);
       return false;
     }
