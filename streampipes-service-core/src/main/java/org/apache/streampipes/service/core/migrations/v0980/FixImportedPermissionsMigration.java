@@ -54,33 +54,33 @@ public class FixImportedPermissionsMigration implements Migration {
   }
 
   private void migrateDashboardPermissions() {
-    LOG.info("Strart migrate permissions for dashboards");
+    LOG.debug("Start migrate permissions for dashboards");
     var dataExplorerDashboardStorage = StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getDataExplorerDashboardStorage();
     var dashboards = dataExplorerDashboardStorage.findAll();
     migrateResourcePermissions(dashboards);
-    LOG.info("Finished migrate permissions for dashboards");
+    LOG.debug("Finished migrate permissions for dashboards");
   }
 
   private void migrateChartsPermissions() {
-    LOG.info("Strart migrate permissions for charts");
+    LOG.debug("Start migrate permissions for charts");
     var dataExplorerWidgetStorage = StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getDataExplorerWidgetStorage();
     var charts = dataExplorerWidgetStorage.findAll();
     migrateResourcePermissions(charts);
-    LOG.info("Finished migrate permissions for charts");
+    LOG.debug("Finished migrate permissions for charts");
   }
 
   private void migrateDataStreamPermissions() {
-    LOG.info("Strart migrate permissions for data streams");
+    LOG.debug("Start migrate permissions for data streams");
     var dataStreamStorage =
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getDataStreamStorage();
     var dataStreams = dataStreamStorage.findAll();
     migrateResourcePermissions(dataStreams);
-    LOG.info("Finished migrate permissions for data streams");
+    LOG.debug("Finished migrate permissions for data streams");
   }
 
   /**
