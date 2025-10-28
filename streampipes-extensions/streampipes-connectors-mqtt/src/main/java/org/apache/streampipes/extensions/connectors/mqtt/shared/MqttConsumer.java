@@ -16,11 +16,6 @@
  *
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import org.apache.streampipes.messaging.InternalEventProcessor;
 
 import org.fusesource.mqtt.client.BlockingConnection;
@@ -28,6 +23,10 @@ import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.Message;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class MqttConsumer implements Runnable {
 
@@ -62,7 +61,8 @@ public class MqttConsumer implements Runnable {
         mqtt.setUserName(mqttConfig.getUsername());
         mqtt.setPassword(mqttConfig.getPassword());
       }
-     if (mqttConfig.getTlsEnabled()) {
+     if (true) {
+      //mqttConfig.getTlsEnabled() Currently for testing purposes set to True by default 
   try {
     // Create a TrustManager that trusts all certificates (for development or self-signed certs)
     TrustManager[] trustAllCerts = new TrustManager[]{
@@ -83,9 +83,9 @@ public class MqttConsumer implements Runnable {
     mqtt.setSslContext(sslContext);
 
     // Optionally: force secure port (usually 8883)
-    if (!mqttConfig.getUrl().startsWith("ssl://")) {
-      mqtt.setHost("ssl://" + mqttConfig.getUrl());
-    }
+    //if (!mqttConfig.getUrl().startsWith("ssl://")) {
+    //  mqtt.setHost("ssl://" + mqttConfig.getUrl());
+   // }
 
   } catch (Exception e) {
     throw new RuntimeException("Failed to initialize TLS for MQTT", e);
