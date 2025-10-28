@@ -73,6 +73,7 @@ public class MqttProtocol implements StreamPipesAdapter {
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
         .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
             MqttConnectUtils.getAlternativesTwo())
+        .requiredSlideToggle(MqttConnectUtils.getTLS(), false)
         .requiredTextParameter(MqttConnectUtils.getTopicLabel())
         .buildConfiguration();
   }

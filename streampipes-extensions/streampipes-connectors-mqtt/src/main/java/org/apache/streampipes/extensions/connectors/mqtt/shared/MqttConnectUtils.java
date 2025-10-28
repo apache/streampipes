@@ -38,6 +38,7 @@ public class MqttConnectUtils {
   public static final String PASSWORD = "password";
   public static final String BROKER_URL = "broker_url";
   public static final String TOPIC = "topic";
+  public static final String TLS = "tls";
 
   public static Label getAccessModeLabel() {
     return Labels.withId(ACCESS_MODE);
@@ -69,6 +70,15 @@ public class MqttConnectUtils {
 
   }
 
+public static Label getTLS() {
+    return Labels.withId(TLS);
+
+  }
+
+  public static StaticPropertyAlternative getTLS(boolean selected) {
+    return Alternatives.from(Labels.withId(TLS),selected);
+
+  }
   public static MqttConfig getMqttConfig(IParameterExtractor extractor) {
     return getMqttConfig(extractor, null);
   }
@@ -92,6 +102,13 @@ public class MqttConnectUtils {
       String username = extractor.singleValueParameter(USERNAME, String.class);
       String password = extractor.secretValue(PASSWORD);
       mqttConfig = new MqttConfig(brokerUrl, topic, username, password);
+    }
+
+    if (extractor.singleValueParameter(TLS, Boolean.class)){
+        String username = extractor.singleValueParameter(USERNAME, String.class);
+      String password = extractor.secretValue(PASSWORD);
+      mqttConfig = new MqttConfig(brokerUrl, topic, username, password, true);
+
     }
 
     return mqttConfig;
