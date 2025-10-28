@@ -26,7 +26,7 @@
             [matMenuTriggerFor]="staticValueMenu"
         >
             <mat-icon>add</mat-icon>
-            <span>&nbsp;Add static value</span>
+            <span>&nbsp;{{ 'Add static value' | translate }}</span>
         </button>
         <mat-menu #staticValueMenu="matMenu">
             <div
@@ -71,7 +71,7 @@
             (click)="addTimestampProperty()"
         >
             <mat-icon>access_time</mat-icon>
-            <span>&nbsp;Add timestamp</span>
+            <span>&nbsp;{{ 'Add timestamp' | translate }}</span>
         </button>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center">

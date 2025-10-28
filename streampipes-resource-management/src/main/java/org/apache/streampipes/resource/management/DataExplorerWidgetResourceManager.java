@@ -26,7 +26,7 @@ public class DataExplorerWidgetResourceManager extends AbstractCRUDResourceManag
   private final DataExplorerResourceManager dashboardManager;
 
   public DataExplorerWidgetResourceManager(DataExplorerResourceManager dashboardManager,
-                                           CRUDStorage<DataExplorerWidgetModel> db) {
+      CRUDStorage<DataExplorerWidgetModel> db) {
     super(db, DataExplorerWidgetModel.class);
     this.dashboardManager = dashboardManager;
   }

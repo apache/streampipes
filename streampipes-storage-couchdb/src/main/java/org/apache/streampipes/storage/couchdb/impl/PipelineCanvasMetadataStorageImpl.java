@@ -52,6 +52,6 @@ public class PipelineCanvasMetadataStorageImpl extends AbstractDao<PipelineCanva
         .stream()
         .filter(p -> p.getPipelineId().equals(pipelineId))
         .findFirst()
-        .orElseThrow(IllegalArgumentException::new);
+        .orElse(null);
   }
 }

@@ -38,7 +38,7 @@ import {
 import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
-import { catchError, filter, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
 import { HttpContext } from '@angular/common/http';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
@@ -98,22 +98,37 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
 
     loadPipeline(): void {
         forkJoin([
-            this.pipelineService.getPipelineById(this.currentPipelineId),
+            this.pipelineService.getPipelineById(this.currentPipelineId).pipe(
+                catchError(error => {
+                    if (error.status === 404) {
+                        this.pipelineNotFound = true;
+                    }
+                    return of(null);
+                }),
+            ),
             this.pipelineCanvasService
                 .getPipelineCanvasMetadata(this.currentPipelineId)
                 .pipe(
+                    map(response => {
+                        if (response === null) {
+                            this.pipelineAvailable = false;
+                            return new PipelineCanvasMetadata();
+                        }
+                        return response;
+                    }),
                     catchError(error => {
                         this.pipelineAvailable = false;
-                        this.pipelineNotFound = true;
-
                         return of(new PipelineCanvasMetadata());
                     }),
                 ),
-        ]).subscribe(res => {
-            this.pipeline = res[0];
-            this.pipelineCanvasMetadata = res[1];
-            this.pipelineAvailable = true;
-            this.onPipelineAvailable();
+        ]).subscribe(([pipeline, metadata]) => {
+            this.pipeline = pipeline;
+            this.pipelineCanvasMetadata = metadata;
+
+            if (pipeline && !this.pipelineNotFound) {
+                this.pipelineAvailable = true;
+                this.onPipelineAvailable();
+            }
         });
     }
 
