@@ -31,6 +31,9 @@ username-alternative.description=
 username-group.title=User Group
 username-group.description=
 
+tls.title=
+tls.description=TLS Encryption
+
 username.title=Username
 username.description=
 

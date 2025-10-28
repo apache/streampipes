@@ -104,7 +104,7 @@ public static Label getTLS() {
       mqttConfig = new MqttConfig(brokerUrl, topic, username, password);
     }
 
-    if (extractor.singleValueParameter(TLS, Boolean.class)){
+    if (extractor.slideToggleValue(TLS)){
         String username = extractor.singleValueParameter(USERNAME, String.class);
       String password = extractor.secretValue(PASSWORD);
       mqttConfig = new MqttConfig(brokerUrl, topic, username, password, true);

@@ -16,6 +16,7 @@
  *
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
+import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 
 import org.fusesource.mqtt.client.BlockingConnection;
@@ -23,6 +24,8 @@ import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.Message;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -36,6 +39,8 @@ public class MqttConsumer implements Runnable {
   private int messageCount = 0;
 
   private final MqttConfig mqttConfig;
+
+  private static final Logger LOG = LoggerFactory.getLogger(MqttProtocol.class);
 
   public MqttConsumer(MqttConfig mqttConfig,
                       InternalEventProcessor<byte[]> consumer) {
@@ -54,6 +59,7 @@ public class MqttConsumer implements Runnable {
   public void run() {
     this.running = true;
     MQTT mqtt = new MQTT();
+    LOG.info("TLS Enabled "+ mqttConfig.getTlsEnabled());
     try {
       mqtt.setHost(mqttConfig.getUrl());
       mqtt.setConnectAttemptsMax(1);
@@ -61,7 +67,7 @@ public class MqttConsumer implements Runnable {
         mqtt.setUserName(mqttConfig.getUsername());
         mqtt.setPassword(mqttConfig.getPassword());
       }
-     if (true) {
+     if (mqttConfig.getTlsEnabled()) {
       //mqttConfig.getTlsEnabled() Currently for testing purposes set to True by default 
   try {
     // Create a TrustManager that trusts all certificates (for development or self-signed certs)
