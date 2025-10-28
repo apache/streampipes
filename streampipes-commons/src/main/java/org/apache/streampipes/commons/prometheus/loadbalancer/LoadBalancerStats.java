@@ -46,20 +46,6 @@ public class LoadBalancerStats {
     metrics.reportMetrics(serviceId, adapterCount, pipelineCount);
   }
 
-  /**
-   * Report pipeline separation event (increment counter)
-   */
-  public void reportPipelineSeparation(String serviceId) {
-    metrics.reportPipelineSeparation(serviceId);
-  }
-
-  /**
-   * Report pipeline migration event (increment counter)
-   */
-  public void reportPipelineMigration(String serviceId) {
-    metrics.reportPipelineMigration(serviceId);
-  }
-
   public void reportMigrationTime(double seconds) {
     metrics.reportMigrationTime(seconds);
   }

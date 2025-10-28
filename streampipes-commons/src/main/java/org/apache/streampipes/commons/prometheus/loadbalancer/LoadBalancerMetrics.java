@@ -19,21 +19,12 @@ package org.apache.streampipes.commons.prometheus.loadbalancer;
 
 import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
 
-import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 
 /**
  * Load Balancer Metrics Manager. Follows the same pattern as ElementServiceMetrics.
  */
 public class LoadBalancerMetrics {
-
-  public static final Counter PIPELINE_SEPARATIONS_TOTAL = StreamPipesCollectorRegistry
-      .registerCounter("lb_pipeline_separations_total",
-                       "Total number of pipeline separations performed", "serviceId");
-
-  public static final Counter PIPELINE_MIGRATIONS_TOTAL = StreamPipesCollectorRegistry
-      .registerCounter("lb_pipeline_migrations_total",
-                       "Total number of pipeline migrations performed", "serviceId");
 
   public static final Gauge SERVICE_ADAPTER_COUNT = StreamPipesCollectorRegistry
       .registerGauge("lb_service_adapter_count", "Number of adapters in each extension service",
@@ -51,20 +42,6 @@ public class LoadBalancerMetrics {
   public void reportMetrics(String serviceId, int serviceAdapterCount, int servicePipelineCount) {
     SERVICE_ADAPTER_COUNT.labels(serviceId).set(serviceAdapterCount);
     SERVICE_PIPELINE_COUNT.labels(serviceId).set(servicePipelineCount);
-  }
-
-  /**
-   * Report pipeline separation event (increment counter)
-   */
-  public void reportPipelineSeparation(String serviceId) {
-    PIPELINE_SEPARATIONS_TOTAL.labels(serviceId).inc();
-  }
-
-  /**
-   * Report pipeline migration event (increment counter)
-   */
-  public void reportPipelineMigration(String serviceId) {
-    PIPELINE_MIGRATIONS_TOTAL.labels(serviceId).inc();
   }
 
   public void reportMigrationTime(double seconds) {

@@ -283,12 +283,13 @@ public class ResourceUnitStatsScanner {
     try {
       String serviceUrl = service.getServiceUrl();
       var adapterStorage =
-          StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
+          StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
       List<AdapterDescription> allAdapters = adapterStorage.findAll();
 
       return (int) allAdapters.stream()
           .filter(adapter -> adapter.isRunning() && serviceUrl != null
-              && serviceUrl.equals(adapter.getSelectedEndpointUrl()))
+              && adapter.getSelectedEndpointUrl() != null
+              && adapter.getSelectedEndpointUrl().startsWith(serviceUrl))
           .count();
     } catch (Exception e) {
       logger.warn("Failed to count adapters for service {}: {}", service.getSvcId(),

@@ -111,7 +111,7 @@ public class ResourceUnitMigration {
         adapter.setSelectedEndpointUrl(newEndpointUrl);
 
         // Update adapter in storage
-        StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage()
+        StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage()
             .updateElement(adapter);
 
         logger.debug("Successfully updated adapter {} in storage", adapter.getElementId());

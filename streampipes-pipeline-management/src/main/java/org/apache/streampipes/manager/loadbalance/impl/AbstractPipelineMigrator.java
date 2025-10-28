@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.manager.loadbalance.impl;
 
-import org.apache.streampipes.commons.prometheus.loadbalancer.LoadBalancerStats;
-import org.apache.streampipes.manager.loadbalance.LoadManager;
 import org.apache.streampipes.manager.loadbalance.PipelineMigrator;
 import org.apache.streampipes.manager.loadbalance.ResourceUnitMigration;
 import org.apache.streampipes.manager.loadbalance.ServiceLoadCalculator;
@@ -106,11 +104,6 @@ public abstract class AbstractPipelineMigrator implements PipelineMigrator {
       target.getKey(), target.getValue()
     );
 
-    // Report pipeline migration metrics
-    LoadBalancerStats stats = LoadManager.getLoadBalancerStats();
-    if (stats != null) {
-      stats.reportPipelineMigration(source.getKey().getSvcId());
-    }
   }
 
   /**

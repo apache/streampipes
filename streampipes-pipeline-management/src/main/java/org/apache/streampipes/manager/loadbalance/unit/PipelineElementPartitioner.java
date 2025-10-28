@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.manager.loadbalance.unit;
 
-import org.apache.streampipes.commons.prometheus.loadbalancer.LoadBalancerStats;
-import org.apache.streampipes.manager.loadbalance.LoadManager;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -136,13 +134,7 @@ public class PipelineElementPartitioner {
     List<DataProcessorInvocation> processors = pipeline.getSepas();
 
     PartitionResult result = partitionElements(sinks, processors, pipeline.getLabels());
-    
-    // Report pipeline separation metrics - only when pipeline is actually separated (>1 units)
-    LoadBalancerStats stats = LoadManager.getLoadBalancerStats();
-    if (stats != null) {
-      stats.reportPipelineSeparation(pipeline.getPipelineId());
-    }
-    
+
     return result;
   }
 

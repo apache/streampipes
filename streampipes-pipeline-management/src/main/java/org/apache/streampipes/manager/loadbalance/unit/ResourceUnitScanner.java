@@ -197,13 +197,14 @@ public class ResourceUnitScanner {
   private static List<LoadBalanceResourceUnit<AdapterDescription>> scanAndCreateAdapterUnits(SpServiceRegistration service) {
 
     String serviceUrl = service.getServiceUrl();
-    var adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
+    var adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
     List<AdapterDescription> allAdapters = adapterStorage.findAll();
 
     // Find adapters running on this service
     List<AdapterDescription> serviceAdapters =
         allAdapters.stream().filter(adapter -> adapter.isRunning() && serviceUrl != null
-            && serviceUrl.equals(adapter.getSelectedEndpointUrl())).toList();
+            && adapter.getSelectedEndpointUrl() != null
+            && adapter.getSelectedEndpointUrl().startsWith(serviceUrl)).toList();
 
     logger.debug("Found {} adapters running on service {}", serviceAdapters.size(),
                  service.getSvcId());
@@ -232,13 +233,14 @@ public class ResourceUnitScanner {
   private static List<PipelineElementPartitioner.AdapterResourceUnitWithServices> scanAndCreateAdapter(SpServiceRegistration service) {
 
     String serviceUrl = service.getServiceUrl();
-    var adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
+    var adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
     List<AdapterDescription> allAdapters = adapterStorage.findAll();
 
     // Find adapters running on this service
     List<AdapterDescription> serviceAdapters =
         allAdapters.stream().filter(adapter -> adapter.isRunning() && serviceUrl != null
-            && serviceUrl.equals(adapter.getSelectedEndpointUrl())).toList();
+            && adapter.getSelectedEndpointUrl() != null
+            && adapter.getSelectedEndpointUrl().startsWith(serviceUrl)).toList();
 
     logger.debug("Found {} adapters running on service {}", serviceAdapters.size(),
                  service.getSvcId());
