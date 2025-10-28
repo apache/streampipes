@@ -288,8 +288,7 @@ public class ResourceUnitStatsScanner {
 
       return (int) allAdapters.stream()
           .filter(adapter -> adapter.isRunning() && serviceUrl != null
-              && adapter.getSelectedEndpointUrl() != null
-              && adapter.getSelectedEndpointUrl().startsWith(serviceUrl))
+              && serviceUrl.equals(adapter.getSelectedEndpointUrl()))
           .count();
     } catch (Exception e) {
       logger.warn("Failed to count adapters for service {}: {}", service.getSvcId(),

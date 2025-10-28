@@ -117,14 +117,8 @@ public class PipelineElementPartitioner {
     
     // Report pipeline separation metrics - only when pipeline is actually separated (>1 units)
     LoadBalancerStats stats = LoadManager.getLoadBalancerStats();
-    if (stats != null && result.getResourceUnits().size() > 1) {
-      // Report separation for each unique service that will handle the partitioned units
-      result.getResourceUnits().stream()
-          .filter(ResourceUnitWithServices::hasCompatibleServices)
-          .flatMap(unit -> unit.getCompatibleServices().stream())
-          .map(SpServiceRegistration::getSvcId)
-          .distinct()
-          .forEach(stats::reportPipelineSeparation);
+    if (stats != null) {
+      stats.reportPipelineSeparation(pipeline.getPipelineId());
     }
     
     return result;

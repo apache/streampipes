@@ -76,12 +76,6 @@ public class ResourceUnitMigration {
       logger.info("Successfully migrated pipeline resource unit {} to service {}",
                   resourceUnit.getId(), targetService.getSvcId());
 
-      // Report pipeline migration metrics for health recovery
-      LoadBalancerStats stats = LoadManager.getLoadBalancerStats();
-      if (stats != null) {
-        stats.reportPipelineMigration(sourceService.getSvcId());
-      }
-
     } catch (Exception e) {
       logger.error("Failed to migrate pipeline resource unit {} to service {}: {}",
                    resourceUnit.getId(), targetService.getSvcId(), e.getMessage(), e);
@@ -126,12 +120,6 @@ public class ResourceUnitMigration {
 
       logger.info("Successfully migrated adapter resource unit {} to service {}",
                   resourceUnit.getId(), targetService.getSvcId());
-
-      // Report pipeline migration metrics for adapter health recovery
-      LoadBalancerStats stats = LoadManager.getLoadBalancerStats();
-      if (stats != null) {
-        stats.reportPipelineMigration(sourceService.getSvcId());
-      }
 
     } catch (Exception e) {
       logger.error("Failed to migrate adapter resource unit {} to service {}: {}",
