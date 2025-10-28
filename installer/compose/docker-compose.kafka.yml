@@ -121,7 +121,6 @@ services:
 
 volumes:
   backend:
-  connect:
   couchdb:
   kafka3:
   influxdb:

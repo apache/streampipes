@@ -101,7 +101,6 @@ services:
 
 volumes:
   backend:
-  connect:
   couchdb:
   influxdb:
   influxdb2:
