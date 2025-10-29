@@ -28,7 +28,6 @@ services:
     image: "${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}"
     environment:
       - SP_PRIORITIZED_PROTOCOL=kafka
-      - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-iiot:8090
     depends_on:
       - couchdb
     volumes:
@@ -42,6 +41,8 @@ services:
     image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
     ports:
       - "80:8088"
+    environment:
+      - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-iiot:8090
     depends_on:
       - couchdb
       - backend
