@@ -16,36 +16,176 @@
   ~
   -->
 
-<div style="padding-top: 0" fxFlex="100" fxLayout="column">
-    @for (item of menu; track item.title) {
-        @if (item.visible) {
-            <div
-                style="min-width: 0; padding: 5px 0"
-                [ngClass]="
-                    item.link === activePage
-                        ? 'sp-navbar-item-selected'
-                        : 'sp-navbar-item'
-                "
+<div class="menubar-root" [class.collapsed]="isCollapsed()" fxLayout="column">
+    <!-- Header / brand -->
+    <div
+        class="menubar-header"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+    >
+        <div class="brand" [class.hidden]="isCollapsed()">
+            <img alt="logo" src="assets/img/sp/logo-navigation.png" />
+        </div>
+
+        <button
+            type="button"
+            class="collapse-btn"
+            (click)="toggleMenubar()"
+            [attr.aria-label]="isCollapsed() ? 'Expand menu' : 'Collapse menu'"
+            [title]="isCollapsed() ? 'Expand' : 'Collapse'"
+        >
+            <mat-icon class="collapse-icon" [class.rotated]="isCollapsed()"
+                >chevron_left</mat-icon
             >
-                <button
-                    mat-icon-button
-                    class="button-margin-iconbar iconbar-size"
-                    (click)="go(item.link)"
-                    matTooltip="{{ item.title }}"
-                    matTooltipPosition="right"
-                >
-                    <mat-icon
-                        [ngClass]="
-                            item.link === activePage
-                                ? 'sp-navbar-icon-selected'
-                                : 'sp-navbar-icon'
+        </button>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="menubar-scroll" fxFlex fxLayout="column">
+        <!-- Top items (no group) -->
+        <div class="top-items" role="list">
+            @for (item of topItems; track item.title) {
+                @if (item.visible !== false) {
+                    <button
+                        type="button"
+                        role="listitem"
+                        class="menu-item"
+                        [class.menu-item-selected]="item.link === activePage"
+                        (click)="go(item.link)"
+                        [title]="isCollapsed() ? item.title : null"
+                        [attr.aria-current]="
+                            item.link === activePage ? 'page' : null
                         "
-                        [attr.data-cy]="'navigation-icon-' + item.link"
                     >
-                        {{ item.icon }}
-                    </mat-icon>
-                </button>
-            </div>
-        }
-    }
+                        <mat-icon class="item-icon">{{ item.icon }}</mat-icon>
+                        <span
+                            class="item-title text-ellipsis"
+                            [class.hidden]="isCollapsed()"
+                            >{{ item.title }}</span
+                        >
+                    </button>
+                }
+            }
+        </div>
+
+        <!-- Grouped sections -->
+        <div class="groups">
+            @for (group of menuGroups; track group.title) {
+                <section class="menu-group">
+                    <!-- Group header -->
+                    <button
+                        type="button"
+                        [class.hidden]="isCollapsed()"
+                        class="menu-group-title"
+                        (click)="toggleGroup(group)"
+                        [attr.aria-expanded]="!group.collapsed"
+                        [title]="isCollapsed() ? group.title : null"
+                    >
+                        <span
+                            class="group-title-text text-ellipsis"
+                            [class.hidden]="isCollapsed()"
+                            >{{ group.title }}</span
+                        >
+                        <mat-icon
+                            class="chevron"
+                            [class.rotate]="!group.collapsed"
+                            [class.hidden]="isCollapsed()"
+                            >expand_more</mat-icon
+                        >
+                    </button>
+
+                    <!-- Group items (accordion) -->
+                    <div
+                        class="menu-group-items"
+                        [style.maxHeight]="
+                            group.collapsed && !isCollapsed() ? '0px' : '500px'
+                        "
+                        [class.instant]="isCollapsed()"
+                        role="list"
+                    >
+                        @for (item of group.items; track item.title) {
+                            @if (item.visible !== false) {
+                                <button
+                                    type="button"
+                                    role="listitem"
+                                    class="menu-item"
+                                    [class.menu-item-selected]="
+                                        item.link === activePage
+                                    "
+                                    (click)="go(item.link)"
+                                    [title]="isCollapsed() ? item.title : null"
+                                    [attr.aria-current]="
+                                        item.link === activePage ? 'page' : ''
+                                    "
+                                >
+                                    <mat-icon class="item-icon">{{
+                                        item.icon
+                                    }}</mat-icon>
+                                    <span
+                                        class="item-title text-ellipsis"
+                                        [class.hidden]="isCollapsed()"
+                                        >{{ item.title }}</span
+                                    >
+                                </button>
+                            }
+                        }
+                    </div>
+                </section>
+                @if (isCollapsed()) {
+                    <mat-divider></mat-divider>
+                }
+            }
+        </div>
+    </div>
 </div>
+
+<!--  <div-->
+<!--      class="md-toolbar-tools"-->
+<!--      style="height: 40px; max-height: 40px"-->
+<!--      fxFlex-->
+<!--      fxLayout="row"-->
+<!--      fxLayoutAlign="start center"-->
+<!--  >-->
+<!--    <div-->
+<!--        style="-->
+
+<!--                        border-radius: 0px;-->
+<!--                        margin-right: 15px;-->
+<!--                        position: relative;-->
+<!--                        left: 20px;-->
+<!--                    "-->
+<!--    >-->
+<!--      <img-->
+<!--          alt="icon"-->
+<!--          src="assets/img/sp/logo.png"-->
+<!--          style="max-height: 35px; max-width: 250px"-->
+<!--      />-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div fxFlex="100" fxLayout="column" class="menu-bar">-->
+<!--    @for (item of menu; track item.title) {-->
+<!--      @if (item.visible) {-->
+<!--        <div-->
+<!--            style="min-width: 0; padding: 5px 10px"-->
+<!--            fxLayoutAlign="start center"-->
+<!--            fxLayoutGap="10px"-->
+<!--            (click)="go(item.link)"-->
+<!--            [ngClass]="-->
+<!--                    item.link === activePage-->
+<!--                        ? 'iconbar-item iconbar-item-selected'-->
+<!--                        : 'iconbar-item'-->
+<!--                "-->
+<!--        >-->
+
+<!--            <mat-icon-->
+
+<!--                [attr.data-cy]="'navigation-icon-' + item.link"-->
+<!--            >-->
+<!--              {{ item.icon }}-->
+<!--            </mat-icon>-->
+<!--            <span>{{ item.title }}</span>-->
+<!--        </div>-->
+<!--      }-->
+<!--    }-->
+<!--  </div>-->

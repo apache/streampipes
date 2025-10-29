@@ -1,0 +1,12 @@
+- id: top
+  title: top
+  collapsed: false
+- id: analytics
+  title: Analytics
+  collapsed: false
+- id: visualization
+  title: Visualization
+  collapsed: false
+- id: management
+  title: Management
+  collapsed: true

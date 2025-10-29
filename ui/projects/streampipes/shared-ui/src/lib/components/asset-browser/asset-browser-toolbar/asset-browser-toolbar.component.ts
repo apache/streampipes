@@ -19,29 +19,87 @@
 import {
     Component,
     EventEmitter,
+    inject,
     Input,
+    OnInit,
     Output,
     ViewChild,
 } from '@angular/core';
 import { AssetBrowserData } from '../asset-browser.model';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { CurrentUserService } from '../../../services/current-user.service';
+import { SpAssetBrowserService } from '../asset-browser.service';
+import { SpAsset } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-asset-browser-toolbar',
     templateUrl: 'asset-browser-toolbar.component.html',
     standalone: false,
 })
-export class AssetBrowserToolbarComponent {
+export class AssetBrowserToolbarComponent implements OnInit {
+    private currentUserService = inject(CurrentUserService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+    private translateService = inject(TranslateService);
+
     @Input()
-    expanded: boolean;
+    allResourcesAlias = this.translateService.instant('Resources');
+
+    @Input()
+    browserWidth = 20;
+
+    @Input()
+    filteredAssetLinkType: string;
+
+    @Input()
+    resourceCount = 0;
+
+    @Input()
+    assetSelectionMode = false;
 
     @Output()
-    toggleExpanded = new EventEmitter<boolean>();
+    filterIdsEmitter: EventEmitter<Set<string>> = new EventEmitter<
+        Set<string>
+    >();
 
-    @Input()
+    @Output()
+    selectedAssetIdEmitter: EventEmitter<string> = new EventEmitter<string>();
+
     assetBrowserData: AssetBrowserData;
+    showAssetBrowser = false;
+
+    assetBrowserDataSub: Subscription;
 
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
+
+    ngOnInit() {
+        this.showAssetBrowser = this.currentUserService.hasAnyRole([
+            'PRIVILEGE_READ_ASSETS',
+            'PRIVILEGE_WRITE_ASSETS',
+        ]);
+        if (this.showAssetBrowser) {
+            this.assetBrowserDataSub =
+                this.assetBrowserService.assetData$.subscribe(assetData => {
+                    this.assetBrowserData = assetData;
+                    console.log(assetData);
+                });
+        }
+    }
+
+    applyAssetFilter(asset: SpAsset) {
+        const elementIds = new Set<string>();
+        if (asset.assetId !== '_root') {
+            this.assetBrowserService.collectElementIds(
+                asset,
+                this.filteredAssetLinkType,
+                elementIds,
+            );
+            this.filterIdsEmitter.emit(elementIds);
+        }
+        this.filterIdsEmitter.emit(elementIds);
+        this.selectedAssetIdEmitter.emit(asset.assetId);
+    }
 
     closeMenu(): void {
         this.menu.closeMenu();

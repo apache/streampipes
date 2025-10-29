@@ -27,6 +27,7 @@ spAssets:
     privileges: '[UserPrivilege.PRIVILEGE_READ_ASSETS, UserPrivilege.PRIVILEGE_WRITE_ASSETS]'
     pageNames: 'PageName.ASSETS'
     showStatusBox: false
+    category: 'management'
 spHome:
     streamPipesModule: True
     moduleName: 'HomeModule'
@@ -40,6 +41,7 @@ spHome:
     privileges: '[]'
     guard: 'canActivate: [ConfiguredCanActivateGuard], '
     showStatusBox: false
+    category: 'top'
 spConnect:
     componentImport: False
     moduleName: 'ConnectModule'
@@ -62,6 +64,7 @@ spConnect:
         dataFns: '[this.adapterService.getAdapters()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
+    category: 'management'
 spPipelines:
     componentImport: False
     moduleName: 'PipelinesModule'
@@ -84,6 +87,7 @@ spPipelines:
         dataFns: '[this.pipelineService.getPipelines()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_PIPELINE, UserPrivilege.PRIVILEGE_WRITE_PIPELINE]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_PIPELINE]'
+    category: 'analytics'
 spConfiguration:
     componentImport: False
     moduleName: 'ConfigurationModule'
@@ -98,20 +102,7 @@ spConfiguration:
     pageNames: 'PageName.SETTINGS'
     privileges: '[UserPrivilege.PRIVILEGE_WRITE_ASSETS, UserPrivilege.PRIVILEGE_WRITE_LABELS, UserPrivilege.PRIVILEGE_WRITE_FILES]'
     showStatusBox: false
-spAppOverview:
-    componentImport: False
-    moduleName: 'AppOverviewModule'
-    component: 'AppOverviewComponent'
-    componentPath: './app-overview/app-overview.component'
-    path: './app-overview/app-overview.module'
-    link: 'apps'
-    url: '/apps'
-    title: 'Apps'
-    description: 'The app overview lets you access additional plugins.'
-    icon: 'apps'
-    pageNames: 'PageName.APPS'
-    privileges: '[UserPrivilege.PRIVILEGE_READ_APPS, UserPrivilege.PRIVILEGE_WRITE_APPS]'
-    showStatusBox: false
+    category: 'management'
 spDashboard:
     componentImport: False
     moduleName: 'DashboardModule'
@@ -134,6 +125,7 @@ spDashboard:
         dataFns: '[this.dashboardService.getDashboards()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
+    category: 'visualization'
 spDataExplorer:
     componentImport: False
     moduleName: 'DataExplorerModule'
@@ -156,3 +148,4 @@ spDataExplorer:
         dataFns: '[this.chartService.getAllCharts()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
+    category: 'visualization'

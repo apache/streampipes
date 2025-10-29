@@ -192,6 +192,7 @@ import { AssetLinkConfigurationComponent } from './components/asset-link-configu
     ],
     exports: [
         AssetBrowserComponent,
+        AssetBrowserToolbarComponent,
         AssetLinkConfigurationComponent,
         ConfirmDialogComponent,
         DataDownloadDialogComponent,
