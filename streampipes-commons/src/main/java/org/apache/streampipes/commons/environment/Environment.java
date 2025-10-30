@@ -157,6 +157,15 @@ public interface Environment {
   StringEnvironmentVariable getTruststorePassword();
   StringEnvironmentVariable getTruststoreType();
   BooleanEnvironmentVariable getAllowSelfSignedCertificates();
+/**
+  StringEnvironmentVariable getMQTTKeystoreFilename();
+  StringEnvironmentVariable getMQTTKeystorePassword();
+  StringEnvironmentVariable getMQTTKeystoreType();
+  StringEnvironmentVariable getMQTTKeyPassword();
+  StringEnvironmentVariable getMQTTTruststoreFilename();
+  StringEnvironmentVariable getMQTTTruststorePassword();
+  StringEnvironmentVariable getMQTTTruststoreType();
+  BooleanEnvironmentVariable getMQTTAllowSelfSignedCertificates();*/
 
   IntEnvironmentVariable getPlc4xMaxWaitTimeMs();
   IntEnvironmentVariable getPlc4xMaxLeaseTimeMs();
