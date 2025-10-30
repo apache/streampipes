@@ -165,7 +165,7 @@ public enum SpRateLimiter {
       }
       return acquired;
     } finally {
-      currentQueueSize.updateAndGet(current -> Math.max(0, current - 1));
+      currentQueueSize.decrementAndGet();
     }
   }
 
