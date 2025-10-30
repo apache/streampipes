@@ -524,6 +524,8 @@ public class DefaultEnvironment implements Environment {
   @Override
   public DoubleEnvironmentVariable getMemoryWarningThreshold() {
     return new DoubleEnvironmentVariable(Envs.SP_MEMORY_WARNING_THRESHOLD);
+    }
+
   @Override
   public StringEnvironmentVariable getDatalakeSchedulerCron() {
     return new StringEnvironmentVariable(Envs.SP_DATALAKE_SCHEDULER_CRON);
