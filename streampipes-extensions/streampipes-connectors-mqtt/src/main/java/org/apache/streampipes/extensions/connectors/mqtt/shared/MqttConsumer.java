@@ -61,20 +61,19 @@ public class MqttConsumer implements Runnable {
     }
 
     public static TrustManager[] acceptAllCerts() {
-        // Accept all certificates - Trust Store necessary for self-signed certificates
-        // and certificates not in the Java trust store
+
         return new TrustManager[] {
                 new X509TrustManager() {
                     public X509Certificate[] getAcceptedIssuers() {
-                        return null; // Return null to accept all issuers
+                        return null;
                     }
 
                     public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        // Do nothing, accept all clients
+
                     }
 
                     public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        // Do nothing, accept all servers
+
                     }
                 }
         };
@@ -83,22 +82,16 @@ public class MqttConsumer implements Runnable {
     public static X509Certificate getServerCertificate(String host, int port)
             throws NoSuchAlgorithmException, IOException, CertificateException {
 
-        // Create a socket and initiate SSL handshake
         SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
         try (Socket socket = factory.createSocket(host, port)) {
-            // Start the SSL handshake to establish a secure connection
+
             ((SSLSocket) socket).startHandshake();
 
-            // Get the server's certificate chain
             SSLSession session = ((SSLSocket) socket).getSession();
             var certChain = session.getPeerCertificates();
 
-            // Return the first certificate in the chain (usually the server's certificate)
             return (X509Certificate) certChain[0];
         }
-        // } catch (KeyManagementException e) {
-        // throw new IOException("SSLContext initialization failed", e);
-        // }
 
     }
 
@@ -141,6 +134,7 @@ public class MqttConsumer implements Runnable {
         this.running = true;
         MQTT mqtt = new MQTT();
         LOG.info("TLS Enabled: " + mqttConfig.getTlsEnabled());
+        var env = Environments.getEnvironment();
 
         try {
             mqtt.setHost(mqttConfig.getUrl());
@@ -157,36 +151,42 @@ public class MqttConsumer implements Runnable {
                 LOG.info(mqtt.getHost().getHost());
                 var certs = getServerCertificate(mqtt.getHost().getHost(), 8883);// loadServerCert();
 
-                if (certs != null) {
-
-
-                    try {
-                        ks = loadServerKeyStore();
-                        tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                        tmf.init(ks);
-
-                    } catch (FileNotFoundException e) {
-                        LOG.error("FILE NOT FOUND" + e);
-                        ks = KeyStore.getInstance(KeyStore.getDefaultType());
-                        ks.load(null, null); // Create an empty KeyStore
-
-                              int index = 0;
-                        ks.setCertificateEntry("server_ca_" + index++, certs);
-
-                        tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                        tmf.init(ks);
-              
-                    }
-
-
+                if (env.getAllowSelfSignedCertificates().getValueOrDefault()) {
+                    TrustManager[] tm = acceptAllCerts();
+                    // Initialize SSLContext with the trust-all manager
                     SSLContext sslContext = SSLContext.getInstance("TLS");
-                    sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
-                    mqtt.setSslContext(sslContext);
+                    sslContext.init(null, tm, new java.security.SecureRandom());
+
                 } else {
-                    throw new RuntimeException("Failed to load server certificates for SSL.");
+
+                    if (certs != null) {
+
+                        try {
+                            ks = loadServerKeyStore();
+                            tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                            tmf.init(ks);
+
+                        } catch (FileNotFoundException e) {
+                            LOG.error("FILE NOT FOUND" + e);
+                            ks = KeyStore.getInstance(KeyStore.getDefaultType());
+                            ks.load(null, null); // Create an empty KeyStore
+
+                            int index = 0;
+                            ks.setCertificateEntry("server_ca_" + index++, certs);
+
+                            tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                            tmf.init(ks);
+
+                        }
+
+                        SSLContext sslContext = SSLContext.getInstance("TLS");
+                        sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
+                        mqtt.setSslContext(sslContext);
+                    } else {
+                        throw new RuntimeException("Failed to load server certificates for SSL.");
+                    }
                 }
             }
-
             BlockingConnection connection = mqtt.blockingConnection();
             connection.connect();
 
