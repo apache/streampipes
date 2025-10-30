@@ -29,8 +29,11 @@ import javax.net.ssl.*;
 
 import java.net.Socket;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.Certificate;
@@ -40,6 +43,8 @@ import java.util.regex.Pattern;
 import javax.net.ssl.*;
 import java.security.cert.X509Certificate;
 import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -104,7 +109,37 @@ public static X509Certificate getServerCertificate(String host, int port) throws
             //throw new IOException("SSLContext initialization failed", e);
        // }
 
+
+
     }
+    
+private KeyStore loadServerKeyStore() throws FileNotFoundException, KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+  //TODO use the variables
+
+    FileInputStream keystoreFile = new FileInputStream("/users/jacquelinehollig/cacerts.pfx");
+    KeyStore keystore = null;
+    
+    try {
+        keystore = KeyStore.getInstance("PKCS12");
+        keystore.load(keystoreFile, "changeit".toCharArray());
+    } catch (FileNotFoundException e) {
+        LOG.error("Keystore file not found: {}", keystoreFile);
+        throw e; // Propagate the exception after logging it
+    } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
+        LOG.error("Error loading keystore from file: {}", keystoreFile, e);
+        throw e; // Propagate other exceptions after logging
+    } finally {
+        try {
+            if (keystoreFile != null) {
+                keystoreFile.close();
+            }
+        } catch (IOException e) {
+            LOG.error("Error closing keystore file: {}", keystoreFile, e);
+        }
+    }
+
+    return keystore;
+}
     @Override
     public void run() {
         this.running = true;
@@ -121,12 +156,19 @@ public static X509Certificate getServerCertificate(String host, int port) throws
             }
 
             if (mqttConfig.getTlsEnabled()) {
+              KeyStore ks = null; 
 
                 var certs = getServerCertificate(mqtt.getHost().getHost(),8883);//loadServerCert();
 
-                if (certs != null) {
-                    KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+                  if (certs != null) {
+
+                  try{
+                  ks = loadServerKeyStore();
+                  }
+                  catch(FileNotFoundException e){
+                    ks = KeyStore.getInstance(KeyStore.getDefaultType());
                     ks.load(null, null); // Create an empty KeyStore
+                  }
                     int index = 0;
                     ks.setCertificateEntry("server_ca_" + index++, certs);
 
