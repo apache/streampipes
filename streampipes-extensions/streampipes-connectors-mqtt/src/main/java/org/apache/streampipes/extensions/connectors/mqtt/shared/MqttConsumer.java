@@ -68,44 +68,11 @@ public class MqttConsumer implements Runnable {
         this.maxElementsToReceive = maxElementsToReceive;
     }
 
-/**    private Certificate[] loadServerCert() {
-        String serverUrl = mqttConfig.getUrl();
-        LOG.info("Connecting to URL: " + serverUrl);
 
-        try {
-            URL url = new URL(serverUrl);
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.connect();
-
-            Certificate[] certificates = connection.getServerCertificates();
-            LOG.info("Certificates received: " + certificates.length);
-
-            if (certificates != null && certificates.length > 0) {
-                X509Certificate serverCert = (X509Certificate) certificates[0];
-                serverCert.checkValidity(); // Check if the certificate is valid
-                LOG.info("Server Certificate: " + serverCert);
-                return certificates;
-            } else {
-                LOG.error("No certificates received from the server.");
-            }
-
-            connection.disconnect();
-
-        } catch (Exception e) {
-            LOG.error("Error loading server certificate: " + e.getMessage());
-        }
-        return null;
-    }
-*/
-
-public static X509Certificate getServerCertificate(String host, int port) throws NoSuchAlgorithmException, IOException, CertificateException {
-
-  //TODO Trust Store necessary for selfsigned and certificates not in the java trusttore
-                //try {
-              // Create an SSL context with a TrustManager that does not perform any certificate validation
-            //SSLContext sslContext = SSLContext.getInstance("TLS");
-            //sslContext.init(null, new TrustManager[] { new X509TrustManager() {
-            /**    public X509Certificate[] getAcceptedIssuers() {
+public static TrustManager[] acceptAllCerts(){
+  //Accept all certificates Trust Store necessary for selfsigned and certificates not in the java trusttore
+  return new TrustManager[] { new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() {
                     return null;
                 }
 
@@ -114,7 +81,11 @@ public static X509Certificate getServerCertificate(String host, int port) throws
 
                 public void checkServerTrusted(X509Certificate[] certs, String authType) {
                 }
-            } }, new java.security.SecureRandom());*/
+            } };‚
+
+}
+
+public static X509Certificate getServerCertificate(String host, int port) throws NoSuchAlgorithmException, IOException, CertificateException {
 
         // Create a socket and initiate SSL handshake
         SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -150,25 +121,14 @@ public static X509Certificate getServerCertificate(String host, int port) throws
             }
 
             if (mqttConfig.getTlsEnabled()) {
-                LOG.info("TLS is enabled. Initializing SSL context.");
-                String regex = "^(ssl|mqtts?|tls):\\/\\/([^:\\/]+)(?::(\\d+))?$";
 
-                //Pattern pattern = Pattern.compile(regex);
-                //var matcher = pattern.matcher(mqttConfig.getUrl());
-                //LOG.info(mqttConfig.getUrl());
-                //LOG.info(matcher.group(0));
-                //LOG.info(matcher.group(1));
-                //LOG.info(matcher.group(2));
-
-                var certs = getServerCertificate("0.0.0.0",8883);//loadServerCert();
+                var certs = getServerCertificate(mqtt.getHost().getHost(),8883);//loadServerCert();
 
                 if (certs != null) {
                     KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
                     ks.load(null, null); // Create an empty KeyStore
                     int index = 0;
-                    //for (Certificate cert : certs) {
-                        ks.setCertificateEntry("server_ca_" + index++, certs);
-                   // }
+                    ks.setCertificateEntry("server_ca_" + index++, certs);
 
                     TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
                     tmf.init(ks);
