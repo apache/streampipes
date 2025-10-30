@@ -93,7 +93,7 @@ public enum SpMemoryManager {
   /**
    * Checks memory usage against configured thresholds and updates blocking state.
    */
-  private void checkMemoryThresholds() {;
+  private void checkMemoryThresholds() {
     double memoryUsageRatio = (double) getAllocatedMemory()
             /  env.getMemoryManagerDefaultInitialMemory().getValueOrDefault();
     
@@ -345,8 +345,8 @@ public enum SpMemoryManager {
      * @return The total available memory in MB
      */
     public double getTotalMemoryMB() {
-        return env.getMemoryManagerDefaultInitialMemory().getValueOrDefault() /
-                (double) env.getMemoryBytesToMb().getValueOrDefault();
+        return env.getMemoryManagerDefaultInitialMemory().getValueOrDefault()
+                / (double) env.getMemoryBytesToMb().getValueOrDefault();
     }
     
     public static void shutdown() {

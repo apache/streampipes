@@ -42,25 +42,25 @@ public class SpRateLimiterStats {
    */
   public void updateAllMetrics() {
     SpRateLimiterMetrics.updateCoreMetrics(queueSize, averageWaitTime);
-}
+  }
 
   public double getQueueSize() {
     return queueSize;
-}
+  }
 
   public void setQueueSize(double queueSize) {
     this.queueSize = queueSize;
-}
+  }
 
   public double getAverageWaitTime() {
     return averageWaitTime;
-}
+  }
 
   public void setAverageWaitTime(double averageWaitTime) {
     this.averageWaitTime = averageWaitTime;
-}
+  }
 
   public SpRateLimiterMetrics getMetrics() {
     return metrics;
-}
+  }
 }

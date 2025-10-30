@@ -63,7 +63,7 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
     } finally {
-        SpMemoryManager.INSTANCE.freeForMap(rawEvent);
+      SpMemoryManager.INSTANCE.freeForMap(rawEvent);
     }
   }
 

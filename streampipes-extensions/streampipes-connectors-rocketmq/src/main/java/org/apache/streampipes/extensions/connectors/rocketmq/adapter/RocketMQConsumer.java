@@ -48,12 +48,12 @@ public class RocketMQConsumer implements Runnable {
   public void run() {
     try {
       this.consumer = RocketMQUtils.createConsumer(brokerUrl, topic, consumerGroup, messageView -> {
-          try {
-              eventProcessor.onEvent(messageView.getBody().array());
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-          }
-          return ConsumeResult.SUCCESS;
+        try {
+          eventProcessor.onEvent(messageView.getBody().array());
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        }
+        return ConsumeResult.SUCCESS;
       });
     } catch (ClientException e) {
       e.printStackTrace();

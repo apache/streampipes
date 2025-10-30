@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.extensions.api.limiter;
 
-import com.sun.management.OperatingSystemMXBean;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.spratelimiter.SpRateLimiterStats;
 
 import com.google.common.util.concurrent.RateLimiter;
+import com.sun.management.OperatingSystemMXBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
