@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
-
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 
@@ -28,29 +28,16 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.*;
 
 import java.net.Socket;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.regex.Pattern;
 
-import javax.net.ssl.*;
-import java.security.cert.X509Certificate;
-import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.Socket;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-
 
 public class MqttConsumer implements Runnable {
 
@@ -73,24 +60,28 @@ public class MqttConsumer implements Runnable {
         this.maxElementsToReceive = maxElementsToReceive;
     }
 
+    public static TrustManager[] acceptAllCerts() {
+        // Accept all certificates - Trust Store necessary for self-signed certificates
+        // and certificates not in the Java trust store
+        return new TrustManager[] {
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null; // Return null to accept all issuers
+                    }
 
-public static TrustManager[] acceptAllCerts(){
-  //Accept all certificates Trust Store necessary for selfsigned and certificates not in the java trusttore
-  return new TrustManager[] { new X509TrustManager() {
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        // Do nothing, accept all clients
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        // Do nothing, accept all servers
+                    }
                 }
+        };
+    }
 
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            } };‚
-
-}
-
-public static X509Certificate getServerCertificate(String host, int port) throws NoSuchAlgorithmException, IOException, CertificateException {
+    public static X509Certificate getServerCertificate(String host, int port)
+            throws NoSuchAlgorithmException, IOException, CertificateException {
 
         // Create a socket and initiate SSL handshake
         SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -100,46 +91,51 @@ public static X509Certificate getServerCertificate(String host, int port) throws
 
             // Get the server's certificate chain
             SSLSession session = ((SSLSocket) socket).getSession();
-           var certChain = session.getPeerCertificates();
+            var certChain = session.getPeerCertificates();
 
             // Return the first certificate in the chain (usually the server's certificate)
             return (X509Certificate) certChain[0];
         }
-               // } catch (KeyManagementException e) {
-            //throw new IOException("SSLContext initialization failed", e);
-       // }
-
-
+        // } catch (KeyManagementException e) {
+        // throw new IOException("SSLContext initialization failed", e);
+        // }
 
     }
-    
-private KeyStore loadServerKeyStore() throws FileNotFoundException, KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-  //TODO use the variables
 
-    FileInputStream keystoreFile = new FileInputStream("/users/jacquelinehollig/cacerts.pfx");
-    KeyStore keystore = null;
-    
-    try {
-        keystore = KeyStore.getInstance("PKCS12");
-        keystore.load(keystoreFile, "changeit".toCharArray());
-    } catch (FileNotFoundException e) {
-        LOG.error("Keystore file not found: {}", keystoreFile);
-        throw e; // Propagate the exception after logging it
-    } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
-        LOG.error("Error loading keystore from file: {}", keystoreFile, e);
-        throw e; // Propagate other exceptions after logging
-    } finally {
+    private KeyStore loadServerKeyStore() throws FileNotFoundException, KeyStoreException, IOException,
+            NoSuchAlgorithmException, CertificateException {
+
+        var env = Environments.getEnvironment();
+
+        FileInputStream keystoreFile = new FileInputStream(env.getKeystoreFilename().getValueOrDefault());
+        KeyStore keystore = null;
+
+        LOG.info(env.getKeystoreType().getValueOrDefault());
+        LOG.info(env.getKeystoreFilename().getValueOrDefault());
+        LOG.info(env.getKeystorePassword().getValueOrDefault());
+
         try {
-            if (keystoreFile != null) {
-                keystoreFile.close();
+            keystore = KeyStore.getInstance(env.getKeystoreType().getValueOrDefault());
+            keystore.load(keystoreFile, env.getKeystorePassword().getValueOrDefault().toCharArray());
+        } catch (FileNotFoundException e) {
+            LOG.error("Keystore file not found: {}", keystoreFile);
+            throw e;
+        } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
+            LOG.error("Error loading keystore from file: {}", keystoreFile, e);
+            throw e;
+        } finally {
+            try {
+                if (keystoreFile != null) {
+                    keystoreFile.close();
+                }
+            } catch (IOException e) {
+                LOG.error("Error closing keystore file: {}", keystoreFile, e);
             }
-        } catch (IOException e) {
-            LOG.error("Error closing keystore file: {}", keystoreFile, e);
         }
+
+        return keystore;
     }
 
-    return keystore;
-}
     @Override
     public void run() {
         this.running = true;
@@ -156,24 +152,32 @@ private KeyStore loadServerKeyStore() throws FileNotFoundException, KeyStoreExce
             }
 
             if (mqttConfig.getTlsEnabled()) {
-              KeyStore ks = null; 
+                KeyStore ks = null;
+                TrustManagerFactory tmf = null;
+                LOG.info(mqtt.getHost().getHost());
+                var certs = getServerCertificate(mqtt.getHost().getHost(), 8883);// loadServerCert();
 
-                var certs = getServerCertificate(mqtt.getHost().getHost(),8883);//loadServerCert();
+                if (certs != null) {
 
-                  if (certs != null) {
 
-                  try{
-                  ks = loadServerKeyStore();
-                  }
-                  catch(FileNotFoundException e){
-                    ks = KeyStore.getInstance(KeyStore.getDefaultType());
-                    ks.load(null, null); // Create an empty KeyStore
-                  }
-                    int index = 0;
-                    ks.setCertificateEntry("server_ca_" + index++, certs);
+                    try {
+                        ks = loadServerKeyStore();
+                        tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                        tmf.init(ks);
 
-                    TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                    tmf.init(ks);
+                    } catch (FileNotFoundException e) {
+                        LOG.error("FILE NOT FOUND" + e);
+                        ks = KeyStore.getInstance(KeyStore.getDefaultType());
+                        ks.load(null, null); // Create an empty KeyStore
+
+                              int index = 0;
+                        ks.setCertificateEntry("server_ca_" + index++, certs);
+
+                        tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                        tmf.init(ks);
+              
+                    }
+
 
                     SSLContext sslContext = SSLContext.getInstance("TLS");
                     sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
