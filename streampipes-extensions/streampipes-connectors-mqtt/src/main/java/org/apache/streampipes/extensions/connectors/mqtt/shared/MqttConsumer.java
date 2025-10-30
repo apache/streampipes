@@ -98,115 +98,85 @@ public class MqttConsumer implements Runnable {
     private KeyStore loadServerKeyStore() throws FileNotFoundException, KeyStoreException, IOException,
             NoSuchAlgorithmException, CertificateException {
 
-        var env = Environments.getEnvironment();
+             var env = Environments.getEnvironment();
+        String keystoreFilename = env.getKeystoreFilename().getValueOrDefault();
+        String keystoreType = env.getKeystoreType().getValueOrDefault();
+        String keystorePassword = env.getKeystorePassword().getValueOrDefault();
 
-        FileInputStream keystoreFile = new FileInputStream(env.getKeystoreFilename().getValueOrDefault());
-        KeyStore keystore = null;
-
-        LOG.info(env.getKeystoreType().getValueOrDefault());
-        LOG.info(env.getKeystoreFilename().getValueOrDefault());
-        LOG.info(env.getKeystorePassword().getValueOrDefault());
-
-        try {
-            keystore = KeyStore.getInstance(env.getKeystoreType().getValueOrDefault());
-            keystore.load(keystoreFile, env.getKeystorePassword().getValueOrDefault().toCharArray());
-        } catch (FileNotFoundException e) {
-            LOG.error("Keystore file not found: {}", keystoreFile);
-            throw e;
+        try (FileInputStream keystoreFile = new FileInputStream(keystoreFilename)) {
+            KeyStore keystore = KeyStore.getInstance(keystoreType);
+            keystore.load(keystoreFile, keystorePassword.toCharArray());
+            return keystore;
         } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
-            LOG.error("Error loading keystore from file: {}", keystoreFile, e);
+            LOG.error("Error loading keystore from file: {}", keystoreFilename, e);
             throw e;
-        } finally {
-            try {
-                if (keystoreFile != null) {
-                    keystoreFile.close();
-                }
-            } catch (IOException e) {
-                LOG.error("Error closing keystore file: {}", keystoreFile, e);
-            }
         }
-
-        return keystore;
     }
 
-    @Override
+       @Override
     public void run() {
         this.running = true;
-        MQTT mqtt = new MQTT();
-        LOG.info("TLS Enabled: " + mqttConfig.getTlsEnabled());
-        var env = Environments.getEnvironment();
-
         try {
-            mqtt.setHost(mqttConfig.getUrl());
-            mqtt.setConnectAttemptsMax(1);
-
-            if (mqttConfig.getAuthenticated()) {
-                mqtt.setUserName(mqttConfig.getUsername());
-                mqtt.setPassword(mqttConfig.getPassword());
-            }
-
-            if (mqttConfig.getTlsEnabled()) {
-                KeyStore ks = null;
-                TrustManagerFactory tmf = null;
-                LOG.info(mqtt.getHost().getHost());
-                var certs = getServerCertificate(mqtt.getHost().getHost(), 8883);// loadServerCert();
-
-                if (env.getAllowSelfSignedCertificates().getValueOrDefault()) {
-                    TrustManager[] tm = acceptAllCerts();
-                    // Initialize SSLContext with the trust-all manager
-                    SSLContext sslContext = SSLContext.getInstance("TLS");
-                    sslContext.init(null, tm, new java.security.SecureRandom());
-
-                } else {
-
-                    if (certs != null) {
-
-                        try {
-                            ks = loadServerKeyStore();
-                            tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                            tmf.init(ks);
-
-                        } catch (FileNotFoundException e) {
-                            LOG.error("FILE NOT FOUND" + e);
-                            ks = KeyStore.getInstance(KeyStore.getDefaultType());
-                            ks.load(null, null); // Create an empty KeyStore
-
-                            int index = 0;
-                            ks.setCertificateEntry("server_ca_" + index++, certs);
-
-                            tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                            tmf.init(ks);
-
-                        }
-
-                        SSLContext sslContext = SSLContext.getInstance("TLS");
-                        sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
-                        mqtt.setSslContext(sslContext);
-                    } else {
-                        throw new RuntimeException("Failed to load server certificates for SSL.");
-                    }
-                }
-            }
+            MQTT mqtt = setupMqttClient();
             BlockingConnection connection = mqtt.blockingConnection();
             connection.connect();
-
-            Topic[] topics = { new Topic(mqttConfig.getTopic(), QoS.AT_LEAST_ONCE) };
-            connection.subscribe(topics);
-
-            while (running && (maxElementsToReceive == -1 || messageCount < maxElementsToReceive)) {
-                Message message = connection.receive();
-                byte[] payload = message.getPayload();
-                consumer.onEvent(payload);
-                message.ack();
-                messageCount++;
-            }
-
+            subscribeToTopic(connection);
+            processMessages(connection);
             connection.disconnect();
-
         } catch (Exception e) {
-            LOG.error("Error when receiving data from MQTT: " + e.getMessage());
-            throw new RuntimeException("Error in MQTT consumer", e);
+            LOG.error("Error in MQTT consumer: ", e);
         }
+    }
+
+        private void processMessages(BlockingConnection connection) throws Exception {
+        while (running && (maxElementsToReceive == -1 || messageCount < maxElementsToReceive)) {
+            Message message = connection.receive();
+            byte[] payload = message.getPayload();
+            consumer.onEvent(payload);
+            message.ack();
+            messageCount++;
+        }
+    }
+
+
+
+    private MQTT setupMqttClient() throws Exception {
+        MQTT mqtt = new MQTT();
+        mqtt.setHost(mqttConfig.getUrl());
+        mqtt.setConnectAttemptsMax(1);
+
+        if (mqttConfig.getAuthenticated()) {
+            mqtt.setUserName(mqttConfig.getUsername());
+            mqtt.setPassword(mqttConfig.getPassword());
+        }
+
+        if (mqttConfig.getTlsEnabled()) {
+            configureTls(mqtt);
+        }
+
+        return mqtt;
+    }
+
+        private void configureTls(MQTT mqtt) throws Exception {
+        LOG.info("Configuring TLS for MQTT connection...");
+        var env = Environments.getEnvironment();
+        KeyStore keyStore = loadServerKeyStore();
+        TrustManagerFactory trustManagerFactory = createTrustManagerFactory(keyStore);
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, trustManagerFactory.getTrustManagers(), new SecureRandom());
+        mqtt.setSslContext(sslContext);
+    }
+
+      private TrustManagerFactory createTrustManagerFactory(KeyStore keystore) throws Exception {
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        trustManagerFactory.init(keystore);
+        return trustManagerFactory;
+    }
+
+        private void subscribeToTopic(BlockingConnection connection) throws Exception {
+        Topic[] topics = {new Topic(mqttConfig.getTopic(), QoS.AT_LEAST_ONCE)};
+        connection.subscribe(topics);
     }
 
     public void close() {
