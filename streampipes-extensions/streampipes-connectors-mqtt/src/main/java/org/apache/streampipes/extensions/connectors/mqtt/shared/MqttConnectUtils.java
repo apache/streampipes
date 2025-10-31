@@ -33,9 +33,13 @@ public class MqttConnectUtils {
   public static final String ACCESS_MODE = "access-mode";
   public static final String ANONYMOUS_ACCESS = "anonymous-alternative";
   public static final String USERNAME_ACCESS = "username-alternative";
+  public static final String CLIENT_CERT_ACCESS = "client-cert-alternative";
   public static final String USERNAME_GROUP = "username-group";
+  public static final String CLIENT_CERT_GROUP = "client-cert-group";
   public static final String USERNAME = "username";
   public static final String PASSWORD = "password";
+  public static final String CLIENTCERT = "clientcert";
+  public static final String CLIENTKEY = "clientkey";
   public static final String BROKER_URL = "broker_url";
   public static final String TOPIC = "topic";
   public static final String TLS = "tls";
@@ -67,6 +71,22 @@ public class MqttConnectUtils {
         StaticProperties.group(Labels.withId(USERNAME_GROUP),
             StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
             StaticProperties.secretValue(Labels.withId(PASSWORD))));
+
+  }
+
+    public static StaticPropertyAlternative getAlternativesThree() {
+      var group = StaticProperties.group(
+            Labels.withId(CLIENT_CERT_GROUP),
+            StaticProperties.secretValue(Labels.withId(CLIENTCERT)),
+            StaticProperties.stringFreeTextProperty(Labels.withId(CLIENTKEY), true, false));
+    group.setHorizontalRendering(false);
+    return Alternatives.from(Labels.withId(CLIENT_CERT_ACCESS), group);
+        //StaticProperties.group(Labels.withId(CLIENT_CERT_GROUP),
+            //StaticProperties.stringFreeTextProperty(Labels.withId(CLIENTCERT)),
+            //StaticProperties.secretValue(Labels.withId(CLIENTKEY))));
+         //    StaticProperties.secretValue(Labels.withId(CLIENTCERT)),
+          //  StaticProperties.stringFreeTextProperty(Labels.withId(CLIENTKEY), true, false)));
+
 
   }
 
