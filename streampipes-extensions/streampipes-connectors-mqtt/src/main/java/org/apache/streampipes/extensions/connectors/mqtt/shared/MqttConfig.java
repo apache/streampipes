@@ -26,11 +26,10 @@ public class MqttConfig {
   private String username;
   private String password;
 
-  //private String caCertificatePath;   
-  //private String clientCertificatePath; 
-  //private String clientKeyPath;       
+  private String clientCertificate; 
+  private String clientKey;       
   private Boolean tls = false;          
-  //private String tlsVersion;    
+  
 
 
   public MqttConfig(String url, String topic) {
@@ -47,15 +46,13 @@ public class MqttConfig {
     this.password = password;
   }
 
-  public MqttConfig(String url, String topic, Boolean tlsEnabled, String caCertificatePath, String clientCertificatePath, String clientKeyPath, String tlsVersion) {
+  public MqttConfig(String url, String topic, Boolean tlsEnabled, String clientCertificate, String clientKey) {
     this.authenticated = false;
     this.url = url;
     this.topic = topic;
     this.tls = tlsEnabled;
-    //this.caCertificatePath = caCertificatePath;
-    //this.clientCertificatePath = clientCertificatePath;
-    //this.clientKeyPath = clientKeyPath;
-    //this.tlsVersion = tlsVersion;
+    this.clientCertificate = clientCertificate;
+    this.clientKey = clientKey;
 }
 
 public MqttConfig(String url, String topic, String username, String password, Boolean tlsEnabled) {
@@ -79,37 +76,22 @@ public MqttConfig(String url, String topic, Boolean tlsEnabled) {
     this.tls = tlsEnabled;
   }
 
-  /**public String getCaCertificatePath() {
-    return caCertificatePath;
-  }
-
-  public void setCaCertificatePath(String caCertificatePath) {
-    this.caCertificatePath = caCertificatePath;
-  }
 
   public String getClientCertificatePath() {
-    return clientCertificatePath;
+    return clientCertificate;
   }
 
-  public void setClientCertificatePath(String clientCertificatePath) {
-    this.clientCertificatePath = clientCertificatePath;
+  public void setClientCertificatePath(String clientCertificate) {
+    this.clientCertificate = clientCertificate;
   }
 
   public String getClientKeyPath() {
-    return clientKeyPath;
+    return clientKey;
   }
 
-  public void setClientKeyPath(String clientKeyPath) {
-    this.clientKeyPath = clientKeyPath;
+  public void setClientKey(String clientKey) {
+    this.clientKey= clientKey;
   }
-
-  public String getTlsVersion() {
-    return tlsVersion;
-  }
-
-  public void setTlsVersion(String tlsVersion) {
-    this.tlsVersion = tlsVersion;
-  }*/
 
   public Boolean getAuthenticated() {
     return authenticated;

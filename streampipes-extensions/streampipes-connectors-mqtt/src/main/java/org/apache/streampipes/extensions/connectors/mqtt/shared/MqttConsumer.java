@@ -27,16 +27,25 @@ import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
+import java.security.KeyFactory;
+import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MqttConsumer implements Runnable {
@@ -149,6 +158,7 @@ public class MqttConsumer implements Runnable {
             mqtt.setUserName(mqttConfig.getUsername());
             mqtt.setPassword(mqttConfig.getPassword());
         }
+       
 
         if (mqttConfig.getTlsEnabled()) {
             configureTls(mqtt);
@@ -159,14 +169,122 @@ public class MqttConsumer implements Runnable {
 
         private void configureTls(MQTT mqtt) throws Exception {
         LOG.info("Configuring TLS for MQTT connection...");
-        var env = Environments.getEnvironment();
         KeyStore keyStore = loadServerKeyStore();
         TrustManagerFactory trustManagerFactory = createTrustManagerFactory(keyStore);
+        // === NEW CODE: Add client certificate and key (for two-way auth) ===
+        KeyManager[] keyManagers = null;
+        if (mqttConfig.getClientCertificatePath() != null && mqttConfig.getClientKeyPath() != null) {
+            LOG.info("Loading client certificate for mutual TLS authentication...");
+            keyManagers = loadClientKeyManagers(
+                    mqttConfig.getClientCertificatePath(),
+                    mqttConfig.getClientKeyPath()
+            );
+        }
 
         SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, trustManagerFactory.getTrustManagers(), new SecureRandom());
+        LOG.info("SSL CONTEYTSET");
+        sslContext.init(keyManagers, trustManagerFactory.getTrustManagers(), new SecureRandom());
         mqtt.setSslContext(sslContext);
     }
+
+    private KeyManager[] loadClientKeyManagers(String certPem, String keyPem) throws Exception {
+
+
+        X509Certificate certificate = parseCertificateFromPem(certPem);
+        PrivateKey privateKey = parsePrivateKeyFromPem(keyPem);
+
+        String password = ""; // no password for in-memory keystore
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(null, null);
+        keyStore.setKeyEntry("client", privateKey, password.toCharArray(), new java.security.cert.Certificate[]{certificate});
+
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, password.toCharArray());
+        return kmf.getKeyManagers();
+    }
+
+    private X509Certificate parseCertificateFromPem(String pem) throws Exception {
+
+    LOG.info("CEET"+pem);
+    String normalized = pem
+            .replace("-----BEGIN CERTIFICATE-----", "")
+            .replace("-----END CERTIFICATE-----", "")
+            .replaceAll("\\s+", "");
+    byte[] decoded = java.util.Base64.getDecoder().decode(normalized);
+    java.security.cert.CertificateFactory cf = java.security.cert.CertificateFactory.getInstance("X.509");
+    return (X509Certificate) cf.generateCertificate(new java.io.ByteArrayInputStream(decoded));
+}
+
+private PrivateKey parsePrivateKeyFromPem(String pem) throws Exception {
+    // Normalize to remove all escaped newlines and carriage returns
+    pem = pem.replace("\\n", "\n")
+             .replace("\\r", "")
+             .replace("\r", "")
+             .trim();
+
+    if (pem.contains("-----BEGIN RSA PRIVATE KEY-----")) {
+        return parsePkcs1PrivateKey(pem);
+   // } else if (pem.contains("-----BEGIN PRIVATE KEY-----")) {
+    //    return parsePkcs8PrivateKey(pem);
+    } else {
+        throw new IllegalArgumentException("Unsupported key format: missing BEGIN/END markers");
+    }
+}
+
+private PrivateKey parsePkcs1PrivateKey(String pem) throws Exception {
+    // Works even if PEM is a single long line
+    Pattern p = Pattern.compile(
+        "-----BEGIN RSA PRIVATE KEY-----([A-Za-z0-9+/=\\s]+)-----END RSA PRIVATE KEY-----"
+    );
+    Matcher m = p.matcher(pem.replaceAll("\\s+", ""));
+    if (!m.find()) {
+        // Fallback: try removing markers manually and strip spaces
+        pem = pem.replaceAll("-----BEGIN RSA PRIVATE KEY-----", "")
+                 .replaceAll("-----END RSA PRIVATE KEY-----", "")
+                 .replaceAll("[\\s\\r\\n]", "")
+                 .trim();
+    } else {
+        pem = m.group(1);
+    }
+
+    byte[] pkcs1Bytes = java.util.Base64.getMimeDecoder().decode(pem);
+    byte[] pkcs8Bytes = convertPkcs1ToPkcs8(pkcs1Bytes);
+
+    var keySpec = new java.security.spec.PKCS8EncodedKeySpec(pkcs8Bytes);
+    var kf = java.security.KeyFactory.getInstance("RSA");
+    return kf.generatePrivate(keySpec);
+}
+private byte[] convertPkcs1ToPkcs8(byte[] pkcs1Bytes) throws IOException {
+    // Wrap the PKCS#1 structure in a PKCS#8 header
+    final byte[] pkcs8Header = new byte[] {
+        0x30, (byte)0x82, // SEQUENCE, length (will be recalculated)
+        // placeholder bytes (we’ll patch them below)
+        0, 0, 
+        0x02, 0x01, 0x00, // INTEGER 0
+        0x30, 0x0d,       // SEQUENCE (AlgorithmIdentifier)
+        0x06, 0x09,       // OID (rsaEncryption)
+        0x2a, (byte)0x86, 0x48, (byte)0x86, (byte)0xf7, 0x0d, 0x01, 0x01, 0x01,
+        0x05, 0x00,       // NULL
+        0x04, (byte)0x82, // OCTET STRING, length (will be recalculated)
+        0, 0              // placeholder
+    };
+
+    int pkcs1Length = pkcs1Bytes.length;
+    int totalLength = pkcs8Header.length + pkcs1Length;
+
+    // Update the placeholder lengths
+    pkcs8Header[2] = (byte)((totalLength - 4) >> 8);
+    pkcs8Header[3] = (byte)(totalLength - 4);
+    pkcs8Header[pkcs8Header.length - 2] = (byte)(pkcs1Length >> 8);
+    pkcs8Header[pkcs8Header.length - 1] = (byte)(pkcs1Length);
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    out.write(pkcs8Header);
+    out.write(pkcs1Bytes);
+    return out.toByteArray();
+}
+
+
 
       private TrustManagerFactory createTrustManagerFactory(KeyStore keystore) throws Exception {
         TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
