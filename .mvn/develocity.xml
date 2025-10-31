@@ -41,7 +41,7 @@
     </local>
     <remote>
       <enabled>true</enabled>
-      <storeEnabled>#{isTrue(env['CI']) and isTrue(env['STREAMPIPES_DEVELOCITY_ACCESS_KEY'])}</storeEnabled>
+      <storeEnabled>#{isTrue(env['CI']) and isTrue(env['DEVELOCITY_ACCESS_KEY'])}</storeEnabled>
     </remote>
   </buildCache>
 </develocity>

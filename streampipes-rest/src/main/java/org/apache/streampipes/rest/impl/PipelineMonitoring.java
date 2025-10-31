@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
-import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
+import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;

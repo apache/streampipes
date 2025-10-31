@@ -72,6 +72,22 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
         .collect(Collectors.toList());
   }
 
+  @Override
+  public List<SpServiceRegistration> getService(boolean restrictToHealthy) {
+    List<SpServiceRegistration> activeServices = findServices(0);
+
+    return activeServices
+            .stream()
+            .filter(service -> !restrictToHealthy
+                    || service.getStatus() != SpServiceStatus.UNHEALTHY)
+            .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<SpServiceRegistration> findAll(){
+    return findServices(0);
+  }
+
   private String makeServiceUrl(SpServiceRegistration service) {
     return service.getServiceUrl();
   }

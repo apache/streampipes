@@ -51,7 +51,7 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
   }
 
   private void send(RawDataProcessor rawDataProcessor, byte[] event) {
-    rawDataProcessor.process(dataFormatDefinition.toMap(event), topic);
+    rawDataProcessor.process(dataFormatDefinition.toMap(event), event.length, topic);
   }
 
   @Override

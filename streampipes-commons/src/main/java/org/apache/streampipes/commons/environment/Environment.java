@@ -15,13 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment;
 
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
-import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
-import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
-import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.*;
 
 import java.util.List;
 
@@ -32,56 +29,79 @@ public interface Environment {
   // Service base configuration
 
   StringEnvironmentVariable getServiceHost();
+
   IntEnvironmentVariable getServicePort();
 
   StringEnvironmentVariable getSpCoreScheme();
 
   StringEnvironmentVariable getSpCoreHost();
+
   IntEnvironmentVariable getSpCorePort();
 
   // Time series storage env variables
 
   StringEnvironmentVariable getTsStorage();
+
   StringEnvironmentVariable getTsStorageProtocol();
+
   StringEnvironmentVariable getTsStorageHost();
+
   IntEnvironmentVariable getTsStoragePort();
+
   StringEnvironmentVariable getTsStorageToken();
+
   StringEnvironmentVariable getTsStorageOrg();
+
   StringEnvironmentVariable getTsStorageBucket();
 
   IntEnvironmentVariable getIotDbSessionPoolSize();
+
   BooleanEnvironmentVariable getIotDbSessionEnableCompression();
+
   StringEnvironmentVariable getIotDbUser();
+
   StringEnvironmentVariable getIotDbPassword();
 
   // CouchDB env variables
 
   StringEnvironmentVariable getCouchDbProtocol();
+
   StringEnvironmentVariable getCouchDbHost();
+
   IntEnvironmentVariable getCouchDbPort();
+
   StringEnvironmentVariable getCouchDbUsername();
+
   StringEnvironmentVariable getCouchDbPassword();
 
 
   // JWT & Authentication
 
   StringEnvironmentVariable getClientUser();
+
   StringEnvironmentVariable getClientSecret();
 
   StringEnvironmentVariable getJwtSecret();
+
   StringEnvironmentVariable getJwtPublicKeyLoc();
+
   StringEnvironmentVariable getJwtPrivateKeyLoc();
+
   StringEnvironmentVariable getJwtSigningMode();
 
   StringEnvironmentVariable getExtensionsAuthMode();
+
   StringEnvironmentVariable getEncryptionPasscode();
 
   BooleanEnvironmentVariable getOAuthEnabled();
+
   StringEnvironmentVariable getOAuthRedirectUri();
+
   List<OAuthConfiguration> getOAuthConfigurations();
 
   // Messaging
   StringEnvironmentVariable getKafkaRetentionTimeMs();
+
   StringEnvironmentVariable getPrioritizedProtocol();
 
 
@@ -107,7 +127,7 @@ public interface Environment {
 
   IntEnvironmentVariable getFlinkJobmanagerPort();
 
-  //prometheus
+  // prometheus
   StringEnvironmentVariable getPrometheusEndpointInclude();
 
   BooleanEnvironmentVariable getSetupPrometheusEndpoint();
@@ -143,30 +163,76 @@ public interface Environment {
   StringEnvironmentVariable getAllowedUploadFiletypes();
 
   StringEnvironmentVariable getOpcUaSecurityDir();
+
   StringEnvironmentVariable getOpcUaKeystoreFile();
+
   StringEnvironmentVariable getOpcUaKeystorePassword();
+
   StringEnvironmentVariable getOpcUaApplicationUri();
+
   StringEnvironmentVariable getOpcUaKeystoreType();
+
   StringEnvironmentVariable getOpcUaKeystoreAlias();
 
   StringEnvironmentVariable getKeystoreFilename();
+
   StringEnvironmentVariable getKeystorePassword();
+
   StringEnvironmentVariable getKeystoreType();
+
   StringEnvironmentVariable getKeyPassword();
+
   StringEnvironmentVariable getTruststoreFilename();
+
   StringEnvironmentVariable getTruststorePassword();
+
   StringEnvironmentVariable getTruststoreType();
+
   BooleanEnvironmentVariable getAllowSelfSignedCertificates();
   
   IntEnvironmentVariable getPlc4xMaxWaitTimeMs();
+
   IntEnvironmentVariable getPlc4xMaxLeaseTimeMs();
 
   BooleanEnvironmentVariable getFileLoggingEnabled();
+
   BooleanEnvironmentVariable getConsoleLoggingEnabled();
+
   StringEnvironmentVariable getFileLoggingPrefix();
+
   StringEnvironmentVariable getFileLoggingDir();
+
   StringEnvironmentVariable getFileLoggingPattern();
 
+  DoubleEnvironmentVariable getCpuResourceWeight();
+
+  DoubleEnvironmentVariable getMemoryResourceWeight();
+
+  DoubleEnvironmentVariable getDirMemoryResourceWeight();
+
+  DoubleEnvironmentVariable getBandwidthInResourceWeight();
+
+  DoubleEnvironmentVariable getBandwidthOutResourceWeight();
+
+  FloatEnvironmentVariable getThresholdMigratorPercentage();
+
+  FloatEnvironmentVariable getMinMigratorPercentage();
+
+  FloatEnvironmentVariable getOverloadedThresholdPercentage();
+
+  FloatEnvironmentVariable getHistoryResourcePercentage();
+
+  IntEnvironmentVariable getMsgRateDifferenceMigratorThreshold();
+
+  FloatEnvironmentVariable getLoadTargetStd();
+
+  StringEnvironmentVariable getSelector();
+
+  StringEnvironmentVariable getMigrator();
+
   StringEnvironmentVariable getRetentionLocalDir();
+
+  BooleanEnvironmentVariable getLoadManagerEnable();
+
   StringEnvironmentVariable getDatalakeSchedulerCron();
 }

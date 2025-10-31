@@ -32,7 +32,7 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of, zip } from 'rxjs';
 import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { EditorService } from './services/editor.service';
 import { JsplumbService } from './services/jsplumb.service';
 
@@ -108,9 +108,17 @@ export class EditorComponent implements OnInit {
 
     loadPipelineToModify(pipelineId: string) {
         const pipelineReq = this.pipelineService.getPipelineById(pipelineId);
+
         const canvasMetadataReq = this.pipelineCanvasMetadataService
             .getPipelineCanvasMetadata(pipelineId)
             .pipe(
+                map(response => {
+                    if (response === null) {
+                        this.handleCanvasMetadataResponse(undefined);
+                        return undefined;
+                    }
+                    return response;
+                }),
                 catchError(() => {
                     this.handleCanvasMetadataResponse(undefined);
                     return of(undefined);

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.health;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -24,7 +23,7 @@ import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
-import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
+import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 
@@ -45,10 +44,8 @@ public class AdapterHealthCheck implements Runnable {
   private final IAdapterStorage adapterStorage;
   private final AdapterMasterManagement adapterMasterManagement;
 
-  public AdapterHealthCheck(
-      IAdapterStorage adapterStorage,
-      AdapterMasterManagement adapterMasterManagement
-  ) {
+  public AdapterHealthCheck(IAdapterStorage adapterStorage,
+                            AdapterMasterManagement adapterMasterManagement) {
     this.adapterStorage = adapterStorage;
     this.adapterMasterManagement = adapterMasterManagement;
   }
@@ -59,10 +56,10 @@ public class AdapterHealthCheck implements Runnable {
   }
 
   /**
-   * In this method it is checked which adapters are currently running.
-   * Then it calls all workers to validate if the adapter instance is
-   * still running as expected. If the adapter is not running anymore a new worker instance is invoked.
-   * In addition, it publishes monitoring metrics for all running adapters (in line with
+   * In this method it is checked which adapters are currently running. Then it calls all workers to
+   * validate if the adapter instance is still running as expected. If the adapter is not running
+   * anymore a new worker instance is invoked. In addition, it publishes monitoring metrics for all
+   * running adapters (in line with
    * {@link org.apache.streampipes.manager.health.PipelineHealthCheck}).
    */
   public void checkAndRestoreAdapters() {
@@ -86,10 +83,9 @@ public class AdapterHealthCheck implements Runnable {
 
     try {
       if (!adapterInstancesSupposedToRun.isEmpty()) {
-        // Filter adapters so that only healthy and running adapters are updated in the metrics endpoint
-        var adaptersToMonitor = adapterInstancesSupposedToRun
-            .entrySet()
-            .stream()
+        // Filter adapters so that only healthy and running adapters are updated in the metrics
+        // endpoint
+        var adaptersToMonitor = adapterInstancesSupposedToRun.entrySet().stream()
             .filter((entry -> !allAdaptersToRecover.containsKey(entry.getKey())))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
@@ -112,24 +108,22 @@ public class AdapterHealthCheck implements Runnable {
   /**
    * Updates the monitoring metrics based on the descriptions of running adapters.
    *
-   * @param runningAdapterDescriptions A map containing the descriptions of running adapters, where the key is the
-   *                                   adapter's element ID and the value is the corresponding adapter description.
+   * @param runningAdapterDescriptions A map containing the descriptions of running adapters, where
+   *        the key is the adapter's element ID and the value is the corresponding adapter
+   *        description.
    */
   protected void updateMonitoringMetrics(Map<String, AdapterDescription> runningAdapterDescriptions) {
 
-    var adapterMetrics = AdapterMetricsManager.getInstance()
-                                              .getAdapterMetrics();
+    var adapterMetrics = AdapterMetricsManager.getInstance().getAdapterMetrics();
     runningAdapterDescriptions.values()
-                              .forEach(
-                                  adapterDescription -> updateTotalEventsPublished(
-                                      adapterMetrics,
-                                      adapterDescription.getElementId(),
-                                      adapterDescription.getName()
-                                  ));
+        .forEach(adapterDescription -> updateTotalEventsPublished(adapterMetrics,
+                                                                  adapterDescription.getElementId(),
+                                                                  adapterDescription.getName()));
     LOG.debug("Monitoring {} adapter instances", adapterMetrics.size());
   }
 
-  private void updateTotalEventsPublished(AdapterMetrics adapterMetrics, String adapterId, String adapterName) {
+  private void updateTotalEventsPublished(AdapterMetrics adapterMetrics, String adapterId,
+                                          String adapterName) {
 
     // Check if the adapter is already registered; if not, register it first.
     // This step is crucial, especially when the StreamPipes Core service is restarted,
@@ -139,107 +133,88 @@ public class AdapterHealthCheck implements Runnable {
       adapterMetrics.register(adapterId, adapterName);
     }
 
-    adapterMetrics.updateTotalEventsPublished(
-        adapterId,
-        adapterName,
-        ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(adapterId)
-                                      .getMessagesOut()
-                                      .getCounter()
-    );
+    adapterMetrics.updateTotalEventsPublished(adapterId, adapterName, ExtensionsLogProvider.INSTANCE
+        .getMetricInfosForResource(adapterId).getMessagesOut().getCounter());
   }
 
 
   /**
-   * Retrieves a map of all adapter instances that are supposed to be running according to the backend storage.
+   * Retrieves a map of all adapter instances that are supposed to be running according to the
+   * backend storage.
    * <p>
-   * This method queries the adapter storage to obtain information about all adapters
-   * and filters the running instances. The resulting map is keyed by the element ID
-   * of each running adapter, and the corresponding values are the respective
-   * {@link AdapterDescription} objects.
+   * This method queries the adapter storage to obtain information about all adapters and filters
+   * the running instances. The resulting map is keyed by the element ID of each running adapter,
+   * and the corresponding values are the respective {@link AdapterDescription} objects.
    *
-   * @return A map containing all adapter instances supposed to be running according to the backend storage.
-   * The keys are element IDs, and the values are the corresponding adapter descriptions.
+   * @return A map containing all adapter instances supposed to be running according to the backend
+   *         storage. The keys are element IDs, and the values are the corresponding adapter
+   *         descriptions.
    */
   public Map<String, AdapterDescription> getAllAdaptersSupposedToRun() {
     Map<String, AdapterDescription> result = new HashMap<>();
     List<AdapterDescription> allRunningInstancesAdapterDescription = this.adapterStorage.findAll();
-    allRunningInstancesAdapterDescription
-        .stream()
-        .filter(AdapterDescription::isRunning)
-        .forEach(adapterDescription ->
-                     result.put(
-                         adapterDescription.getElementId(),
-                         adapterDescription
-                     ));
+    allRunningInstancesAdapterDescription.stream().filter(AdapterDescription::isRunning)
+        .forEach(adapterDescription -> result.put(adapterDescription.getElementId(),
+                                                  adapterDescription));
 
     return result;
   }
 
-  public Map<String, List<AdapterDescription>> getAllWorkersWithAdapters(
-      Map<String, AdapterDescription> adapterInstancesSupposedToRun
-  ) {
+  public Map<String, List<AdapterDescription>> getAllWorkersWithAdapters(Map<String, AdapterDescription> adapterInstancesSupposedToRun) {
 
     Map<String, List<AdapterDescription>> groupByWorker = new HashMap<>();
-    adapterInstancesSupposedToRun.values()
-                                 .forEach(ad -> {
-                                   String selectedEndpointUrl = ad.getSelectedEndpointUrl();
-                                   if (selectedEndpointUrl != null) {
-                                     if (groupByWorker.containsKey(selectedEndpointUrl)) {
-                                       groupByWorker.get(selectedEndpointUrl)
-                                                    .add(ad);
-                                     } else {
-                                       List<AdapterDescription> adapterDescriptionsPerWorker = new ArrayList<>();
-                                       adapterDescriptionsPerWorker.add(ad);
-                                       groupByWorker.put(selectedEndpointUrl, adapterDescriptionsPerWorker);
-                                     }
-                                   }
-                                 });
+    adapterInstancesSupposedToRun.values().forEach(ad -> {
+      String selectedEndpointUrl = ad.getSelectedEndpointUrl();
+      if (selectedEndpointUrl != null) {
+        if (groupByWorker.containsKey(selectedEndpointUrl)) {
+          groupByWorker.get(selectedEndpointUrl).add(ad);
+        } else {
+          List<AdapterDescription> adapterDescriptionsPerWorker = new ArrayList<>();
+          adapterDescriptionsPerWorker.add(ad);
+          groupByWorker.put(selectedEndpointUrl, adapterDescriptionsPerWorker);
+        }
+      }
+    });
 
     return groupByWorker;
   }
 
   /**
    * Retrieves a map of adapters to recover by comparing the provided groupings of adapter instances
-   * with the instances supposed to run according to the storage.
-   * For every adapter instance it is verified that it actually runs on a worker node.
-   * If this is not the case, it is added to the output of adapters to recover.
+   * with the instances supposed to run according to the storage. For every adapter instance it is
+   * verified that it actually runs on a worker node. If this is not the case, it is added to the
+   * output of adapters to recover.
    *
    * @param adapterInstancesGroupedByWorker A map grouping adapter instances by worker.
-   * @param adapterInstancesSupposedToRun   The map containing all adapter instances supposed to be running.
+   * @param adapterInstancesSupposedToRun The map containing all adapter instances supposed to be
+   *        running.
    * @return A new map containing adapter instances to recover, filtered based on running instances.
    */
-  public Map<String, AdapterDescription> getAdaptersToRecover(
-      Map<String, List<AdapterDescription>> adapterInstancesGroupedByWorker,
-      Map<String, AdapterDescription> adapterInstancesSupposedToRun
-  ) {
+  public Map<String, AdapterDescription> getAdaptersToRecover(Map<String, List<AdapterDescription>> adapterInstancesGroupedByWorker,
+                                                              Map<String, AdapterDescription> adapterInstancesSupposedToRun) {
 
     // NOTE: This line is added to prevent modifying the existing map of instances supposed to run
     // It looks like the parameter `adapterInstancesSupposedToRun` is not required at all,
     // but this should be checked more carefully.
-    Map<String, AdapterDescription> adaptersToRecover = new HashMap<>(adapterInstancesSupposedToRun);
+    Map<String, AdapterDescription> adaptersToRecover =
+        new HashMap<>(adapterInstancesSupposedToRun);
 
-    adapterInstancesGroupedByWorker.keySet()
-                                   .forEach(adapterEndpointUrl -> {
-                                     try {
-                                       List<AdapterDescription> allRunningInstancesOfOneWorker =
-                                           WorkerRestClient.getAllRunningAdapterInstanceDescriptions(
-                                               adapterEndpointUrl + WorkerPaths.getRunningAdaptersPath());
+    adapterInstancesGroupedByWorker.keySet().forEach(adapterEndpointUrl -> {
+      try {
+        List<AdapterDescription> allRunningInstancesOfOneWorker =
+            WorkerRestClient.getAllRunningAdapterInstanceDescriptions(adapterEndpointUrl
+                + WorkerPaths.getRunningAdaptersPath());
 
-                                       // only keep adapters where there is no running adapter instance
-                                       // therefore, all others are removed
-                                       allRunningInstancesOfOneWorker.forEach(
-                                           adapterDescription ->
-                                               adaptersToRecover.remove(
-                                                   adapterDescription.getElementId()));
-                                     } catch (AdapterException e) {
-                                       LOG.info(
-                                           "Could not recover adapter at endpoint {}  - "
-                                               + "marking it as requested to recover (reason: {})",
-                                           adapterEndpointUrl,
-                                           e.getMessage()
-                                       );
-                                     }
-                                   });
+        // only keep adapters where there is no running adapter instance
+        // therefore, all others are removed
+        allRunningInstancesOfOneWorker.forEach(adapterDescription -> adaptersToRecover
+            .remove(adapterDescription.getElementId()));
+      } catch (AdapterException e) {
+        LOG.info("Could not recover adapter at endpoint {}  - "
+            + "marking it as requested to recover (reason: {})", adapterEndpointUrl,
+                 e.getMessage());
+      }
+    });
 
     return adaptersToRecover;
   }

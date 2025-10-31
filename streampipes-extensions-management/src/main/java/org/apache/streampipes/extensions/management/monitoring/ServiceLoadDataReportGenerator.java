@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.monitoring;
 
 import org.apache.streampipes.commons.prometheus.service.ElementServiceStats;
@@ -35,11 +34,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Service Load Data Report Generator
- * Responsible for collecting and calculating service CPU and memory usage, and generating load reports
+ * Service Load Data Report Generator Responsible for collecting and calculating service CPU and
+ * memory usage, and generating load reports
  */
 public class ServiceLoadDataReportGenerator {
-    
+
   private static final Logger log = LoggerFactory.getLogger(ServiceLoadDataReportGenerator.class);
 
   // Configuration constants
@@ -62,6 +61,7 @@ public class ServiceLoadDataReportGenerator {
   private volatile boolean initialized = false;
 
   private volatile ServiceLoadDataReport currentReport = new ServiceLoadDataReport();
+  private volatile ServiceLoadDataReport previousReport = new ServiceLoadDataReport();
 
   // Singleton instance
   private static volatile ServiceLoadDataReportGenerator instance;
@@ -70,15 +70,16 @@ public class ServiceLoadDataReportGenerator {
     this.systemBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
     this.totalCPULimit = calculateTotalCPULimit();
     this.executorService = Executors.newSingleThreadScheduledExecutor(r -> {
-        Thread t = new Thread(r, "ServiceLoadDataReportGenerator");
-        t.setDaemon(true);
-        return t;
+      Thread t = new Thread(r, "ServiceLoadDataReportGenerator");
+      t.setDaemon(true);
+      return t;
     });
     serviceStats = new ElementServiceStats(DeclarersSingleton.getInstance().getServiceId());
   }
 
   /**
    * Get singleton instance
+   * 
    * @return ServiceLoadDataReportGenerator instance
    */
   public static ServiceLoadDataReportGenerator getInstance() {
@@ -144,10 +145,20 @@ public class ServiceLoadDataReportGenerator {
 
   /**
    * Get current load report
+   * 
    * @return Current service load data report
    */
   public ServiceLoadDataReport getCurrentReport() {
     return currentReport;
+  }
+
+  /**
+   * Get previous load report (historical data)
+   * 
+   * @return Previous service load data report
+   */
+  public ServiceLoadDataReport getPreviousReport() {
+    return previousReport;
   }
 
   /**
@@ -163,43 +174,55 @@ public class ServiceLoadDataReportGenerator {
    */
   private void startScheduledTasks() {
     // CPU load calculation task
-    executorService.scheduleWithFixedDelay(
-        this::calculateCpuLoad,
-        CPU_CHECK_INTERVAL_MILLIS,
-        CPU_CHECK_INTERVAL_MILLIS,
-        TimeUnit.MILLISECONDS
-    );
+    executorService.scheduleWithFixedDelay(this::calculateCpuLoad, CPU_CHECK_INTERVAL_MILLIS,
+                                           CPU_CHECK_INTERVAL_MILLIS, TimeUnit.MILLISECONDS);
 
     // Usage calculation task
-    executorService.scheduleWithFixedDelay(
-        this::calculateUsages,
-        USAGE_CALCULATION_INTERVAL_MINUTES,
-        USAGE_CALCULATION_INTERVAL_MINUTES,
-        TimeUnit.MINUTES
-    );
+    executorService.scheduleWithFixedDelay(this::calculateUsages,
+                                           USAGE_CALCULATION_INTERVAL_MINUTES,
+                                           USAGE_CALCULATION_INTERVAL_MINUTES, TimeUnit.MINUTES);
   }
 
   /**
-   * Calculate usage
+   * Calculate usage and update reports with historical data
    */
   public void calculateUsages() {
     try {
-      ServiceLoadDataReport newReport = new ServiceLoadDataReport();
-      newReport.setCpu(getCpuUsage());
-      newReport.setMemory(getMemoryUsage());
-      newReport.setWeight(
-        (int) newReport.getCpu().percentUsage(),
-        (int) newReport.getMemory().percentUsage()
-      );
+      // Create current snapshot
+      ServiceLoadDataReport.ResourceSnapshot currentSnapshot =
+          new ServiceLoadDataReport.ResourceSnapshot(getCpuUsage(), getMemoryUsage());
 
-      serviceStats.setCpuUsage(newReport.getCpu().getUsage());
-      serviceStats.setMemoryUsage(newReport.getMemory().getUsage());
-      serviceStats.setSystemLoad(newReport.getTotalUsagePercent());
-      serviceStats.setHistoricalSystemLoad(systemBean.getSystemLoadAverage());
+      // Create historical snapshot from previous current
+      ServiceLoadDataReport.ResourceSnapshot historicalSnapshot;
+      if (currentReport != null && currentReport.isComplete()) {
+        historicalSnapshot = currentReport.getCurrent();
+      } else {
+        // For first report, use current as historical
+        historicalSnapshot = currentSnapshot;
+      }
+
+      // Create new report
+      ServiceLoadDataReport newReport =
+          new ServiceLoadDataReport(currentSnapshot, historicalSnapshot, 0);
+
+      // Calculate and set weight
+      newReport.calculateWeight();
+
+      // Update service stats
+      serviceStats.setCpuUsage(currentSnapshot.getCpu().getUsage());
+      serviceStats.setMemoryUsage(currentSnapshot.getMemory().getUsage());
+      serviceStats.setSystemLoad(currentSnapshot.getAverageUsagePercent());
+      serviceStats.setHistoricalSystemLoad(historicalSnapshot.getAverageUsagePercent());
       serviceStats.updateAllMetrics();
+
+      // Store previous and update current
+      previousReport = currentReport;
       currentReport = newReport;
 
-      log.debug("Successfully calculated usage and collected metrics");
+      log.debug("Successfully calculated usage - Current: CPU={}%, Memory={}%, Historical: CPU={}%, Memory={}%",
+                currentSnapshot.getCpu().percentUsage(), currentSnapshot.getMemory().percentUsage(),
+                historicalSnapshot.getCpu().percentUsage(),
+                historicalSnapshot.getMemory().percentUsage());
     } catch (Exception e) {
       log.error("Error calculating usage", e);
     }
@@ -222,6 +245,7 @@ public class ServiceLoadDataReportGenerator {
 
   /**
    * Get CPU load value
+   * 
    * @return CPU load value
    */
   private double getCpuLoadValue() {
@@ -239,6 +263,7 @@ public class ServiceLoadDataReportGenerator {
 
   /**
    * Calculate total CPU limit
+   * 
    * @return Total CPU limit
    */
   private double calculateTotalCPULimit() {
@@ -247,6 +272,7 @@ public class ServiceLoadDataReportGenerator {
 
   /**
    * Get total CPU usage
+   * 
    * @return Total CPU usage
    */
   private double getTotalCpuUsage() {
@@ -266,6 +292,7 @@ public class ServiceLoadDataReportGenerator {
 
   /**
    * Get CPU usage
+   * 
    * @return CPU usage
    */
   private Usage getCpuUsage() {
@@ -276,6 +303,7 @@ public class ServiceLoadDataReportGenerator {
 
   /**
    * Get memory usage
+   * 
    * @return Memory usage
    */
   private Usage getMemoryUsage() {
@@ -296,19 +324,20 @@ public class ServiceLoadDataReportGenerator {
 
   /**
    * Check if initialized
+   * 
    * @return Whether initialized
    */
   public boolean isInitialized() {
     return initialized;
-}
+  }
 
   /**
    * Get CPU usage statistics
+   * 
    * @return CPU usage statistics
    */
   public String getCpuUsageStats() {
-    return String.format("CPU Usage: sum=%.2f, count=%d",
-        cpuUsageSum.get(), cpuUsageCount.get());
+    return String.format("CPU Usage: sum=%.2f, count=%d", cpuUsageSum.get(), cpuUsageCount.get());
   }
 
   // Backward compatible static methods
