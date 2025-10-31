@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.manager.health.ServiceRegistrationManager;
@@ -55,8 +54,8 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> registerService(@RequestBody SpServiceRegistration serviceRegistration) {
-    new ServiceRegistrationManager(extensionsServiceStorage)
-        .addService(serviceRegistration, SpServiceStatus.REGISTERED);
+    new ServiceRegistrationManager(extensionsServiceStorage).addService(serviceRegistration,
+                                                                        SpServiceStatus.REGISTERED);
     return ok();
   }
 
@@ -66,8 +65,7 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
       new ServiceRegistrationManager(extensionsServiceStorage).removeService(serviceId);
       return ok();
     } catch (IllegalArgumentException e) {
-      throw new SpMessageException(
-          HttpStatus.BAD_REQUEST,
+      throw new SpMessageException(HttpStatus.BAD_REQUEST,
           Notifications.error("Could not find registered service with id " + serviceId));
     }
   }

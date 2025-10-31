@@ -48,17 +48,19 @@ public enum SpMonitoringManager {
 
   public void increaseInCounter(String resourceId,
                                 String sourceInfo,
+                                long size,
                                 long timestamp) {
     var currentEntry = getMetricsEntry(resourceId, timestamp);
-    currentEntry.addInMetrics(sourceInfo, timestamp);
+    currentEntry.addInMetrics(sourceInfo, size, timestamp);
     this.metricsInfos.put(resourceId, currentEntry);
   }
 
 
   public void increaseOutCounter(String resourceId,
+                                 long size,
                                  long timestamp) {
     var currentEntry = getMetricsEntry(resourceId, timestamp);
-    currentEntry.addOutMetrics(timestamp);
+    currentEntry.addOutMetrics(timestamp, size);
     this.metricsInfos.put(resourceId, currentEntry);
   }
 

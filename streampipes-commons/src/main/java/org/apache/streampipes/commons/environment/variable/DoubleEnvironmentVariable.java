@@ -15,17 +15,26 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment.variable;
 
+import org.apache.streampipes.commons.constants.Envs;
+
+/**
+ * Environment variable for Double values.
+ */
 public class DoubleEnvironmentVariable extends EnvironmentVariable<Double> {
 
-  public DoubleEnvironmentVariable(org.apache.streampipes.commons.constants.Envs envVariable) {
+  /**
+   * Creates a new DoubleEnvironmentVariable.
+   *
+   * @param envVariable the environment variable
+   */
+  public DoubleEnvironmentVariable(Envs envVariable) {
     super(envVariable);
   }
 
   @Override
   public Double parse(String value) {
-    return Double.parseDouble(value);
+    return Double.parseDouble(value.toLowerCase());
   }
 }

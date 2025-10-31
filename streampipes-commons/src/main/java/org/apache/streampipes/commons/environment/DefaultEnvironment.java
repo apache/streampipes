@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment;
 
 import org.apache.streampipes.commons.constants.Envs;
@@ -93,22 +92,23 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
-  public IntEnvironmentVariable getIotDbSessionPoolSize(){
+  public IntEnvironmentVariable getIotDbSessionPoolSize() {
     return new IntEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_SIZE);
   }
 
   @Override
-  public BooleanEnvironmentVariable getIotDbSessionEnableCompression(){
-    return new BooleanEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION);
+  public BooleanEnvironmentVariable getIotDbSessionEnableCompression() {
+    return new BooleanEnvironmentVariable(
+        Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION);
   }
 
   @Override
-  public StringEnvironmentVariable getIotDbUser(){
+  public StringEnvironmentVariable getIotDbUser() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_USER);
   }
 
   @Override
-  public StringEnvironmentVariable getIotDbPassword(){
+  public StringEnvironmentVariable getIotDbPassword() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_PASSWORD);
   }
 
@@ -116,6 +116,7 @@ public class DefaultEnvironment implements Environment {
   public StringEnvironmentVariable getCouchDbProtocol() {
     return new StringEnvironmentVariable(Envs.SP_COUCHDB_PROTOCOL);
   }
+
   @Override
   public StringEnvironmentVariable getCouchDbHost() {
     return new StringEnvironmentVariable(Envs.SP_COUCHDB_HOST);
@@ -434,6 +435,16 @@ public class DefaultEnvironment implements Environment {
   @Override
   public BooleanEnvironmentVariable getConsoleLoggingEnabled() {
     return new BooleanEnvironmentVariable(Envs.SP_LOGGING_CONSOLE_ENABLED);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getCpuResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.CPU_RESOURCE_WEIGHT);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getMemoryResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.MEMORY_RESOURCE_WEIGHT);
   }
 
   @Override

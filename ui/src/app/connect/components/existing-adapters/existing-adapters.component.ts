@@ -45,6 +45,7 @@ import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription, zip } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -97,6 +98,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         private breadcrumbService: SpBreadcrumbService,
         private adapterMonitoringService: AdapterMonitoringService,
         private shepherdService: ShepherdService,
+        private translate: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -155,7 +157,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         const dialogRef: DialogRef<AllAdapterActionsComponent> =
             this.dialogService.open(AllAdapterActionsComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: (action ? 'Start' : 'Stop') + ' all adapters',
+                title: action
+                    ? this.translate.instant('Start all adapters')
+                    : this.translate.instant('Stop all adapters'),
                 width: '70vw',
                 data: {
                     adapters: this.existingAdapters,
@@ -182,13 +186,15 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             SpExceptionDetailsDialogComponent,
             {
                 panelType: PanelType.STANDARD_PANEL,
-                title: 'Adapter Status',
+                title: this.translate.instant('Adapter status'),
                 width: '70vw',
                 data: {
                     message: message,
                     title: title,
                     additionalButton: !startAction,
-                    additionalButtonText: 'Reset adapter state',
+                    additionalButtonText: this.translate.instant(
+                        'Reset adapter state',
+                    ),
                 },
             },
         );
@@ -223,12 +229,14 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             ObjectPermissionDialogComponent,
             {
                 panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Manage permissions',
+                title: this.translate.instant('Manage permissions'),
                 width: '50vw',
                 data: {
                     objectInstanceId: adapter.correspondingDataStreamElementId,
                     headerTitle:
-                        'Manage permissions for adapter ' + adapter.name,
+                        this.translate.instant(
+                            'Manage permissions for adapter ',
+                        ) + adapter.name,
                 },
             },
         );
@@ -252,7 +260,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         const dialogRef: DialogRef<DeleteAdapterDialogComponent> =
             this.dialogService.open(DeleteAdapterDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: 'Delete Adapter',
+                title: this.translate.instant('Delete Adapter'),
                 width: '70vw',
                 data: {
                     adapter: adapter,

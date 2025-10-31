@@ -34,20 +34,29 @@
                 class="info-text"
             >
                 <p>
-                    The adapter is currently used by these pipelines:
+                    {{
+                        'The adapter is currently used by these pipelines:'
+                            | translate
+                    }}
                     <b>{{ namesOfPipelinesUsingAdapter }}</b
                     ><br />
-                    (if you don't see those pipelines, they are created by other
-                    users)
+                    {{
+                        "(if you don't see those pipelines, they are created by other users)"
+                            | translate
+                    }}
                 </p>
                 <p>
-                    You need to delete those pipelines first before deleting the
-                    adapter.
+                    {{
+                        'You need to delete those pipelines first before deleting the adapter.'
+                            | translate
+                    }}
                 </p>
                 <p>
-                    <b
-                        >Do you want to delete all associated pipelines and the
-                        adapter?</b
+                    <b>
+                        {{
+                            'Do you want to delete all associated pipelines and the adapter?'
+                                | translate
+                        }}</b
                     >
                 </p>
             </div>
@@ -82,9 +91,15 @@
         >
             <b>
                 <h4>
-                    Unable to delete all associated pipelines because you are
-                    not the owner of the following pipelines:
-                    {{ namesOfPipelinesNotOwnedByUser }}
+                    <p>
+                        {{
+                            'Unable to delete all associated pipelines because you are not the owner of the following pipelines: '
+                                | translate
+                        }}
+                    </p>
+                    <p>
+                        <b>{{ namesOfPipelinesNotOwnedByUser }}</b>
+                    </p>
                 </h4>
             </b>
         </div>
@@ -92,10 +107,17 @@
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <b
                     ><h4>
-                        Do you really want to delete adapter {{ adapter.name }}?
+                        {{
+                            'Do you really want to delete adapter ' | translate
+                        }}
+                        {{ adapter.name }} ?
                     </h4></b
                 >
-                <b><h5>This operation cannot be undone.</h5></b>
+                <b
+                    ><h5>
+                        {{ 'This operation cannot be undone.' | translate }}
+                    </h5></b
+                >
             </div>
 
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
@@ -106,7 +128,7 @@
                     (click)="deleteAdapter(false)"
                     data-cy="delete-adapter-confirmation"
                 >
-                    Delete adapter
+                    {{ 'Delete adapter' | translate }}
                 </button>
             </div>
         </div>
@@ -137,7 +159,7 @@
             class="mat-basic"
             (click)="close(false)"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

@@ -29,7 +29,7 @@
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.98.0-SNAPSHOT</version>
+    <version>0.99.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache StreamPipes</name>
@@ -1101,8 +1101,9 @@
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
-        <module>streampipes-pipeline-management</module>
         <module>streampipes-resource-management</module>
+        <module>streampipes-load-balancer</module>
+        <module>streampipes-pipeline-management</module>
         <module>streampipes-rest-extensions</module>
         <module>streampipes-rest</module>
         <module>streampipes-rest-core-base</module>

@@ -22,33 +22,214 @@ import java.util.Objects;
 
 /**
  * Service Load Data Report
- * Contains service CPU, memory usage and weight information
+ * Contains service resource usage snapshot with current and historical data
  */
 public class ServiceLoadDataReport {
-    
-  // Using configuration from constants class
 
-  private Usage cpu;
-  private Usage memory;
+  /**
+   * Resource snapshot containing usage data at a specific time
+   */
+  public static class ResourceSnapshot {
+    private Usage cpu;
+    private Usage memory;
+    private long timestamp;
+
+    public ResourceSnapshot() {
+      this.timestamp = System.currentTimeMillis();
+    }
+
+    public ResourceSnapshot(Usage cpu, Usage memory) {
+      this.cpu = cpu;
+      this.memory = memory;
+      this.timestamp = System.currentTimeMillis();
+    }
+
+    public Usage getCpu() {
+      return cpu;
+    }
+
+    public void setCpu(Usage cpu) {
+      this.cpu = cpu;
+    }
+
+    public Usage getMemory() {
+      return memory;
+    }
+
+    public void setMemory(Usage memory) {
+      this.memory = memory;
+    }
+
+    public long getTimestamp() {
+      return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+      this.timestamp = timestamp;
+    }
+
+    public boolean isComplete() {
+      return cpu != null && memory != null;
+    }
+
+    public double getAverageUsagePercent() {
+      if (!isComplete()) {
+        return 0.0;
+      }
+      return (cpu.percentUsage() + memory.percentUsage()) / 2.0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      ResourceSnapshot that = (ResourceSnapshot) o;
+      return timestamp == that.timestamp
+              && Objects.equals(cpu, that.cpu)
+              && Objects.equals(memory, that.memory);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(cpu, memory, timestamp);
+    }
+
+    @Override
+    public String toString() {
+      return "ResourceSnapshot{"
+              + "cpu=" + cpu
+              + ", memory=" + memory
+              + ", timestamp=" + timestamp
+              + '}';
+    }
+  }
+
+  private ResourceSnapshot current;
+  private ResourceSnapshot historical;
   private int weight;
 
   /**
    * Default constructor
    */
   public ServiceLoadDataReport() {
+    this.current = new ResourceSnapshot();
+    this.historical = new ResourceSnapshot();
     this.weight = 0;
-}
+  }
 
   /**
-   * Constructor
-   * @param cpu CPU usage
-   * @param memory Memory usage
+   * Constructor with current snapshot
+   * @param current Current resource snapshot
    * @param weight Weight
    */
-  public ServiceLoadDataReport(Usage cpu, Usage memory, int weight) {
-    this.cpu = cpu;
-    this.memory = memory;
+  public ServiceLoadDataReport(ResourceSnapshot current, int weight) {
+    this.current = current;
+    this.historical = new ResourceSnapshot();
     this.weight = validateWeight(weight);
+  }
+
+  /**
+   * Constructor with current and historical snapshots
+   * @param current Current resource snapshot
+   * @param historical Historical resource snapshot
+   * @param weight Weight
+   */
+  public ServiceLoadDataReport(ResourceSnapshot current, ResourceSnapshot historical, int weight) {
+    this.current = current;
+    this.historical = historical;
+    this.weight = validateWeight(weight);
+  }
+
+  /**
+   * Get current resource snapshot
+   * @return Current snapshot
+   */
+  public ResourceSnapshot getCurrent() {
+    return current;
+  }
+
+  /**
+   * Set current resource snapshot
+   * @param current Current snapshot
+   */
+  public void setCurrent(ResourceSnapshot current) {
+    this.current = current;
+  }
+
+  /**
+   * Get historical resource snapshot
+   * @return Historical snapshot
+   */
+  public ResourceSnapshot getHistorical() {
+    return historical;
+  }
+
+  /**
+   * Set historical resource snapshot
+   * @param historical Historical snapshot
+   */
+  public void setHistorical(ResourceSnapshot historical) {
+    this.historical = historical;
+  }
+
+  /**
+   * Get weight
+   * @return Weight value
+   */
+  public int getWeight() {
+    return weight;
+  }
+
+  /**
+   * Set weight
+   * @param weight Weight value
+   */
+  public void setWeight(int weight) {
+    this.weight = validateWeight(weight);
+  }
+
+  // Convenience methods for backward compatibility
+
+  /**
+   * Get current CPU usage (backward compatible)
+   * @return Current CPU usage
+   */
+  public Usage getCpu() {
+    return current != null ? current.getCpu() : null;
+  }
+
+  /**
+   * Set current CPU usage (backward compatible)
+   * @param cpu CPU usage
+   */
+  public void setCpu(Usage cpu) {
+    if (current == null) {
+      current = new ResourceSnapshot();
+    }
+    current.setCpu(cpu);
+  }
+
+  /**
+   * Get current memory usage (backward compatible)
+   * @return Current memory usage
+   */
+  public Usage getMemory() {
+    return current != null ? current.getMemory() : null;
+  }
+
+  /**
+   * Set current memory usage (backward compatible)
+   * @param memory Memory usage
+   */
+  public void setMemory(Usage memory) {
+    if (current == null) {
+      current = new ResourceSnapshot();
+    }
+    current.setMemory(memory);
   }
 
   /**
@@ -67,69 +248,21 @@ public class ServiceLoadDataReport {
   }
 
   /**
-   * Automatically calculate weight based on CPU and memory usage
+   * Automatically calculate weight based on current CPU and memory usage
    */
   public void calculateWeight() {
-    if (cpu != null && memory != null) {
-      setWeight((int) cpu.percentUsage(), (int) memory.percentUsage());
+    if (current != null && current.isComplete()) {
+      setWeight((int) current.getCpu().percentUsage(), (int) current.getMemory().percentUsage());
     }
   }
-
-  /**
-   * Get weight
-   * @return Weight value
-   */
-  public int getWeight() {
-    return weight;
-}
-
-  /**
-   * Set weight
-   * @param weight Weight value
-   */
-  public void setWeight(int weight) {
-    this.weight = validateWeight(weight);
-}
-
-  /**
-   * Get CPU usage
-   * @return CPU usage
-   */
-  public Usage getCpu() {
-    return cpu;
-}
-
-  /**
-   * Set CPU usage
-   * @param cpu CPU usage
-   */
-  public void setCpu(Usage cpu) {
-    this.cpu = cpu;
-}
-
-  /**
-   * Get memory usage
-   * @return Memory usage
-   */
-  public Usage getMemory() {
-    return memory;
-  }
-
-  /**
-   * Set memory usage
-   * @param memory Memory usage
-   */
-  public void setMemory(Usage memory) {
-    this.memory = memory;
-}
 
   /**
    * Check if report is complete
    * @return Whether contains all necessary information
    */
   public boolean isComplete() {
-    return cpu != null && memory != null;
-}
+    return current != null && current.isComplete();
+  }
 
   /**
    * Get total usage rate (average of CPU and memory)
@@ -139,7 +272,15 @@ public class ServiceLoadDataReport {
     if (!isComplete()) {
       return 0.0;
     }
-    return (cpu.percentUsage() + memory.percentUsage()) / 2.0;
+    return current.getAverageUsagePercent();
+  }
+
+  /**
+   * Check if historical data is available
+   * @return Whether historical data is present
+   */
+  public boolean hasHistoricalData() {
+    return historical != null && historical.isComplete();
   }
 
   /**
@@ -164,25 +305,21 @@ public class ServiceLoadDataReport {
     }
     ServiceLoadDataReport that = (ServiceLoadDataReport) o;
     return weight == that.weight
-            && Objects.equals(cpu, that.cpu)
-            && Objects.equals(memory, that.memory);
+            && Objects.equals(current, that.current)
+            && Objects.equals(historical, that.historical);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(cpu, memory, weight);
+    return Objects.hash(current, historical, weight);
   }
 
   @Override
   public String toString() {
     return "ServiceLoadDataReport{"
-            + "cpu="
-            + cpu
-            + ", memory="
-            + memory
-            + ", weight="
-            + weight
-            +
-            '}';
+            + "current=" + current
+            + ", historical=" + historical
+            + ", weight=" + weight
+            + '}';
   }
 }
