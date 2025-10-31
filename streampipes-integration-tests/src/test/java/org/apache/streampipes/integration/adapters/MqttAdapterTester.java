@@ -87,7 +87,7 @@ public class MqttAdapterTester extends AdapterTesterBase {
     // Set format to Json
     ((StaticPropertyAlternatives) (desc)
         .getConfig()
-        .get(3))
+        .get(4)) //used to be 3 by adding TLS now 4
         .getAlternatives()
         .get(0)
         .setSelected(true);
