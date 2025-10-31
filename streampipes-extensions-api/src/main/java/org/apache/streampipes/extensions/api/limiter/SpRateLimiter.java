@@ -27,9 +27,6 @@ import com.sun.management.OperatingSystemMXBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -166,30 +163,6 @@ public enum SpRateLimiter {
       return acquired;
     } finally {
       currentQueueSize.decrementAndGet();
-    }
-  }
-
-  public void limitForMap(Map<?, ?> map) throws InterruptedException {
-    if (map == null || map.isEmpty()) {
-      return;
-    }
-    long mapDataSize = getMapSizeInBytes(map);
-    if (mapDataSize < 0) {
-      LOG.warn("Could not determine map size for rate limiting.");
-      return;
-    }
-    limit(mapDataSize);
-  }
-
-  public static long getMapSizeInBytes(Map<?, ?> map) {
-    try {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      ObjectOutputStream oos = new ObjectOutputStream(baos);
-      oos.writeObject(map);
-      oos.close();
-      return baos.size();
-    } catch (Exception e) {
-      return -1;
     }
   }
 

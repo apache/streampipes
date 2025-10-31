@@ -232,6 +232,8 @@ public interface Environment {
 
   StringEnvironmentVariable getRetentionLocalDir();
 
+  BooleanEnvironmentVariable getLoadManagerEnable();
+
   //SpRateLimiter
   LongEnvironmentVariable getRateLimiterDefaultWarmupPeriod();
   IntEnvironmentVariable getRateLimiterSchedulerInitialDelaySeconds();

@@ -25,9 +25,6 @@ import org.apache.streampipes.commons.prometheus.spmemorymanager.SpMemoryManager
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
@@ -188,42 +185,6 @@ public enum SpMemoryManager {
     
     long allocatedMemory = env.getMemoryManagerDefaultInitialMemory().getValueOrDefault() - newFreeMemory;
     memoryUsedBytes = (double) allocatedMemory;
-  }
-
-  public void allocateForMap(Map<?, ?> map) {
-    if (map == null || map.isEmpty()) {
-      return;
-    }
-    long sizeInBytes = getMapSizeInBytes(map);
-    if (sizeInBytes < 0) {
-      LOG.warn("Could not determine size of map for memory allocation");
-      return;
-    }
-    allocate(sizeInBytes);
-  }
-
-  public void freeForMap(Map<?, ?> map) {
-    if (map == null || map.isEmpty()) {
-      return;
-    }
-    long sizeInBytes = getMapSizeInBytes(map);
-    if (sizeInBytes < 0) {
-      LOG.warn("Could not determine size of map for memory deallocation");
-      return;
-    }
-    free(sizeInBytes);
-  }
-
-  public static long getMapSizeInBytes(Map<?, ?> map) {
-    try {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      ObjectOutputStream oos = new ObjectOutputStream(baos);
-      oos.writeObject(map);
-      oos.close();
-      return baos.size();
-    } catch (Exception e) {
-      return -1;
-    }
   }
 
   /**

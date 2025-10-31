@@ -211,6 +211,7 @@ public class ServiceLoadDataReportGenerator {
       // Update service stats
       serviceStats.setCpuUsage(currentSnapshot.getCpu().getUsage());
       serviceStats.setMemoryUsage(currentSnapshot.getMemory().getUsage());
+      serviceStats.setWeight(newReport.getWeight());
       serviceStats.setSystemLoad(currentSnapshot.getAverageUsagePercent());
       serviceStats.setHistoricalSystemLoad(historicalSnapshot.getAverageUsagePercent());
       serviceStats.updateAllMetrics();

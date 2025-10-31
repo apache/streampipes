@@ -66,6 +66,8 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
   @Override
   public void process(Map<String, Object> rawEvent, long size, String sourceInfo) {
     try {
+      SpRateLimiter.INSTANCE.limit(size);
+      SpMemoryManager.INSTANCE.allocate(size);
       monitoringManager.increaseInCounter(instanceId, sourceInfo, size, System.currentTimeMillis());
       var event = this.internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo);
       pipelineElement
@@ -79,7 +81,7 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
     } finally {
-      SpMemoryManager.INSTANCE.freeForMap(rawEvent);
+      SpMemoryManager.INSTANCE.free(size);
     }
   }
 
