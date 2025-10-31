@@ -236,7 +236,7 @@ public class PipelineHealthCheck implements Runnable {
   }
 
   private List<Pipeline> getAllPipelines() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
   }
 
   private int getElementsCount(List<Pipeline> allPipelines) {

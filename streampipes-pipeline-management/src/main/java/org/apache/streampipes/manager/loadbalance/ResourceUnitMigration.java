@@ -134,7 +134,7 @@ public class ResourceUnitMigration {
    */
   private static void updatePipelineEndpoints(LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit) {
     Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI()
-        .getPipeline(resourceUnit.getPipelineId());
+        .getElementById(resourceUnit.getPipelineId());
 
     if (pipeline == null) {
       logger.warn("Pipeline {} not found in storage", resourceUnit.getPipelineId());

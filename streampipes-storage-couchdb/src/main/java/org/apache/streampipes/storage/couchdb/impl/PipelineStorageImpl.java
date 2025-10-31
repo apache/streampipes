@@ -60,22 +60,4 @@ public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements
     }
     return result;
   }
-
-  @Override
-  public Pipeline getPipeline(String pipelineId) {
-    return findWithNullIfEmpty(pipelineId);
-  }
-
-  @Override
-  public List<Pipeline> getAllPipelines() {
-    List<Pipeline> pipelines = findAll(ALL_PIPELINES_VIEW);
-
-    List<Pipeline> result = new ArrayList<>();
-    for (Pipeline p : pipelines) {
-      if (p.getActions() != null) {
-        result.add(p);
-      }
-    }
-    return result;
-  }
 }
