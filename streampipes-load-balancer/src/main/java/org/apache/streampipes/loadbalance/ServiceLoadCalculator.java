@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance;
+package org.apache.streampipes.loadbalance;
 
 import org.apache.streampipes.commons.prometheus.service.ElementServiceStats;
-import org.apache.streampipes.manager.monitoring.pipeline.service.ExtensionsServiceReportExecutor;
+import org.apache.streampipes.loadbalance.service.ExtensionsServiceReportExecutor;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.loadbalancer.ServiceLoadDataReport;
 
@@ -34,8 +34,6 @@ import java.util.List;
 public class ServiceLoadCalculator {
 
   private static final Logger logger = LoggerFactory.getLogger(ServiceLoadCalculator.class);
-  private static final String SERVICE_MONITOR_PATH = "/serviceMonitor";
-
   /**
    * Calculate weighted load based on historical and current load.
    *

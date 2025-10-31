@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance.impl;
+package org.apache.streampipes.loadbalance.impl;
 
-import org.apache.streampipes.manager.loadbalance.PipelineMigrator;
-import org.apache.streampipes.manager.loadbalance.ResourceUnitMigration;
-import org.apache.streampipes.manager.loadbalance.ServiceLoadCalculator;
+import org.apache.streampipes.loadbalance.PipelineMigrator;
+import org.apache.streampipes.loadbalance.ResourceUnitMigration;
+import org.apache.streampipes.loadbalance.ServiceLoadCalculator;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 
 import org.slf4j.Logger;

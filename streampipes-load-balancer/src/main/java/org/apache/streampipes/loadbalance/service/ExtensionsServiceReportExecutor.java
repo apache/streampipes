@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.monitoring.pipeline.service;
+package org.apache.streampipes.loadbalance.service;
 
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.loadbalancer.ServiceLoadDataReport;
 import org.apache.streampipes.serializers.json.JacksonSerializer;

@@ -15,15 +15,15 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.monitoring.pipeline;
+package org.apache.streampipes.loadbalance.pipeline;
 
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.pipelines.PipelineFlowStats;
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
-import org.apache.streampipes.manager.loadbalance.LoadManager;
+import org.apache.streampipes.loadbalance.LoadManager;
+import org.apache.streampipes.loadbalance.service.ExtensionServiceExecutions;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;

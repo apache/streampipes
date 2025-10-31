@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance.unit;
+package org.apache.streampipes.loadbalance.unit;
 
-import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -107,7 +106,7 @@ public class ResourceUnitScanner {
   private static List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> scanAndPartitionPipelineElements(SpServiceRegistration service) {
 
     String serviceUrl = service.getServiceUrl();
-    List<Pipeline> allPipelines = PipelineManager.getAllPipelines();
+    List<Pipeline> allPipelines = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
 
     List<Pipeline> relevantPipelines = allPipelines.stream()
         .filter(pipeline -> pipeline.isRunning() && pipelineUsesService(pipeline, serviceUrl))
@@ -156,7 +155,7 @@ public class ResourceUnitScanner {
   private static List<PipelineElementPartitioner.PartitionResult> scanAndPartitionPipeline(SpServiceRegistration service) {
 
     String serviceUrl = service.getServiceUrl();
-    List<Pipeline> allPipelines = PipelineManager.getAllPipelines();
+    List<Pipeline> allPipelines = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
 
     List<Pipeline> relevantPipelines = allPipelines.stream()
         .filter(pipeline -> pipeline.isRunning() && pipelineUsesService(pipeline, serviceUrl))

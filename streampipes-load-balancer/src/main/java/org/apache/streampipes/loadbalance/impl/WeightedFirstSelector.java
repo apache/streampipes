@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance.impl;
+package org.apache.streampipes.loadbalance.impl;
 
-import org.apache.streampipes.manager.loadbalance.ExtensionServiceSelector;
+import org.apache.streampipes.loadbalance.ExtensionServiceSelector;
+import org.apache.streampipes.loadbalance.ServiceLoadCalculator;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -30,15 +31,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
- * Weighted random service selector using A-Res algorithm
+ * Weighted first service selector that considers both service load and weight
  */
-public class WeightedRandomSelector implements ExtensionServiceSelector {
+public class WeightedFirstSelector implements ExtensionServiceSelector {
 
-  private static final Logger log = LoggerFactory.getLogger(WeightedRandomSelector.class);
+  private static final Logger log = LoggerFactory.getLogger(WeightedFirstSelector.class);
 
   @Override
   public SpServiceRegistration select(List<SpServiceRegistration> availableServices,
@@ -47,18 +47,34 @@ public class WeightedRandomSelector implements ExtensionServiceSelector {
       throw new IllegalArgumentException("Available services list cannot be null or empty");
     }
 
-    SpServiceRegistration selectedService;
+    List<SpServiceRegistration> candidates = availableServices;
     if (labels != null && !labels.isEmpty()) {
-      List<SpServiceRegistration> affinityServices = filterServices(availableServices, labels);
-      if (!affinityServices.isEmpty()) {
-        selectedService = aResAlgorithm(affinityServices);
-      } else {
-        selectedService = aResAlgorithm(availableServices);
+      List<SpServiceRegistration> affinity = filterServices(availableServices, labels);
+      if (!affinity.isEmpty()) {
+        candidates = affinity;
       }
-    } else {
-      selectedService = aResAlgorithm(availableServices);
     }
-    return selectedService;
+
+    SpServiceRegistration best = candidates.get(0);
+    double bestRemaining = Double.NEGATIVE_INFINITY;
+
+    for (SpServiceRegistration service : candidates) {
+      float loadPercent = ServiceLoadCalculator.calculateLoad(service);
+
+      // Get dynamic weight calculated from ServiceLoadCalculator
+      double dynamicWeight = getDynamicWeight(service);
+
+      double remaining = dynamicWeight * (1.0 - (loadPercent / 100.0));
+      if (remaining > bestRemaining) {
+        bestRemaining = remaining;
+        best = service;
+      }
+    }
+    return best;
+  }
+
+  private double getDynamicWeight(SpServiceRegistration service) {
+    return service.getWeight();
   }
 
   /**
@@ -83,29 +99,7 @@ public class WeightedRandomSelector implements ExtensionServiceSelector {
    * @return True if any label matches
    */
   private static boolean containsAnyLabel(Set<String> serviceLabels, List<String> labels) {
-    return serviceLabels.stream().anyMatch(labels::contains);
-  }
-
-  /**
-   * A-Res (Acceptance-Rejection) algorithm for weighted random selection
-   * 
-   * @param availableServices List of available services
-   * @return Selected service
-   */
-  private SpServiceRegistration aResAlgorithm(List<SpServiceRegistration> availableServices) {
-    SpServiceRegistration result = availableServices.get(0);
-    double minK = Double.MAX_VALUE;
-
-    for (SpServiceRegistration service : availableServices) {
-      double ki =
-          Math.pow(ThreadLocalRandom.current().nextDouble(), (double) 1 / service.getWeight());
-      if (ki < minK) {
-        minK = ki;
-        result = service;
-      }
-    }
-
-    return result;
+    return serviceLabels != null && serviceLabels.stream().anyMatch(labels::contains);
   }
 
   @Override
@@ -121,9 +115,9 @@ public class WeightedRandomSelector implements ExtensionServiceSelector {
 
     Map<SpServiceRegistration, List<InvocableStreamPipesEntity>> allocationMap = new HashMap<>();
 
-    // Allocate each element using weighted random selection
+    // Allocate each element using weighted first selection (considers load and weight)
     for (InvocableStreamPipesEntity element : sinksAndProcessors) {
-      SpServiceRegistration selectedService = aResAlgorithm(availableServices);
+      SpServiceRegistration selectedService = selectBestService(availableServices);
       allocationMap.computeIfAbsent(selectedService, k -> new ArrayList<>()).add(element);
     }
 
@@ -143,13 +137,36 @@ public class WeightedRandomSelector implements ExtensionServiceSelector {
 
     Map<SpServiceRegistration, List<AdapterDescription>> allocationMap = new HashMap<>();
 
-    // Allocate each adapter using weighted random selection
+    // Allocate each adapter using weighted first selection (considers load and weight)
     for (AdapterDescription adapter : adapters) {
-      SpServiceRegistration selectedService = aResAlgorithm(availableServices);
+      SpServiceRegistration selectedService = selectBestService(availableServices);
       allocationMap.computeIfAbsent(selectedService, k -> new ArrayList<>()).add(adapter);
     }
 
     return allocationMap;
   }
 
+  /**
+   * Select the best service based on remaining capacity (weight * (1 - load))
+   * 
+   * @param availableServices List of available services
+   * @return Best service for allocation
+   */
+  private SpServiceRegistration selectBestService(List<SpServiceRegistration> availableServices) {
+    SpServiceRegistration best = availableServices.get(0);
+    double bestRemaining = Double.NEGATIVE_INFINITY;
+
+    for (SpServiceRegistration service : availableServices) {
+      float loadPercent = ServiceLoadCalculator.calculateLoad(service);
+      double dynamicWeight = getDynamicWeight(service);
+      double remaining = dynamicWeight * (1.0 - (loadPercent / 100.0));
+
+      if (remaining > bestRemaining) {
+        bestRemaining = remaining;
+        best = service;
+      }
+    }
+
+    return best;
+  }
 }

@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance;
+package org.apache.streampipes.loadbalance;
 
 import org.apache.streampipes.commons.exceptions.SpException;
-import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
-import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
-import org.apache.streampipes.manager.loadbalance.unit.ResourceUnitStatsScanner;
+import org.apache.streampipes.loadbalance.unit.ExtensionsServiceEndpointUtils;
+import org.apache.streampipes.loadbalance.unit.InvokeHttpRequest;
+import org.apache.streampipes.loadbalance.unit.ResourceUnitStatsScanner;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;

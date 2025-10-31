@@ -15,20 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance;
+package org.apache.streampipes.loadbalance;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.loadbalancer.LoadBalancerStats;
-import org.apache.streampipes.manager.loadbalance.impl.ExtensibleLoadManager;
-import org.apache.streampipes.manager.loadbalance.impl.MinimumLoadSelector;
-import org.apache.streampipes.manager.loadbalance.impl.OverloadMigrator;
-import org.apache.streampipes.manager.loadbalance.impl.ThresholdMigrator;
-import org.apache.streampipes.manager.loadbalance.impl.TransferMigrator;
-import org.apache.streampipes.manager.loadbalance.impl.WeightedFirstSelector;
-import org.apache.streampipes.manager.loadbalance.impl.WeightedRandomSelector;
-import org.apache.streampipes.manager.loadbalance.unit.PipelineElementPartitioner;
-import org.apache.streampipes.manager.loadbalance.unit.ResourceUnitScanner;
+import org.apache.streampipes.loadbalance.impl.ExtensibleLoadManager;
+import org.apache.streampipes.loadbalance.impl.MinimumLoadSelector;
+import org.apache.streampipes.loadbalance.impl.OverloadMigrator;
+import org.apache.streampipes.loadbalance.impl.ThresholdMigrator;
+import org.apache.streampipes.loadbalance.impl.TransferMigrator;
+import org.apache.streampipes.loadbalance.impl.WeightedFirstSelector;
+import org.apache.streampipes.loadbalance.impl.WeightedRandomSelector;
+import org.apache.streampipes.loadbalance.unit.PipelineElementPartitioner;
+import org.apache.streampipes.loadbalance.unit.ResourceUnitScanner;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;

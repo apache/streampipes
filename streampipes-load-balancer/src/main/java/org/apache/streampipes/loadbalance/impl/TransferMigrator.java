@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance.impl;
+package org.apache.streampipes.loadbalance.impl;
 
-import org.apache.streampipes.manager.loadbalance.LoadBalancerConfig;
+import org.apache.streampipes.loadbalance.LoadBalancerConfig;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 
 import org.slf4j.Logger;

@@ -1094,8 +1094,9 @@
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
-        <module>streampipes-pipeline-management</module>
         <module>streampipes-resource-management</module>
+        <module>streampipes-load-balancer</module>
+        <module>streampipes-pipeline-management</module>
         <module>streampipes-rest-extensions</module>
         <module>streampipes-rest</module>
         <module>streampipes-rest-core-base</module>

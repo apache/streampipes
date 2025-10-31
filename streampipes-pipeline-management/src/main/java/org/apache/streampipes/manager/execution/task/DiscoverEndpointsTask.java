@@ -19,11 +19,11 @@
 package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.loadbalance.LoadManager;
+import org.apache.streampipes.loadbalance.unit.PipelineElementPartitioner;
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
-import org.apache.streampipes.manager.loadbalance.LoadManager;
-import org.apache.streampipes.manager.loadbalance.unit.PipelineElementPartitioner;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;

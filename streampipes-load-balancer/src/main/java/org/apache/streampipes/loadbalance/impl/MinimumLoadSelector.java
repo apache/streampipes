@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance.impl;
+package org.apache.streampipes.loadbalance.impl;
 
-import org.apache.streampipes.manager.loadbalance.ExtensionServiceSelector;
-import org.apache.streampipes.manager.loadbalance.ServiceLoadCalculator;
+import org.apache.streampipes.loadbalance.ExtensionServiceSelector;
+import org.apache.streampipes.loadbalance.ServiceLoadCalculator;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;

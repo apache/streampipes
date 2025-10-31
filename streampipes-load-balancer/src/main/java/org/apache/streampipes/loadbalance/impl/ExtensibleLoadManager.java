@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance.impl;
+package org.apache.streampipes.loadbalance.impl;
 
-import org.apache.streampipes.manager.health.ServiceRegistrationManager;
-import org.apache.streampipes.manager.loadbalance.ExtensionServiceSelector;
-import org.apache.streampipes.manager.loadbalance.LoadBalancer;
-import org.apache.streampipes.manager.loadbalance.PipelineMigrator;
-import org.apache.streampipes.manager.loadbalance.unit.ResourceUnitStatsScanner;
+import org.apache.streampipes.loadbalance.ExtensionServiceSelector;
+import org.apache.streampipes.loadbalance.LoadBalancer;
+import org.apache.streampipes.loadbalance.PipelineMigrator;
+import org.apache.streampipes.loadbalance.unit.ResourceUnitStatsScanner;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
@@ -31,16 +32,12 @@ public class ExtensibleLoadManager implements LoadBalancer {
 
     ExtensionServiceSelector selector;
 
-  ServiceRegistrationManager serviceManager;
-
   PipelineMigrator migrator;
 
   public ExtensibleLoadManager(ExtensionServiceSelector selector,
                                PipelineMigrator pipelineMigrator) {
     this.selector = selector;
     this.migrator = pipelineMigrator;
-    serviceManager = new ServiceRegistrationManager(
-        StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage());
   }
 
   @Override
@@ -50,7 +47,9 @@ public class ExtensibleLoadManager implements LoadBalancer {
   }
 
   public void doLoadShedding() {
-    List<SpServiceRegistration> services = serviceManager.getAivService();
+    CRUDStorage<SpServiceRegistration> storage =  StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+    List<SpServiceRegistration> services = storage.findAll().stream().filter(s -> s.getStatus() == SpServiceStatus.HEALTHY)
+            .toList();
 
     // Collect load balancer metrics for all services using optimized database queries
     ResourceUnitStatsScanner.collectAllLoadBalancerMetrics();

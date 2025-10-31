@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance.unit;
+package org.apache.streampipes.loadbalance.unit;
 
 import org.apache.streampipes.commons.prometheus.loadbalancer.LoadBalancerStats;
-import org.apache.streampipes.manager.loadbalance.LoadManager;
-import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
-import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.loadbalance.LoadManager;
+import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -304,7 +303,7 @@ public class ResourceUnitStatsScanner {
   private static int countPipelinesForService(SpServiceRegistration service) {
     try {
       String serviceUrl = service.getServiceUrl();
-      List<Pipeline> allPipelines = PipelineManager.getAllPipelines();
+      List<Pipeline> allPipelines =  StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
 
       return (int) allPipelines.stream()
           .filter(pipeline -> pipeline.isRunning() && pipelineUsesService(pipeline, serviceUrl))

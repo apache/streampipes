@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.loadbalance;
+package org.apache.streampipes.loadbalance;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 
