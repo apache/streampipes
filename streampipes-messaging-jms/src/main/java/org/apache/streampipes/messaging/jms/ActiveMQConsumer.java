@@ -25,6 +25,7 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.util.ByteSequence;
+import org.slf4j.Logger;
 
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
@@ -36,6 +37,8 @@ import java.io.Serializable;
 public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
     EventConsumer,
     AutoCloseable, Serializable {
+
+  Logger logger = org.slf4j.LoggerFactory.getLogger(ActiveMQConsumer.class);
 
   private Session session;
   private MessageConsumer consumer;
@@ -56,6 +59,7 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
                 eventProcessor.onEvent(bs.getData());
             } catch (InterruptedException e) {
               Thread.currentThread().interrupt();
+              logger.warn("Event processing was interrupted", e);
             }
         }
 

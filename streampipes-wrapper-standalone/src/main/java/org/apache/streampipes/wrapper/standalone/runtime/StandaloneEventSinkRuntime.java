@@ -62,6 +62,7 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
       addLogEntry(e);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
+      LOG.warn("Event processing interrupted in {}", pipelineElement.getClass().getCanonicalName(), e);
     } finally {
       SpMemoryManager.INSTANCE.free(size);
     }

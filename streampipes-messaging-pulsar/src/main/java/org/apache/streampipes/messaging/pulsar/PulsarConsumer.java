@@ -28,8 +28,11 @@ import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.MessageListener;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
+import org.slf4j.Logger;
 
 public class PulsarConsumer implements EventConsumer {
+
+  Logger logger = org.slf4j.LoggerFactory.getLogger(PulsarConsumer.class);
 
   private PulsarClient pulsarClient;
   private Consumer<byte[]> consumer;
@@ -61,6 +64,7 @@ public class PulsarConsumer implements EventConsumer {
                     eventProcessor.onEvent(msg.getData());
                 } catch (InterruptedException e) {
                   Thread.currentThread().interrupt();
+                  logger.warn("Event processing interrupted in PulsarConsumer", e);
                 }
             }
           })

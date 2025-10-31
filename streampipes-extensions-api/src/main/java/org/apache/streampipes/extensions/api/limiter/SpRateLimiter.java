@@ -300,6 +300,7 @@ public enum SpRateLimiter {
       } catch (InterruptedException e) {
         scheduler.shutdownNow();
         Thread.currentThread().interrupt();
+        LOG.warn("RateLimiter scheduler shutdown interrupted", e);
       }
     }
   }

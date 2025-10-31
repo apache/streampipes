@@ -22,10 +22,13 @@ import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.rocketmq.client.apis.ClientException;
 import org.apache.rocketmq.client.apis.consumer.ConsumeResult;
 import org.apache.rocketmq.client.apis.consumer.PushConsumer;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 
 public class RocketMQConsumer implements Runnable {
+
+  Logger logger = org.slf4j.LoggerFactory.getLogger(RocketMQConsumer.class);
 
   private InternalEventProcessor<byte[]> eventProcessor;
   private String brokerUrl;
@@ -52,6 +55,7 @@ public class RocketMQConsumer implements Runnable {
           eventProcessor.onEvent(messageView.getBody().array());
         } catch (InterruptedException e) {
           Thread.currentThread().interrupt();
+          logger.warn("Event processing was interrupted", e);
         }
         return ConsumeResult.SUCCESS;
       });

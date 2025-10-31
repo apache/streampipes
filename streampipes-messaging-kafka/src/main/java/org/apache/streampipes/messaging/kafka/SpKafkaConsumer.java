@@ -79,6 +79,7 @@ public class SpKafkaConsumer implements EventConsumer, Runnable,
               eventProcessor.onEvent(record.value());
           } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            LOG.warn("Event processing interrupted in KafkaConsumer", e);
           }
       });
     }

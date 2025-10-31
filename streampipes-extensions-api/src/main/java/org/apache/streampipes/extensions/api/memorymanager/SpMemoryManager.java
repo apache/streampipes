@@ -324,6 +324,7 @@ public enum SpMemoryManager {
             } catch (InterruptedException e) {
                 scheduler.shutdownNow();
                 Thread.currentThread().interrupt();
+                LOG.warn("Memory manager scheduler shutdown was interrupted", e);
             }
         }
     }

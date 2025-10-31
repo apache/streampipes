@@ -80,6 +80,7 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
       addLogEntry(e);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
+      LOG.warn("Event processing interrupted", e);
     } finally {
       SpMemoryManager.INSTANCE.free(size);
     }
