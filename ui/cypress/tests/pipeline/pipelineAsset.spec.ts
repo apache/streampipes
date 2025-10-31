@@ -55,7 +55,7 @@ describe('Test Saving Pipeline with Asset Link', () => {
     });
 
     it('Add Pipeline to Asset during creation', () => {
-        PipelineUtils.deletePipeline(`Pipeline Test`);
+        PipelineUtils.editPipeline('Pipeline Test');
 
         // Go Back to Asset
         AssetUtils.goToAssets();

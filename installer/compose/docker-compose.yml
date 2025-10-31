@@ -26,10 +26,10 @@ services:
   # StreamPipes services
   backend:
     image: "${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}"
-    environment:
-      - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-jvm:8090
     depends_on:
       - couchdb
+    environment:
+      - SP_PRIORITIZED_PROTOCOL=nats
     volumes:
       - backend:/root/.streampipes
     logging: *default-logging
@@ -39,6 +39,8 @@ services:
 
   ui:
     image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
+    environment:
+      - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-iiot:8090
     ports:
       - "80:8088"
     depends_on:
@@ -58,32 +60,6 @@ services:
       - COUCHDB_PASSWORD=admin
     volumes:
       - couchdb:/opt/couchdb/data
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
-  kafka:
-    image: apache/kafka:4.1.0
-    hostname: kafka
-    environment:
-      - KAFKA_NODE_ID=0
-      - KAFKA_PROCESS_ROLES=controller,broker
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
-      - KAFKA_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-      - KAFKA_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,OUTSIDE://:9094
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,OUTSIDE://localhost:9094
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
-      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
-      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_MESSAGE_MAX_BYTES=5000012
-      - KAFKA_REPLICA_FETCH_MAX_BYTES=10000000
-      - KAFKA_FETCH_MESSAGE_MAX_BYTES=5000012
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS=1
-      - KAFKA_DEFAULT_REPLICATION_FACTOR=1
-    volumes:
-      - kafka3:/var/lib/kafka/data
     logging: *default-logging
     restart: unless-stopped
     networks:
@@ -109,20 +85,23 @@ services:
     networks:
       spnet:
 
+  nats:
+    image: nats
+    restart: unless-stopped
+    networks:
+      spnet:
+
   # Lite version pipeline elements
-  extensions-all-jvm:
-    image: "${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}"
+  extensions-all-iiot:
+    image: "${SP_DOCKER_REGISTRY}/extensions-all-iiot:${SP_VERSION}"
     logging: *default-logging
     restart: unless-stopped
     networks:
       spnet:
 
-
 volumes:
   backend:
-  connect:
   couchdb:
-  kafka3:
   influxdb:
   influxdb2:
   nginx:

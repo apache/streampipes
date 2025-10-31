@@ -36,24 +36,22 @@ Go to http://localhost to finish the installation in the browser. Once finished,
 * Docker-Compose >= 1.17.0 (Compose file format: 3.4)
 * Google Chrome (recommended), Mozilla Firefox, Microsoft Edge
 
-Tested on: **macOS, Linux, Windows 10** (CMD, PowerShell, GitBash)
+Tested on: **macOS, Linux, Windows** (CMD, PowerShell, GitBash)
 
-**macOS** and **Windows 10** (Pro, Enterprise, Education) users can easily get Docker and Docker-Compose on their systems by installing **Docker for Mac/Windows** (recommended).
+**macOS** and **Windows** users can easily get Docker and Docker-Compose on their systems by installing **Docker for Mac/Windows** (recommended).
 
 > **NOTE**: On purpose, we disabled all port mappings except of http port **80** to access the StreamPipes UI to provide minimal surface for conflicting ports.
 
 ## Usage
-We provide three options to get you going:
+We provide several options to get you going:
 
-- **default**: the standard installation, uses Kafka as internal message broker (recommended)
-- **nats**: the standard installation which uses Nats as message broker (recommended for new installations)
-- **full**:  contains experimental Flink wrappers
-- **quickstart**:  contains pre-configured sample assets, including pipelines, dashboards, and data views. We recommend first-time StreamPipes users to use the Quickstart mode to experience the convenience of StreamPipes in IIoT! （Recommended for first-time users)
+- **default**: the standard installation, uses NATS as internal message broker (recommended for new installations)
+- **kafka**: starts the Kafka-based setup via `docker-compose.kafka.yml`
+- **minimal**: contains only a minimal set of adapters, processors and sinks for iiot use cases
 
-The ``nats`` version will become the default version in a later release. You can already try it for new installations,
-but there's not yet an automatic migration from current Kafka-based installations to Nats.
+The NATS-based setup is the recommended default. If you previously relied on Kafka, the Kafka compose file is still available as `docker-compose.kafka.yml`.
 
-**Starting** the **default** option is as easy as simply running:
+**Starting** the **default (NATS)** option is as easy as simply running:
 > **NOTE**: Starting might take a while since `docker-compose up` also initially pulls all Docker images from Dockerhub.
 
 ```bash
@@ -69,35 +67,27 @@ docker-compose down
 # docker-compose down -v
 ```
 
-Starting the **nats** option works as follows:
+If you need the Kafka-based setup, start it with the dedicated Kafka compose file:
+
 ```bash
-docker-compose -f docker-compose.nats.yml up -d
+docker-compose -f docker-compose.kafka.yml up -d
 # go to `http://localhost` after all services are started
-```
-Stopping the **nats** option:
-```bash
-docker-compose -f docker-compose.nats.yml down
 ```
 
-Starting the **full** option is almost the same, just specify the `docker-compose.full.yml` file:
+Stopping the **kafka** option:
+
 ```bash
-docker-compose -f docker-compose.full.yml up -d
-# go to `http://localhost` after all services are started
-```
-Stopping the **full** option:
-```bash
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.kafka.yml down
 ```
 
-We introduce quickstart deployment that comes with a set of predefined StreamPipes assets, to use the quickstart mode, just build the Docker image and start **quickstart** option:
+Starting the **minimal** option is almost the same, just specify the `docker-compose.full.yml` file:
 ```bash
-docker-compose -f docker-compose.quickstart.yml build script-runner
-docker-compose -f docker-compose.quickstart.yml up -d
+docker-compose -f docker-compose.minimal.yml up -d
 # go to `http://localhost` after all services are started
 ```
-Stopping the **quickstart** option:
+Stopping the **minimal** option:
 ```bash
-docker-compose -f docker-compose.quickstart.yml down
+docker-compose -f docker-compose.minimal.yml down
 ```
 
 ## Update services
@@ -118,7 +108,7 @@ SP_VERSION=<VERSION>
 If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue i on [GitHub](https://github.com/apache/streampipes/issues).
 
 ## Get help
-Since we purely levarage Docker Compose, please see their [documentation](https://docs.docker.com/compose/) in case you want to find out more about their available [commands](https://docs.docker.com/compose/reference/overview/).
+Since we purely leverage Docker Compose, please see their [documentation](https://docs.docker.com/compose/) in case you want to find out more about their available [commands](https://docs.docker.com/compose/reference/overview/).
 
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
 
