@@ -21,8 +21,6 @@ package org.apache.streampipes.wrapper.standalone.function;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
-import org.apache.streampipes.extensions.api.memorymanager.SpMemoryManager;
 import org.apache.streampipes.extensions.api.declarer.IFunctionConfig;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;

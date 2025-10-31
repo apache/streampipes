@@ -20,7 +20,12 @@ package org.apache.streampipes.commons.environment;
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
 import org.apache.streampipes.commons.environment.parser.OAuthConfigurationParser;
-import org.apache.streampipes.commons.environment.variable.*;
+import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.DoubleEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.FloatEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.LongEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
 
 import java.util.List;
 
