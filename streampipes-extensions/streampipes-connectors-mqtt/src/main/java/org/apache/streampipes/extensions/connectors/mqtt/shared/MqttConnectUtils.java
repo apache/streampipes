@@ -70,15 +70,16 @@ public class MqttConnectUtils {
 
   }
 
-public static Label getTLS() {
+  public static Label getTLS() {
     return Labels.withId(TLS);
 
   }
 
   public static StaticPropertyAlternative getTLS(boolean selected) {
-    return Alternatives.from(Labels.withId(TLS),selected);
+    return Alternatives.from(Labels.withId(TLS), selected);
 
   }
+
   public static MqttConfig getMqttConfig(IParameterExtractor extractor) {
     return getMqttConfig(extractor, null);
   }
@@ -98,17 +99,17 @@ public static Label getTLS() {
 
     if (selectedAlternative.equals(ANONYMOUS_ACCESS)) {
       mqttConfig = new MqttConfig(brokerUrl, topic);
+      if (extractor.slideToggleValue(TLS)) {
+        mqttConfig = new MqttConfig(brokerUrl, topic, true);
+      }
     } else {
       String username = extractor.singleValueParameter(USERNAME, String.class);
       String password = extractor.secretValue(PASSWORD);
-      mqttConfig = new MqttConfig(brokerUrl, topic, username, password);
-    }
-
-    if (extractor.slideToggleValue(TLS)){
-        String username = extractor.singleValueParameter(USERNAME, String.class);
-      String password = extractor.secretValue(PASSWORD);
-      mqttConfig = new MqttConfig(brokerUrl, topic, username, password, true);
-
+      if (extractor.slideToggleValue(TLS)) {
+        mqttConfig = new MqttConfig(brokerUrl, topic, username, password, true);
+      } else {
+        mqttConfig = new MqttConfig(brokerUrl, topic, username, password);
+      }
     }
 
     return mqttConfig;

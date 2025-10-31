@@ -29,7 +29,7 @@ public class MqttConfig {
   //private String caCertificatePath;   
   //private String clientCertificatePath; 
   //private String clientKeyPath;       
-  private Boolean tls;          
+  private Boolean tls = false;          
   //private String tlsVersion;    
 
 
@@ -37,7 +37,7 @@ public class MqttConfig {
     this.authenticated = false;
     this.url = url;
     this.topic = topic;
-    this.tls = false;
+
   }
 
   public MqttConfig(String url, String topic, String username, String password) {
@@ -58,15 +58,16 @@ public class MqttConfig {
     //this.tlsVersion = tlsVersion;
 }
 
-public MqttConfig(String url, String topic, String username, String password, Boolean tlsEnabled/**, 
-                  String caCertificatePath, String clientCertificatePath, String clientKeyPath, String tlsVersion*/) {
-    this(url, topic, username, password); // Calls the other constructor for base fields
+public MqttConfig(String url, String topic, String username, String password, Boolean tlsEnabled) {
+    this(url, topic, username, password); 
     this.tls = tlsEnabled;
-    /**this.caCertificatePath = caCertificatePath;
-    this.clientCertificatePath = clientCertificatePath;
-    this.clientKeyPath = clientKeyPath;
-    this.tlsVersion = tlsVersion;*/
 }
+
+public MqttConfig(String url, String topic, Boolean tlsEnabled) {
+    this(url, topic); 
+    this.tls = tlsEnabled;
+}
+
 
 
 
