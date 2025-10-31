@@ -125,7 +125,7 @@ public class PipelineHealthCheck implements Runnable {
           }
           currentPipeline.setPipelineNotifications(pipelineNotifications);
           StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI()
-              .updatePipeline(currentPipeline);
+              .updateElement(currentPipeline);
         }
       });
       int healthNum = pipelinesStats.getRunningPipelines() - pipelinesStats.getFailedPipelines()
@@ -225,7 +225,7 @@ public class PipelineHealthCheck implements Runnable {
     try {
       this.checkAndRestorePipelineElements();
     } catch (Exception e) {
-
+        LOG.error("Error while checking and restoring pipeline elements", e);
     }
 
   }

@@ -62,23 +62,8 @@ public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements
   }
 
   @Override
-  public void storePipeline(Pipeline pipeline) {
-    persist(pipeline);
-  }
-
-  @Override
-  public void updatePipeline(Pipeline pipeline) {
-    update(pipeline);
-  }
-
-  @Override
   public Pipeline getPipeline(String pipelineId) {
     return findWithNullIfEmpty(pipelineId);
-  }
-
-  @Override
-  public void deletePipeline(String pipelineId) {
-    delete(pipelineId);
   }
 
   @Override

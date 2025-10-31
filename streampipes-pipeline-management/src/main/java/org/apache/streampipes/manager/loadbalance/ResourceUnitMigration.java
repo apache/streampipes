@@ -156,7 +156,7 @@ public class ResourceUnitMigration {
     }
 
     // Save updated pipeline
-    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(pipeline);
 
     logger.debug("Updated pipeline {} endpoints in storage", pipeline.getPipelineId());
   }
