@@ -109,10 +109,8 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   public void process(Map<String, Object> rawEvent, long size, String topicName) {
     try {
       var sourceInfo = sourceInfoMapper.get(topicName);
-
       var event = EventFactory
           .fromMap(rawEvent, sourceInfo, schemaInfoMapper.get(topicName));
-
       this.onEvent(event, sourceInfo.getSourceId());
       increaseCounter(sourceInfo.getSourceId(), size);
     } catch (RuntimeException e) {

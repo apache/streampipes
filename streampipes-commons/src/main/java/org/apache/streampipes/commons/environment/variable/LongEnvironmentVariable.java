@@ -16,9 +16,16 @@
  *
  */
 
-package org.apache.streampipes.messaging;
+package org.apache.streampipes.commons.environment.variable;
 
-public interface InternalEventProcessor<T> {
+public class LongEnvironmentVariable extends EnvironmentVariable<Long> {
 
-  void onEvent(T event) throws InterruptedException;
+  public LongEnvironmentVariable(org.apache.streampipes.commons.constants.Envs envVariable) {
+    super(envVariable);
+  }
+
+  @Override
+  public Long parse(String value) {
+    return Long.parseLong(value);
+  }
 }

@@ -18,7 +18,12 @@
 package org.apache.streampipes.commons.environment;
 
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
-import org.apache.streampipes.commons.environment.variable.*;
+import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.DoubleEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.FloatEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.LongEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
 
 import java.util.List;
 
@@ -234,5 +239,25 @@ public interface Environment {
 
   BooleanEnvironmentVariable getLoadManagerEnable();
 
+  //SpRateLimiter
+  LongEnvironmentVariable getRateLimiterDefaultWarmupPeriod();
+  IntEnvironmentVariable getRateLimiterSchedulerInitialDelaySeconds();
+  IntEnvironmentVariable getRateLimiterSchedulerPeriodSeconds();
+  IntEnvironmentVariable getRateLimiterStatsResetThreshold();
+  IntEnvironmentVariable getRateLimiterStatsResetFactor();
+  IntEnvironmentVariable getRateLimiterStatsResetDivisor();
+  IntEnvironmentVariable getRateLimiterShutdownTimeoutSeconds();
+  LongEnvironmentVariable getRateLimiterTimeoutMs();
+  DoubleEnvironmentVariable getRateLimiterPermitsSetPercentage();
+
+  //SpMemoryManager
+  LongEnvironmentVariable getMemoryManagerDefaultInitialMemory();
+  LongEnvironmentVariable getMemoryManagerWaitTimeoutMs();
+  IntEnvironmentVariable getMemorySchedulerInitialDelaySeconds();
+  IntEnvironmentVariable getMemorySchedulerPeriodSeconds();
+  LongEnvironmentVariable getMemoryBytesToMb();
+  IntEnvironmentVariable getMemoryManagerShutdownTimeoutSeconds();
+  DoubleEnvironmentVariable getMemoryManagerUsageThreshold();
+  DoubleEnvironmentVariable getMemoryWarningThreshold();
   StringEnvironmentVariable getDatalakeSchedulerCron();
 }

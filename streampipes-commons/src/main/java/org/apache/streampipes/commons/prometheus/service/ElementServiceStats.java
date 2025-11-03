@@ -20,8 +20,6 @@ package org.apache.streampipes.commons.prometheus.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 /**
  * Service Statistics
  */
