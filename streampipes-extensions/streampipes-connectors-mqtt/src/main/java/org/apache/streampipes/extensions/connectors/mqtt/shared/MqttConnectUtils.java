@@ -82,12 +82,6 @@ public class MqttConnectUtils {
             );
     group.setHorizontalRendering(false);
     return Alternatives.from(Labels.withId(CLIENT_CERT_ACCESS), group);
-        //StaticProperties.group(Labels.withId(CLIENT_CERT_GROUP),
-            //StaticProperties.stringFreeTextProperty(Labels.withId(CLIENTCERT)),
-            //StaticProperties.secretValue(Labels.withId(CLIENTKEY))));
-         //    StaticProperties.secretValue(Labels.withId(CLIENTCERT)),
-          //  StaticProperties.stringFreeTextProperty(Labels.withId(CLIENTKEY), true, false)));
-
 
   }
 
