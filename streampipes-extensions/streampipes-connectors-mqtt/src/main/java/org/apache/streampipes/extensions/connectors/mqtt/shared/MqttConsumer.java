@@ -68,6 +68,8 @@ public class MqttConsumer implements Runnable {
             connection.disconnect();
         } catch (Exception e) {
             LOG.error("Error in MQTT consumer: ", e);
+            throw new RuntimeException("Error when receiving data from MQTT", e);
+
         }
     }
 
