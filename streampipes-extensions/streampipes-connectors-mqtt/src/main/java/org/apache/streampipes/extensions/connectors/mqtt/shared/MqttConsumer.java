@@ -182,7 +182,6 @@ public class MqttConsumer implements Runnable {
         }
 
         SSLContext sslContext = SSLContext.getInstance("TLS");
-        LOG.info("SSL CONTEYTSET");
         sslContext.init(keyManagers, trustManagerFactory.getTrustManagers(), new SecureRandom());
         mqtt.setSslContext(sslContext);
     }
