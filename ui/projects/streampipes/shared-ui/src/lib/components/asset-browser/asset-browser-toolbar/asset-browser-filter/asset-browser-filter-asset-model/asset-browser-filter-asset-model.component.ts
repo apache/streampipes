@@ -23,7 +23,6 @@ import { AssetFilter } from '../../../asset-browser.model';
 @Component({
     selector: 'sp-asset-browser-filter-asset-model',
     templateUrl: 'asset-browser-filter-asset-model.component.html',
-    styleUrls: ['../asset-browser-filter.component.scss'],
     standalone: false,
 })
 export class AssetBrowserFilterAssetModelComponent {
