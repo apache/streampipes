@@ -37,9 +37,10 @@ import { SpAssetBrowserService } from '../../asset-browser.service';
 export class AssetBrowserFilterComponent implements OnInit, OnDestroy {
     @Input()
     assetBrowserData: AssetBrowserData;
+
     activeFilters: AssetFilter;
 
-    filterSub: Subscription;
+    filter$: Subscription;
 
     @Output()
     closeMenu: EventEmitter<void> = new EventEmitter();
@@ -47,7 +48,7 @@ export class AssetBrowserFilterComponent implements OnInit, OnDestroy {
     constructor(private assetBrowserService: SpAssetBrowserService) {}
 
     ngOnInit() {
-        this.filterSub = this.assetBrowserService.filter$.subscribe(
+        this.filter$ = this.assetBrowserService.filter$.subscribe(
             activeFilters => {
                 this.activeFilters = activeFilters;
             },
@@ -65,6 +66,6 @@ export class AssetBrowserFilterComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.filterSub?.unsubscribe();
+        this.filter$?.unsubscribe();
     }
 }

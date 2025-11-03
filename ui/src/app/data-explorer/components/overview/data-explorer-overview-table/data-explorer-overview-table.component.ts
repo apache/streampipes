@@ -16,8 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { SpDataExplorerOverviewDirective } from '../data-explorer-overview.directive';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
     ChartService,
@@ -25,16 +24,14 @@ import {
 } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
-    CurrentUserService,
     DateFormatService,
-    DialogService,
+    SpAssetBrowserService,
 } from '@streampipes/shared-ui';
-import { AuthService } from '../../../../services/auth.service';
-import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
+import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-data-explorer-overview-table',
@@ -42,28 +39,42 @@ import { DataExplorerDashboardService } from '../../../../dashboard-shared/servi
     styleUrls: ['../data-explorer-overview.component.scss'],
     standalone: false,
 })
-export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverviewDirective {
+export class SpDataExplorerDataViewOverviewComponent implements OnInit {
+    @Input()
+    hasDataExplorerWritePrivileges: boolean;
+
+    @Input()
+    admin: boolean;
+
     dataSource = new MatTableDataSource<DataExplorerWidgetModel>();
-    displayedColumns: string[] = [];
+    displayedColumns: string[] = [
+        'name',
+        'lastModified',
+        'createdAt',
+        'actions',
+    ];
     charts: DataExplorerWidgetModel[] = [];
     filteredCharts: DataExplorerWidgetModel[] = [];
-
-    @Output()
-    resourceCountEmitter: EventEmitter<number> = new EventEmitter();
 
     private dataViewService = inject(ChartService);
     private dataExplorerDashboardService = inject(DataExplorerSharedService);
     private dialog = inject(MatDialog);
     private translateService = inject(TranslateService);
     private dateFormatService = inject(DateFormatService);
+    private routingService = inject(DataExplorerRoutingService);
+    private assetFilterService = inject(SpAssetBrowserService);
 
-    afterInit(): void {
-        this.displayedColumns = [
-            'name',
-            'lastModified',
-            'createdAt',
-            'actions',
-        ];
+    assetFilter$: Subscription;
+    currentFilterIds = new Set<string>();
+
+    ngOnInit(): void {
+        this.assetFilterService.applyAssetLinkType('chart');
+        this.assetFilter$ =
+            this.assetFilterService.currentAssetFilter$.subscribe(filter => {
+                this.currentFilterIds =
+                    filter?.activeElementIds || new Set<string>();
+                this.applyChartFilters(this.currentFilterIds);
+            });
         this.getDataViews();
     }
 
@@ -74,8 +85,7 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
                     b.baseAppearanceConfig.widgetTitle,
                 ),
             );
-            this.resourceCountEmitter.emit(this.charts.length);
-            this.applyChartFilters();
+            this.applyChartFilters(this.currentFilterIds);
         });
     }
 

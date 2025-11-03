@@ -39,7 +39,19 @@
     .btn-secondary {
         @include mat.button-overrides(
             (
-                filled-container-color: var(--color-bg-1),
+                filled-container-color: var(--mat-sys-surface-container-high),
+                filled-label-text-color: var(--mat-sys-secondary),
+                text-hover-state-layer-opacity: 1,
+                filled-label-text-weight: 400,
+            )
+        );
+    }
+
+    .btn-secondary-outline {
+        border: 1px solid var(--color-primary);
+        @include mat.button-overrides(
+            (
+                filled-container-color: var(--mat-sys-surface-container-high),
                 filled-label-text-color: var(--mat-sys-primary),
                 text-hover-state-layer-opacity: 1,
                 filled-label-text-weight: 400,

@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,34 +16,15 @@
  *
  */
 
-import {
-    AssetLink,
-    AssetSiteDesc,
-    Isa95TypeDesc,
-    SpAsset,
-    SpLabel,
-} from '@streampipes/platform-services';
-
-export interface AssetBrowserData {
-    assets: SpAsset[];
-    assetLinks: AssetLink[];
-    sites: AssetSiteDesc[];
-    labels: SpLabel[];
+.active-filters {
+    border-radius: 50%;
+    background: var(--color-secondary);
+    color: var(--color-bg-0);
+    padding: 2px;
+    line-height: 20px;
+    font-weight: bold;
 }
 
-export interface AssetFilter {
-    selectedSites: AssetSiteDesc[];
-    selectedTypes: Isa95TypeDesc[];
-    selectedLabels: SpLabel[];
-    selectedAssetModels: SpAsset[];
-}
-
-export interface FilterResult {
-    filterActive: boolean;
-    filterDisabled: boolean;
-    activeElementIds?: Set<string>;
-    currentAssetLink?: string;
-    selectedAssets?: SpAsset[];
-    allAssetCount?: number;
-    selectedAssetCount?: number;
+.btn-filter {
+    font-weight: 700;
 }

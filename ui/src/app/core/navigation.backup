@@ -23,7 +23,8 @@ import { AuthService } from '../../services/auth.service';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { AppConstants } from '../../services/app.constants';
 import { UserPrivilege } from '../../_enums/user-privilege.enum';
-import { inject, signal } from '@angular/core';
+import { inject } from '@angular/core';
+import { CollapseService } from '../collapse.service';
 
 export interface MenuItem {
   link: string;
@@ -32,6 +33,7 @@ export interface MenuItem {
   pageNames: any[];
   privileges: any[];
   visible?: boolean;
+  category: string;
 }
 
 export interface MenuGroup {
@@ -49,33 +51,34 @@ export interface MenuCategory {
 export abstract class BaseNavigationComponent {
 
   activePageName: string;
+  activePage = 'home';
   authenticated = true;
   topItems: MenuItem[] = [];
   menuGroups: MenuGroup[] = [];
   notificationsVisible = false;
 
   public categories: MenuCategory[] = [
-    {
-      id: 'top',
-      title: 'top',
-      collapsed: false
-    },
-    {
-      id: 'analytics',
-      title: 'Analytics',
-      collapsed: false
-    },
-    {
-      id: 'visualization',
-      title: 'Visualization',
-      collapsed: false
-    },
-    {
-      id: 'management',
-      title: 'Management',
-      collapsed: true
-    },
-  ]
+      {
+          id: 'top',
+          title: 'top',
+          collapsed: false,
+      },
+      {
+          id: 'analytics',
+          title: 'Analytics',
+          collapsed: false,
+      },
+      {
+          id: 'visualization',
+          title: 'Visualization',
+          collapsed: false,
+      },
+      {
+          id: 'management',
+          title: 'Management',
+          collapsed: false,
+      },
+  ];
 
   public menu = [
     {
@@ -98,7 +101,7 @@ export abstract class BaseNavigationComponent {
     },
     {
         link: 'connect',
-        title: 'Connect',
+        title: 'Connectors',
         icon: 'power',
         pageNames: [PageName.CONNECT],
         privileges: [UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER],
@@ -107,7 +110,7 @@ export abstract class BaseNavigationComponent {
     },
     {
         link: 'dashboard',
-        title: 'Dashboard',
+        title: 'Dashboards',
         icon: 'dashboard',
         pageNames: [PageName.DASHBOARD],
         privileges: [UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD],
@@ -116,7 +119,7 @@ export abstract class BaseNavigationComponent {
     },
     {
         link: 'dataexplorer',
-        title: 'Data Explorer',
+        title: 'Charts',
         icon: 'query_stats',
         pageNames: [PageName.DATA_EXPLORER],
         privileges: [UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW],
@@ -125,7 +128,7 @@ export abstract class BaseNavigationComponent {
     },
     {
         link: 'assets',
-        title: 'Asset Management',
+        title: 'Assets',
         icon: 'precision_manufacturing',
         pageNames: [PageName.ASSETS],
         privileges: [UserPrivilege.PRIVILEGE_READ_ASSETS, UserPrivilege.PRIVILEGE_WRITE_ASSETS],
@@ -134,7 +137,7 @@ export abstract class BaseNavigationComponent {
     },
     {
         link: 'configuration',
-        title: 'Configuration',
+        title: 'Settings',
         icon: 'settings',
         pageNames: [PageName.SETTINGS],
         privileges: [UserPrivilege.PRIVILEGE_WRITE_ASSETS, UserPrivilege.PRIVILEGE_WRITE_LABELS, UserPrivilege.PRIVILEGE_WRITE_FILES],
@@ -143,13 +146,13 @@ export abstract class BaseNavigationComponent {
     },
   ];
 
-
-
-
    protected authService = inject(AuthService);
    protected currentUserService = inject(CurrentUserService);
    protected router = inject(Router);
    protected appConstants = inject(AppConstants);
+   protected collapseService = inject(CollapseService);
+
+    collapsed = this.collapseService.isCollapsed;
 
     onInit() {
       this.currentUserService.user$.subscribe(user => {
@@ -177,10 +180,6 @@ export abstract class BaseNavigationComponent {
           this.activePageName = this.getPageTitle(this.activePage);
         }
       });
-    }
-
-    getActivePage() {
-      return this.activePage;
     }
 
     getPageTitle(path) {
@@ -211,28 +210,11 @@ export abstract class BaseNavigationComponent {
       return this.authService.isAnyAccessGranted(privileges);
     }
 
-  activePage: string = 'home';
-  isCollapsed = signal<boolean>(this.loadCollapsed());
+      toggleGroup(group: MenuGroup): void {
+        group.collapsed = !group.collapsed;
+      }
 
-  // Collapse/expand entire menubar
-  toggleMenubar(): void {
-    const next = !this.isCollapsed();
-    this.isCollapsed.set(next);
-    localStorage.setItem('sp-menubar-collapsed', JSON.stringify(next));
-  }
-
-  // Collapse/expand a single group
-  toggleGroup(group: MenuGroup): void {
-    group.collapsed = !group.collapsed;
-  }
-
-  private loadCollapsed(): boolean {
-    try {
-      const v = localStorage.getItem('sp-menubar-collapsed');
-      return v ? JSON.parse(v) : false;
-    } catch {
-      return false;
-    }
-  }
-
+      toggleMenubar(): void {
+      this.collapseService.toggleMenubar();
+      }
 }

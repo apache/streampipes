@@ -16,63 +16,34 @@
   ~
   -->
 
-<div
-    fxLayout="row"
-    fxFlex="100"
-    fxLayoutAlign="start center"
-    class="filter-section"
+<sp-asset-browser-filter-outer
+    [selectedItems]="activeFilters.selectedLabels"
+    [allItems]="labels"
+    [title]="'Labels' | translate"
+    (selectAllEmitter)="selectAll()"
+    (deselectAllEmitter)="selectNone()"
 >
-    <div
-        fxFlex="50"
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        fxLayoutGap="10px"
+    <mat-form-field
+        appearance="outline"
+        class="form-field-small filter-selection"
+        color="accent"
     >
-        <div
-            class="filter-header"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            fxFlex="100"
+        <mat-select
+            multiple
+            [compareWith]="compare"
+            [(ngModel)]="activeFilters.selectedLabels"
         >
-            <div
-                fxLayoutAlign="center center"
-                class="active-filters mr-5"
-                *ngIf="activeFilters.selectedLabels.length > 0"
+            <mat-option
+                *ngFor="let label of labels; let i = index"
+                [value]="label"
             >
-                <i class="material-icons fs-icon">filter_alt</i>
-            </div>
-            <span>{{ 'Labels' | translate }}</span>
-        </div>
-    </div>
-    <div
-        fxFlex="50"
-        class="filter-selection"
-        fxLayout="column"
-        (click)="$event.stopPropagation()"
-        fxLayoutAlign="end center"
-    >
-        <mat-form-field
-            appearance="outline"
-            class="form-field-small filter-selection"
-            color="accent"
-        >
-            <mat-select
-                multiple
-                [compareWith]="compare"
-                [(ngModel)]="activeFilters.selectedLabels"
-            >
-                <mat-option
-                    *ngFor="let label of labels; let i = index"
-                    [value]="label"
+                <sp-label
+                    [labelText]="label.label"
+                    size="small"
+                    [labelBackground]="label.color"
                 >
-                    <sp-label
-                        [labelText]="label.label"
-                        size="small"
-                        [labelBackground]="label.color"
-                    >
-                    </sp-label>
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-</div>
+                </sp-label>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</sp-asset-browser-filter-outer>

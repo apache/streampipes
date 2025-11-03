@@ -66,13 +66,6 @@
                 fxLayoutAlign="end center"
                 class="page-container-nav"
             >
-                <sp-asset-browser-toolbar
-                    filteredAssetLinkType="adapter"
-                    [allResourcesAlias]="'Adapters' | translate"
-                    [resourceCount]="existingAdapters.length"
-                    (filterIdsEmitter)="applyAdapterFilters($event)"
-                >
-                </sp-asset-browser-toolbar>
                 <button
                     mat-icon-button
                     color="accent"
@@ -123,6 +116,7 @@
                 <ng-container matColumnDef="start">
                     <th mat-header-cell *matHeaderCellDef>Start</th>
                     <td
+                        (click)="$event.stopPropagation()"
                         mat-cell
                         *matCellDef="let adapter"
                         data-cy="adapters-table"

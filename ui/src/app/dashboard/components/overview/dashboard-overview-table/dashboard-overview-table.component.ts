@@ -16,22 +16,24 @@
  *
  */
 
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
     DateFormatService,
+    DialogService,
     PanelType,
+    SpAssetBrowserService,
 } from '@streampipes/shared-ui';
-import { SpDataExplorerOverviewDirective } from '../../../../data-explorer/components/overview/data-explorer-overview.directive';
 import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { CloneDashboardDialogComponent } from '../../../dialogs/clone-dashboard/clone-dashboard-dialog.component';
-import { EditDashboardDialogComponent } from '../../../dialogs/edit-dashboard/edit-dashboard-dialog.component';
+import { Subscription } from 'rxjs';
+import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
@@ -41,14 +43,22 @@ import { EditDashboardDialogComponent } from '../../../dialogs/edit-dashboard/ed
     ],
     standalone: false,
 })
-export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirective {
+export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
+    @Input()
+    hasDashboardWritePrivileges: boolean;
+
+    @Input()
+    admin: boolean;
+
     dataSource = new MatTableDataSource<Dashboard>();
-    displayedColumns: string[] = [];
+    displayedColumns: string[] = [
+        'name',
+        'lastModified',
+        'createdAt',
+        'actions',
+    ];
     dashboards: Dashboard[] = [];
     filteredDashboards: Dashboard[] = [];
-
-    @Output()
-    resourceCountEmitter: EventEmitter<number> = new EventEmitter();
 
     private dashboardService = inject(DashboardService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
@@ -57,14 +67,21 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
     protected translateService = inject(TranslateService);
     protected dateFormatService = inject(DateFormatService);
     private router = inject(Router);
+    private assetFilterService = inject(SpAssetBrowserService);
+    private routingService = inject(DataExplorerRoutingService);
+    private dialogService = inject(DialogService);
 
-    afterInit(): void {
-        this.displayedColumns = [
-            'name',
-            'lastModified',
-            'createdAt',
-            'actions',
-        ];
+    assetFilter$: Subscription;
+    currentFilterIds = new Set<string>();
+
+    ngOnInit(): void {
+        this.assetFilterService.applyAssetLinkType('dashboard');
+        this.assetFilter$ =
+            this.assetFilterService.currentAssetFilter$.subscribe(filter => {
+                this.currentFilterIds =
+                    filter?.activeElementIds || new Set<string>();
+                this.applyDashboardFilters(this.currentFilterIds);
+            });
         this.getDashboards();
     }
 
@@ -134,8 +151,7 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
     getDashboards() {
         this.dashboardService.getDashboards().subscribe(data => {
             this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
-            this.resourceCountEmitter.emit(this.dashboards.length);
-            this.applyDashboardFilters();
+            this.applyDashboardFilters(this.currentFilterIds);
         });
     }
 
@@ -183,5 +199,9 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
 
     onRowClicked(dashboard: Dashboard) {
         this.showDashboard(dashboard);
+    }
+
+    ngOnDestroy() {
+        this.assetFilter$?.unsubscribe();
     }
 }

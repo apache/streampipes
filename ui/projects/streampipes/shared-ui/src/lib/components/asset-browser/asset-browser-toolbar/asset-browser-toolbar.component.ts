@@ -16,60 +16,31 @@
  *
  */
 
-import {
-    Component,
-    EventEmitter,
-    inject,
-    Input,
-    OnInit,
-    Output,
-    ViewChild,
-} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AssetBrowserData } from '../asset-browser.model';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Subscription } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 import { CurrentUserService } from '../../../services/current-user.service';
 import { SpAssetBrowserService } from '../asset-browser.service';
-import { SpAsset } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-asset-browser-toolbar',
     templateUrl: 'asset-browser-toolbar.component.html',
+    styleUrls: ['asset-browser-toolbar.component.scss'],
     standalone: false,
 })
-export class AssetBrowserToolbarComponent implements OnInit {
+export class AssetBrowserToolbarComponent implements OnInit, OnDestroy {
     private currentUserService = inject(CurrentUserService);
     private assetBrowserService = inject(SpAssetBrowserService);
-    private translateService = inject(TranslateService);
-
-    @Input()
-    allResourcesAlias = this.translateService.instant('Resources');
-
-    @Input()
-    browserWidth = 20;
-
-    @Input()
-    filteredAssetLinkType: string;
-
-    @Input()
-    resourceCount = 0;
-
-    @Input()
-    assetSelectionMode = false;
-
-    @Output()
-    filterIdsEmitter: EventEmitter<Set<string>> = new EventEmitter<
-        Set<string>
-    >();
-
-    @Output()
-    selectedAssetIdEmitter: EventEmitter<string> = new EventEmitter<string>();
 
     assetBrowserData: AssetBrowserData;
     showAssetBrowser = false;
 
-    assetBrowserDataSub: Subscription;
+    assetBrowserData$: Subscription;
+    filterActive = false;
+    filterDisabled = false;
+    selectedAssetCount = 0;
+    allAssetCount = 0;
 
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
 
@@ -79,26 +50,23 @@ export class AssetBrowserToolbarComponent implements OnInit {
             'PRIVILEGE_WRITE_ASSETS',
         ]);
         if (this.showAssetBrowser) {
-            this.assetBrowserDataSub =
+            this.assetBrowserData$ =
                 this.assetBrowserService.assetData$.subscribe(assetData => {
                     this.assetBrowserData = assetData;
-                    console.log(assetData);
                 });
+            this.assetBrowserService.currentAssetFilter$.subscribe(
+                assetFilter => {
+                    this.filterActive = assetFilter.filterActive;
+                    this.filterDisabled = assetFilter.filterDisabled;
+                    this.allAssetCount = assetFilter.allAssetCount;
+                    this.selectedAssetCount = assetFilter.selectedAssetCount;
+                },
+            );
         }
     }
 
-    applyAssetFilter(asset: SpAsset) {
-        const elementIds = new Set<string>();
-        if (asset.assetId !== '_root') {
-            this.assetBrowserService.collectElementIds(
-                asset,
-                this.filteredAssetLinkType,
-                elementIds,
-            );
-            this.filterIdsEmitter.emit(elementIds);
-        }
-        this.filterIdsEmitter.emit(elementIds);
-        this.selectedAssetIdEmitter.emit(asset.assetId);
+    ngOnDestroy() {
+        this.assetBrowserData$?.unsubscribe();
     }
 
     closeMenu(): void {

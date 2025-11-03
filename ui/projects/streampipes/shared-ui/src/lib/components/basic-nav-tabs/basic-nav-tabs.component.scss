@@ -17,11 +17,11 @@
  */
 
 .sp-bg-lightgray {
-    background-color: var(--color-bg-1);
+    background-color: var(--color-bg-0);
 }
 
 .sp-tab-bg {
-    background-color: var(--color-bg-1);
+    background-color: var(--color-bg-0);
 }
 
 .page-container {
@@ -46,4 +46,8 @@
 
 .pr-5 {
     padding-right: 5px;
+}
+
+.mat-mdc-tab-header {
+    flex-shrink: 1;
 }

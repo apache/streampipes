@@ -23,7 +23,8 @@ import { AuthService } from '../../services/auth.service';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { AppConstants } from '../../services/app.constants';
 import { UserPrivilege } from '../../_enums/user-privilege.enum';
-import { inject, signal } from '@angular/core';
+import { inject } from '@angular/core';
+import { CollapseService } from '../collapse.service';
 
 export interface MenuItem {
   link: string;
@@ -55,7 +56,6 @@ export abstract class BaseNavigationComponent {
   topItems: MenuItem[] = [];
   menuGroups: MenuGroup[] = [];
   notificationsVisible = false;
-  isCollapsed = signal<boolean>(this.loadCollapsed());
 
   public categories: MenuCategory[] = [
     {{#categoriesActive}}
@@ -65,7 +65,7 @@ export abstract class BaseNavigationComponent {
           collapsed: {{{collapsed}}},
       },
     {{/categoriesActive}}
-  ]
+  ];
 
   public menu = [
     {{#modulesActive}}
@@ -85,6 +85,9 @@ export abstract class BaseNavigationComponent {
    protected currentUserService = inject(CurrentUserService);
    protected router = inject(Router);
    protected appConstants = inject(AppConstants);
+   protected collapseService = inject(CollapseService);
+
+   collapsed = this.collapseService.isCollapsed;
 
     onInit() {
       this.currentUserService.user$.subscribe(user => {
@@ -142,23 +145,12 @@ export abstract class BaseNavigationComponent {
       return this.authService.isAnyAccessGranted(privileges);
     }
 
-    toggleMenubar(): void {
-        const next = !this.isCollapsed();
-        this.isCollapsed.set(next);
-        localStorage.setItem('sp-menubar-collapsed', JSON.stringify(next));
-      }
+  toggleGroup(group: MenuGroup): void {
+    group.collapsed = !group.collapsed;
+  }
 
-      toggleGroup(group: MenuGroup): void {
-        group.collapsed = !group.collapsed;
-      }
-
-      private loadCollapsed(): boolean {
-        try {
-          const v = localStorage.getItem('sp-menubar-collapsed');
-          return v ? JSON.parse(v) : false;
-        } catch {
-          return false;
+  toggleMenubar(): void {
+        this.collapseService.toggleMenubar();
         }
-      }
 
 }
