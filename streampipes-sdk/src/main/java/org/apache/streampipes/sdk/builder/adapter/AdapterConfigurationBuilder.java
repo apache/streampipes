@@ -98,7 +98,7 @@ public class AdapterConfigurationBuilder extends
   }
 
   /**
-   * deprecated: Categories are no longer needed for adapters as of version 0.98.0
+   * @deprecated Categories are no longer needed for adapters as of version 0.98.0
    */
   @Deprecated(forRemoval = true, since = "0.98.0")
   public AdapterConfigurationBuilder withCategory(AdapterType... categories) {
