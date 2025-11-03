@@ -79,19 +79,26 @@
 
 /* Header */
 .menubar-header {
-    height: var(--mat-toolbar-standard-height);
+    height: calc(var(--mat-toolbar-standard-height) + 10px);
     padding: 0 10px 0 12px;
     border-bottom: 1px solid var(--mb-outline);
     display: flex;
     align-items: center;
     gap: 8px;
-    //background: var(--color-bg-1);
+}
+
+.brand {
+    height: var(--mat-toolbar-standard-height);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
 }
 
 .brand img {
     max-width: 100%;
     display: block;
-    padding: 10px 0px;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .collapse-btn {
@@ -232,12 +239,8 @@
         transparent
     );
     outline-color: var(--mb-outline-strong);
-    //box-shadow:
-    //        inset 0 0 0 1px rgba(255,255,255,.05),
-    //        0 6px 16px rgba(0,0,0,.18);
 }
 
-/* Icon + text + badge */
 .item-icon {
     font-size: 18px;
     width: 18px;
@@ -258,7 +261,6 @@
     text-overflow: ellipsis;
 }
 
-/* Collapsed (icon-only) refinements */
 .menubar-root.collapsed .iconbar-item-btn {
     justify-content: center;
 }
@@ -268,7 +270,6 @@
     padding: 10px 0;
 }
 
-/* Responsive hint (optional) */
 @media (max-width: 960px) {
     :root {
         --mb-width: 248px;
