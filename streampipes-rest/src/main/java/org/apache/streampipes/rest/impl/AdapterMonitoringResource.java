@@ -21,13 +21,18 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
-import org.apache.streampipes.model.monitoring.SpLogEntry;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
+import org.apache.streampipes.rest.security.SpPermissionEvaluator;
+import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,38 +46,59 @@ import java.util.Map;
 @RequestMapping("/api/v2/adapter-monitoring")
 public class AdapterMonitoringResource extends AbstractMonitoringResource {
 
+  private final IAdapterStorage adapterStorage;
+
+  public AdapterMonitoringResource() {
+    this.adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
+  }
+
   @GetMapping(
       path = "adapter/{elementId}/logs",
       produces = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize("this.hasReadAuthority() and hasPermission('#elementId', 'READ')")
-  public ResponseEntity<List<SpLogEntry>> getLogInfoForAdapter(
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResponseEntity<?> getLogInfoForAdapter(
       @PathVariable("elementId") String elementId
   ) {
-    return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForResource(elementId));
+    var adapterDescription = getAdapter(elementId);
+    if (checkAdapterPermission(adapterDescription, "READ")) {
+      return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForResource(elementId));
+    } else {
+      return unauthorized();
+    }
   }
 
   @GetMapping(
       path = "adapter/{elementId}/metrics",
       produces = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize("this.hasReadAuthority() and hasPermission('#elementId', 'READ')")
-  public ResponseEntity<SpMetricsEntry> getMetricsInfoForAdapter(
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResponseEntity<?> getMetricsInfoForAdapter(
       @PathVariable("elementId") String elementId
   ) {
-    return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(elementId));
+    var adapterDescription = getAdapter(elementId);
+    if (checkAdapterPermission(adapterDescription, "READ")) {
+      return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(elementId));
+    } else {
+      return unauthorized();
+    }
   }
 
   @GetMapping(
       path = "metrics",
       produces = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize("this.hasReadAuthority() and hasPermission('#elementId', 'READ')")
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfos(
       @RequestParam(value = "filter") List<String> elementIds
   ) {
     new ExtensionsServiceLogExecutor().triggerUpdate();
-    return ok(ExtensionsLogProvider.INSTANCE.getMetricsInfoForResources(elementIds));
+    var filteredElementIds = elementIds.stream()
+        .map(adapterStorage::getElementById)
+        .filter(a -> checkAdapterPermission(a, "READ"))
+        .map(NamedStreamPipesEntity::getElementId)
+        .toList();
+    return ok(ExtensionsLogProvider.INSTANCE.getMetricsInfoForResources(filteredElementIds));
   }
 
   /**
@@ -87,5 +113,23 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
    */
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE);
+  }
+
+  public AdapterDescription getAdapter(String elementId) {
+    return adapterStorage.getElementById(elementId);
+  }
+
+  /**
+   * Checks if the current user has the permission to read the adapter
+   */
+  private boolean checkAdapterPermission(AdapterDescription adapterDescription,
+                                         String permission) {
+    var spPermissionEvaluator = new SpPermissionEvaluator();
+    var authentication = SecurityContextHolder.getContext()
+        .getAuthentication();
+    return spPermissionEvaluator.hasPermission(
+        authentication,
+        adapterDescription.getCorrespondingDataStreamElementId(),
+        permission);
   }
 }
