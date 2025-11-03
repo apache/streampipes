@@ -35,12 +35,14 @@ public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
     @Override
   public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
                                                      IStaticPropertyExtractor extractor) throws RuntimeException {
+
 var url = (FreeTextStaticProperty) element.getConfig().get(0);
 url.setDescription("Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)");
 element.getConfig().set(0, url);
+
 migrateSecurity((StaticPropertyAlternatives) element.getConfig().get(1));
 
-    element.getConfig().add(2, makeTLS());
+element.getConfig().add(2, makeTLS());
        return MigrationResult.success(element);
   }
 
