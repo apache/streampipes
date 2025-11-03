@@ -406,48 +406,7 @@ public class DefaultEnvironment implements Environment {
   public BooleanEnvironmentVariable getAllowSelfSignedCertificates() {
     return new BooleanEnvironmentVariable(Envs.SP_SECURITY_ALLOW_SELFSIGNED);
   }
-/**
 
-  @Override
-  public StringEnvironmentVariable getMQTTKeystoreFilename() {
-    return new StringEnvironmentVariable(Envs.SP_SECURITY_MQTT_KEYSTORE_FILENAME);
-  }
-
-  @Override
-  public StringEnvironmentVariable getMQTTKeystorePassword() {
-    return new StringEnvironmentVariable(Envs.SP_SECURITY_MQTT_KEYSTORE_PASSWORD);
-  }
-
-  @Override
-  public StringEnvironmentVariable getMQTTKeystoreType() {
-    return new StringEnvironmentVariable(Envs.SP_SECURITY_MQTT_KEYSTORE_TYPE);
-  }
-
-  @Override
-  public StringEnvironmentVariable getMQTTKeyPassword() {
-    return new StringEnvironmentVariable(Envs.SP_SECURITY_MQTT_KEY_PASSWORD);
-  }
-
-  @Override
-  public StringEnvironmentVariable getMQTTTruststoreFilename() {
-    return new StringEnvironmentVariable(Envs.SP_SECURITY_MQTT_TRUSTSTORE_FILENAME);
-  }
-
-  @Override
-  public StringEnvironmentVariable getMQTTTruststorePassword() {
-    return new StringEnvironmentVariable(Envs.SP_SECURITY_MQTT_TRUSTSTORE_PASSWORD);
-  }
-
-  @Override
-  public StringEnvironmentVariable getMQTTTruststoreType() {
-    return new StringEnvironmentVariable(Envs.SP_SECURITY_MQTT_TRUSTSTORE_TYPE);
-  }
-
-  @Override
-  public BooleanEnvironmentVariable getMQTTAllowSelfSignedCertificates() {
-    return new BooleanEnvironmentVariable(Envs.SP_SECURITY_MQTT_ALLOW_SELFSIGNED);
-  }
-    */
   @Override
   public IntEnvironmentVariable getPlc4xMaxWaitTimeMs() {
     return new IntEnvironmentVariable(Envs.SP_PLC4X_CONN_MAX_WAIT_TIME_MS);
