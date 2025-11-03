@@ -47,7 +47,6 @@ url.setDescription("Example: tcp://test-server.com:1883 (Protocol required. Port
 LOG.info (""+url.getDescription());
 element.getConfig().set(0, url);
   return MigrationResult.success(element);
-/**
 LOG.info ("Start Info Migrate Option");
 // Migrate Options
 
@@ -55,7 +54,7 @@ migrateSecurity((StaticPropertyAlternatives) element.getConfig().get(2));
 
 LOG.info ("Start Info Migrate RLS ");
     element.getConfig().add(3, makeTLS());
-       return MigrationResult.success(element);*/
+       return MigrationResult.success(element);
   }
 
 private StaticPropertyAlternatives makeTLS() {
