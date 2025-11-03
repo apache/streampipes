@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
 import org.apache.streampipes.extensions.connectors.mqtt.security.SecurityUtils;
 import org.apache.streampipes.messaging.InternalEventProcessor;
@@ -28,25 +27,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.security.KeyFactory;
-import java.security.KeyPair;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class MqttConsumer implements Runnable {
