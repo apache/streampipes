@@ -51,6 +51,7 @@
                         role="listitem"
                         class="menu-item"
                         [class.menu-item-selected]="item.link === activePage"
+                        [attr.data-cy]="'navigation-icon-' + item.link"
                         (click)="go(item.link)"
                         [title]="collapsed() ? item.title : null"
                         [attr.aria-current]="
@@ -111,6 +112,9 @@
                                     class="menu-item"
                                     [class.menu-item-selected]="
                                         item.link === activePage
+                                    "
+                                    [attr.data-cy]="
+                                        'navigation-icon-' + item.link
                                     "
                                     (click)="go(item.link)"
                                     [title]="collapsed() ? item.title : null"
