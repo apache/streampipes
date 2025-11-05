@@ -17,17 +17,20 @@
  */
 package org.apache.streampipes.integration.adapters;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.extension.ExtendWith;
 
+//@ExtendWith(EnvSetterExtension.class)
 public class AdaptersTest {
 
 
-  /**@Test
+  @Test
   public void testPulsarAdapter() throws Exception {
     try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
       pulsarAdapterTester.run();
     }
-  }*/
+  }
 
   @Test
   public void testMqttAdapter() throws Exception {
@@ -37,17 +40,32 @@ public class AdaptersTest {
   }
 
     @Test
+    @Tag("selfsigned")
   public void testMqttTLSAdapter() throws Exception {
+
 try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
       mqttAdapterTLSTester.run();
     }
   }
 
 
-  /**@Test
+    @Test
+    @Tag("keystore")
+  public void testMqttTLSKeystoreAdapter() throws Exception {
+
+try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
+      mqttAdapterTLSTester.run();
+    }
+  }
+
+
+  @Test
   public void testKafkaAdapter() throws Exception {
+
     try (KafkaAdapterTester kafkaAdapterTester = new KafkaAdapterTester()) {
       kafkaAdapterTester.run();
     }
-  }*/
+
+   
+  }
 }
