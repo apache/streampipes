@@ -64,7 +64,7 @@ The MQTT protocol adapter enables StreamPipes to consume messages from an MQTT b
 * **Security**:
   * Basic authentication support
   * TCP protocol support
-  * SSL/TLS support (coming soon)
+  * SSL/TLS support
 
 * **Protocol Support**:
   * MQTT 3.1
