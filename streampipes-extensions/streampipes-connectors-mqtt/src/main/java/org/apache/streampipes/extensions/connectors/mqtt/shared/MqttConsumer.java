@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
 import org.apache.streampipes.extensions.connectors.mqtt.security.SecurityUtils;
 import org.apache.streampipes.messaging.InternalEventProcessor;
@@ -32,7 +33,6 @@ import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
-
 
 public class MqttConsumer implements Runnable {
 
@@ -55,8 +55,7 @@ public class MqttConsumer implements Runnable {
         this.maxElementsToReceive = maxElementsToReceive;
     }
 
-   
-       @Override
+    @Override
     public void run() {
         this.running = true;
         try {
@@ -73,7 +72,7 @@ public class MqttConsumer implements Runnable {
         }
     }
 
-        private void processMessages(BlockingConnection connection) throws Exception {
+    private void processMessages(BlockingConnection connection) throws Exception {
         while (running && (maxElementsToReceive == -1 || messageCount < maxElementsToReceive)) {
             Message message = connection.receive();
             byte[] payload = message.getPayload();
@@ -82,8 +81,6 @@ public class MqttConsumer implements Runnable {
             messageCount++;
         }
     }
-
-
 
     private MQTT setupMqttClient() throws Exception {
         MQTT mqtt = new MQTT();
@@ -94,7 +91,6 @@ public class MqttConsumer implements Runnable {
             mqtt.setUserName(mqttConfig.getUsername());
             mqtt.setPassword(mqttConfig.getPassword());
         }
-       
 
         if (mqttConfig.getTlsEnabled()) {
             configureTls(mqtt);
@@ -103,24 +99,36 @@ public class MqttConsumer implements Runnable {
         return mqtt;
     }
 
-        private void configureTls(MQTT mqtt) throws Exception {
+    private void configureTls(MQTT mqtt) throws Exception {
         LOG.info("Configuring TLS for MQTT connection...");
         KeyStore keyStore = null;
-        try{
-        keyStore = SecurityUtils.loadServerKeyStore();
-        
-          } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
-            LOG.error("Error loading keystore from file: {}", e);
+
+        var env = Environments.getEnvironment();
+        boolean acceptAllCerts = env.getAllowSelfSignedCertificates().getValueOrDefault();
+
+        if (acceptAllCerts) {
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, SecurityUtils.acceptAllCerts(), new java.security.SecureRandom());
+
+            mqtt.setSslContext(sslContext);
+            return;
         }
+
+            try {
+                keyStore = SecurityUtils.loadServerKeyStore();
+
+            } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
+                LOG.error("Error loading keystore from file: {}", e);
+            }
+
         TrustManagerFactory trustManagerFactory = SecurityUtils.createTrustManagerFactory(keyStore);
-        // === NEW CODE: Add client certificate and key (for two-way auth) ===
         KeyManager[] keyManagers = null;
         if (mqttConfig.getClientCertificatePath() != null && mqttConfig.getClientKeyPath() != null) {
             LOG.info("Loading client certificate for mutual TLS authentication...");
             keyManagers = SecurityUtils.loadClientKeyManagers(
                     mqttConfig.getClientCertificatePath(),
-                    mqttConfig.getClientKeyPath()
-            );
+                    mqttConfig.getClientKeyPath());
         }
 
         SSLContext sslContext = SSLContext.getInstance("TLS");
@@ -128,10 +136,8 @@ public class MqttConsumer implements Runnable {
         mqtt.setSslContext(sslContext);
     }
 
-    
-
-        private void subscribeToTopic(BlockingConnection connection) throws Exception {
-        Topic[] topics = {new Topic(mqttConfig.getTopic(), QoS.AT_LEAST_ONCE)};
+    private void subscribeToTopic(BlockingConnection connection) throws Exception {
+        Topic[] topics = { new Topic(mqttConfig.getTopic(), QoS.AT_LEAST_ONCE) };
         connection.subscribe(topics);
     }
 
