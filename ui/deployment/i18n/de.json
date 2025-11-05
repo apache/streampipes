@@ -691,6 +691,8 @@
   "Do you really want to delete the export provider?": "Exportprovider wirklich löschen?",
   "This operation cannot be undone. Please ensure that the data provider is not used in a datalake retention.": "Dieser Vorgang kann nicht rückgängig gemacht werden. Bitte stellen Sie sicher, dass der Provider in keiner Speicherrichtlinie verwendet wird.",
   "Delete Data": "Daten löschen",
+  "Do you really want to delete the data index {{index}}?": "Möchten Sie die Daten in {{index}} wirklich löschen?",
+  "Do you really want to truncate the data in {{index}}?": "Möchten Sie die Daten in {{index}} wirklich leeren?",
   "Truncate Data": "Daten leeren",
   "Start Sync": "Synchronisierung starten",
   "Delete Sync": "Sync löschen",

@@ -855,6 +855,8 @@
   "Email custom inner content (mandatory)": null,
   "Truncating data...": null,
   "Deleting data...": null,
+  "Do you really want to delete the data index {{index}}?": "Do you really want to delete the data index {{index}}?",
+  "Do you really want to truncate the data in {{index}}?": "Do you really want to truncate the data in {{index}}?",
   "Truncate data": null,
   "Delete data": null,
   "Delete Export Provider": null,
