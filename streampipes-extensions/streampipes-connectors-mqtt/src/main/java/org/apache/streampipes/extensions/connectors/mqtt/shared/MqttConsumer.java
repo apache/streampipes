@@ -115,7 +115,7 @@ public class MqttConsumer implements Runnable {
             return;
         }
 
-            try {
+        try {
                 keyStore = SecurityUtils.loadServerKeyStore();
 
             } catch (IOException | NoSuchAlgorithmException | CertificateException e) {

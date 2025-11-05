@@ -70,7 +70,6 @@ public class SecurityUtils {
         String keystoreFilename = env.getKeystoreFilename().getValueOrDefault();
         String keystoreType = env.getKeystoreType().getValueOrDefault();
         String keystorePassword = env.getKeystorePassword().getValueOrDefault();
-
         try (FileInputStream keystoreFile = new FileInputStream(keystoreFilename)) {
             KeyStore keystore = KeyStore.getInstance(keystoreType);
             keystore.load(keystoreFile, keystorePassword.toCharArray());
