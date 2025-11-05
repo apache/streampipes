@@ -139,6 +139,21 @@
             </propertyExpansion>
         </configuration>
       </plugin>
+
+       <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-surefire-plugin</artifactId>
+      <version>3.2.5</version>
+      <configuration>
+        <environmentVariables>
+          <!-- Define test-only environment variables here -->
+          <SP_SECURITY_ALLOW_SELFSIGNED>true</SP_SECURITY_ALLOW_SELFSIGNED>
+
+          <!-- Add more if needed -->
+          <!-- <ANOTHER_ENV>something</ANOTHER_ENV> -->
+        </environmentVariables>
+      </configuration>
+    </plugin>
     </plugins>
   </build>
 

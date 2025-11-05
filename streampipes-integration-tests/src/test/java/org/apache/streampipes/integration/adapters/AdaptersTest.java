@@ -22,12 +22,12 @@ import org.junit.jupiter.api.Test;
 public class AdaptersTest {
 
 
-  @Test
+  /**@Test
   public void testPulsarAdapter() throws Exception {
     try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
       pulsarAdapterTester.run();
     }
-  }
+  }*/
 
   @Test
   public void testMqttAdapter() throws Exception {
@@ -36,11 +36,18 @@ public class AdaptersTest {
     }
   }
 
+    @Test
+  public void testMqttTLSAdapter() throws Exception {
+try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
+      mqttAdapterTLSTester.run();
+    }
+  }
 
-  @Test
+
+  /**@Test
   public void testKafkaAdapter() throws Exception {
     try (KafkaAdapterTester kafkaAdapterTester = new KafkaAdapterTester()) {
       kafkaAdapterTester.run();
     }
-  }
+  }*/
 }

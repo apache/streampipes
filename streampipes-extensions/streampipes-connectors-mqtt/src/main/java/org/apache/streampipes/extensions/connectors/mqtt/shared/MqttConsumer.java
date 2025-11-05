@@ -108,10 +108,12 @@ public class MqttConsumer implements Runnable {
 
         if (acceptAllCerts) {
 
+            LOG.info("Accept all Certs");
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, SecurityUtils.acceptAllCerts(), new java.security.SecureRandom());
-
+             LOG.info("Init SSL ");
             mqtt.setSslContext(sslContext);
+             LOG.info("Return");
             return;
         }
 
