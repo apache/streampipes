@@ -75,14 +75,14 @@ public class ContinuousPlcRequestReader
             .get(5000, TimeUnit.MILLISECONDS);
         processPlcReadResponse(readResponse);
       } else {
-        LOG.info("Not connected");
+        handleFailingPlcRead("Not connected");
       }
     } catch (Exception e) {
-      handleFailingPlcRead(e);
+      handleFailingPlcRead(e.getMessage());
     }
   }
 
-  private void handleFailingPlcRead(Exception e) {
+  private void handleFailingPlcRead(String problem) {
     // ensure that the cached connection manager removes the broken connection
     if (connectionManager instanceof CachedPlcConnectionManager) {
       ((CachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
@@ -97,7 +97,7 @@ public class ContinuousPlcRequestReader
 
     LOG.error(
         "Error while reading from PLC with connection string {}. Setting adapter to idle for {} attempts. {} ",
-        settings.connectionString(), idlePullsBeforeNextAttempt, e.getMessage()
+        settings.connectionString(), idlePullsBeforeNextAttempt, problem
     );
 
     currentIdlePulls = 0;
