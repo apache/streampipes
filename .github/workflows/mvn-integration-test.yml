@@ -27,6 +27,5 @@ jobs:
           sudo apt update
           sudo apt install -y maven
       - name: Run IntegrationTest 
-        run: mvn clean test -P selfsigned -Dtestcontainers.reuse.enable=true -Dtestcontainers.docker-client-timeout=60000 -Dtestcontainers.ryuk.container-startup-timeout=120000
-        env:
-          DOCKER_HOST: tcp://localhost:2375
+        run: mvn clean test -P selfsigned
+ 
