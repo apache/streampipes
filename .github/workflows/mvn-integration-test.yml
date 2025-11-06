@@ -1,0 +1,33 @@
+name: run-mvn-integration-tests
+
+on:
+  pull_request:
+
+
+jobs:
+  build_and_integration_test:
+    runs-on: ubuntu-latest  # Use an Ubuntu runner
+    container:
+      image: maven:3.8.4-openjdk-17-slim  # You can specify a Maven container with a JDK 17
+      #options: --platform linux/amd64  # Force the architecture to x86_64
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Checkout the code to the runner
+    
+      #- name: Set up Maven
+      #  uses: actions/setup-java@v2
+      #  with:
+      #    java-version: '17'  # Specify the Java version (adjust if necessary)
+      #    distribution: 'adopt'  # You can also choose other JDK distributions like OpenJDK, Zulu, etc.
+      #- name: Install required dependencies
+      #  run: sudo apt-get update && sudo apt-get install -y libc6
+      #- name: Update apt repository and install Maven
+      #  run: |
+      #    sudo apt-get update && sudo apt-get install -y maven  # Update apt package list and install Maven
+
+
+      - name: Run Maven tests with keystore profile
+        run: mvn clean test -P keystore  
+      - name: Run Maven tests with selfsigned profile
+        run: mvn clean test -P selfsigned  
+      
