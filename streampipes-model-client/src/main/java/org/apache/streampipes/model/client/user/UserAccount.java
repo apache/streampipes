@@ -41,6 +41,10 @@ public class UserAccount extends Principal {
   protected boolean hideTutorial;
   protected boolean darkMode = false;
   protected boolean hasAcknowledged = false;
+  protected String language;
+
+  protected long createdAtMillis;
+  protected long lastLoginAtMillis;
 
   /**
    * The authentication provider (LOCAL or one of the configured OAuth providers
@@ -55,6 +59,7 @@ public class UserAccount extends Principal {
     this.preferredDataProcessors = new ArrayList<>();
     this.preferredDataSinks = new ArrayList<>();
     this.preferredDataStreams = new ArrayList<>();
+    this.createdAtMillis = System.currentTimeMillis();
     this.provider = UserAccount.LOCAL;
   }
 
@@ -189,5 +194,29 @@ public class UserAccount extends Principal {
 
   public void setHasAcknowledged(boolean hasAcknowledged) {
     this.hasAcknowledged = hasAcknowledged;
+  }
+
+  public long getCreatedAtMillis() {
+    return createdAtMillis;
+  }
+
+  public void setCreatedAtMillis(long createdAtMillis) {
+    this.createdAtMillis = createdAtMillis;
+  }
+
+  public long getLastLoginAtMillis() {
+    return lastLoginAtMillis;
+  }
+
+  public void setLastLoginAtMillis(long lastLoginAtMillis) {
+    this.lastLoginAtMillis = lastLoginAtMillis;
+  }
+
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
   }
 }

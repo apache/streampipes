@@ -15,7 +15,7 @@
 
 services:
   opcua:
-    image: mcr.microsoft.com/iotedge/opc-plc
+    image: mcr.microsoft.com/iotedge/opc-plc:2.12.37
     ports:
       - 50000:50000
     command: --ut=true

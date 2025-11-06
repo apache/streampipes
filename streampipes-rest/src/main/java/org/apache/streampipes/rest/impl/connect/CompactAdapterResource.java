@@ -128,7 +128,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
           "application/yml"
       }
   )
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission('#elementId', 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<?> updateAdapterCompact(
       @PathVariable("id") String elementId,
       @RequestBody CompactAdapter compactAdapter

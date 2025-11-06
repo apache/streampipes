@@ -46,7 +46,7 @@
         <button
             class="topics-icon-button"
             mat-icon-button
-            matTooltip="View Topics"
+            [matTooltip]="'View Topics' | translate"
             [matTooltipPosition]="'above'"
             (click)="openTopicsDialog(pipelineElementConfig)"
         >

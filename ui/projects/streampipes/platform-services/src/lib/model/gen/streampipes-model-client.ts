@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-08-27 16:31:50.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-23 20:03:54.
 
 import { Storable } from './streampipes-model';
 
@@ -241,17 +241,19 @@ export class ServiceAccount extends Principal {
 }
 
 export class UserAccount extends Principal {
+    createdAtMillis: number;
     darkMode: boolean;
     externallyManagedRoles: boolean;
     fullName: string;
     hasAcknowledged: boolean;
     hideTutorial: boolean;
+    language: string;
+    lastLoginAtMillis: number;
     password: string;
     preferredDataProcessors: string[];
     preferredDataSinks: string[];
     preferredDataStreams: string[];
     provider: string;
-    shouldAcknowledge: boolean;
     userApiTokens: UserApiToken[];
 
     static fromData(data: UserAccount, target?: UserAccount): UserAccount {
@@ -260,11 +262,14 @@ export class UserAccount extends Principal {
         }
         const instance = target || new UserAccount();
         super.fromData(data, instance);
+        instance.createdAtMillis = data.createdAtMillis;
         instance.darkMode = data.darkMode;
         instance.externallyManagedRoles = data.externallyManagedRoles;
         instance.fullName = data.fullName;
         instance.hasAcknowledged = data.hasAcknowledged;
         instance.hideTutorial = data.hideTutorial;
+        instance.language = data.language;
+        instance.lastLoginAtMillis = data.lastLoginAtMillis;
         instance.password = data.password;
         instance.preferredDataProcessors = __getCopyArrayFn(
             __identity<string>(),
@@ -276,7 +281,6 @@ export class UserAccount extends Principal {
             data.preferredDataStreams,
         );
         instance.provider = data.provider;
-        instance.shouldAcknowledge = data.shouldAcknowledge;
         instance.userApiTokens = __getCopyArrayFn(UserApiToken.fromData)(
             data.userApiTokens,
         );

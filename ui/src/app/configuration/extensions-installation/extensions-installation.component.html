@@ -38,7 +38,7 @@
                     class="mr-10"
                 >
                     <i class="material-icons">cloud_download</i>
-                    &nbsp;Install selected
+                    &nbsp;{{ 'Install selected' | translate }}
                 </button>
                 <button
                     mat-button
@@ -49,14 +49,14 @@
                     class="mr-10"
                 >
                     <i class="material-icons">delete</i>
-                    &nbsp;Uninstall selected
+                    &nbsp;{{ 'Uninstall selected' | translate }}
                 </button>
                 <button
                     mat-icon-button
                     color="accent"
                     class="mr-10"
                     (click)="selectAll(true)"
-                    matTooltip="Select all"
+                    [matTooltip]="'Select all' | translate"
                     matTooltipPosition="above"
                 >
                     <i class="material-icons">queue</i>
@@ -66,7 +66,7 @@
                     color="accent"
                     class="mr-10"
                     (click)="selectAll(false)"
-                    matTooltip="Select none"
+                    [matTooltip]="'Select none' | translate"
                     matTooltipPosition="above"
                 >
                     <i class="material-icons">filter_none</i>
@@ -80,15 +80,21 @@
                             [(value)]="selectedCategory"
                             (selectionChange)="filterByCategory($event)"
                         >
-                            <mat-option value="all"> All</mat-option>
-                            <mat-option value="ADAPTER"> Adapters</mat-option>
+                            <mat-option value="all">
+                                {{ 'All' | translate }}</mat-option
+                            >
+                            <mat-option value="ADAPTER">
+                                {{ 'Adapters' | translate }}</mat-option
+                            >
                             <mat-option value="DATA_STREAM">
-                                Streams</mat-option
+                                {{ 'Data Streams' | translate }}</mat-option
                             >
                             <mat-option value="DATA_PROCESSOR">
-                                Processors
+                                {{ 'Data Processors' | translate }}
                             </mat-option>
-                            <mat-option value="DATA_SINK"> Sinks</mat-option>
+                            <mat-option value="DATA_SINK">
+                                {{ 'Data Sinks' | translate }}</mat-option
+                            >
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -102,7 +108,7 @@
                     >
                         <input
                             matInput
-                            placeholder="Find Element"
+                            [placeholder]="'Find Element' | translate"
                             value=""
                             [(ngModel)]="filterTerm"
                             name="something"
@@ -116,13 +122,13 @@
                     <mat-form-field color="accent" appearance="outline">
                         <mat-select [(value)]="selectedInstallationStatus">
                             <mat-option [value]="'all'">
-                                Available & Installed
+                                {{ 'Available & Installed' | translate }}
                             </mat-option>
                             <mat-option [value]="'installed'">
-                                Installed
+                                {{ 'Installed' | translate }}
                             </mat-option>
                             <mat-option [value]="'available'">
-                                Available
+                                {{ 'Available' | translate }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -133,7 +139,7 @@
                     mat-icon-button
                     color="accent"
                     (click)="getEndpointItems()"
-                    matTooltip="Reload items"
+                    [matTooltip]="'Reload items' | translate"
                     matTooltipPosition="above"
                 >
                     <mat-icon>refresh</mat-icon>
@@ -150,7 +156,7 @@
         >
             <div fxLayoutAlign="start start" fxLayout="column">
                 <sp-basic-header-title-component
-                    title="Available Extensions"
+                    [title]="'Available Extensions' | translate"
                 ></sp-basic-header-title-component>
             </div>
             <div fxLayout="row wrap" class="w-100">
@@ -184,7 +190,10 @@
                 color="accent"
             ></mat-spinner>
             <h4>
-                &nbsp;&nbsp;Searching for available extensions, please wait...
+                &nbsp;&nbsp;{{
+                    'Searching for available extensions, please wait...'
+                        | translate
+                }}
             </h4>
         </div>
     </div>

@@ -82,7 +82,7 @@ import { SpConfigurationLinkSettingsComponent } from './general-configuration/li
 import { SitesConfigurationComponent } from './sites-configuration/sites-configuration.component';
 import { LocationFeaturesConfigurationComponent } from './sites-configuration/location-features-configuration/location-features-configuration.component';
 import { SiteAreaConfigurationComponent } from './sites-configuration/site-area-configuration/site-area-configuration.component';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ManageSiteDialogComponent } from './dialog/manage-site/manage-site-dialog.component';
 import { EditAssetLocationComponent } from './dialog/manage-site/edit-location/edit-location.component';
 import { EditAssetLocationAreaComponent } from './dialog/manage-site/edit-location/edit-location-area/edit-location-area.component';
@@ -107,9 +107,12 @@ import { UserAcknowledgmentComponent } from './general-configuration/user-acknow
 import { QuillEditorComponent } from 'ngx-quill';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DataRetentionDialogComponent } from './dialog/data-retention-dialog/data-retention-dialog.component';
+import { ExportProviderComponent } from './dialog/export-provider-dialog/export-provider-dialog.component';
 import { SelectDataComponent } from './dialog/data-retention-dialog/components/select-retention/select-data.component';
 import { SelectDataRetentionComponent } from './dialog/data-retention-dialog/components/select-retention/select-data-retention/select-data-retention.component';
 import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/components/select-retention/select-retention-action/select-retention-action.component';
+import { SelectDataExportComponent } from './dialog/data-retention-dialog/components/select-export/select-format.component';
+import { DeleteExportProviderComponent } from './dialog/delete-export-provider/delete-export-provider-dialog.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -128,6 +131,7 @@ import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/c
         MatPaginatorModule,
         MatRadioModule,
         MatSelectModule,
+        MatSortModule,
         FormsModule,
         DragDropModule,
         CoreUiModule,
@@ -259,6 +263,7 @@ import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/c
         SpRegisteredExtensionsServiceComponent,
         SpExtensionsServiceConfigurationComponent,
         DataRetentionDialogComponent,
+        ExportProviderComponent,
         SpExtensionsInstallationComponent,
         SpExtensionsInstallationDialogComponent,
         EndpointItemComponent,
@@ -273,6 +278,8 @@ import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/c
         SelectDataComponent,
         SelectDataRetentionComponent,
         SelectRetentionActionComponent,
+        SelectDataExportComponent,
+        DeleteExportProviderComponent,
     ],
     providers: [
         OrderByPipe,

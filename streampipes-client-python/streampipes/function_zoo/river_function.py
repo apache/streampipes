@@ -138,7 +138,9 @@ class OnlineML:
         The ids of the data stream to train the model.
     model: Any
         The model to train. It meant to be a River model/pipeline,
-        but can be every model with a 'learn_one' and 'predict_one' methode.
+        but can be every model with a 'learn_one' and 'predict_one' method.
+    output_stream_name: str
+        The name and id of the output stream that contains the prediction of the model
     prediction_type: str
         The data type of the prediction.
         Is only needed when you continue to work with the prediction in StreamPipes.
@@ -159,6 +161,7 @@ class OnlineML:
         client: StreamPipesClient,
         stream_ids: List[str],
         model: Any,
+        output_stream_name: str = "Online ML Prediction",
         prediction_type: str = RuntimeType.STRING.value,
         supervised: bool = False,
         target_label: Optional[str] = None,
@@ -175,10 +178,10 @@ class OnlineML:
                 raise ValueError("You must define a target attribute for a supervised model.")
 
         output_stream = create_data_stream(
-            name="prediction",
+            name=output_stream_name,
             attributes=attributes,
             broker=get_broker_description(client.dataStreamApi.get(stream_ids[0])),  # type: ignore
-            stream_id=stream_ids[0],
+            stream_id=output_stream_name,
         )
         function_definition = FunctionDefinition(consumed_streams=stream_ids).add_output_data_stream(output_stream)
         self.sp_function = RiverFunction(

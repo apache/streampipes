@@ -17,6 +17,36 @@
  */
 
 package org.apache.streampipes.model.datalake;
-//, RetentionExportConfig exportConfig
-public record RetentionTimeConfig(
-    DataRetentionConfig dataRetentionConfig) {}
+
+
+public class RetentionTimeConfig {
+
+    private DataRetentionConfig dataRetentionConfig;
+    private RetentionExportConfig retentionExportConfig;
+
+    public RetentionTimeConfig() {}
+
+
+    public RetentionTimeConfig(
+        DataRetentionConfig dataRetentionConfig,
+        RetentionExportConfig retentionExportConfig) {
+        this.dataRetentionConfig = dataRetentionConfig;
+        this.retentionExportConfig = retentionExportConfig;
+    }
+
+    public DataRetentionConfig getDataRetentionConfig() {
+        return dataRetentionConfig;
+    }
+
+    public void setDataRetentionConfig(DataRetentionConfig dataRetentionConfig) {
+        this.dataRetentionConfig = dataRetentionConfig;
+    }
+
+    public RetentionExportConfig getRetentionExportConfig() {
+        return retentionExportConfig;
+    }
+
+    public void setRetentionExportConfig(RetentionExportConfig exportConfig) {
+        this.retentionExportConfig = exportConfig;
+    }
+}

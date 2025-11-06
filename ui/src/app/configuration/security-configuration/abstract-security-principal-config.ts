@@ -16,7 +16,7 @@
  *
  */
 
-import { Directive, OnInit, ViewChild } from '@angular/core';
+import { Directive, inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -34,6 +34,7 @@ import {
 } from '@streampipes/shared-ui';
 import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 
 @Directive()
 export abstract class AbstractSecurityPrincipalConfig<
@@ -42,18 +43,15 @@ export abstract class AbstractSecurityPrincipalConfig<
 {
     users: T[] = [];
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    pageSize = 1;
     @ViewChild(MatSort) sort: MatSort;
 
     dataSource: MatTableDataSource<T>;
 
-    constructor(
-        protected userService: UserService,
-        protected userAdminService: UserAdminService,
-        protected dialogService: DialogService,
-        private dialog: MatDialog,
-    ) {}
+    protected userService = inject(UserService);
+    protected userAdminService = inject(UserAdminService);
+    protected dialogService = inject(DialogService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
 
     ngOnInit(): void {
         this.load();
@@ -62,7 +60,11 @@ export abstract class AbstractSecurityPrincipalConfig<
     openEditDialog(user: UserAccount | ServiceAccount, editMode: boolean) {
         const dialogRef = this.dialogService.open(EditUserDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: editMode ? 'Edit user ' + user.username : 'Add user',
+            title: editMode
+                ? this.translateService.instant('Edit user {{user}}', {
+                      user: user.username,
+                  })
+                : this.translateService.instant('Add group'),
             width: '50vw',
             data: {
                 user: user,
@@ -88,6 +90,9 @@ export abstract class AbstractSecurityPrincipalConfig<
         this.getObservable().subscribe(response => {
             this.users = response;
             this.dataSource = new MatTableDataSource(this.users);
+            setTimeout(() => {
+                this.dataSource.sort = this.sort;
+            });
         });
     }
 
@@ -95,10 +100,14 @@ export abstract class AbstractSecurityPrincipalConfig<
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
-                title: 'Are you sure you want to delete this account?',
-                subtitle: 'This action cannot be reversed!',
-                cancelTitle: 'Cancel',
-                okTitle: 'Delete User',
+                title: this.translateService.instant(
+                    'Are you sure you want to delete this account?',
+                ),
+                subtitle: this.translateService.instant(
+                    'This action cannot be reversed!',
+                ),
+                cancelTitle: this.translateService.instant('Cancel'),
+                okTitle: this.translateService.instant('Delete User'),
                 confirmAndCancel: true,
             },
         });

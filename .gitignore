@@ -152,3 +152,6 @@ dist/
 *whl
 *egg-info/
 __pycache__
+
+# Develocity
+.mvn/.develocity

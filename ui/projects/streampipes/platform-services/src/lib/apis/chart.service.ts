@@ -19,7 +19,7 @@
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
     DataExplorerWidgetModel,
     DataLakeMeasure,
@@ -30,10 +30,8 @@ import { TranslateService } from '@ngx-translate/core';
     providedIn: 'root',
 })
 export class ChartService {
-    constructor(
-        private http: HttpClient,
-        private translateService: TranslateService,
-    ) {}
+    private http = inject(HttpClient);
+    private translateService = inject(TranslateService);
 
     getAllCharts(): Observable<DataExplorerWidgetModel[]> {
         return this.http

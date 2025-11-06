@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
@@ -26,10 +26,8 @@ import { CompactPipeline } from '../model/gen/streampipes-model';
     providedIn: 'root',
 })
 export class CompactPipelineService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     create(pipeline: CompactPipeline): Observable<any> {
         return this.http.post(this.baseUrl, pipeline);

@@ -52,7 +52,7 @@
 }
 
 .widget-header-text {
-    font-size: 14pt;
+    font-size: var(--mat-sys-body-small-font);
     font-weight: bold;
 }
 
@@ -75,15 +75,6 @@
 
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.35);
-}
-
-.time-counter {
-    border-radius: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    width: 65px;
-    margin-right: 10px;
-    text-align: center;
 }
 
 .h-0 {

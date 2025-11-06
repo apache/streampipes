@@ -157,6 +157,8 @@ public class GenericStorageImpl implements IGenericStorage {
     return new GenericStorageAttachment(content.getType().getMimeType(), content.asBytes());
   }
 
+
+
   private Map<String, Object> queryDocuments(String route) throws IOException {
     Request req = Utils.getRequest(route);
     Content content = executeAndReturnContent(req);
@@ -175,5 +177,42 @@ public class GenericStorageImpl implements IGenericStorage {
 
   private String getDatabaseRoute() {
     return Utils.getDatabaseRoute(GenericCouchDbConstants.DB_NAME);
+  }
+
+    @Override
+  public void deleteAssetLinkToResource(String id) throws IOException {
+    
+      var assets = this.findAll("asset-management");
+      for (Map<String, Object>  asset :assets){
+
+        deleteAssetLinks(asset, id);
+        String docId = (String) asset.get("_id");
+        String assetJson = mapper.writeValueAsString(asset);
+        this.update(docId,assetJson);
+      }
+  }
+  
+  private void deleteAssetLinks(Map<String, Object>  asset, String resourceIdToDelete){
+
+    if (asset.containsKey("assetLinks")) {
+      List<Map<String, Object>> assetLinks = (List<Map<String, Object>>) asset.get("assetLinks");
+
+      for (int i = 0; i < assetLinks.size(); i++) {
+        Map<String, Object> link = assetLinks.get(i);
+        if (link.containsKey("resourceId") && link.get("resourceId").equals(resourceIdToDelete)) {
+          assetLinks.remove(i);
+          i--; 
+        }
+      }
+    }
+    if (asset.containsKey("assets")) {
+      List<Map<String, Object>> nestedAssets = (List<Map<String, Object>>) asset.get("assets");
+      for (Map<String, Object> nestedAsset : nestedAssets) {
+        deleteAssetLinks(nestedAsset, resourceIdToDelete);
+            }
+        }
+
+
+
   }
 }

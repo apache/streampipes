@@ -56,6 +56,9 @@ public class SharedUserConfiguration {
   public static final String SECURITY_POLICY = "securityPolicy";
   public static final String USER_AUTHENTICATION = "userAuthentication";
   public static final String USER_AUTHENTICATION_ANONYMOUS = "anonymous";
+  public static final String X509_GROUP = "x509Group";
+  public static final String X509_PRIVATE_KEY_PEM = "x509PrivateKeyPem";
+  public static final String X509_PUBLIC_KEY_PEM = "x509PublicKeyPem";
 
   public static OneOfStaticProperty makeNamingStrategyOption() {
     return StaticProperties.singleValueSelection(
@@ -71,6 +74,13 @@ public class SharedUserConfiguration {
                                              boolean adapterConfig) {
 
     var dependsOn = getDependsOn(adapterConfig);
+
+    var x509Group = StaticProperties.group(
+            Labels.withId(X509_GROUP),
+            StaticProperties.secretValue(Labels.withId(X509_PRIVATE_KEY_PEM)),
+            StaticProperties.stringFreeTextProperty(Labels.withId(X509_PUBLIC_KEY_PEM), true, false));
+
+    x509Group.setHorizontalRendering(false);
 
     builder
         .requiredSingleValueSelection(
@@ -89,7 +99,8 @@ public class SharedUserConfiguration {
                     StaticProperties.stringFreeTextProperty(
                         Labels.withId(USERNAME)),
                     StaticProperties.secretValue(Labels.withId(PASSWORD))
-                ))
+                )),
+            Alternatives.from(Labels.withId(X509_GROUP), x509Group)
         )
         .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL),
             Alternatives.from(

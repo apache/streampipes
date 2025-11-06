@@ -34,6 +34,12 @@ export class DataExplorerWidgetAppearanceSettingsComponent
 {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
+    backgroundOption: 'default' | 'custom' = 'default';
+    textOption: 'default' | 'custom' = 'default';
+
+    defaultBackgroundColor = 'var(--color-bg-0)';
+    defaultTextColor = 'var(--color-default-text)';
+
     presetColors: string[] = [
         '#39B54A',
         '#1B1464',
@@ -62,13 +68,21 @@ export class DataExplorerWidgetAppearanceSettingsComponent
         if (
             !this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor
         ) {
-            this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor =
-                '#FFFFFF';
+            this.applyDefaultBackground();
         }
         if (!this.currentlyConfiguredWidget.baseAppearanceConfig.textColor) {
-            this.currentlyConfiguredWidget.baseAppearanceConfig.textColor =
-                '#3e3e3e';
+            this.applyDefaultText();
         }
+        this.backgroundOption =
+            this.currentlyConfiguredWidget.baseAppearanceConfig
+                ?.backgroundColor === this.defaultBackgroundColor
+                ? 'default'
+                : 'custom';
+        this.textOption =
+            this.currentlyConfiguredWidget.baseAppearanceConfig?.textColor ===
+            this.defaultTextColor
+                ? 'default'
+                : 'custom';
     }
 
     findWidget(widgetType: string): void {
@@ -88,5 +102,27 @@ export class DataExplorerWidgetAppearanceSettingsComponent
 
     ngOnDestroy() {
         this.widgetTypeSubscription?.unsubscribe();
+    }
+
+    onBackgroundChange(option: string) {
+        if (option === 'default') {
+            this.applyDefaultBackground();
+        }
+    }
+
+    onTextChange(option: string): void {
+        if (option === 'default') {
+            this.applyDefaultText();
+        }
+    }
+
+    applyDefaultBackground(): void {
+        this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor =
+            this.defaultBackgroundColor;
+    }
+
+    applyDefaultText(): void {
+        this.currentlyConfiguredWidget.baseAppearanceConfig.textColor =
+            this.defaultTextColor;
     }
 }

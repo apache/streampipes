@@ -93,9 +93,9 @@
                             class="small-button"
                             (click)="
                                 selectAll(
-                                    dataViews,
+                                    charts,
                                     elementIdFunction,
-                                    nameFunction,
+                                    widgetNameFunction,
                                     'chart'
                                 )
                             "
@@ -107,7 +107,7 @@
                             mat-button
                             mat-flat-button
                             class="mat-basic small-button"
-                            (click)="deselectAll(dataViews, elementIdFunction)"
+                            (click)="deselectAll(charts, elementIdFunction)"
                             style="margin-right: 10px; margin-left: 5px"
                         >
                             <span>Deselect All</span>

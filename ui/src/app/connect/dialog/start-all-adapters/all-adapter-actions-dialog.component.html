@@ -26,13 +26,22 @@
                 *ngIf="page === 'preview'"
             >
                 <h4>
-                    You are about to {{ action ? 'start' : 'stop' }} the
-                    following adapters:
+                    {{
+                        action
+                            ? ('You are about to start the following adapters:'
+                              | translate)
+                            : ('You are about to stop the following adapters:'
+                              | translate)
+                    }}
                 </h4>
                 <div *ngFor="let adapter of adaptersToModify">
                     <h5>{{ adapter.name }}</h5>
                 </div>
-                <h5><b>Press 'Next' to start the process.</b></h5>
+                <h5>
+                    <b>{{
+                        "Press 'Next' to start the process." | translate
+                    }}</b>
+                </h5>
             </div>
             <div
                 fxFlex="100"
@@ -42,16 +51,26 @@
             >
                 <div *ngFor="let status of actionStatus">
                     <h4>
-                        {{ action ? 'Starting adapter ' : 'Stopping adapter' }}
-                        {{ status.id + 1 }} of {{ adaptersToModify.length }} ({{
-                            status.name
-                        }})...{{ status.status }}
+                        {{
+                            action
+                                ? ('Starting adapter' | translate)
+                                : ('Stopping adapter' | translate)
+                        }}
+                        {{ status.id + 1 }} {{ 'of' | translate }}
+                        {{ adaptersToModify.length }} ({{ status.name }})...{{
+                            status.status
+                        }}
                     </h4>
                 </div>
                 <div *ngIf="adaptersToModify.length === 0">
                     <h4>
-                        Sorry, there are no adapters that are currently
-                        {{ action ? 'idle.' : 'running.' }}
+                        {{
+                            action
+                                ? ('Sorry, there are no adapters that are currently idle'
+                                  | translate)
+                                : ('Sorry, there are no adapters that are currently running'
+                                  | translate)
+                        }}.
                     </h4>
                 </div>
             </div>
@@ -66,7 +85,7 @@
             (click)="close(false)"
             style="margin-right: 10px"
         >
-            Cancel
+            {{ 'Cancel' | translate }}
         </button>
         <button
             mat-button

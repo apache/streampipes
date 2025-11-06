@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
@@ -25,10 +25,8 @@ import { Observable } from 'rxjs';
     providedIn: 'root',
 })
 export class GenericStorageService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     createDocument(appDocType: string, document: any): Observable<any> {
         return this.http.post(this.getAppDocPath(appDocType), document);

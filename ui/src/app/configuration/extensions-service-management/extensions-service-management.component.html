@@ -23,20 +23,29 @@
     <div fxLayout="row" class="page-container-padding">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section
-                title="Registered services"
-                subtitle="Inspect currently registered extensions services"
+                [title]="'Registered services' | translate"
+                [subtitle]="
+                    'Inspect currently registered extensions services'
+                        | translate
+                "
             >
                 <sp-registered-extensions-services></sp-registered-extensions-services>
             </sp-split-section>
             <sp-split-section
-                title="Service configurations"
-                subtitle="Configure basic settings of core and extensions services"
+                [title]="'Service configurations' | translate"
+                [subtitle]="
+                    'Configure basic settings of core and extensions services'
+                        | translate
+                "
             >
                 <sp-extensions-service-configuration></sp-extensions-service-configuration>
             </sp-split-section>
             <sp-split-section
-                title="Certificates"
-                subtitle="Configure trusted and rejected OPC-UA certificates"
+                [title]="'Certificates' | translate"
+                [subtitle]="
+                    'Configure trusted and rejected OPC-UA certificates'
+                        | translate
+                "
             >
                 <sp-certificate-configuration></sp-certificate-configuration>
             </sp-split-section>

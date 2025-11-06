@@ -34,13 +34,17 @@
                 [diameter]="15"
                 *ngIf="pipelineCacheRunning"
             ></mat-spinner>
-            <span
-                >&nbsp;{{
-                    pipelineCacheRunning
-                        ? '&nbsp;Saving pipeline modifications'
-                        : 'All pipeline modifications saved.'
-                }}</span
-            >
+            @if (pipelineCacheRunning) {
+                <span class="modification-status"
+                    >'&nbsp;{{
+                        'Saving pipeline modifications' | translate
+                    }}</span
+                >
+            } @else {
+                <span class="modification-status">{{
+                    'All pipeline modifications saved.' | translate
+                }}</span>
+            }
         </div>
     </div>
 </div>

@@ -24,16 +24,14 @@ import {
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 @Injectable({
     providedIn: 'root',
 })
 export class UserAdminService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     getAllUserAccounts(): Observable<UserAccount[]> {
         return this.http.get(`${this.usersAdminPath}?type=USER_ACCOUNT`).pipe(

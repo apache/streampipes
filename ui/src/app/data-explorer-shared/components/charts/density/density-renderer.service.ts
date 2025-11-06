@@ -70,8 +70,9 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                     `${xField.fullDbName}${xField.measurementUnitResourceId ? ` (${xField.measurementUnitResourceId.split('#').pop()})` : ''}`,
                 nameLocation: 'center',
                 nameTextStyle: {
-                    fontSize: 20,
+                    fontSize: 14,
                 },
+                nameGap: 40,
             },
             yAxis: {
                 scale: true,
@@ -82,8 +83,9 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                     `${yField.fullDbName}${yField.measurementUnitResourceId ? ` (${yField.measurementUnitResourceId.split('#').pop()})` : ''}`,
                 nameLocation: 'center',
                 nameTextStyle: {
-                    fontSize: 20,
+                    fontSize: 14,
                 },
+                nameGap: 40,
             },
             dataset: dataset.rawDataset,
             visualMap: {

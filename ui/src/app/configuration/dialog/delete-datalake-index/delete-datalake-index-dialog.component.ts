@@ -19,6 +19,7 @@
 import { Component, Input } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DatalakeRestService } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-delete-datalake-index-dialog',
@@ -35,9 +36,15 @@ export class DeleteDatalakeIndexComponent {
     isInProgress = false;
     currentStatus: any;
 
+    confirmDeleteMessage =
+        'Do you really want to delete the data index {{index}}?';
+    confirmTruncateMessage =
+        'Do you really want to truncate the data in {{index}}?';
+
     constructor(
         private dialogRef: DialogRef<DeleteDatalakeIndexComponent>,
         private datalakeRestService: DatalakeRestService,
+        private translateService: TranslateService,
     ) {}
 
     close(refreshDataLakeIndex: boolean) {
@@ -46,7 +53,8 @@ export class DeleteDatalakeIndexComponent {
 
     truncateData() {
         this.isInProgress = true;
-        this.currentStatus = 'Truncating data...';
+        this.currentStatus =
+            this.translateService.instant('Truncating data...');
         this.datalakeRestService
             .removeData(this.measurementIndex)
             .subscribe(data => {
@@ -56,7 +64,7 @@ export class DeleteDatalakeIndexComponent {
 
     deleteData() {
         this.isInProgress = true;
-        this.currentStatus = 'Deleting data...';
+        this.currentStatus = this.translateService.instant('Deleting data...');
 
         // this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
         this.datalakeRestService

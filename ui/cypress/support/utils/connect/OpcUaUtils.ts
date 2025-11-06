@@ -41,7 +41,26 @@ export class OpcUaUtils {
         cy.dataCy('reloading-nodes', { timeout: 3000 }).should('not.exist');
         ErrorMessageUtils.getExceptionComponent().should('not.exist');
 
-        StaticPropertyUtils.input(adapterInput.adapterConfiguration);
+        // The opc ua tests started to become flaky, therefore I split up the configurations of tree and non tree configs
+        // First the adapter is configured, then the tree is loaded before the tree configurations are added
+        const nonTreeConfigs = adapterInput.adapterConfiguration.filter(
+            config => config.type !== 'tree',
+        );
+        StaticPropertyUtils.input(nonTreeConfigs);
+
+        this.reloadTreeNodeSelection();
+
+        const treeConfigs = adapterInput.adapterConfiguration.filter(
+            config => config.type === 'tree',
+        );
+        StaticPropertyUtils.input(treeConfigs);
+    }
+
+    public static reloadTreeNodeSelection() {
+        cy.dataCy('reloading-nodes', { timeout: 10000 }).should('not.exist');
+        cy.dataCy('reload-tree-node-selection-btn').click();
+        cy.dataCy('reloading-nodes', { timeout: 10000 }).should('exist');
+        cy.dataCy('reloading-nodes', { timeout: 10000 }).should('not.exist');
     }
 
     public static getAdapterBuilderWithTreeNodes(pullMode: boolean) {

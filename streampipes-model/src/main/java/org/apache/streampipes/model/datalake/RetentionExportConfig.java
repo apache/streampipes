@@ -17,5 +17,28 @@
  */
 
 package org.apache.streampipes.model.datalake;
+public class RetentionExportConfig {
+    
+    private ExportConfig exportConfig; 
+    private String exportProviderId;
 
-public record RetentionExportConfig() {}
+    public RetentionExportConfig(ExportConfig exportConfig, String exportProviderId) {
+        this.exportConfig = exportConfig;
+        this.exportProviderId = exportProviderId;
+    }
+
+    public ExportConfig getExportConfig() {
+        return exportConfig;
+    }
+
+    public void setExportConfig(ExportConfig exportConfig) {
+        this.exportConfig = exportConfig;
+    }
+    public String getExportProviderId() {
+        return exportProviderId;
+    }
+
+    public void setExportProviderId(String exportProviderId) {
+        this.exportProviderId = exportProviderId;
+    }
+}

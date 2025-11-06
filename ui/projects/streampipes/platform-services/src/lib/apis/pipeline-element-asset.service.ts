@@ -17,14 +17,12 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PipelineElementAssetService {
-    private http = inject(HttpClient);
     private platformServicesCommons = inject(PlatformServicesCommons);
 
     getAssetUrl(appId) {

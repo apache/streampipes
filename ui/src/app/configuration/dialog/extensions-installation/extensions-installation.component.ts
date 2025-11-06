@@ -22,6 +22,7 @@ import {
     ExtensionInstallationService,
     ExtensionItemDescription,
 } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-extensions-installation-dialog',
@@ -50,11 +51,12 @@ export class SpExtensionsInstallationDialogComponent {
     constructor(
         private dialogRef: DialogRef<SpExtensionsInstallationDialogComponent>,
         private extensionInstallationService: ExtensionInstallationService,
+        private translateService: TranslateService,
     ) {
         this.installationStatus = [];
         this.installationFinished = false;
         this.page = 'preview';
-        this.nextButton = 'Next';
+        this.nextButton = this.translateService.instant('Next');
         this.installationRunning = false;
     }
 
@@ -118,7 +120,7 @@ export class SpExtensionsInstallationDialogComponent {
                     );
                 } else {
                     this.installedItemsChanged = true;
-                    this.nextButton = 'Close';
+                    this.nextButton = this.translateService.instant('Close');
                     this.installationRunning = false;
                 }
             });
@@ -145,7 +147,7 @@ export class SpExtensionsInstallationDialogComponent {
                         index,
                     );
                 } else {
-                    this.nextButton = 'Close';
+                    this.nextButton = this.translateService.instant('Close');
                     this.installationRunning = false;
                     this.installedItemsChanged = true;
                 }

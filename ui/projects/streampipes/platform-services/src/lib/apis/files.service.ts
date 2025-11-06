@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
     HttpClient,
     HttpEvent,
@@ -32,10 +32,8 @@ import { FileMetadata } from '../model/gen/streampipes-model';
     providedIn: 'root',
 })
 export class FilesService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     uploadFile(file: File): Observable<HttpEvent<any>> {
         const data: FormData = new FormData();

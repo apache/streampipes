@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
@@ -26,10 +26,8 @@ import { MeasurementUnit } from '../model/measurement-unit/MeasurementUnit';
     providedIn: 'root',
 })
 export class MeasurementUnitsService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     getAllMeasurementUnits(): Observable<MeasurementUnit[]> {
         return this.http.get<MeasurementUnit[]>(

@@ -16,11 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DataRetentionDialogModel } from './model/data-retention-dialog.model';
 import {
     DatalakeRestService,
+    ExportProviderSettings,
     RetentionTimeConfig,
 } from '@streampipes/platform-services';
 
@@ -33,29 +34,43 @@ import {
 export class DataRetentionDialogComponent implements OnInit {
     @Input() dataRetentionDialogModel: DataRetentionDialogModel;
 
-    @Input()
     retentionConfig: RetentionTimeConfig;
+    exportProvider: ExportProviderSettings;
 
     @Input()
     measurementIndex: string;
 
-    constructor(
-        public dialogRef: DialogRef<DataRetentionDialogComponent>,
-        private datalakeRestService: DatalakeRestService,
-    ) {}
+    disableDelete = false;
+
+    dialogRef = inject(DialogRef<DataRetentionDialogComponent>);
+    datalakeRestService = inject(DatalakeRestService);
 
     ngOnInit() {
         this.datalakeRestService
             .getMeasurement(this.measurementIndex)
             .subscribe({
                 next: measure => {
-                    if (measure.retentionTime != null) {
+                    if (
+                        measure?.retentionTime ||
+                        measure.retentionTime != null
+                    ) {
+                        this.disableDelete = true;
                         this.retentionConfig ??= measure.retentionTime;
                     } else {
                         this.retentionConfig ??= RetentionTimeConfig.fromData({
                             dataRetentionConfig: {
                                 olderThanDays: 30,
                                 interval: 'DAILY',
+                                action: 'DELETE',
+                            },
+                            retentionExportConfig: {
+                                exportConfig: {
+                                    format: 'csv',
+                                    csvDelimiter: 'comma',
+                                    missingValueBehaviour: 'ignore',
+                                    headerColumnName: 'key',
+                                },
+                                exportProviderId: '',
                             },
                         } as RetentionTimeConfig);
                     }
@@ -77,8 +92,50 @@ export class DataRetentionDialogComponent implements OnInit {
     setCleanUp() {
         this.datalakeRestService
             .cleanup(this.measurementIndex, this.retentionConfig)
+            .subscribe({
+                next: data => {
+                    this.close(true);
+                },
+                error: err => {
+                    this.close(false);
+                },
+            });
+    }
+
+    deleteCleanUp() {
+        this.datalakeRestService
+            .deleteCleanup(this.measurementIndex)
             .subscribe(data => {
                 this.close(true);
             });
+    }
+
+    requiresExportValidation(): boolean {
+        const action = this.retentionConfig?.dataRetentionConfig?.action;
+        return action === 'SAVE' || action === 'SAVEDELETE';
+    }
+
+    isExportValid(): boolean {
+        const exportConfig =
+            this.retentionConfig?.retentionExportConfig?.exportConfig;
+        const providerId =
+            this.retentionConfig?.retentionExportConfig?.exportProviderId;
+
+        if (!exportConfig?.format) {
+            console.error('Export format is required.');
+            return false;
+        }
+
+        if (exportConfig.format === 'csv' && !exportConfig.csvDelimiter) {
+            console.error('CSV delimiter is required for CSV format.');
+            return false;
+        }
+
+        if (providerId == '') {
+            console.error('S3 provider details must be selected.');
+            return false;
+        }
+
+        return true;
     }
 }

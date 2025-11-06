@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.model.nodename;
 
-import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
+import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
 
 public interface NamingStrategyResolver {
 
-  String resolveName(BaseDataVariableTypeNode node,
+  String resolveName(VariableNode node,
                      String fieldAppendix);
 }

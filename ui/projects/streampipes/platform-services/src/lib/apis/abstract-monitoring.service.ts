@@ -19,12 +19,11 @@
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
+import { inject } from '@angular/core';
 
 export abstract class AbstractMonitoringService {
-    constructor(
-        protected http: HttpClient,
-        protected platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    protected http = inject(HttpClient);
+    protected platformServicesCommons = inject(PlatformServicesCommons);
 
     triggerMonitoringUpdate(): Observable<any> {
         return this.http.get(this.monitoringBasePath);

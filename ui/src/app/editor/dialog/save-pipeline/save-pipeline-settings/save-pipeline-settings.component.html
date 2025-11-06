@@ -122,6 +122,25 @@
     >
         Navigate to pipeline overview afterwards
     </mat-checkbox>
+    <mat-checkbox
+        [(ngModel)]="addToAssets"
+        color="accent"
+        data-cy="sp-show-pipeline-asset-checkbox"
+    >
+        Add Pipeline to Assets
+    </mat-checkbox>
+    @if (addToAssets) {
+        <div class="mt-10">
+            <sp-asset-link-configuration
+                [isEdit]="storageOptions.updateMode === 'update'"
+                [itemId]="pipeline._id"
+                (selectedAssetsChange)="onSelectedAssetsChange($event)"
+                (deselectedAssetsChange)="onDeselectedAssetsChange($event)"
+                (originalAssetsEmitter)="onOriginalAssetsEmitted($event)"
+            >
+            </sp-asset-link-configuration>
+        </div>
+    }
     <div class="mt-10">
         <mat-expansion-panel class="mat-elevation-z0 border-1">
             <mat-expansion-panel-header

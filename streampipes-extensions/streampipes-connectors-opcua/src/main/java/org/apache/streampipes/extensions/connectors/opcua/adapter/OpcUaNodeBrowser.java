@@ -19,17 +19,17 @@
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
+import org.apache.streampipes.extensions.connectors.opcua.model.OpcUaNodeFactory;
 import org.apache.streampipes.extensions.connectors.opcua.model.node.BasicVariableNodeInfo;
 import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
-import org.apache.streampipes.extensions.connectors.opcua.model.OpcUaNodeFactory;
 import org.apache.streampipes.model.staticproperty.TreeInputNode;
 
 import org.eclipse.milo.opcua.sdk.client.AddressSpace;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.UaClient;
-import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
+import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.UaRuntimeException;
@@ -108,14 +108,17 @@ public class OpcUaNodeBrowser {
             .toString()
     );
 
-    if (node instanceof BaseDataVariableTypeNode) {
-      var nodeInfo = new BasicVariableNodeInfo((BaseDataVariableTypeNode) node, spOpcConfig.getNamingStrategy());
+    if (node instanceof VariableNode) {
+      var nodeInfo = new BasicVariableNodeInfo((VariableNode) node, spOpcConfig.getNamingStrategy());
       return OpcUaNodeFactory.createOpcUaNode(nodeInfo, runtimeNamesToDelete);
     }
 
-    LOG.warn("Node {} not of type UaVariableNode", node.getDisplayName());
+    LOG.warn("Node {} not of type VariableNode", node.getDisplayName());
 
-    throw new UaException(StatusCode.BAD, "Node is not of type BaseDataVariableTypeNode");
+    throw new UaException(
+        StatusCode.BAD,
+        String.format("Node of type %S is not of type VariableNode", node.getClass().getName()
+        ));
   }
 
   private List<TreeInputNode> findChildren(

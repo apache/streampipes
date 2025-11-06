@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
     HttpClient,
     HttpContext,
@@ -34,7 +34,7 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
     providedIn: 'root',
 })
 export class DatalakeRestService {
-    constructor(private http: HttpClient) {}
+    private http = inject(HttpClient);
 
     private get baseUrl() {
         return '/streampipes-backend';
@@ -72,6 +72,12 @@ export class DatalakeRestService {
     getMeasurement(id: string): Observable<DataLakeMeasure> {
         return this.http
             .get(`${this.dataLakeMeasureUrl}/${id}`)
+            .pipe(map(res => res as DataLakeMeasure));
+    }
+
+    getMeasurementByName(name: String): Observable<DataLakeMeasure> {
+        return this.http
+            .get(`${this.dataLakeMeasureUrl}/byName/${name}`)
             .pipe(map(res => res as DataLakeMeasure));
     }
 
@@ -140,6 +146,7 @@ export class DatalakeRestService {
                       ...formatConfig,
                       missingValueBehaviour,
                   };
+
         return this.buildDownloadRequest(index, queryParams);
     }
 
@@ -155,18 +162,17 @@ export class DatalakeRestService {
     }
 
     cleanup(index: string, config: any) {
-        console.log('cleanup');
-        console.log(config);
-
         const url = `${this.dataLakeUrl}/${index}/cleanup`;
-
         const request = new HttpRequest('POST', url, config, {
             headers: new HttpHeaders({ 'Content-Type': 'application/json' }), // optional if already handled globally
         });
 
-        console.log(request);
-
         return this.http.request(request);
+    }
+
+    deleteCleanup(index: string) {
+        const url = `${this.dataLakeUrl}/${index}/cleanup`;
+        return this.http.delete(url);
     }
 
     buildDownloadRequest(index: string, queryParams: any) {

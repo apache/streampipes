@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
     AdapterDescription,
     EventRateTransformationRuleDescription,
     EventSchema,
+    SpAssetTreeNode,
     RemoveDuplicatesTransformationRuleDescription,
 } from '@streampipes/platform-services';
 import {
@@ -36,6 +36,7 @@ import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-start-adapter-configuration',
@@ -69,7 +70,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
      */
     @Output() adapterStartedEmitter: EventEmitter<void> =
         new EventEmitter<void>();
-
     /**
      * Go to next configuration step when this is complete
      */
@@ -98,6 +98,10 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     startAdapterNow = true;
     showCode = false;
+    showAsset = false;
+    selectedAssets = [];
+    deselectedAssets = [];
+    originalAssets = [];
 
     constructor(
         private dialogService: DialogService,
@@ -105,10 +109,11 @@ export class StartAdapterConfigurationComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private timestampPipe: TimestampPipe,
         private transformationRuleService: TransformationRuleService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
-        // initialize form for validation
+        this.showAsset = this.isEditMode;
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
@@ -173,11 +178,14 @@ export class StartAdapterConfigurationComponent implements OnInit {
         this.checkAndApplyStreamRules();
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
-            title: 'Adapter edit',
+            title: this.translateService.instant('Edit adapter'),
             width: '70vw',
             data: {
                 adapter: this.adapterDescription,
                 editMode: true,
+                selectedAssets: this.selectedAssets,
+                deselectedAssets: this.deselectedAssets,
+                originalAssets: this.originalAssets,
             },
         });
 
@@ -191,7 +199,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
-            title: 'Adapter generation',
+            title: this.translateService.instant('Adapter generation'),
             width: '70vw',
             data: {
                 adapter: this.adapterDescription,
@@ -199,13 +207,25 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 dataLakeTimestampField: this.dataLakeTimestampField,
                 editMode: false,
                 startAdapterNow: this.startAdapterNow,
+                selectedAssets: this.selectedAssets,
             },
         });
-        this.shepherdService.trigger('adapter-settings-adapter-started');
 
         dialogRef.afterClosed().subscribe(() => {
             this.adapterStartedEmitter.emit();
         });
+    }
+
+    onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.selectedAssets = updatedAssets;
+    }
+
+    onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.deselectedAssets = updatedAssets;
+    }
+
+    onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
+        this.originalAssets = updatedAssets;
     }
 
     private checkAndApplyStreamRules(): void {

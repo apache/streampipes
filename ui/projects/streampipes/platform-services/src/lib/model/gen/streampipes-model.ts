@@ -20,7 +20,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-08-27 21:55:36.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-23 20:03:42.
+
 export class NamedStreamPipesEntity implements Storable {
     '@class':
         | 'org.apache.streampipes.model.SpDataStream'
@@ -1161,6 +1162,7 @@ export class DashboardModel implements Storable, SpResource {
     description: string;
     displayHeader: boolean;
     elementId: string;
+    gridColumns: number;
     id: string;
     metadata: ResourceMetadata;
     name: string;
@@ -1188,6 +1190,7 @@ export class DashboardModel implements Storable, SpResource {
         instance.description = data.description;
         instance.displayHeader = data.displayHeader;
         instance.elementId = data.elementId;
+        instance.gridColumns = data.gridColumns;
         instance.id = data.id;
         instance.metadata = ResourceMetadata.fromData(data.metadata);
         instance.name = data.name;
@@ -1819,6 +1822,25 @@ export class EventSchema {
     }
 }
 
+export class ExportConfig {
+    csvDelimiter: string;
+    format: string;
+    headerColumnName: string;
+    missingValueBehaviour: string;
+
+    static fromData(data: ExportConfig, target?: ExportConfig): ExportConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExportConfig();
+        instance.csvDelimiter = data.csvDelimiter;
+        instance.format = data.format;
+        instance.headerColumnName = data.headerColumnName;
+        instance.missingValueBehaviour = data.missingValueBehaviour;
+        return instance;
+    }
+}
+
 export class ExportConfiguration {
     assetExportConfiguration: AssetExportConfiguration[];
 
@@ -1850,6 +1872,36 @@ export class ExportItem {
         instance.label = data.label;
         instance.resourceId = data.resourceId;
         instance.selected = data.selected;
+        return instance;
+    }
+}
+
+export class ExportProviderSettings {
+    accessKey: string;
+    awsRegion: string;
+    bucketName: string;
+    endPoint: string;
+    providerId: string;
+    providerType: ProviderType;
+    secretEncrypted: boolean;
+    secretKey: string;
+
+    static fromData(
+        data: ExportProviderSettings,
+        target?: ExportProviderSettings,
+    ): ExportProviderSettings {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExportProviderSettings();
+        instance.accessKey = data.accessKey;
+        instance.awsRegion = data.awsRegion;
+        instance.bucketName = data.bucketName;
+        instance.endPoint = data.endPoint;
+        instance.providerId = data.providerId;
+        instance.providerType = data.providerType;
+        instance.secretEncrypted = data.secretEncrypted;
+        instance.secretKey = data.secretKey;
         return instance;
     }
 }
@@ -3318,8 +3370,27 @@ export class ResourceMetadata {
     }
 }
 
+export class RetentionExportConfig {
+    exportConfig: ExportConfig;
+    exportProviderId: string;
+
+    static fromData(
+        data: RetentionExportConfig,
+        target?: RetentionExportConfig,
+    ): RetentionExportConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RetentionExportConfig();
+        instance.exportConfig = ExportConfig.fromData(data.exportConfig);
+        instance.exportProviderId = data.exportProviderId;
+        return instance;
+    }
+}
+
 export class RetentionTimeConfig {
     dataRetentionConfig: DataRetentionConfig;
+    retentionExportConfig: RetentionExportConfig;
 
     static fromData(
         data: RetentionTimeConfig,
@@ -3331,6 +3402,9 @@ export class RetentionTimeConfig {
         const instance = target || new RetentionTimeConfig();
         instance.dataRetentionConfig = DataRetentionConfig.fromData(
             data.dataRetentionConfig,
+        );
+        instance.retentionExportConfig = RetentionExportConfig.fromData(
+            data.retentionExportConfig,
         );
         return instance;
     }
@@ -4136,6 +4210,7 @@ export class UserInfo {
     darkMode: boolean;
     displayName: string;
     hasAcknowledged: boolean;
+    language: string;
     roles: string[];
     showTutorial: boolean;
     username: string;
@@ -4148,6 +4223,7 @@ export class UserInfo {
         instance.darkMode = data.darkMode;
         instance.displayName = data.displayName;
         instance.hasAcknowledged = data.hasAcknowledged;
+        instance.language = data.language;
         instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         instance.showTutorial = data.showTutorial;
         instance.username = data.username;
@@ -4240,6 +4316,8 @@ export type PropertyScope =
     | 'DIMENSION_PROPERTY'
     | 'MEASUREMENT_PROPERTY'
     | 'NONE';
+
+export type ProviderType = 'FOLDER' | 'S3';
 
 export type RetentionAction = 'DELETE' | 'SAVE' | 'SAVEDELETE';
 

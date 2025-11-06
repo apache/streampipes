@@ -18,20 +18,20 @@
 
 <sp-auth-box [linkSettings]="loginSettings.linkSettings" *ngIf="configReady">
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
-        <h1>Register</h1>
+        <h1>{{ 'Register' | translate }}</h1>
     </div>
     <div fxLayout="column" fxFlex="100">
         <form [formGroup]="parentForm">
             <div fxLayout="column">
                 <mat-form-field color="accent">
-                    <mat-label>Email</mat-label>
+                    <mat-label>{{ 'Email' | translate }}</mat-label>
                     <input formControlName="username" fxFlex matInput />
                     <mat-error *ngIf="parentForm.controls.username.errors"
                         >Must be an email address.</mat-error
                     >
                 </mat-form-field>
                 <mat-form-field color="accent">
-                    <mat-label>Initial password</mat-label>
+                    <mat-label>{{ 'Initial password' | translate }}</mat-label>
                     <input
                         formControlName="password"
                         fxFlex
@@ -41,7 +41,7 @@
                     />
                 </mat-form-field>
                 <mat-form-field color="accent">
-                    <mat-label>Repeat password</mat-label>
+                    <mat-label>{{ 'Repeat password' | translate }}</mat-label>
                     <input
                         formControlName="repeatPassword"
                         fxFlex
@@ -50,9 +50,9 @@
                         required
                     />
                 </mat-form-field>
-                <mat-error *ngIf="parentForm.hasError('notMatching')"
-                    >Passwords do not match.</mat-error
-                >
+                <mat-error *ngIf="parentForm.hasError('notMatching')">{{
+                    'Passwords do not match.' | translate
+                }}</mat-error>
                 <div class="form-actions" style="margin-top: 20px">
                     <button
                         mat-button
@@ -62,7 +62,7 @@
                         [disabled]="!parentForm.valid"
                         *ngIf="!registrationSuccess"
                     >
-                        <span>Register</span>
+                        <span>{{ 'Register' | translate }}</span>
                     </button>
                     <mat-spinner
                         [mode]="'indeterminate'"
@@ -78,11 +78,13 @@
                     </div>
                     <div class="md-success" *ngIf="registrationSuccess">
                         <h5 class="info-box register-success">
-                            We've sent out a confirmation mail to this address.
+                            {{ 'We've sent out a confirmation mail to this address.' | translate }}
                         </h5>
                     </div>
                     <div class="mt-10">
-                        <a [routerLink]="['/login']">Go to login page</a>
+                        <a [routerLink]="['/login']">{{
+                            'Go to login page' | translate
+                        }}</a>
                     </div>
                 </div>
             </div>

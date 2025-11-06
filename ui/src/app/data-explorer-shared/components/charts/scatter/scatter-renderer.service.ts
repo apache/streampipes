@@ -71,8 +71,9 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
                     `${xField.fullDbName}${xField.measurementUnitResourceId ? ` (${xField.measurementUnitResourceId.split('#').pop()})` : ''}`,
                 nameLocation: 'center',
                 nameTextStyle: {
-                    fontSize: 20,
+                    fontSize: 14,
                 },
+                nameGap: 40,
             },
             yAxis: {
                 type: 'value',
@@ -83,8 +84,9 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
                     `${yField.fullDbName}${yField.measurementUnitResourceId ? ` (${yField.measurementUnitResourceId.split('#').pop()})` : ''}`,
                 nameLocation: 'center',
                 nameTextStyle: {
-                    fontSize: 20,
+                    fontSize: 14,
                 },
+                nameGap: 40,
             },
             series,
         });

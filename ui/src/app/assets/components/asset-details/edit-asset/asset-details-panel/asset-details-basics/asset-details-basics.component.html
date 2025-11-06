@@ -82,17 +82,19 @@
                 label="Asset Type"
                 description="The ISA95 type of this asset"
             >
-                <mat-button-toggle-group
-                    [disabled]="!editMode"
-                    [(ngModel)]="asset.assetType.isa95AssetType"
-                    aria-label="Asset Type"
-                >
-                    <mat-button-toggle
-                        *ngFor="let isaType of isa95Types"
-                        [value]="isaType.type"
-                        >{{ isaType.label }}
-                    </mat-button-toggle>
-                </mat-button-toggle-group>
+                <mat-form-field class="w-100">
+                    <mat-select
+                        [disabled]="!editMode"
+                        [(ngModel)]="asset.assetType.isa95AssetType"
+                        aria-label="Asset Type"
+                    >
+                        <mat-option
+                            *ngFor="let isaType of isa95Types"
+                            [value]="isaType.type"
+                            >{{ isaType.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </sp-basic-field-description>
             <sp-basic-field-description
                 fxFlex="100"

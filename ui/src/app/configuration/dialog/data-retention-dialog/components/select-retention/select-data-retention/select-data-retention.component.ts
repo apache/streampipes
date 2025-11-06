@@ -20,6 +20,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
     DataExplorerDataConfig,
     DateRange,
+    RetentionTimeConfig,
 } from '@streampipes/platform-services';
 import { DataRetentionConfig } from '../../../model/data-retention-config.model';
 
@@ -34,5 +35,5 @@ import { DataRetentionConfig } from '../../../model/data-retention-config.model'
 })
 export class SelectDataRetentionComponent {
     @Input() dataExplorerDataConfig: DataExplorerDataConfig;
-    @Input() dataRetentionConfig: DataRetentionConfig;
+    @Input() dataRetentionConfig: RetentionTimeConfig;
 }

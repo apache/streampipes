@@ -28,6 +28,7 @@ import {
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { EditRoleDialogComponent } from '../edit-role-dialog/edit-role-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-security-role-config',
@@ -48,6 +49,7 @@ export class SecurityRoleConfigComponent implements OnInit {
         private roleService: RoleService,
         private dialogService: DialogService,
         private dialog: MatDialog,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -71,10 +73,14 @@ export class SecurityRoleConfigComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
-                title: 'Are you sure you want to delete this role?',
-                subtitle: 'This action cannot be reversed!',
-                cancelTitle: 'Cancel',
-                okTitle: 'Delete Role',
+                title: this.translateService.instant(
+                    'Are you sure you want to delete this role?',
+                ),
+                subtitle: this.translateService.instant(
+                    'This action cannot be reversed!',
+                ),
+                cancelTitle: this.translateService.instant('Cancel'),
+                okTitle: this.translateService.instant('Delete Role'),
                 confirmAndCancel: true,
             },
         });
@@ -94,7 +100,11 @@ export class SecurityRoleConfigComponent implements OnInit {
     openRoleDialog(role: Role, editMode: boolean) {
         const dialogRef = this.dialogService.open(EditRoleDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: editMode ? 'Edit role ' + role.label : 'Add role',
+            title: editMode
+                ? this.translateService.instant('Edit role {{label}}', {
+                      label: role.label,
+                  })
+                : this.translateService.instant('Add role'),
             width: '50vw',
             data: {
                 role: role,

@@ -19,7 +19,7 @@
 <sp-configuration-box [title]="'Data Retention Action' | translate">
     <div class="p-10">
         <mat-radio-group
-            [(ngModel)]="dataRetentionConfig.action"
+            [(ngModel)]="dataRetentionConfig.dataRetentionConfig.action"
             data-cy="retention-action-select"
             fxLayout="column"
         >
@@ -31,7 +31,6 @@
             </mat-radio-button>
 
             <mat-radio-button
-                [disabled]="true"
                 value="SAVE"
                 data-cy="retention-configuration-save"
             >
@@ -39,7 +38,6 @@
             </mat-radio-button>
 
             <mat-radio-button
-                [disabled]="true"
                 value="SAVEDELETE"
                 data-cy="retention-configuration-save-delete"
             >

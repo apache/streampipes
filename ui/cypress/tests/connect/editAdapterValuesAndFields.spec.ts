@@ -61,7 +61,7 @@ describe('Test Edit Adapter', () => {
             .get('mat-option')
             .contains('Multiply')
             .click();
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
         cy.dataCy('sp-event-schema-next-button').click();
 
         // Fill in adapter name and close view
@@ -70,6 +70,7 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.closeAdapterPreview();
 
         // Edit adapter and check if given values and added property still provided
+        ConnectBtns.openActionsMenu('Test Adapter');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
         cy.contains('Next').click();
@@ -96,7 +97,7 @@ describe('Test Edit Adapter', () => {
             .contains('Float')
             .click();
         cy.dataCy('connect-schema-correction-value').clear();
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
         cy.get('[class="general-panel"]').should(
             'include.text',
             'test-property-1',
@@ -106,6 +107,7 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.closeAdapterPreview();
 
         // Configure adapter with pressure instead of flowrate
+        ConnectBtns.openActionsMenu('Test Adapter');
         ConnectBtns.editAdapter().click();
         const newUserConfiguration = AdapterBuilder.create(
             'Machine_Data_Simulator',

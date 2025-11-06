@@ -23,6 +23,7 @@ import org.apache.streampipes.model.shared.api.Storable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @TsModel
@@ -36,6 +37,8 @@ public class SpServiceRegistration implements Storable {
   private String scheme = "http";
   private String host;
   private int port;
+  private int weight = 1;
+  private Set<String> labels;
   private Set<SpServiceTag> tags;
   private String healthCheckPath;
   private long firstTimeSeenUnhealthy = 0;
@@ -61,6 +64,7 @@ public class SpServiceRegistration implements Storable {
     this.port = port;
     this.tags = tags;
     this.healthCheckPath = healthCheckPath;
+    this.labels = new HashSet<>();
     this.providedExtensions = providedExtensions;
   }
 
@@ -73,6 +77,19 @@ public class SpServiceRegistration implements Storable {
                                            String healthCheckPath,
                                            Set<ExtensionItemDescription> providedExtensions) {
     return new SpServiceRegistration(svcType, svcGroup, svcId, host, port, tags, healthCheckPath, providedExtensions);
+  }
+
+  public int getWeight() {
+    return weight;
+  }
+  public void setWeight(int weight) {
+    this.weight = weight;
+  }
+  public Set<String> getLabels() {
+    return labels;
+  }
+  public void setLabels(Set<String> labels) {
+    this.labels = labels;
   }
 
   public String getSvcGroup() {

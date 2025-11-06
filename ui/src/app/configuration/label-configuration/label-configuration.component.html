@@ -19,8 +19,11 @@
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'labels'">
     <div fxLayout="column" class="page-container-padding">
         <sp-split-section
-            title="Labels"
-            subtitle="Configure labels which can be assigned to assets and other resources"
+            [title]="'Labels' | translate"
+            [subtitle]="
+                'Configure labels which can be assigned to assets and other resources'
+                    | translate
+            "
         >
             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
                 <button
@@ -31,7 +34,7 @@
                     (click)="createLabelMode = true"
                 >
                     <i class="material-icons">add</i
-                    ><span>&nbsp;New label</span>
+                    ><span>&nbsp;{{ 'New label' | translate }}</span>
                 </button>
             </div>
             <div *ngIf="createLabelMode" class="mb-10">
@@ -40,7 +43,9 @@
                     (saveEmitter)="saveLabel($event)"
                 ></sp-edit-label>
             </div>
-            <div class="subsection-title mt-10">Available labels</div>
+            <div class="subsection-title mt-10">
+                {{ 'Available labels' | translate }}
+            </div>
             <div
                 fxLayout="column"
                 *ngFor="let label of allLabels"
@@ -66,7 +71,7 @@
                     <div fxFlex fxLayoutAlign="end center">
                         <button
                             mat-icon-button
-                            matTooltip="Edit label"
+                            [matTooltip]="'Edit label' | translate"
                             color="accent"
                             (click)="editedLabels.push(label._id)"
                             *ngIf="!isEditMode(label._id)"
@@ -75,7 +80,7 @@
                         </button>
                         <button
                             mat-icon-button
-                            matTooltip="Delete label"
+                            [matTooltip]="'Delete label' | translate"
                             class="btn-warn"
                             (click)="deleteLabel(label)"
                             data-cy="delete-label-button"
