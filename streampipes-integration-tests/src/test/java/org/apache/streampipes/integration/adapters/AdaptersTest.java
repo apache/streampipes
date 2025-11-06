@@ -29,13 +29,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 public class AdaptersTest {
 
 
-  /**@Test
-  public void testPulsarAdapter() throws Exception {
-    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
-      pulsarAdapterTester.run();
-    }
-  }*/
-
   @Test
   @Order(1)
   public void testMqttAdapter() throws Exception {
@@ -52,13 +45,22 @@ public class AdaptersTest {
 try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
       mqttAdapterTLSTester.run();
     }
-  }  
+  }
+  
+  @Test
+  @Order(3)
+  public void testPulsarAdapter() throws Exception {
+    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
+      pulsarAdapterTester.run();
+    }
+  }
 
 
 
 
 
-  /**@Test
+  @Test
+  @Order(4)
   public void testKafkaAdapter() throws Exception {
 
     try (KafkaAdapterTester kafkaAdapterTester = new KafkaAdapterTester()) {
@@ -66,5 +68,5 @@ try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
     }
 
    
-  }*/
+  }
 }
