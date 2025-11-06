@@ -127,9 +127,12 @@ public class MqttAdapterTLSTester extends AdapterTesterBase {
     var objectMapper = new ObjectMapper();
 
     events.forEach(event -> {
+
+      LOG.info("EVENT" + event);
       try {
         var serializedEvent = objectMapper.writeValueAsBytes(event);
         publisher.publish(serializedEvent);
+        LOG.info("PUBLISHED EVENT");
       } catch (JsonProcessingException e) {
         throw new RuntimeException(e);
       }

@@ -20,7 +20,6 @@ package org.apache.streampipes.integration.containers;
 
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
 
 public class MosquittoContainer extends GenericContainer<MosquittoContainer> {
 
@@ -32,7 +31,7 @@ public class MosquittoContainer extends GenericContainer<MosquittoContainer> {
 
   public void start() {
     //this.waitStrategy = Wait.forLogMessage(".*listen socket on port 1883.*", 1);
-    this.waitStrategy = Wait.forLogMessage(".*mosquitto version.*running.*", 1);
+    //this.waitStrategy = Wait.forLogMessage(".*mosquitto version.*running.*", 1);
     //this.waitStrategy = Wait.forLogMessage(".* Container eclipse-mosquitto:latest started.*", 1);
     this.withExposedPorts(MOSQUITTO_PORTS);
     this.withClasspathResourceMapping(

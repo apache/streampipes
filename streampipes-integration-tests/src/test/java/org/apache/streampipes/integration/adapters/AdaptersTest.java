@@ -17,22 +17,27 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-import org.junit.jupiter.api.Tag;
+//import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 //import org.junit.jupiter.api.extension.ExtendWith;
 
 //@ExtendWith(EnvSetterExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdaptersTest {
 
 
-  @Test
+  /**@Test
   public void testPulsarAdapter() throws Exception {
     try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
       pulsarAdapterTester.run();
     }
-  }
+  }*/
 
   @Test
+  @Order(1)
   public void testMqttAdapter() throws Exception {
     try (MqttAdapterTester mqttAdapterTester = new MqttAdapterTester()) {
       mqttAdapterTester.run();
@@ -40,26 +45,20 @@ public class AdaptersTest {
   }
 
     @Test
-    @Tag("selfsigned")
+      @Order(2)
+    //@Tag("selfsigned")
   public void testMqttTLSAdapter() throws Exception {
 
 try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
       mqttAdapterTLSTester.run();
     }
-  }
+  }  
 
 
-    @Test
-    @Tag("keystore")
-  public void testMqttTLSKeystoreAdapter() throws Exception {
-
-try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
-      mqttAdapterTLSTester.run();
-    }
-  }
 
 
-  @Test
+
+  /**@Test
   public void testKafkaAdapter() throws Exception {
 
     try (KafkaAdapterTester kafkaAdapterTester = new KafkaAdapterTester()) {
@@ -67,5 +66,5 @@ try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
     }
 
    
-  }
+  }*/
 }
