@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.integration.adapters;
 
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -38,8 +37,6 @@ import org.apache.streampipes.model.template.PipelineElementTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +44,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class MqttAdapterTLSTester extends AdapterTesterBase {
-
-    private static final Logger LOG =
-      LoggerFactory.getLogger(MqttAdapterTLSTester.class.getCanonicalName());
 
   MosquittoContainer mosquittoContainer;
 
@@ -69,16 +63,12 @@ public class MqttAdapterTLSTester extends AdapterTesterBase {
   @Override
   public IAdapterConfiguration prepareAdapter() {
 
-    LOG.info("ENv varianle value" + Environments.getEnvironment().getAllowSelfSignedCertificates().getValueOrDefault());
-
     IAdapterConfiguration configuration = new MqttProtocol().declareConfig();
 
     List<Map<String, Object>> configs = new ArrayList<>();
     configs.add(Map.of(MqttConnectUtils.TOPIC, TOPIC));
     configs.add(Map.of(MqttConnectUtils.BROKER_URL, mosquittoContainer.getBrokerUrlTLS()));
     configs.add(Map.of(MqttConnectUtils.TLS, true));
-
-    LOG.info(mosquittoContainer.getBrokerUrlTLS());
 
     var template = new PipelineElementTemplate("name", "description", configs);
 
@@ -128,11 +118,9 @@ public class MqttAdapterTLSTester extends AdapterTesterBase {
 
     events.forEach(event -> {
 
-      LOG.info("EVENT" + event);
       try {
         var serializedEvent = objectMapper.writeValueAsBytes(event);
         publisher.publish(serializedEvent);
-        LOG.info("PUBLISHED EVENT");
       } catch (JsonProcessingException e) {
         throw new RuntimeException(e);
       }

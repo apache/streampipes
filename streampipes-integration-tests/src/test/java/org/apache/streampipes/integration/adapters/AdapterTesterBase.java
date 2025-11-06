@@ -22,8 +22,6 @@ import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.shaded.com.google.common.collect.Maps;
 
 import java.util.List;
@@ -40,10 +38,6 @@ public abstract class AdapterTesterBase implements AutoCloseable {
 
   private int counter;
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(AdapterTesterBase.class.getCanonicalName());
-
-  //private CountDownLatch latch;
 
   /**
    Executes the test procedure for the adapter integration test.
@@ -68,23 +62,15 @@ public abstract class AdapterTesterBase implements AutoCloseable {
     // start the adapter instance
     adapter = startAdapter(adapterConfiguration);
 
-  
-
     // wait a second to make sure the consumer is ready
     TimeUnit.MILLISECONDS.sleep(1000);
 
     // get events for broker
     expectedEvents = getTestEvents();
 
-    //latch = new CountDownLatch(expectedEvents.size());
-
     // send events to thrird party service
     publishEvents(expectedEvents);
-
-      // Wait for all events to be processed
-    //latch.await();
-      TimeUnit.MILLISECONDS.sleep(10000);
-
+    
     // validate that events where send correctly
     validate(expectedEvents);
   }
@@ -104,8 +90,6 @@ public abstract class AdapterTesterBase implements AutoCloseable {
 
 
     adapter.onAdapterStarted(extractor, (event -> {
-
-      LOG.info("Received event: " + event);
       // This collector validates that the events are sent correctly and within the right order
 
       assertTrue(Maps.difference(event, expectedEvents.get(counter)).areEqual());
@@ -161,8 +145,6 @@ public abstract class AdapterTesterBase implements AutoCloseable {
 
     while (counter != expectedEvents.size() && retry < 5) {
       Thread.sleep(1000);
-        LOG.info("counter" + counter);
-    LOG.info("" + expectedEvents.size());
       retry++;
     }
 
