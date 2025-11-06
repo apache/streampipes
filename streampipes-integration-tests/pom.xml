@@ -145,9 +145,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
         <configuration>
-          <environmentVariables>
-            <SP_SECURITY_ALLOW_SELFSIGNED>true</SP_SECURITY_ALLOW_SELFSIGNED>
-          </environmentVariables>
+          <skipTests>true</skipTests> <!-- Skip tests during mvn clean package -->
         </configuration>
       </plugin>
     </plugins>
@@ -167,6 +165,7 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>3.2.5</version>
             <configuration>
+            <skipTests>false</skipTests>
               <environmentVariables>
                 <SP_SECURITY_ALLOW_SELFSIGNED>true</SP_SECURITY_ALLOW_SELFSIGNED>
               </environmentVariables>
@@ -186,8 +185,9 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>3.2.5</version>
             <configuration>
+            <skipTests>false</skipTests>
               <environmentVariables>
-                <SP_SECURITY_KEYSTORE_FILENAME>/Users/jacquelinehollig/Documents/Code/forks/streampipes/streampipes-integration-tests/src/test/resources/cacerts.pfx</SP_SECURITY_KEYSTORE_FILENAME>
+                <SP_SECURITY_KEYSTORE_FILENAME>src/test/resources/cacerts.pfx</SP_SECURITY_KEYSTORE_FILENAME>
                 <SP_SECURITY_KEYSTORE_PASSWORD>changeit</SP_SECURITY_KEYSTORE_PASSWORD>
               </environmentVariables>
             </configuration>
@@ -196,5 +196,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>
