@@ -6,28 +6,27 @@ on:
 
 jobs:
   build_and_integration_test:
-    runs-on: ubuntu-latest  # Use an Ubuntu runner
-    container:
-      image: maven:3.8.4-openjdk-17-slim  # You can specify a Maven container with a JDK 17
-      #options: --platform linux/amd64  # Force the architecture to x86_64
+    runs-on: ubuntu-latest 
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2  # Checkout the code to the runner
-    
-      #- name: Set up Maven
-      #  uses: actions/setup-java@v2
-      #  with:
-      #    java-version: '17'  # Specify the Java version (adjust if necessary)
-      #    distribution: 'adopt'  # You can also choose other JDK distributions like OpenJDK, Zulu, etc.
-      #- name: Install required dependencies
-      #  run: sudo apt-get update && sudo apt-get install -y libc6
-      #- name: Update apt repository and install Maven
-      #  run: |
-      #    sudo apt-get update && sudo apt-get install -y maven  # Update apt package list and install Maven
+      - name: Checkout
+        uses: actions/checkout@v5
 
-
-      - name: Run Maven tests with keystore profile
-        run: mvn clean test -P keystore  
-      - name: Run Maven tests with selfsigned profile
-        run: mvn clean test -P selfsigned  
-      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+        with:
+          version: latest
+      - name: Install Maven
+        run: |
+          sudo apt update
+          sudo apt install -y maven
+      - name: Run IntegrationTest 
+        run: mvn clean test -P selfsigned -Dtestcontainers.reuse.enable=true -Dtestcontainers.docker-client-timeout=60000 -Dtestcontainers.ryuk.container-startup-timeout=120000
+        env:
+          DOCKER_HOST: tcp://localhost:2375
