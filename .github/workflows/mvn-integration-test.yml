@@ -26,6 +26,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y maven
-      - name: Run IntegrationTest 
+      - name: Run IntegrationTest selfsigned
         run: mvn clean test -P selfsigned
+      - name: Run IntegrationTest keystore
+        run: mvn clean test -P keystore
  
