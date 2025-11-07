@@ -17,15 +17,28 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.sink.common;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+import org.apache.streampipes.extensions.connectors.mqtt.security.SecurityUtils;
 import org.apache.streampipes.model.runtime.Event;
 
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URI;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 public class MqttClient {
 
@@ -33,6 +46,8 @@ public class MqttClient {
   private URI uri;
   private MQTT mqtt;
   private BlockingConnection conn;
+
+  private static final Logger LOG = LoggerFactory.getLogger(MqttClient.class);
 
   public MqttClient(IDataSinkParameters params) {
     this.options = new MqttOptions(params);
@@ -61,6 +76,11 @@ public class MqttClient {
          * The password for authenticated sessions.
          */
         mqtt.setPassword(options.getPassword());
+      }
+
+      if (options.getProtocol() != "TCP"){
+        configureTls(mqtt);
+
       }
 
       /**
@@ -119,6 +139,44 @@ public class MqttClient {
     }
   }
 
+      private void configureTls(MQTT mqtt) throws Exception {
+        LOG.info("Configuring TLS for MQTT connection...");
+        KeyStore keyStore = null;
+
+        var env = Environments.getEnvironment();
+        boolean acceptAllCerts = env.getAllowSelfSignedCertificates().getValueOrDefault();
+
+        if (acceptAllCerts) {
+
+            LOG.info("Accept all Certs");
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, SecurityUtils.acceptAllCerts(), new java.security.SecureRandom());
+             LOG.info("Init SSL ");
+            mqtt.setSslContext(sslContext);
+             LOG.info("Return");
+            return;
+        }
+
+        try {
+                keyStore = SecurityUtils.loadServerKeyStore();
+
+            } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
+                LOG.error("Error loading keystore from file: {}", e);
+            }
+
+        TrustManagerFactory trustManagerFactory = SecurityUtils.createTrustManagerFactory(keyStore);
+        KeyManager[] keyManagers = null;
+        /**if (options.getClientCertificatePath() != null && options.getClientKeyPath() != null) {
+            LOG.info("Loading client certificate for mutual TLS authentication...");
+            keyManagers = SecurityUtils.loadClientKeyManagers(
+                    options.getClientCertificatePath(),
+                    options.getClientKeyPath());
+        }*/
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(keyManagers, trustManagerFactory.getTrustManagers(), new SecureRandom());
+        mqtt.setSslContext(sslContext);
+    }
   /**
    * Start blocking connection to MQTT broker.
    */
