@@ -69,22 +69,20 @@ public class ContinuousPlcRequestReader
 
   private void connectAndReadPlcData() {
     try (PlcConnection plcConnection = connectionManager.getConnection(settings.connectionString())) {
-      var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
-      var readResponse = readRequest.execute()
-                                    .get(5000, TimeUnit.MILLISECONDS);
-      processPlcReadResponse(readResponse);
+      if (plcConnection.isConnected()) {
+        var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
+        var readResponse = readRequest.execute()
+            .get(5000, TimeUnit.MILLISECONDS);
+        processPlcReadResponse(readResponse);
+      } else {
+        handleFailingPlcRead("Not connected");
+      }
     } catch (Exception e) {
-      handleFailingPlcRead(e);
+      handleFailingPlcRead(e.getMessage());
     }
   }
 
-  private void processPlcReadResponse(PlcReadResponse readResponse) {
-    var event = eventGenerator.makeEvent(readResponse);
-    collector.collect(event);
-    this.resetIdlePulls();
-  }
-
-  private void handleFailingPlcRead(Exception e) {
+  private void handleFailingPlcRead(String problem) {
     // ensure that the cached connection manager removes the broken connection
     if (connectionManager instanceof CachedPlcConnectionManager) {
       ((CachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
@@ -98,11 +96,17 @@ public class ContinuousPlcRequestReader
     }
 
     LOG.error(
-        "Error while reading from PLC with connection string {}. Setting adapter to idle for {} attemtps. {} ",
-        settings.connectionString(), idlePullsBeforeNextAttempt, e.getMessage()
+        "Error while reading from PLC with connection string {}. Setting adapter to idle for {} attempts. {} ",
+        settings.connectionString(), idlePullsBeforeNextAttempt, problem
     );
 
     currentIdlePulls = 0;
+  }
+
+  private void processPlcReadResponse(PlcReadResponse readResponse) {
+    var event = eventGenerator.makeEvent(readResponse);
+    collector.collect(event);
+    this.resetIdlePulls();
   }
 
   private void idleRead() {

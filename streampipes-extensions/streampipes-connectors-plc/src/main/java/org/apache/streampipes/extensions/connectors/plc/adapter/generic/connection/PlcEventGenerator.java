@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PlcEventGenerator {
@@ -43,9 +42,8 @@ public class PlcEventGenerator {
 
     for (String key : nodes.keySet()) {
       if (response.getResponseCode(key) == PlcResponseCode.OK) {
-
         // if the response is a list, add each element to the result
-        if (response.getObject(key) instanceof List) {
+        if (response.getAsPlcValue().getValue(key).isList()) {
           event.put(key,
               response.getAsPlcValue()
                   .getValue(key)
@@ -57,8 +55,7 @@ public class PlcEventGenerator {
           event.put(key, response.getObject(key));
         }
       } else {
-        LOG.error("Error[" + key + "]: "
-            + response.getResponseCode(key).name());
+        LOG.error("Error[{}]: {}", key, response.getResponseCode(key).name());
       }
     }
     return event;
