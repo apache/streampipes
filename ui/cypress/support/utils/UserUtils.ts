@@ -66,6 +66,31 @@ export class UserUtils {
         cy.dataCy('sp-element-edit-user-save').click();
     }
 
+    public static changeUserRole(user: User, role: UserRole) {
+        this.switchUser(this.adminUser);
+        this.goToUserConfiguration();
+
+        //TODO This is a TODO : FInd the right row
+        // user configuration
+        cy.dataCy('user-edit-btn-' + user.email, { timeout: 10000 }).click();
+        //cy.dataCy('add-new-user', { timeout: 10000 }).click();
+        //cy.dataCy('new-user-email').type(user.email);
+        //cy.dataCy('new-user-full-name').type(user.name);
+        //cy.dataCy('new-user-password').type(user.password);
+        //cy.dataCy('new-user-password-repeat').type(user.password);
+
+        // Set role
+        //for (var i = 0; i < user.role.length; i++) {
+        cy.dataCy('role-' + role)
+            .children()
+            .click();
+        //}
+        //cy.dataCy('new-user-enabled').children().click();
+
+        // Store
+        cy.dataCy('sp-element-edit-user-save').click();
+    }
+
     /**
      * Create a new user with the specified roles and a default password to the system.
      *

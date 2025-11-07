@@ -112,7 +112,9 @@
                                     class="mat-basic"
                                     [matTooltip]="'Edit user' | translate"
                                     matTooltipPosition="above"
-                                    data-cy="user-edit-btn"
+                                    [attr.data-cy]="
+                                        'user-edit-btn-' + account.username
+                                    "
                                     (click)="editUser(account)"
                                 >
                                     <i class="material-icons">edit</i>

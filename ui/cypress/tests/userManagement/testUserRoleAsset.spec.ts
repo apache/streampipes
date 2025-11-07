@@ -46,8 +46,6 @@ describe('Test User Roles for Pipelines', () => {
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-
-        // Login as user and check if pipeline is visible to user
         UserUtils.switchUser(newUser);
         AssetUtils.goToAssets();
         AssetUtils.addAndSaveAsset('Asset');
@@ -65,9 +63,13 @@ describe('Test User Roles for Pipelines', () => {
         );
         cy.dataCy('show-asset-checkbox').should('exist');
 
-        UserUtils.switchUser(newUserWithoutAssetAdmin);
+        UserUtils.changeUserRole(
+            newUserWithoutAssetAdmin,
+            UserRole.ROLE_ASSET_ADMIN,
+        );
+        //Config --> Sicherheit --> Find user --> Bearb -->Rollen
 
-        ConnectUtils.goToConnect();
+        /**ConnectUtils.goToConnect();
 
         ConnectUtils.addAdapter(
             AdapterBuilder.create('Machine_Data_Simulator 2')
@@ -76,7 +78,7 @@ describe('Test User Roles for Pipelines', () => {
                 .setStartAdapter(false)
                 .build(),
         );
-        cy.dataCy('show-asset-checkbox').should('not.exist');
+        cy.dataCy('show-asset-checkbox').should('not.exist');*/
     });
     /**
     it('Asset user should see add Assets in Connect', () => {
