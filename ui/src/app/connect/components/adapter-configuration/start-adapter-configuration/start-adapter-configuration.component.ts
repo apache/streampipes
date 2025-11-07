@@ -151,7 +151,10 @@ export class StartAdapterConfigurationComponent implements OnInit {
         this.applySelectedRemoveDuplicates();
     }
     hasRole(role: UserRole): boolean {
-        return this.currentUser.roles.indexOf(role) > -1;
+        return (
+            this.currentUser.roles.indexOf(role) > -1 ||
+            this.currentUser.roles.indexOf(UserRole.ROLE_ADMIN) > -1
+        );
     }
 
     applySelectedEventRateReduction(): void {
