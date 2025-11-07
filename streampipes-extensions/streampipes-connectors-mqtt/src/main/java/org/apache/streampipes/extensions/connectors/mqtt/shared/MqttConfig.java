@@ -90,7 +90,7 @@ public MqttConfig(String url, String topic, Boolean tlsEnabled) {
   }
 
   public void setClientKey(String clientKey) {
-    this.clientKey= clientKey;
+    this.clientKey = clientKey;
   }
 
   public Boolean getAuthenticated() {
