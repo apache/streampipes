@@ -22,7 +22,7 @@ host.title=Host
 host.description=IP address or DNS of MQTT broker
 
 port.title=Port
-port.description=Port of MQTT broker (default 1883)
+port.description=Port of MQTT broker (default 1883, for TLS often 8883)
 
 topic.title=Topic
 topic.description=Enter MQTT topic
@@ -49,7 +49,7 @@ basic-auth-alternative.title=Basic auth
 basic-auth-alternative.description=Username and password
 
 cert-auth-alternative.title=Client Certificate
-cert-auth-alternative.description=Certificate and Key
+cert-auth-alternative.description=Certificate and Key, only works in combination with SSL/TLS.
 
 username-group.title=Username and password
 
