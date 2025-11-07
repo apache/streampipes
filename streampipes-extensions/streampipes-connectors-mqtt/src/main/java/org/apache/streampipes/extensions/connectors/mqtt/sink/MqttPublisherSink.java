@@ -38,6 +38,8 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import java.util.Arrays;
 
 public class MqttPublisherSink implements IStreamPipesDataSink {
+    //TODO is this right ? 
+    public static final String ID = "org.apache.streampipes.sinks.brokers.jvm.mqtt";
 
     private static final int DEFAULT_MQTT_PORT = 1883;
     private static final int DEFAULT_RECONNECT_PERIOD = 30;
