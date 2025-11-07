@@ -31,6 +31,9 @@ import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE_CERT;
@@ -39,6 +42,8 @@ import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublish
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_KEY;
 
 public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
+
+            private static final Logger LOG = LoggerFactory.getLogger(MQTTSinkMigrationV1.class);
 
     @Override
     public ModelMigratorConfig config() {
@@ -54,17 +59,23 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
     public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
             IDataSinkParameterExtractor extractor) throws RuntimeException {
         // change Text
+        LOG.info("Change Description of Port");
         var port = (FreeTextStaticProperty) element.getStaticProperties().get(2);
+        LOG.info(" " + port.getLabel());
         port.setDescription(
                 "Port of MQTT broker (default 1883, for TLS often 8883)");
         element.getStaticProperties().set(2, port);
 
         // change Text
-        var tls = (FreeTextStaticProperty) element.getStaticProperties().get(4);
+        LOG.info("Change Description of TLS");
+        LOG.info(" " + element.getStaticProperties().get(4).getLabel());
+        var tls = element.getStaticProperties().get(4);
+        LOG.info(" " + tls.getDescription());
         tls.setDescription(
                 "Select protocol. TCP (plaintext), SSL/TLS (encrypted)");
         element.getStaticProperties().set(4, tls);
-
+        LOG.info("Migrate Security");
+        LOG.info(element.getStaticProperties().get(3).getLabel());
         migrateSecurity((StaticPropertyAlternatives) element.getStaticProperties().get(3));
 
         return MigrationResult.success(element);
