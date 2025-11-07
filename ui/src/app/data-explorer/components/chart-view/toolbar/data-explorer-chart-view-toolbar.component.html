@@ -67,16 +67,18 @@
             <mat-icon>save</mat-icon>
             {{ 'Save' | translate }}
         </button>
-        <button
-            mat-flat-button
-            [matTooltip]="'Add to Asset' | translate"
-            class="edit-menu-btn"
-            (click)="addToAssetEmitter.emit()"
-            data-cy="add-to-Asset-data-view-btn"
-        >
-            <mat-icon>precision_manufacturing</mat-icon>
-            {{ 'Add To Asset' | translate }}
-        </button>
+        @if (isAssetAdmin) {
+            <button
+                mat-flat-button
+                [matTooltip]="'Add to Asset' | translate"
+                class="edit-menu-btn"
+                (click)="addToAssetEmitter.emit()"
+                data-cy="add-to-Asset-data-view-btn"
+            >
+                <mat-icon>precision_manufacturing</mat-icon>
+                {{ 'Add To Asset' | translate }}
+            </button>
+        }
         <button
             mat-flat-button
             [matTooltip]="'Discard' | translate"
