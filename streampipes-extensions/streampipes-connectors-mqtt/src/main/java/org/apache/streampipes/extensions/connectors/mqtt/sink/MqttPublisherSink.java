@@ -76,6 +76,10 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
 
     @Override
     public IDataSinkConfiguration declareConfig() {
+                    var group =  StaticProperties.group(Labels.withId(CERT_GROUP),
+                                                StaticProperties.stringFreeTextProperty(Labels.withId(CLIENT_CERT), true, false),
+                                                StaticProperties.secretValue(Labels.withId(CLIENT_KEY)));
+                     group.setHorizontalRendering(false);
         return DataSinkConfiguration.create(
                 MqttPublisherSink::new,
                 DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.mqtt", 0)
@@ -94,9 +98,7 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
                                                 StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
                                                 StaticProperties.secretValue(Labels.withId(PASSWORD)))),
                                 Alternatives.from(Labels.withId(AUTH_ALTERNATIVE_CERT),
-                                        StaticProperties.group(Labels.withId(CERT_GROUP),
-                                                StaticProperties.stringFreeTextProperty(Labels.withId(CLIENT_CERT)),
-                                                StaticProperties.secretValue(Labels.withId(CLIENT_KEY)))))
+                                     group))
                         .requiredSingleValueSelection(
                                 Labels.withId(ENCRYPTION_MODE),
                                 Arrays.asList(
