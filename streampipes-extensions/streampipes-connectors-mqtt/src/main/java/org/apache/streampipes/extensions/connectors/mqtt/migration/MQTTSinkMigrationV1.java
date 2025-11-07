@@ -19,7 +19,6 @@ package org.apache.streampipes.extensions.connectors.mqtt.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
-import org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
@@ -48,7 +47,7 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
     @Override
     public ModelMigratorConfig config() {
         return new ModelMigratorConfig(
-                MqttPublisherSink.ID,
+                "sp:org.apache.streampipes.sinks.brokers.jvm.mqtt",
                 SpServiceTagPrefix.DATA_SINK,
                 0,
                 1);
