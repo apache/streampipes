@@ -67,6 +67,12 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
   public static final String RETAIN = "retain";
   public static final String KEEP_ALIVE_IN_SEC = "keep-alive";
   public static final String MQTT_COMPLIANT = "mqtt-version-compliant";
+    public static final String CLIENT_CERT = "client-cert";
+      public static final String CLIENT_KEY = "client-key";
+        public static final String AUTH_ALTERNATIVE_CERT = "cert-auth-alternative";
+          public static final String CERT_GROUP = "cert-group";
+
+
 
   private MqttClient mqttClient;
 
@@ -88,7 +94,11 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
                 Alternatives.from(Labels.withId(AUTH_ALTERNATIVE),
                     StaticProperties.group(Labels.withId(USERNAME_GROUP),
                         StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
-                        StaticProperties.secretValue(Labels.withId(PASSWORD)))))
+                        StaticProperties.secretValue(Labels.withId(PASSWORD)))),
+                        Alternatives.from(Labels.withId(AUTH_ALTERNATIVE_CERT),
+                    StaticProperties.group(Labels.withId(CERT_GROUP),
+                        StaticProperties.stringFreeTextProperty(Labels.withId(CLIENT_CERT)),
+                        StaticProperties.secretValue(Labels.withId(CLIENT_KEY)))))
             .requiredSingleValueSelection(
                 Labels.withId(ENCRYPTION_MODE),
                 Arrays.asList(

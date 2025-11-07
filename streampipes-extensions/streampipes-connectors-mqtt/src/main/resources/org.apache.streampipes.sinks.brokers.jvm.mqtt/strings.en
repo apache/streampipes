@@ -33,6 +33,12 @@ username.description=The username to authenticate with the broker
 password.title=Password
 password.description=The password to authenticate with the broker
 
+client-cert.title=Certificate PEM
+client-cert.description = Public key in PEM format
+
+client-key.title=Private Key PEM
+client-key.description=Private key in PEM format
+
 auth-mode.title=Authentication
 auth-mode.description=Unauthenticated or basic auth
 
@@ -42,7 +48,12 @@ no-auth-alternative.description=No authentication
 basic-auth-alternative.title=Basic auth
 basic-auth-alternative.description=Username and password
 
+cert-auth-alternative.title=Client Certificate
+cert-auth-alternative.description=Certificate and Key
+
 username-group.title=Username and password
+
+cert-group.title=Client Certificate
 
 qos-level.title=QoS
 qos-level.description=Quality of Service level (default: at-least-once)
@@ -54,7 +65,7 @@ will-retain.title=Retain will message?
 will-retain.description=Select if you want the Will to be published with the retain option (default: No)
 
 encryption-mode.title=Encryption
-encryption-mode.description=Select protocol. TCP (plaintext), SSL/TLS (encrypted, not yet supported!)
+encryption-mode.description=Select protocol. TCP (plaintext), SSL/TLS (encrypted)
 
 reconnect-period.title=Reconnect period (seconds)
 reconnect-period.description=Amount of time to wait between reconnect attempts (default: 30s)

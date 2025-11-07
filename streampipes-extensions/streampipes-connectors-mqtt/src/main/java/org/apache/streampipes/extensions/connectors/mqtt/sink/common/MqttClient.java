@@ -166,12 +166,12 @@ public class MqttClient {
 
         TrustManagerFactory trustManagerFactory = SecurityUtils.createTrustManagerFactory(keyStore);
         KeyManager[] keyManagers = null;
-        /**if (options.getClientCertificatePath() != null && options.getClientKeyPath() != null) {
+        if (options.getClientCertificate() != null && options.getClientKey() != null) {
             LOG.info("Loading client certificate for mutual TLS authentication...");
             keyManagers = SecurityUtils.loadClientKeyManagers(
-                    options.getClientCertificatePath(),
-                    options.getClientKeyPath());
-        }*/
+                    options.getClientCertificate(),
+                    options.getClientKey());
+        }
 
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(keyManagers, trustManagerFactory.getTrustManagers(), new SecureRandom());

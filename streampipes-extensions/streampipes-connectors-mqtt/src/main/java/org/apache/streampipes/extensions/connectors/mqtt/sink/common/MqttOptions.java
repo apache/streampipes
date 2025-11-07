@@ -24,6 +24,8 @@ import org.fusesource.mqtt.client.QoS;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_MODE;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLEAN_SESSION_KEY;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_CERT;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_KEY;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.ENCRYPTION_MODE;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.HOST;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.KEEP_ALIVE_IN_SEC;
@@ -41,6 +43,7 @@ import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublish
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_QOS;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_RETAIN;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_TOPIC;
+
 
 public class MqttOptions {
 
@@ -64,6 +67,8 @@ public class MqttOptions {
   private String willTopic = "";
   private String willMessage = "";
   private String mqttProtocolVersion = "3.1";
+  private String clientCertificate;
+  private String clientKey;
 
   public MqttOptions(IDataSinkParameters params) {
     var extract = params.extractor();
@@ -81,7 +86,11 @@ public class MqttOptions {
     this.cleanSession = MqttUtils.extractBoolean(extract.selectedSingleValue(CLEAN_SESSION_KEY, String.class));
     this.retain = MqttUtils.extractBoolean(extract.selectedSingleValue(RETAIN, String.class));
 
+    this.clientCertificate = extract.singleValueParameter(CLIENT_CERT, String.class);
+    this.clientKey = extract.secretValue(CLIENT_KEY);
+
     boolean isCompliant = MqttUtils.extractBoolean(extract.selectedSingleValue(MQTT_COMPLIANT, String.class));
+
     if (isCompliant) {
       this.mqttProtocolVersion = "3.1.1";
     }
@@ -177,5 +186,13 @@ public class MqttOptions {
 
   public String getMqttProtocolVersion() {
     return mqttProtocolVersion;
+  }
+
+  public String getClientCertificate(){
+    return clientCertificate;
+  }
+
+   public String getClientKey(){
+    return clientKey;
   }
 }
