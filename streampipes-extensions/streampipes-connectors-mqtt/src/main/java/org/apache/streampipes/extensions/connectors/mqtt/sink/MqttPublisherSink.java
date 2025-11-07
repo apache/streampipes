@@ -84,7 +84,7 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
                      group.setHorizontalRendering(false);
         return DataSinkConfiguration.create(
                 MqttPublisherSink::new,
-                DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.mqtt", 0)
+                DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.mqtt", 1)
                         .category(DataSinkType.MESSAGING)
                         .withLocales(Locales.EN)
                         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

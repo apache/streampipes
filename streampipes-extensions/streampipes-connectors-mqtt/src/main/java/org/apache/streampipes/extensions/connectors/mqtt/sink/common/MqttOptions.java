@@ -44,7 +44,6 @@ import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublish
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_RETAIN;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_TOPIC;
 
-
 public class MqttOptions {
 
   private final String clientId;
@@ -67,8 +66,8 @@ public class MqttOptions {
   private String willTopic = "";
   private String willMessage = "";
   private String mqttProtocolVersion = "3.1";
-  private String clientCertificate;
-  private String clientKey;
+  private String clientCertificate = null;
+  private String clientKey = null;
 
   public MqttOptions(IDataSinkParameters params) {
     var extract = params.extractor();
@@ -80,14 +79,20 @@ public class MqttOptions {
     this.protocol = extract.selectedSingleValue(ENCRYPTION_MODE, String.class);
 
     this.qos = MqttUtils.extractQoSFromString(extract.selectedSingleValue(QOS_LEVEL_KEY, String.class));
-    this.reconnectDelayMaxInMs =
-        MqttUtils.fromSecToMs(extract.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class));
+    this.reconnectDelayMaxInMs = MqttUtils
+        .fromSecToMs(extract.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class));
     this.keepAliveInSec = extract.singleValueParameter(KEEP_ALIVE_IN_SEC, Short.class);
     this.cleanSession = MqttUtils.extractBoolean(extract.selectedSingleValue(CLEAN_SESSION_KEY, String.class));
     this.retain = MqttUtils.extractBoolean(extract.selectedSingleValue(RETAIN, String.class));
 
-    this.clientCertificate = extract.singleValueParameter(CLIENT_CERT, String.class);
-    this.clientKey = extract.secretValue(CLIENT_KEY);
+    try {
+
+      this.clientCertificate = extract.singleValueParameter(CLIENT_CERT, String.class);
+      this.clientKey = extract.secretValue(CLIENT_KEY);
+    } catch (Exception e) {
+      this.clientCertificate = null;
+      this.clientKey = null;
+    }
 
     boolean isCompliant = MqttUtils.extractBoolean(extract.selectedSingleValue(MQTT_COMPLIANT, String.class));
 
@@ -188,11 +193,11 @@ public class MqttOptions {
     return mqttProtocolVersion;
   }
 
-  public String getClientCertificate(){
+  public String getClientCertificate() {
     return clientCertificate;
   }
 
-   public String getClientKey(){
+  public String getClientKey() {
     return clientKey;
   }
 }

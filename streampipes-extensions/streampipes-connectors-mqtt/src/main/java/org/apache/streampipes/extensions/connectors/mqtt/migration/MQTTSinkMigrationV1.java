@@ -47,7 +47,7 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
     @Override
     public ModelMigratorConfig config() {
         return new ModelMigratorConfig(
-                "sp:org.apache.streampipes.sinks.brokers.jvm.mqtt",
+                "org.apache.streampipes.sinks.brokers.jvm.mqtt",
                 SpServiceTagPrefix.DATA_SINK,
                 0,
                 1);
