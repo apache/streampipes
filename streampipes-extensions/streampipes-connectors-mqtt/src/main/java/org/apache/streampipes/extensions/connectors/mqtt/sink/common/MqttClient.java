@@ -29,16 +29,16 @@ import org.fusesource.mqtt.client.MQTT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+
 import java.io.IOException;
 import java.net.URI;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
 
 public class MqttClient {
 
@@ -62,7 +62,8 @@ public class MqttClient {
     this.uri = MqttUtils.makeMqttServerUri(options.getProtocol(), options.getHost(), options.getPort());
     try {
       /**
-       * Sets the url for connecting to the MQTT broker, e.g. {@code: tcp://localhost:1883}.
+       * Sets the url for connecting to the MQTT broker, e.g.
+       * {@code: tcp://localhost:1883}.
        */
       mqtt.setHost(uri);
 
@@ -78,7 +79,7 @@ public class MqttClient {
         mqtt.setPassword(options.getPassword());
       }
 
-      if (options.getProtocol() != "TCP"){
+      if (options.getProtocol() != "TCP") {
         configureTls(mqtt);
 
       }
@@ -89,38 +90,45 @@ public class MqttClient {
       mqtt.setClientId(options.getClientId());
 
       /**
-       * Set to false if you want the MQTT server to persist topic subscriptions and ack positions across
+       * Set to false if you want the MQTT server to persist topic subscriptions and
+       * ack positions across
        * client sessions. Defaults to true.
        */
       mqtt.setCleanSession(options.isCleanSession());
 
       /**
-       * The maximum amount of time in ms to wait between reconnect attempts. Defaults to 30,000.
+       * The maximum amount of time in ms to wait between reconnect attempts. Defaults
+       * to 30,000.
        */
       mqtt.setReconnectDelayMax(options.getReconnectDelayMaxInMs());
 
       /**
-       * Configures the Keep Alive timer in seconds. Defines the maximum time interval between messages
-       * received from a client. It enables the server to detect that the network connection to a client has
+       * Configures the Keep Alive timer in seconds. Defines the maximum time interval
+       * between messages
+       * received from a client. It enables the server to detect that the network
+       * connection to a client has
        * dropped, without having to wait for the long TCP/IP timeout.
        */
       mqtt.setKeepAlive(options.getKeepAliveInSec());
 
       /**
-       * Set to "3.1.1" to use MQTT version 3.1.1. Otherwise defaults to the 3.1 protocol version.
+       * Set to "3.1.1" to use MQTT version 3.1.1. Otherwise defaults to the 3.1
+       * protocol version.
        */
       mqtt.setVersion(options.getMqttProtocolVersion());
 
       // last will and testament options
       if (options.isLastWill()) {
         /**
-         * If set the server will publish the client's Will message to the specified topics if the client has
+         * If set the server will publish the client's Will message to the specified
+         * topics if the client has
          * an unexpected disconnection.
          */
         mqtt.setWillTopic(options.getWillTopic());
 
         /**
-         * Sets the quality of service to use for the Will message. Defaults to QoS.AT_MOST_ONCE.
+         * Sets the quality of service to use for the Will message. Defaults to
+         * QoS.AT_MOST_ONCE.
          */
         mqtt.setWillQos(options.getWillQoS());
 
@@ -139,44 +147,45 @@ public class MqttClient {
     }
   }
 
-      private void configureTls(MQTT mqtt) throws Exception {
-        LOG.info("Configuring TLS for MQTT connection...");
-        KeyStore keyStore = null;
+  private void configureTls(MQTT mqtt) throws Exception {
+    LOG.info("Configuring TLS for MQTT connection...");
+    KeyStore keyStore = null;
 
-        var env = Environments.getEnvironment();
-        boolean acceptAllCerts = env.getAllowSelfSignedCertificates().getValueOrDefault();
+    var env = Environments.getEnvironment();
+    boolean acceptAllCerts = env.getAllowSelfSignedCertificates().getValueOrDefault();
 
-        if (acceptAllCerts) {
+    if (acceptAllCerts) {
 
-            LOG.info("Accept all Certs");
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, SecurityUtils.acceptAllCerts(), new java.security.SecureRandom());
-             LOG.info("Init SSL ");
-            mqtt.setSslContext(sslContext);
-             LOG.info("Return");
-            return;
-        }
-
-        try {
-                keyStore = SecurityUtils.loadServerKeyStore();
-
-            } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
-                LOG.error("Error loading keystore from file: {}", e);
-            }
-
-        TrustManagerFactory trustManagerFactory = SecurityUtils.createTrustManagerFactory(keyStore);
-        KeyManager[] keyManagers = null;
-        if (options.getClientCertificate() != null && options.getClientKey() != null) {
-            LOG.info("Loading client certificate for mutual TLS authentication...");
-            keyManagers = SecurityUtils.loadClientKeyManagers(
-                    options.getClientCertificate(),
-                    options.getClientKey());
-        }
-
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(keyManagers, trustManagerFactory.getTrustManagers(), new SecureRandom());
-        mqtt.setSslContext(sslContext);
+      LOG.info("Accept all Certs");
+      SSLContext sslContext = SSLContext.getInstance("TLS");
+      sslContext.init(null, SecurityUtils.acceptAllCerts(), new java.security.SecureRandom());
+      LOG.info("Init SSL ");
+      mqtt.setSslContext(sslContext);
+      LOG.info("Return");
+      return;
     }
+
+    try {
+      keyStore = SecurityUtils.loadServerKeyStore();
+
+    } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
+      LOG.error("Error loading keystore from file: {}", e);
+    }
+
+    TrustManagerFactory trustManagerFactory = SecurityUtils.createTrustManagerFactory(keyStore);
+    KeyManager[] keyManagers = null;
+    if (options.getClientCertificate() != null && options.getClientKey() != null) {
+      LOG.info("Loading client certificate for mutual TLS authentication...");
+      keyManagers = SecurityUtils.loadClientKeyManagers(
+          options.getClientCertificate(),
+          options.getClientKey());
+    }
+
+    SSLContext sslContext = SSLContext.getInstance("TLS");
+    sslContext.init(keyManagers, trustManagerFactory.getTrustManagers(), new SecureRandom());
+    mqtt.setSslContext(sslContext);
+  }
+
   /**
    * Start blocking connection to MQTT broker.
    */

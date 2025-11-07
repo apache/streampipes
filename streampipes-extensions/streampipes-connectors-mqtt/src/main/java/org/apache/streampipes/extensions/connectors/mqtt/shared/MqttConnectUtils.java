@@ -74,12 +74,11 @@ public class MqttConnectUtils {
 
   }
 
-    public static StaticPropertyAlternative getAlternativesThree() {
-      var group = StaticProperties.group(
-            Labels.withId(CLIENT_CERT_GROUP),
-            StaticProperties.stringFreeTextProperty(Labels.withId(CLIENTCERT), true, false),
-            StaticProperties.secretValue(Labels.withId(CLIENTKEY))
-            );
+  public static StaticPropertyAlternative getAlternativesThree() {
+    var group = StaticProperties.group(
+        Labels.withId(CLIENT_CERT_GROUP),
+        StaticProperties.stringFreeTextProperty(Labels.withId(CLIENTCERT), true, false),
+        StaticProperties.secretValue(Labels.withId(CLIENTKEY)));
     group.setHorizontalRendering(false);
     return Alternatives.from(Labels.withId(CLIENT_CERT_ACCESS), group);
 
@@ -117,17 +116,14 @@ public class MqttConnectUtils {
       if (extractor.slideToggleValue(TLS)) {
         mqttConfig = new MqttConfig(brokerUrl, topic, true);
       }
-    } 
-    else if(selectedAlternative.equals(CLIENT_CERT_ACCESS)){
+    } else if (selectedAlternative.equals(CLIENT_CERT_ACCESS)) {
 
-      String clientcert= extractor.singleValueParameter(CLIENTCERT, String.class);
-      String clientkey= extractor.secretValue(CLIENTKEY);
-      // TWO way auth so TLS needs to be enabled 
-      mqttConfig = new MqttConfig(brokerUrl, topic,  true, clientcert, clientkey);
+      String clientcert = extractor.singleValueParameter(CLIENTCERT, String.class);
+      String clientkey = extractor.secretValue(CLIENTKEY);
+      // TWO way auth so TLS needs to be enabled
+      mqttConfig = new MqttConfig(brokerUrl, topic, true, clientcert, clientkey);
 
-
-    }
-    else {
+    } else {
       String username = extractor.singleValueParameter(USERNAME, String.class);
       String password = extractor.secretValue(PASSWORD);
       if (extractor.slideToggleValue(TLS)) {
