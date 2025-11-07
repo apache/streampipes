@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.security;
 
-import javax.net.ssl.*;
-
 import org.apache.streampipes.commons.environment.Environments;
+
+import javax.net.ssl.*;
 
 import java.io.*;
 import java.net.Socket;
