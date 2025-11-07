@@ -86,7 +86,7 @@ public class MqttOptions {
     this.retain = MqttUtils.extractBoolean(extract.selectedSingleValue(RETAIN, String.class));
 
     try {
-
+      //TODO How to do this better 
       this.clientCertificate = extract.singleValueParameter(CLIENT_CERT, String.class);
       this.clientKey = extract.secretValue(CLIENT_KEY);
     } catch (Exception e) {
