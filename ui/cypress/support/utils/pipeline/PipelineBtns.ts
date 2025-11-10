@@ -28,4 +28,50 @@ export class PipelineBtns {
     public static deletePipeline() {
         return cy.dataCy('delete-pipeline', { timeout: 10000 });
     }
+    public static modifyPipeline() {
+        return cy.dataCy('modify-pipeline-btn');
+    }
+
+    public static pipelinesToEditor() {
+        return cy.dataCy('pipelines-navigate-to-editor');
+    }
+
+    public static editorAddPipelineElement() {
+        return cy.dataCy('sp-editor-add-pipeline-element');
+    }
+
+    public static possibleElementsBtns(dataSourceName) {
+        return cy.dataCy('sp-possible-elements-' + dataSourceName, {
+            timeout: 10000,
+        });
+    }
+
+    public static selectCompatibleElementBtn(elementName) {
+        return cy.dataCy('sp-compatible-elements-' + elementName);
+    }
+
+    public static saveElementConfigBtn() {
+        return cy.dataCy('sp-element-configuration-save');
+    }
+    public static savePipelineBtn() {
+        return cy.dataCy('sp-editor-save-pipeline');
+    }
+
+    public static pipelineCloneModeBtn() {
+        return cy.dataCy('pipeline-update-mode-clone');
+    }
+
+    public static navigateToOverviewCheckbox() {
+        return cy.dataCy('sp-editor-checkbox-navigate-to-overview');
+    }
+
+    public static editorApplyBtn() {
+        return cy.dataCy('sp-editor-apply');
+    }
+
+    public static navigateToPipelineOverview() {
+        return cy.dataCy('sp-navigate-to-pipeline-overview', {
+            timeout: 15000,
+        });
+    }
 }
