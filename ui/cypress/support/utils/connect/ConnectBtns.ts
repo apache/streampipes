@@ -23,7 +23,7 @@ export class ConnectBtns {
     }
 
     public static deleteAdapter() {
-        return cy.dataCy('delete-adapter', { timeout: 10000 });
+        return cy.dataCy('delete-adapter', { timeout: 20000 });
     }
 
     public static moreOptions() {
@@ -72,6 +72,10 @@ export class ConnectBtns {
         return cy.get('button').contains('Next').parent();
     }
 
+    public static deleteAdapterConfirmationButton() {
+        return cy.dataCy('delete-adapter-confirmation');
+    }
+
     // =====================  Adapter settings btns  ==========================
     public static adapterSettingsStartAdapter() {
         return cy.dataCy('adapter-settings-start-adapter-btn');
@@ -91,6 +95,19 @@ export class ConnectBtns {
 
     public static showCodeCheckbox() {
         return cy.dataCy('show-code-checkbox');
+    }
+
+    public static deleteAdapterAndAssociatedPipelineConfirmation() {
+        return cy.dataCy(
+            'delete-adapter-and-associated-pipelines-confirmation',
+            {
+                timeout: 10000,
+            },
+        );
+    }
+
+    public static showAssetCheckbox() {
+        return cy.dataCy('show-asset-checkbox');
     }
 
     // ========================================================================

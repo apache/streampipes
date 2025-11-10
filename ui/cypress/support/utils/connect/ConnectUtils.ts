@@ -254,7 +254,7 @@ export class ConnectUtils {
     }
 
     public static addToAsset(assetNameList = []) {
-        cy.dataCy('show-asset-checkbox').click();
+        ConnectBtns.showAssetCheckbox().click();
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
 
         assetNameList.forEach(assetName => {
@@ -288,15 +288,12 @@ export class ConnectUtils {
         this.goToConnect();
 
         GeneralUtils.openMenuForRow(adapterName);
-        cy.dataCy('delete-adapter').should('have.length', 1);
+        ConnectBtns.deleteAdapter().should('have.length', 1);
         this.clickDelete();
         cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should(
             'be.visible',
         );
-        cy.dataCy('delete-adapter', { timeout: 20000 }).should(
-            'have.length',
-            0,
-        );
+        ConnectBtns.deleteAdapter().should('have.length', 0);
     }
 
     public static storeAndStartEditedAdapter() {
@@ -313,12 +310,10 @@ export class ConnectUtils {
         ConnectBtns.openActionsMenu('simulator');
         cy.dataCy('delete-adapter').should('have.length', 1);
         this.clickDelete();
-        cy.dataCy('delete-adapter-and-associated-pipelines-confirmation', {
-            timeout: 10000,
-        }).should('be.visible');
-        cy.dataCy(
-            'delete-adapter-and-associated-pipelines-confirmation',
-        ).click();
+        ConnectBtns.deleteAdapterAndAssociatedPipelineConfirmation().should(
+            'be.visible',
+        );
+        ConnectBtns.deleteAdapterAndAssociatedPipelineConfirmation().click();
         cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should(
             'be.visible',
         );
@@ -336,14 +331,12 @@ export class ConnectUtils {
         // Associated pipelines not owned by the user (unless admin) should not be deleted during adapter deletion
         this.goToConnect();
         ConnectBtns.openActionsMenu('simulator');
-        cy.dataCy('delete-adapter').should('have.length', 1);
+        ConnectBtns.deleteAdapter().should('have.length', 1);
         this.clickDelete();
-        cy.dataCy('delete-adapter-and-associated-pipelines-confirmation', {
-            timeout: 10000,
-        }).should('be.visible');
-        cy.dataCy(
-            'delete-adapter-and-associated-pipelines-confirmation',
-        ).click();
+        ConnectBtns.deleteAdapterAndAssociatedPipelineConfirmation().should(
+            'be.visible',
+        );
+        ConnectBtns.deleteAdapterAndAssociatedPipelineConfirmation().click();
         cy.dataCy('adapter-deletion-permission-denied', {
             timeout: 10000,
         }).should('be.visible');
@@ -352,29 +345,20 @@ export class ConnectUtils {
     }
 
     public static clickDelete() {
-        cy.dataCy('delete-adapter').click();
-        cy.dataCy('delete-adapter-confirmation').click();
+        ConnectBtns.deleteAdapter().click();
+        ConnectBtns.deleteAdapterConfirmationButton().click();
     }
 
     public static checkAdapterNotDeleted() {
         this.goToConnect();
-        cy.dataCy('delete-adapter', { timeout: 20000 }).should(
-            'have.length',
-            1,
-        );
+        ConnectBtns.deleteAdapter().should('have.length', 1);
     }
 
     public static checkAdapterAndAssociatedPipelinesDeleted() {
         this.goToConnect();
-        cy.dataCy('delete-adapter', { timeout: 20000 }).should(
-            'have.length',
-            0,
-        );
+        ConnectBtns.deleteAdapter().should('have.length', 0);
         PipelineUtils.goToPipelines();
-        cy.dataCy('delete-pipeline', { timeout: 10000 }).should(
-            'have.length',
-            0,
-        );
+        ConnectBtns.deleteAdapter().should('have.length', 0);
     }
 
     public static setUpPreprocessingRuleTest(
