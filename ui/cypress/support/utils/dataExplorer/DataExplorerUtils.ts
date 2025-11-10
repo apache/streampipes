@@ -312,12 +312,12 @@ export class DataExplorerUtils {
     }
 
     public static editWidget(widgetName: string) {
-        cy.dataCy('edit-' + widgetName).click();
+        DataExplorerBtns.editWidget(widgetName).click();
     }
 
     public static startEditWidget(widgetName: string) {
-        cy.dataCy('more-options-' + widgetName).click();
-        cy.dataCy('start-edit-' + widgetName).click();
+        DataExplorerBtns.moreOptionsBtn(widgetName).click();
+        DataExplorerBtns.startEditWidget(widgetName).click();
     }
 
     public static saveAndReEditWidget(dataViewName: string) {
@@ -338,11 +338,11 @@ export class DataExplorerUtils {
     }
 
     public static goBackToOverview() {
-        cy.dataCy('save-data-explorer-go-back-to-overview').click();
+        DataExplorerBtns.goBackToOverviewBtn().click();
     }
 
     public static addNewWidget() {
-        cy.dataCy('add-new-widget').click();
+        DataExplorerBtns.addNewWidgetBtn().click();
     }
 
     public static selectDataSet(dataSet: string) {

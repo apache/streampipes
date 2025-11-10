@@ -96,4 +96,24 @@ export class DataExplorerBtns {
     public static editDataViewButton(dataViewName: string) {
         return cy.dataCy('edit-data-view-' + dataViewName);
     }
+
+    public static editWidget(widgetName: string) {
+        return cy.dataCy('edit-' + widgetName);
+    }
+
+    public static moreOptionsBtn(widgetName) {
+        return cy.dataCy('more-options-' + widgetName);
+    }
+
+    public static startEditWidget(widgetName) {
+        return cy.dataCy('start-edit-' + widgetName);
+    }
+
+    public static goBackToOverviewBtn() {
+        return cy.dataCy('save-data-explorer-go-back-to-overview');
+    }
+
+    public static addNewWidgetBtn() {
+        return cy.dataCy('add-new-widget');
+    }
 }
