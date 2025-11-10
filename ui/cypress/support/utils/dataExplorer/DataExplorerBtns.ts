@@ -16,8 +16,6 @@
  *
  */
 
-import { GeneralUtils } from '../GeneralUtils';
-
 export class DataExplorerBtns {
     public static refreshDataLakeMeasures() {
         return cy.dataCy('refresh-data-lake-measures');
