@@ -33,11 +33,9 @@ describe('Test User Roles for Pipelines', () => {
 
         AssetUtils.goToAssets();
         AssetUtils.addAndSaveAsset('Asset');
-        //AssetBtns.createAssetBtn().should('be.visible');
-        //AssetUtils.checkAmountOfAssetsGreaterThan(0)
     });
 
-    it('Asset admin should see add Asset in Connect', () => {
+    /**it('Connect Asset Role Check ', () => {
         const newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
@@ -64,8 +62,6 @@ describe('Test User Roles for Pipelines', () => {
 
         UserUtils.switchUser(newUser);
 
-        //Config --> Sicherheit --> Find user --> Bearb -->Rollen
-
         ConnectUtils.goToConnect();
 
         ConnectUtils.addAdapter(
@@ -76,6 +72,49 @@ describe('Test User Roles for Pipelines', () => {
                 .build(),
         );
         cy.dataCy('show-asset-checkbox').should('not.exist');
+    });*/
+
+    it('Pipeline Role Check ', () => {
+        const newUser = UserUtils.createUser(
+            'user',
+            UserRole.ROLE_PIPELINE_ADMIN,
+            UserRole.ROLE_ASSET_ADMIN,
+            UserRole.ROLE_CONNECT_ADMIN,
+            UserRole.ROLE_DATA_EXPLORER_ADMIN,
+            UserRole.ROLE_DASHBOARD_ADMIN,
+        );
+
+        UserUtils.switchUser(newUser);
+
+        PipelineUtils.goToPipelines();
+
+        PipelineUtils.addSampleAdapterAndPipeline();
+
+        PipelineUtils.editPipeline('Pipeline Test');
+
+        cy.dataCy('sp-editor-save-pipeline').click();
+
+        cy.log('FIRST ASSES');
+
+        cy.dataCy('sp-show-pipeline-asset-checkbox').should('exist');
+
+        //Navigate some where else to get out of the editor
+
+        cy.dataCy('sp-editor-cancel').click();
+
+        UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
+
+        UserUtils.switchUser(newUser);
+
+        PipelineUtils.goToPipelines();
+
+        PipelineUtils.editPipeline('Pipeline Test');
+
+        cy.dataCy('sp-editor-save-pipeline').click();
+
+        cy.log('SECOND ASSES');
+
+        cy.dataCy('sp-show-pipeline-asset-checkbox').should('not.exist');
     });
 
     /**
