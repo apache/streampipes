@@ -24,17 +24,65 @@ export class DataExplorerBtns {
     }
 
     public static saveDataViewButton() {
-        return cy.dataCy('save-data-view-btn').click();
+        return cy.dataCy('save-data-view-btn', { timeout: 10000 });
     }
 
     public static saveDashboard() {
-        return cy.dataCy('save-data-view').click();
+        return cy.dataCy('save-data-view');
     }
     public static saveChartsToAssetBtn() {
         return cy
             .dataCy('add-to-Asset-data-view-btn', { timeout: 10000 })
             .should('exist')
             .click();
+    }
+
+    public static deleteDashboardBtn(dashboardName) {
+        return cy.dataCy('delete-dashboard-' + dashboardName, {
+            timeout: 10000,
+        });
+    }
+
+    public static deleteDataViewBtn(dataViewName) {
+        return cy.dataCy('delete-data-view-' + dataViewName, {
+            timeout: 10000,
+        });
+    }
+
+    public static confirmDelete() {
+        return cy.dataCy('confirm-delete', { timeout: 10000 });
+    }
+
+    public static cancelDelete() {
+        return cy.dataCy('cancel-delete', { timeout: 10000 });
+    }
+
+    public static saveDashboardConfigurationBtn() {
+        return cy.dataCy('save-dashboard-btn', { timeout: 10000 });
+    }
+
+    public static removeWidgetBtn(dataViewName) {
+        return cy.dataCy('remove-' + dataViewName);
+    }
+
+    public static editDashboardBtn(dashboardName) {
+        return cy.dataCy('edit-dashboard-' + dashboardName);
+    }
+
+    public static editDashboardSettingsBtn(dashboardName) {
+        return cy.dataCy('edit-dashboard-settings-' + dashboardName);
+    }
+
+    public static openNewDataViewBtn() {
+        return cy.dataCy('open-new-data-view', { timeout: 10000 });
+    }
+
+    public static addDataViewBtn(dataViewName) {
+        return cy.dataCy('add-data-view-btn-' + dataViewName);
+    }
+
+    public static newDashboardDialogBtn() {
+        return cy.dataCy('open-new-dashboard-dialog');
     }
 
     public static chartAssetCheckboxBtn() {
@@ -45,10 +93,7 @@ export class DataExplorerBtns {
             .dataCy('asset-dialog-confirm-delete', { timeout: 10000 })
             .click();
     }
-    public static editDataViewButton(widgetName: string) {
-        GeneralUtils.openMenuForRow(widgetName);
-        return cy
-            .dataCy('edit-data-view-' + widgetName.replaceAll(' ', ''))
-            .click();
+    public static editDataViewButton(dataViewName: string) {
+        return cy.dataCy('edit-data-view-' + dataViewName);
     }
 }
