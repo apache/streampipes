@@ -25,61 +25,59 @@ import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
 import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
+import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 
 describe('Test User Roles for Pipelines', () => {
-    const newUser = UserUtils.createUser(
-        'user',
-        UserRole.ROLE_PIPELINE_ADMIN,
-        UserRole.ROLE_ASSET_ADMIN,
-        UserRole.ROLE_CONNECT_ADMIN,
-        UserRole.ROLE_DATA_EXPLORER_ADMIN,
-        UserRole.ROLE_DASHBOARD_ADMIN,
-    );
-
-    const newUserWithoutAssetAdmin = UserUtils.createUser(
-        'user',
-        UserRole.ROLE_PIPELINE_ADMIN,
-        UserRole.ROLE_CONNECT_ADMIN,
-        UserRole.ROLE_DATA_EXPLORER_ADMIN,
-        UserRole.ROLE_DASHBOARD_ADMIN,
-    );
-
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        UserUtils.switchUser(newUser);
+
         AssetUtils.goToAssets();
         AssetUtils.addAndSaveAsset('Asset');
+        //AssetBtns.createAssetBtn().should('be.visible');
+        //AssetUtils.checkAmountOfAssetsGreaterThan(0)
     });
 
     it('Asset admin should see add Asset in Connect', () => {
+        const newUser = UserUtils.createUser(
+            'user',
+            UserRole.ROLE_PIPELINE_ADMIN,
+            UserRole.ROLE_ASSET_ADMIN,
+            UserRole.ROLE_CONNECT_ADMIN,
+            UserRole.ROLE_DATA_EXPLORER_ADMIN,
+            UserRole.ROLE_DASHBOARD_ADMIN,
+        );
+
+        UserUtils.switchUser(newUser);
+
         ConnectUtils.goToConnect();
 
         ConnectUtils.addAdapter(
-            AdapterBuilder.create('Machine_Data_Simulator 1')
-                .setName('Machine Data Simulator Test')
+            AdapterBuilder.create('Machine_Data_Simulator')
+                .setName('Machine Data Simulator Test 1')
                 .addInput('input', 'wait-time-ms', '1000')
                 .setStartAdapter(false)
                 .build(),
         );
         cy.dataCy('show-asset-checkbox').should('exist');
 
-        UserUtils.changeUserRole(
-            newUserWithoutAssetAdmin,
-            UserRole.ROLE_ASSET_ADMIN,
-        );
+        UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
+
+        UserUtils.switchUser(newUser);
+
         //Config --> Sicherheit --> Find user --> Bearb -->Rollen
 
-        /**ConnectUtils.goToConnect();
+        ConnectUtils.goToConnect();
 
         ConnectUtils.addAdapter(
-            AdapterBuilder.create('Machine_Data_Simulator 2')
-                .setName('Machine Data Simulator Test')
+            AdapterBuilder.create('Machine_Data_Simulator')
+                .setName('Machine Data Simulator Test2')
                 .addInput('input', 'wait-time-ms', '1000')
                 .setStartAdapter(false)
                 .build(),
         );
-        cy.dataCy('show-asset-checkbox').should('not.exist');*/
+        cy.dataCy('show-asset-checkbox').should('not.exist');
     });
+
     /**
     it('Asset user should see add Assets in Connect', () => {
         const newUser = UserUtils.createUser(

@@ -42,6 +42,7 @@ export class UserUtils {
 
     public static goToUserConfiguration() {
         cy.visit('#/configuration/security');
+        cy.dataCy('add-new-user', { timeout: 10000 }).should('exist');
     }
 
     public static addUser(user: User) {
@@ -69,10 +70,33 @@ export class UserUtils {
     public static changeUserRole(user: User, role: UserRole) {
         this.switchUser(this.adminUser);
         this.goToUserConfiguration();
+        cy.get('table tbody tr', { timeout: 10000 }).should(
+            'have.length.greaterThan',
+            0,
+        );
+
+        // The right row
+
+        //cy.get('[data-cy="security-user-config"]') // Select the table
+        //.contains('b', user.email) // Find the <b> element containing the username
+        //.closest('tr') // Navigate up to the row (<tr>) containing this username
+        //.find('[data-cy="user-edit-btn"]') // Find the edit button within this row
+        //.click(); // Click the edit button
+
+        cy.get('[data-cy="security-user-config"]') // Target the table component
+            .find('tr') // Find all table rows
+            .contains('b', user.email) // Look for the username inside a <b> tag
+            .closest('tr') // Find the closest <tr> that contains the username
+            .within(() => {
+                // Now we're within the specific row
+                cy.get('[data-cy="user-edit-btn"]') // Find the edit button within this row
+                    .should('be.visible') // Ensure the button is visible
+                    .click(); // Click the edit button
+            });
 
         //TODO This is a TODO : FInd the right row
         // user configuration
-        cy.dataCy('user-edit-btn-' + user.email, { timeout: 10000 }).click();
+        //cy.dataCy('user-edit-btn-' + user.email, { timeout: 10000 }).click();
         //cy.dataCy('add-new-user', { timeout: 10000 }).click();
         //cy.dataCy('new-user-email').type(user.email);
         //cy.dataCy('new-user-full-name').type(user.name);
