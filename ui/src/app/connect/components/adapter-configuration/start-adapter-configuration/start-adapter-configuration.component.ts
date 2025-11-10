@@ -127,8 +127,12 @@ export class StartAdapterConfigurationComponent implements OnInit {
     ngOnInit(): void {
         this.showAsset = this.isEditMode;
         this.currentUser = this.currentUserService.getCurrentUser();
-        this.isAssetAdmin = this.hasRole(UserRole.ROLE_ASSET_ADMIN);
-        this.isPipelineAdmin = this.hasRole(UserRole.ROLE_PIPELINE_ADMIN);
+        this.isAssetAdmin = this.currentUserService.hasRoleFromUserRole(
+            UserRole.ROLE_ASSET_ADMIN,
+        );
+        this.isPipelineAdmin = this.currentUserService.hasRoleFromUserRole(
+            UserRole.ROLE_PIPELINE_ADMIN,
+        );
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
@@ -149,12 +153,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
         this.applySelectedEventRateReduction();
         this.applySelectedRemoveDuplicates();
-    }
-    hasRole(role: UserRole): boolean {
-        return (
-            this.currentUser.roles.indexOf(role) > -1 ||
-            this.currentUser.roles.indexOf(UserRole.ROLE_ADMIN) > -1
-        );
     }
 
     applySelectedEventRateReduction(): void {

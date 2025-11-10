@@ -20,6 +20,7 @@ import { BehaviorSubject } from 'rxjs';
 import { UserInfo } from '@streampipes/platform-services';
 import { Injectable } from '@angular/core';
 import { JwtTokenStorageService } from './jwt-token-storage.service';
+import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CurrentUserService {
@@ -45,6 +46,13 @@ export class CurrentUserService {
     public hasRole(role: string): boolean {
         const roles = this.getCurrentUser().roles;
         return roles.includes('ROLE_ADMIN') || roles.includes(role);
+    }
+
+    public hasRoleFromUserRole(role: UserRole): boolean {
+        return (
+            this.getCurrentUser().roles.indexOf(role) > -1 ||
+            this.getCurrentUser().roles.indexOf(UserRole.ROLE_ADMIN) > -1
+        );
     }
 
     public hasAnyRole(roles: string[]): boolean {
