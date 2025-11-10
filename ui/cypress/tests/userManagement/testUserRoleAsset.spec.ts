@@ -120,7 +120,7 @@ describe('Test User Roles for Pipelines', () => {
         cy.dataCy('sp-show-pipeline-asset-checkbox').should('not.exist');
     });*/
 
-    /**it('Chart Role Check ', () => {
+    it('Chart Role Check ', () => {
         const newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
@@ -135,7 +135,9 @@ describe('Test User Roles for Pipelines', () => {
         DataExplorerUtils.goToDatalake();
         DataExplorerUtils.createAndEditDataView();
 
-        cy.dataCy('add-to-Asset-data-view-btn').should('exist');
+        DataExplorerBtns.chartAssetCheckboxBtn().should('exist');
+
+        //cy.dataCy('add-to-Asset-data-view-btn').should('exist');
 
         UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
 
@@ -144,8 +146,9 @@ describe('Test User Roles for Pipelines', () => {
         DataExplorerUtils.goToDatalake();
         DataExplorerUtils.createAndEditDataView();
 
-        cy.dataCy('add-to-Asset-data-view-btn').should('not.exist');
-    });*/
+        DataExplorerBtns.chartAssetCheckboxBtn().should('not.exist');
+        //cy.dataCy('add-to-Asset-data-view-btn').should('not.exist');
+    });
 
     it('Dashboard Role Check ', () => {
         const newUser = UserUtils.createUser(

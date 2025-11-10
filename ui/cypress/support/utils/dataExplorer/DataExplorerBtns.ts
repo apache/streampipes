@@ -38,7 +38,7 @@ export class DataExplorerBtns {
     }
 
     public static chartAssetCheckboxBtn() {
-        return cy.dataCy('sp-show-chart-asset-checkbox');
+        return cy.dataCy('add-to-Asset-data-view-btn');
     }
     public static confirmAssetSelectionBtn() {
         return cy
