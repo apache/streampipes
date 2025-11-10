@@ -110,6 +110,13 @@ export class ConnectBtns {
         return cy.dataCy('show-asset-checkbox');
     }
 
+    public static connectRemoveDuplicateBox() {
+        return cy.dataCy('connect-remove-duplicates-box');
+    }
+    public static connectReduceEventRate() {
+        return cy.dataCy('connect-reduce-event-rate-box');
+    }
+
     // ========================================================================
 
     // =====================  Event Schema buttons  ==========================
@@ -160,6 +167,10 @@ export class ConnectBtns {
         return cy.dataCy('connect-edit-field-runtime-name', {
             timeout: 10000,
         });
+    }
+
+    public static schemaNextBtn() {
+        return cy.dataCy('sp-event-schema-next-button');
     }
 
     // ========================================================================
