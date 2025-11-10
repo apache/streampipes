@@ -68,7 +68,7 @@ export class UserUtils {
         cy.dataCy('sp-element-edit-user-save').click();
     }
 
-    public static changeUserRole(user: User, role: UserRole) {
+    public static toggleUserRole(user: User, role: UserRole) {
         this.switchUser(this.adminUser);
         this.goToUserConfiguration();
         cy.get('table tbody tr', { timeout: 10000 }).should(

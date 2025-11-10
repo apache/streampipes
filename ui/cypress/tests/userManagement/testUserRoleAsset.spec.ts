@@ -35,7 +35,7 @@ describe('Test User Roles for Pipelines', () => {
         AssetUtils.addAndSaveAsset('Asset');
     });
 
-    it('Connect Asset Role Check ', () => {
+    it('Check Role Asset Admin in Connect', () => {
         const newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
@@ -58,7 +58,7 @@ describe('Test User Roles for Pipelines', () => {
         );
         ConnectBtns.assetCheckbox().should('exist');
 
-        UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
+        UserUtils.toggleUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
 
         UserUtils.switchUser(newUser);
 
@@ -74,7 +74,7 @@ describe('Test User Roles for Pipelines', () => {
         ConnectBtns.assetCheckbox().should('not.exist');
     });
 
-    it('Pipeline Role Check ', () => {
+    it('Check Role Asset Admin in Pipeline', () => {
         const newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
@@ -98,7 +98,7 @@ describe('Test User Roles for Pipelines', () => {
 
         PipelineBtns.pipelineEditorCancel().click();
 
-        UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
+        UserUtils.toggleUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
 
         UserUtils.switchUser(newUser);
 
@@ -111,7 +111,7 @@ describe('Test User Roles for Pipelines', () => {
         PipelineBtns.pipelineAssetCheckbox().should('not.exist');
     });
 
-    it('Chart Role Check ', () => {
+    it('Check Role Asset Admin in Charts', () => {
         const newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
@@ -128,7 +128,7 @@ describe('Test User Roles for Pipelines', () => {
 
         DataExplorerBtns.chartAssetCheckboxBtn().should('exist');
 
-        UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
+        UserUtils.toggleUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
 
         UserUtils.switchUser(newUser);
 
@@ -138,7 +138,7 @@ describe('Test User Roles for Pipelines', () => {
         DataExplorerBtns.chartAssetCheckboxBtn().should('not.exist');
     });
 
-    it('Dashboard Role Check ', () => {
+    it('Check Role Asset Admin in Dashboard', () => {
         const newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
@@ -155,7 +155,7 @@ describe('Test User Roles for Pipelines', () => {
         DataExplorerBtns.dashboardAssetCheckboxBtn().should('exist');
         DataExplorerBtns.closeDashboardCreate().click();
 
-        UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
+        UserUtils.toggleUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
 
         UserUtils.switchUser(newUser);
 
