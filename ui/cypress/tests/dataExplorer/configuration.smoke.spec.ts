@@ -30,7 +30,7 @@ describe('Test Truncate data in datalake', () => {
         DataExplorerUtils.goToDatalakeConfiguration();
 
         // Check if amount of events is correct
-        cy.dataCy('datalake-number-of-events', { timeout: 10000 })
+        DataExplorerBtns.datalakeNumberEvents()
             .should('be.visible')
             .contains('10');
 
@@ -41,7 +41,7 @@ describe('Test Truncate data in datalake', () => {
             .click();
 
         // Check if amount of events is zero. The should('have.text, '0') is required to check for text equality
-        cy.dataCy('datalake-number-of-events', { timeout: 10000 })
+        DataExplorerBtns.datalakeNumberEvents()
             .should('be.visible')
             .should($element => {
                 const text = $element.text().trim();
@@ -61,7 +61,7 @@ describe('Delete data in datalake', () => {
         DataExplorerUtils.goToDatalakeConfiguration();
 
         // Check if amount of events is correct
-        cy.dataCy('datalake-number-of-events', { timeout: 10000 })
+        DataExplorerBtns.datalakeNumberEvents()
             .should('be.visible')
             .contains('10');
 
@@ -72,9 +72,6 @@ describe('Delete data in datalake', () => {
             .click();
 
         // Check if amount of events is zero
-        cy.dataCy('datalake-number-of-events', { timeout: 10000 }).should(
-            'have.length',
-            0,
-        );
+        DataExplorerBtns.datalakeNumberEvents().should('have.length', 0);
     });
 });

@@ -129,4 +129,8 @@ export class DataExplorerBtns {
     public static confirmDataLakeDeleteBtn() {
         return cy.dataCy('confirm-delete-data-btn', { timeout: 10000 });
     }
+
+    public static datalakeNumberEvents() {
+        return cy.dataCy('datalake-number-of-events', { timeout: 10000 });
+    }
 }
