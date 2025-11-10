@@ -19,6 +19,7 @@
 import { User } from '../model/User';
 import { UserBuilder } from '../builder/UserBuilder';
 import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserBtns } from './user/UserBtns';
 
 export class UserUtils {
     public static adminUser = UserBuilder.create('admin@streampipes.apache.org')
@@ -75,44 +76,11 @@ export class UserUtils {
             0,
         );
 
-        // The right row
+        UserBtns.editUserBtn(user.email);
 
-        //cy.get('[data-cy="security-user-config"]') // Select the table
-        //.contains('b', user.email) // Find the <b> element containing the username
-        //.closest('tr') // Navigate up to the row (<tr>) containing this username
-        //.find('[data-cy="user-edit-btn"]') // Find the edit button within this row
-        //.click(); // Click the edit button
+        UserBtns.userRoleCheckbox(role).click();
 
-        cy.get('[data-cy="security-user-config"]') // Target the table component
-            .find('tr') // Find all table rows
-            .contains('b', user.email) // Look for the username inside a <b> tag
-            .closest('tr') // Find the closest <tr> that contains the username
-            .within(() => {
-                // Now we're within the specific row
-                cy.get('[data-cy="user-edit-btn"]') // Find the edit button within this row
-                    .should('be.visible') // Ensure the button is visible
-                    .click(); // Click the edit button
-            });
-
-        //TODO This is a TODO : FInd the right row
-        // user configuration
-        //cy.dataCy('user-edit-btn-' + user.email, { timeout: 10000 }).click();
-        //cy.dataCy('add-new-user', { timeout: 10000 }).click();
-        //cy.dataCy('new-user-email').type(user.email);
-        //cy.dataCy('new-user-full-name').type(user.name);
-        //cy.dataCy('new-user-password').type(user.password);
-        //cy.dataCy('new-user-password-repeat').type(user.password);
-
-        // Set role
-        //for (var i = 0; i < user.role.length; i++) {
-        cy.dataCy('role-' + role)
-            .children()
-            .click();
-        //}
-        //cy.dataCy('new-user-enabled').children().click();
-
-        // Store
-        cy.dataCy('sp-element-edit-user-save').click();
+        UserBtns.saveEditUserBtn().click();
     }
 
     /**
