@@ -28,4 +28,16 @@ export class PipelineBtns {
     public static deletePipeline() {
         return cy.dataCy('delete-pipeline', { timeout: 10000 });
     }
+
+    public static pipelineEditorSave() {
+        return cy.dataCy('sp-editor-save-pipeline');
+    }
+
+    public static pipelineAssetCheckbox() {
+        return cy.dataCy('sp-show-pipeline-asset-checkbox');
+    }
+
+    public static pipelineEditorCancel() {
+        return cy.dataCy('sp-editor-cancel');
+    }
 }

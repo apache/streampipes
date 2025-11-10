@@ -77,7 +77,7 @@ describe('Test User Roles for Pipelines', () => {
         cy.dataCy('show-asset-checkbox').should('not.exist');
     });*/
 
-    /**it('Pipeline Role Check ', () => {
+    it('Pipeline Role Check ', () => {
         const newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
@@ -95,15 +95,11 @@ describe('Test User Roles for Pipelines', () => {
 
         PipelineUtils.editPipeline('Pipeline Test');
 
-        cy.dataCy('sp-editor-save-pipeline').click();
+        PipelineBtns.pipelineEditorSave().click();
 
-        cy.log('FIRST ASSES');
+        PipelineBtns.pipelineAssetCheckbox().should('exist');
 
-        cy.dataCy('sp-show-pipeline-asset-checkbox').should('exist');
-
-        //Navigate some where else to get out of the editor
-
-        cy.dataCy('sp-editor-cancel').click();
+        PipelineBtns.pipelineEditorCancel().click();
 
         UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
 
@@ -113,12 +109,10 @@ describe('Test User Roles for Pipelines', () => {
 
         PipelineUtils.editPipeline('Pipeline Test');
 
-        cy.dataCy('sp-editor-save-pipeline').click();
+        PipelineBtns.pipelineEditorSave().click();
 
-        cy.log('SECOND ASSES');
-
-        cy.dataCy('sp-show-pipeline-asset-checkbox').should('not.exist');
-    });*/
+        PipelineBtns.pipelineAssetCheckbox().should('not.exist');
+    });
 
     it('Chart Role Check ', () => {
         const newUser = UserUtils.createUser(
