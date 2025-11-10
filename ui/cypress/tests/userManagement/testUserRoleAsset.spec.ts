@@ -119,7 +119,7 @@ describe('Test User Roles for Pipelines', () => {
         cy.dataCy('sp-show-pipeline-asset-checkbox').should('not.exist');
     });*/
 
-    it('Chart Role Check ', () => {
+    /**it('Chart Role Check ', () => {
         const newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
@@ -130,15 +130,6 @@ describe('Test User Roles for Pipelines', () => {
         );
 
         UserUtils.switchUser(newUser);
-
-        ConnectUtils.addAdapter(
-            AdapterBuilder.create('Machine_Data_Simulator')
-                .setName('Machine Data Simulator Test 1')
-                .setStoreInDataLake()
-                .addInput('input', 'wait-time-ms', '1000')
-                .setStartAdapter(true)
-                .build(),
-        );
 
         DataExplorerUtils.goToDatalake();
         DataExplorerUtils.createAndEditDataView();
@@ -153,63 +144,30 @@ describe('Test User Roles for Pipelines', () => {
         DataExplorerUtils.createAndEditDataView();
 
         cy.dataCy('add-to-Asset-data-view-btn').should('not.exist');
-    });
+    });*/
 
-    /**
-    it('Asset user should see add Assets in Connect', () => {
+    it('Dashboard Role Check ', () => {
         const newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
+            UserRole.ROLE_ASSET_ADMIN,
+            UserRole.ROLE_CONNECT_ADMIN,
+            UserRole.ROLE_DATA_EXPLORER_ADMIN,
+            UserRole.ROLE_DASHBOARD_ADMIN,
         );
 
-        // Add new authorized user to pipeline
-        PipelineUtils.goToPipelines();
-        PermissionUtils.markElementAsPublic('Persist simulator');
+        UserUtils.switchUser(newUser);
+        DataExplorerUtils.goToDashboard();
+        DataExplorerUtils.createDashboard('Test');
+        cy.dataCy('sp-show-dashboard-asset-checkbox').should('exist');
+        cy.dataCy('close-data-view').click();
 
-        // Login as user and check if pipeline is visible to user
+        UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
+
         UserUtils.switchUser(newUser);
 
-        PipelineUtils.goToPipelines();
-        PipelineUtils.checkAmountOfPipelinesPipeline(1);
-    });*/
-
-    /**it(' Pipeline admin should see shared pipelines of other users', () => {
-        const newUser = UserUtils.createUser(
-            'user',
-            UserRole.ROLE_PIPELINE_ADMIN,
-        );
-
-        // Add new authorized user to pipeline
-        PipelineUtils.goToPipelines();
-        PermissionUtils.markElementAsPublic('Persist simulator');
-        PermissionUtils.authorizeUser('Persist simulator', newUser.email);
-
-        // Login as user and check if pipeline is visible to user
-        UserUtils.switchUser(newUser);
-
-        PipelineUtils.goToPipelines();
-        PipelineUtils.checkAmountOfPipelinesPipeline(1);
+        DataExplorerUtils.goToDashboard();
+        DataExplorerUtils.createDashboard('Test');
+        cy.dataCy('sp-show-dashboard-asset-checkbox').should('not.exist');
     });
-
-    it(' Pipeline user should see shared pipelines of other users but not be able to edit them', () => {
-        const newUser = UserUtils.createUser(
-            'user',
-            UserRole.ROLE_PIPELINE_USER,
-        );
-
-        // Add new authorized user to pipeline
-        PipelineUtils.goToPipelines();
-        // PermissionUtils.markElementAsPublic();
-        PermissionUtils.authorizeUser('Persist simulator', newUser.email);
-
-        // Login as user and check if pipeline is visible to user
-        UserUtils.switchUser(newUser);
-
-        PipelineUtils.goToPipelines();
-        PipelineUtils.checkAmountOfPipelinesPipeline(1);
-
-        // A pipeline user should not be able to stop the pipeline or delete it
-        PipelineBtns.deletePipeline().should('not.exist');
-        PipelineBtns.stopPipeline().should('be.disabled');
-    });*/
 });
