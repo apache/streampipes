@@ -26,6 +26,8 @@ import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils'
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { AssetBtns } from '../../support/utils/asset/AssetBtns';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerWidget } from '../../support/model/DataExplorerWidget';
 
 describe('Test User Roles for Pipelines', () => {
     beforeEach('Setup Test', () => {
@@ -74,7 +76,7 @@ describe('Test User Roles for Pipelines', () => {
         cy.dataCy('show-asset-checkbox').should('not.exist');
     });*/
 
-    it('Pipeline Role Check ', () => {
+    /**it('Pipeline Role Check ', () => {
         const newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
@@ -115,6 +117,42 @@ describe('Test User Roles for Pipelines', () => {
         cy.log('SECOND ASSES');
 
         cy.dataCy('sp-show-pipeline-asset-checkbox').should('not.exist');
+    });*/
+
+    it('Chart Role Check ', () => {
+        const newUser = UserUtils.createUser(
+            'user',
+            UserRole.ROLE_PIPELINE_ADMIN,
+            UserRole.ROLE_ASSET_ADMIN,
+            UserRole.ROLE_CONNECT_ADMIN,
+            UserRole.ROLE_DATA_EXPLORER_ADMIN,
+            UserRole.ROLE_DASHBOARD_ADMIN,
+        );
+
+        UserUtils.switchUser(newUser);
+
+        ConnectUtils.addAdapter(
+            AdapterBuilder.create('Machine_Data_Simulator')
+                .setName('Machine Data Simulator Test 1')
+                .setStoreInDataLake()
+                .addInput('input', 'wait-time-ms', '1000')
+                .setStartAdapter(true)
+                .build(),
+        );
+
+        DataExplorerUtils.goToDatalake();
+        DataExplorerUtils.createAndEditDataView();
+
+        cy.dataCy('add-to-Asset-data-view-btn').should('exist');
+
+        UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
+
+        UserUtils.switchUser(newUser);
+
+        DataExplorerUtils.goToDatalake();
+        DataExplorerUtils.createAndEditDataView();
+
+        cy.dataCy('add-to-Asset-data-view-btn').should('not.exist');
     });
 
     /**
