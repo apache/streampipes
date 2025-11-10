@@ -114,4 +114,19 @@ export class DataExplorerBtns {
     public static addNewWidgetBtn() {
         return cy.dataCy('add-new-widget');
     }
+
+    public static dataLakeTruncateBtn() {
+        return cy.dataCy('datalake-truncate-btn');
+    }
+
+    public static dataLakeDeleteBtn() {
+        return cy.dataCy('datalake-delete-btn');
+    }
+
+    public static confirmDataLakeTruncateBtn() {
+        return cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 });
+    }
+    public static confirmDataLakeDeleteBtn() {
+        return cy.dataCy('confirm-delete-data-btn', { timeout: 10000 });
+    }
 }

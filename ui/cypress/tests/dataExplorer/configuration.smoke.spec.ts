@@ -18,6 +18,7 @@
 
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 
 describe('Test Truncate data in datalake', () => {
     beforeEach('Setup Test', () => {
@@ -34,8 +35,8 @@ describe('Test Truncate data in datalake', () => {
             .contains('10');
 
         // Truncate data
-        cy.dataCy('datalake-truncate-btn').should('be.visible').click();
-        cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 })
+        DataExplorerBtns.dataLakeTruncateBtn().should('be.visible').click();
+        DataExplorerBtns.confirmDataLakeTruncateBtn()
             .should('be.visible')
             .click();
 
@@ -65,8 +66,8 @@ describe('Delete data in datalake', () => {
             .contains('10');
 
         // Delete data
-        cy.dataCy('datalake-delete-btn').should('be.visible').click();
-        cy.dataCy('confirm-delete-data-btn', { timeout: 10000 })
+        DataExplorerBtns.dataLakeDeleteBtn().should('be.visible').click();
+        DataExplorerBtns.confirmDataLakeDeleteBtn()
             .should('be.visible')
             .click();
 
