@@ -28,6 +28,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { DataExplorerWidget } from '../../support/model/DataExplorerWidget';
+import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 
 describe('Test User Roles for Pipelines', () => {
     beforeEach('Setup Test', () => {
@@ -159,8 +160,10 @@ describe('Test User Roles for Pipelines', () => {
         UserUtils.switchUser(newUser);
         DataExplorerUtils.goToDashboard();
         DataExplorerUtils.createDashboard('Test');
-        cy.dataCy('sp-show-dashboard-asset-checkbox').should('exist');
-        cy.dataCy('close-data-view').click();
+
+        DataExplorerBtns.dashboardAssetCheckboxBtn().should('exist');
+        //cy.dataCy('sp-show-dashboard-asset-checkbox').should('exist');
+        DataExplorerBtns.closeDashboardCreate().click();
 
         UserUtils.changeUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
 
@@ -168,6 +171,7 @@ describe('Test User Roles for Pipelines', () => {
 
         DataExplorerUtils.goToDashboard();
         DataExplorerUtils.createDashboard('Test');
-        cy.dataCy('sp-show-dashboard-asset-checkbox').should('not.exist');
+        DataExplorerBtns.dashboardAssetCheckboxBtn().should('not.exist');
+        //cy.dataCy('sp-show-dashboard-asset-checkbox').should('not.exist');
     });
 });

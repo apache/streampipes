@@ -51,4 +51,12 @@ export class DataExplorerBtns {
             .dataCy('edit-data-view-' + widgetName.replaceAll(' ', ''))
             .click();
     }
+
+    public static dashboardAssetCheckboxBtn() {
+        return cy.dataCy('sp-show-dashboard-asset-checkbox');
+    }
+
+    public static closeDashboardCreate() {
+        return cy.dataCy('close-data-view');
+    }
 }
