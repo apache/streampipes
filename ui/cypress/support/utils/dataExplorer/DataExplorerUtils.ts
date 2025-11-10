@@ -206,7 +206,7 @@ export class DataExplorerUtils {
 
         // Configure data view
         cy.dataCy('data-view-name').type(name);
-        DataExplorerBtns.saveDataViewButton().click();
+        DataExplorerBtns.saveDashboard().click();
 
         this.editDashboard(name);
     }
