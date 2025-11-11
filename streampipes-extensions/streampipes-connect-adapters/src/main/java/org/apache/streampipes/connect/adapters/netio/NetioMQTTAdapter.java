@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated(since = "0.98.0", forRemoval = true)
 public class NetioMQTTAdapter implements StreamPipesAdapter {
 
   private MqttConsumer mqttConsumer;
