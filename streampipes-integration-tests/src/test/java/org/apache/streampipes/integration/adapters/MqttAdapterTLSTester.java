@@ -85,8 +85,6 @@ public class MqttAdapterTLSTester extends AdapterTesterBase {
         .get(0)
         .setSelected(true);
 
-    //Set TLS
-    //((SlideToggleStaticProperty)desc.getConfig().get(2)).setSelected(true);
 
     // Set format to Json
     ((StaticPropertyAlternatives) (desc)
