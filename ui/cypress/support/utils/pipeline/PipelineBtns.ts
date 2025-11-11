@@ -37,7 +37,7 @@ export class PipelineBtns {
     }
 
     public static editorAddPipelineElement() {
-        return cy.dataCy('sp-editor-add-pipeline-element');
+        return cy.dataCy('sp-editor-add-pipeline-element', { timeout: 10000 });
     }
 
     public static possibleElementsBtns(dataSourceName) {
@@ -73,5 +73,9 @@ export class PipelineBtns {
         return cy.dataCy('sp-navigate-to-pipeline-overview', {
             timeout: 15000,
         });
+    }
+
+    public static settingsPipelineElementBtn() {
+        return cy.dataCy('settings-pipeline-element-button');
     }
 }

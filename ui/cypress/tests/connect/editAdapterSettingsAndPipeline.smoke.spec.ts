@@ -91,8 +91,10 @@ describe('Test Edit Adapter and Pipeline', () => {
 
         GeneralUtils.openMenuForRow('Pipeline Test');
         PipelineBtns.modifyPipeline().click();
-        PipelineBtns.editorAddPipelineElement().eq(0).click();
-        cy.dataCy('number-mapping').contains('pressure').click({ force: true });
+        PipelineBtns.settingsPipelineElementBtn().eq(0).click();
+        cy.dataCy('number-mapping', { timeout: 10000 })
+            .contains('pressure')
+            .click({ force: true });
         PipelineBtns.saveElementConfigBtn().click({ force: true });
         PipelineBtns.savePipelineBtn().click();
         PipelineBtns.navigateToOverviewCheckbox().children().click();
