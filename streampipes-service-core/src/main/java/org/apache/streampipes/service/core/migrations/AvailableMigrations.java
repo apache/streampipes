@@ -28,6 +28,7 @@ import org.apache.streampipes.service.core.migrations.v093.StoreEmailTemplatesMi
 import org.apache.streampipes.service.core.migrations.v095.MergeFilenamesAndRenameDuplicatesMigration;
 import org.apache.streampipes.service.core.migrations.v0980.AddDataLakeMeasureViewMigration;
 import org.apache.streampipes.service.core.migrations.v0980.AddDefaultExportProviderMigration;
+import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissionsMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinksMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddDataLakePipelineTemplateMigration;
@@ -60,7 +61,8 @@ public class AvailableMigrations {
         new ModifyAssetLinksMigration(),
         new ModifyAssetLinkTypesMigration(),
         new AddDataLakeMeasureViewMigration(),
-        new AddDefaultExportProviderMigration()
+        new AddDefaultExportProviderMigration(),
+        new FixImportedPermissionsMigration()
     );
   }
 }

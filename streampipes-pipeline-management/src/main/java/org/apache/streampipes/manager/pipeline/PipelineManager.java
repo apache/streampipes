@@ -70,8 +70,8 @@ public class PipelineManager {
       Pipeline pipeline) {
 
     String pipelineId = Objects.isNull(pipeline.getPipelineId())
-        ? UUIDGenerator.generateUuid()
-        : pipeline.getPipelineId();
+            ? UUIDGenerator.generateUuid()
+            : pipeline.getPipelineId();
     preparePipelineBasics(principalSid, pipeline, pipelineId);
     new PipelineStorageService(pipeline).addPipeline();
 

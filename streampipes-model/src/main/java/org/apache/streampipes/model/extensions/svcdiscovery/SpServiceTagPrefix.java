@@ -28,4 +28,9 @@ public enum SpServiceTagPrefix {
   public String asString() {
     return this.name();
   }
+
+  private String prefix;
+
+  SpServiceTagPrefix() {
+  }
 }

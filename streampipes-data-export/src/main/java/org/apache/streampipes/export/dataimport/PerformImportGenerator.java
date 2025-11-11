@@ -30,7 +30,6 @@ import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -81,7 +80,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   protected void handleAdapter(String document, String adapterId) throws JsonProcessingException {
     if (shouldStore(adapterId, config.getAdapters())) {
       writeDocument(document, new AdapterResolver());
-      permissionsToStore.add(new PermissionInfo(adapterId, AdapterDescription.class));
+      // adapters do not have permissions associated
     }
   }
 
@@ -89,7 +88,8 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   protected void handleChart(String document, String chartId) throws JsonProcessingException {
     if (shouldStore(chartId, config.getDataViews())) {
       writeDocument(document, new ChartResolver());
-      permissionsToStore.add(new PermissionInfo(chartId, DataExplorerWidgetModel.class));
+      var chart = new ChartResolver().deserializeDocument(document);
+      permissionsToStore.add(new PermissionInfo(chart.getElementId(), DataExplorerWidgetModel.class));
     }
   }
 
@@ -97,7 +97,8 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
     if (shouldStore(dashboardId, config.getDashboards())) {
       writeDocument(document, new DashboardResolver());
-      permissionsToStore.add(new PermissionInfo(dashboardId, DashboardModel.class));
+      var dashboard = new DashboardResolver().deserializeDocument(document);
+      permissionsToStore.add(new PermissionInfo(dashboard.getElementId(), DashboardModel.class));
     }
   }
 
@@ -105,7 +106,8 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   protected void handleDataSource(String document, String dataSourceId) throws JsonProcessingException {
     if (shouldStore(dataSourceId, config.getDataSources())) {
       writeDocument(document, new DataSourceResolver());
-      permissionsToStore.add(new PermissionInfo(dataSourceId, SpDataStream.class));
+      var dataStream = new DataSourceResolver().deserializeDocument(document);
+      permissionsToStore.add(new PermissionInfo(dataStream.getElementId(), SpDataStream.class));
     }
   }
 

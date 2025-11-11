@@ -20,5 +20,5 @@ package org.apache.streampipes.messaging;
 
 public interface InternalEventProcessor<T> {
 
-  void onEvent(T event);
+  void onEvent(T event) throws InterruptedException;
 }

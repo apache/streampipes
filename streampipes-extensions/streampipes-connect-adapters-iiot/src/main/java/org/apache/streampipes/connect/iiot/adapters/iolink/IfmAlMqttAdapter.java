@@ -50,6 +50,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated(since = "0.98.0", forRemoval = true)
 public class IfmAlMqttAdapter implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.iolink";

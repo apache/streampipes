@@ -15,14 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment;
 
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
 import org.apache.streampipes.commons.environment.parser.OAuthConfigurationParser;
 import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.DoubleEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.FloatEnvironmentVariable;
 import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.LongEnvironmentVariable;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
 
 import java.util.List;
@@ -95,22 +97,23 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
-  public IntEnvironmentVariable getIotDbSessionPoolSize(){
+  public IntEnvironmentVariable getIotDbSessionPoolSize() {
     return new IntEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_SIZE);
   }
 
   @Override
-  public BooleanEnvironmentVariable getIotDbSessionEnableCompression(){
-    return new BooleanEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION);
+  public BooleanEnvironmentVariable getIotDbSessionEnableCompression() {
+    return new BooleanEnvironmentVariable(
+        Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION);
   }
 
   @Override
-  public StringEnvironmentVariable getIotDbUser(){
+  public StringEnvironmentVariable getIotDbUser() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_USER);
   }
 
   @Override
-  public StringEnvironmentVariable getIotDbPassword(){
+  public StringEnvironmentVariable getIotDbPassword() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_PASSWORD);
   }
 
@@ -118,6 +121,7 @@ public class DefaultEnvironment implements Environment {
   public StringEnvironmentVariable getCouchDbProtocol() {
     return new StringEnvironmentVariable(Envs.SP_COUCHDB_PROTOCOL);
   }
+
   @Override
   public StringEnvironmentVariable getCouchDbHost() {
     return new StringEnvironmentVariable(Envs.SP_COUCHDB_HOST);
@@ -439,9 +443,165 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public DoubleEnvironmentVariable getCpuResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.CPU_RESOURCE_WEIGHT);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getMemoryResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.MEMORY_RESOURCE_WEIGHT);
+  }
+
+  @Override
   public StringEnvironmentVariable getRetentionLocalDir() {
     return new StringEnvironmentVariable(Envs.SP_RETENTION_LOCAL_DIR);
   }
+
+  @Override
+  public DoubleEnvironmentVariable getDirMemoryResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.DIR_MEMORY_RESOURCE_WEIGHT);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getBandwidthInResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.BANDWIDTH_IN_RESOURCE_WEIGHT);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getBandwidthOutResourceWeight() {
+    return new DoubleEnvironmentVariable(Envs.BANDWIDTH_OUT_RESOURCE_WEIGHT);
+  }
+
+  @Override
+  public FloatEnvironmentVariable getThresholdMigratorPercentage() {
+    return new FloatEnvironmentVariable(Envs.THRESHOLD_MIGRATOR_PERCENTAGE);
+  }
+
+  @Override
+  public FloatEnvironmentVariable getMinMigratorPercentage() {
+    return new FloatEnvironmentVariable(Envs.MIN_MIGRATOR_PERCENTAGE);
+  }
+
+  @Override
+  public FloatEnvironmentVariable getOverloadedThresholdPercentage() {
+    return new FloatEnvironmentVariable(Envs.OVERLOADED_THRESHOLD_PERCENTAGE);
+  }
+
+  @Override
+  public FloatEnvironmentVariable getHistoryResourcePercentage() {
+    return new FloatEnvironmentVariable(Envs.HISTORY_RESOURCE_PERCENTAGE);
+  }
+
+  @Override
+  public IntEnvironmentVariable getMsgRateDifferenceMigratorThreshold() {
+    return new IntEnvironmentVariable(Envs.MSG_RATE_DIFFERENCE_MIGRATOR_THRESHOLD);
+  }
+
+  @Override
+  public FloatEnvironmentVariable getLoadTargetStd() {
+    return new FloatEnvironmentVariable(Envs.LOAD_TARGET_STD);
+  }
+
+  @Override
+  public StringEnvironmentVariable getSelector() {
+    return new StringEnvironmentVariable(Envs.SELECTOR);
+  }
+
+  @Override
+  public StringEnvironmentVariable getMigrator() {
+    return new StringEnvironmentVariable(Envs.MIGRATOR);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getLoadManagerEnable() {
+    return new BooleanEnvironmentVariable(Envs.LOAD_MANAGER_ENABLE);
+  }
+
+  @Override
+  public LongEnvironmentVariable getRateLimiterDefaultWarmupPeriod() {
+    return new LongEnvironmentVariable(Envs.SP_RATE_LIMITER_DEFAULT_WARMUP_PERIOD);
+  }
+
+  @Override
+  public IntEnvironmentVariable getRateLimiterSchedulerInitialDelaySeconds() {
+    return new IntEnvironmentVariable(Envs.SP_RATE_LIMITER_SCHEDULER_INITIAL_DELAY_SECONDS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getRateLimiterSchedulerPeriodSeconds() {
+        return new IntEnvironmentVariable(Envs.SP_RATE_LIMITER_SCHEDULER_PERIOD_SECONDS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getRateLimiterStatsResetThreshold() {
+    return new IntEnvironmentVariable(Envs.SP_RATE_LIMITER_STATS_RESET_THRESHOLD);
+  }
+
+  @Override
+  public IntEnvironmentVariable getRateLimiterStatsResetFactor() {
+    return new IntEnvironmentVariable(Envs.SP_RATE_LIMITER_STATS_RESET_FACTOR);
+  }
+
+  @Override
+  public IntEnvironmentVariable getRateLimiterStatsResetDivisor() {
+    return new IntEnvironmentVariable(Envs.SP_RATE_LIMITER_STATS_RESET_DIVISOR);
+  }
+
+  @Override
+  public IntEnvironmentVariable getRateLimiterShutdownTimeoutSeconds() {
+    return new IntEnvironmentVariable(Envs.SP_RATE_LIMITER_SHUTDOWN_TIMEOUT_SECONDS);
+  }
+
+  @Override
+  public LongEnvironmentVariable getRateLimiterTimeoutMs() {
+    return new LongEnvironmentVariable(Envs.SP_RATE_LIMITER_TIMEOUT_MS);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getRateLimiterPermitsSetPercentage() {
+      return new DoubleEnvironmentVariable(Envs.SP_RATE_LIMITER_PERMITS_SET_PERCENTAGE);
+  }
+
+  @Override
+  public LongEnvironmentVariable getMemoryManagerDefaultInitialMemory() {
+    return new LongEnvironmentVariable(Envs.SP_MEMORY_MANAGER_DEFAULT_INITIAL_MEMORY);
+  }
+
+  @Override
+  public LongEnvironmentVariable getMemoryManagerWaitTimeoutMs() {
+    return new LongEnvironmentVariable(Envs.SP_MEMORY_MANAGER_WAIT_TIMEOUT_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getMemorySchedulerInitialDelaySeconds() {
+    return new IntEnvironmentVariable(Envs.SP_MEMORY_SCHEDULER_INITIAL_DELAY_SECONDS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getMemorySchedulerPeriodSeconds() {
+    return new IntEnvironmentVariable(Envs.SP_MEMORY_SCHEDULER_PERIOD_SECONDS);
+  }
+
+  @Override
+  public LongEnvironmentVariable getMemoryBytesToMb() {
+    return new LongEnvironmentVariable(Envs.SP_MEMORY_BYTES_TO_MB);
+  }
+
+  @Override
+  public IntEnvironmentVariable getMemoryManagerShutdownTimeoutSeconds() {
+    return new IntEnvironmentVariable(Envs.SP_MEMORY_MANAGER_SHUTDOWN_TIMEOUT_SECONDS);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getMemoryManagerUsageThreshold() {
+    return new DoubleEnvironmentVariable(Envs.SP_MEMORY_MANAGER_USAGE_THRESHOLD);
+  }
+
+  @Override
+  public DoubleEnvironmentVariable getMemoryWarningThreshold() {
+    return new DoubleEnvironmentVariable(Envs.SP_MEMORY_WARNING_THRESHOLD);
+    }
+
   @Override
   public StringEnvironmentVariable getDatalakeSchedulerCron() {
     return new StringEnvironmentVariable(Envs.SP_DATALAKE_SCHEDULER_CRON);

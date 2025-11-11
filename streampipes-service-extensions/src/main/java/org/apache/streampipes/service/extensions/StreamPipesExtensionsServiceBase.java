@@ -20,6 +20,7 @@ package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
@@ -81,6 +82,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
       String serviceId = serviceDef.getServiceGroup() + "-" + AUTO_GENERATED_SERVICE_ID;
       serviceDef.setServiceId(serviceId);
       DeclarersSingleton.getInstance().populate(networkingConfig.getHost(), networkingConfig.getPort(), serviceDef);
+      SpRateLimiter.INSTANCE.createRateLimiter();
       startExtensionsService(this.getClass(), serviceDef, networkingConfig);
       ServiceLoadDataReportGenerator.getInstance().initialize();
     } catch (UnknownHostException e) {

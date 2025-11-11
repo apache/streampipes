@@ -123,6 +123,7 @@
                 }
                 <button
                     mat-menu-item
+                    *ngIf="isAdmin"
                     [attr.data-cy]="
                         'manage-dashboard-permissions-' + element.name
                     "

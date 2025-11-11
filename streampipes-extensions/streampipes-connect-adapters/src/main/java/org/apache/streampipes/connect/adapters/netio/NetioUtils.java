@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated(since = "0.98.0", forRemoval = true)
 public class NetioUtils {
   public static final String TIMESTAMP_KEY = "timestamp";
   public static final String NAME_KEY = "name";

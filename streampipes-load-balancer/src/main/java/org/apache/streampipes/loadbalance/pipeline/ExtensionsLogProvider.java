@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.loadbalance.pipeline;
 
-package org.apache.streampipes.manager.monitoring.pipeline;
-
-import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum ExtensionsLogProvider {
+public enum   ExtensionsLogProvider {
 
   INSTANCE;
 
@@ -62,13 +61,10 @@ public enum ExtensionsLogProvider {
     });
   }
 
-  private <T> Map<String, T> getInfosForPipeline(Map<String, T> allElements,
-                                                 Pipeline pipeline) {
+  private <T> Map<String, T> getInfosForPipeline(Map<String, T> allElements, Pipeline pipeline) {
     List<String> pipelineElementIds = collectPipelineElementIds(pipeline);
 
-    return allElements.entrySet()
-        .stream()
-        .filter(x -> pipelineElementIds.contains(x.getKey()))
+    return allElements.entrySet().stream().filter(x -> pipelineElementIds.contains(x.getKey()))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
@@ -77,7 +73,7 @@ public enum ExtensionsLogProvider {
   }
 
   public Map<String, List<SpLogEntry>> getLogInfosForPipeline(String pipelineId) {
-    var pipeline = PipelineManager.getPipeline(pipelineId);
+    var pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getElementById(pipelineId);
 
     return getLogInfosForPipeline(pipeline);
   }
@@ -95,15 +91,12 @@ public enum ExtensionsLogProvider {
   }
 
   public Map<String, SpMetricsEntry> getMetricsInfoForResources(List<String> resourceIds) {
-    return allMetricsInfos
-        .entrySet()
-        .stream()
-        .filter(entry -> resourceIds.contains(entry.getKey()))
+    return allMetricsInfos.entrySet().stream().filter(entry -> resourceIds.contains(entry.getKey()))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
   public Map<String, SpMetricsEntry> getMetricInfosForPipeline(String pipelineId) {
-    var pipeline = PipelineManager.getPipeline(pipelineId);
+    var pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getElementById(pipelineId);
 
     return getInfosForPipeline(allMetricsInfos, pipeline);
   }
@@ -122,7 +115,7 @@ public enum ExtensionsLogProvider {
     this.allLogInfos.remove(resourceId);
   }
 
-  public Map<String, SpMetricsEntry> getAllMetricsInfos(){
+  public Map<String, SpMetricsEntry> getAllMetricsInfos() {
     return this.allMetricsInfos;
   }
 

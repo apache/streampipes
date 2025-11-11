@@ -44,6 +44,7 @@ public class Plc4xConnectionExtractor {
   }
 
   public Plc4xConnectionSettings makeSettings() {
+    var modifiedProtocolCode = checkAndOverrideProtocolCode();
     var host = extractHost();
     var transportCode = extractTransportCode();
     var transportConfigs = extractTransportMetadata(transportCode);
@@ -51,10 +52,18 @@ public class Plc4xConnectionExtractor {
     var configParameters = makeConfigParameters(transportConfigs, protocolConfigs);
 
     return new Plc4xConnectionSettings(
-        getConnectionString(host, transportCode, protocolCode, configParameters),
+        getConnectionString(host, transportCode, modifiedProtocolCode, configParameters),
         extractor.singleValueParameter(Plc4xLabels.PLC_POLLING_INTERVAL, Integer.class),
         extractNodes()
     );
+  }
+
+  private String checkAndOverrideProtocolCode() {
+    if (protocolCode.equals("s7")) {
+      return "s7-light";
+    } else {
+      return protocolCode;
+    }
   }
 
   private String getConnectionString(String host,

@@ -29,7 +29,7 @@
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.98.0-SNAPSHOT</version>
+    <version>0.99.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache StreamPipes</name>
@@ -61,6 +61,7 @@
         <eclipse.milo.version>0.6.16</eclipse.milo.version>
         <error-prone.version>2.10.0</error-prone.version>
         <file-management.version>3.1.0</file-management.version>
+        <findbugs.version>3.0.2</findbugs.version>
         <flink.version>1.13.5</flink.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <geojson-jackson.version>1.14</geojson-jackson.version>
@@ -111,7 +112,7 @@
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.3.1</opennlp.version>
-        <plc4x.version>0.12.0</plc4x.version>
+        <plc4x.version>0.13.1</plc4x.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
@@ -239,6 +240,12 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${findbugs.version}</version>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -1094,8 +1101,9 @@
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
-        <module>streampipes-pipeline-management</module>
         <module>streampipes-resource-management</module>
+        <module>streampipes-load-balancer</module>
+        <module>streampipes-pipeline-management</module>
         <module>streampipes-rest-extensions</module>
         <module>streampipes-rest</module>
         <module>streampipes-rest-core-base</module>
@@ -1185,8 +1193,6 @@
     </profiles>
 
     <!-- Build Settings -->
-
-
     <build>
 
         <!-- Plugin Management -->
