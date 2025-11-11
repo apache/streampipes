@@ -23,15 +23,13 @@ import org.fusesource.mqtt.client.QoS;
 
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_MODE;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.BROKER;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLEAN_SESSION_KEY;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_CERT;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_KEY;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.ENCRYPTION_MODE;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.HOST;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.KEEP_ALIVE_IN_SEC;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.MQTT_COMPLIANT;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.PASSWORD;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.PORT;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.QOS_LEVEL_KEY;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.RECONNECT_PERIOD_IN_SEC;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.RETAIN;
@@ -47,10 +45,8 @@ import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublish
 public class MqttOptions {
 
   private final String clientId;
-  private final String host;
-  private final int port;
+  private final String broker;
   private final String topic;
-  private final String protocol;
   private final QoS qos;
   private final long reconnectDelayMaxInMs;
   private final boolean cleanSession;
@@ -74,9 +70,8 @@ public class MqttOptions {
 
     this.clientId = MqttUtils.runningInstanceId(params.getModel().getElementId());
     this.topic = extract.singleValueParameter(TOPIC, String.class);
-    this.host = extract.singleValueParameter(HOST, String.class);
-    this.port = extract.singleValueParameter(PORT, Integer.class);
-    this.protocol = extract.selectedSingleValue(ENCRYPTION_MODE, String.class);
+    this.broker = extract.singleValueParameter(BROKER, String.class);
+
 
     this.qos = MqttUtils.extractQoSFromString(extract.selectedSingleValue(QOS_LEVEL_KEY, String.class));
     this.reconnectDelayMaxInMs = MqttUtils
@@ -121,20 +116,12 @@ public class MqttOptions {
     return clientId;
   }
 
-  public String getHost() {
-    return host;
-  }
-
-  public int getPort() {
-    return port;
+  public String getBroker() {
+    return broker;
   }
 
   public String getTopic() {
     return topic;
-  }
-
-  public String getProtocol() {
-    return protocol;
   }
 
   public QoS getQos() {

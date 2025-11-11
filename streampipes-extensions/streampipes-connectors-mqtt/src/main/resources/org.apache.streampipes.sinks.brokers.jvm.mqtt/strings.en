@@ -18,11 +18,8 @@
 org.apache.streampipes.sinks.brokers.jvm.mqtt.title=MQTT Publisher
 org.apache.streampipes.sinks.brokers.jvm.mqtt.description=Publishes events to a MQTT topic
 
-host.title=Host
-host.description=IP address or DNS of MQTT broker
-
-port.title=Port
-port.description=Port of MQTT broker (default 1883, for TLS often 8883)
+broker.title=Broker URL
+broker.description=Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)"
 
 topic.title=Topic
 topic.description=Enter MQTT topic
@@ -45,7 +42,7 @@ auth-mode.description=Unauthenticated or basic auth
 no-auth-alternative.title=Unauthenticated
 no-auth-alternative.description=No authentication
 
-basic-auth-alternative.title=Basic auth
+basic-auth-alternative.title=Username/Password
 basic-auth-alternative.description=Username and password
 
 cert-auth-alternative.title=Client Certificate
@@ -63,9 +60,6 @@ clean-session.description=Deselect to persist topic subscriptions & ack position
 
 will-retain.title=Retain will message?
 will-retain.description=Select if you want the Will to be published with the retain option (default: No)
-
-encryption-mode.title=Encryption
-encryption-mode.description=Select protocol. TCP (plaintext), SSL/TLS (encrypted)
 
 reconnect-period.title=Reconnect period (seconds)
 reconnect-period.description=Amount of time to wait between reconnect attempts (default: 30s)

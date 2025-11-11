@@ -46,8 +46,7 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
     private static final int DEFAULT_KEEP_ALIVE = 30;
 
     public static final String TOPIC = "topic";
-    public static final String HOST = "host";
-    public static final String PORT = "port";
+    public static final String BROKER = "broker";
     public static final String AUTH_MODE = "auth-mode";
     public static final String NO_AUTH_ALTERNATIVE = "no-auth-alternative";
     public static final String AUTH_ALTERNATIVE = "basic-auth-alternative";
@@ -57,7 +56,6 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
     public static final String QOS_LEVEL_KEY = "qos-level";
     public static final String CLEAN_SESSION_KEY = "clean-session";
     public static final String WILL_RETAIN = "will-retain";
-    public static final String ENCRYPTION_MODE = "encryption-mode";
     public static final String RECONNECT_PERIOD_IN_SEC = "reconnect-period";
     public static final String WILL_MODE = "lwt-mode";
     public static final String NO_WILL_ALTERNATIVE = "no-lwt-alternative";
@@ -88,10 +86,9 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
                         .category(DataSinkType.MESSAGING)
                         .withLocales(Locales.EN)
                         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-                        .requiredStream(StreamRequirementsBuilder.any())
-                        .requiredTextParameter(Labels.withId(TOPIC))
-                        .requiredTextParameter(Labels.withId(HOST))
-                        .requiredIntegerParameter(Labels.withId(PORT), DEFAULT_MQTT_PORT)
+                        .requiredStream(StreamRequirementsBuilder.any())   
+                        .requiredTextParameter(Labels.withId(BROKER))
+                        //.requiredIntegerParameter(Labels.withId(PORT), DEFAULT_MQTT_PORT)
                         .requiredAlternatives(
                                 Labels.withId(AUTH_MODE),
                                 Alternatives.from(Labels.withId(NO_AUTH_ALTERNATIVE), true),
@@ -101,12 +98,13 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
                                                 StaticProperties.secretValue(Labels.withId(PASSWORD)))),
                                 Alternatives.from(Labels.withId(AUTH_ALTERNATIVE_CERT),
                                      group))
-                        .requiredSingleValueSelection(
-                                Labels.withId(ENCRYPTION_MODE),
-                                Arrays.asList(
-                                        new Option("TCP", true),
+                         .requiredTextParameter(Labels.withId(TOPIC))
+                        //.requiredSingleValueSelection(
+                        //        Labels.withId(ENCRYPTION_MODE),
+                        //        Arrays.asList(
+                        //                new Option("TCP", true),
                                         // SSL not yet supported
-                                        new Option("SSL/TLS", false)))
+                        //                new Option("SSL/TLS", false)))
                         .requiredSingleValueSelection(
                                 Labels.withId(QOS_LEVEL_KEY),
                                 Arrays.asList(

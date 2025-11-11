@@ -35,6 +35,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -54,12 +55,28 @@ public class MqttClient {
     this.createMqttClient();
   }
 
+
+   private static boolean tlsEnabled(URI brokerUri) {
+    String protocol = brokerUri.getScheme();
+    if (protocol == null) {
+      return false;
+    }
+    String proto = protocol.toLowerCase();
+    return proto.equals("ssl") || proto.equals("tls") || proto.equals("mqtts");
+  }
+
   /**
    * Create new MQTT client
    */
   public void createMqttClient() {
     this.mqtt = new MQTT();
-    this.uri = MqttUtils.makeMqttServerUri(options.getProtocol(), options.getHost(), options.getPort());
+    try {
+    this.uri = new URI(options.getBroker());
+     } catch (URISyntaxException e) {
+
+      throw new SpRuntimeException("Failed to initialize MQTT Client: " + e.getMessage(), e);
+
+    }
     try {
       /**
        * Sets the url for connecting to the MQTT broker, e.g.
@@ -79,7 +96,7 @@ public class MqttClient {
         mqtt.setPassword(options.getPassword());
       }
 
-      if (options.getProtocol() != "TCP") {
+      if (tlsEnabled(uri)) {
         configureTls(mqtt);
 
       }
