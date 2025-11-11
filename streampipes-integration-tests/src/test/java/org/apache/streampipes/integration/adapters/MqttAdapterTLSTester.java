@@ -29,7 +29,6 @@ import org.apache.streampipes.integration.utils.Utils;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
@@ -68,7 +67,7 @@ public class MqttAdapterTLSTester extends AdapterTesterBase {
     List<Map<String, Object>> configs = new ArrayList<>();
     configs.add(Map.of(MqttConnectUtils.TOPIC, TOPIC));
     configs.add(Map.of(MqttConnectUtils.BROKER_URL, mosquittoContainer.getBrokerUrlTLS()));
-    configs.add(Map.of(MqttConnectUtils.TLS, true));
+    //configs.add(Map.of(MqttConnectUtils.TLS, true));
 
     var template = new PipelineElementTemplate("name", "description", configs);
 
@@ -87,12 +86,12 @@ public class MqttAdapterTLSTester extends AdapterTesterBase {
         .setSelected(true);
 
     //Set TLS
-    ((SlideToggleStaticProperty)desc.getConfig().get(2)).setSelected(true);
+    //((SlideToggleStaticProperty)desc.getConfig().get(2)).setSelected(true);
 
     // Set format to Json
     ((StaticPropertyAlternatives) (desc)
         .getConfig()
-        .get(4)) //used to be 3 by adding TLS now 4
+        .get(3)) 
         .getAlternatives()
         .get(0)
         .setSelected(true);

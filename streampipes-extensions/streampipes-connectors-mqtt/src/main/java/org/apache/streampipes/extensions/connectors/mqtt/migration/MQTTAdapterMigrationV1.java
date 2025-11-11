@@ -26,10 +26,8 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
-import org.apache.streampipes.sdk.StaticProperties;
 
 import java.util.List;
 
@@ -49,28 +47,37 @@ public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
     public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
             IStaticPropertyExtractor extractor) throws RuntimeException {
 
+        
+
         changeUrlDescription(element);
+
+        accessModeDescription(element);
 
         migrateSecurity((StaticPropertyAlternatives) element.getConfig().get(1));
 
-        element.getConfig().add(2, makeTLS());
         return MigrationResult.success(element);
-    }
-
-    private SlideToggleStaticProperty makeTLS() {
-        var tlsAlternative = StaticProperties.toggleAlternative(MqttConnectUtils.getTLS(), false);
-        return tlsAlternative;
     }
 
     private void migrateSecurity(StaticPropertyAlternatives securityAlternatives) {
         migrateGroup(securityAlternatives.getAlternatives());
     }
 
+
+
     private void changeUrlDescription(AdapterDescription element){
         var url = (FreeTextStaticProperty) element.getConfig().get(0);
         url.setDescription(
                 "Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)");
         element.getConfig().set(0, url);
+    }
+
+    private void accessModeDescription(AdapterDescription element){
+        var accessmode = (FreeTextStaticProperty) element.getConfig().get(1);
+
+        accessmode.setLabel("User Authentication");
+        accessmode.setDescription(
+                "Choose an authentication method for the user");
+        element.getConfig().set(0, accessmode);
     }
 
     private void migrateGroup(List<StaticPropertyAlternative> alternatives) {

@@ -65,7 +65,7 @@ public class MqttProtocol implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, 0, MqttProtocol::new)
+        .create(ID, 1, MqttProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
@@ -73,7 +73,6 @@ public class MqttProtocol implements StreamPipesAdapter {
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
         .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
             MqttConnectUtils.getAlternativesTwo(),  MqttConnectUtils.getAlternativesThree())
-        .requiredSlideToggle(MqttConnectUtils.getTLS(), true)
         .requiredTextParameter(MqttConnectUtils.getTopicLabel())
         .buildConfiguration();
   }

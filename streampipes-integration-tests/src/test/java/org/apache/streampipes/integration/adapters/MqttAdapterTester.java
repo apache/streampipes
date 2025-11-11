@@ -29,7 +29,6 @@ import org.apache.streampipes.integration.utils.Utils;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
@@ -85,14 +84,11 @@ public class MqttAdapterTester extends AdapterTesterBase {
         .get(0)
         .setSelected(true);
 
-    //SET TLS 
-
-    ((SlideToggleStaticProperty)desc.getConfig().get(2)).setSelected(false);
 
     // Set format to Json
     ((StaticPropertyAlternatives) (desc)
         .getConfig()
-        .get(4)) //used to be 3 by adding TLS now 4
+        .get(3))
         .getAlternatives()
         .get(0)
         .setSelected(true);
