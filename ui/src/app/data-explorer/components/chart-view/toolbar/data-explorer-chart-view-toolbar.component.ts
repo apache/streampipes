@@ -30,7 +30,7 @@ import {
     UserInfo,
 } from '@streampipes/platform-services';
 import { CurrentUserService } from '@streampipes/shared-ui';
-import { UserRole } from 'src/app/_enums/user-role.enum';
+import { UserRole } from '../../../../_enums/user-role.enum';
 
 @Component({
     selector: 'sp-data-explorer-data-view-toolbar',

@@ -42,7 +42,7 @@ import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 import { TranslateService } from '@ngx-translate/core';
-import { UserRole } from 'src/app/_enums/user-role.enum';
+import { UserRole } from '../../../../_enums/user-role.enum';
 
 @Component({
     selector: 'sp-start-adapter-configuration',

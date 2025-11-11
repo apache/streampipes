@@ -19,7 +19,6 @@
 import {
     Component,
     EventEmitter,
-    Inject,
     inject,
     Input,
     OnInit,
@@ -41,7 +40,7 @@ import {
 import { PipelineStorageOptions } from '../../../model/editor.model';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 import { CurrentUserService } from '@streampipes/shared-ui';
-import { UserRole } from 'src/app/_enums/user-role.enum';
+import { UserRole } from '../../../../_enums/user-role.enum';
 
 @Component({
     selector: 'sp-save-pipeline-settings',
