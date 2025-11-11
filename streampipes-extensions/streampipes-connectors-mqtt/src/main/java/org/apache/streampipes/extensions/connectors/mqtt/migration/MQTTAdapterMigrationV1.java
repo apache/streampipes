@@ -33,6 +33,7 @@ import java.util.List;
 
 public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
 
+
     @Override
     public ModelMigratorConfig config() {
         return new ModelMigratorConfig(
@@ -45,9 +46,7 @@ public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
 
     @Override
     public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
-            IStaticPropertyExtractor extractor) throws RuntimeException {
-
-        
+            IStaticPropertyExtractor extractor) throws RuntimeException { 
 
         changeUrlDescription(element);
 
@@ -72,12 +71,12 @@ public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
     }
 
     private void accessModeDescription(AdapterDescription element){
-        var accessmode = (FreeTextStaticProperty) element.getConfig().get(1);
+        var accessmode = (StaticPropertyAlternatives) element.getConfig().get(1);
 
         accessmode.setLabel("User Authentication");
         accessmode.setDescription(
                 "Choose an authentication method for the user");
-        element.getConfig().set(0, accessmode);
+        element.getConfig().set(1, accessmode);
     }
 
     private void migrateGroup(List<StaticPropertyAlternative> alternatives) {
