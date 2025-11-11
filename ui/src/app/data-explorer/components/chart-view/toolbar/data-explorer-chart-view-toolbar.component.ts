@@ -16,11 +16,21 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import {
     DataExplorerWidgetModel,
     TimeSettings,
+    UserInfo,
 } from '@streampipes/platform-services';
+import { CurrentUserService } from '@streampipes/shared-ui';
+import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Component({
     selector: 'sp-data-explorer-data-view-toolbar',
@@ -28,7 +38,9 @@ import {
     styleUrls: ['../data-explorer-chart-view.component.scss'],
     standalone: false,
 })
-export class DataExplorerChartViewToolbarComponent {
+export class DataExplorerChartViewToolbarComponent implements OnInit {
+    private readonly currentUserService = inject(CurrentUserService);
+
     @Input()
     editMode = true;
 
@@ -54,4 +66,14 @@ export class DataExplorerChartViewToolbarComponent {
 
     @Output()
     downloadFileEmitter: EventEmitter<void> = new EventEmitter();
+
+    currentUser: UserInfo;
+    isAssetAdmin = false;
+
+    ngOnInit() {
+        this.currentUser = this.currentUserService.getCurrentUser();
+        this.isAssetAdmin = this.currentUserService.hasRole(
+            UserRole.ROLE_ASSET_ADMIN,
+        );
+    }
 }

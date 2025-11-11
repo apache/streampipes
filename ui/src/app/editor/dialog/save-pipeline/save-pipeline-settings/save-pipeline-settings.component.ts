@@ -19,6 +19,7 @@
 import {
     Component,
     EventEmitter,
+    Inject,
     inject,
     Input,
     OnInit,
@@ -35,9 +36,12 @@ import {
     Pipeline,
     PipelineService,
     SpAssetTreeNode,
+    UserInfo,
 } from '@streampipes/platform-services';
 import { PipelineStorageOptions } from '../../../model/editor.model';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
+import { CurrentUserService } from '@streampipes/shared-ui';
+import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Component({
     selector: 'sp-save-pipeline-settings',
@@ -46,6 +50,8 @@ import { ValidateName } from '../../../../core-ui/static-properties/input.valida
     standalone: false,
 })
 export class SavePipelineSettingsComponent implements OnInit {
+    private readonly currentUserService = inject(CurrentUserService);
+
     @Input()
     submitPipelineForm: UntypedFormGroup = new UntypedFormGroup({});
 
@@ -62,6 +68,8 @@ export class SavePipelineSettingsComponent implements OnInit {
     private pipelineService = inject(PipelineService);
 
     compactPipeline: CompactPipeline;
+    currentUser: UserInfo;
+    isAssetAdmin = false;
 
     addToAssets: boolean = false;
     @Input()
@@ -76,6 +84,10 @@ export class SavePipelineSettingsComponent implements OnInit {
     @Output() originalAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
 
     ngOnInit() {
+        this.currentUser = this.currentUserService.getCurrentUser();
+        this.isAssetAdmin = this.currentUserService.hasRole(
+            UserRole.ROLE_ASSET_ADMIN,
+        );
         this.submitPipelineForm.addControl(
             'pipelineName',
             new UntypedFormControl(this.pipeline.name, [

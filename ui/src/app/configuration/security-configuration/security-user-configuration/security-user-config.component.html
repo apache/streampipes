@@ -112,7 +112,7 @@
                                     class="mat-basic"
                                     [matTooltip]="'Edit user' | translate"
                                     matTooltipPosition="above"
-                                    data-cy="user-edit-btn"
+                                    [attr.data-cy]="'user-edit-btn'"
                                     (click)="editUser(account)"
                                 >
                                     <i class="material-icons">edit</i>
@@ -124,9 +124,7 @@
                                 mat-flat-button
                                 [matTooltip]="'Delete user' | translate"
                                 matTooltipPosition="above"
-                                [attr.data-cy]="
-                                    'user-delete-btn-' + account.fullName
-                                "
+                                [attr.data-cy]="'user-delete-btn'"
                                 (click)="deleteUser(account)"
                             >
                                 <i class="material-icons">delete</i>

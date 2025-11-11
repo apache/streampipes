@@ -29,8 +29,14 @@ import {
     DashboardService,
     LinkageData,
     SpAssetTreeNode,
+    UserInfo,
 } from '@streampipes/platform-services';
-import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
+import {
+    AssetSaveService,
+    CurrentUserService,
+    DialogRef,
+} from '@streampipes/shared-ui';
+import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Component({
     selector: 'sp-edit-dashboard-dialog-component',
@@ -52,10 +58,17 @@ export class EditDashboardDialogComponent implements OnInit {
     private dialogRef = inject(DialogRef<EditDashboardDialogComponent>);
     private dashboardService = inject(DashboardService);
     private assetSaveService = inject(AssetSaveService);
+    private readonly currentUserService = inject(CurrentUserService);
 
+    currentUser: UserInfo;
+    isAssetAdmin = false;
     addToAssets: boolean = false;
 
     ngOnInit() {
+        this.currentUser = this.currentUserService.getCurrentUser();
+        this.isAssetAdmin = this.currentUserService.hasRole(
+            UserRole.ROLE_ASSET_ADMIN,
+        );
         if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {
             this.dashboard.dashboardGeneralSettings.defaultViewMode = 'grid';
         }

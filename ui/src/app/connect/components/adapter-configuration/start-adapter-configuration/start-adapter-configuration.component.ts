@@ -22,6 +22,7 @@ import {
     EventSchema,
     SpAssetTreeNode,
     RemoveDuplicatesTransformationRuleDescription,
+    UserInfo,
 } from '@streampipes/platform-services';
 import {
     UntypedFormBuilder,
@@ -31,12 +32,17 @@ import {
 } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterStartedDialog } from '../../../dialog/adapter-started/adapter-started-dialog.component';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    DialogService,
+    PanelType,
+} from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 import { TranslateService } from '@ngx-translate/core';
+import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Component({
     selector: 'sp-start-adapter-configuration',
@@ -85,6 +91,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     startAdapterSettingsFormValid = false;
 
+    currentUser: UserInfo;
+
     // preprocessing rule variables
     removeDuplicates = false;
     removeDuplicatesTime: number;
@@ -103,6 +111,9 @@ export class StartAdapterConfigurationComponent implements OnInit {
     deselectedAssets = [];
     originalAssets = [];
 
+    isAssetAdmin = false;
+    isPipelineAdmin = false;
+
     constructor(
         private dialogService: DialogService,
         private shepherdService: ShepherdService,
@@ -110,10 +121,18 @@ export class StartAdapterConfigurationComponent implements OnInit {
         private timestampPipe: TimestampPipe,
         private transformationRuleService: TransformationRuleService,
         private translateService: TranslateService,
+        private currentUserService: CurrentUserService,
     ) {}
 
     ngOnInit(): void {
         this.showAsset = this.isEditMode;
+        this.currentUser = this.currentUserService.getCurrentUser();
+        this.isAssetAdmin = this.currentUserService.hasRole(
+            UserRole.ROLE_ASSET_ADMIN,
+        );
+        this.isPipelineAdmin = this.currentUserService.hasRole(
+            UserRole.ROLE_PIPELINE_ADMIN,
+        );
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
