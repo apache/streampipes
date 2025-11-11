@@ -30,6 +30,9 @@ import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE_CERT;
@@ -39,47 +42,103 @@ import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublish
 
 public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
 
-    @Override
-    public ModelMigratorConfig config() {
-        return new ModelMigratorConfig(
-                "org.apache.streampipes.sinks.brokers.jvm.mqtt",
-                SpServiceTagPrefix.DATA_SINK,
-                0,
-                1);
+        private static final Logger LOG = LoggerFactory.getLogger(MQTTSinkMigrationV1.class);
 
-    }
+        @Override
+        public ModelMigratorConfig config() {
+                return new ModelMigratorConfig(
+                                "org.apache.streampipes.sinks.brokers.jvm.mqtt",
+                                SpServiceTagPrefix.DATA_SINK,
+                                0,
+                                1);
 
-    @Override
-    public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
-            IDataSinkParameterExtractor extractor) throws RuntimeException {
-        // change Text
-        var port = (FreeTextStaticProperty) element.getStaticProperties().get(2);
-        port.setDescription(
-                "Port of MQTT broker (default 1883, for TLS often 8883)");
-        element.getStaticProperties().set(2, port);
+        }
 
-        // change Text
-        var tls = element.getStaticProperties().get(30);
-        tls.setDescription(
-                "Select protocol. TCP (plaintext), SSL/TLS (encrypted)");
-        element.getStaticProperties().set(4, tls);
-        migrateSecurity((StaticPropertyAlternatives) element.getStaticProperties().get(3));
+        @Override
+        public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
+                        IDataSinkParameterExtractor extractor) throws RuntimeException {
 
-        return MigrationResult.success(element);
-    }
+                LOG.info("Start Data Mig ");
+                // Migrate DAta from Host +Port + Protocpl to URI
+                migrateData(element);
 
-    public void migrateSecurity(StaticPropertyAlternatives securityAlternatives) {
-        migrateGroup(securityAlternatives.getAlternatives());
-    }
 
-    private void migrateGroup(List<StaticPropertyAlternative> alternatives) {
-        var group = StaticProperties.group(Labels.withId(CERT_GROUP),
-                StaticProperties.stringFreeTextProperty(Labels.withId(CLIENT_CERT), true, false),
-                StaticProperties.secretValue(Labels.withId(CLIENT_KEY)));
-        group.setHorizontalRendering(false);
-        alternatives.add(Alternatives.from(Labels.withId(AUTH_ALTERNATIVE_CERT),
-                group));
+                LOG.info("Data Mig Finished ");
+                // ELIMINATE UNNECSSARY STUFF
 
-    }
+                var topic = element.getStaticProperties().get(0);
+
+                // SORT THE ITEMS
+                element.getStaticProperties().set(2, topic);
+
+                // change Text
+                /**
+                 * var port = (FreeTextStaticProperty) element.getStaticProperties().get(2);
+                 * port.setDescription(
+                 * "Port of MQTT broker (default 1883, for TLS often 8883)");
+                 * element.getStaticProperties().set(2, port);
+                 */
+
+                // change Text
+                /**
+                 * var tls = element.getStaticProperties().get(30);
+                 * tls.setDescription(
+                 * "Select protocol. TCP (plaintext), SSL/TLS (encrypted)");
+                 * element.getStaticProperties().set(4, tls);
+                 */
+
+                var tls = element.getStaticProperties().get(30);
+                migrateSecurity((StaticPropertyAlternatives) element.getStaticProperties().get(3));
+
+                return MigrationResult.success(element);
+        }
+
+        private String buildBrokerURI(DataSinkInvocation element){
+                var host = ((FreeTextStaticProperty) element.getStaticProperties().get(1)).getValue();
+                var port = ((FreeTextStaticProperty) element.getStaticProperties().get(2)).getValue();
+                var encryptionAlternative = ((StaticPropertyAlternatives) element.getStaticProperties().get(4))
+                                .getAlternatives();
+                var encryption = "";
+             for (var i = 0; i < encryptionAlternative.size(); i++) {
+                        StaticPropertyAlternative alternative = encryptionAlternative.get(i);
+                                                                        
+                                                                        
+                        
+                        if (alternative.getSelected()) {
+                                encryption = alternative.getStaticProperty().getLabel();
+                        }
+                }
+                String protocol = "tcp";  
+
+                if ("SSL".equalsIgnoreCase(encryption)) {
+                        protocol = "ssl"; 
+                }
+
+                var brokerUri = protocol + "://" + host + ":" + port;
+                return brokerUri;
+
+        }
+
+        private void migrateData(DataSinkInvocation element) {
+
+                var brokerUri = buildBrokerURI(element);
+
+               
+
+        }
+
+        private void migrateSecurity(StaticPropertyAlternatives securityAlternatives) {
+                migrateGroup(securityAlternatives.getAlternatives());
+        }
+
+        private void migrateGroup(List<StaticPropertyAlternative> alternatives) {
+                var group = StaticProperties.group(Labels.withId(CERT_GROUP),
+                                StaticProperties.stringFreeTextProperty(Labels.withId(CLIENT_CERT), true, false),
+                                StaticProperties.secretValue(Labels.withId(CLIENT_KEY)));
+                group.setHorizontalRendering(false);
+                alternatives.add(Alternatives.from(Labels.withId(AUTH_ALTERNATIVE_CERT),
+                                group));
+
+        }
 
 }
