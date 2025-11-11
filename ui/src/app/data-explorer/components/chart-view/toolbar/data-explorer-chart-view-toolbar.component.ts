@@ -65,7 +65,7 @@ export class DataExplorerChartViewToolbarComponent {
 
     ngOnInit() {
         this.currentUser = this.currentUserService.getCurrentUser();
-        this.isAssetAdmin = this.currentUserService.hasRoleFromUserRole(
+        this.isAssetAdmin = this.currentUserService.hasRole(
             UserRole.ROLE_ASSET_ADMIN,
         );
     }

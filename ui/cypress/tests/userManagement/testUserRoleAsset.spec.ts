@@ -28,15 +28,10 @@ import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerB
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe('Test User Roles for Pipelines', () => {
+    let newUser;
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-
-        AssetUtils.goToAssets();
-        AssetUtils.addAndSaveAsset('Asset');
-    });
-
-    it('Check Role Asset Admin in Connect', () => {
-        const newUser = UserUtils.createUser(
+        newUser = UserUtils.createUser(
             'user',
             UserRole.ROLE_PIPELINE_ADMIN,
             UserRole.ROLE_ASSET_ADMIN,
@@ -45,6 +40,11 @@ describe('Test User Roles for Pipelines', () => {
             UserRole.ROLE_DASHBOARD_ADMIN,
         );
 
+        AssetUtils.goToAssets();
+        AssetUtils.addAndSaveAsset('Asset');
+    });
+
+    it('Check Role Asset Admin in Connect', () => {
         UserUtils.switchUser(newUser);
 
         ConnectUtils.goToConnect();
@@ -75,15 +75,6 @@ describe('Test User Roles for Pipelines', () => {
     });
 
     it('Check Role Asset Admin in Pipeline', () => {
-        const newUser = UserUtils.createUser(
-            'user',
-            UserRole.ROLE_PIPELINE_ADMIN,
-            UserRole.ROLE_ASSET_ADMIN,
-            UserRole.ROLE_CONNECT_ADMIN,
-            UserRole.ROLE_DATA_EXPLORER_ADMIN,
-            UserRole.ROLE_DASHBOARD_ADMIN,
-        );
-
         UserUtils.switchUser(newUser);
 
         PipelineUtils.goToPipelines();
@@ -112,15 +103,6 @@ describe('Test User Roles for Pipelines', () => {
     });
 
     it('Check Role Asset Admin in Charts', () => {
-        const newUser = UserUtils.createUser(
-            'user',
-            UserRole.ROLE_PIPELINE_ADMIN,
-            UserRole.ROLE_ASSET_ADMIN,
-            UserRole.ROLE_CONNECT_ADMIN,
-            UserRole.ROLE_DATA_EXPLORER_ADMIN,
-            UserRole.ROLE_DASHBOARD_ADMIN,
-        );
-
         UserUtils.switchUser(newUser);
 
         DataExplorerUtils.goToDatalake();
@@ -139,15 +121,6 @@ describe('Test User Roles for Pipelines', () => {
     });
 
     it('Check Role Asset Admin in Dashboard', () => {
-        const newUser = UserUtils.createUser(
-            'user',
-            UserRole.ROLE_PIPELINE_ADMIN,
-            UserRole.ROLE_ASSET_ADMIN,
-            UserRole.ROLE_CONNECT_ADMIN,
-            UserRole.ROLE_DATA_EXPLORER_ADMIN,
-            UserRole.ROLE_DASHBOARD_ADMIN,
-        );
-
         UserUtils.switchUser(newUser);
         DataExplorerUtils.goToDashboard();
         DataExplorerUtils.createDashboard('Test');

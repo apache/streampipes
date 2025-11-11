@@ -66,7 +66,7 @@ export class EditDashboardDialogComponent implements OnInit {
 
     ngOnInit() {
         this.currentUser = this.currentUserService.getCurrentUser();
-        this.isAssetAdmin = this.currentUserService.hasRoleFromUserRole(
+        this.isAssetAdmin = this.currentUserService.hasRole(
             UserRole.ROLE_ASSET_ADMIN,
         );
         if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {

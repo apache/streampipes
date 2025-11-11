@@ -127,10 +127,10 @@ export class StartAdapterConfigurationComponent implements OnInit {
     ngOnInit(): void {
         this.showAsset = this.isEditMode;
         this.currentUser = this.currentUserService.getCurrentUser();
-        this.isAssetAdmin = this.currentUserService.hasRoleFromUserRole(
+        this.isAssetAdmin = this.currentUserService.hasRole(
             UserRole.ROLE_ASSET_ADMIN,
         );
-        this.isPipelineAdmin = this.currentUserService.hasRoleFromUserRole(
+        this.isPipelineAdmin = this.currentUserService.hasRole(
             UserRole.ROLE_PIPELINE_ADMIN,
         );
         this.startAdapterForm = this._formBuilder.group({});
