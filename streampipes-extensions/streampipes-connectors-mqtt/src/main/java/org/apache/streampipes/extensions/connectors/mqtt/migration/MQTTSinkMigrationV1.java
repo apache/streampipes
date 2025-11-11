@@ -59,7 +59,7 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
         element.getStaticProperties().set(2, port);
 
         // change Text
-        var tls = element.getStaticProperties().get(4);
+        var tls = element.getStaticProperties().get(30);
         tls.setDescription(
                 "Select protocol. TCP (plaintext), SSL/TLS (encrypted)");
         element.getStaticProperties().set(4, tls);
