@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import {
     DataExplorerWidgetModel,
     TimeSettings,
@@ -31,7 +38,7 @@ import { UserRole } from 'src/app/_enums/user-role.enum';
     styleUrls: ['../data-explorer-chart-view.component.scss'],
     standalone: false,
 })
-export class DataExplorerChartViewToolbarComponent {
+export class DataExplorerChartViewToolbarComponent implements OnInit {
     private readonly currentUserService = inject(CurrentUserService);
 
     @Input()
