@@ -49,10 +49,7 @@ public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
     public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
             IStaticPropertyExtractor extractor) throws RuntimeException {
 
-        var url = (FreeTextStaticProperty) element.getConfig().get(0);
-        url.setDescription(
-                "Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)");
-        element.getConfig().set(0, url);
+        changeUrlDescription(element);
 
         migrateSecurity((StaticPropertyAlternatives) element.getConfig().get(1));
 
@@ -65,8 +62,15 @@ public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
         return tlsAlternative;
     }
 
-    public void migrateSecurity(StaticPropertyAlternatives securityAlternatives) {
+    private void migrateSecurity(StaticPropertyAlternatives securityAlternatives) {
         migrateGroup(securityAlternatives.getAlternatives());
+    }
+
+    private void changeUrlDescription(AdapterDescription element){
+        var url = (FreeTextStaticProperty) element.getConfig().get(0);
+        url.setDescription(
+                "Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)");
+        element.getConfig().set(0, url);
     }
 
     private void migrateGroup(List<StaticPropertyAlternative> alternatives) {
