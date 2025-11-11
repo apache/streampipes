@@ -25,6 +25,9 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 public class MqttConnectUtils {
 
   /**
@@ -42,7 +45,6 @@ public class MqttConnectUtils {
   public static final String CLIENTKEY = "clientkey";
   public static final String BROKER_URL = "broker_url";
   public static final String TOPIC = "topic";
-  public static final String TLS = "tls";
 
   public static Label getAccessModeLabel() {
     return Labels.withId(ACCESS_MODE);
@@ -84,23 +86,36 @@ public class MqttConnectUtils {
 
   }
 
-  public static Label getTLS() {
-    return Labels.withId(TLS);
-
-  }
-
-  public static StaticPropertyAlternative getTLS(boolean selected) {
-    return Alternatives.from(Labels.withId(TLS), selected);
-
-  }
-
   public static MqttConfig getMqttConfig(IParameterExtractor extractor) {
     return getMqttConfig(extractor, null);
+  }
+
+  public static String getProtocol(String brokeruri) {
+    String protocol = null;
+
+    try {
+      URI uri = new URI(brokeruri);
+      protocol = uri.getScheme();
+    } catch (URISyntaxException e) {
+
+    }
+
+    return protocol;
+  }
+
+  public static boolean tlsEnabled(String protocol) {
+    if (protocol == null) {
+      return false;
+    }
+    String proto = protocol.toLowerCase();
+    return proto.equals("ssl") || proto.equals("tls") || proto.equals("mqtts");
   }
 
   public static MqttConfig getMqttConfig(IParameterExtractor extractor, String topicInput) {
     MqttConfig mqttConfig;
     String brokerUrl = extractor.singleValueParameter(BROKER_URL, String.class);
+    String protocol = getProtocol(brokerUrl);
+    boolean tlsEnabled = tlsEnabled(protocol);
 
     String topic;
     if (topicInput == null) {
@@ -113,7 +128,7 @@ public class MqttConnectUtils {
 
     if (selectedAlternative.equals(ANONYMOUS_ACCESS)) {
       mqttConfig = new MqttConfig(brokerUrl, topic);
-      if (extractor.slideToggleValue(TLS)) {
+      if (tlsEnabled) {
         mqttConfig = new MqttConfig(brokerUrl, topic, true);
       }
     } else if (selectedAlternative.equals(CLIENT_CERT_ACCESS)) {
@@ -126,7 +141,7 @@ public class MqttConnectUtils {
     } else {
       String username = extractor.singleValueParameter(USERNAME, String.class);
       String password = extractor.secretValue(PASSWORD);
-      if (extractor.slideToggleValue(TLS)) {
+      if (tlsEnabled) {
         mqttConfig = new MqttConfig(brokerUrl, topic, username, password, true);
       } else {
         mqttConfig = new MqttConfig(brokerUrl, topic, username, password);

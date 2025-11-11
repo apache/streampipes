@@ -26,7 +26,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 //@ExtendWith(EnvSetterExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AdaptersTest {
+public class AdaptersIntegrationTest {
 
 
   @Test

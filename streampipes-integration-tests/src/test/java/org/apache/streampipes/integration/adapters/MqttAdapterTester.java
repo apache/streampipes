@@ -28,14 +28,9 @@ import org.apache.streampipes.integration.containers.MosquittoDevContainer;
 import org.apache.streampipes.integration.utils.Utils;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -85,14 +80,11 @@ public class MqttAdapterTester extends AdapterTesterBase {
         .get(0)
         .setSelected(true);
 
-    //SET TLS 
-
-    ((SlideToggleStaticProperty)desc.getConfig().get(2)).setSelected(false);
 
     // Set format to Json
     ((StaticPropertyAlternatives) (desc)
         .getConfig()
-        .get(4)) //used to be 3 by adding TLS now 4
+        .get(3))
         .getAlternatives()
         .get(0)
         .setSelected(true);
@@ -110,33 +102,15 @@ public class MqttAdapterTester extends AdapterTesterBase {
     return Utils.getSimpleTestEvents();
   }
 
-
   @Override
-  public void publishEvents(List<Map<String, Object>> events) {
-    var publisher = getMqttPublisher();
-    var objectMapper = new ObjectMapper();
-
-    events.forEach(event -> {
-      try {
-        var serializedEvent = objectMapper.writeValueAsBytes(event);
-        publisher.publish(serializedEvent);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException(e);
-      }
-    });
-
-    publisher.disconnect();
+  public void publishEvents(List<Map<String, Object>> events) { 
+      var pub = getMqttPublisher();
+      MQTTPublisherUtils.publishEvents(pub, events);
   }
 
   @NotNull
   private MqttPublisher getMqttPublisher() {
-    MqttTransportProtocol mqttSettings = new MqttTransportProtocol(
-        mosquittoContainer.getBrokerHost(),
-        mosquittoContainer.getBrokerPort(),
-        TOPIC);
-    MqttPublisher publisher = new MqttPublisher(mqttSettings);
-    publisher.connect();
-    return publisher;
+    return MQTTPublisherUtils.getMqttPublisher(mosquittoContainer, TOPIC);
   }
 
   @Override

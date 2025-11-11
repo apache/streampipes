@@ -26,11 +26,9 @@ public class MqttConfig {
   private String username;
   private String password;
 
-  private String clientCertificate; 
-  private String clientKey;       
-  private Boolean tls = false;          
-  
-
+  private String clientCertificate;
+  private String clientKey;
+  private Boolean tls = false;
 
   public MqttConfig(String url, String topic) {
     this.authenticated = false;
@@ -53,29 +51,25 @@ public class MqttConfig {
     this.tls = tlsEnabled;
     this.clientCertificate = clientCertificate;
     this.clientKey = clientKey;
-}
+  }
 
-public MqttConfig(String url, String topic, String username, String password, Boolean tlsEnabled) {
-    this(url, topic, username, password); 
+  public MqttConfig(String url, String topic, String username, String password, Boolean tlsEnabled) {
+    this(url, topic, username, password);
     this.tls = tlsEnabled;
-}
+  }
 
-public MqttConfig(String url, String topic, Boolean tlsEnabled) {
-    this(url, topic); 
+  public MqttConfig(String url, String topic, Boolean tlsEnabled) {
+    this(url, topic);
     this.tls = tlsEnabled;
-}
+  }
 
-
-
-
-   public Boolean getTlsEnabled() {
+  public Boolean getTlsEnabled() {
     return tls;
   }
 
   public void setTlsEnabled(Boolean tlsEnabled) {
     this.tls = tlsEnabled;
   }
-
 
   public String getClientCertificatePath() {
     return clientCertificate;

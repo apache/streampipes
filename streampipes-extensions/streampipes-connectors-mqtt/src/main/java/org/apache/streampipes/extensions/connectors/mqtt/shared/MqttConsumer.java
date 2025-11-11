@@ -22,11 +22,17 @@ import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
 import org.apache.streampipes.extensions.connectors.mqtt.security.SecurityUtils;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 
-import org.fusesource.mqtt.client.*;
+import org.fusesource.mqtt.client.BlockingConnection;
+import org.fusesource.mqtt.client.MQTT;
+import org.fusesource.mqtt.client.Message;
+import org.fusesource.mqtt.client.QoS;
+import org.fusesource.mqtt.client.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 import java.io.IOException;
 import java.security.KeyStore;

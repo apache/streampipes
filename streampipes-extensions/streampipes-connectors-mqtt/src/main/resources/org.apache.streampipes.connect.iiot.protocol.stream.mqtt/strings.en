@@ -19,8 +19,8 @@
 org.apache.streampipes.connect.iiot.protocol.stream.mqtt.title=MQTT
 org.apache.streampipes.connect.iiot.protocol.stream.mqtt.description=Consumes messages from a broker using the MQTT protocol
 
-access-mode.title=Access Mode
-access-mode.description=0
+access-mode.title=User Authentication
+access-mode.description=Choose an authentication method for the user
 
 anonymous-alternative.title=Unauthenticated
 anonymous-alternative.description=
@@ -33,9 +33,6 @@ username-group.description=
 
 client-cert-alternative.title= Client Certificate
 client-cert-alternative.description=
-
-tls.title=
-tls.description=TLS Encryption
 
 username.title=Username
 username.description=
