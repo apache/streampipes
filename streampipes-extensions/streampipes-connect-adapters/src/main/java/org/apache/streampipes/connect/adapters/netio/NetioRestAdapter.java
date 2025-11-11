@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Deprecated(since = "0.98.0", forRemoval = true)
 public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
 
   /**
