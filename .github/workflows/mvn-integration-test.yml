@@ -40,8 +40,17 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y maven
-      - name: Run IntegrationTest selfsigned
-        run: mvn clean test -P selfsigned
-      - name: Run IntegrationTest keystore
-        run: mvn clean test -P keystore
+       # Step 1: Build everything but skip tests
+      - name: Build all StreamPipes modules (skip tests)
+        run: mvn -B clean install -DskipTests
+
+      # Step 2: Run only integration tests (selfsigned)
+      - name: Run Integration Tests (selfsigned)
+        run: |
+          mvn -B test -P selfsigned -pl streampipes-integration-tests -Dtest='**/*Test'
+
+      # Step 3: Run only integration tests (keystore)
+      - name: Run Integration Tests (keystore)
+        run: |
+          mvn -B test -P keystore -pl streampipes-integration-tests -Dtest='**/*Test'
  
