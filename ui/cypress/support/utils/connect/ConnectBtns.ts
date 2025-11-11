@@ -93,6 +93,10 @@ export class ConnectBtns {
         return cy.dataCy('show-code-checkbox');
     }
 
+    public static assetCheckbox() {
+        return cy.dataCy('show-asset-checkbox');
+    }
+
     // ========================================================================
 
     // =====================  Event Schema buttons  ==========================

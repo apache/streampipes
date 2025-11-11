@@ -16,28 +16,24 @@
  *
  */
 
-export class PipelineBtns {
-    public static statusPipeline() {
-        return cy.dataCy('status-pipeline-green', { timeout: 10000 });
+export class UserBtns {
+    public static editUserBtn(username) {
+        cy.get('[data-cy="security-user-config"]')
+            .find('tr')
+            .contains('b', username)
+            .closest('tr')
+            .within(() => {
+                cy.get('[data-cy="user-edit-btn"]')
+                    .should('be.visible')
+                    .click();
+            });
     }
 
-    public static stopPipeline() {
-        return cy.dataCy('stop-pipeline-button', { timeout: 10000 });
+    public static userRoleCheckbox(role) {
+        return cy.dataCy('role-' + role).children();
     }
 
-    public static deletePipeline() {
-        return cy.dataCy('delete-pipeline', { timeout: 10000 });
-    }
-
-    public static pipelineEditorSave() {
-        return cy.dataCy('sp-editor-save-pipeline');
-    }
-
-    public static pipelineAssetCheckbox() {
-        return cy.dataCy('sp-show-pipeline-asset-checkbox');
-    }
-
-    public static pipelineEditorCancel() {
-        return cy.dataCy('sp-editor-cancel');
+    public static saveEditUserBtn() {
+        return cy.dataCy('sp-element-edit-user-save');
     }
 }

@@ -38,7 +38,7 @@ export class DataExplorerBtns {
     }
 
     public static chartAssetCheckboxBtn() {
-        return cy.dataCy('sp-show-chart-asset-checkbox');
+        return cy.dataCy('add-to-Asset-data-view-btn');
     }
     public static confirmAssetSelectionBtn() {
         return cy
@@ -50,5 +50,13 @@ export class DataExplorerBtns {
         return cy
             .dataCy('edit-data-view-' + widgetName.replaceAll(' ', ''))
             .click();
+    }
+
+    public static dashboardAssetCheckboxBtn() {
+        return cy.dataCy('sp-show-dashboard-asset-checkbox');
+    }
+
+    public static closeDashboardCreate() {
+        return cy.dataCy('close-data-view');
     }
 }
