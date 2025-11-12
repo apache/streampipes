@@ -40,7 +40,7 @@ public class MqttConnectUtils {
   /**
    * Keys of user configuration parameters
    */
-  //Adapter
+  // Adapter
   public static final String ACCESS_MODE = "access-mode";
   public static final String ANONYMOUS_ACCESS = "anonymous-alternative";
   public static final String USERNAME_ACCESS = "username-alternative";
@@ -53,21 +53,21 @@ public class MqttConnectUtils {
   public static final String CLIENTKEY = "clientkey";
   public static final String BROKER_URL = "broker_url";
   public static final String TOPIC = "topic";
-//Pubisher
+  // Pubisher
   public static final String QOS_LEVEL_KEY = "qos-level";
   public static final String CLEAN_SESSION_KEY = "clean-session";
   public static final String WILL_RETAIN = "will-retain";
   public static final String RECONNECT_PERIOD_IN_SEC = "reconnect-period";
   public static final String WILL_MODE = "lwt-mode";
   public static final String NO_WILL_ALTERNATIVE = "no-lwt-alternative";
-    public static final String WILL_ALTERNATIVE = "lwt-alternative";
-    public static final String WILL_GROUP = "lwt-group";
-    public static final String WILL_TOPIC = "lwt-topic";
-    public static final String WILL_MESSAGE = "lwt-message";
-    public static final String WILL_QOS = "lwt-qos-level";
-    public static final String RETAIN = "retain";
-    public static final String KEEP_ALIVE_IN_SEC = "keep-alive";
-    public static final String MQTT_COMPLIANT = "mqtt-version-compliant";
+  public static final String WILL_ALTERNATIVE = "lwt-alternative";
+  public static final String WILL_GROUP = "lwt-group";
+  public static final String WILL_TOPIC = "lwt-topic";
+  public static final String WILL_MESSAGE = "lwt-message";
+  public static final String WILL_QOS = "lwt-qos-level";
+  public static final String RETAIN = "retain";
+  public static final String KEEP_ALIVE_IN_SEC = "keep-alive";
+  public static final String MQTT_COMPLIANT = "mqtt-version-compliant";
 
   public static Label getAccessModeLabel() {
     return Labels.withId(ACCESS_MODE);
@@ -84,49 +84,50 @@ public class MqttConnectUtils {
   public static Label getQosLevelLabel() {
     return Labels.withId(QOS_LEVEL_KEY);
   }
-    public static Label getRetainLabel() {
+
+  public static Label getRetainLabel() {
     return Labels.withId(RETAIN);
   }
 
-    public static Label getCleanSessionLabel() {
+  public static Label getCleanSessionLabel() {
     return Labels.withId(CLEAN_SESSION_KEY);
   }
-    public static Label getReconnectPeriodLabel() {
+
+  public static Label getReconnectPeriodLabel() {
     return Labels.withId(RECONNECT_PERIOD_IN_SEC);
   }
 
-      public static Label getKeepAliveLabel() {
+  public static Label getKeepAliveLabel() {
     return Labels.withId(KEEP_ALIVE_IN_SEC);
   }
 
-      public static Label getMqttComplient() {
+  public static Label getMqttComplient() {
     return Labels.withId(MQTT_COMPLIANT);
   }
 
-      public static Label getWillModeLabel() {
+  public static Label getWillModeLabel() {
     return Labels.withId(WILL_MODE);
   }
 
-
-  public static StaticPropertyAlternative getNoWillAlternative(){
+  public static StaticPropertyAlternative getNoWillAlternative() {
     return Alternatives.from(Labels.withId(NO_WILL_ALTERNATIVE), true);
   }
 
-  public static StaticPropertyAlternative getWillAlternative(){
+  public static StaticPropertyAlternative getWillAlternative() {
     return Alternatives.from(Labels.withId(WILL_ALTERNATIVE),
-                                        StaticProperties.group(Labels.withId(WILL_GROUP),
-                                                StaticProperties.stringFreeTextProperty(Labels.withId(WILL_TOPIC)),
-                                                StaticProperties.stringFreeTextProperty(Labels.withId(WILL_MESSAGE)),
-                                                StaticProperties.singleValueSelection(Labels.withId(WILL_RETAIN),
-                                                        Arrays.asList(
-                                                                new Option("Yes", false),
-                                                                new Option("No", true))),
-                                                StaticProperties.singleValueSelection(
-                                                        Labels.withId(WILL_QOS),
-                                                        Arrays.asList(
-                                                                new Option("0 - at-most-once", true),
-                                                                new Option("1 - at-least-once", false),
-                                                                new Option("2 - exactly-once", false)))));
+        StaticProperties.group(Labels.withId(WILL_GROUP),
+            StaticProperties.stringFreeTextProperty(Labels.withId(WILL_TOPIC)),
+            StaticProperties.stringFreeTextProperty(Labels.withId(WILL_MESSAGE)),
+            StaticProperties.singleValueSelection(Labels.withId(WILL_RETAIN),
+                Arrays.asList(
+                    new Option("Yes", false),
+                    new Option("No", true))),
+            StaticProperties.singleValueSelection(
+                Labels.withId(WILL_QOS),
+                Arrays.asList(
+                    new Option("0 - at-most-once", true),
+                    new Option("1 - at-least-once", false),
+                    new Option("2 - exactly-once", false)))));
   }
 
   public static StaticPropertyAlternative getAnonymousAccess() {
@@ -147,35 +148,30 @@ public class MqttConnectUtils {
 
   }
 
-  public static List<Option> getQOSLevelSelection(){
+  public static List<Option> getQOSLevelSelection() {
     return Arrays.asList(
-                                        new Option("0 - at-most-once", false),
-                                        new Option("1 - at-least-once", true),
-                                        new Option("2 - exactly-once", false));
+        new Option("0 - at-most-once", false),
+        new Option("1 - at-least-once", true),
+        new Option("2 - exactly-once", false));
   }
 
-
-  public static List<Option> getRetainSelection(){
+  public static List<Option> getRetainSelection() {
     return Arrays.asList(
-                                        new Option("Yes", false),
-                                        new Option("No", true));
+        new Option("Yes", false),
+        new Option("No", true));
   }
 
-
-
-  public static List<Option> getCleanSessionSelection(){
-     return Arrays.asList(
-                                        new Option("Yes", true),
-                                        new Option("No", false));
+  public static List<Option> getCleanSessionSelection() {
+    return Arrays.asList(
+        new Option("Yes", true),
+        new Option("No", false));
   }
 
-
-  public static List<Option> getMqttSelection(){
-     return Arrays.asList(
-                                        new Option("Yes", true),
-                                        new Option("No", false));
+  public static List<Option> getMqttSelection() {
+    return Arrays.asList(
+        new Option("Yes", true),
+        new Option("No", false));
   }
-  
 
   public static StaticPropertyAlternative getClientCertAccess() {
     var group = StaticProperties.group(
@@ -252,8 +248,7 @@ public class MqttConnectUtils {
     return mqttConfig;
   }
 
-
-    public static QoS extractQoSFromString(String s) {
+  public static QoS extractQoSFromString(String s) {
     int qos = Integer.parseInt(s.replaceAll("\\D+", ""));
     switch (qos) {
       case 0:
@@ -266,7 +261,7 @@ public class MqttConnectUtils {
     throw new SpRuntimeException("Could not retrieve QoS level: QoS " + qos);
   }
 
-    public static String runningInstanceId(String elementId) {
+  public static String runningInstanceId(String elementId) {
     return elementId.substring(elementId.lastIndexOf(".") + 1);
   }
 
@@ -284,71 +279,67 @@ public class MqttConnectUtils {
     return value * 1000;
   }
 
-public static MqttConfig extractDataSinkParams(IDataSinkParameters params){
+  public static MqttConfig extractDataSinkParams(IDataSinkParameters params) {
     // TODO Is there any better place to put this?
 
     var extract = params.extractor();
     MqttConfig mqttConfig = new MqttConfig(
-        extract.singleValueParameter(BROKER_URL, String.class), 
-        extract.singleValueParameter(TOPIC, String.class)
-    );
+        extract.singleValueParameter(BROKER_URL, String.class),
+        extract.singleValueParameter(TOPIC, String.class));
 
     // Set QoS using the setter
     mqttConfig.setQos(MqttConnectUtils.extractQoSFromString(
-        extract.selectedSingleValue(QOS_LEVEL_KEY, String.class))
-    );
+        extract.selectedSingleValue(QOS_LEVEL_KEY, String.class)));
 
     // Set clientId using MqttConnectUtils
-    String clientId = MqttConnectUtils.runningInstanceId(params.getModel().getElementId());
+    mqttConfig.setClientId(MqttConnectUtils.runningInstanceId(params.getModel().getElementId()));
 
     // Set reconnect delay max using the setter
     mqttConfig.setReconnectDelayMaxInMs(MqttConnectUtils
-        .fromSecToMs(extract.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class))
-    );
+        .fromSecToMs(extract.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class)));
 
     // Set keep-alive interval using the setter
     mqttConfig.setKeepAliveInSec(extract.singleValueParameter(KEEP_ALIVE_IN_SEC, Short.class));
 
     // Set clean session and retain flags using the setters
-    mqttConfig.setCleanSession(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(CLEAN_SESSION_KEY, String.class)));
+    mqttConfig
+        .setCleanSession(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(CLEAN_SESSION_KEY, String.class)));
     mqttConfig.setRetain(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(RETAIN, String.class)));
-
-    try {
-        // Set client certificate and key using setters
-        mqttConfig.setClientCertificatePath(extract.singleValueParameter(CLIENTCERT, String.class));
-        mqttConfig.setClientKey(extract.secretValue(CLIENTKEY));
-    } catch (Exception e) {
-        // If error occurs, reset client certificate and key to null
-        mqttConfig.setClientCertificatePath(null);
-        mqttConfig.setClientKey(null);
-    }
 
     // Set MQTT protocol version if compliant
     boolean isCompliant = MqttConnectUtils.extractBoolean(extract.selectedSingleValue(MQTT_COMPLIANT, String.class));
     if (isCompliant) {
-        mqttConfig.setMqttProtocolVersion("3.1.1");
+      mqttConfig.setMqttProtocolVersion("3.1.1");
     }
 
     // Set access mode and credentials if using basic auth
     String accessMode = extract.selectedAlternativeInternalId(ACCESS_MODE);
     if (accessMode.equals(USERNAME_ACCESS)) {
-        mqttConfig.setAuthenticated(true);
-        mqttConfig.setUsername(extract.singleValueParameter(USERNAME, String.class));
-        mqttConfig.setPassword(extract.secretValue(PASSWORD));
+      mqttConfig.setAuthenticated(true);
+      mqttConfig.setUsername(extract.singleValueParameter(USERNAME, String.class));
+      mqttConfig.setPassword(extract.secretValue(PASSWORD));
+    }
+
+    if (accessMode.equals(CLIENT_CERT_ACCESS)) {
+      // Set client certificate and key using setters
+      mqttConfig.setClientCertificatePath(extract.singleValueParameter(CLIENTCERT, String.class));
+      mqttConfig.setClientKey(extract.secretValue(CLIENTKEY));
+    } else {
+
+      mqttConfig.setClientCertificatePath(null);
+      mqttConfig.setClientKey(null);
     }
 
     // Set last will configuration
     String willMode = extract.selectedAlternativeInternalId(WILL_MODE);
     if (willMode.equals(WILL_ALTERNATIVE)) {
-        mqttConfig.setLastWill(true);
-        mqttConfig.setWillTopic(extract.singleValueParameter(WILL_TOPIC, String.class));
-        mqttConfig.setWillMessage(extract.singleValueParameter(WILL_MESSAGE, String.class));
-        mqttConfig.setWillQoS(MqttConnectUtils.extractQoSFromString(extract.selectedSingleValue(WILL_QOS, String.class)));
-        mqttConfig.setWillRetain(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(WILL_RETAIN, String.class)));
+      mqttConfig.setLastWill(true);
+      mqttConfig.setWillTopic(extract.singleValueParameter(WILL_TOPIC, String.class));
+      mqttConfig.setWillMessage(extract.singleValueParameter(WILL_MESSAGE, String.class));
+      mqttConfig.setWillQoS(MqttConnectUtils.extractQoSFromString(extract.selectedSingleValue(WILL_QOS, String.class)));
+      mqttConfig.setWillRetain(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(WILL_RETAIN, String.class)));
     }
 
     return mqttConfig;
-}
   }
-
-
+}

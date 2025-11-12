@@ -43,6 +43,7 @@ public class MqttConfig {
   private boolean cleanSession = true; // Default: clean session
   private boolean retain = false; // Default: do not retain the message
   private short keepAliveInSec = 60; // Default: keep alive interval of 60 seconds
+  private String clientId = "";
 
   public MqttConfig(String url, String topic) {
     this.authenticated = false;
@@ -110,6 +111,13 @@ public class MqttConfig {
 
   public String getPassword() {
     return password;
+  }
+    public String getClientId() {
+    return clientId;
+  }
+
+      public void setClientId(String clientId) {
+    this.clientId = clientId;
   }
 
   public void setPassword(String password) {
