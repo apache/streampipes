@@ -101,7 +101,7 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
 
                 var brokerUri = buildBrokerURI(element);
 
-                var broker = StaticProperties.stringFreeTextProperty(Labels.withId(BROKER_URL), brokerUri);
+                var broker = StaticProperties.stringFreeTextProperty(MqttConnectUtils.getBrokerUrlLabel(), brokerUri);
 
                 element.getStaticProperties().set(0, broker);
 
