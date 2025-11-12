@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE_CERT;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.BROKER;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CERT_GROUP;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_CERT;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_KEY;
@@ -58,6 +59,14 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
         public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
                         IDataSinkParameterExtractor extractor) throws RuntimeException {
 
+                //migrate Topic
+
+                var topic = element.getStaticProperties().get(0);
+
+                // SORT THE ITEMS
+                element.getStaticProperties().set(2, topic);
+
+
                 LOG.info("Start Data Mig ");
                 // Migrate DAta from Host +Port + Protocpl to URI
                 migrateData(element);
@@ -66,11 +75,7 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                 LOG.info("Data Mig Finished ");
                 // ELIMINATE UNNECSSARY STUFF
 
-                var topic = element.getStaticProperties().get(0);
-
-                // SORT THE ITEMS
-                element.getStaticProperties().set(2, topic);
-
+             
                 // change Text
                 /**
                  * var port = (FreeTextStaticProperty) element.getStaticProperties().get(2);
@@ -94,7 +99,9 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
         }
 
         private String buildBrokerURI(DataSinkInvocation element){
+
                 var host = ((FreeTextStaticProperty) element.getStaticProperties().get(1)).getValue();
+                LOG.info("host "+ host )
                 var port = ((FreeTextStaticProperty) element.getStaticProperties().get(2)).getValue();
                 var encryptionAlternative = ((StaticPropertyAlternatives) element.getStaticProperties().get(4))
                                 .getAlternatives();
@@ -115,6 +122,8 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                 }
 
                 var brokerUri = protocol + "://" + host + ":" + port;
+
+                LOG.info("broker uri "+ brokerUri )
                 return brokerUri;
 
         }
@@ -123,7 +132,9 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
 
                 var brokerUri = buildBrokerURI(element);
 
-               
+                var broker =   StaticProperties.stringFreeTextProperty(Labels.withId(BROKER),brokerUri);
+
+                element.getStaticProperties().set(0, broker);               
 
         }
 
