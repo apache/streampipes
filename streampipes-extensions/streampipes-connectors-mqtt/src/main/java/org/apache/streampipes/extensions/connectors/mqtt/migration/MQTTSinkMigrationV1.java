@@ -78,9 +78,9 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
 
                 LOG.info("Start Sorting Items  ");
                 // SORT THE ITEMS
-                element.getStaticProperties().set(2, topic);
+                element.getStaticProperties().set(4, topic);
                 //Remove TLS
-                element.getStaticProperties().remove(4);
+                element.getStaticProperties().remove(2);
                 //Remobve Port 
                 element.getStaticProperties().remove(1);
 
@@ -89,7 +89,7 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                  var staticProps = element.getStaticProperties();
   
                 // Add Certificate Option
-                migrateSecurity((StaticPropertyAlternatives) element.getStaticProperties().get(2));
+                migrateSecurity((StaticPropertyAlternatives) element.getStaticProperties().get(1));
 
                 return MigrationResult.success(element);
 
