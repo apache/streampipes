@@ -105,7 +105,9 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                 // Add Certificate Option
                 migrateSecurity((StaticPropertyAlternatives) element.getStaticProperties().get(3));
 
-                return MigrationResult.success(element);
+                return MigrationResult.failure(element, "No success");
+
+                //return MigrationResult.success(element);
         }
 
         private String buildBrokerURI(DataSinkInvocation element) {
@@ -116,9 +118,10 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                 LOG.info("port " + port);
                 var encryptionAlternative = ((StaticPropertyAlternatives) element.getStaticProperties().get(4))
                                 .getAlternatives();
-                
-                                var encryption = "";
+                LOG.info("Successfully got encryption Alt");
+                var encryption = "";
                 for (var i = 0; i < encryptionAlternative.size(); i++) {
+                        LOG.info("For LOOP");
                         StaticPropertyAlternative alternative = encryptionAlternative.get(i);
                         LOG.info("alternative " + alternative);
 
