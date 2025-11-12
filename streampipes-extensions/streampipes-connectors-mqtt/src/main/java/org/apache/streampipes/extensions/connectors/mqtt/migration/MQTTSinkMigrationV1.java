@@ -85,15 +85,13 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                 element.getStaticProperties().remove(1);
 
                 LOG.info("FInished Sorting Items  ");
-
-                 var staticProps = element.getStaticProperties();
   
                 // Add Certificate Option
                 migrateSecurity((StaticPropertyAlternatives) element.getStaticProperties().get(1));
 
-                return MigrationResult.success(element);
+                //Migrate Text 
 
-                //return MigrationResult.success(element);
+                return MigrationResult.success(element);
         }
 
         private String buildBrokerURI(DataSinkInvocation element) {
