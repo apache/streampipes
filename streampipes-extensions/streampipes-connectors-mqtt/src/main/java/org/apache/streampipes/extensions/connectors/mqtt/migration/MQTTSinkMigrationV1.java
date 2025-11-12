@@ -24,6 +24,8 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -116,17 +118,17 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                 LOG.info("host " + host);
                 var port = ((FreeTextStaticProperty) element.getStaticProperties().get(2)).getValue();
                 LOG.info("port " + port);
-                var encryptionAlternative = ((StaticPropertyAlternatives) element.getStaticProperties().get(4))
-                                .getAlternatives();
+                var encryptionAlternative = ((OneOfStaticProperty) element.getStaticProperties().get(4))
+                                .getOptions();
                 LOG.info("Successfully got encryption Alt");
                 var encryption = "";
                 for (var i = 0; i < encryptionAlternative.size(); i++) {
                         LOG.info("For LOOP");
-                        StaticPropertyAlternative alternative = encryptionAlternative.get(i);
+                        Option alternative = encryptionAlternative.get(i);
                         LOG.info("alternative " + alternative);
 
-                        if (alternative.getSelected()) {
-                                encryption = alternative.getStaticProperty().getLabel();
+                        if (alternative.isSelected()) {
+                                encryption = alternative.getName();
                         }
                 }
                 String protocol = "tcp";
