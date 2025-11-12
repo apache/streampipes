@@ -26,6 +26,7 @@ import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
+
 import org.fusesource.mqtt.client.QoS;
 
 import java.net.URI;
@@ -124,7 +125,7 @@ public class MqttConnectUtils {
                                                         Arrays.asList(
                                                                 new Option("0 - at-most-once", true),
                                                                 new Option("1 - at-least-once", false),
-                                                                new Option("2 - exactly-once", false)))))
+                                                                new Option("2 - exactly-once", false)))));
   }
 
   public static StaticPropertyAlternative getAnonymousAccess() {
