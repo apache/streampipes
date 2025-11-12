@@ -18,33 +18,33 @@
 package org.apache.streampipes.extensions.connectors.mqtt.sink.common;
 
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
 
 import org.fusesource.mqtt.client.QoS;
 
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.ACCESS_MODE;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.BROKER_URL;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.CLEAN_SESSION_KEY;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.CLIENTCERT;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.CLIENTKEY;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.KEEP_ALIVE_IN_SEC;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.MQTT_COMPLIANT;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.PASSWORD;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.QOS_LEVEL_KEY;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.RECONNECT_PERIOD_IN_SEC;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.RETAIN;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.TOPIC;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.USERNAME;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.USERNAME_ACCESS;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.WILL_ALTERNATIVE;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.WILL_MESSAGE;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.WILL_MODE;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.WILL_QOS;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.WILL_RETAIN;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.WILL_TOPIC;
 
-//TODO FIx this 
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.*:
 
-//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE;
-//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_MODE;
-//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.BROKER;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLEAN_SESSION_KEY;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_CERT;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_KEY;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.KEEP_ALIVE_IN_SEC;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.MQTT_COMPLIANT;
-//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.PASSWORD;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.QOS_LEVEL_KEY;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.RECONNECT_PERIOD_IN_SEC;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.RETAIN;
-//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.TOPIC;
-//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.USERNAME;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_ALTERNATIVE;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_MESSAGE;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_MODE;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_QOS;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_RETAIN;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_TOPIC;
+
 
 public class MqttOptions {
 
@@ -72,35 +72,35 @@ public class MqttOptions {
   public MqttOptions(IDataSinkParameters params) {
     var extract = params.extractor();
 
-    this.clientId = MqttUtils.runningInstanceId(params.getModel().getElementId());
+    this.clientId = MqttConnectUtils.runningInstanceId(params.getModel().getElementId());
     this.topic = extract.singleValueParameter(TOPIC, String.class);
-    this.broker = extract.singleValueParameter(BROKER, String.class);
+    this.broker = extract.singleValueParameter(BROKER_URL, String.class);
 
 
-    this.qos = MqttUtils.extractQoSFromString(extract.selectedSingleValue(QOS_LEVEL_KEY, String.class));
-    this.reconnectDelayMaxInMs = MqttUtils
+    this.qos = MqttConnectUtils.extractQoSFromString(extract.selectedSingleValue(QOS_LEVEL_KEY, String.class));
+    this.reconnectDelayMaxInMs = MqttConnectUtils
         .fromSecToMs(extract.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class));
     this.keepAliveInSec = extract.singleValueParameter(KEEP_ALIVE_IN_SEC, Short.class);
-    this.cleanSession = MqttUtils.extractBoolean(extract.selectedSingleValue(CLEAN_SESSION_KEY, String.class));
-    this.retain = MqttUtils.extractBoolean(extract.selectedSingleValue(RETAIN, String.class));
+    this.cleanSession = MqttConnectUtils.extractBoolean(extract.selectedSingleValue(CLEAN_SESSION_KEY, String.class));
+    this.retain = MqttConnectUtils.extractBoolean(extract.selectedSingleValue(RETAIN, String.class));
 
     try {
       //TODO How to do this better 
-      this.clientCertificate = extract.singleValueParameter(CLIENT_CERT, String.class);
-      this.clientKey = extract.secretValue(CLIENT_KEY);
+      this.clientCertificate = extract.singleValueParameter(CLIENTCERT, String.class);
+      this.clientKey = extract.secretValue(CLIENTKEY);
     } catch (Exception e) {
       this.clientCertificate = null;
       this.clientKey = null;
     }
 
-    boolean isCompliant = MqttUtils.extractBoolean(extract.selectedSingleValue(MQTT_COMPLIANT, String.class));
+    boolean isCompliant = MqttConnectUtils.extractBoolean(extract.selectedSingleValue(MQTT_COMPLIANT, String.class));
 
     if (isCompliant) {
       this.mqttProtocolVersion = "3.1.1";
     }
 
-    String accessMode = extract.selectedAlternativeInternalId(AUTH_MODE);
-    if (accessMode.equals(AUTH_ALTERNATIVE)) {
+    String accessMode = extract.selectedAlternativeInternalId(ACCESS_MODE);
+    if (accessMode.equals(USERNAME_ACCESS)) {
       this.isBasicAuth = true;
       this.username = extract.singleValueParameter(USERNAME, String.class);
       this.password = extract.secretValue(PASSWORD);
@@ -111,8 +111,8 @@ public class MqttOptions {
       this.isLastWill = true;
       this.willTopic = extract.singleValueParameter(WILL_TOPIC, String.class);
       this.willMessage = extract.singleValueParameter(WILL_MESSAGE, String.class);
-      this.willQoS = MqttUtils.extractQoSFromString(extract.selectedSingleValue(WILL_QOS, String.class));
-      this.willRetain = MqttUtils.extractBoolean(extract.selectedSingleValue(WILL_RETAIN, String.class));
+      this.willQoS = MqttConnectUtils.extractQoSFromString(extract.selectedSingleValue(WILL_QOS, String.class));
+      this.willRetain = MqttConnectUtils.extractBoolean(extract.selectedSingleValue(WILL_RETAIN, String.class));
     }
   }
 
