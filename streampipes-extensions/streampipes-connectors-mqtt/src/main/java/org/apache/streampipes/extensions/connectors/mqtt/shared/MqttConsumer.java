@@ -17,9 +17,6 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
-import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
-import org.apache.streampipes.extensions.connectors.mqtt.security.SecurityUtils;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 
 import org.fusesource.mqtt.client.BlockingConnection;
@@ -30,29 +27,17 @@ import org.fusesource.mqtt.client.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-
-import java.io.IOException;
-import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-
-public class MqttConsumer implements Runnable {
+public class MqttConsumer extends MqttBase implements Runnable {
 
     private final InternalEventProcessor<byte[]> consumer;
     private boolean running;
     private int maxElementsToReceive = -1;
     private int messageCount = 0;
 
-    private final MqttConfig mqttConfig;
-
-    private static final Logger LOG = LoggerFactory.getLogger(MqttProtocol.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MqttConsumer.class);
 
     public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer) {
-        this.mqttConfig = mqttConfig;
+        super(mqttConfig);
         this.consumer = consumer;
     }
 
@@ -65,7 +50,7 @@ public class MqttConsumer implements Runnable {
     public void run() {
         this.running = true;
         try {
-            MQTT mqtt = setupMqttClient();
+            MQTT mqtt = super.setupMqttClient();
             BlockingConnection connection = mqtt.blockingConnection();
             connection.connect();
             subscribeToTopic(connection);
@@ -74,7 +59,6 @@ public class MqttConsumer implements Runnable {
         } catch (Exception e) {
             LOG.error("Error in MQTT consumer: ", e);
             throw new RuntimeException("Error when receiving data from MQTT", e);
-
         }
     }
 
@@ -88,64 +72,8 @@ public class MqttConsumer implements Runnable {
         }
     }
 
-    private MQTT setupMqttClient() throws Exception {
-        MQTT mqtt = new MQTT();
-        mqtt.setHost(mqttConfig.getUrl());
-        mqtt.setConnectAttemptsMax(1);
-
-        if (mqttConfig.getAuthenticated()) {
-            mqtt.setUserName(mqttConfig.getUsername());
-            mqtt.setPassword(mqttConfig.getPassword());
-        }
-
-        if (mqttConfig.getTlsEnabled()) {
-            configureTls(mqtt);
-        }
-
-        return mqtt;
-    }
-
-    private void configureTls(MQTT mqtt) throws Exception {
-        LOG.info("Configuring TLS for MQTT connection...");
-        KeyStore keyStore = null;
-
-        var env = Environments.getEnvironment();
-        boolean acceptAllCerts = env.getAllowSelfSignedCertificates().getValueOrDefault();
-
-        if (acceptAllCerts) {
-
-            LOG.info("Accept all Certs");
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, SecurityUtils.acceptAllCerts(), new java.security.SecureRandom());
-             LOG.info("Init SSL ");
-            mqtt.setSslContext(sslContext);
-             LOG.info("Return");
-            return;
-        }
-
-        try {
-                keyStore = SecurityUtils.loadServerKeyStore();
-
-            } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
-                LOG.error("Error loading keystore from file: {}", e);
-            }
-
-        TrustManagerFactory trustManagerFactory = SecurityUtils.createTrustManagerFactory(keyStore);
-        KeyManager[] keyManagers = null;
-        if (mqttConfig.getClientCertificatePath() != null && mqttConfig.getClientKeyPath() != null) {
-            LOG.info("Loading client certificate for mutual TLS authentication...");
-            keyManagers = SecurityUtils.loadClientKeyManagers(
-                    mqttConfig.getClientCertificatePath(),
-                    mqttConfig.getClientKeyPath());
-        }
-
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(keyManagers, trustManagerFactory.getTrustManagers(), new SecureRandom());
-        mqtt.setSslContext(sslContext);
-    }
-
     private void subscribeToTopic(BlockingConnection connection) throws Exception {
-        Topic[] topics = { new Topic(mqttConfig.getTopic(), QoS.AT_LEAST_ONCE) };
+        Topic[] topics = { new Topic(super.mqttConfig.getTopic(), QoS.AT_LEAST_ONCE) };
         connection.subscribe(topics);
     }
 
