@@ -70,7 +70,7 @@ black = "25.9.0"
 blacken-docs = "1.20.0"
 flake8 = "7.2.0"
 interrogate = { version = "1.7.0", extras = ["png"] }
-isort = "5.13.2"
+isort = "7.0.0"
 mypy = "1.17.0"
 ruff = "0.11.9"
 pre-commit = "4.3.0"
