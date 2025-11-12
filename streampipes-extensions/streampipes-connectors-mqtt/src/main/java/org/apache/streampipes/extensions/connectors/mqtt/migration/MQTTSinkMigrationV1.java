@@ -59,23 +59,32 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
         public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
                         IDataSinkParameterExtractor extractor) throws RuntimeException {
 
-                //migrate Topic
+                
+                LOG.info("Start Mig ");
+
+                var staticProps = element.getStaticProperties();
+                // migrate Topic
 
                 var topic = element.getStaticProperties().get(0);
-
-                // SORT THE ITEMS
-                element.getStaticProperties().set(2, topic);
 
 
                 LOG.info("Start Data Mig ");
                 // Migrate DAta from Host +Port + Protocpl to URI
                 migrateData(element);
 
-
                 LOG.info("Data Mig Finished ");
-                // ELIMINATE UNNECSSARY STUFF
 
-             
+                LOG.info("Start Sorting Items  ");
+                // SORT THE ITEMS
+                element.getStaticProperties().set(2, topic);
+                //Remove TLS
+                element.getStaticProperties().remove(4);
+                //Remobve Port 
+                element.getStaticProperties().remove(1);
+
+                LOG.info("FInished Sorting Items  ");
+  
+
                 // change Text
                 /**
                  * var port = (FreeTextStaticProperty) element.getStaticProperties().get(2);
@@ -93,37 +102,38 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                  */
 
                 var tls = element.getStaticProperties().get(30);
+                // Add Certificate Option
                 migrateSecurity((StaticPropertyAlternatives) element.getStaticProperties().get(3));
 
                 return MigrationResult.success(element);
         }
 
-        private String buildBrokerURI(DataSinkInvocation element){
+        private String buildBrokerURI(DataSinkInvocation element) {
 
                 var host = ((FreeTextStaticProperty) element.getStaticProperties().get(1)).getValue();
-                LOG.info("host "+ host )
+                LOG.info("host " + host);
                 var port = ((FreeTextStaticProperty) element.getStaticProperties().get(2)).getValue();
+                LOG.info("port " + port);
                 var encryptionAlternative = ((StaticPropertyAlternatives) element.getStaticProperties().get(4))
                                 .getAlternatives();
-                var encryption = "";
-             for (var i = 0; i < encryptionAlternative.size(); i++) {
+                
+                                var encryption = "";
+                for (var i = 0; i < encryptionAlternative.size(); i++) {
                         StaticPropertyAlternative alternative = encryptionAlternative.get(i);
-                                                                        
-                                                                        
-                        
+
                         if (alternative.getSelected()) {
                                 encryption = alternative.getStaticProperty().getLabel();
                         }
                 }
-                String protocol = "tcp";  
+                String protocol = "tcp";
 
                 if ("SSL".equalsIgnoreCase(encryption)) {
-                        protocol = "ssl"; 
+                        protocol = "ssl";
                 }
 
                 var brokerUri = protocol + "://" + host + ":" + port;
 
-                LOG.info("broker uri "+ brokerUri )
+                LOG.info("broker uri " + brokerUri);
                 return brokerUri;
 
         }
@@ -132,9 +142,9 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
 
                 var brokerUri = buildBrokerURI(element);
 
-                var broker =   StaticProperties.stringFreeTextProperty(Labels.withId(BROKER),brokerUri);
+                var broker = StaticProperties.stringFreeTextProperty(Labels.withId(BROKER), brokerUri);
 
-                element.getStaticProperties().set(0, broker);               
+                element.getStaticProperties().set(0, broker);
 
         }
 
