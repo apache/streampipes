@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
+import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Alternatives;
@@ -27,12 +28,15 @@ import org.apache.streampipes.sdk.helpers.Labels;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
 
 public class MqttConnectUtils {
 
   /**
    * Keys of user configuration parameters
    */
+  //Adapter
   public static final String ACCESS_MODE = "access-mode";
   public static final String ANONYMOUS_ACCESS = "anonymous-alternative";
   public static final String USERNAME_ACCESS = "username-alternative";
@@ -45,6 +49,21 @@ public class MqttConnectUtils {
   public static final String CLIENTKEY = "clientkey";
   public static final String BROKER_URL = "broker_url";
   public static final String TOPIC = "topic";
+//Pubisher
+  public static final String QOS_LEVEL_KEY = "qos-level";
+  public static final String CLEAN_SESSION_KEY = "clean-session";
+  public static final String WILL_RETAIN = "will-retain";
+  public static final String RECONNECT_PERIOD_IN_SEC = "reconnect-period";
+  public static final String WILL_MODE = "lwt-mode";
+  public static final String NO_WILL_ALTERNATIVE = "no-lwt-alternative";
+    public static final String WILL_ALTERNATIVE = "lwt-alternative";
+    public static final String WILL_GROUP = "lwt-group";
+    public static final String WILL_TOPIC = "lwt-topic";
+    public static final String WILL_MESSAGE = "lwt-message";
+    public static final String WILL_QOS = "lwt-qos-level";
+    public static final String RETAIN = "retain";
+    public static final String KEEP_ALIVE_IN_SEC = "keep-alive";
+    public static final String MQTT_COMPLIANT = "mqtt-version-compliant";
 
   public static Label getAccessModeLabel() {
     return Labels.withId(ACCESS_MODE);
@@ -58,17 +77,65 @@ public class MqttConnectUtils {
     return Labels.withId(TOPIC);
   }
 
-  public static StaticPropertyAlternative getAlternativesOne() {
+  public static Label getQosLevelLabel() {
+    return Labels.withId(QOS_LEVEL_KEY);
+  }
+    public static Label getRetainLabel() {
+    return Labels.withId(RETAIN);
+  }
+
+    public static Label getCleanSessionLabel() {
+    return Labels.withId(CLEAN_SESSION_KEY);
+  }
+    public static Label getReconnectPeriodLabel() {
+    return Labels.withId(RECONNECT_PERIOD_IN_SEC);
+  }
+
+      public static Label getKeepAliveLabel() {
+    return Labels.withId(KEEP_ALIVE_IN_SEC);
+  }
+
+      public static Label getMqttComplient() {
+    return Labels.withId(MQTT_COMPLIANT);
+  }
+
+      public static Label getWillModeLabel() {
+    return Labels.withId(WILL_MODE);
+  }
+
+
+  public static StaticPropertyAlternative getNoWillAlternative(){
+    return Alternatives.from(Labels.withId(NO_WILL_ALTERNATIVE), true);
+  }
+
+  public static StaticPropertyAlternative getWillAlternative(){
+    return Alternatives.from(Labels.withId(WILL_ALTERNATIVE),
+                                        StaticProperties.group(Labels.withId(WILL_GROUP),
+                                                StaticProperties.stringFreeTextProperty(Labels.withId(WILL_TOPIC)),
+                                                StaticProperties.stringFreeTextProperty(Labels.withId(WILL_MESSAGE)),
+                                                StaticProperties.singleValueSelection(Labels.withId(WILL_RETAIN),
+                                                        Arrays.asList(
+                                                                new Option("Yes", false),
+                                                                new Option("No", true))),
+                                                StaticProperties.singleValueSelection(
+                                                        Labels.withId(WILL_QOS),
+                                                        Arrays.asList(
+                                                                new Option("0 - at-most-once", true),
+                                                                new Option("1 - at-least-once", false),
+                                                                new Option("2 - exactly-once", false)))))
+  }
+
+  public static StaticPropertyAlternative getAnonymousAccess() {
     return Alternatives.from(Labels.withId(ANONYMOUS_ACCESS));
 
   }
 
-  public static StaticPropertyAlternative getAlternativesOne(boolean selected) {
+  public static StaticPropertyAlternative getAnonymousAccess(boolean selected) {
     return Alternatives.from(Labels.withId(ANONYMOUS_ACCESS), selected);
 
   }
 
-  public static StaticPropertyAlternative getAlternativesTwo() {
+  public static StaticPropertyAlternative getUsernameAccess() {
     return Alternatives.from(Labels.withId(USERNAME_ACCESS),
         StaticProperties.group(Labels.withId(USERNAME_GROUP),
             StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
@@ -76,7 +143,37 @@ public class MqttConnectUtils {
 
   }
 
-  public static StaticPropertyAlternative getAlternativesThree() {
+  public static List<Option> getQOSLevelSelection(){
+    return Arrays.asList(
+                                        new Option("0 - at-most-once", false),
+                                        new Option("1 - at-least-once", true),
+                                        new Option("2 - exactly-once", false));
+  }
+
+
+  public static List<Option> getRetainSelection(){
+    return Arrays.asList(
+                                        new Option("Yes", false),
+                                        new Option("No", true));
+  }
+
+
+
+  public static List<Option> getCleanSessionSelection(){
+     return Arrays.asList(
+                                        new Option("Yes", true),
+                                        new Option("No", false));
+  }
+
+
+  public static List<Option> getMqttSelection(){
+     return Arrays.asList(
+                                        new Option("Yes", true),
+                                        new Option("No", false));
+  }
+  
+
+  public static StaticPropertyAlternative getClientCertAccess() {
     var group = StaticProperties.group(
         Labels.withId(CLIENT_CERT_GROUP),
         StaticProperties.stringFreeTextProperty(Labels.withId(CLIENTCERT), true, false),

@@ -21,20 +21,24 @@ import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 
 import org.fusesource.mqtt.client.QoS;
 
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_MODE;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.BROKER;
+
+//TODO FIx this 
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.*:
+
+//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE;
+//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_MODE;
+//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.BROKER;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLEAN_SESSION_KEY;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_CERT;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_KEY;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.KEEP_ALIVE_IN_SEC;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.MQTT_COMPLIANT;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.PASSWORD;
+//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.PASSWORD;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.QOS_LEVEL_KEY;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.RECONNECT_PERIOD_IN_SEC;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.RETAIN;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.TOPIC;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.USERNAME;
+//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.TOPIC;
+//import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.USERNAME;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_ALTERNATIVE;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_MESSAGE;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_MODE;

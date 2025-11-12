@@ -22,64 +22,32 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
 import org.apache.streampipes.extensions.connectors.mqtt.sink.common.MqttClient;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
-import org.apache.streampipes.sdk.helpers.Alternatives;
-import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-
-import java.util.Arrays;
 
 public class MqttPublisherSink implements IStreamPipesDataSink {
     //TODO is this right ? 
+    //TODO insead of MQTT Option use MQTTConnectUtils
     public static final String ID = "org.apache.streampipes.sinks.brokers.jvm.mqtt";
 
     private static final int DEFAULT_MQTT_PORT = 1883;
     private static final int DEFAULT_RECONNECT_PERIOD = 30;
     private static final int DEFAULT_KEEP_ALIVE = 30;
 
-    public static final String TOPIC = "topic";
-    public static final String BROKER = "broker";
-    public static final String AUTH_MODE = "auth-mode";
-    public static final String NO_AUTH_ALTERNATIVE = "no-auth-alternative";
-    public static final String AUTH_ALTERNATIVE = "basic-auth-alternative";
-    public static final String USERNAME_GROUP = "username-group";
-    public static final String USERNAME = "username";
-    public static final String PASSWORD = "password";
-    public static final String QOS_LEVEL_KEY = "qos-level";
-    public static final String CLEAN_SESSION_KEY = "clean-session";
-    public static final String WILL_RETAIN = "will-retain";
-    public static final String RECONNECT_PERIOD_IN_SEC = "reconnect-period";
-    public static final String WILL_MODE = "lwt-mode";
-    public static final String NO_WILL_ALTERNATIVE = "no-lwt-alternative";
-    public static final String WILL_ALTERNATIVE = "lwt-alternative";
-    public static final String WILL_GROUP = "lwt-group";
-    public static final String WILL_TOPIC = "lwt-topic";
-    public static final String WILL_MESSAGE = "lwt-message";
-    public static final String WILL_QOS = "lwt-qos-level";
-    public static final String RETAIN = "retain";
-    public static final String KEEP_ALIVE_IN_SEC = "keep-alive";
-    public static final String MQTT_COMPLIANT = "mqtt-version-compliant";
-    public static final String CLIENT_CERT = "client-cert";
-    public static final String CLIENT_KEY = "client-key";
-    public static final String AUTH_ALTERNATIVE_CERT = "cert-auth-alternative";
-    public static final String CERT_GROUP = "cert-group";
 
     private MqttClient mqttClient;
+//TODO Only necessary for consumer 
+    //private MqttConfig mqttConfig;
 
     @Override
     public IDataSinkConfiguration declareConfig() {
-                    var group =  StaticProperties.group(Labels.withId(CERT_GROUP),
-                                                StaticProperties.stringFreeTextProperty(Labels.withId(CLIENT_CERT), true, false),
-                                                StaticProperties.secretValue(Labels.withId(CLIENT_KEY)));
-                     group.setHorizontalRendering(false);
         return DataSinkConfiguration.create(
                 MqttPublisherSink::new,
                 DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.mqtt", 1)
@@ -87,64 +55,28 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
                         .withLocales(Locales.EN)
                         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
                         .requiredStream(StreamRequirementsBuilder.any())   
-                        .requiredTextParameter(Labels.withId(BROKER))
-                        //.requiredIntegerParameter(Labels.withId(PORT), DEFAULT_MQTT_PORT)
+                         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
+        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAnonymousAccess(),
+            MqttConnectUtils.getUsernameAccess(),  MqttConnectUtils.getClientCertAccess())
+        .requiredTextParameter(MqttConnectUtils.getTopicLabel())
+                        .requiredSingleValueSelection(
+                                MqttConnectUtils.getQosLevelLabel(),
+                                MqttConnectUtils.getQOSLevelSelection())
+                        .requiredSingleValueSelection(
+                                MqttConnectUtils.getRetainLabel(),
+                               MqttConnectUtils.getRetainSelection())
+                        .requiredSingleValueSelection(
+                                MqttConnectUtils.getCleanSessionLabel(),
+                                MqttConnectUtils.getCleanSessionSelection())
+                        .requiredIntegerParameter(MqttConnectUtils.getReconnectPeriodLabel(), DEFAULT_RECONNECT_PERIOD)
+                        .requiredIntegerParameter(MqttConnectUtils.getKeepAliveLabel(), DEFAULT_KEEP_ALIVE)
+                        .requiredSingleValueSelection(
+                                MqttConnectUtils.getMqttComplient(),
+                                MqttConnectUtils.getMqttSelection())
                         .requiredAlternatives(
-                                Labels.withId(AUTH_MODE),
-                                Alternatives.from(Labels.withId(NO_AUTH_ALTERNATIVE), true),
-                                Alternatives.from(Labels.withId(AUTH_ALTERNATIVE),
-                                        StaticProperties.group(Labels.withId(USERNAME_GROUP),
-                                                StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
-                                                StaticProperties.secretValue(Labels.withId(PASSWORD)))),
-                                Alternatives.from(Labels.withId(AUTH_ALTERNATIVE_CERT),
-                                     group))
-                         .requiredTextParameter(Labels.withId(TOPIC))
-                        //.requiredSingleValueSelection(
-                        //        Labels.withId(ENCRYPTION_MODE),
-                        //        Arrays.asList(
-                        //                new Option("TCP", true),
-                                        // SSL not yet supported
-                        //                new Option("SSL/TLS", false)))
-                        .requiredSingleValueSelection(
-                                Labels.withId(QOS_LEVEL_KEY),
-                                Arrays.asList(
-                                        new Option("0 - at-most-once", false),
-                                        new Option("1 - at-least-once", true),
-                                        new Option("2 - exactly-once", false)))
-                        .requiredSingleValueSelection(
-                                Labels.withId(RETAIN),
-                                Arrays.asList(
-                                        new Option("Yes", false),
-                                        new Option("No", true)))
-                        .requiredSingleValueSelection(
-                                Labels.withId(CLEAN_SESSION_KEY),
-                                Arrays.asList(
-                                        new Option("Yes", true),
-                                        new Option("No", false)))
-                        .requiredIntegerParameter(Labels.withId(RECONNECT_PERIOD_IN_SEC), DEFAULT_RECONNECT_PERIOD)
-                        .requiredIntegerParameter(Labels.withId(KEEP_ALIVE_IN_SEC), DEFAULT_KEEP_ALIVE)
-                        .requiredSingleValueSelection(
-                                Labels.withId(MQTT_COMPLIANT),
-                                Arrays.asList(
-                                        new Option("Yes", true),
-                                        new Option("No", false)))
-                        .requiredAlternatives(
-                                Labels.withId(WILL_MODE),
-                                Alternatives.from(Labels.withId(NO_WILL_ALTERNATIVE), true),
-                                Alternatives.from(Labels.withId(WILL_ALTERNATIVE),
-                                        StaticProperties.group(Labels.withId(WILL_GROUP),
-                                                StaticProperties.stringFreeTextProperty(Labels.withId(WILL_TOPIC)),
-                                                StaticProperties.stringFreeTextProperty(Labels.withId(WILL_MESSAGE)),
-                                                StaticProperties.singleValueSelection(Labels.withId(WILL_RETAIN),
-                                                        Arrays.asList(
-                                                                new Option("Yes", false),
-                                                                new Option("No", true))),
-                                                StaticProperties.singleValueSelection(
-                                                        Labels.withId(WILL_QOS),
-                                                        Arrays.asList(
-                                                                new Option("0 - at-most-once", true),
-                                                                new Option("1 - at-least-once", false),
-                                                                new Option("2 - exactly-once", false))))))
+                                MqttConnectUtils.getWillModeLabel(),
+                                MqttConnectUtils.getNoWillAlternative(),
+                               MqttConnectUtils.getWillAlternative())
                         .build());
     }
 
