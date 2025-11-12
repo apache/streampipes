@@ -120,6 +120,7 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                                 var encryption = "";
                 for (var i = 0; i < encryptionAlternative.size(); i++) {
                         StaticPropertyAlternative alternative = encryptionAlternative.get(i);
+                        LOG.info("alternative " + alternative);
 
                         if (alternative.getSelected()) {
                                 encryption = alternative.getStaticProperty().getLabel();
