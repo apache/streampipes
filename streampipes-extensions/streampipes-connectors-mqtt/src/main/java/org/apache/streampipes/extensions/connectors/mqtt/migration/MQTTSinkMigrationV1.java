@@ -31,9 +31,6 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.helpers.Labels;
-
-import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.BROKER_URL;
 
 public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
 

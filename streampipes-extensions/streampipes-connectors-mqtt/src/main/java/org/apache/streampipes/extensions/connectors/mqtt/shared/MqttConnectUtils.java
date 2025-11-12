@@ -21,6 +21,7 @@ package org.apache.streampipes.extensions.connectors.mqtt.shared;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+import org.apache.streampipes.extensions.connectors.mqtt.migration.MQTTSinkMigrationV1;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -29,6 +30,8 @@ import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
 
 import org.fusesource.mqtt.client.QoS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -279,10 +282,15 @@ public class MqttConnectUtils {
     return value * 1000;
   }
 
+      private static final Logger LOG = LoggerFactory.getLogger(MqttConnectUtils.class);
+
   public static MqttConfig extractDataSinkParams(IDataSinkParameters params) {
     // TODO Is there any better place to put this?
 
     var extract = params.extractor();
+
+    LOG.info(BROKER_URL);
+
     MqttConfig mqttConfig = new MqttConfig(
         extract.singleValueParameter(BROKER_URL, String.class),
         extract.singleValueParameter(TOPIC, String.class));
