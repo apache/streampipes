@@ -82,8 +82,8 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
-            MqttConnectUtils.getAlternativesTwo())
+        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAnonymousAccess(),
+            MqttConnectUtils.getUsernameAccess())
         .requiredMultiValueSelection(Labels.withId(PORTS),
             Options.from("Port 1", "Port 2", "Port 3", "Port 4"))
         .requiredSingleValueSelection(Labels.withId(SENSOR_TYPE),

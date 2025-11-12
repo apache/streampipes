@@ -19,6 +19,7 @@ package org.apache.streampipes.extensions.connectors.mqtt.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
@@ -29,7 +30,6 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 
 import org.slf4j.Logger;
@@ -37,11 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE_CERT;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.BROKER;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CERT_GROUP;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_CERT;
-import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLIENT_KEY;
+import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.BROKER_URL;
 
 public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
 
@@ -130,7 +126,7 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
 
                 var brokerUri = buildBrokerURI(element);
 
-                var broker = StaticProperties.stringFreeTextProperty(Labels.withId(BROKER), brokerUri);
+                var broker = StaticProperties.stringFreeTextProperty(Labels.withId(BROKER_URL), brokerUri);
 
                 element.getStaticProperties().set(0, broker);
 
@@ -142,15 +138,8 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
         }
 
         private void migrateGroup(List<StaticPropertyAlternative> alternatives) {
-                 LOG.info("GROUOP");
-                var group = StaticProperties.group(Labels.withId(CERT_GROUP),
-                                StaticProperties.stringFreeTextProperty(Labels.withId(CLIENT_CERT), true, false),
-                                StaticProperties.secretValue(Labels.withId(CLIENT_KEY)));
-                 LOG.info("Horitzonatl");
-                group.setHorizontalRendering(false);
-                 LOG.info("Add");
-                alternatives.add(Alternatives.from(Labels.withId(AUTH_ALTERNATIVE_CERT),
-                                group));
+ 
+                alternatives.add(MqttConnectUtils.getClientCertAccess());
 
         }
 
