@@ -64,7 +64,7 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                 
                 LOG.info("Start Mig ");
 
-                var staticProps = element.getStaticProperties();
+               
                 // migrate Topic
 
                 var topic = element.getStaticProperties().get(0);
@@ -85,29 +85,13 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                 element.getStaticProperties().remove(1);
 
                 LOG.info("FInished Sorting Items  ");
+
+                 var staticProps = element.getStaticProperties();
   
-
-                // change Text
-                /**
-                 * var port = (FreeTextStaticProperty) element.getStaticProperties().get(2);
-                 * port.setDescription(
-                 * "Port of MQTT broker (default 1883, for TLS often 8883)");
-                 * element.getStaticProperties().set(2, port);
-                 */
-
-                // change Text
-                /**
-                 * var tls = element.getStaticProperties().get(30);
-                 * tls.setDescription(
-                 * "Select protocol. TCP (plaintext), SSL/TLS (encrypted)");
-                 * element.getStaticProperties().set(4, tls);
-                 */
-
-                var tls = element.getStaticProperties().get(30);
                 // Add Certificate Option
-                migrateSecurity((StaticPropertyAlternatives) element.getStaticProperties().get(3));
+                migrateSecurity((StaticPropertyAlternatives) element.getStaticProperties().get(2));
 
-                return MigrationResult.failure(element, "No success");
+                return MigrationResult.success(element);
 
                 //return MigrationResult.success(element);
         }
@@ -155,14 +139,18 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
         }
 
         private void migrateSecurity(StaticPropertyAlternatives securityAlternatives) {
+                LOG.info("Get Alternative");
                 migrateGroup(securityAlternatives.getAlternatives());
         }
 
         private void migrateGroup(List<StaticPropertyAlternative> alternatives) {
+                 LOG.info("GROUOP");
                 var group = StaticProperties.group(Labels.withId(CERT_GROUP),
                                 StaticProperties.stringFreeTextProperty(Labels.withId(CLIENT_CERT), true, false),
                                 StaticProperties.secretValue(Labels.withId(CLIENT_KEY)));
+                 LOG.info("Horitzonatl");
                 group.setHorizontalRendering(false);
+                 LOG.info("Add");
                 alternatives.add(Alternatives.from(Labels.withId(AUTH_ALTERNATIVE_CERT),
                                 group));
 
