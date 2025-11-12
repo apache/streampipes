@@ -80,7 +80,7 @@ public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
     }
 
     private void migrateGroup(List<StaticPropertyAlternative> alternatives) {
-        alternatives.add(MqttConnectUtils.getAlternativesThree());
+        alternatives.add(MqttConnectUtils.getClientCertAccess());
 
     }
 

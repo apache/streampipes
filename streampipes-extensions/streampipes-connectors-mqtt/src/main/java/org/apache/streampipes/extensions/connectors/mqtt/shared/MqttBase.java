@@ -45,7 +45,7 @@ public class MqttBase {
         this.mqttConfig = mqttConfig;
     }
 
-    MQTT setupMqttClient() throws Exception {
+    protected MQTT setupMqttClient() throws Exception {
         MQTT mqtt = new MQTT();
         mqtt.setHost(mqttConfig.getUrl());
         mqtt.setConnectAttemptsMax(1);
