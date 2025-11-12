@@ -142,6 +142,9 @@ services:
     volumes:
       - kafka3:/var/lib/kafka/data
     logging: *default-logging
+    networks:
+      spnet:
+
 
 volumes:
   kafka3:
