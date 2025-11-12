@@ -18,9 +18,8 @@
 org.apache.streampipes.sinks.brokers.jvm.mqtt.title=MQTT Publisher
 org.apache.streampipes.sinks.brokers.jvm.mqtt.description=Publishes events to a MQTT topic
 
-broker.title=Broker URL
-broker.description=Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)"
-
+broker_url.title=Broker URL
+broker_url.description=Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)"
 topic.title=Topic
 topic.description=Enter MQTT topic
 
@@ -30,23 +29,27 @@ username.description=The username to authenticate with the broker
 password.title=Password
 password.description=The password to authenticate with the broker
 
-client-cert.title=Certificate PEM
-client-cert.description = Public key in PEM format
+clientcert.title=Certificate PEM
+clientcert.description = Public key in PEM format
 
-client-key.title=Private Key PEM
-client-key.description=Private key in PEM format
+clientkey.title=Private Key PEM
+clientkey.description=Private key in PEM format
 
-auth-mode.title=Authentication
-auth-mode.description=Unauthenticated or basic auth
+access-mode.title=User Authentication
+access-mode.description=Choose an authentication method for the user
 
-no-auth-alternative.title=Unauthenticated
-no-auth-alternative.description=No authentication
 
-basic-auth-alternative.title=Username/Password
-basic-auth-alternative.description=Username and password
+anonymous-alternative.title=Unauthenticated
+anonymous-alternative.description=
 
-cert-auth-alternative.title=Client Certificate
-cert-auth-alternative.description=Certificate and Key, only works in combination with SSL/TLS.
+username-alternative.title=Username/Password
+username-alternative.description=
+
+username-group.title=User Group
+username-group.description=
+
+client-cert-alternative.title= Client Certificate
+client-cert-alternative.description=
 
 username-group.title=Username and password
 
