@@ -30,6 +30,7 @@ import {
     CurrentUserService,
     DialogRef,
     DialogService,
+    ObjectPermissionDialogComponent,
     PanelType,
     SpAssetBrowserService,
     SpBreadcrumbService,
@@ -38,8 +39,6 @@ import {
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
 import { MatSort } from '@angular/material/sort';
-import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
-import { UserRole } from '../../../_enums/user-role.enum';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
@@ -77,7 +76,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     dataSource: MatTableDataSource<AdapterDescription> =
         new MatTableDataSource();
-    isAdmin = false;
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
     tutorialActive = false;
@@ -114,7 +112,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             this.breadcrumbService.getRootLink(SpConnectRoutes.BASE),
         );
         this.user$ = this.currentUserService.user$.subscribe(user => {
-            this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
             this.getAdaptersRunning();
         });
         this.tutorial$ = this.shepherdService.tutorialActive$.subscribe(

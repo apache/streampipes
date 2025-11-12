@@ -30,7 +30,6 @@ import { PipelineOperationsService } from '../../services/pipeline-operations.se
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { AuthService } from '../../../services/auth.service';
-import { UserRole } from '../../../_enums/user-role.enum';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { Subscription } from 'rxjs';
@@ -61,8 +60,6 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
 
     starting: any;
     stopping: any;
-
-    isAdmin = false;
     hasPipelineWritePrivileges = false;
 
     userSub: Subscription;
@@ -78,7 +75,6 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.userSub = this.currentUserService.user$.subscribe(user => {
-            this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );

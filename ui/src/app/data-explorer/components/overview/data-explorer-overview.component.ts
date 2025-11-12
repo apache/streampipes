@@ -26,7 +26,6 @@ import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
 import { SpDataExplorerDataViewOverviewComponent } from './data-explorer-overview-table/data-explorer-overview-table.component';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { UserRole } from '../../../_enums/user-role.enum';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -40,8 +39,6 @@ export class DataExplorerOverviewComponent implements OnInit, OnDestroy {
     chartsOverview: SpDataExplorerDataViewOverviewComponent;
 
     auth$: Subscription;
-
-    isAdmin = false;
     hasDataExplorerWritePrivileges = false;
 
     private breadcrumbService = inject(SpBreadcrumbService);
@@ -57,7 +54,6 @@ export class DataExplorerOverviewComponent implements OnInit, OnDestroy {
             this.hasDataExplorerWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
             );
-            this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
         });
     }
 

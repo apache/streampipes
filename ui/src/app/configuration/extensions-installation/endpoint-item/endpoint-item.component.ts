@@ -25,8 +25,11 @@ import {
     ExtensionItemInstallationRequest,
 } from '@streampipes/platform-services';
 import { AppConstants } from '../../../services/app.constants';
-import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    DialogService,
+    ObjectPermissionDialogComponent,
+    PanelType,
+} from '@streampipes/shared-ui';
 import { ExtensionsInstallationService } from '../extensions-installation.service';
 import { TranslateService } from '@ngx-translate/core';
 

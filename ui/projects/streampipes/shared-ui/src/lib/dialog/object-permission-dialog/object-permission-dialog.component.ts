@@ -17,8 +17,15 @@
  */
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    Component,
+    ElementRef,
+    inject,
+    Input,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
+import { DialogRef } from '../base-dialog/dialog-ref';
 import {
     UntypedFormBuilder,
     UntypedFormControl,
@@ -30,13 +37,13 @@ import {
     Permission,
     PermissionEntry,
     PermissionsService,
-    ServiceAccount,
-    UserAccount,
-    UserAdminService,
+    PrincipalType,
+    ShortUserInfo,
     UserGroupService,
+    UserService,
 } from '@streampipes/platform-services';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Observable, zip } from 'rxjs';
+import { combineLatest, Observable, shareReplay, zip } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { map, startWith } from 'rxjs/operators';
 
@@ -65,33 +72,29 @@ export class ObjectPermissionDialogComponent implements OnInit {
 
     permission: Permission;
 
-    owner: UserAccount | ServiceAccount;
-    grantedUserAuthorities: (UserAccount | ServiceAccount)[];
-    grantedGroupAuthorities: Group[];
+    owner: ShortUserInfo;
+    grantedUserAuthorities: ShortUserInfo[] = [];
+    grantedGroupAuthorities: Group[] = [];
 
-    allUsers: (UserAccount | ServiceAccount)[];
+    allUsers: ShortUserInfo[];
     allGroups: Group[];
 
-    filteredUsers: Observable<(UserAccount | ServiceAccount)[]>;
-    filteredGroups: Observable<Group[]>;
+    filteredUsers$: Observable<ShortUserInfo[]>;
+    filteredGroups$: Observable<Group[]>;
 
-    usersLoaded = false;
+    loading = true;
+    permissionDenied = false;
 
     @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
     @ViewChild('groupInput') groupInput: ElementRef<HTMLInputElement>;
     userCtrl = new UntypedFormControl();
     groupCtrl = new UntypedFormControl();
 
-    constructor(
-        private fb: UntypedFormBuilder,
-        private dialogRef: DialogRef<ObjectPermissionDialogComponent>,
-        private permissionsService: PermissionsService,
-        private userAdminService: UserAdminService,
-        private groupService: UserGroupService,
-    ) {
-        this.grantedGroupAuthorities = [];
-        this.grantedUserAuthorities = [];
-    }
+    private fb = inject(UntypedFormBuilder);
+    private dialogRef = inject(DialogRef<ObjectPermissionDialogComponent>);
+    private permissionsService = inject(PermissionsService);
+    private userService = inject(UserService);
+    private groupService = inject(UserGroupService);
 
     ngOnInit(): void {
         this.loadUsersAndGroups();
@@ -99,20 +102,26 @@ export class ObjectPermissionDialogComponent implements OnInit {
     }
 
     loadUsersAndGroups() {
+        this.loading = true;
         zip(
-            this.userAdminService.getAllUserAccounts(),
-            this.userAdminService.getAllServiceAccounts(),
+            this.userService.listUsers(true),
             this.groupService.getAllUserGroups(),
             this.permissionsService.getPermissionsForObject(
                 this.objectInstanceId,
             ),
-        ).subscribe(results => {
-            this.allUsers = results[0];
-            this.allUsers.concat(results[1]);
-            this.allGroups = results[2];
-            this.processPermissions(results[3]);
-            this.usersLoaded = true;
-        });
+        ).subscribe(
+            results => {
+                this.allUsers = results[0];
+                this.allGroups = results[1];
+                this.processPermissions(results[2]);
+                this.permissionDenied = false;
+                this.loading = false;
+            },
+            error => {
+                this.permissionDenied = true;
+                this.loading = false;
+            },
+        );
     }
 
     processPermissions(permissions: Permission[]) {
@@ -138,18 +147,24 @@ export class ObjectPermissionDialogComponent implements OnInit {
                     new UntypedFormControl(this.permission.readAnonymous),
                 );
             }
-            this.filteredUsers = this.userCtrl.valueChanges.pipe(
-                startWith(null),
-                map((username: string | null) => {
-                    return username
-                        ? this._filter(username)
-                        : this.allUsers
-                              .filter(u => !this.isOwnerOrAdded(u))
-                              .slice();
+            this.filteredUsers$ = combineLatest([
+                this.userCtrl.valueChanges.pipe(startWith(null)),
+                this.parentForm
+                    .get('owner')!
+                    .valueChanges.pipe(
+                        startWith(this.parentForm.get('owner')!.value),
+                    ),
+            ]).pipe(
+                map(([username]) => {
+                    const base = this.allUsers.filter(
+                        u => !this.isOwnerOrAdded(u),
+                    );
+                    return username ? this._filter(username) : base.slice();
                 }),
+                shareReplay({ bufferSize: 1, refCount: true }),
             );
 
-            this.filteredGroups = this.groupCtrl.valueChanges.pipe(
+            this.filteredGroups$ = this.groupCtrl.valueChanges.pipe(
                 startWith(null),
                 map((groupName: string | null) => {
                     return groupName
@@ -188,7 +203,10 @@ export class ObjectPermissionDialogComponent implements OnInit {
 
         this.permission.grantedAuthorities = this.grantedUserAuthorities
             .map(u => {
-                return { principalType: u.principalType, sid: u.principalId };
+                return {
+                    principalType: u.principalType as PrincipalType,
+                    sid: u.principalId,
+                };
             })
             .concat(
                 this.grantedGroupAuthorities.map(g => {
@@ -206,7 +224,7 @@ export class ObjectPermissionDialogComponent implements OnInit {
         this.dialogRef.close(refresh);
     }
 
-    removeUser(user: UserAccount | ServiceAccount) {
+    removeUser(user: ShortUserInfo) {
         const currentIndex = this.grantedUserAuthorities.findIndex(
             u => u.principalId === user.principalId,
         );
@@ -256,15 +274,14 @@ export class ObjectPermissionDialogComponent implements OnInit {
         this.grantedGroupAuthorities.push(group);
     }
 
-    private _filter(value: any): (UserAccount | ServiceAccount)[] {
-        const isUserAccount =
-            value instanceof UserAccount || value instanceof ServiceAccount;
+    private _filter(value: any): ShortUserInfo[] {
+        const isUserAccount = value instanceof ShortUserInfo;
         const filterValue = isUserAccount
-            ? value.username.toLowerCase()
+            ? value.email.toLowerCase()
             : value.toLowerCase();
         return this.allUsers.filter(u => {
             return (
-                u.username.toLowerCase().startsWith(filterValue) &&
+                u.email.toLowerCase().startsWith(filterValue) &&
                 !this.isOwnerOrAdded(u)
             );
         });
@@ -283,9 +300,9 @@ export class ObjectPermissionDialogComponent implements OnInit {
         });
     }
 
-    private isOwnerOrAdded(user: UserAccount | ServiceAccount): boolean {
+    private isOwnerOrAdded(user: ShortUserInfo): boolean {
         return (
-            this.permission.ownerSid === user.principalId ||
+            this.parentForm.get('owner').getRawValue() === user.principalId ||
             this.grantedUserAuthorities.find(
                 authority => authority.principalId === user.principalId,
             ) !== undefined

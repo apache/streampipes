@@ -46,11 +46,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,12 +61,32 @@ import java.util.stream.Collectors;
 public class UserResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<ShortUserInfo>> listUsers() {
-    var users = getUserStorage()
-        .getAllUserAccounts()
+  public ResponseEntity<List<ShortUserInfo>> listUsers(
+      @RequestParam("includeServiceAccounts") boolean includeServiceAccounts
+  ) {
+    var userStorage = getUserStorage();
+
+    var users = userStorage.getAllUserAccounts()
         .stream()
-        .map(u -> ShortUserInfo.create(u.getPrincipalId(), u.getUsername(), u.getFullName()))
-        .collect(Collectors.toList());
+        .map(u -> ShortUserInfo.create(
+            u.getPrincipalId(),
+            u.getUsername(),
+            u.getFullName(),
+            u.getPrincipalType().name())
+        )
+        .collect(Collectors.toCollection(ArrayList::new));
+
+    if (includeServiceAccounts) {
+      var services = userStorage.getAllServiceAccounts()
+          .stream()
+          .map(s -> ShortUserInfo.create(
+              s.getPrincipalId(),
+              s.getUsername(),
+              s.getUsername(),
+              s.getPrincipalType().name()))
+          .toList();
+      users.addAll(services);
+    }
 
     return ok(users);
   }

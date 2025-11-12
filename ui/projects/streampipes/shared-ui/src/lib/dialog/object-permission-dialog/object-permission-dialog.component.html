@@ -17,7 +17,14 @@
   -->
 
 <div class="sp-dialog-container">
-    @if (usersLoaded) {
+    @if (loading) {
+        <div class="sp-dialog-content">
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                <mat-progress-spinner [diameter]="25"></mat-progress-spinner>
+                <h5>{{ 'Loading' | translate }}</h5>
+            </div>
+        </div>
+    } @else if (!permissionDenied) {
         <div class="sp-dialog-content">
             <div fxFlex="100" fxLayout="column" class="p-15">
                 <h4>{{ headerTitle }}</h4>
@@ -32,8 +39,8 @@
                                 <mat-option
                                     *ngFor="let user of allUsers"
                                     [value]="user.principalId"
-                                    >{{ user.username }}</mat-option
-                                >
+                                    >{{ user.email }}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-checkbox
@@ -51,9 +58,9 @@
                                 'Users' | translate
                             }}</span>
                             <mat-form-field color="accent">
-                                <mat-label>{{
-                                    'Authorized Users' | translate
-                                }}</mat-label>
+                                <mat-label
+                                    >{{ 'Authorized Users' | translate }}
+                                </mat-label>
                                 <mat-chip-grid
                                     #chipList
                                     [attr.aria-label]="
@@ -68,7 +75,7 @@
                                         removable="true"
                                         (removed)="removeUser(user)"
                                     >
-                                        {{ user.username }}
+                                        {{ user.email }}
                                         <button matChipRemove>
                                             <mat-icon>cancel</mat-icon>
                                         </button>
@@ -93,14 +100,14 @@
                                 >
                                     <mat-option
                                         *ngFor="
-                                            let user of filteredUsers | async
+                                            let user of filteredUsers$ | async
                                         "
                                         [value]="user"
                                         [attr.data-cy]="
-                                            'user-option-' + user.username
+                                            'user-option-' + user.email
                                         "
                                     >
-                                        {{ user.username }}
+                                        {{ user.email }}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
@@ -112,9 +119,9 @@
                                 'Groups' | translate
                             }}</span>
                             <mat-form-field color="accent">
-                                <mat-label data-cy="authorized-groups-label">{{
-                                    'Authorized Groups' | translate
-                                }}</mat-label>
+                                <mat-label data-cy="authorized-groups-label"
+                                    >{{ 'Authorized Groups' | translate }}
+                                </mat-label>
                                 <mat-chip-grid
                                     #chipList
                                     [attr.aria-label]="
@@ -155,7 +162,7 @@
                                 >
                                     <mat-option
                                         *ngFor="
-                                            let group of filteredGroups | async
+                                            let group of filteredGroups$ | async
                                         "
                                         [value]="group"
                                     >
@@ -211,22 +218,36 @@
                 </form>
             </div>
         </div>
+    } @else {
+        <div class="sp-dialog-content">
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                <mat-icon>block</mat-icon>
+                <h5>
+                    {{
+                        'Only admins and owners can manage permissions for this resource.'
+                            | translate
+                    }}
+                </h5>
+            </div>
+        </div>
     }
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <div fxLayout="row">
-            <button
-                mat-button
-                mat-flat-button
-                color="accent"
-                (click)="save()"
-                style="margin-right: 10px"
-                [disabled]="parentForm.invalid"
-                data-cy="sp-manage-permissions-save"
-            >
-                <i class="material-icons">save</i
-                ><span>&nbsp;{{ 'Save' | translate }}</span>
-            </button>
+            @if (!loading && !permissionDenied) {
+                <button
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    (click)="save()"
+                    style="margin-right: 10px"
+                    [disabled]="parentForm.invalid"
+                    data-cy="sp-manage-permissions-save"
+                >
+                    <i class="material-icons">save</i
+                    ><span>&nbsp;{{ 'Save' | translate }}</span>
+                </button>
+            }
             <button
                 mat-button
                 mat-flat-button

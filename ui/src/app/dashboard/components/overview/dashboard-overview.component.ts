@@ -22,7 +22,6 @@ import {
     CurrentUserService,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.routes';
@@ -40,8 +39,6 @@ import { Subscription } from 'rxjs';
 })
 export class DashboardOverviewComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['name', 'actions'];
-
-    isAdmin = false;
     hasDashboardWritePrivileges = false;
 
     @ViewChild(DashboardOverviewTableComponent)
@@ -61,7 +58,6 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
             this.breadcrumbService.getRootLink(SpDashboardRoutes.BASE),
         );
         this.user$ = this.currentUserService.user$.subscribe(user => {
-            this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
             this.hasDashboardWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );

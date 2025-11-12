@@ -43,9 +43,6 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
     @Input()
     hasDataExplorerWritePrivileges: boolean;
 
-    @Input()
-    admin: boolean;
-
     dataSource = new MatTableDataSource<DataExplorerWidgetModel>();
     displayedColumns: string[] = [
         'name',

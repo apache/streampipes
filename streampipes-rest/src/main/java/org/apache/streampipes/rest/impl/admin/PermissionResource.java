@@ -19,37 +19,61 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.security.AuthConstants;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v2/admin/permissions")
 public class PermissionResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "objects/{objectInstanceId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public List<Permission> getPermissionForObject(@PathVariable("objectInstanceId") String objectInstanceId) {
-    return getSpResourceManager().managePermissions().findForObjectId(objectInstanceId);
-  }
-
-  @PutMapping(path = "{permissionId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public void updatePermission(@PathVariable("permissionId") String permissionId,
-                               @RequestBody Permission permission) {
-    if (permissionId.equals(permission.getPermissionId())) {
-      getSpResourceManager().managePermissions().update(permission);
+    var principalId = getAuthenticatedUserSid();
+    var permission = getSpResourceManager().managePermissions().findForObjectId(objectInstanceId);
+    if (isAdminOrOwner(principalId, permission)) {
+      return permission;
+    } else {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only admins or owners can receive permissions");
     }
   }
 
+  @PutMapping(path = "{permissionId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public void updatePermission(@PathVariable("permissionId") String permissionId,
+                               @RequestBody Permission permission) {
+    var principalId = getAuthenticatedUserSid();
+    var existingPermission = getSpResourceManager().managePermissions().findForObjectId(permission.getObjectInstanceId());
+    if (
+        permissionId.equals(permission.getPermissionId())
+            && isObjectInstanceCorrect(existingPermission, permission)
+            && isAdminOrOwner(principalId, existingPermission)) {
+      getSpResourceManager().managePermissions().update(permission);
+    } else {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only admins or owners can update permissions");
+    }
+  }
 
+  private boolean isAdminOrOwner(String principalId, List<Permission> permission) {
+    if (Objects.isNull(permission) || permission.isEmpty()) {
+      return false;
+    }
+    return isAdminOrHasAnyAuthority()
+        || permission.stream().anyMatch(p -> p.getOwnerSid().equals(principalId));
+  }
+
+  private boolean isObjectInstanceCorrect(List<Permission> existingPermission, Permission permission) {
+    return existingPermission
+        .stream()
+        .anyMatch(p -> p.getPermissionId().equals(permission.getPermissionId()));
+  }
 }

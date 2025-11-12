@@ -55,7 +55,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
 import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-status/pipeline-started-status.component';
-import { ObjectPermissionDialogComponent } from './object-permission-dialog/object-permission-dialog.component';
 import { StaticSlideToggleComponent } from './static-properties/static-slide-toggle/static-slide-toggle.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/static-runtime-resolvable-tree-input/static-runtime-resolvable-tree-input.component';
@@ -164,7 +163,6 @@ import { TextFieldModule } from '@angular/cdk/text-field';
     declarations: [
         ConfigurationCodePanelComponent,
         DisplayRecommendedPipe,
-        ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
         PipelineElementTemplateConfigItemComponent,
         PipelineElementTemplatePipe,

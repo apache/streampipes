@@ -47,9 +47,6 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     @Input()
     hasDashboardWritePrivileges: boolean;
 
-    @Input()
-    admin: boolean;
-
     dataSource = new MatTableDataSource<Dashboard>();
     displayedColumns: string[] = [
         'name',
