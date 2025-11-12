@@ -282,14 +282,11 @@ public class MqttConnectUtils {
     return value * 1000;
   }
 
-      private static final Logger LOG = LoggerFactory.getLogger(MqttConnectUtils.class);
 
   public static MqttConfig extractDataSinkParams(IDataSinkParameters params) {
     // TODO Is there any better place to put this?
 
     var extract = params.extractor();
-
-    LOG.info(BROKER_URL);
 
     MqttConfig mqttConfig = new MqttConfig(
         extract.singleValueParameter(BROKER_URL, String.class),
