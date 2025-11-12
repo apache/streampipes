@@ -29,6 +29,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
 import java.io.IOException;
+import java.net.URI;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -55,13 +56,22 @@ public class MqttBase {
             mqtt.setPassword(mqttConfig.getPassword());
         }
 
-        if (mqttConfig.getTlsEnabled()) {
+        if (tlsEnabled(new URI(mqttConfig.getUrl()))) {
             configureTls(mqtt);
         }
 
         return mqtt;
     }
 
+
+private static boolean tlsEnabled(URI brokerUri) {
+    String protocol = brokerUri.getScheme();
+    if (protocol == null) {
+      return false;
+    }
+    String proto = protocol.toLowerCase();
+    return proto.equals("ssl") || proto.equals("tls") || proto.equals("mqtts");
+  }
     private void configureTls(MQTT mqtt) throws Exception {
         LOG.info("Configuring TLS for MQTT connection...");
         KeyStore keyStore = null;

@@ -23,7 +23,7 @@ import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
-import org.apache.streampipes.extensions.connectors.mqtt.sink.common.MqttClient;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttPublisher;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
@@ -42,7 +42,7 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
     private static final int DEFAULT_KEEP_ALIVE = 30;
 
 
-    private MqttClient mqttClient;
+    private MqttPublisher mqttClient;
 //TODO Only necessary for consumer 
     //private MqttConfig mqttConfig;
 
@@ -82,7 +82,7 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
 
     @Override
     public void onPipelineStarted(IDataSinkParameters params, EventSinkRuntimeContext runtimeContext) {
-        this.mqttClient = new MqttClient(params);
+        this.mqttClient = new MqttPublisher(params);
         this.mqttClient.connect();
     }
 

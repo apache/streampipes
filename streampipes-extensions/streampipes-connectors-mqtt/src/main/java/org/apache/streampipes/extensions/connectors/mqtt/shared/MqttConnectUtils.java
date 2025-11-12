@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -282,5 +283,72 @@ public class MqttConnectUtils {
   public static long fromSecToMs(Long value) {
     return value * 1000;
   }
+
+public static MqttConfig extractDataSinkParams(IDataSinkParameters params){
+    // TODO Is there any better place to put this?
+
+    var extract = params.extractor();
+    MqttConfig mqttConfig = new MqttConfig(
+        extract.singleValueParameter(BROKER_URL, String.class), 
+        extract.singleValueParameter(TOPIC, String.class)
+    );
+
+    // Set QoS using the setter
+    mqttConfig.setQos(MqttConnectUtils.extractQoSFromString(
+        extract.selectedSingleValue(QOS_LEVEL_KEY, String.class))
+    );
+
+    // Set clientId using MqttConnectUtils
+    String clientId = MqttConnectUtils.runningInstanceId(params.getModel().getElementId());
+
+    // Set reconnect delay max using the setter
+    mqttConfig.setReconnectDelayMaxInMs(MqttConnectUtils
+        .fromSecToMs(extract.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class))
+    );
+
+    // Set keep-alive interval using the setter
+    mqttConfig.setKeepAliveInSec(extract.singleValueParameter(KEEP_ALIVE_IN_SEC, Short.class));
+
+    // Set clean session and retain flags using the setters
+    mqttConfig.setCleanSession(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(CLEAN_SESSION_KEY, String.class)));
+    mqttConfig.setRetain(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(RETAIN, String.class)));
+
+    try {
+        // Set client certificate and key using setters
+        mqttConfig.setClientCertificatePath(extract.singleValueParameter(CLIENTCERT, String.class));
+        mqttConfig.setClientKey(extract.secretValue(CLIENTKEY));
+    } catch (Exception e) {
+        // If error occurs, reset client certificate and key to null
+        mqttConfig.setClientCertificatePath(null);
+        mqttConfig.setClientKey(null);
+    }
+
+    // Set MQTT protocol version if compliant
+    boolean isCompliant = MqttConnectUtils.extractBoolean(extract.selectedSingleValue(MQTT_COMPLIANT, String.class));
+    if (isCompliant) {
+        mqttConfig.setMqttProtocolVersion("3.1.1");
+    }
+
+    // Set access mode and credentials if using basic auth
+    String accessMode = extract.selectedAlternativeInternalId(ACCESS_MODE);
+    if (accessMode.equals(USERNAME_ACCESS)) {
+        mqttConfig.setAuthenticated(true);
+        mqttConfig.setUsername(extract.singleValueParameter(USERNAME, String.class));
+        mqttConfig.setPassword(extract.secretValue(PASSWORD));
+    }
+
+    // Set last will configuration
+    String willMode = extract.selectedAlternativeInternalId(WILL_MODE);
+    if (willMode.equals(WILL_ALTERNATIVE)) {
+        mqttConfig.setLastWill(true);
+        mqttConfig.setWillTopic(extract.singleValueParameter(WILL_TOPIC, String.class));
+        mqttConfig.setWillMessage(extract.singleValueParameter(WILL_MESSAGE, String.class));
+        mqttConfig.setWillQoS(MqttConnectUtils.extractQoSFromString(extract.selectedSingleValue(WILL_QOS, String.class)));
+        mqttConfig.setWillRetain(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(WILL_RETAIN, String.class)));
+    }
+
+    return mqttConfig;
 }
+  }
+
 

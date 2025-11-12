@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
+import org.fusesource.mqtt.client.QoS;
+
 public class MqttConfig {
 
   private Boolean authenticated;
@@ -26,15 +28,26 @@ public class MqttConfig {
   private String username;
   private String password;
 
-  private String clientCertificate;
-  private String clientKey;
+  private String clientCertificate = null;
+  private String clientKey = null;
   private Boolean tls = false;
+
+  private boolean isLastWill = false; // Default: no last will
+  private QoS willQoS = QoS.AT_MOST_ONCE; // Default: QoS 0 (At most once)
+  private Boolean willRetain = false; // Default: do not retain the last will message
+  private String willTopic = ""; // Default: empty topic
+  private String willMessage = ""; // Default: empty message
+  private String mqttProtocolVersion = "3.1"; // Default: MQTT 3.1 protocol
+  private QoS qos = QoS.AT_MOST_ONCE; // Default: QoS 0 (At most once)
+  private long reconnectDelayMaxInMs = 10000L; // Default: max reconnect delay of 10 seconds (in milliseconds)
+  private boolean cleanSession = true; // Default: clean session
+  private boolean retain = false; // Default: do not retain the message
+  private short keepAliveInSec = 60; // Default: keep alive interval of 60 seconds
 
   public MqttConfig(String url, String topic) {
     this.authenticated = false;
     this.url = url;
     this.topic = topic;
-
   }
 
   public MqttConfig(String url, String topic, String username, String password) {
@@ -63,12 +76,44 @@ public class MqttConfig {
     this.tls = tlsEnabled;
   }
 
-  public Boolean getTlsEnabled() {
-    return tls;
+  public Boolean getAuthenticated() {
+    return authenticated;
   }
 
-  public void setTlsEnabled(Boolean tlsEnabled) {
-    this.tls = tlsEnabled;
+  public void setAuthenticated(Boolean authenticated) {
+    this.authenticated = authenticated;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public String getTopic() {
+    return topic;
+  }
+
+  public void setTopic(String topic) {
+    this.topic = topic;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public String getClientCertificatePath() {
@@ -87,23 +132,99 @@ public class MqttConfig {
     this.clientKey = clientKey;
   }
 
-  public Boolean getAuthenticated() {
-    return authenticated;
+  public Boolean getTlsEnabled() {
+    return tls;
   }
 
-  public String getUrl() {
-    return url;
+  public void setTlsEnabled(Boolean tlsEnabled) {
+    this.tls = tlsEnabled;
   }
 
-  public String getTopic() {
-    return topic;
+  public boolean isLastWill() {
+    return isLastWill;
   }
 
-  public String getUsername() {
-    return username;
+  public void setLastWill(boolean lastWill) {
+    this.isLastWill = lastWill;
   }
 
-  public String getPassword() {
-    return password;
+  public QoS getWillQoS() {
+    return willQoS;
+  }
+
+  public void setWillQoS(QoS willQoS) {
+    this.willQoS = willQoS;
+  }
+
+  public Boolean getWillRetain() {
+    return willRetain;
+  }
+
+  public void setWillRetain(Boolean willRetain) {
+    this.willRetain = willRetain;
+  }
+
+  public String getWillTopic() {
+    return willTopic;
+  }
+
+  public void setWillTopic(String willTopic) {
+    this.willTopic = willTopic;
+  }
+
+  public String getWillMessage() {
+    return willMessage;
+  }
+
+  public void setWillMessage(String willMessage) {
+    this.willMessage = willMessage;
+  }
+
+  public String getMqttProtocolVersion() {
+    return mqttProtocolVersion;
+  }
+
+  public void setMqttProtocolVersion(String mqttProtocolVersion) {
+    this.mqttProtocolVersion = mqttProtocolVersion;
+  }
+
+  public QoS getQos() {
+    return qos;
+  }
+
+  public void setQos(QoS qos) {
+    this.qos = qos;
+  }
+
+  public long getReconnectDelayMaxInMs() {
+    return reconnectDelayMaxInMs;
+  }
+
+  public void setReconnectDelayMaxInMs(long reconnectDelayMaxInMs) {
+    this.reconnectDelayMaxInMs = reconnectDelayMaxInMs;
+  }
+
+  public boolean isCleanSession() {
+    return cleanSession;
+  }
+
+  public void setCleanSession(boolean cleanSession) {
+    this.cleanSession = cleanSession;
+  }
+
+  public boolean isRetain() {
+    return retain;
+  }
+
+  public void setRetain(boolean retain) {
+    this.retain = retain;
+  }
+
+  public short getKeepAliveInSec() {
+    return keepAliveInSec;
+  }
+
+  public void setKeepAliveInSec(short keepAliveInSec) {
+    this.keepAliveInSec = keepAliveInSec;
   }
 }
