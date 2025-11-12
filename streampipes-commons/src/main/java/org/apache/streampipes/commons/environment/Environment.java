@@ -125,13 +125,6 @@ public interface Environment {
 
   StringEnvironmentVariable getExtAssetBaseDir();
 
-  // Flink Wrapper
-  StringEnvironmentVariable getFlinkJarFileLoc();
-
-  StringEnvironmentVariable getFlinkJobmanagerHost();
-
-  IntEnvironmentVariable getFlinkJobmanagerPort();
-
   // prometheus
   StringEnvironmentVariable getPrometheusEndpointInclude();
 

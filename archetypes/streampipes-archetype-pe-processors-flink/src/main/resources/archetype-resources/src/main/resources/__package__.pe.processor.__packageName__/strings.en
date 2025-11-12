@@ -1,5 +1,0 @@
-${package}.pe.processor.${packageName}.title=${classNamePrefix}
-${package}.pe.processor.${packageName}.description=Description of data processor
-
-example-key.title=Example Text Parameter
-example-key.description=Example Text Parameter Description

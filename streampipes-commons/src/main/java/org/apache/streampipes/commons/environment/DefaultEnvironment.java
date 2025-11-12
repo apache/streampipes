@@ -243,21 +243,6 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
-  public StringEnvironmentVariable getFlinkJarFileLoc() {
-    return new StringEnvironmentVariable(Envs.SP_FLINK_JAR_FILE_LOC);
-  }
-
-  @Override
-  public StringEnvironmentVariable getFlinkJobmanagerHost() {
-    return new StringEnvironmentVariable(Envs.SP_FLINK_JOBMANAGER_HOST);
-  }
-
-  @Override
-  public IntEnvironmentVariable getFlinkJobmanagerPort() {
-    return new IntEnvironmentVariable(Envs.SP_FLINK_JOBMANAGER_PORT);
-  }
-
-  @Override
   public StringEnvironmentVariable getPrometheusEndpointInclude() {
     return new StringEnvironmentVariable(Envs.SP_PROMETHEUS_ENDPOINT_INCLUDE);
   }
