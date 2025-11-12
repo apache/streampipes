@@ -33,8 +33,6 @@ import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.Locales;
 
 public class MqttPublisherSink implements IStreamPipesDataSink {
-    //TODO is this right ? 
-    //TODO insead of MQTT Option use MQTTConnectUtils
     public static final String ID = "org.apache.streampipes.sinks.brokers.jvm.mqtt";
 
     private static final int DEFAULT_MQTT_PORT = 1883;
@@ -43,8 +41,7 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
 
 
     private MqttPublisher mqttClient;
-//TODO Only necessary for consumer 
-    //private MqttConfig mqttConfig;
+
 
     @Override
     public IDataSinkConfiguration declareConfig() {
