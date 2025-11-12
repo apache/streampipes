@@ -27,19 +27,15 @@ import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils.BROKER_URL;
 
 public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
-
-        private static final Logger LOG = LoggerFactory.getLogger(MQTTSinkMigrationV1.class);
 
         @Override
         public ModelMigratorConfig config() {
@@ -54,54 +50,37 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
         @Override
         public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
                         IDataSinkParameterExtractor extractor) throws RuntimeException {
-
-                LOG.info("Start Mig ");
-
                 // migrate Topic
-
-                var topic = element.getStaticProperties().get(0);
-                topic.setLabel(MqttConnectUtils.getTopicLabel().getLabel());
-                 topic.setInternalName(MqttConnectUtils.getTopicLabel().getInternalId());
-
-                LOG.info("Start Data Mig ");
-                // Migrate DAta from Host +Port + Protocpl to URI
+                var topic = migrateTopicToNewNaming(element.getStaticProperties().get(0));
+                // Migrate DAta from Host +Port + Protocol to URI
                 migrateData(element);
-
-                LOG.info("Data Mig Finished ");
-
-                LOG.info("Start Sorting Items  ");
                 // SORT THE ITEMS
-
                 element.getStaticProperties().set(4, topic);
                 // Remove TLS
                 element.getStaticProperties().remove(2);
-                // Remobve Port
+                // Remove Port
                 element.getStaticProperties().remove(1);
-
-                LOG.info("FInished Sorting Items  ");
-
                 // Add Certificate Option
                 migrateSecurity(element);
-
-                // Migrate Text
-
                 return MigrationResult.success(element);
+        }
+
+        private StaticProperty migrateTopicToNewNaming(StaticProperty topic) {
+                topic.setLabel(MqttConnectUtils.getTopicLabel().getLabel());
+                topic.setInternalName(MqttConnectUtils.getTopicLabel().getInternalId());
+                return topic;
+
         }
 
         private String buildBrokerURI(DataSinkInvocation element) {
 
                 var host = ((FreeTextStaticProperty) element.getStaticProperties().get(1)).getValue();
-                LOG.info("host " + host);
                 var port = ((FreeTextStaticProperty) element.getStaticProperties().get(2)).getValue();
-                LOG.info("port " + port);
                 var encryptionAlternative = ((OneOfStaticProperty) element.getStaticProperties().get(4))
                                 .getOptions();
-                LOG.info("Successfully got encryption Alt");
                 var encryption = "";
                 for (var i = 0; i < encryptionAlternative.size(); i++) {
-                        LOG.info("For LOOP");
                         Option alternative = encryptionAlternative.get(i);
-                        LOG.info("alternative " + alternative);
 
                         if (alternative.isSelected()) {
                                 encryption = alternative.getName();
@@ -114,8 +93,6 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                 }
 
                 var brokerUri = protocol + "://" + host + ":" + port;
-
-                LOG.info("broker uri " + brokerUri);
                 return brokerUri;
 
         }
@@ -133,15 +110,11 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
         private void migrateSecurity(DataSinkInvocation element) {
                 var oldSecurityAlternatives = (StaticPropertyAlternatives) element.getStaticProperties().get(1);
 
-                LOG.info("Get Alternative");
                 var securityAlternative = StaticProperties.alternatives(MqttConnectUtils.getAccessModeLabel(),
                                 MqttConnectUtils.getAnonymousAccess(),
                                 MqttConnectUtils.getUsernameAccess(), MqttConnectUtils.getClientCertAccess());
                 for (var i = 0; i < oldSecurityAlternatives.getAlternatives().size(); i++) {
-                        LOG.info("For LOOP");
                         StaticPropertyAlternative alternative = oldSecurityAlternatives.getAlternatives().get(i);
-                        LOG.info("alternative " + alternative);
-
                         if (alternative.getSelected()) {
                                 securityAlternative.getAlternatives().get(i).setSelected(true);
                         } else {
@@ -149,13 +122,6 @@ public class MQTTSinkMigrationV1 implements IDataSinkMigrator {
                         }
                 }
                 element.getStaticProperties().set(1, securityAlternative);
-                // migrateGroup(securityAlternatives.getAlternatives());
         }
-
-        // private void migrateGroup(List<StaticPropertyAlternative> alternatives) {
-
-        // alternatives.add(MqttConnectUtils.getClientCertAccess());
-
-        // }
 
 }
