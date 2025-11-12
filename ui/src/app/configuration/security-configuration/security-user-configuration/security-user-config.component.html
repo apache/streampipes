@@ -124,7 +124,9 @@
                                 mat-flat-button
                                 [matTooltip]="'Delete user' | translate"
                                 matTooltipPosition="above"
-                                [attr.data-cy]="'user-delete-btn'"
+                                [attr.data-cy]="
+                                    'user-delete-btn-' + account.fullName
+                                "
                                 (click)="deleteUser(account)"
                             >
                                 <i class="material-icons">delete</i>
