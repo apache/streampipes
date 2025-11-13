@@ -29,8 +29,8 @@ import { EventSchemaComponent } from './components/adapter-configuration/schema-
 
 import { MatInputModule } from '@angular/material/input';
 import { AdapterStartedDialog } from './dialog/adapter-started/adapter-started-dialog.component';
-import { AdapterDescriptionComponent } from './components/data-marketplace/adapter-description/adapter-description.component';
-import { DataMarketplaceComponent } from './components/data-marketplace/data-marketplace.component';
+import { AdapterDescriptionComponent } from './components/adapter-catalog/adapter-description/adapter-description.component';
+import { AdapterCatalogComponent } from './components/adapter-catalog/adapter-catalog.component';
 
 import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
 import { TimestampPipe } from './filter/timestamp.pipe';
@@ -62,7 +62,7 @@ import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/compo
 import { SpAdapterOptionsPanelComponent } from './components/adapter-configuration/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
+import { CreateAdapterComponent } from './components/create-adapter/create-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
 import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/schema-editor/event-schema-error-hints/event-schema-error-hints.component';
 import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
@@ -159,12 +159,12 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
                         component: ExistingAdaptersComponent,
                     },
                     {
-                        path: 'create',
-                        component: DataMarketplaceComponent,
+                        path: 'catalog',
+                        component: AdapterCatalogComponent,
                     },
                     {
                         path: 'create/:appId',
-                        component: NewAdapterComponent,
+                        component: CreateAdapterComponent,
                     },
                     {
                         path: 'edit/:elementId',
@@ -212,7 +212,7 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
         AdapterStartedDialog,
         AdapterStatusLightComponent,
         AdapterSettingsComponent,
-        DataMarketplaceComponent,
+        AdapterCatalogComponent,
         DeleteAdapterDialogComponent,
         EventSchemaComponent,
         EditEventPropertyComponent,
@@ -247,7 +247,7 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
         SpAdapterStartedUpdateMigrationComponent,
         SpAdapterTemplateDialogComponent,
         SpConnectFilterToolbarComponent,
-        NewAdapterComponent,
+        CreateAdapterComponent,
         EditAdapterComponent,
         EventSchemaErrorHintsComponent,
         CanNotEditAdapterDialog,
