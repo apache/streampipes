@@ -1,79 +1,87 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div>
-            <div
-                fxFlex="100"
-                class="md-dialog-content"
-                style="padding: 20px"
-                *ngIf="page === 'preview'"
-            >
-                <h4>
-                    {{
-                        action
-                            ? ('You are about to start the following adapters:'
-                              | translate)
-                            : ('You are about to stop the following adapters:'
-                              | translate)
-                    }}
-                </h4>
-                <div *ngFor="let adapter of adaptersToModify">
-                    <h5>{{ adapter.name }}</h5>
-                </div>
-                <h5>
-                    <b>{{
-                        "Press 'Next' to start the process." | translate
-                    }}</b>
-                </h5>
-            </div>
-            <div
-                fxFlex="100"
-                class="md-dialog-content"
-                style="padding: 20px"
-                *ngIf="page === 'running'"
-            >
-                <div *ngFor="let status of actionStatus">
+            @if (page === 'preview') {
+                <div
+                    fxFlex="100"
+                    class="md-dialog-content"
+                    style="padding: 20px"
+                >
                     <h4>
                         {{
                             action
-                                ? ('Starting adapter' | translate)
-                                : ('Stopping adapter' | translate)
-                        }}
-                        {{ status.id + 1 }} {{ 'of' | translate }}
-                        {{ adaptersToModify.length }} ({{ status.name }})...{{
-                            status.status
+                                ? ('You are about to start the following adapters:'
+                                  | translate)
+                                : ('You are about to stop the following adapters:'
+                                  | translate)
                         }}
                     </h4>
+                    @for (adapter of adaptersToModify; track adapter) {
+                        <div>
+                            <h5>{{ adapter.name }}</h5>
+                        </div>
+                    }
+                    <h5>
+                        <b>{{
+                            "Press 'Next' to start the process." | translate
+                        }}</b>
+                    </h5>
                 </div>
-                <div *ngIf="adaptersToModify.length === 0">
-                    <h4>
-                        {{
-                            action
-                                ? ('Sorry, there are no adapters that are currently idle'
-                                  | translate)
-                                : ('Sorry, there are no adapters that are currently running'
-                                  | translate)
-                        }}.
-                    </h4>
+            }
+            @if (page === 'running') {
+                <div
+                    fxFlex="100"
+                    class="md-dialog-content"
+                    style="padding: 20px"
+                >
+                    @for (status of actionStatus; track status) {
+                        <div>
+                            <h4>
+                                {{
+                                    action
+                                        ? ('Starting adapter' | translate)
+                                        : ('Stopping adapter' | translate)
+                                }}
+                                {{ status.id + 1 }} {{ 'of' | translate }}
+                                {{ adaptersToModify.length }} ({{
+                                    status.name
+                                }})...{{ status.status }}
+                            </h4>
+                        </div>
+                    }
+                    @if (adaptersToModify.length === 0) {
+                        <div>
+                            <h4>
+                                {{
+                                    action
+                                        ? ('Sorry, there are no adapters that are currently idle'
+                                          | translate)
+                                        : ('Sorry, there are no adapters that are currently running'
+                                          | translate)
+                                }}.
+                            </h4>
+                        </div>
+                    }
                 </div>
-            </div>
+            }
         </div>
     </div>
     <mat-divider></mat-divider>

@@ -1,118 +1,108 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100" class="w-100">
-    <div
-        *ngIf="!adapterErrorMessage"
-        fxFlex="100"
-        fxLayout="column"
-        class="w-100"
-    >
-        <div>
+    @if (!adapterErrorMessage) {
+        <div fxFlex="100" fxLayout="column" class="w-100">
+            <div>
+                <div
+                    class="info-message"
+                    fxFlex="100"
+                    fxLayoutAlign="center center"
+                    fxLayout="row"
+                >
+                    <i class="material-icons">done</i>
+                    <span data-cy="sp-connect-adapter-success-added"
+                        >&nbsp;{{ adapterInstallationSuccessMessage }}</span
+                    >
+                </div>
+            </div>
+        </div>
+    }
+    @if (saveInDataLake && templateErrorMessage) {
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
             <div
-                class="info-message"
+                class="info-message warning-message"
                 fxFlex="100"
                 fxLayoutAlign="center center"
                 fxLayout="row"
             >
-                <i class="material-icons">done</i>
-                <span data-cy="sp-connect-adapter-success-added"
-                    >&nbsp;{{ adapterInstallationSuccessMessage }}</span
+                <i class="material-icons">warning</i>
+                <span
+                    >&nbsp;{{
+                        templateErrorMessage.notifications[0].title
+                    }}</span
                 >
             </div>
         </div>
-    </div>
-    <div
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        fxFlex="100"
-        *ngIf="saveInDataLake && templateErrorMessage"
-    >
-        <div
-            class="info-message warning-message"
-            fxFlex="100"
-            fxLayoutAlign="center center"
-            fxLayout="row"
-        >
-            <i class="material-icons">warning</i>
-            <span>&nbsp;{{ templateErrorMessage.notifications[0].title }}</span>
+    }
+    @if (pipelineOperationStatus) {
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+            <sp-pipeline-started-status
+                [pipelineOperationStatus]="pipelineOperationStatus"
+            >
+            </sp-pipeline-started-status>
+            <mat-divider fxFlex="100"></mat-divider>
         </div>
-    </div>
-    <div
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        fxFlex="100"
-        *ngIf="pipelineOperationStatus"
-    >
-        <sp-pipeline-started-status
-            [pipelineOperationStatus]="pipelineOperationStatus"
-        >
-        </sp-pipeline-started-status>
-        <mat-divider fxFlex="100"></mat-divider>
-    </div>
+    }
 
-    <div
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        fxFlex="100"
-        *ngIf="saveInAsset !== ''"
-    >
-        <div>
-            <div
-                class="info-message"
-                fxFlex="100"
-                fxLayoutAlign="center center"
-                fxLayout="row"
-            >
-                <i class="material-icons">done</i>
-                <span data-cy="sp-connect-adapter-success-added"
-                    >&nbsp;{{ saveInAsset }}</span
+    @if (saveInAsset !== '') {
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+            <div>
+                <div
+                    class="info-message"
+                    fxFlex="100"
+                    fxLayoutAlign="center center"
+                    fxLayout="row"
                 >
+                    <i class="material-icons">done</i>
+                    <span data-cy="sp-connect-adapter-success-added"
+                        >&nbsp;{{ saveInAsset }}</span
+                    >
+                </div>
             </div>
+            <mat-divider fxFlex="100"></mat-divider>
         </div>
-        <mat-divider fxFlex="100"></mat-divider>
-    </div>
+    }
 
-    <div
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        fxFlex="100"
-        *ngIf="deletedFromAsset !== ''"
-    >
-        <div>
-            <div
-                class="info-message"
-                fxFlex="100"
-                fxLayoutAlign="center center"
-                fxLayout="row"
-            >
-                <i class="material-icons">done</i>
-                <span data-cy="sp-connect-adapter-success-added"
-                    >&nbsp;{{ deletedFromAsset }}</span
+    @if (deletedFromAsset !== '') {
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+            <div>
+                <div
+                    class="info-message"
+                    fxFlex="100"
+                    fxLayoutAlign="center center"
+                    fxLayout="row"
                 >
+                    <i class="material-icons">done</i>
+                    <span data-cy="sp-connect-adapter-success-added"
+                        >&nbsp;{{ deletedFromAsset }}</span
+                    >
+                </div>
             </div>
+            <mat-divider fxFlex="100"></mat-divider>
         </div>
-        <mat-divider fxFlex="100"></mat-divider>
-    </div>
-    <sp-exception-details
-        *ngIf="adapterErrorMessage"
-        [message]="adapterErrorMessage"
-        [title]="'Could not start adapter'"
-    >
-    </sp-exception-details>
+    }
+    @if (adapterErrorMessage) {
+        <sp-exception-details
+            [message]="adapterErrorMessage"
+            [title]="'Could not start adapter'"
+        >
+        </sp-exception-details>
+    }
 </div>
