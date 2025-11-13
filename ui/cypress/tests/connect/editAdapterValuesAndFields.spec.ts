@@ -66,7 +66,7 @@ describe('Test Edit Adapter', () => {
 
         // Fill in adapter name and close view
         cy.dataCy('sp-adapter-name').type('Test Adapter');
-        cy.dataCy('adapter-settings-start-adapter-btn').click();
+        ConnectBtns.adapterSettingsStartAdapter().click();
         ConnectUtils.closeAdapterPreview();
 
         // Edit adapter and check if given values and added property still provided
@@ -102,8 +102,8 @@ describe('Test Edit Adapter', () => {
             'include.text',
             'test-property-1',
         );
-        cy.dataCy('sp-event-schema-next-button').click();
-        cy.dataCy('store-edit-adapter').click();
+        ConnectBtns.schemaNextBtn().click();
+        ConnectBtns.storeEditAdapter().click();
         ConnectUtils.closeAdapterPreview();
 
         // Configure adapter with pressure instead of flowrate
@@ -122,8 +122,8 @@ describe('Test Edit Adapter', () => {
             'include.text',
             'test-property-1',
         );
-        cy.dataCy('sp-event-schema-next-button').click();
-        cy.dataCy('store-edit-adapter').click();
+        ConnectBtns.schemaNextBtn().click();
+        ConnectBtns.storeEditAdapter().click();
         ConnectUtils.closeAdapterPreview();
     });
 });
