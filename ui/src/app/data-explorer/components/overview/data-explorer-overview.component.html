@@ -16,37 +16,31 @@
   ~
   -->
 
-<sp-asset-browser
-    filteredAssetLinkType="chart"
-    [allResourcesAlias]="'Charts' | translate"
-    [resourceCount]="resourceCount"
-    (filterIdsEmitter)="applyChartFilters($event)"
->
-    <sp-basic-view [showBackLink]="false" [padding]="true">
-        <div
-            nav
-            fxFlex="100"
-            fxLayoutAlign="start center"
-            fxLayout="row"
-            class="pl-10"
+<sp-basic-view [showBackLink]="false" [padding]="true">
+    <div
+        nav
+        fxFlex="100"
+        fxLayoutAlign="start center"
+        fxLayout="row"
+        class="pl-10"
+    >
+        <button
+            mat-button
+            mat-flat-button
+            color="accent"
+            data-cy="open-new-data-view"
+            (click)="createNewDataView()"
+            class="mr-10"
+            *ngIf="hasDataExplorerWritePrivileges"
         >
-            <button
-                mat-button
-                mat-flat-button
-                color="accent"
-                data-cy="open-new-data-view"
-                (click)="createNewDataView()"
-                class="mr-10"
-                *ngIf="hasDataExplorerWritePrivileges"
-            >
-                <i class="material-icons">add</i>
-                <span>{{ 'New chart' | translate }}</span>
-            </button>
-        </div>
-        <div fxFlex="100" fxLayout="column">
-            <sp-data-explorer-overview-table
-                (resourceCountEmitter)="resourceCount = $event"
-            ></sp-data-explorer-overview-table>
-        </div>
-    </sp-basic-view>
-</sp-asset-browser>
+            <i class="material-icons">add</i>
+            <span>{{ 'New chart' | translate }}</span>
+        </button>
+    </div>
+    <div fxFlex="100" fxLayout="column">
+        <sp-data-explorer-overview-table
+            [admin]="isAdmin"
+            [hasDataExplorerWritePrivileges]="hasDataExplorerWritePrivileges"
+        ></sp-data-explorer-overview-table>
+    </div>
+</sp-basic-view>

@@ -16,34 +16,32 @@
  *
  */
 
-import {
-    AssetLink,
-    AssetSiteDesc,
-    Isa95TypeDesc,
-    SpAsset,
-    SpLabel,
-} from '@streampipes/platform-services';
+import { Component, Input } from '@angular/core';
+import { Isa95TypeDesc, SpAsset } from '@streampipes/platform-services';
+import { AssetFilter } from '../../../asset-browser.model';
 
-export interface AssetBrowserData {
+@Component({
+    selector: 'sp-asset-browser-filter-asset-model',
+    templateUrl: 'asset-browser-filter-asset-model.component.html',
+    styleUrls: ['../asset-browser-filter.component.scss'],
+    standalone: false,
+})
+export class AssetBrowserFilterAssetModelComponent {
+    @Input()
     assets: SpAsset[];
-    assetLinks: AssetLink[];
-    sites: AssetSiteDesc[];
-    labels: SpLabel[];
-}
 
-export interface AssetFilter {
-    selectedSites: AssetSiteDesc[];
-    selectedTypes: Isa95TypeDesc[];
-    selectedLabels: SpLabel[];
-    selectedAssetModels: SpAsset[];
-}
+    @Input()
+    activeFilters: AssetFilter;
 
-export interface FilterResult {
-    filterActive: boolean;
-    filterDisabled: boolean;
-    activeElementIds?: Set<string>;
-    currentAssetLink?: string;
-    selectedAssets?: SpAsset[];
-    allAssetCount?: number;
-    selectedAssetCount?: number;
+    compare(o1: Isa95TypeDesc, o2: Isa95TypeDesc): boolean {
+        return o1.type === o2.type;
+    }
+
+    selectAll(): void {
+        this.activeFilters.selectedAssetModels = [...this.assets];
+    }
+
+    selectNone(): void {
+        this.activeFilters.selectedAssetModels = [];
+    }
 }

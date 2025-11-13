@@ -98,39 +98,43 @@
                     </mat-checkbox>
                 </div>
 
-                <div class="mt-10" fxLayout="column">
-                    <label>{{ 'Add Dashboard to Assets' | translate }}</label>
+                @if (isAssetAdmin) {
+                    <div class="mt-10" fxLayout="column">
+                        <label>{{
+                            'Add Dashboard to Assets' | translate
+                        }}</label>
 
-                    <mat-checkbox
-                        [(ngModel)]="addToAssets"
-                        color="accent"
-                        data-cy="sp-show-dashboard-asset-checkbox"
-                    >
-                        {{
-                            'Add the current dashboard to an existing asset'
-                                | translate
-                        }}
-                    </mat-checkbox>
+                        <mat-checkbox
+                            [(ngModel)]="addToAssets"
+                            color="accent"
+                            data-cy="sp-show-dashboard-asset-checkbox"
+                        >
+                            {{
+                                'Add the current dashboard to an existing asset'
+                                    | translate
+                            }}
+                        </mat-checkbox>
 
-                    @if (addToAssets) {
-                        <div class="mt-10">
-                            <sp-asset-link-configuration
-                                [isEdit]="!createMode"
-                                [itemId]="dashboard.elementId"
-                                (selectedAssetsChange)="
-                                    onSelectedAssetsChange($event)
-                                "
-                                (deselectedAssetsChange)="
-                                    onDeselectedAssetsChange($event)
-                                "
-                                (originalAssetsEmitter)="
-                                    onOriginalAssetsEmitted($event)
-                                "
-                            >
-                            </sp-asset-link-configuration>
-                        </div>
-                    }
-                </div>
+                        @if (addToAssets) {
+                            <div class="mt-10">
+                                <sp-asset-link-configuration
+                                    [isEdit]="!createMode"
+                                    [itemId]="dashboard.elementId"
+                                    (selectedAssetsChange)="
+                                        onSelectedAssetsChange($event)
+                                    "
+                                    (deselectedAssetsChange)="
+                                        onDeselectedAssetsChange($event)
+                                    "
+                                    (originalAssetsEmitter)="
+                                        onOriginalAssetsEmitted($event)
+                                    "
+                                >
+                                </sp-asset-link-configuration>
+                            </div>
+                        }
+                    </div>
+                }
 
                 <!--<mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard</mat-checkbox>-->
             </div>
@@ -153,6 +157,7 @@
             mat-flat-button
             class="mat-basic mr-10"
             (click)="onCancel()"
+            data-cy="close-data-view"
         >
             {{ 'Close' | translate }}
         </button>

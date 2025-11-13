@@ -19,6 +19,7 @@
 import { User } from '../model/User';
 import { UserBuilder } from '../builder/UserBuilder';
 import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserBtns } from './user/UserBtns';
 
 export class UserUtils {
     public static adminUser = UserBuilder.create('admin@streampipes.apache.org')
@@ -42,6 +43,7 @@ export class UserUtils {
 
     public static goToUserConfiguration() {
         cy.visit('#/configuration/security');
+        cy.dataCy('add-new-user', { timeout: 10000 }).should('exist');
     }
 
     public static addUser(user: User) {
@@ -64,6 +66,21 @@ export class UserUtils {
 
         // Store
         cy.dataCy('sp-element-edit-user-save').click();
+    }
+
+    public static toggleUserRole(user: User, role: UserRole) {
+        this.switchUser(this.adminUser);
+        this.goToUserConfiguration();
+        cy.get('table tbody tr', { timeout: 10000 }).should(
+            'have.length.greaterThan',
+            0,
+        );
+
+        UserBtns.editUserBtn(user.email);
+
+        UserBtns.userRoleCheckbox(role).click();
+
+        UserBtns.saveEditUserBtn().click();
     }
 
     /**

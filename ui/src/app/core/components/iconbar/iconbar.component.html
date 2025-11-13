@@ -16,36 +16,129 @@
   ~
   -->
 
-<div style="padding-top: 0" fxFlex="100" fxLayout="column">
-    @for (item of menu; track item.title) {
-        @if (item.visible) {
-            <div
-                style="min-width: 0; padding: 5px 0"
-                [ngClass]="
-                    item.link === activePage
-                        ? 'sp-navbar-item-selected'
-                        : 'sp-navbar-item'
-                "
+<div class="menubar-root" [class.collapsed]="collapsed()" fxLayout="column">
+    <!-- Header / brand -->
+    <div
+        class="menubar-header"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+    >
+        <div class="brand" [class.hidden]="collapsed()">
+            <img alt="logo" src="assets/img/sp/logo-navigation.png" />
+        </div>
+
+        <button
+            type="button"
+            class="collapse-btn"
+            (click)="toggleMenubar()"
+            [attr.aria-label]="collapsed() ? 'Expand menu' : 'Collapse menu'"
+            [title]="collapsed() ? 'Expand' : 'Collapse'"
+        >
+            <mat-icon class="collapse-icon" [class.rotated]="collapsed()"
+                >chevron_left</mat-icon
             >
-                <button
-                    mat-icon-button
-                    class="button-margin-iconbar iconbar-size"
-                    (click)="go(item.link)"
-                    matTooltip="{{ item.title }}"
-                    matTooltipPosition="right"
-                >
-                    <mat-icon
-                        [ngClass]="
-                            item.link === activePage
-                                ? 'sp-navbar-icon-selected'
-                                : 'sp-navbar-icon'
-                        "
+        </button>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="menubar-scroll" fxFlex fxLayout="column">
+        <!-- Top items (no group) -->
+        <div class="top-items" role="list">
+            @for (item of topItems; track item.title) {
+                @if (item.visible !== false) {
+                    <button
+                        type="button"
+                        role="listitem"
+                        class="menu-item"
+                        [class.menu-item-selected]="item.link === activePage"
                         [attr.data-cy]="'navigation-icon-' + item.link"
+                        (click)="go(item.link)"
+                        [title]="collapsed() ? item.title : null"
+                        [attr.aria-current]="
+                            item.link === activePage ? 'page' : null
+                        "
                     >
-                        {{ item.icon }}
-                    </mat-icon>
-                </button>
-            </div>
-        }
-    }
+                        <mat-icon class="item-icon">{{ item.icon }}</mat-icon>
+                        <span
+                            class="item-title text-ellipsis"
+                            [class.hidden]="collapsed()"
+                            >{{ item.title }}</span
+                        >
+                    </button>
+                }
+            }
+        </div>
+
+        <!-- Grouped sections -->
+        <div class="groups">
+            @for (group of menuGroups; track group.title) {
+                <section class="menu-group">
+                    <!-- Group header -->
+                    <button
+                        type="button"
+                        [class.hidden]="collapsed()"
+                        class="menu-group-title"
+                        (click)="toggleGroup(group)"
+                        [attr.aria-expanded]="!group.collapsed"
+                        [title]="collapsed() ? group.title : null"
+                    >
+                        <span
+                            class="group-title-text text-ellipsis"
+                            [class.hidden]="collapsed()"
+                            >{{ group.title }}</span
+                        >
+                        <mat-icon
+                            class="chevron"
+                            [class.rotate]="!group.collapsed"
+                            [class.hidden]="collapsed()"
+                            >expand_more</mat-icon
+                        >
+                    </button>
+
+                    <!-- Group items (accordion) -->
+                    <div
+                        class="menu-group-items"
+                        [style.maxHeight]="
+                            group.collapsed && !collapsed() ? '0px' : '500px'
+                        "
+                        [class.instant]="collapsed()"
+                        role="list"
+                    >
+                        @for (item of group.items; track item.title) {
+                            @if (item.visible !== false) {
+                                <button
+                                    type="button"
+                                    role="listitem"
+                                    class="menu-item"
+                                    [class.menu-item-selected]="
+                                        item.link === activePage
+                                    "
+                                    [attr.data-cy]="
+                                        'navigation-icon-' + item.link
+                                    "
+                                    (click)="go(item.link)"
+                                    [title]="collapsed() ? item.title : null"
+                                    [attr.aria-current]="
+                                        item.link === activePage ? 'page' : ''
+                                    "
+                                >
+                                    <mat-icon class="item-icon">{{
+                                        item.icon
+                                    }}</mat-icon>
+                                    <span
+                                        class="item-title text-ellipsis"
+                                        [class.hidden]="collapsed()"
+                                        >{{ item.title }}</span
+                                    >
+                                </button>
+                            }
+                        }
+                    </div>
+                </section>
+                @if (collapsed()) {
+                    <mat-divider></mat-divider>
+                }
+            }
+        </div>
+    </div>
 </div>

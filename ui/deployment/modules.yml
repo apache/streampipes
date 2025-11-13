@@ -21,12 +21,13 @@ spAssets:
     path: './assets/assets.module'
     link: 'assets'
     url: '/editor/:pipeline'
-    title: 'Asset Management'
+    title: 'Assets'
     description: 'Manage assets which help assigning pipelines, dashboards and adapters to real-world objects such as machines and plants.'
     icon: 'precision_manufacturing'
     privileges: '[UserPrivilege.PRIVILEGE_READ_ASSETS, UserPrivilege.PRIVILEGE_WRITE_ASSETS]'
     pageNames: 'PageName.ASSETS'
     showStatusBox: false
+    category: 'management'
 spHome:
     streamPipesModule: True
     moduleName: 'HomeModule'
@@ -40,6 +41,7 @@ spHome:
     privileges: '[]'
     guard: 'canActivate: [ConfiguredCanActivateGuard], '
     showStatusBox: false
+    category: 'top'
 spConnect:
     componentImport: False
     moduleName: 'ConnectModule'
@@ -48,7 +50,7 @@ spConnect:
     path: './connect/connect.module'
     link: 'connect'
     url: '/connect'
-    title: 'Connect'
+    title: 'Connectors'
     description: 'StreamPipes Connect lets you easily connect new data sources for a variety of data formats and protocols.'
     icon: 'power'
     privileges: '[UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
@@ -62,6 +64,7 @@ spConnect:
         dataFns: '[this.adapterService.getAdapters()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
+    category: 'management'
 spPipelines:
     componentImport: False
     moduleName: 'PipelinesModule'
@@ -84,6 +87,7 @@ spPipelines:
         dataFns: '[this.pipelineService.getPipelines()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_PIPELINE, UserPrivilege.PRIVILEGE_WRITE_PIPELINE]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_PIPELINE]'
+    category: 'analytics'
 spConfiguration:
     componentImport: False
     moduleName: 'ConfigurationModule'
@@ -92,26 +96,13 @@ spConfiguration:
     path: './configuration/configuration.module'
     link: 'configuration'
     url: '/configuration'
-    title: 'Configuration'
-    description: 'In the configuration module, basic StreamPipes settings and services can be configured.'
+    title: 'Settings'
+    description: 'In the settings module, basic StreamPipes settings and services can be configured.'
     icon: 'settings'
     pageNames: 'PageName.SETTINGS'
     privileges: '[UserPrivilege.PRIVILEGE_WRITE_ASSETS, UserPrivilege.PRIVILEGE_WRITE_LABELS, UserPrivilege.PRIVILEGE_WRITE_FILES]'
     showStatusBox: false
-spAppOverview:
-    componentImport: False
-    moduleName: 'AppOverviewModule'
-    component: 'AppOverviewComponent'
-    componentPath: './app-overview/app-overview.component'
-    path: './app-overview/app-overview.module'
-    link: 'apps'
-    url: '/apps'
-    title: 'Apps'
-    description: 'The app overview lets you access additional plugins.'
-    icon: 'apps'
-    pageNames: 'PageName.APPS'
-    privileges: '[UserPrivilege.PRIVILEGE_READ_APPS, UserPrivilege.PRIVILEGE_WRITE_APPS]'
-    showStatusBox: false
+    category: 'management'
 spDashboard:
     componentImport: False
     moduleName: 'DashboardModule'
@@ -120,7 +111,7 @@ spDashboard:
     path: './dashboard/dashboard.module'
     link: 'dashboard'
     url: '/dashboard'
-    title: 'Dashboard'
+    title: 'Dashboards'
     description: 'The live dashboard visualizes data in real-time.'
     icon: 'dashboard'
     pageNames: 'PageName.DASHBOARD'
@@ -134,6 +125,7 @@ spDashboard:
         dataFns: '[this.dashboardService.getDashboards()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
+    category: 'visualization'
 spDataExplorer:
     componentImport: False
     moduleName: 'DataExplorerModule'
@@ -142,8 +134,8 @@ spDataExplorer:
     path: './data-explorer/data-explorer.module'
     link: 'dataexplorer'
     url: '/dataexplorer'
-    title: 'Data Explorer'
-    description: 'The data explorer lets you visually inspect historical data from your connected sources.'
+    title: 'Charts'
+    description: 'The chart view lets you visually inspect historical data from your connected sources.'
     icon: 'query_stats'
     pageNames: 'PageName.DATA_EXPLORER'
     privileges: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
@@ -156,3 +148,4 @@ spDataExplorer:
         dataFns: '[this.chartService.getAllCharts()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
+    category: 'visualization'

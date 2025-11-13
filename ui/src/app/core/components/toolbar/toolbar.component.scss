@@ -24,6 +24,18 @@
     height: 41px;
 }
 
+.sp-navbar-icon-selected {
+    color: var(--color-toolbar-icon-selected);
+}
+
+.sp-navbar-icon {
+    color: var(--color-toolbar-icon);
+}
+
+.sp-navbar-icon:hover {
+    color: var(--color-toolbar-icon-hover);
+}
+
 .current-user {
     color: var(--color-default-text);
     display: block;
@@ -36,9 +48,8 @@
     position: relative;
 }
 
-.toolbar-bg {
-    background: var(--color-navigation-bg);
-    border-bottom: 2px solid var(--color-navigation-divider);
+.toolbar {
+    background: var(--color-bg-1);
     color: var(--color-navigation-text);
 }
 

@@ -16,14 +16,30 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-    <div fxLayout="row">
-        <div fxFlex="210px" fxLayout="column" class="split-section">
-            <div class="split-section-title">{{ title }}</div>
-            <div class="split-section-description">{{ subtitle }}</div>
-        </div>
-        <div fxFlex fxLayout="column">
-            <ng-content></ng-content>
-        </div>
-    </div>
-</div>
+<sp-asset-browser-filter-outer
+    [selectedItems]="activeFilters.selectedAssetModels"
+    [allItems]="assets"
+    [title]="'Assets' | translate"
+    (selectAllEmitter)="selectAll()"
+    (deselectAllEmitter)="selectNone()"
+>
+    <mat-form-field
+        appearance="outline"
+        class="form-field-small filter-selection"
+        color="accent"
+    >
+        <mat-select
+            multiple
+            [compareWith]="compare"
+            [(ngModel)]="activeFilters.selectedAssetModels"
+        >
+            <mat-option
+                *ngFor="let asset of assets; let i = index"
+                [value]="asset"
+                class="smaller-font-size"
+            >
+                {{ asset.assetName }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</sp-asset-browser-filter-outer>

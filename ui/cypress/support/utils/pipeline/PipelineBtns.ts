@@ -78,4 +78,15 @@ export class PipelineBtns {
     public static settingsPipelineElementBtn() {
         return cy.dataCy('settings-pipeline-element-button');
     }
+    public static pipelineEditorSave() {
+        return cy.dataCy('sp-editor-save-pipeline');
+    }
+
+    public static pipelineAssetCheckbox() {
+        return cy.dataCy('sp-show-pipeline-asset-checkbox');
+    }
+
+    public static pipelineEditorCancel() {
+        return cy.dataCy('sp-editor-cancel');
+    }
 }

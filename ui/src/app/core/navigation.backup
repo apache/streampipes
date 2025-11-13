@@ -58,27 +58,92 @@ export abstract class BaseNavigationComponent {
   notificationsVisible = false;
 
   public categories: MenuCategory[] = [
-    {{#categoriesActive}}
       {
-          id: '{{{id}}}',
-          title: '{{{title}}}',
-          collapsed: {{{collapsed}}},
+          id: 'top',
+          title: 'top',
+          collapsed: false,
       },
-    {{/categoriesActive}}
+      {
+          id: 'analytics',
+          title: 'Analytics',
+          collapsed: false,
+      },
+      {
+          id: 'visualization',
+          title: 'Visualization',
+          collapsed: false,
+      },
+      {
+          id: 'management',
+          title: 'Management',
+          collapsed: false,
+      },
   ];
 
   public menu = [
-    {{#modulesActive}}
     {
-        link: '{{{link}}}',
-        title: '{{{title}}}',
-        icon: '{{{icon}}}',
-        pageNames: [{{{pageNames}}}],
-        privileges: {{{privileges}}},
+        link: '',
+        title: 'Home',
+        icon: 'home',
+        pageNames: [PageName.HOME],
+        privileges: [],
         visible: false,
-        category: '{{{category}}}'
+        category: 'top'
     },
-    {{/modulesActive}}
+    {
+        link: 'pipelines',
+        title: 'Pipelines',
+        icon: 'play_arrow',
+        pageNames: [PageName.PIPELINE_OVERVIEW],
+        privileges: [UserPrivilege.PRIVILEGE_READ_PIPELINE, UserPrivilege.PRIVILEGE_WRITE_PIPELINE],
+        visible: false,
+        category: 'analytics'
+    },
+    {
+        link: 'connect',
+        title: 'Connectors',
+        icon: 'power',
+        pageNames: [PageName.CONNECT],
+        privileges: [UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER],
+        visible: false,
+        category: 'management'
+    },
+    {
+        link: 'dashboard',
+        title: 'Dashboards',
+        icon: 'dashboard',
+        pageNames: [PageName.DASHBOARD],
+        privileges: [UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD],
+        visible: false,
+        category: 'visualization'
+    },
+    {
+        link: 'dataexplorer',
+        title: 'Charts',
+        icon: 'query_stats',
+        pageNames: [PageName.DATA_EXPLORER],
+        privileges: [UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW],
+        visible: false,
+        category: 'visualization'
+    },
+    {
+        link: 'assets',
+        title: 'Assets',
+        icon: 'precision_manufacturing',
+        pageNames: [PageName.ASSETS],
+        privileges: [UserPrivilege.PRIVILEGE_READ_ASSETS, UserPrivilege.PRIVILEGE_WRITE_ASSETS],
+        visible: false,
+        category: 'management'
+    },
+    {
+        link: 'configuration',
+        title: 'Settings',
+        icon: 'settings',
+        pageNames: [PageName.SETTINGS],
+        privileges: [UserPrivilege.PRIVILEGE_WRITE_ASSETS, UserPrivilege.PRIVILEGE_WRITE_LABELS, UserPrivilege.PRIVILEGE_WRITE_FILES],
+        visible: false,
+        category: 'management'
+    },
   ];
 
    protected authService = inject(AuthService);
@@ -87,7 +152,7 @@ export abstract class BaseNavigationComponent {
    protected appConstants = inject(AppConstants);
    protected collapseService = inject(CollapseService);
 
-   collapsed = this.collapseService.isCollapsed;
+    collapsed = this.collapseService.isCollapsed;
 
     onInit() {
       this.currentUserService.user$.subscribe(user => {
@@ -145,12 +210,11 @@ export abstract class BaseNavigationComponent {
       return this.authService.isAnyAccessGranted(privileges);
     }
 
-  toggleGroup(group: MenuGroup): void {
-    group.collapsed = !group.collapsed;
-  }
+      toggleGroup(group: MenuGroup): void {
+        group.collapsed = !group.collapsed;
+      }
 
-  toggleMenubar(): void {
-        this.collapseService.toggleMenubar();
-        }
-
+      toggleMenubar(): void {
+      this.collapseService.toggleMenubar();
+      }
 }

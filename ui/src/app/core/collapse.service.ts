@@ -16,34 +16,24 @@
  *
  */
 
-import {
-    AssetLink,
-    AssetSiteDesc,
-    Isa95TypeDesc,
-    SpAsset,
-    SpLabel,
-} from '@streampipes/platform-services';
+import { Injectable, signal } from '@angular/core';
 
-export interface AssetBrowserData {
-    assets: SpAsset[];
-    assetLinks: AssetLink[];
-    sites: AssetSiteDesc[];
-    labels: SpLabel[];
-}
+@Injectable({ providedIn: 'root' })
+export class CollapseService {
+    isCollapsed = signal<boolean>(this.loadCollapsed());
 
-export interface AssetFilter {
-    selectedSites: AssetSiteDesc[];
-    selectedTypes: Isa95TypeDesc[];
-    selectedLabels: SpLabel[];
-    selectedAssetModels: SpAsset[];
-}
+    toggleMenubar(): void {
+        const next = !this.isCollapsed();
+        this.isCollapsed.set(next);
+        localStorage.setItem('sp-menubar-collapsed', JSON.stringify(next));
+    }
 
-export interface FilterResult {
-    filterActive: boolean;
-    filterDisabled: boolean;
-    activeElementIds?: Set<string>;
-    currentAssetLink?: string;
-    selectedAssets?: SpAsset[];
-    allAssetCount?: number;
-    selectedAssetCount?: number;
+    private loadCollapsed(): boolean {
+        try {
+            const v = localStorage.getItem('sp-menubar-collapsed');
+            return v ? JSON.parse(v) : false;
+        } catch {
+            return false;
+        }
+    }
 }

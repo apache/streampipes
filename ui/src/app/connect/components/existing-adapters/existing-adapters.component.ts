@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
     AdapterDescription,
     AdapterMonitoringService,
@@ -31,6 +31,7 @@ import {
     DialogRef,
     DialogService,
     PanelType,
+    SpAssetBrowserService,
     SpBreadcrumbService,
     SpExceptionDetailsDialogComponent,
 } from '@streampipes/shared-ui';
@@ -81,40 +82,46 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     adapterMetrics: Record<string, SpMetricsEntry> = {};
     tutorialActive = false;
 
-    userSubscription: Subscription;
-    tutorialActiveSubscription: Subscription;
+    assetFilter$: Subscription;
+    user$: Subscription;
+    tutorial$: Subscription;
     currentFilterIds: Set<string> = new Set<string>();
 
     startAdapterErrorText = 'Could not start adapter';
     stopAdapterErrorText = 'Could not stop adapter';
 
-    constructor(
-        private adapterService: AdapterService,
-        private dialogService: DialogService,
-        private currentUserService: CurrentUserService,
-        private router: Router,
-        private pipelineElementAssetService: PipelineElementAssetService,
-        private adapterFilter: AdapterFilterPipe,
-        private breadcrumbService: SpBreadcrumbService,
-        private adapterMonitoringService: AdapterMonitoringService,
-        private shepherdService: ShepherdService,
-        private translate: TranslateService,
-    ) {}
+    private adapterService = inject(AdapterService);
+    private dialogService = inject(DialogService);
+    private currentUserService = inject(CurrentUserService);
+    private router = inject(Router);
+    private pipelineElementAssetService = inject(PipelineElementAssetService);
+    private adapterFilter = inject(AdapterFilterPipe);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private shepherdService = inject(ShepherdService);
+    private translate = inject(TranslateService);
+    private adapterMonitoringService = inject(AdapterMonitoringService);
+    private assetFilterService = inject(SpAssetBrowserService);
 
     ngOnInit(): void {
+        this.assetFilterService.applyAssetLinkType('adapter');
+        this.assetFilter$ =
+            this.assetFilterService.currentAssetFilter$.subscribe(filter => {
+                this.currentFilterIds =
+                    filter?.activeElementIds || new Set<string>();
+                this.applyAdapterFilters(this.currentFilterIds);
+            });
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpConnectRoutes.BASE),
         );
-        this.userSubscription = this.currentUserService.user$.subscribe(
-            user => {
-                this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
-                this.getAdaptersRunning();
+        this.user$ = this.currentUserService.user$.subscribe(user => {
+            this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+            this.getAdaptersRunning();
+        });
+        this.tutorial$ = this.shepherdService.tutorialActive$.subscribe(
+            tutorialActive => {
+                this.tutorialActive = tutorialActive;
             },
         );
-        this.tutorialActiveSubscription =
-            this.shepherdService.tutorialActive$.subscribe(tutorialActive => {
-                this.tutorialActive = tutorialActive;
-            });
     }
 
     startAdapter(adapter: AdapterDescription) {
@@ -323,7 +330,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.userSubscription?.unsubscribe();
-        this.tutorialActiveSubscription?.unsubscribe();
+        this.user$?.unsubscribe();
+        this.tutorial$?.unsubscribe();
+        this.assetFilter$?.unsubscribe();
     }
 }

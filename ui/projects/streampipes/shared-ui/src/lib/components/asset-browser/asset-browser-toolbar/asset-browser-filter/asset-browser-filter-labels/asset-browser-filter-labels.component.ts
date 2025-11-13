@@ -33,6 +33,14 @@ export class AssetBrowserFilterLabelsComponent {
     @Input()
     activeFilters: AssetFilter;
 
+    selectAll(): void {
+        this.activeFilters.selectedLabels = [...this.labels];
+    }
+
+    selectNone(): void {
+        this.activeFilters.selectedLabels = [];
+    }
+
     compare(o1: SpLabel, o2: SpLabel): boolean {
         return o1._id === o2._id;
     }

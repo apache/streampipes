@@ -100,6 +100,7 @@ import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SpTableActionsDirective } from './components/sp-table/sp-table-actions.directive';
 import { AssetLinkConfigurationComponent } from './components/asset-link-configuration/asset-link-configuration.component';
+import { AssetBrowserFilterAssetModelComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-asset-model/asset-browser-filter-asset-model.component';
 
 @NgModule({
     declarations: [
@@ -153,6 +154,7 @@ import { AssetLinkConfigurationComponent } from './components/asset-link-configu
         SortByRuntimeNamePipe,
         SpTableActionsDirective,
         AssetLinkConfigurationComponent,
+        AssetBrowserFilterAssetModelComponent,
     ],
     imports: [
         CommonModule,
@@ -192,6 +194,7 @@ import { AssetLinkConfigurationComponent } from './components/asset-link-configu
     ],
     exports: [
         AssetBrowserComponent,
+        AssetBrowserToolbarComponent,
         AssetLinkConfigurationComponent,
         ConfirmDialogComponent,
         DataDownloadDialogComponent,

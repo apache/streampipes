@@ -22,6 +22,11 @@
     *ngIf="activeFilters"
 >
     <div fxLayout="column" fxLayoutGap="10px">
+        <sp-asset-browser-filter-asset-model
+            [assets]="assetBrowserData.assets"
+            [activeFilters]="activeFilters"
+        >
+        </sp-asset-browser-filter-asset-model>
         <sp-asset-browser-filter-type [activeFilters]="activeFilters">
         </sp-asset-browser-filter-type>
         <sp-asset-browser-filter-sites

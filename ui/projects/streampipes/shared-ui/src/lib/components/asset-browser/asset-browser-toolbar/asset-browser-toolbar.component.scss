@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,19 +16,15 @@
  *
  */
 
-.sp-navbar-item-selected {
-    background: var(--color-navigation-bg-selected);
+.active-filters {
+    border-radius: 50%;
+    background: var(--color-secondary);
+    color: var(--color-bg-0);
+    padding: 2px;
+    line-height: 20px;
+    font-weight: bold;
 }
 
-.sp-navbar-icon {
-    color: var(--color-navigation-link-text);
-    background: var(--color-bg-navbar-icon);
-}
-.sp-navbar-icon-selected {
-    color: var(--color-navigation-selected);
-}
-
-.sp-navbar-item:hover {
-    color: var(--color-navigation-selected);
-    background: var(--color-navigation-hover);
+.btn-filter {
+    font-weight: 700;
 }

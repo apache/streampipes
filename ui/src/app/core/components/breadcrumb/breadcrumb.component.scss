@@ -17,11 +17,10 @@
  */
 
 .breadcrumb-outer {
-    margin: 10px 10px 0 10px;
     max-height: 20px;
     height: 20px;
     font-size: 10pt;
-    color: var(--color-primary);
+    color: var(--color-toolbar-text);
 }
 
 .divider {
@@ -31,6 +30,6 @@
 }
 
 .bc-item:hover {
-    color: var(--color-secondary);
+    color: var(--color-toolbar-text-hover);
     cursor: pointer;
 }
