@@ -35,7 +35,7 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.goToConnect();
         ConnectUtils.goToNewAdapterPage();
         ConnectUtils.selectAdapter(configuration.adapterType);
-        cy.contains('Next').click();
+        ConnectBtns.adapterSettingsNextBtn().click();
 
         // Add new property and edit field
         cy.dataCy('connect-add-static-property').click();
@@ -73,7 +73,7 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.openActionsMenu('Test Adapter');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
-        cy.contains('Next').click();
+        ConnectBtns.adapterSettingsNextBtn().click();
         cy.dataCy('edit-density').click();
         ConnectEventSchemaUtils.validateRuntimeName('test-density');
 
