@@ -24,7 +24,9 @@
 >
     <div
         class="general-panel-header"
+        [class.header-collapsed]="collapsed"
         [ngClass]="headerBackground ? 'bg-highlight' : 'bg-no-highlight'"
+        [style.height]="headerHeight"
         fxLayout="row"
         fxLayoutAlign="start center"
         *ngIf="!hideToolbar"
@@ -36,14 +38,29 @@
                 </div>
             </div>
             <ng-content select="[header]" class="pr-5"></ng-content>
+            <div fxFlex></div>
+
+            <button
+                *ngIf="collapsible"
+                type="button"
+                class="collapse-btn"
+                (click)="toggleCollapse(); $event.stopPropagation()"
+            >
+                <mat-icon class="chevron-icon" [class.collapsed]="collapsed">
+                    expand_less
+                </mat-icon>
+            </button>
         </div>
     </div>
 
     <div
-        class="general-panel"
-        fxFlex="100"
-        [ngStyle]="{ padding: innerPadding }"
+        class="general-panel-wrapper"
+        [@collapseExpand]="
+            collapsible ? (collapsed ? 'collapsed' : 'expanded') : 'expanded'
+        "
     >
-        <ng-content fxFlex="100"></ng-content>
+        <div class="general-panel" [ngStyle]="{ padding: innerPadding }">
+            <ng-content></ng-content>
+        </div>
     </div>
 </div>
