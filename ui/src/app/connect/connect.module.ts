@@ -47,7 +47,6 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 
 import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
-import { ConfigurationGroupComponent } from './components/configuration-group/configuration-group.component';
 import { ErrorMessageComponent } from './components/adapter-configuration/schema-editor/error-message/error-message.component';
 import { LoadingMessageComponent } from './components/adapter-configuration/schema-editor/loading-message/loading-message.component';
 import { SchemaEditorHeaderComponent } from './components/adapter-configuration/schema-editor/schema-editor-header/schema-editor-header.component';
@@ -108,6 +107,7 @@ import { AdapterDetailsCodeComponent } from './components/adapter-details/adapte
 import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ConfigurationGroupComponent } from './components/adapter-configuration/adapter-settings/configuration-group/configuration-group.component';
 
 @NgModule({
     imports: [
