@@ -26,6 +26,7 @@ import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
 import { ConfigurationBtns } from '../../support/utils/configuration/ConfigurationBtns';
+import { UserBtns } from '../../support/utils/user/UserBtns';
 
 describe('Test Group Management for Pipelines', () => {
     beforeEach('Setup Test', () => {
@@ -88,12 +89,12 @@ describe('Test Group Management for Pipelines', () => {
         ConfigurationBtns.newUserGroupBtn().click();
         ConfigurationBtns.inputGroupName('User_Group');
         cy.get('input[value="ROLE_PIPELINE_ADMIN"]').check();
-        cy.dataCy('sp-element-edit-user-save').click();
+        UserBtns.saveEditUserBtn().click();
 
         // Add first user to group
-        cy.dataCy('user-edit-btn').eq(1).click();
+        UserBtns.firstEditUserBtn().click();
         cy.get('input[type="checkbox"]').eq(0).check();
-        cy.dataCy('sp-element-edit-user-save').click();
+        UserBtns.saveEditUserBtn().click();
 
         // Add user group to pipeline
         PipelineUtils.goToPipelines();
@@ -126,7 +127,7 @@ describe('Test Group Management for Pipelines', () => {
         UserUtils.deleteUser(user2);
 
         // Delete group
-        cy.dataCy('service-delete-btn').eq(1).click();
-        cy.dataCy('confirm-delete').click();
+        UserBtns.serviceDeleteBtn().eq(1).click();
+        UserBtns.confirmDeleteBtn().click();
     });
 });

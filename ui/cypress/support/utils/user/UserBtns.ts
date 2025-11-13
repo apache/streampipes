@@ -52,4 +52,10 @@ export class UserBtns {
     public static confirmDeleteBtn() {
         return cy.dataCy('confirm-delete');
     }
+    public static firstEditUserBtn() {
+        return cy.dataCy('user-edit-btn').eq(1);
+    }
+    public static serviceDeleteBtn() {
+        return cy.dataCy('service-delete-btn');
+    }
 }
