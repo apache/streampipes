@@ -16,32 +16,58 @@
  *
  */
 
-import {
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-    ViewChild,
-} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AssetBrowserData } from '../asset-browser.model';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { Subscription } from 'rxjs';
+import { CurrentUserService } from '../../../services/current-user.service';
+import { SpAssetBrowserService } from '../asset-browser.service';
 
 @Component({
     selector: 'sp-asset-browser-toolbar',
     templateUrl: 'asset-browser-toolbar.component.html',
+    styleUrls: ['asset-browser-toolbar.component.scss'],
     standalone: false,
 })
-export class AssetBrowserToolbarComponent {
-    @Input()
-    expanded: boolean;
+export class AssetBrowserToolbarComponent implements OnInit, OnDestroy {
+    private currentUserService = inject(CurrentUserService);
+    private assetBrowserService = inject(SpAssetBrowserService);
 
-    @Output()
-    toggleExpanded = new EventEmitter<boolean>();
-
-    @Input()
     assetBrowserData: AssetBrowserData;
+    showAssetBrowser = false;
+
+    assetBrowserData$: Subscription;
+    filterActive = false;
+    filterDisabled = false;
+    selectedAssetCount = 0;
+    allAssetCount = 0;
 
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
+
+    ngOnInit() {
+        this.showAssetBrowser = this.currentUserService.hasAnyRole([
+            'PRIVILEGE_READ_ASSETS',
+            'PRIVILEGE_WRITE_ASSETS',
+        ]);
+        if (this.showAssetBrowser) {
+            this.assetBrowserData$ =
+                this.assetBrowserService.assetData$.subscribe(assetData => {
+                    this.assetBrowserData = assetData;
+                });
+            this.assetBrowserService.currentAssetFilter$.subscribe(
+                assetFilter => {
+                    this.filterActive = assetFilter.filterActive;
+                    this.filterDisabled = assetFilter.filterDisabled;
+                    this.allAssetCount = assetFilter.allAssetCount;
+                    this.selectedAssetCount = assetFilter.selectedAssetCount;
+                },
+            );
+        }
+    }
+
+    ngOnDestroy() {
+        this.assetBrowserData$?.unsubscribe();
+    }
 
     closeMenu(): void {
         this.menu.closeMenu();

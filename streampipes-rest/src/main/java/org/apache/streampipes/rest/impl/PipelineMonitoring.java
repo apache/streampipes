@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
-import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
+import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
@@ -43,7 +43,7 @@ public class PipelineMonitoring extends AbstractMonitoringResource {
       value = "/pipeline/{pipelineId}/logs",
       produces = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize("this.hasReadAuthority() and hasPermission('#pipelineId', 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#pipelineId, 'READ')")
   public ResponseEntity<Map<String, List<SpLogEntry>>> getLogInfoForPipeline(
       @PathVariable("pipelineId") String pipelineId
   ) {
@@ -54,7 +54,7 @@ public class PipelineMonitoring extends AbstractMonitoringResource {
       value = "/pipeline/{pipelineId}/metrics",
       produces = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize("this.hasReadAuthority() and hasPermission('#pipelineId', 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#pipelineId, 'READ')")
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfoForPipeline(
       @PathVariable("pipelineId") String pipelineId,
       @RequestParam(value = "forceUpdate", required = false, defaultValue = "false") boolean forceUpdate

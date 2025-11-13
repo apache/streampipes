@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.ResponseEntity;

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.migration;
 
-import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
@@ -53,7 +52,7 @@ public class OpcUaAdapterMigrationV6 implements IAdapterMigrator {
   public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
                                                      IStaticPropertyExtractor extractor) throws RuntimeException {
     var config = element.getConfig();
-    element.setConfig(migrate(config, 4));
+    element.setConfig(migrate(config, 3));
 
     return MigrationResult.success(element);
   }

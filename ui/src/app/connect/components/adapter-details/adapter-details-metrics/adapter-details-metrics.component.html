@@ -33,14 +33,22 @@
             <i class="material-icons">refresh</i>
         </button>
     </div>
-    <div fxFlex="100" fxLayout="column" *ngIf="adapter && adapterMetrics">
-        <sp-simple-metrics
-            [elementName]="adapter.name"
-            [lastPublishedLabel]="'Last published message' | translate"
-            [statusValueLabel]="'Published messages' | translate"
-            [lastTimestamp]="adapterMetrics.lastTimestamp"
-            [statusValue]="adapterMetrics.messagesOut.counter"
+    @if (adapterNotFound) {
+        <sp-warning-box>
+            {{
+                'The desired adapter was not found!' | translate
+            }}</sp-warning-box
         >
-        </sp-simple-metrics>
-    </div>
+    } @else {
+        <div fxFlex="100" fxLayout="column" *ngIf="adapter && adapterMetrics">
+            <sp-simple-metrics
+                [elementName]="adapter.name"
+                [lastPublishedLabel]="'Last published message' | translate"
+                [statusValueLabel]="'Published messages' | translate"
+                [lastTimestamp]="adapterMetrics.lastTimestamp"
+                [statusValue]="adapterMetrics.messagesOut.counter"
+            >
+            </sp-simple-metrics>
+        </div>
+    }
 </sp-basic-nav-tabs>

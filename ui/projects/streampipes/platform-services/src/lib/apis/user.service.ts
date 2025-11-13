@@ -35,8 +35,13 @@ export class UserService {
     private http = inject(HttpClient);
     private platformServicesCommons = inject(PlatformServicesCommons);
 
-    public listUsers(): Observable<ShortUserInfo[]> {
-        return this.http.get(this.usersPath).pipe(
+    public listUsers(
+        includeServiceAccounts = false,
+    ): Observable<ShortUserInfo[]> {
+        const params = {
+            includeServiceAccounts: includeServiceAccounts.toString(),
+        };
+        return this.http.get(this.usersPath, { params }).pipe(
             map(response => {
                 return (response as any[]).map(p => ShortUserInfo.fromData(p));
             }),

@@ -16,16 +16,19 @@
  *
  */
 
-import { ShepherdService } from '../../services/tour/shepherd.service';
 import { EventEmitter, Injectable } from '@angular/core';
-import { Pipeline, PipelineService } from '@streampipes/platform-services';
-import { PanelType, DialogService, DialogRef } from '@streampipes/shared-ui';
+import { Pipeline } from '@streampipes/platform-services';
+import {
+    PanelType,
+    DialogService,
+    DialogRef,
+    ObjectPermissionDialogComponent,
+} from '@streampipes/shared-ui';
 import { PipelineStatusDialogComponent } from '../dialog/pipeline-status/pipeline-status-dialog.component';
 import { DeletePipelineDialogComponent } from '../dialog/delete-pipeline/delete-pipeline-dialog.component';
 import { Router } from '@angular/router';
 import { PipelineAction } from '../model/pipeline-model';
 import { PipelineNotificationsComponent } from '../dialog/pipeline-notifications/pipeline-notifications.component';
-import { ObjectPermissionDialogComponent } from '../../core-ui/object-permission-dialog/object-permission-dialog.component';
 
 @Injectable({ providedIn: 'root' })
 export class PipelineOperationsService {
@@ -33,8 +36,6 @@ export class PipelineOperationsService {
     stopping: any;
 
     constructor(
-        private shepherdService: ShepherdService,
-        private pipelineService: PipelineService,
         private dialogService: DialogService,
         private router: Router,
     ) {}
@@ -186,9 +187,5 @@ export class PipelineOperationsService {
 
     modifyPipeline(pipeline) {
         this.showPipelineInEditor(pipeline);
-    }
-
-    showLogs(id) {
-        // this.$state.go("streampipes.pipelinelogs", {pipeline: id});
     }
 }

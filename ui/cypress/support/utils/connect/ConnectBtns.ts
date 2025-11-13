@@ -23,7 +23,7 @@ export class ConnectBtns {
     }
 
     public static deleteAdapter() {
-        return cy.dataCy('delete-adapter', { timeout: 10000 });
+        return cy.dataCy('delete-adapter', { timeout: 20000 });
     }
 
     public static moreOptions() {
@@ -72,6 +72,14 @@ export class ConnectBtns {
         return cy.get('button').contains('Next').parent();
     }
 
+    public static deleteAdapterConfirmationButton() {
+        return cy.dataCy('delete-adapter-confirmation');
+    }
+
+    public static connectNewAdapterCancel() {
+        return cy.dataCy('connect-new-adapter-cancel');
+    }
+
     // =====================  Adapter settings btns  ==========================
     public static adapterSettingsStartAdapter() {
         return cy.dataCy('adapter-settings-start-adapter-btn');
@@ -91,6 +99,34 @@ export class ConnectBtns {
 
     public static showCodeCheckbox() {
         return cy.dataCy('show-code-checkbox');
+    }
+
+    public static deleteAdapterAndAssociatedPipelineConfirmation() {
+        return cy.dataCy(
+            'delete-adapter-and-associated-pipelines-confirmation',
+            {
+                timeout: 10000,
+            },
+        );
+    }
+
+    public static showAssetCheckbox() {
+        return cy.dataCy('show-asset-checkbox');
+    }
+
+    public static connectRemoveDuplicateBox() {
+        return cy.dataCy('connect-remove-duplicates-box');
+    }
+    public static connectReduceEventRate() {
+        return cy.dataCy('connect-reduce-event-rate-box');
+    }
+
+    public static assetCheckbox() {
+        return cy.dataCy('show-asset-checkbox');
+    }
+
+    public static adapterSettingsNextBtn() {
+        return cy.dataCy('adapter-settings-next-button');
     }
 
     // ========================================================================
@@ -143,6 +179,10 @@ export class ConnectBtns {
         return cy.dataCy('connect-edit-field-runtime-name', {
             timeout: 10000,
         });
+    }
+
+    public static schemaNextBtn() {
+        return cy.dataCy('sp-event-schema-next-button');
     }
 
     // ========================================================================

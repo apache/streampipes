@@ -128,10 +128,10 @@
 
 <div fxLayoutAlign="end" class="mt-10">
     <button class="mat-basic" mat-flat-button (click)="removeSelection()">
-        Cancel
+        {{ 'Cancel' | translate }}
     </button>
     <button class="mat-basic stepper-button" mat-flat-button (click)="goBack()">
-        Back
+        {{ 'Back' | translate }}
     </button>
     <button
         class="stepper-button"
@@ -142,6 +142,6 @@
         (click)="clickNext()"
         [disabled]="!validEventSchema"
     >
-        Next
+        {{ 'Next' | translate }}
     </button>
 </div>

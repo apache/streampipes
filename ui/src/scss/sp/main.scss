@@ -57,11 +57,6 @@ pre.version {
     border: 0;
 }
 
-.md-toolbar-tools {
-    width: 100%;
-    align-items: center;
-}
-
 code[class*='language-'],
 pre[class*='language-'] {
     white-space: pre-wrap;
@@ -152,7 +147,6 @@ md-content {
 
 .page-container {
     margin: 10px;
-    border: 1px solid var(--color-bg-3);
     min-height: calc(100% - 60px);
     background: var(--color-bg-page-container);
 }
@@ -194,11 +188,6 @@ md-content {
     background: #dddddd;
     border-bottom-left-radius: 20em;
     border-bottom-right-radius: 20em;
-}
-
-.top-nav {
-    height: 40px !important;
-    border-bottom: 0px solid var(--color-primary);
 }
 
 .angular-google-map-container {

@@ -29,12 +29,14 @@ import {
 } from '@streampipes/shared-ui';
 import { SpAdapterDetailsTabs } from './adapter-details-tabs';
 import { Directive } from '@angular/core';
+import { catchError, of } from 'rxjs';
 
 @Directive()
 export abstract class SpAbstractAdapterDetailsDirective {
     currentAdapterId: string;
     tabs: SpNavigationItem[] = [];
     adapter: AdapterDescription;
+    adapterNotFound = false;
 
     constructor(
         protected currentUserService: CurrentUserService,
@@ -56,10 +58,22 @@ export abstract class SpAbstractAdapterDetailsDirective {
     }
 
     loadAdapter(): void {
-        this.adapterService.getAdapter(this.currentAdapterId).subscribe(res => {
-            this.adapter = res;
-            this.onAdapterLoaded();
-        });
+        this.adapterService
+            .getAdapter(this.currentAdapterId)
+            .pipe(
+                catchError(() => {
+                    this.adapterNotFound = true;
+                    return of(null);
+                }),
+            )
+            .subscribe(res => {
+                if (!res) {
+                    return;
+                }
+
+                this.adapter = res;
+                this.onAdapterLoaded();
+            });
     }
 
     triggerUpdate(): void {

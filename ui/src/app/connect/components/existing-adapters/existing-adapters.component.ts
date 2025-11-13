@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
     AdapterDescription,
     AdapterMonitoringService,
@@ -30,21 +30,22 @@ import {
     CurrentUserService,
     DialogRef,
     DialogService,
+    ObjectPermissionDialogComponent,
     PanelType,
+    SpAssetBrowserService,
     SpBreadcrumbService,
     SpExceptionDetailsDialogComponent,
 } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
 import { MatSort } from '@angular/material/sort';
-import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
-import { UserRole } from '../../../_enums/user-role.enum';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription, zip } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -75,44 +76,49 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     dataSource: MatTableDataSource<AdapterDescription> =
         new MatTableDataSource();
-    isAdmin = false;
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
     tutorialActive = false;
 
-    userSubscription: Subscription;
-    tutorialActiveSubscription: Subscription;
+    assetFilter$: Subscription;
+    user$: Subscription;
+    tutorial$: Subscription;
     currentFilterIds: Set<string> = new Set<string>();
 
     startAdapterErrorText = 'Could not start adapter';
     stopAdapterErrorText = 'Could not stop adapter';
 
-    constructor(
-        private adapterService: AdapterService,
-        private dialogService: DialogService,
-        private currentUserService: CurrentUserService,
-        private router: Router,
-        private pipelineElementAssetService: PipelineElementAssetService,
-        private adapterFilter: AdapterFilterPipe,
-        private breadcrumbService: SpBreadcrumbService,
-        private adapterMonitoringService: AdapterMonitoringService,
-        private shepherdService: ShepherdService,
-    ) {}
+    private adapterService = inject(AdapterService);
+    private dialogService = inject(DialogService);
+    private currentUserService = inject(CurrentUserService);
+    private router = inject(Router);
+    private pipelineElementAssetService = inject(PipelineElementAssetService);
+    private adapterFilter = inject(AdapterFilterPipe);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private shepherdService = inject(ShepherdService);
+    private translate = inject(TranslateService);
+    private adapterMonitoringService = inject(AdapterMonitoringService);
+    private assetFilterService = inject(SpAssetBrowserService);
 
     ngOnInit(): void {
+        this.assetFilterService.applyAssetLinkType('adapter');
+        this.assetFilter$ =
+            this.assetFilterService.currentAssetFilter$.subscribe(filter => {
+                this.currentFilterIds =
+                    filter?.activeElementIds || new Set<string>();
+                this.applyAdapterFilters(this.currentFilterIds);
+            });
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpConnectRoutes.BASE),
         );
-        this.userSubscription = this.currentUserService.user$.subscribe(
-            user => {
-                this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
-                this.getAdaptersRunning();
+        this.user$ = this.currentUserService.user$.subscribe(user => {
+            this.getAdaptersRunning();
+        });
+        this.tutorial$ = this.shepherdService.tutorialActive$.subscribe(
+            tutorialActive => {
+                this.tutorialActive = tutorialActive;
             },
         );
-        this.tutorialActiveSubscription =
-            this.shepherdService.tutorialActive$.subscribe(tutorialActive => {
-                this.tutorialActive = tutorialActive;
-            });
     }
 
     startAdapter(adapter: AdapterDescription) {
@@ -155,7 +161,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         const dialogRef: DialogRef<AllAdapterActionsComponent> =
             this.dialogService.open(AllAdapterActionsComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: (action ? 'Start' : 'Stop') + ' all adapters',
+                title: action
+                    ? this.translate.instant('Start all adapters')
+                    : this.translate.instant('Stop all adapters'),
                 width: '70vw',
                 data: {
                     adapters: this.existingAdapters,
@@ -182,13 +190,15 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             SpExceptionDetailsDialogComponent,
             {
                 panelType: PanelType.STANDARD_PANEL,
-                title: 'Adapter Status',
+                title: this.translate.instant('Adapter status'),
                 width: '70vw',
                 data: {
                     message: message,
                     title: title,
                     additionalButton: !startAction,
-                    additionalButtonText: 'Reset adapter state',
+                    additionalButtonText: this.translate.instant(
+                        'Reset adapter state',
+                    ),
                 },
             },
         );
@@ -223,12 +233,14 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             ObjectPermissionDialogComponent,
             {
                 panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Manage permissions',
+                title: this.translate.instant('Manage permissions'),
                 width: '50vw',
                 data: {
                     objectInstanceId: adapter.correspondingDataStreamElementId,
                     headerTitle:
-                        'Manage permissions for adapter ' + adapter.name,
+                        this.translate.instant(
+                            'Manage permissions for adapter ',
+                        ) + adapter.name,
                 },
             },
         );
@@ -252,7 +264,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         const dialogRef: DialogRef<DeleteAdapterDialogComponent> =
             this.dialogService.open(DeleteAdapterDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: 'Delete Adapter',
+                title: this.translate.instant('Delete Adapter'),
                 width: '70vw',
                 data: {
                     adapter: adapter,
@@ -315,7 +327,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.userSubscription?.unsubscribe();
-        this.tutorialActiveSubscription?.unsubscribe();
+        this.user$?.unsubscribe();
+        this.tutorial$?.unsubscribe();
+        this.assetFilter$?.unsubscribe();
     }
 }

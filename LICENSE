@@ -252,13 +252,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-===============================================================
-
-This project includes some sources that are also licensed under the Apache
-License Version 2.0:
-
-All files in streampipes-extensions/streampipes-processors-transformation-flink/src/main/java/src/main/java/com/kohlschutter/boilerpipe (https://github.com/kohlschutter/boilerpipe)
-
 ================================================================
 
 This project includes some sources that are licensed under the MIT License:

@@ -18,7 +18,7 @@
 
 <div [formGroup]="startAdapterForm" fxLayout="column" fxFlex="100">
     <sp-basic-inner-panel
-        panelTitle="Adapter settings"
+        [panelTitle]="'Adapter settings' | translate"
         outerMargin="20px 0px 10px 0px"
     >
         <div fxFlex="100">
@@ -28,7 +28,7 @@
                         formControlName="adapterName"
                         matInput
                         id="input-AdapterName"
-                        placeholder="Adapter Name"
+                        [placeholder]="'Adapter Name' | translate"
                         data-cy="sp-adapter-name"
                         required
                         (blur)="triggerTutorialAdapterNameAssigned()"
@@ -94,7 +94,7 @@
                         matInput
                         id="input-AdapterDescription"
                         [ngModelOptions]="{ standalone: true }"
-                        placeholder="Adapter Description"
+                        [placeholder]="'Adapter Description' | translate"
                         [(ngModel)]="adapterDescription.description"
                     />
                 </mat-form-field>
@@ -104,8 +104,8 @@
 
     <div fxFlex="100" fxLayout="column">
         <sp-adapter-options-panel
-            optionTitle="Run adapter"
-            optionDescription="Start adapter now"
+            [optionTitle]="'Run adapter' | translate"
+            [optionDescription]="'Start adapter now' | translate"
             optionIcon="play_arrow"
             dataCy="start-adapter-now-checkbox"
             *ngIf="!isEditMode"
@@ -114,26 +114,30 @@
         >
         </sp-adapter-options-panel>
 
-        <sp-adapter-options-panel
-            [optionTitle]="'Add to Asset' | translate"
-            [optionDescription]="'Add Adapter to an existing Asset' | translate"
-            optionIcon="precision_manufacturing"
-            dataCy="show-asset-checkbox"
-            [isChecked]="
-                showAsset && (!isEditMode || originalAssets.length > 0)
-            "
-            (optionSelectedEmitter)="showAsset = $event"
-        >
-            <sp-asset-link-configuration
-                *ngIf="showAsset"
-                [isEdit]="isEditMode"
-                [itemId]="adapterDescription.elementId"
-                (selectedAssetsChange)="onSelectedAssetsChange($event)"
-                (deselectedAssetsChange)="onDeselectedAssetsChange($event)"
-                (originalAssetsEmitter)="onOriginalAssetsEmitted($event)"
+        @if (isAssetAdmin) {
+            <sp-adapter-options-panel
+                [optionTitle]="'Add to Asset' | translate"
+                [optionDescription]="
+                    'Add Adapter to an existing Asset' | translate
+                "
+                optionIcon="precision_manufacturing"
+                dataCy="show-asset-checkbox"
+                [isChecked]="
+                    showAsset && (!isEditMode || originalAssets.length > 0)
+                "
+                (optionSelectedEmitter)="showAsset = $event"
             >
-            </sp-asset-link-configuration>
-        </sp-adapter-options-panel>
+                <sp-asset-link-configuration
+                    *ngIf="showAsset"
+                    [isEdit]="isEditMode"
+                    [itemId]="adapterDescription.elementId"
+                    (selectedAssetsChange)="onSelectedAssetsChange($event)"
+                    (deselectedAssetsChange)="onDeselectedAssetsChange($event)"
+                    (originalAssetsEmitter)="onOriginalAssetsEmitted($event)"
+                >
+                </sp-asset-link-configuration>
+            </sp-adapter-options-panel>
+        }
 
         <sp-adapter-options-panel
             [optionTitle]="'Remove Duplicates' | translate"
@@ -208,38 +212,44 @@
         </sp-adapter-options-panel>
 
         <!-- Start pipeline template to store raw events in data lake -->
-        <sp-adapter-options-panel
-            [optionTitle]="'Persist events' | translate"
-            [optionDescription]="
-                'Store all events of this source in the internal data store'
-                    | translate
-            "
-            optionIcon="save"
-            dataCy="sp-store-in-datalake"
-            *ngIf="!isEditMode"
-            (optionSelectedEmitter)="handlePersistOption($event)"
-        >
-            <mat-form-field *ngIf="saveInDataLake" color="accent" class="mt-10">
-                <mat-label>{{ 'Select Time Field' | translate }}</mat-label>
-                <mat-select
-                    [(ngModel)]="dataLakeTimestampField"
-                    [ngModelOptions]="{ standalone: true }"
-                    data-cy="sp-store-in-datalake-timestamp"
+        @if (isPipelineAdmin) {
+            <sp-adapter-options-panel
+                [optionTitle]="'Persist events' | translate"
+                [optionDescription]="
+                    'Store all events of this source in the internal data store'
+                        | translate
+                "
+                optionIcon="save"
+                dataCy="sp-store-in-datalake"
+                *ngIf="!isEditMode"
+                (optionSelectedEmitter)="handlePersistOption($event)"
+            >
+                <mat-form-field
+                    *ngIf="saveInDataLake"
+                    color="accent"
+                    class="mt-10"
                 >
-                    <mat-option
-                        class="md-elevation-z1"
-                        style="background: white"
-                        *ngFor="
-                            let timestampField of eventSchema.eventProperties
-                                | timestampFilter
-                        "
-                        [value]="timestampField.runtimeName"
+                    <mat-label>{{ 'Select Time Field' | translate }}</mat-label>
+                    <mat-select
+                        [(ngModel)]="dataLakeTimestampField"
+                        [ngModelOptions]="{ standalone: true }"
+                        data-cy="sp-store-in-datalake-timestamp"
                     >
-                        {{ timestampField.runtimeName }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </sp-adapter-options-panel>
+                        <mat-option
+                            class="md-elevation-z1"
+                            style="background: white"
+                            *ngFor="
+                                let timestampField of eventSchema.eventProperties
+                                    | timestampFilter
+                            "
+                            [value]="timestampField.runtimeName"
+                        >
+                            {{ timestampField.runtimeName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </sp-adapter-options-panel>
+        }
 
         <sp-adapter-options-panel
             [optionTitle]="'Show code' | translate"

@@ -21,5 +21,5 @@ import java.util.Map;
 
 public interface RawDataProcessor {
 
-  void process(Map<String, Object> rawEvent, String sourceInfo);
+  void process(Map<String, Object> rawEvent, long size, String sourceInfo);
 }

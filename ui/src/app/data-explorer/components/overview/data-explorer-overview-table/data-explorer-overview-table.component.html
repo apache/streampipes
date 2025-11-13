@@ -90,11 +90,7 @@
                     <mat-icon>edit</mat-icon>
                     <span>{{ 'Edit chart' | translate }}</span>
                 </button>
-                <button
-                    mat-menu-item
-                    *ngIf="isAdmin"
-                    (click)="showPermissionsDialog(element)"
-                >
+                <button mat-menu-item (click)="showPermissionsDialog(element)">
                     <mat-icon>share</mat-icon>
                     <span>{{ 'Manage permissions' | translate }}</span>
                 </button>

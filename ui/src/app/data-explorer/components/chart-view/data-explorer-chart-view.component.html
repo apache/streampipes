@@ -42,53 +42,59 @@
         </sp-data-explorer-data-view-toolbar>
     </div>
     <div fxFlex="100" fxLayout="column">
-        <mat-drawer-container
-            class="designer-panel-container h-100 dashboard-grid"
-        >
-            <mat-drawer
-                [opened]="editMode"
-                [style.width.px]="drawerWidth"
-                mode="side"
-                position="end"
-                class="designer-panel"
+        @if (chartNotFound) {
+            <sp-warning-box>
+                {{ 'The desired chart was not found!' | translate }}
+            </sp-warning-box>
+        } @else {
+            <mat-drawer-container
+                class="designer-panel-container h-100 dashboard-grid"
             >
-                <sp-sidebar-resize
-                    [minWidth]="450"
-                    [maxWidth]="1000"
-                    (widthChanged)="onWidthChanged($event)"
+                <mat-drawer
+                    [opened]="editMode"
+                    [style.width.px]="drawerWidth"
+                    mode="side"
+                    position="end"
+                    class="designer-panel"
                 >
-                    <div fxLayout="column" fxFlex="100">
-                        <sp-data-explorer-designer-panel
-                            [currentlyConfiguredWidget]="dataView"
-                            [dataLakeMeasure]="dataLakeMeasure"
-                            fxFlex="100"
-                        >
-                        </sp-data-explorer-designer-panel>
-                    </div>
-                </sp-sidebar-resize>
-            </mat-drawer>
-            <mat-drawer-content class="h-100 dashboard-grid">
-                <div #panel fxFlex="100" fxLayout="column">
-                    <sp-data-explorer-chart-container
-                        *ngIf="
-                            dataView &&
-                            gridsterItemComponent &&
-                            dataView.dataConfig?.sourceConfigs?.length > 0
-                        "
-                        [dataViewMode]="true"
-                        [editMode]="editMode"
-                        [configuredWidget]="dataView"
-                        [gridsterItemComponent]="gridsterItemComponent"
-                        [timeSettings]="timeSettings"
-                        [observableGenerator]="observableGenerator"
-                        [dataLakeMeasure]="
-                            dataView.dataConfig.sourceConfigs[0].measure
-                        "
-                        (startEditModeEmitter)="editDataView()"
+                    <sp-sidebar-resize
+                        [minWidth]="450"
+                        [maxWidth]="1000"
+                        (widthChanged)="onWidthChanged($event)"
                     >
-                    </sp-data-explorer-chart-container>
-                </div>
-            </mat-drawer-content>
-        </mat-drawer-container>
+                        <div fxLayout="column" fxFlex="100">
+                            <sp-data-explorer-designer-panel
+                                [currentlyConfiguredWidget]="dataView"
+                                [dataLakeMeasure]="dataLakeMeasure"
+                                fxFlex="100"
+                            >
+                            </sp-data-explorer-designer-panel>
+                        </div>
+                    </sp-sidebar-resize>
+                </mat-drawer>
+                <mat-drawer-content class="h-100 dashboard-grid">
+                    <div #panel fxFlex="100" fxLayout="column">
+                        <sp-data-explorer-chart-container
+                            *ngIf="
+                                dataView &&
+                                gridsterItemComponent &&
+                                dataView.dataConfig?.sourceConfigs?.length > 0
+                            "
+                            [dataViewMode]="true"
+                            [editMode]="editMode"
+                            [configuredWidget]="dataView"
+                            [gridsterItemComponent]="gridsterItemComponent"
+                            [timeSettings]="timeSettings"
+                            [observableGenerator]="observableGenerator"
+                            [dataLakeMeasure]="
+                                dataView.dataConfig.sourceConfigs[0].measure
+                            "
+                            (startEditModeEmitter)="editDataView()"
+                        >
+                        </sp-data-explorer-chart-container>
+                    </div>
+                </mat-drawer-content>
+            </mat-drawer-container>
+        }
     </div>
 </sp-basic-view>

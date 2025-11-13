@@ -83,7 +83,7 @@
                     <mat-icon>visibility</mat-icon>
                     <span>{{ 'Show' | translate }}</span>
                 </button>
-                @if (hasDataExplorerWritePrivileges) {
+                @if (hasDashboardWritePrivileges) {
                     <button
                         mat-menu-item
                         [attr.data-cy]="'edit-dashboard-' + element.name"
@@ -109,7 +109,7 @@
                     <mat-icon>open_in_new</mat-icon>
                     <span>{{ 'Kiosk mode' | translate }}</span>
                 </button>
-                @if (hasDataExplorerWritePrivileges) {
+                @if (hasDashboardWritePrivileges) {
                     <button
                         mat-menu-item
                         [attr.data-cy]="
@@ -131,7 +131,7 @@
                     <mat-icon>share</mat-icon>
                     <span>{{ 'Manage permissions' | translate }}</span>
                 </button>
-                @if (hasDataExplorerWritePrivileges) {
+                @if (hasDashboardWritePrivileges) {
                     <button
                         mat-menu-item
                         [attr.data-cy]="'delete-dashboard-' + element.name"

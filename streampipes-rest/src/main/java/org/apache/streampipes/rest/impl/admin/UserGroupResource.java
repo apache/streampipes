@@ -44,7 +44,6 @@ import java.util.List;
 public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<List<Group>> getAllUserGroups() {
     return ok(getUserGroupStorage().findAll());
   }

@@ -16,37 +16,35 @@
   ~
   -->
 
-<div fxFlex fxLayoutAlign="start center" *ngIf="expanded">
-    <span class="ml-5">{{ 'Browse assets' | translate }}</span>
-</div>
-<div fxLayoutAlign="end center">
-    <button
-        mat-icon-button
-        *ngIf="expanded"
-        color="accent"
-        [matMenuTriggerFor]="menu"
-        #menuTrigger="matMenuTrigger"
-        [matTooltip]="'Filter assets' | translate"
-        (menuClosed)="menuTrigger.closeMenu()"
-    >
-        <mat-icon>filter_alt</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu" fxFlex="100" class="large-menu">
-        <sp-asset-browser-filter
-            (closeMenu)="closeMenu()"
-            [assetBrowserData]="assetBrowserData"
+@if (showAssetBrowser) {
+    <div fxLayoutAlign="end center">
+        <button
+            mat-flat-button
+            class="btn-secondary-outline btn-filter"
+            color="secondary"
+            [matMenuTriggerFor]="menu"
+            #menuTrigger="matMenuTrigger"
+            [matTooltip]="'Filter assets' | translate"
+            [disabled]="filterDisabled"
+            (menuClosed)="menuTrigger.closeMenu()"
         >
-        </sp-asset-browser-filter>
-    </mat-menu>
-    <button
-        mat-icon-button
-        color="accent"
-        (click)="toggleExpanded.emit(!expanded)"
-    >
-        <mat-icon>{{
-            expanded
-                ? 'keyboard_double_arrow_left'
-                : 'keyboard_double_arrow_right'
-        }}</mat-icon>
-    </button>
-</div>
+            <mat-icon [class.active-filters]="filterActive"
+                >filter_alt</mat-icon
+            >
+            @if (filterActive) {
+                <span>{{
+                    selectedAssetCount + ' of ' + allAssetCount + ' ' + 'assets'
+                }}</span>
+            } @else {
+                <span>{{ 'All assets' | translate }}</span>
+            }
+        </button>
+        <mat-menu #menu="matMenu" fxFlex="100" class="large-menu">
+            <sp-asset-browser-filter
+                (closeMenu)="closeMenu()"
+                [assetBrowserData]="assetBrowserData"
+            >
+            </sp-asset-browser-filter>
+        </mat-menu>
+    </div>
+}

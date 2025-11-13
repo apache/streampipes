@@ -29,7 +29,7 @@
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.98.0-SNAPSHOT</version>
+    <version>0.99.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache StreamPipes</name>
@@ -61,7 +61,7 @@
         <eclipse.milo.version>0.6.16</eclipse.milo.version>
         <error-prone.version>2.10.0</error-prone.version>
         <file-management.version>3.1.0</file-management.version>
-        <flink.version>1.13.5</flink.version>
+        <findbugs.version>3.0.2</findbugs.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <geojson-jackson.version>1.14</geojson-jackson.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
@@ -111,7 +111,7 @@
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.3.1</opennlp.version>
-        <plc4x.version>0.12.0</plc4x.version>
+        <plc4x.version>0.13.1</plc4x.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
@@ -239,6 +239,12 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${findbugs.version}</version>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -434,21 +440,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
                 <version>${commons-text.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.flink</groupId>
-                <artifactId>flink-connector-kafka_2.11</artifactId>
-                <version>${flink.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.flink</groupId>
-                <artifactId>flink-java</artifactId>
-                <version>${flink.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.flink</groupId>
-                <artifactId>flink-streaming-java_2.11</artifactId>
-                <version>${flink.version}</version>
             </dependency>
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
@@ -1063,8 +1054,6 @@
 
     <modules>
         <module>archetypes/streampipes-archetype-extensions-jvm</module>
-        <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
-        <module>archetypes/streampipes-archetype-pe-processors-flink</module>
         <module>streampipes-client</module>
         <module>streampipes-client-api</module>
         <module>streampipes-commons</module>
@@ -1094,8 +1083,9 @@
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
-        <module>streampipes-pipeline-management</module>
         <module>streampipes-resource-management</module>
+        <module>streampipes-load-balancer</module>
+        <module>streampipes-pipeline-management</module>
         <module>streampipes-rest-extensions</module>
         <module>streampipes-rest</module>
         <module>streampipes-rest-core-base</module>
@@ -1119,7 +1109,6 @@
         <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>
         <module>streampipes-wrapper-distributed</module>
-        <module>streampipes-wrapper-flink</module>
         <module>streampipes-wrapper-kafka-streams</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
@@ -1185,8 +1174,6 @@
     </profiles>
 
     <!-- Build Settings -->
-
-
     <build>
 
         <!-- Plugin Management -->
@@ -1465,15 +1452,10 @@
                         <exclude>streampipes-code-generation/src/test/resources/expected_web_xml</exclude>
 
                         <!-- Archetype resources should not have ASF license header -->
-                        <exclude>archetypes/streampipes-archetype-pe-processors-flink/src/main/resources/**</exclude>
                         <exclude>archetypes/streampipes-archetype-pe-processors-jvm/src/main/resources/**</exclude>
-                        <exclude>archetypes/streampipes-archetype-pe-sinks-flink/src/main/resources/**</exclude>
                         <exclude>archetypes/streampipes-archetype-pe-sinks-jvm/src/main/resources/**</exclude>
 
                         <!-- External files -->
-                        <exclude>
-                            streampipes-extensions/streampipes-pipeline-elements-experimental-flink/src/main/java/com/kohlschutter/boilerpipe/**
-                        </exclude>
                         <exclude>
                             streampipes-extensions/streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor/revgeocoder/geocode/**
                         </exclude>

@@ -35,4 +35,15 @@ export interface AssetFilter {
     selectedSites: AssetSiteDesc[];
     selectedTypes: Isa95TypeDesc[];
     selectedLabels: SpLabel[];
+    selectedAssetModels: SpAsset[];
+}
+
+export interface FilterResult {
+    filterActive: boolean;
+    filterDisabled: boolean;
+    activeElementIds?: Set<string>;
+    currentAssetLink?: string;
+    selectedAssets?: SpAsset[];
+    allAssetCount?: number;
+    selectedAssetCount?: number;
 }

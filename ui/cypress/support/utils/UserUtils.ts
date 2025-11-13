@@ -19,6 +19,7 @@
 import { User } from '../model/User';
 import { UserBuilder } from '../builder/UserBuilder';
 import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserBtns } from './user/UserBtns';
 
 export class UserUtils {
     public static adminUser = UserBuilder.create('admin@streampipes.apache.org')
@@ -42,13 +43,14 @@ export class UserUtils {
 
     public static goToUserConfiguration() {
         cy.visit('#/configuration/security');
+        UserBtns.newUserBtn().should('exist');
     }
 
     public static addUser(user: User) {
         this.goToUserConfiguration();
 
         // user configuration
-        cy.dataCy('add-new-user', { timeout: 10000 }).click();
+        UserBtns.newUserBtn().click();
         cy.dataCy('new-user-email').type(user.email);
         cy.dataCy('new-user-full-name').type(user.name);
         cy.dataCy('new-user-password').type(user.password);
@@ -60,10 +62,25 @@ export class UserUtils {
                 .children()
                 .click();
         }
-        cy.dataCy('new-user-enabled').children().click();
+        UserBtns.activateUserBtn().children().click();
 
         // Store
-        cy.dataCy('sp-element-edit-user-save').click();
+        UserBtns.saveEditUserBtn().click();
+    }
+
+    public static toggleUserRole(user: User, role: UserRole) {
+        this.switchUser(this.adminUser);
+        this.goToUserConfiguration();
+        cy.get('table tbody tr', { timeout: 10000 }).should(
+            'have.length.greaterThan',
+            0,
+        );
+
+        UserBtns.editUserBtn(user.email);
+
+        UserBtns.userRoleCheckbox(role).click();
+
+        UserBtns.saveEditUserBtn().click();
     }
 
     /**
@@ -97,7 +114,7 @@ export class UserUtils {
     public static deleteUser(user: User) {
         this.goToUserConfiguration();
 
-        cy.dataCy('user-delete-btn-' + user.name).click();
-        cy.dataCy('confirm-delete').click();
+        UserBtns.deleteUserBtn(user.name).click();
+        UserBtns.confirmDeleteBtn().click();
     }
 }

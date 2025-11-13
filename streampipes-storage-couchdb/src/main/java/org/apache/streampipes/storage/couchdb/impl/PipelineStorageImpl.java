@@ -40,11 +40,11 @@ public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements
   @Override
   public List<String> getPipelinesUsingAdapter(String adapterId) {
     List<JsonObject> pipelinesWithAdapter =
-        couchDbClientSupplier
-            .get()
-            .view(ADAPTER_VIEW)
-            .key(adapterId)
-            .query(JsonObject.class);
+            couchDbClientSupplier
+                    .get()
+                    .view(ADAPTER_VIEW)
+                    .key(adapterId)
+                    .query(JsonObject.class);
     return pipelinesWithAdapter.stream().map(p -> p.get("value").getAsString()).collect(Collectors.toList());
   }
 
@@ -60,8 +60,7 @@ public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements
     }
     return result;
   }
-
-  @Override
+    @Override
   public boolean uniqueNameValidation(String name){
 String selectorJson = Utils.getJsonSelectorForUniqueNameValidation("name", name);
 

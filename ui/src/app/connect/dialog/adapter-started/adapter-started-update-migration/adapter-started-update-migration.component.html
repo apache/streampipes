@@ -17,17 +17,23 @@
   -->
 
 <div fxLayout="column" fxLayoutAlign="start center">
-    <h4>
-        This adapter is used by
-        {{ adapterPipelineUpdateInfos.length }} pipelines.
-    </h4>
+    @if (adapterPipelineUpdateInfos.length > 1) {
+        <h4>
+            {{ 'This adapter is used by' | translate }}
+            {{ adapterPipelineUpdateInfos.length }}
+            {{ 'pipeline' | translate }}.
+        </h4>
+    } @else {
+        {{ 'This adapter is used by' | translate }}
+        {{ adapterPipelineUpdateInfos.length }} {{ 'pipelines' | translate }}. ‚
+    }
     <div class="migration-infos">
         <div *ngFor="let updateInfo of adapterPipelineUpdateInfos">
             <div *ngIf="updateInfo.canAutoMigrate" fxLayoutAlign="start center">
-                <i class="material-icons">check</i>&nbsp;Pipeline&nbsp;<b>{{
-                    updateInfo.pipelineName
-                }}</b
-                >&nbsp;will be automatically migrated.
+                <i class="material-icons">check</i>&nbsp;{{
+                    'Pipeline' | translate
+                }}&nbsp;<b>{{ updateInfo.pipelineName }}</b
+                >&nbsp;{{ 'will be automatically migrated' | translate }}.
             </div>
             <div
                 *ngIf="!updateInfo.canAutoMigrate"
@@ -38,15 +44,21 @@
                     data-cy="sp-connect-adapter-edit-warning"
                     >warning</i
                 >
-                &nbsp;Pipeline&nbsp;<b>{{ updateInfo.pipelineName }}</b
-                >&nbsp;will be stopped and needs manual review.
+                &nbsp;{{ 'Pipeline' | translate }}&nbsp;<b>{{
+                    updateInfo.pipelineName
+                }}</b
+                >&nbsp;{{
+                    'will be stopped and needs manual review' | translate
+                }}.
             </div>
         </div>
     </div>
     <div class="migration-infos" fxLayoutAlign="start center">
         <i class="material-icons">warning</i>
-        Please check and possibly modify existing dashboards and data views
-        afterwards.
+        {{
+            'Please check and possibly modify existing dashboards and data views afterwards.'
+                | translate
+        }}
     </div>
     <div>
         <button
@@ -56,7 +68,7 @@
             (click)="startUpdateEmitter.emit()"
             data-cy="btn-update-adapter-migrate-pipelines"
         >
-            Update adapter and migrate pipelines
+            {{ 'Update adapter and migrate pipelines' | translate }}
         </button>
     </div>
 </div>

@@ -25,6 +25,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
+import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
 
 describe('Test Edit Adapter and Pipeline', () => {
     beforeEach('Setup Test', () => {
@@ -89,16 +90,16 @@ describe('Test Edit Adapter and Pipeline', () => {
         }).should('be.visible');
 
         GeneralUtils.openMenuForRow('Pipeline Test');
-        cy.dataCy('modify-pipeline-btn').click();
-        cy.dataCy('settings-pipeline-element-button').eq(0).click();
-        cy.dataCy('number-mapping').contains('pressure').click({ force: true });
-        cy.dataCy('sp-element-configuration-save').click({ force: true });
-        cy.dataCy('sp-editor-save-pipeline').click();
-        cy.dataCy('sp-editor-checkbox-navigate-to-overview').children().click();
-        cy.dataCy('sp-editor-apply').click();
-        cy.dataCy('sp-navigate-to-pipeline-overview', {
-            timeout: 7000,
-        }).click();
+        PipelineBtns.modifyPipeline().click();
+        PipelineBtns.settingsPipelineElementBtn().eq(0).click();
+        cy.dataCy('number-mapping', { timeout: 10000 })
+            .contains('pressure')
+            .click({ force: true });
+        PipelineBtns.saveElementConfigBtn().click({ force: true });
+        PipelineBtns.savePipelineBtn().click();
+        PipelineBtns.navigateToOverviewCheckbox().children().click();
+        PipelineBtns.editorApplyBtn().click();
+        PipelineBtns.navigateToPipelineOverview().click();
 
         // Visit dashboard
         cy.wait(5000);

@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-10-09 16:21:10.
+// Generated using typescript-generator version 3.2.1263 on 2025-11-12 10:22:54.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -2461,6 +2462,7 @@ export class MatchingStaticProperty extends StaticProperty {
 export class MessageCounter {
     counter: number;
     lastTimestamp: number;
+    size: number;
 
     static fromData(
         data: MessageCounter,
@@ -2472,6 +2474,7 @@ export class MessageCounter {
         const instance = target || new MessageCounter();
         instance.counter = data.counter;
         instance.lastTimestamp = data.lastTimestamp;
+        instance.size = data.size;
         return instance;
     }
 }
@@ -2675,6 +2678,8 @@ export class Pipeline implements Storable {
     description: string;
     elementId: string;
     healthStatus: PipelineHealthStatus;
+    labels: string[];
+    lastMigratedAt: number;
     name: string;
     pipelineNotifications: string[];
     publicElement: boolean;
@@ -2701,6 +2706,8 @@ export class Pipeline implements Storable {
         instance.description = data.description;
         instance.elementId = data.elementId;
         instance.healthStatus = data.healthStatus;
+        instance.labels = __getCopyArrayFn(__identity<string>())(data.labels);
+        instance.lastMigratedAt = data.lastMigratedAt;
         instance.name = data.name;
         instance.pipelineNotifications = __getCopyArrayFn(__identity<string>())(
             data.pipelineNotifications,
@@ -3613,6 +3620,7 @@ export class ShortUserInfo {
     displayName: string;
     email: string;
     principalId: string;
+    principalType: string;
 
     static fromData(
         data: ShortUserInfo,
@@ -3625,6 +3633,7 @@ export class ShortUserInfo {
         instance.displayName = data.displayName;
         instance.email = data.email;
         instance.principalId = data.principalId;
+        instance.principalType = data.principalType;
         return instance;
     }
 }
@@ -3843,6 +3852,7 @@ export class SpServiceRegistration implements Storable {
     firstTimeSeenUnhealthy: number;
     healthCheckPath: string;
     host: string;
+    labels: string[];
     port: number;
     providedExtensions: ExtensionItemDescription[];
     rev: string;
@@ -3853,6 +3863,7 @@ export class SpServiceRegistration implements Storable {
     svcId: string;
     svcType: string;
     tags: SpServiceTag[];
+    weight: number;
 
     static fromData(
         data: SpServiceRegistration,
@@ -3866,6 +3877,7 @@ export class SpServiceRegistration implements Storable {
         instance.firstTimeSeenUnhealthy = data.firstTimeSeenUnhealthy;
         instance.healthCheckPath = data.healthCheckPath;
         instance.host = data.host;
+        instance.labels = __getCopyArrayFn(__identity<string>())(data.labels);
         instance.port = data.port;
         instance.providedExtensions = __getCopyArrayFn(
             ExtensionItemDescription.fromData,
@@ -3878,6 +3890,7 @@ export class SpServiceRegistration implements Storable {
         instance.svcId = data.svcId;
         instance.svcType = data.svcType;
         instance.tags = __getCopyArrayFn(SpServiceTag.fromData)(data.tags);
+        instance.weight = data.weight;
         return instance;
     }
 }
@@ -4209,6 +4222,7 @@ export class UserInfo {
     darkMode: boolean;
     displayName: string;
     hasAcknowledged: boolean;
+    language: string;
     roles: string[];
     showTutorial: boolean;
     username: string;
@@ -4221,6 +4235,7 @@ export class UserInfo {
         instance.darkMode = data.darkMode;
         instance.displayName = data.displayName;
         instance.hasAcknowledged = data.hasAcknowledged;
+        instance.language = data.language;
         instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         instance.showTutorial = data.showTutorial;
         instance.username = data.username;

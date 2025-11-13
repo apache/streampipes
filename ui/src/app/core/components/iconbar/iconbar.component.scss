@@ -24,3 +24,254 @@
 .mat-mdc-icon-button.iconbar-size mat-icon {
     margin-top: 5px;
 }
+
+.md-toolbar-tools {
+    width: 100%;
+    align-items: center;
+}
+
+.menu-bar {
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.iconbar-item:hover {
+    cursor: pointer;
+}
+
+.menubar-root {
+    --mb-width: 260px;
+    --mb-width-collapsed: 62px;
+    --mb-radius: 18px;
+    --mb-gap: 10px;
+    --mb-item-h: 34px;
+    --mb-surface: color-mix(in oklab, var(--color-menubar-bg) 90%, transparent);
+    --mb-surface-2: color-mix(
+        in oklab,
+        var(--color-menubar-bg) 75%,
+        transparent
+    );
+    --mb-outline: rgba(255, 255, 255, 0.08);
+    --mb-outline-strong: rgba(255, 255, 255, 0.14);
+    --mb-text-dim: var(--color-primary);
+
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: var(--mb-width);
+    background: var(--mb-surface);
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.25),
+        inset -1px 0 0 var(--mb-outline);
+    color: var(--color-menubar-link-text);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.22s ease;
+    z-index: 3;
+}
+
+.menubar-root.collapsed {
+    width: var(--mb-width-collapsed);
+}
+
+/* Header */
+.menubar-header {
+    height: calc(var(--mat-toolbar-standard-height) + 10px);
+    padding: 0 10px 0 12px;
+    border-bottom: 1px solid var(--mb-outline);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brand {
+    height: var(--mat-toolbar-standard-height);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.brand img {
+    max-width: 100%;
+    display: block;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.collapse-btn {
+    border: 0;
+    background: transparent;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+
+.collapse-btn:hover {
+    background: var(--mb-surface-2);
+}
+
+.collapse-icon {
+    transition: transform 0.22s ease;
+}
+
+.menubar-root.collapsed .collapse-icon.rotated {
+    transform: rotate(180deg);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Scroll area */
+.menubar-scroll {
+    padding: 12px 8px 14px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+/* Ungrouped items */
+.top-items {
+    margin-top: 32px;
+}
+
+/* Group header */
+.menu-group {
+    margin: 6px 0 10px;
+}
+
+.menu-group-title {
+    width: 100%;
+    border: 0;
+    background: var(--color-menubar-bg-menu-group);
+    color: var(--color-menubar-text-menu-group);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    border-radius: var(--mb-radius);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+.menu-group-title:hover {
+    background: var(--color-menubar-bg-menu-group-hover);
+    outline-color: var(--mb-outline-strong);
+}
+
+.group-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    opacity: 0.9;
+}
+
+.chevron {
+    margin-left: auto;
+    transition:
+        transform 0.22s ease,
+        opacity 0.18s ease;
+    opacity: 0.9;
+}
+
+.chevron.rotate {
+    transform: rotate(180deg);
+}
+
+/* Accordion container */
+.menu-group-items {
+    margin-top: 4px;
+    overflow: hidden;
+    transition: max-height 0.22s ease;
+}
+
+.menu-group-items.instant {
+    transition: none;
+}
+
+/* Menu item button */
+.menu-item {
+    width: 100%;
+    height: var(--mb-item-h);
+    padding: 8px 10px;
+    margin: 3px 0;
+    border: 0;
+    border-radius: calc(var(--mb-radius) + 2px);
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition:
+        background 0.18s ease,
+        transform 0.06s ease,
+        outline-color 0.18s ease;
+    outline: 1px solid transparent;
+    color: var(--color-menubar-text-menu-item);
+}
+
+.menu-item:hover {
+    background: var(--color-menubar-bg-menu-item-hover);
+    outline-color: var(--mb-outline-strong);
+    color: var(--color-menubar-text-menu-item-hover);
+}
+
+.menu-item:active {
+    transform: translateY(1px);
+}
+
+.menu-item-selected {
+    background: color-mix(
+        in oklab,
+        var(--color-menubar-bg-menu-item-selected) 95%,
+        transparent
+    );
+    outline-color: var(--mb-outline-strong);
+}
+
+.item-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    opacity: 0.96;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.item-title {
+    font-size: 0.86rem;
+    flex: 1 1 auto;
+}
+
+.text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.menubar-root.collapsed .iconbar-item-btn {
+    justify-content: center;
+}
+
+.menubar-root.collapsed .menu-group-title {
+    justify-content: center;
+    padding: 10px 0;
+}
+
+@media (max-width: 960px) {
+    :root {
+        --mb-width: 248px;
+    }
+}
