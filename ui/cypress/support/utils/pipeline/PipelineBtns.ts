@@ -89,4 +89,12 @@ export class PipelineBtns {
     public static pipelineEditorCancel() {
         return cy.dataCy('sp-editor-cancel');
     }
+
+    public static pipelineIconStandRow() {
+        return cy.dataCy('pipeline-element-icon-stand-row');
+    }
+
+    public static pipelineHelpBtn() {
+        return cy.dataCy('help-button-icon-stand');
+    }
 }

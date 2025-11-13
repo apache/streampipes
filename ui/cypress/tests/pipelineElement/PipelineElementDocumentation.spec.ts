@@ -16,6 +16,7 @@
  *
  */
 
+import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 
 describe('Validate that the markdown documentation for pipeline elements works', () => {
@@ -25,8 +26,8 @@ describe('Validate that the markdown documentation for pipeline elements works',
 
     it('Perform Test', () => {
         PipelineUtils.goToPipelineEditor();
-        cy.dataCy('pipeline-element-icon-stand-row').first().click();
-        cy.dataCy('help-button-icon-stand').click();
+        PipelineBtns.pipelineIconStandRow().first().click();
+        PipelineBtns.pipelineHelpBtn().click();
         cy.dataCy('pipeline-element-documentation-markdown').should('exist');
     });
 });
