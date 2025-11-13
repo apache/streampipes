@@ -16,9 +16,10 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { SpBreadcrumbItem, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-breadcrumb',
@@ -26,23 +27,28 @@ import { Router } from '@angular/router';
     styleUrls: ['./breadcrumb.component.scss'],
     standalone: false,
 })
-export class SpBreadcrumbComponent implements OnInit {
+export class SpBreadcrumbComponent implements OnInit, OnDestroy {
     currentNavItems: SpBreadcrumbItem[] = [];
 
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        private router: Router,
-    ) {}
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private router = inject(Router);
+
+    private breadcrumb$: Subscription;
 
     ngOnInit(): void {
-        this.breadcrumbService.currentNavHierarchy$.subscribe(
-            currentNavItems => {
-                this.currentNavItems = currentNavItems;
-            },
-        );
+        this.breadcrumb$ =
+            this.breadcrumbService.currentNavHierarchy$.subscribe(
+                currentNavItems => {
+                    this.currentNavItems = currentNavItems;
+                },
+            );
     }
 
     navigateTo(target: string[]) {
         this.router.navigate(target);
+    }
+
+    ngOnDestroy() {
+        this.breadcrumb$?.unsubscribe();
     }
 }

@@ -22,7 +22,6 @@ jobmanager
 taskmanager
 kafka
 influxdb
-pipeline-elements-all-flink
 grafana
 prometheus
 prometheus-alertmanager

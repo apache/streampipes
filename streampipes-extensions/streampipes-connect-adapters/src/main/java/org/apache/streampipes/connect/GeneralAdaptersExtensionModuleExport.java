@@ -20,8 +20,6 @@ package org.apache.streampipes.connect;
 
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.connect.adapters.iss.IssAdapter;
-import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
-import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
@@ -35,8 +33,6 @@ public class GeneralAdaptersExtensionModuleExport implements IExtensionModuleExp
   @Override
   public List<StreamPipesAdapter> adapters() {
     return List.of(
-        new NetioRestAdapter(),
-        new NetioMQTTAdapter(),
         new ImageStreamAdapter(),
         new IssAdapter()
     );

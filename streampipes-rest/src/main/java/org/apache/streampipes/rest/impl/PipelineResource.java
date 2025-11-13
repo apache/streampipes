@@ -114,7 +114,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       path = "/{pipelineId}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Delete a pipeline with a given id", tags = {"Pipeline"})
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission('#pipelineId', 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public Message delete(@PathVariable("pipelineId") String pipelineId) {
     PipelineManager.deletePipeline(pipelineId);
     return Notifications.success("Pipeline deleted");
@@ -122,7 +122,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/{pipelineId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a specific pipeline with the given id", tags = {"Pipeline"})
-  @PreAuthorize("this.hasReadAuthority() and hasPermission('#pipelineId', 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#pipelineId, 'READ')")
   public ResponseEntity<Pipeline> getElement(@PathVariable("pipelineId") String pipelineId) {
     Pipeline foundPipeline = PipelineManager.getPipeline(pipelineId);
 
@@ -135,7 +135,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/{pipelineId}/start", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Start the pipeline with the given id", tags = {"Pipeline"})
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission('#pipelineId', 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<?> start(@PathVariable("pipelineId") String pipelineId) {
     try {
       PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId);
@@ -149,7 +149,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/{pipelineId}/stop", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Stop the pipeline with the given id", tags = {"Pipeline"})
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission('#pipelineId', 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<?> stop(@PathVariable("pipelineId") String pipelineId,
                                 @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
     try {
@@ -238,7 +238,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Update an existing pipeline", tags = {"Pipeline"})
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission('#pipelineId', 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<SuccessMessage> updatePipeline(@PathVariable("pipelineId") String pipelineId,
                                                           @RequestBody Pipeline pipeline) {
     Pipeline storedPipeline = getPipelineStorage().getElementById(pipelineId);

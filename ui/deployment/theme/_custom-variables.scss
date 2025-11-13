@@ -27,13 +27,23 @@
     --color-loading-bar: var(--color-primary);
     --color-primary-alt: rgb(59, 92, 149);
 
-    --color-navigation-bg: var(--color-secondary);
-    --color-navigation-link-text: var(--color-bg-0);
+    --color-menubar-bg: var(--color-secondary);
+    --color-menubar-bg-menu-item: var(--color-secondary);
+    --color-menubar-bg-menu-item-hover: var(--color-secondary);
+    --color-menubar-bg-menu-item-selected: var(--color-secondary);
+    --color-menubar-bg-menu-group-hover: var(--color-secondary);
+    --color-menubar-bg-menu-group-selected: var(--color-secondary);
+    --color-menubar-text-menu-item: var(--color-bg-1);
+    --color-menubar-text-menu-group: var(--color-primary);
+    --color-menubar-text-menu-item-hover: var(--color-bg-1);
+    --color-menubar-text-menu-group-hover: var(--color-primary);
 
-    --color-navigation-selected: var(--color-secondary);
-    --color-navigation-hover: var(--color-secondary-dark);
-    --color-navigation-bg-selected: var(--color-bg-1);
-    --color-navigation-divider: var(--color-secondary);
+    --color-toolbar-bg: var(--color-bg-0);
+    --color-toolbar-text: var(--color-secondary);
+    --color-toolbar-text-hover: var(--color-secondary-dark);
+    --color-toolbar-icon: var(--color-secondary);
+    --color-toolbar-icon-hover: var(--color-secondary-dark);
+    --color-toolbar-icon-selected: var(--color-secondary-dark);
 }
 
 .dark-mode {

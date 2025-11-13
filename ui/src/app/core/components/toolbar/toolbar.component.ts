@@ -27,11 +27,12 @@ import { Subscription, timer } from 'rxjs';
 import { exhaustMap } from 'rxjs/operators';
 import { NotificationCountService } from '../../../services/notification-count-service';
 import { LoginService } from '../../../login/services/login.service';
+import { SpAssetBrowserService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-toolbar',
     templateUrl: './toolbar.component.html',
-    styleUrls: ['./toolbar.component.scss', '../bars.scss'],
+    styleUrls: ['./toolbar.component.scss'],
     standalone: false,
 })
 export class ToolbarComponent
@@ -57,8 +58,10 @@ export class ToolbarComponent
     private restApi = inject(RestApi);
     private overlay = inject(OverlayContainer);
     public notificationCountService = inject(NotificationCountService);
+    private assetFilterService = inject(SpAssetBrowserService);
 
     ngOnInit(): void {
+        this.assetFilterService.applyAssetLinkType('');
         this.unreadNotificationsSubscription = timer(0, 10000)
             .pipe(exhaustMap(() => this.restApi.getUnreadNotificationsCount()))
             .subscribe(response => {

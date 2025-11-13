@@ -35,7 +35,7 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.goToConnect();
         ConnectUtils.goToNewAdapterPage();
         ConnectUtils.selectAdapter(configuration.adapterType);
-        cy.contains('Next').click();
+        ConnectBtns.adapterSettingsNextBtn().click();
 
         // Add new property and edit field
         cy.dataCy('connect-add-static-property').click();
@@ -73,7 +73,7 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.openActionsMenu('Test Adapter');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
-        cy.contains('Next').click();
+        ConnectBtns.adapterSettingsNextBtn().click();
         cy.dataCy('edit-density').click();
         ConnectEventSchemaUtils.validateRuntimeName('test-density');
 
@@ -102,8 +102,8 @@ describe('Test Edit Adapter', () => {
             'include.text',
             'test-property-1',
         );
-        cy.dataCy('sp-event-schema-next-button').click();
-        cy.dataCy('store-edit-adapter').click();
+        ConnectBtns.schemaNextBtn().click();
+        ConnectBtns.storeEditAdapter().click();
         ConnectUtils.closeAdapterPreview();
 
         // Configure adapter with pressure instead of flowrate
@@ -122,8 +122,8 @@ describe('Test Edit Adapter', () => {
             'include.text',
             'test-property-1',
         );
-        cy.dataCy('sp-event-schema-next-button').click();
-        cy.dataCy('store-edit-adapter').click();
+        ConnectBtns.schemaNextBtn().click();
+        ConnectBtns.storeEditAdapter().click();
         ConnectUtils.closeAdapterPreview();
     });
 });

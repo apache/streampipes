@@ -39,6 +39,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SpBreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { ShortenPipe } from './pipes/shorten.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -60,6 +61,7 @@ import { ShortenPipe } from './pipes/shorten.pipe';
         MatSlideToggleModule,
         ReactiveFormsModule,
         SharedUiModule,
+        TranslatePipe,
     ],
     declarations: [
         SpBreadcrumbComponent,

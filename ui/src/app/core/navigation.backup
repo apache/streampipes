@@ -1,0 +1,220 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+import { NavigationEnd, Router } from '@angular/router';
+import { PageName } from '../../_enums/page-name.enum';
+import { AuthService } from '../../services/auth.service';
+import { CurrentUserService } from '@streampipes/shared-ui';
+import { AppConstants } from '../../services/app.constants';
+import { UserPrivilege } from '../../_enums/user-privilege.enum';
+import { inject } from '@angular/core';
+import { CollapseService } from '../collapse.service';
+
+export interface MenuItem {
+  link: string;
+  title: string;
+  icon: string;
+  pageNames: any[];
+  privileges: any[];
+  visible?: boolean;
+  category: string;
+}
+
+export interface MenuGroup {
+  title: string;
+  items: MenuItem[];
+  collapsed?: boolean;
+}
+
+export interface MenuCategory {
+  id: string;
+  title: string;
+  collapsed: boolean;
+}
+
+export abstract class BaseNavigationComponent {
+
+  activePageName: string;
+  activePage = 'home';
+  authenticated = true;
+  topItems: MenuItem[] = [];
+  menuGroups: MenuGroup[] = [];
+  notificationsVisible = false;
+
+  public categories: MenuCategory[] = [
+      {
+          id: 'top',
+          title: 'top',
+          collapsed: false,
+      },
+      {
+          id: 'analytics',
+          title: 'Analytics',
+          collapsed: false,
+      },
+      {
+          id: 'visualization',
+          title: 'Visualization',
+          collapsed: false,
+      },
+      {
+          id: 'management',
+          title: 'Management',
+          collapsed: false,
+      },
+  ];
+
+  public menu = [
+    {
+        link: '',
+        title: 'Home',
+        icon: 'home',
+        pageNames: [PageName.HOME],
+        privileges: [],
+        visible: false,
+        category: 'top'
+    },
+    {
+        link: 'pipelines',
+        title: 'Pipelines',
+        icon: 'play_arrow',
+        pageNames: [PageName.PIPELINE_OVERVIEW],
+        privileges: [UserPrivilege.PRIVILEGE_READ_PIPELINE, UserPrivilege.PRIVILEGE_WRITE_PIPELINE],
+        visible: false,
+        category: 'analytics'
+    },
+    {
+        link: 'connect',
+        title: 'Connectors',
+        icon: 'power',
+        pageNames: [PageName.CONNECT],
+        privileges: [UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER],
+        visible: false,
+        category: 'management'
+    },
+    {
+        link: 'dashboard',
+        title: 'Dashboards',
+        icon: 'dashboard',
+        pageNames: [PageName.DASHBOARD],
+        privileges: [UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD],
+        visible: false,
+        category: 'visualization'
+    },
+    {
+        link: 'dataexplorer',
+        title: 'Charts',
+        icon: 'query_stats',
+        pageNames: [PageName.DATA_EXPLORER],
+        privileges: [UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW],
+        visible: false,
+        category: 'visualization'
+    },
+    {
+        link: 'assets',
+        title: 'Assets',
+        icon: 'precision_manufacturing',
+        pageNames: [PageName.ASSETS],
+        privileges: [UserPrivilege.PRIVILEGE_READ_ASSETS, UserPrivilege.PRIVILEGE_WRITE_ASSETS],
+        visible: false,
+        category: 'management'
+    },
+    {
+        link: 'configuration',
+        title: 'Settings',
+        icon: 'settings',
+        pageNames: [PageName.SETTINGS],
+        privileges: [UserPrivilege.PRIVILEGE_WRITE_ASSETS, UserPrivilege.PRIVILEGE_WRITE_LABELS, UserPrivilege.PRIVILEGE_WRITE_FILES],
+        visible: false,
+        category: 'management'
+    },
+  ];
+
+   protected authService = inject(AuthService);
+   protected currentUserService = inject(CurrentUserService);
+   protected router = inject(Router);
+   protected appConstants = inject(AppConstants);
+   protected collapseService = inject(CollapseService);
+
+    collapsed = this.collapseService.isCollapsed;
+
+    onInit() {
+      this.currentUserService.user$.subscribe(user => {
+        this.menu.forEach(m => m.visible = this.isNavItemVisible(m.privileges));
+        const menuGroups = this.categories.map(category => {
+          return {
+            title: category.title,
+            collapsed: category.collapsed,
+            items: this.menu.filter(m => m.category === category.id && m.visible)
+          }
+        }).filter(m => m.items.length > 0);
+
+        this.topItems = menuGroups.find(m => m.title === 'top')?.items || [];
+        this.menuGroups = menuGroups.filter(m => m.title !== 'top');
+        this.notificationsVisible = this.isNavItemVisible([
+        UserPrivilege.PRIVILEGE_READ_PIPELINE,
+        UserPrivilege.PRIVILEGE_WRITE_PIPELINE
+        ]);
+      });
+      this.activePage = this.router.url.replace('/', '');
+      this.activePageName = this.getPageTitle(this.activePage);
+      this.router.events.subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          this.activePage = event.url.split('/')[1];
+          this.activePageName = this.getPageTitle(this.activePage);
+        }
+      });
+    }
+
+    getPageTitle(path) {
+      let currentTitle = this.appConstants.APP_NAME;
+      this.menu.forEach(m => {
+        if (m.link === path) {
+          currentTitle = m.title;
+        }
+      });
+      if (path === 'pipeline-details') {
+        currentTitle = 'Pipeline Details';
+      }
+      return currentTitle;
+    }
+
+    go(path, payload?) {
+      if (payload === undefined) {
+        this.router.navigateByUrl(path);
+        this.activePage = path;
+      } else {
+        this.router.navigateByUrl(path, payload);
+        this.activePage = path;
+      }
+      this.activePageName = this.getPageTitle(this.activePage);
+    }
+
+    public isNavItemVisible(privileges: string[]): boolean {
+      return this.authService.isAnyAccessGranted(privileges);
+    }
+
+      toggleGroup(group: MenuGroup): void {
+        group.collapsed = !group.collapsed;
+      }
+
+      toggleMenubar(): void {
+      this.collapseService.toggleMenubar();
+      }
+}

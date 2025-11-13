@@ -32,6 +32,8 @@
 .idea/uiDesigner.xml
 .idea/*
 
+!.idea/icon.png
+
 # Gradle:
 .idea/gradle.xml
 .idea/libraries

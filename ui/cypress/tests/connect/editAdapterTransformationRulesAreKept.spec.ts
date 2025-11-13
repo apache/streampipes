@@ -34,25 +34,25 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         ConnectUtils.goToConnect();
         ConnectUtils.goToNewAdapterPage();
         ConnectUtils.selectAdapter(configuration.adapterType);
-        cy.contains('Next').click();
+        ConnectBtns.adapterSettingsNextBtn().click();
 
-        cy.dataCy('sp-event-schema-next-button').click();
+        ConnectBtns.schemaNextBtn().click();
         cy.dataCy('sp-adapter-name').type('Test Adapter');
-        cy.dataCy('connect-remove-duplicates-box').click();
+        ConnectBtns.connectRemoveDuplicateBox().click();
         cy.dataCy('connect-remove-duplicates-input').type('10000');
-        cy.dataCy('connect-reduce-event-rate-box').click();
+        ConnectBtns.connectReduceEventRate().click();
         cy.dataCy('connect-reduce-event-input').type('20000');
-        cy.dataCy('adapter-settings-start-adapter-btn').click();
+        ConnectBtns.adapterSettingsStartAdapter().click();
         ConnectUtils.closeAdapterPreview();
 
         // Edit adapter and check if given values and added property still provided
         ConnectBtns.openActionsMenu('Test Adapter');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
-        cy.contains('Next').click();
-        cy.dataCy('sp-event-schema-next-button').click();
+        ConnectBtns.adapterSettingsNextBtn().click();
+        ConnectBtns.schemaNextBtn().click();
 
-        cy.dataCy('connect-remove-duplicates-box')
+        ConnectBtns.connectRemoveDuplicateBox()
             .find('input')
             .should('be.checked');
         cy.dataCy('connect-remove-duplicates-input').should(
@@ -60,9 +60,7 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
             '10000',
         );
 
-        cy.dataCy('connect-reduce-event-rate-box')
-            .find('input')
-            .should('be.checked');
+        ConnectBtns.connectReduceEventRate().find('input').should('be.checked');
         cy.dataCy('connect-reduce-event-input').should('have.value', '20000');
     });
 });

@@ -18,6 +18,7 @@
 
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 
 describe('Test Truncate data in datalake', () => {
     beforeEach('Setup Test', () => {
@@ -29,18 +30,18 @@ describe('Test Truncate data in datalake', () => {
         DataExplorerUtils.goToDatalakeConfiguration();
 
         // Check if amount of events is correct
-        cy.dataCy('datalake-number-of-events', { timeout: 10000 })
+        DataExplorerBtns.datalakeNumberEvents()
             .should('be.visible')
             .contains('10');
 
         // Truncate data
-        cy.dataCy('datalake-truncate-btn').should('be.visible').click();
-        cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 })
+        DataExplorerBtns.dataLakeTruncateBtn().should('be.visible').click();
+        DataExplorerBtns.confirmDataLakeTruncateBtn()
             .should('be.visible')
             .click();
 
         // Check if amount of events is zero. The should('have.text, '0') is required to check for text equality
-        cy.dataCy('datalake-number-of-events', { timeout: 10000 })
+        DataExplorerBtns.datalakeNumberEvents()
             .should('be.visible')
             .should($element => {
                 const text = $element.text().trim();
@@ -60,20 +61,17 @@ describe('Delete data in datalake', () => {
         DataExplorerUtils.goToDatalakeConfiguration();
 
         // Check if amount of events is correct
-        cy.dataCy('datalake-number-of-events', { timeout: 10000 })
+        DataExplorerBtns.datalakeNumberEvents()
             .should('be.visible')
             .contains('10');
 
         // Delete data
-        cy.dataCy('datalake-delete-btn').should('be.visible').click();
-        cy.dataCy('confirm-delete-data-btn', { timeout: 10000 })
+        DataExplorerBtns.dataLakeDeleteBtn().should('be.visible').click();
+        DataExplorerBtns.confirmDataLakeDeleteBtn()
             .should('be.visible')
             .click();
 
         // Check if amount of events is zero
-        cy.dataCy('datalake-number-of-events', { timeout: 10000 }).should(
-            'have.length',
-            0,
-        );
+        DataExplorerBtns.datalakeNumberEvents().should('have.length', 0);
     });
 });

@@ -65,7 +65,6 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
   public Map<String, Object> process(Map<String, Object> event) {
     try {
       if (event != null) {
-        sendToBroker(dataFormatDefinition.fromMap(event));
         byte[] data = dataFormatDefinition.fromMap(event);
         sendToBroker(data);
         SpMonitoringManager.INSTANCE.increaseOutCounter(

@@ -95,7 +95,7 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     return ok(resourceManager.create(dataExplorerWidgetModel, getAuthenticatedUserSid()));

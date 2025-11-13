@@ -27,15 +27,24 @@ import {
     SpAsset,
     SpLabel,
 } from '@streampipes/platform-services';
-import { AssetBrowserData, AssetFilter } from './asset-browser.model';
+import {
+    AssetBrowserData,
+    AssetFilter,
+    FilterResult,
+} from './asset-browser.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpAssetBrowserService {
     assetData$ = new BehaviorSubject<AssetBrowserData>(undefined);
     expanded$ = new BehaviorSubject<boolean>(true);
     filter$ = new BehaviorSubject<AssetFilter>(undefined);
+    currentAssetFilter$ = new BehaviorSubject<FilterResult>({
+        filterActive: false,
+        filterDisabled: true,
+    });
 
     loadedAssetData: AssetBrowserData;
+    activeAssetLink = undefined;
 
     constructor(
         private genericStorageService: GenericStorageService,
@@ -44,20 +53,26 @@ export class SpAssetBrowserService {
         this.loadAssetData();
     }
 
+    applyAssetLinkType(assetLink: string) {
+        this.activeAssetLink = assetLink;
+        if (this.filter$.getValue() !== undefined) {
+            this.applyFilters(this.filter$.getValue());
+        }
+    }
+
     loadAssetData(): void {
-        const assetsReq = this.genericStorageService.getAllDocuments(
+        const assets$ = this.genericStorageService.getAllDocuments(
             AssetConstants.ASSET_APP_DOC_NAME,
         );
-        const assetLinksReq = this.genericStorageService.getAllDocuments(
+        const assetLinks$ = this.genericStorageService.getAllDocuments(
             AssetConstants.ASSET_LINK_TYPES_DOC_NAME,
         );
-        const sitesReq = this.genericStorageService.getAllDocuments(
+        const sites$ = this.genericStorageService.getAllDocuments(
             AssetConstants.ASSET_SITES_APP_DOC_NAME,
         );
-        const labelsReq =
-            this.genericStorageService.getAllDocuments('sp-labels');
+        const labels$ = this.genericStorageService.getAllDocuments('sp-labels');
 
-        zip([assetsReq, assetLinksReq, sitesReq, labelsReq]).subscribe(res => {
+        zip([assets$, assetLinks$, sites$, labels$]).subscribe(res => {
             this.loadedAssetData = {
                 assets: res[0].sort((a, b) =>
                     a.assetName.localeCompare(b.assetName),
@@ -72,15 +87,22 @@ export class SpAssetBrowserService {
     }
 
     private reloadFilters(): void {
-        const data = this.assetData$.getValue();
-        const filters: AssetFilter = {
-            selectedSites: [...data.sites].sort((a, b) =>
-                a.label.localeCompare(b.label),
-            ),
-            selectedLabels: [],
-            selectedTypes: [...this.typeService.getTypeDescriptions()],
-        };
-        this.filter$.next(filters);
+        if (
+            this.activeAssetLink !== undefined &&
+            this.assetData$.getValue() !== undefined
+        ) {
+            const data = this.assetData$.getValue();
+            const filters: AssetFilter = {
+                selectedSites: [...data.sites].sort((a, b) =>
+                    a.label.localeCompare(b.label),
+                ),
+                selectedLabels: [...data.labels],
+                selectedTypes: [...this.typeService.getTypeDescriptions()],
+                selectedAssetModels: [...data.assets],
+            };
+            this.filter$.next(filters);
+            this.applyFilters(filters);
+        }
     }
 
     resetFilters(): void {
@@ -92,29 +114,78 @@ export class SpAssetBrowserService {
         const clonedLoadedAssetData = JSON.parse(
             JSON.stringify(this.loadedAssetData),
         ) as AssetBrowserData;
-        const filteredAssets = clonedLoadedAssetData.assets
-            .filter(
-                a =>
-                    this.allSelected(
-                        this.typeService.getTypeDescriptions(),
-                        filter.selectedTypes,
-                    ) || this.filterType(a, filter.selectedTypes),
-            )
-            .filter(
-                a =>
-                    this.allSelected(
-                        clonedLoadedAssetData.sites,
-                        filter.selectedSites,
-                    ) || this.filterSites(a, filter.selectedSites),
-            )
-            .filter(a => this.filterLabels(a, filter.selectedLabels));
+        const allAssetsSelected = this.allSelected(
+            clonedLoadedAssetData.assets,
+            filter.selectedAssetModels,
+        );
+        const allTypesSelected = this.allSelected(
+            this.typeService.getTypeDescriptions(),
+            filter.selectedTypes,
+        );
+        const allSitesSelected = this.allSelected(
+            clonedLoadedAssetData.sites,
+            filter.selectedSites,
+        );
+        const allLabelsSelected = this.allSelected(
+            clonedLoadedAssetData.labels,
+            filter.selectedLabels,
+        );
 
-        this.assetData$.next({
-            assets: filteredAssets,
-            assetLinks: clonedLoadedAssetData.assetLinks,
-            sites: clonedLoadedAssetData.sites,
-            labels: clonedLoadedAssetData.labels,
+        if (
+            allAssetsSelected &&
+            allTypesSelected &&
+            allSitesSelected &&
+            allLabelsSelected
+        ) {
+            this.currentAssetFilter$.next({
+                filterActive: false,
+                filterDisabled: false,
+                activeElementIds: new Set<string>(),
+                selectedAssets: clonedLoadedAssetData.assets,
+                currentAssetLink: this.activeAssetLink,
+            });
+        } else {
+            const filteredAssets = clonedLoadedAssetData.assets
+                .filter(
+                    a =>
+                        allAssetsSelected ||
+                        this.filterAssetModel(a, filter.selectedAssetModels),
+                )
+                .filter(
+                    a =>
+                        allTypesSelected ||
+                        this.filterType(a, filter.selectedTypes),
+                )
+                .filter(
+                    a =>
+                        allSitesSelected ||
+                        this.filterSites(a, filter.selectedSites),
+                )
+                .filter(
+                    a =>
+                        allLabelsSelected ||
+                        this.filterLabels(a, filter.selectedLabels),
+                );
+
+            this.applyAssetFilter(filteredAssets);
+        }
+    }
+
+    applyAssetFilter(filteredAssets: SpAsset[]) {
+        const elementIds = new Set<string>();
+        filteredAssets.forEach(asset => {
+            this.collectElementIds(asset, this.activeAssetLink, elementIds);
         });
+        const currentFilter = {
+            filterActive: true,
+            activeElementIds: elementIds,
+            selectedAssets: filteredAssets,
+            currentAssetLink: this.activeAssetLink,
+            allAssetCount: this.assetData$.getValue().assets.length,
+            selectedAssetCount: filteredAssets.length,
+            filterDisabled: false,
+        };
+        this.currentAssetFilter$.next(currentFilter);
     }
 
     private allSelected(items: any[], selected: any[]) {
@@ -137,6 +208,15 @@ export class SpAssetBrowserService {
         }
 
         return matchesSelf;
+    }
+
+    private filterAssetModel(
+        asset: SpAsset,
+        selectedAssets: SpAsset[],
+    ): boolean {
+        return (
+            selectedAssets.find(a => a.assetId === asset.assetId) !== undefined
+        );
     }
 
     private filterSites(

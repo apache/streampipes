@@ -16,13 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
     CurrentUserService,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.routes';
@@ -30,6 +29,7 @@ import { Dashboard } from '@streampipes/platform-services';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-dashboard-overview',
@@ -37,12 +37,9 @@ import { TranslateService } from '@ngx-translate/core';
     styleUrls: ['./dashboard-overview.component.scss'],
     standalone: false,
 })
-export class DashboardOverviewComponent implements OnInit {
-    displayedColumns: string[] = [];
-
-    isAdmin = false;
+export class DashboardOverviewComponent implements OnInit, OnDestroy {
+    displayedColumns: string[] = ['name', 'actions'];
     hasDashboardWritePrivileges = false;
-    resourceCount = 0;
 
     @ViewChild(DashboardOverviewTableComponent)
     dashboardOverview: DashboardOverviewTableComponent;
@@ -54,16 +51,16 @@ export class DashboardOverviewComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private translateService = inject(TranslateService);
 
+    private user$: Subscription;
+
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpDashboardRoutes.BASE),
         );
-        this.currentUserService.user$.subscribe(user => {
-            this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+        this.user$ = this.currentUserService.user$.subscribe(user => {
             this.hasDashboardWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
-            this.displayedColumns = ['name', 'actions'];
         });
     }
 
@@ -99,7 +96,7 @@ export class DashboardOverviewComponent implements OnInit {
         });
     }
 
-    applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
-        this.dashboardOverview.applyDashboardFilters(elementIds);
+    ngOnDestroy() {
+        this.user$?.unsubscribe();
     }
 }

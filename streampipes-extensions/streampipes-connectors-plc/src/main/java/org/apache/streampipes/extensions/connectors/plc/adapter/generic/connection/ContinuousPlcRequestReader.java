@@ -22,12 +22,12 @@ import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPollingSettings;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
+import org.apache.streampipes.extensions.connectors.plc.cache.SpCachedPlcConnectionManager;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
-import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,25 +69,23 @@ public class ContinuousPlcRequestReader
 
   private void connectAndReadPlcData() {
     try (PlcConnection plcConnection = connectionManager.getConnection(settings.connectionString())) {
-      var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
-      var readResponse = readRequest.execute()
-                                    .get(5000, TimeUnit.MILLISECONDS);
-      processPlcReadResponse(readResponse);
+      if (plcConnection.isConnected()) {
+        var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
+        var readResponse = readRequest.execute()
+            .get(5000, TimeUnit.MILLISECONDS);
+        processPlcReadResponse(readResponse);
+      } else {
+        handleFailingPlcRead("Not connected");
+      }
     } catch (Exception e) {
-      handleFailingPlcRead(e);
+      handleFailingPlcRead(e.getMessage());
     }
   }
 
-  private void processPlcReadResponse(PlcReadResponse readResponse) {
-    var event = eventGenerator.makeEvent(readResponse);
-    collector.collect(event);
-    this.resetIdlePulls();
-  }
-
-  private void handleFailingPlcRead(Exception e) {
+  private void handleFailingPlcRead(String problem) {
     // ensure that the cached connection manager removes the broken connection
-    if (connectionManager instanceof CachedPlcConnectionManager) {
-      ((CachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
+    if (connectionManager instanceof SpCachedPlcConnectionManager) {
+      ((SpCachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
     }
 
     // Increase backoff counter on failure
@@ -98,11 +96,17 @@ public class ContinuousPlcRequestReader
     }
 
     LOG.error(
-        "Error while reading from PLC with connection string {}. Setting adapter to idle for {} attemtps. {} ",
-        settings.connectionString(), idlePullsBeforeNextAttempt, e.getMessage()
+        "Error while reading from PLC with connection string {}. Setting adapter to idle for {} attempts. {} ",
+        settings.connectionString(), idlePullsBeforeNextAttempt, problem
     );
 
     currentIdlePulls = 0;
+  }
+
+  private void processPlcReadResponse(PlcReadResponse readResponse) {
+    var event = eventGenerator.makeEvent(readResponse);
+    collector.collect(event);
+    this.resetIdlePulls();
   }
 
   private void idleRead() {

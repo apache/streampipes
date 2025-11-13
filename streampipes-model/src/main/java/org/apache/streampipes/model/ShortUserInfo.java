@@ -24,13 +24,15 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 public class ShortUserInfo {
 
   private String principalId;
+  private String principalType;
   private String email;
   private String displayName;
 
   public static ShortUserInfo create(String principalId,
                                      String email,
-                                     String displayName) {
-    return new ShortUserInfo(principalId, email, displayName);
+                                     String displayName,
+                                     String principalType) {
+    return new ShortUserInfo(principalId, email, displayName, principalType);
   }
 
   public ShortUserInfo() {
@@ -38,7 +40,8 @@ public class ShortUserInfo {
 
   public ShortUserInfo(String principalId,
                        String email,
-                       String displayName) {
+                       String displayName,
+                       String principalType) {
     this.principalId = principalId;
     this.email = email;
     this.displayName = displayName;
@@ -66,5 +69,13 @@ public class ShortUserInfo {
 
   public void setDisplayName(String displayName) {
     this.displayName = displayName;
+  }
+
+  public String getPrincipalType() {
+    return principalType;
+  }
+
+  public void setPrincipalType(String principalType) {
+    this.principalType = principalType;
   }
 }

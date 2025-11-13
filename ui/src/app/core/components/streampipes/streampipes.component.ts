@@ -16,11 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
-import { AuthService } from '../../../services/auth.service';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
+import { CollapseService } from '../../collapse.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-streampipes',
@@ -37,19 +38,31 @@ import { TranslateService } from '@ngx-translate/core';
     ],
     standalone: false,
 })
-export class StreampipesComponent implements OnInit {
+export class StreampipesComponent implements OnInit, OnDestroy {
     darkMode: boolean;
 
     private translate = inject(TranslateService);
+    private collapseService = inject(CollapseService);
+    private currentUserService = inject(CurrentUserService);
 
-    constructor(public currentUserService: CurrentUserService) {}
+    darkMode$: Subscription;
+    user$: Subscription;
+
+    collapsed = this.collapseService.isCollapsed;
 
     ngOnInit(): void {
-        this.currentUserService.darkMode$.subscribe(dm => (this.darkMode = dm));
-        this.currentUserService.user$.subscribe(user => {
+        this.darkMode$ = this.currentUserService.darkMode$.subscribe(
+            dm => (this.darkMode = dm),
+        );
+        this.user$ = this.currentUserService.user$.subscribe(user => {
             if (user.language !== null && user.language !== 'browser') {
                 this.translate.use(user.language);
             }
         });
+    }
+
+    ngOnDestroy() {
+        this.darkMode$?.unsubscribe();
+        this.user$?.unsubscribe();
     }
 }

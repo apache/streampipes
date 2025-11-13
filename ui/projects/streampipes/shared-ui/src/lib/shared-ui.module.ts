@@ -69,7 +69,7 @@ import { SidebarResizeComponent } from './components/sidebar-resize/sidebar-resi
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTreeModule } from '@angular/material/tree';
 import { DataDownloadDialogComponent } from './dialog/data-download-dialog/data-download-dialog.component';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -100,6 +100,11 @@ import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SpTableActionsDirective } from './components/sp-table/sp-table-actions.directive';
 import { AssetLinkConfigurationComponent } from './components/asset-link-configuration/asset-link-configuration.component';
+import { AssetBrowserFilterAssetModelComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-asset-model/asset-browser-filter-asset-model.component';
+import { ObjectPermissionDialogComponent } from './dialog/object-permission-dialog/object-permission-dialog.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 
 @NgModule({
     declarations: [
@@ -153,6 +158,8 @@ import { AssetLinkConfigurationComponent } from './components/asset-link-configu
         SortByRuntimeNamePipe,
         SpTableActionsDirective,
         AssetLinkConfigurationComponent,
+        AssetBrowserFilterAssetModelComponent,
+        ObjectPermissionDialogComponent,
     ],
     imports: [
         CommonModule,
@@ -184,6 +191,11 @@ import { AssetLinkConfigurationComponent } from './components/asset-link-configu
         TranslateModule.forChild({}),
         DragDropModule,
         MarkdownModule.forRoot(),
+        MatChipsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        CdkCopyToClipboard,
     ],
     providers: [
         DefaultMatCalendarRangeStrategy,
@@ -192,6 +204,7 @@ import { AssetLinkConfigurationComponent } from './components/asset-link-configu
     ],
     exports: [
         AssetBrowserComponent,
+        AssetBrowserToolbarComponent,
         AssetLinkConfigurationComponent,
         ConfirmDialogComponent,
         DataDownloadDialogComponent,
@@ -222,6 +235,7 @@ import { AssetLinkConfigurationComponent } from './components/asset-link-configu
         InputSchemaPanelComponent,
         SidebarResizeComponent,
         SpTableActionsDirective,
+        ObjectPermissionDialogComponent,
     ],
 })
 export class SharedUiModule {}

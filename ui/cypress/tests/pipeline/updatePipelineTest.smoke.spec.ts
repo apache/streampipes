@@ -16,6 +16,7 @@
  *
  */
 
+import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 
 describe('Test update of running pipeline', () => {
@@ -33,7 +34,7 @@ describe('Test update of running pipeline', () => {
 
         PipelineUtils.editPipeline(pipelineName);
         cy.wait(1000);
-        cy.dataCy('sp-editor-save-pipeline').click();
+        PipelineBtns.savePipelineBtn().click();
         PipelineUtils.clonePipeline('Pipeline Test 2');
         PipelineUtils.finalizePipelineStart();
         cy.dataCy('more-options', { timeout: 10000 }).should('have.length', 2);

@@ -16,6 +16,7 @@
  *
  */
 
+import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 
 describe('Test rename of running pipeline', () => {
@@ -31,7 +32,7 @@ describe('Test rename of running pipeline', () => {
 
         PipelineUtils.editPipeline('Pipeline Test');
         cy.wait(1000);
-        cy.dataCy('sp-editor-save-pipeline').click();
+        PipelineBtns.savePipelineBtn().click();
         cy.dataCy('sp-editor-pipeline-name').clear();
         PipelineUtils.updatePipeline('Renamed Pipeline');
         PipelineUtils.finalizePipelineStart();
@@ -40,7 +41,7 @@ describe('Test rename of running pipeline', () => {
         PipelineUtils.verifyPipelineName('Renamed Pipeline');
 
         PipelineUtils.editPipeline('Renamed Pipeline');
-        cy.dataCy('sp-editor-save-pipeline').click();
+        PipelineBtns.savePipelineBtn().click();
         cy.dataCy('sp-editor-pipeline-name').clear();
         PipelineUtils.clonePipeline('Cloned Renamed Pipeline');
         PipelineUtils.finalizePipelineStart();

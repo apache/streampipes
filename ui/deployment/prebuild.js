@@ -54,6 +54,7 @@ try {
 
 // Read Modules-File and check if it is valid
 let modules = {};
+let categories = [];
 try {
     modules = yaml.load(fs.readFileSync('deployment/modules.yml', 'utf8'));
 } catch (error) {
@@ -61,8 +62,19 @@ try {
     process.exit(1);
 }
 
+try {
+    categories = yaml.load(
+        fs.readFileSync('deployment/categories.yml', 'utf8'),
+    );
+} catch (error) {
+    console.log(
+        'Invalid file categories.yml. Check if the file exists in your build configuration. Pre-Build failed.',
+    );
+    process.exit(1);
+}
+
 // Add active Modules to Template-Variable
-let modulesActive = { modulesActive: [] };
+let modulesActive = { modulesActive: [], categoriesActive: categories };
 for (let module of config.modules) {
     modulesActive['modulesActive'].push({
         module: module,
@@ -81,6 +93,7 @@ for (let module of config.modules) {
         description: modules[module]['description'],
         showStatusBox: modules[module]['showStatusBox'],
         statusBox: modules[module]['statusBox'],
+        category: modules[module]['category'],
     });
     console.log('Active Angular Module: ' + module);
 }

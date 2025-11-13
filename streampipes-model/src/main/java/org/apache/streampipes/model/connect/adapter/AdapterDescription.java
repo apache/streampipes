@@ -187,6 +187,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     return category;
   }
 
+  @Deprecated(forRemoval = true, since = "0.98.0")
   public void setCategory(List<String> category) {
     this.category = category;
   }

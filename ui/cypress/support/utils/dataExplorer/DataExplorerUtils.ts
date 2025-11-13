@@ -135,7 +135,7 @@ export class DataExplorerUtils {
 
     public static createDashboard(name) {
         // Create new data view
-        cy.dataCy('open-new-dashboard-dialog').click();
+        DataExplorerBtns.newDashboardDialogBtn().click();
 
         // Configure data view
         cy.dataCy('data-view-name').type(name);
@@ -160,7 +160,7 @@ export class DataExplorerUtils {
     }
 
     public static saveDashboard() {
-        return cy.dataCy('save-data-view').click();
+        return DataExplorerBtns.saveDashboard().click();
     }
     public static addDataViewAndTableWidget(
         dataViewName: string,
@@ -202,11 +202,11 @@ export class DataExplorerUtils {
 
     public static createAndEditDashboard(name: string) {
         // Create new data view
-        cy.dataCy('open-new-dashboard-dialog').click();
+        DataExplorerBtns.newDashboardDialogBtn().click();
 
         // Configure data view
         cy.dataCy('data-view-name').type(name);
-        cy.dataCy('save-data-view').click();
+        DataExplorerBtns.saveDashboard().click();
 
         this.editDashboard(name);
     }
@@ -221,43 +221,43 @@ export class DataExplorerUtils {
                 this.getFutureDate(),
             );
         }
-        cy.dataCy('add-data-view-btn-' + dataViewName).click();
+        DataExplorerBtns.addDataViewBtn(dataViewName).click();
     }
 
     public static createAndEditDataView() {
         // Create new data view
-        cy.dataCy('open-new-data-view', { timeout: 10000 }).click();
+        DataExplorerBtns.openNewDataViewBtn().click();
     }
 
     public static removeWidget(dataViewName: string) {
-        cy.dataCy('remove-' + dataViewName).click();
+        DataExplorerBtns.removeWidgetBtn(dataViewName).click();
     }
 
     public static editDashboard(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        cy.dataCy('edit-dashboard-' + dashboardName).click();
+        DataExplorerBtns.editDashboardBtn(dashboardName).click();
     }
 
     public static editDashboardSettings(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        cy.dataCy('edit-dashboard-settings-' + dashboardName).click();
+        DataExplorerBtns.editDashboardSettingsBtn(dashboardName).click();
     }
 
     public static editDataView(dataViewName: string) {
         // Click edit button
         // following only works if single view is available
         GeneralUtils.openMenuForRow(dataViewName);
-        cy.dataCy('edit-data-view-' + dataViewName).click();
+        DataExplorerBtns.editDataViewButton(dataViewName).click();
     }
 
     public static saveDataViewConfiguration() {
-        cy.dataCy('save-data-view-btn', { timeout: 10000 }).click({
+        DataExplorerBtns.saveDataViewButton().click({
             force: true,
         });
     }
 
     public static saveDashboardConfiguration() {
-        cy.dataCy('save-dashboard-btn', { timeout: 10000 }).click();
+        DataExplorerBtns.saveDashboardConfigurationBtn().click();
     }
 
     public static getEmptyDashboardInformation() {
@@ -289,43 +289,35 @@ export class DataExplorerUtils {
 
     public static deleteDashboard(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        cy.dataCy('delete-dashboard-' + dashboardName, {
-            timeout: 10000,
-        }).click();
-        cy.dataCy('confirm-delete', { timeout: 10000 }).click();
+        DataExplorerBtns.deleteDashboardBtn(dashboardName).click();
+        DataExplorerBtns.confirmDelete().click();
     }
 
     public static deleteDataView(dataViewName: string) {
         GeneralUtils.openMenuForRow(dataViewName);
-        cy.dataCy('delete-data-view-' + dataViewName, {
-            timeout: 10000,
-        }).click();
-        cy.dataCy('confirm-delete', { timeout: 10000 }).click();
+        DataExplorerBtns.deleteDataViewBtn(dataViewName).click();
+        DataExplorerBtns.confirmDelete().click();
     }
 
     public static cancelDeleteDashboard(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        cy.dataCy('delete-dashboard-' + dashboardName, {
-            timeout: 10000,
-        }).click();
-        cy.dataCy('cancel-delete', { timeout: 10000 }).click();
+        DataExplorerBtns.deleteDashboardBtn(dashboardName).click();
+        DataExplorerBtns.cancelDelete().click();
     }
 
     public static cancelDeleteDataView(dataViewName: string) {
         GeneralUtils.openMenuForRow(dataViewName);
-        cy.dataCy('delete-data-view-' + dataViewName, {
-            timeout: 10000,
-        }).click();
-        cy.dataCy('cancel-delete', { timeout: 10000 }).click();
+        DataExplorerBtns.deleteDataViewBtn(dataViewName).click();
+        DataExplorerBtns.cancelDelete().click();
     }
 
     public static editWidget(widgetName: string) {
-        cy.dataCy('edit-' + widgetName).click();
+        DataExplorerBtns.editWidget(widgetName).click();
     }
 
     public static startEditWidget(widgetName: string) {
-        cy.dataCy('more-options-' + widgetName).click();
-        cy.dataCy('start-edit-' + widgetName).click();
+        DataExplorerBtns.moreOptionsBtn(widgetName).click();
+        DataExplorerBtns.startEditWidget(widgetName).click();
     }
 
     public static saveAndReEditWidget(dataViewName: string) {
@@ -346,11 +338,11 @@ export class DataExplorerUtils {
     }
 
     public static goBackToOverview() {
-        cy.dataCy('save-data-explorer-go-back-to-overview').click();
+        DataExplorerBtns.goBackToOverviewBtn().click();
     }
 
     public static addNewWidget() {
-        cy.dataCy('add-new-widget').click();
+        DataExplorerBtns.addNewWidgetBtn().click();
     }
 
     public static selectDataSet(dataSet: string) {

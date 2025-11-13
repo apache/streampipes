@@ -27,9 +27,9 @@ import {
 import {
     DataDownloadDialogComponent,
     DialogService,
+    ObjectPermissionDialogComponent,
     PanelType,
 } from '@streampipes/shared-ui';
-import { ObjectPermissionDialogComponent } from '../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ObservableGenerator } from '../models/dataview-dashboard.model';
 

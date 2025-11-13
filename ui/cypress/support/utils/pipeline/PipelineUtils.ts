@@ -81,7 +81,7 @@ export class PipelineUtils {
 
     public static editPipeline(pipelineName: string) {
         GeneralUtils.openMenuForRow(pipelineName);
-        cy.dataCy('modify-pipeline-btn').first().click();
+        PipelineBtns.modifyPipeline().first().click();
     }
 
     public static goToPipelines() {
@@ -91,7 +91,7 @@ export class PipelineUtils {
     public static goToPipelineEditor() {
         // Go to StreamPipes editor
         this.goToPipelines();
-        cy.dataCy('pipelines-navigate-to-editor').click();
+        PipelineBtns.pipelinesToEditor().click();
     }
 
     public static selectDataStream(pipelineInput: PipelineInput) {
@@ -99,18 +99,16 @@ export class PipelineUtils {
         cy.dataCy('sp-pipeline-element-selection', { timeout: 10000 }).should(
             'be.visible',
         );
-        cy.dataCy('sp-editor-add-pipeline-element').click();
+        PipelineBtns.editorAddPipelineElement().click();
         cy.dataCy(pipelineInput.dataSource, { timeout: 10000 }).click();
     }
 
     public static openPossibleElementsMenu(dataSourceName: string) {
-        cy.dataCy('sp-possible-elements-' + dataSourceName, {
-            timeout: 10000,
-        }).click();
+        PipelineBtns.possibleElementsBtns(dataSourceName).click();
     }
 
     public static selectCompatibleElement(elementName: string) {
-        cy.dataCy('sp-compatible-elements-' + elementName).click();
+        PipelineBtns.selectCompatibleElementBtn(elementName).click();
     }
 
     public static configureProcessingElement(
@@ -122,7 +120,7 @@ export class PipelineUtils {
     }
 
     private static savePipelineElementConfiguration() {
-        cy.dataCy('sp-element-configuration-save').click();
+        PipelineBtns.saveElementConfigBtn().click();
     }
 
     private static configurePipeline(pipelineInput: PipelineInput) {
@@ -135,25 +133,24 @@ export class PipelineUtils {
             this.savePipelineElementConfiguration();
 
             // Select sink
-            cy.dataCy(
-                'sp-possible-elements-' + pipelineInput.processingElement.name,
-                { timeout: 10000 },
+            PipelineBtns.possibleElementsBtns(
+                pipelineInput.processingElement.name,
             ).click();
         }
 
         // Configure sink
-        cy.dataCy(
-            'sp-compatible-elements-' + pipelineInput.dataSink.name,
+        PipelineBtns.selectCompatibleElementBtn(
+            pipelineInput.dataSink.name,
         ).click();
         StaticPropertyUtils.input(pipelineInput.dataSink.config);
 
         // Save sink configuration
-        cy.dataCy('sp-element-configuration-save').click();
+        PipelineBtns.saveElementConfigBtn().click();
     }
 
     public static startPipeline(pipelineInput?: PipelineInput) {
         // Save and start pipeline
-        cy.dataCy('sp-editor-save-pipeline').click();
+        PipelineBtns.savePipelineBtn().click();
         if (pipelineInput) {
             cy.dataCy('sp-editor-pipeline-name').type(
                 pipelineInput.pipelineName,
@@ -167,7 +164,7 @@ export class PipelineUtils {
         assetNameList?: String[],
     ) {
         // Save and start pipeline
-        cy.dataCy('sp-editor-save-pipeline').click();
+        PipelineBtns.savePipelineBtn().click();
         if (pipelineInput) {
             cy.dataCy('sp-editor-pipeline-name').type(
                 pipelineInput.pipelineName,
@@ -196,28 +193,26 @@ export class PipelineUtils {
     }
 
     public static clonePipeline(newPipelineName: string) {
-        cy.dataCy('pipeline-update-mode-clone').children().click();
+        PipelineBtns.pipelineCloneModeBtn().children().click();
         cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
     }
 
     public static updatePipeline(newPipelineName: string) {
-        cy.dataCy('pipeline-update-mode-update').children().click();
+        //PipelineBtns.pipelineCloneModeBtn().children().click();
         cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
     }
 
     public static finalizePipelineStart(assetNameList?: String[]) {
-        cy.dataCy('sp-editor-checkbox-navigate-to-overview').children().click();
+        PipelineBtns.navigateToOverviewCheckbox().children().click();
         if (assetNameList) {
             PipelineUtils.addToAsset(assetNameList);
         }
-        cy.dataCy('sp-editor-apply').click();
+        PipelineBtns.editorApplyBtn().click();
 
         cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
             'be.visible',
         );
-        cy.dataCy('sp-navigate-to-pipeline-overview', {
-            timeout: 15000,
-        }).click();
+        PipelineBtns.navigateToPipelineOverview().click();
     }
 
     public static checkAmountOfPipelinesPipeline(amount: number) {

@@ -20,6 +20,7 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { StaticPropertyUtils } from '../../support/utils/userInput/StaticPropertyUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { PipelineElementTemplateUtils } from '../../support/utils/PipelineElementTemplateUtils';
+import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -47,7 +48,7 @@ describe('Test Edit Adapter', () => {
         // store adapter template
         PipelineElementTemplateUtils.addTemplate(TEMPLATE_NAME);
 
-        cy.dataCy('connect-new-adapter-cancel').click();
+        ConnectBtns.connectNewAdapterCancel().click();
 
         // Reload template configuration
         ConnectUtils.goToNewAdapterPage();

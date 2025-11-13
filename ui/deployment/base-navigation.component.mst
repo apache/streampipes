@@ -24,13 +24,48 @@ import { CurrentUserService } from '@streampipes/shared-ui';
 import { AppConstants } from '../../services/app.constants';
 import { UserPrivilege } from '../../_enums/user-privilege.enum';
 import { inject } from '@angular/core';
+import { CollapseService } from '../collapse.service';
+
+export interface MenuItem {
+  link: string;
+  title: string;
+  icon: string;
+  pageNames: any[];
+  privileges: any[];
+  visible?: boolean;
+  category: string;
+}
+
+export interface MenuGroup {
+  title: string;
+  items: MenuItem[];
+  collapsed?: boolean;
+}
+
+export interface MenuCategory {
+  id: string;
+  title: string;
+  collapsed: boolean;
+}
 
 export abstract class BaseNavigationComponent {
 
   activePageName: string;
-  activePage: any;
-
+  activePage = 'home';
   authenticated = true;
+  topItems: MenuItem[] = [];
+  menuGroups: MenuGroup[] = [];
+  notificationsVisible = false;
+
+  public categories: MenuCategory[] = [
+    {{#categoriesActive}}
+      {
+          id: '{{{id}}}',
+          title: '{{{title}}}',
+          collapsed: {{{collapsed}}},
+      },
+    {{/categoriesActive}}
+  ];
 
   public menu = [
     {{#modulesActive}}
@@ -40,22 +75,33 @@ export abstract class BaseNavigationComponent {
         icon: '{{{icon}}}',
         pageNames: [{{{pageNames}}}],
         privileges: {{{privileges}}},
-        visible: false
+        visible: false,
+        category: '{{{category}}}'
     },
     {{/modulesActive}}
   ];
-
-  notificationsVisible = false;
-
 
    protected authService = inject(AuthService);
    protected currentUserService = inject(CurrentUserService);
    protected router = inject(Router);
    protected appConstants = inject(AppConstants);
+   protected collapseService = inject(CollapseService);
+
+   collapsed = this.collapseService.isCollapsed;
 
     onInit() {
       this.currentUserService.user$.subscribe(user => {
         this.menu.forEach(m => m.visible = this.isNavItemVisible(m.privileges));
+        const menuGroups = this.categories.map(category => {
+          return {
+            title: category.title,
+            collapsed: category.collapsed,
+            items: this.menu.filter(m => m.category === category.id && m.visible)
+          }
+        }).filter(m => m.items.length > 0);
+
+        this.topItems = menuGroups.find(m => m.title === 'top')?.items || [];
+        this.menuGroups = menuGroups.filter(m => m.title !== 'top');
         this.notificationsVisible = this.isNavItemVisible([
         UserPrivilege.PRIVILEGE_READ_PIPELINE,
         UserPrivilege.PRIVILEGE_WRITE_PIPELINE
@@ -69,10 +115,6 @@ export abstract class BaseNavigationComponent {
           this.activePageName = this.getPageTitle(this.activePage);
         }
       });
-    }
-
-    getActivePage() {
-      return this.activePage;
     }
 
     getPageTitle(path) {
@@ -102,5 +144,13 @@ export abstract class BaseNavigationComponent {
     public isNavItemVisible(privileges: string[]): boolean {
       return this.authService.isAnyAccessGranted(privileges);
     }
+
+  toggleGroup(group: MenuGroup): void {
+    group.collapsed = !group.collapsed;
+  }
+
+  toggleMenubar(): void {
+        this.collapseService.toggleMenubar();
+        }
 
 }
