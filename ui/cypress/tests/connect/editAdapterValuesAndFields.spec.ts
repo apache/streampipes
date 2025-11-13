@@ -66,7 +66,7 @@ describe('Test Edit Adapter', () => {
 
         // Fill in adapter name and close view
         cy.dataCy('sp-adapter-name').type('Test Adapter');
-        ConnectBtns.adapterSettingsStartAdapter().click();
+        cy.dataCy('adapter-settings-start-adapter-btn').click();
         ConnectUtils.closeAdapterPreview();
 
         // Edit adapter and check if given values and added property still provided
