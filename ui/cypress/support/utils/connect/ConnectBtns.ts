@@ -76,6 +76,10 @@ export class ConnectBtns {
         return cy.dataCy('delete-adapter-confirmation');
     }
 
+    public static connectNewAdapterCancel() {
+        return cy.dataCy('connect-new-adapter-cancel');
+    }
+
     // =====================  Adapter settings btns  ==========================
     public static adapterSettingsStartAdapter() {
         return cy.dataCy('adapter-settings-start-adapter-btn');
