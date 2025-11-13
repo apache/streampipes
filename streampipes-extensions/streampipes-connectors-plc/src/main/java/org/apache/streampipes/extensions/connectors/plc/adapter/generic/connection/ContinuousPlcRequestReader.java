@@ -37,7 +37,7 @@ public class ContinuousPlcRequestReader
     extends OneTimePlcRequestReader implements IPullAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(ContinuousPlcRequestReader.class);
-  private static final int MAX_IDLE_PULLS = 300;
+  private static final int MAX_IDLE_PULLS = 500;
 
   private final IEventCollector collector;
   private int idlePullsBeforeNextAttempt = 0;
@@ -75,7 +75,7 @@ public class ContinuousPlcRequestReader
             .get(5000, TimeUnit.MILLISECONDS);
         processPlcReadResponse(readResponse);
       } else {
-        handleFailingPlcRead("Not connected");
+        LOG.error("Not connected to PLC with connection string {}", settings.connectionString());
       }
     } catch (Exception e) {
       handleFailingPlcRead(e.getMessage());
