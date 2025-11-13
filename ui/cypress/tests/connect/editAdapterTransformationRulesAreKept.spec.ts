@@ -34,7 +34,7 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         ConnectUtils.goToConnect();
         ConnectUtils.goToNewAdapterPage();
         ConnectUtils.selectAdapter(configuration.adapterType);
-        cy.contains('Next').click();
+        ConnectBtns.adapterSettingsNextBtn().click();
 
         ConnectBtns.schemaNextBtn().click();
         cy.dataCy('sp-adapter-name').type('Test Adapter');
@@ -49,7 +49,7 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         ConnectBtns.openActionsMenu('Test Adapter');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
-        cy.contains('Next').click();
+        ConnectBtns.adapterSettingsNextBtn().click();
         ConnectBtns.schemaNextBtn().click();
 
         ConnectBtns.connectRemoveDuplicateBox()

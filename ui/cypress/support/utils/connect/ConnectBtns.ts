@@ -125,6 +125,10 @@ export class ConnectBtns {
         return cy.dataCy('show-asset-checkbox');
     }
 
+    public static adapterSettingsNextBtn() {
+        return cy.dataCy('adapter-settings-next-button');
+    }
+
     // ========================================================================
 
     // =====================  Event Schema buttons  ==========================
