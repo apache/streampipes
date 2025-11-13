@@ -67,7 +67,7 @@ export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
     @ContentChild(SpTableActionsDirective, { read: TemplateRef })
     actionsTemplate?: TemplateRef<any>;
 
-    pageSize = 1;
+    pageSize = 10;
     timedOutCloser: any;
     trigger: MatMenuTrigger | undefined = undefined;
 

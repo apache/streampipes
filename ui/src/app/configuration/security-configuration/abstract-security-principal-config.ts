@@ -64,7 +64,7 @@ export abstract class AbstractSecurityPrincipalConfig<
                 ? this.translateService.instant('Edit user {{user}}', {
                       user: user.username,
                   })
-                : this.translateService.instant('Add group'),
+                : this.translateService.instant('Add user'),
             width: '50vw',
             data: {
                 user: user,

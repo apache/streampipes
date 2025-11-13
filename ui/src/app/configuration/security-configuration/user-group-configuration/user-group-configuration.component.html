@@ -17,18 +17,6 @@
   -->
 
 <div fxLayout="column">
-    <div>
-        <button
-            mat-button
-            mat-flat-button
-            color="accent"
-            data-cy="new-user-group-btn"
-            (click)="createGroup()"
-        >
-            <i class="material-icons">add</i
-            ><span>&nbsp;{{ 'New User Group' | translate }}</span>
-        </button>
-    </div>
     <div fxFlex="100" fxLayout="column">
         <sp-table
             *ngIf="dataSource"
@@ -56,9 +44,7 @@
             </ng-container>
 
             <ng-container matColumnDef="edit">
-                <th mat-header-cell *matHeaderCellDef class="text-right">
-                    {{ 'Actions' | translate }}
-                </th>
+                <th mat-header-cell *matHeaderCellDef class="text-right"></th>
                 <td mat-cell *matCellDef="let group">
                     <div fxLayout="row">
                         <span
