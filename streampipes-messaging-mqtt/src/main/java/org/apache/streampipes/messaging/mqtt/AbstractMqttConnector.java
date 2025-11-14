@@ -19,47 +19,37 @@ package org.apache.streampipes.messaging.mqtt;
 
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
-
 import com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3Client;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3ClientBuilder;
 
 public class AbstractMqttConnector {
 
-  protected MQTT mqtt;
-  protected boolean connected = false;
+    protected Mqtt3AsyncClient client;
+    protected boolean connected = false;
 
-  protected final MqttTransportProtocol protocol;
+    protected final MqttTransportProtocol protocol;
 
-  public AbstractMqttConnector(MqttTransportProtocol protocol) {
-    this.protocol = protocol;
-  }
+    public AbstractMqttConnector(MqttTransportProtocol protocol) {
+        this.protocol = protocol;
+    }
 
-  protected void createBrokerConnection(MqttTransportProtocol protocolSettings) throws Exception {
-   try {
-            String brokerUrl = makeBrokerUrl(protocolSettings);
+    protected void createBrokerConnection(MqttTransportProtocol protocolSettings) {
+        try {
 
             Mqtt3ClientBuilder builder = Mqtt3Client.builder()
                     .identifier("mqtt-client-" + System.currentTimeMillis())
                     .serverHost(protocolSettings.getBrokerHostname())
                     .serverPort(protocolSettings.getPort());
 
-            // Optional TLS handling
-            if (protocolSettings.isSecure()) {
-                builder.sslWithDefaultConfig(); // Can be customized for certs
-            }
 
             client = builder.buildAsync();
-
-            // Blocking connect
             client.connectWith().send().get();
             connected = true;
 
         } catch (Exception e) {
             throw new RuntimeException("Could not connect to MQTT broker: " + e.getMessage(), e);
         }
-  }
-
-  private String makeBrokerUrl(MqttTransportProtocol protocolSettings) {
-    return "tcp://" + protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
-  }
+    }
 
 }

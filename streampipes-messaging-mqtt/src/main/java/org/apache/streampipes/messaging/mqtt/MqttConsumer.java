@@ -17,12 +17,13 @@
  */
 package org.apache.streampipes.messaging.mqtt;
 
+
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
-import com.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Publish;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 
 import java.io.Serializable;
 
@@ -31,8 +32,11 @@ public class MqttConsumer extends AbstractMqttConnector implements
         AutoCloseable,
         Serializable {
 
+    protected final MqttTransportProtocol protocol;
+
     public MqttConsumer(MqttTransportProtocol protocol) {
         super(protocol);
+        this.protocol = protocol;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class MqttConsumer extends AbstractMqttConnector implements
             // Subscribe to topic
             client.subscribeWith()
                     .topicFilter(protocol.getTopicDefinition().getActualTopicName())
-                    .qos(org.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Qos.AT_LEAST_ONCE)
+                    .qos(MqttQos.AT_LEAST_ONCE)
                     .callback(this::handleMessage)
                     .send()
                     .join();
