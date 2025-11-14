@@ -23,7 +23,6 @@ import org.apache.streampipes.extensions.connectors.mqtt.security.SecurityUtils;
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.MqttClientSslConfig;
 import com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

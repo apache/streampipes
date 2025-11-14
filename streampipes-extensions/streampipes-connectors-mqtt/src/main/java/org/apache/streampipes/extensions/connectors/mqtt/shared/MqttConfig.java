@@ -17,7 +17,8 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
-import org.fusesource.mqtt.client.QoS;
+
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 
 public class MqttConfig {
 
@@ -33,12 +34,12 @@ public class MqttConfig {
   private Boolean tls = false;
 
   private boolean isLastWill = false; // Default: no last will
-  private QoS willQoS = QoS.AT_MOST_ONCE; // Default: QoS 0 (At most once)
+  private MqttQos willQoS = MqttQos.AT_MOST_ONCE; // Default: QoS 0 (At most once)
   private Boolean willRetain = false; // Default: do not retain the last will message
   private String willTopic = ""; // Default: empty topic
   private String willMessage = ""; // Default: empty message
   private String mqttProtocolVersion = "3.1"; // Default: MQTT 3.1 protocol
-  private QoS qos = QoS.AT_MOST_ONCE; // Default: QoS 0 (At most once)
+  private MqttQos qos = MqttQos.AT_MOST_ONCE; // Default: QoS 0 (At most once)
   private long reconnectDelayMaxInMs = 10000L; // Default: max reconnect delay of 10 seconds (in milliseconds)
   private boolean cleanSession = true; // Default: clean session
   private boolean retain = false; // Default: do not retain the message
@@ -156,11 +157,11 @@ public class MqttConfig {
     this.isLastWill = lastWill;
   }
 
-  public QoS getWillQoS() {
+  public MqttQos getWillQoS() {
     return willQoS;
   }
 
-  public void setWillQoS(QoS willQoS) {
+  public void setWillQoS(MqttQos willQoS) {
     this.willQoS = willQoS;
   }
 
@@ -196,11 +197,11 @@ public class MqttConfig {
     this.mqttProtocolVersion = mqttProtocolVersion;
   }
 
-  public QoS getQos() {
+  public MqttQos getQos() {
     return qos;
   }
 
-  public void setQos(QoS qos) {
+  public void setQos(MqttQos qos) {
     this.qos = qos;
   }
 

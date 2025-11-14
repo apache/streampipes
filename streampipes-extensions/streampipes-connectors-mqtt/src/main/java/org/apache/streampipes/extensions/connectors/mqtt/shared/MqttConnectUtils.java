@@ -21,7 +21,6 @@ package org.apache.streampipes.extensions.connectors.mqtt.shared;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
-import org.apache.streampipes.extensions.connectors.mqtt.migration.MQTTSinkMigrationV1;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -29,9 +28,7 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
 
-import org.fusesource.mqtt.client.QoS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -251,15 +248,15 @@ public class MqttConnectUtils {
     return mqttConfig;
   }
 
-  public static QoS extractQoSFromString(String s) {
+  public static MqttQos extractQoSFromString(String s) {
     int qos = Integer.parseInt(s.replaceAll("\\D+", ""));
     switch (qos) {
       case 0:
-        return QoS.AT_MOST_ONCE;
+        return MqttQos.AT_MOST_ONCE;
       case 1:
-        return QoS.AT_LEAST_ONCE;
+        return MqttQos.AT_LEAST_ONCE;
       case 2:
-        return QoS.EXACTLY_ONCE;
+        return MqttQos.EXACTLY_ONCE;
     }
     throw new SpRuntimeException("Could not retrieve QoS level: QoS " + qos);
   }
