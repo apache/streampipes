@@ -32,7 +32,6 @@ import java.util.Map;
 public class MQTTPublisherUtils {
 
     public static void publishEvents(MqttPublisher publisher, List<Map<String, Object>> events) {
-        // var publisher = getMqttPublisher();
         var objectMapper = new ObjectMapper();
 
         events.forEach(event -> {
