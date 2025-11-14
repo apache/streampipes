@@ -92,7 +92,7 @@ export class DataExplorerBtns {
             .click();
     }
     public static editDataViewButton(dataViewName: string) {
-        return cy.dataCy('edit-data-view-' + dataViewName);
+        return cy.dataCy('edit-data-view-' + dataViewName.replaceAll(' ', ''));
     }
 
     public static editWidget(widgetName: string) {
