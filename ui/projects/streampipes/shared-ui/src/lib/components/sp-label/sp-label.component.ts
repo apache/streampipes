@@ -33,6 +33,9 @@ export class SpLabelComponent implements OnInit {
     small = false;
 
     @Input()
+    icon: string | undefined = undefined;
+
+    @Input()
     size: 'small' | 'medium' | 'large' = 'large';
 
     _labelBackground: string = 'var(--color-bg-2)';
@@ -48,6 +51,9 @@ export class SpLabelComponent implements OnInit {
         } else if (this.size === 'small') {
             this.cssClass = 'small-label';
         }
+        this.labelTextColor = this.colorizationService.generateContrastColor(
+            this._labelBackground,
+        );
     }
 
     @Input()

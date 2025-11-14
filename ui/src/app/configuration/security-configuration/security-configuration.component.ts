@@ -16,10 +16,14 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.routes';
+import { SecurityUserConfigComponent } from './security-user-configuration/security-user-config.component';
+import { SecurityServiceConfigComponent } from './security-service-configuration/security-service-config.component';
+import { SecurityRoleConfigComponent } from './role-configuration/role-configuration.component';
+import { SecurityUserGroupConfigComponent } from './user-group-configuration/user-group-configuration.component';
 
 @Component({
     selector: 'sp-security-configuration',
@@ -30,10 +34,17 @@ import { SpConfigurationRoutes } from '../configuration.routes';
 export class SecurityConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];
 
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        private tabService: SpConfigurationTabsService,
-    ) {}
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private tabService = inject(SpConfigurationTabsService);
+
+    @ViewChild(SecurityUserConfigComponent)
+    userConfig!: SecurityUserConfigComponent;
+    @ViewChild(SecurityServiceConfigComponent)
+    serviceConfig!: SecurityServiceConfigComponent;
+    @ViewChild(SecurityRoleConfigComponent)
+    roleConfig!: SecurityRoleConfigComponent;
+    @ViewChild(SecurityUserGroupConfigComponent)
+    groupConfig!: SecurityUserGroupConfigComponent;
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();
@@ -41,5 +52,21 @@ export class SecurityConfigurationComponent implements OnInit {
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('security') },
         ]);
+    }
+
+    createUserAccount(): void {
+        this.userConfig.createUser();
+    }
+
+    createServiceAccount(): void {
+        this.serviceConfig.createUser();
+    }
+
+    createGroup(): void {
+        this.groupConfig.createGroup();
+    }
+
+    createRole(): void {
+        this.roleConfig.createRole();
     }
 }

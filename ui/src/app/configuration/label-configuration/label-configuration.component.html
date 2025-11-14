@@ -25,7 +25,12 @@
                     | translate
             "
         >
-            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+            <div
+                fxLayout="row"
+                fxLayoutAlign="start start"
+                fxLayoutGap="10px"
+                section-actions
+            >
                 <button
                     mat-button
                     mat-flat-button
@@ -34,7 +39,7 @@
                     (click)="createLabelMode = true"
                 >
                     <i class="material-icons">add</i
-                    ><span>&nbsp;{{ 'New label' | translate }}</span>
+                    ><span>&nbsp;{{ 'New' | translate }}</span>
                 </button>
             </div>
             <div *ngIf="createLabelMode" class="mb-10">
@@ -42,9 +47,6 @@
                     (cancelEmitter)="createLabelMode = false"
                     (saveEmitter)="saveLabel($event)"
                 ></sp-edit-label>
-            </div>
-            <div class="subsection-title mt-10">
-                {{ 'Available labels' | translate }}
             </div>
             <div
                 fxLayout="column"

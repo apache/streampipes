@@ -17,17 +17,17 @@
   -->
 
 <div fxLayout="column">
-    <form
-        [formGroup]="locationForm"
-        fxFlex="100"
-        fxLayout="column"
-        *ngIf="locationConfig"
+    <sp-split-section
+        [title]="'Geo features' | translate"
+        [subtitle]="
+            'Geo features are used to better organize assets.' | translate
+        "
     >
-        <sp-split-section
-            [title]="'Geo features' | translate"
-            [subtitle]="
-                'Geo features are used to better organize assets.' | translate
-            "
+        <form
+            [formGroup]="locationForm"
+            fxFlex="100"
+            fxLayout="column"
+            *ngIf="locationConfig"
         >
             <mat-checkbox
                 formControlName="locationFeaturesEnabled"
@@ -72,19 +72,18 @@
                     />
                 </mat-form-field>
             </div>
-        </sp-split-section>
-        <sp-split-section>
-            <div>
-                <button
-                    mat-flat-button
-                    color="accent"
-                    data-cy="sites-location-features-button"
-                    [disabled]="!locationForm.valid"
-                    (click)="save()"
-                >
-                    {{ 'Save' | translate }}
-                </button>
-            </div>
-        </sp-split-section>
-    </form>
+        </form>
+        <div class="mt-10">
+            <button
+                mat-flat-button
+                color="accent"
+                data-cy="sites-location-features-button"
+                [disabled]="!locationForm.valid"
+                (click)="save()"
+            >
+                <mat-icon>save</mat-icon>
+                <span>{{ 'Save' | translate }}</span>
+            </button>
+        </div>
+    </sp-split-section>
 </div>

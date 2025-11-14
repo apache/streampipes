@@ -19,11 +19,15 @@
 <span
     class="basic-label"
     [ngClass]="cssClass"
+    [class.no-icon]="icon === undefined"
     [ngStyle]="{
         background: labelBackground,
         borderColor: 'color-mix(in srgb, ' + labelBackground + ' 70%, black)',
         color: labelTextColor
     }"
 >
+    @if (icon) {
+        <i class="material-icons centered-icon">{{ icon }}</i>
+    }
     {{ labelText }}
 </span>
