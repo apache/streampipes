@@ -19,7 +19,6 @@ package org.apache.streampipes.extensions.connectors.mqtt.security;
 
 import org.apache.streampipes.commons.environment.Environments;
 
-import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;

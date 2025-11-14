@@ -22,8 +22,8 @@ import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.runtime.Event;
 
-import org.fusesource.mqtt.client.BlockingConnection;
-import org.fusesource.mqtt.client.MQTT;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +35,7 @@ public class MqttPublisher extends MqttBase {
 
   //private final MqttConfig options;
   private URI uri;
-  private MQTT mqtt;
-  private BlockingConnection conn;
+  private Mqtt3AsyncClient client;
 
   private static final Logger LOG = LoggerFactory.getLogger(MqttPublisher.class);
 
@@ -45,7 +44,7 @@ public class MqttPublisher extends MqttBase {
     //this.options = MqttConnectUtils.extractDataSinkParams(params);
     super(MqttConnectUtils.extractDataSinkParams(params));
        try {
-    this.mqtt = super.setupMqttClient();
+    this.client = super.setupMqttClient();
 
        } catch (Exception e) {
             LOG.error("Error in MQTT consumer: ", e);
@@ -59,11 +58,19 @@ public class MqttPublisher extends MqttBase {
    */
   public void connect() {
     try {
-      this.conn = mqtt.blockingConnection();
-      this.conn.connect();
+      LOG.info("Connecting to MQTT broker: {}", super.mqttConfig.getUrl());
+
+      client.connectWith()
+          .cleanSession(super.mqttConfig.isCleanSession())
+          .keepAlive(super.mqttConfig.getKeepAliveInSec())
+          .send()
+          .get(); // blocking wait
+
+      LOG.info("Connected to MQTT broker");
+
     } catch (Exception e) {
       throw new SpRuntimeException("Could not connect to MQTT broker: "
-          + uri.toString() + ", " + e.getMessage(), e);
+          + super.mqttConfig.getUrl() + ", " + e.getMessage(), e);
     }
   }
 
@@ -76,7 +83,19 @@ public class MqttPublisher extends MqttBase {
     JsonDataFormatDefinition dataFormatDefinition = new JsonDataFormatDefinition();
     byte[] payload = new String(dataFormatDefinition.fromMap(event.getRaw())).getBytes();
     try {
-      this.conn.publish(super.mqttConfig.getTopic(), payload, super.mqttConfig.getQos(), super.mqttConfig.isRetain());
+      MqttQos qos = super.mqttConfig.getQos();
+
+      client.publishWith()
+          .topic(super.mqttConfig.getTopic())
+          .payload(payload)
+          .qos(qos)
+          .retain(super.mqttConfig.isRetain())
+          .send()
+          .whenComplete((ack, error) -> {
+            if (error != null) {
+              LOG.error("MQTT publish failed", error);
+            }
+          });
     } catch (Exception e) {
       throw new SpRuntimeException("Could not publish to MQTT broker: "
           + uri.toString() + ", " + e.getMessage(), e);
@@ -88,9 +107,8 @@ public class MqttPublisher extends MqttBase {
    */
   public void disconnect() {
     try {
-      if (this.conn.isConnected()) {
-        this.conn.disconnect();
-      }
+      client.disconnect()
+          .get(); // block until disconnected
     } catch (Exception e) {
       throw new SpRuntimeException("Could not disconnect from MQTT broker: "
           + uri.toString() + ", " + e.getMessage(), e);
