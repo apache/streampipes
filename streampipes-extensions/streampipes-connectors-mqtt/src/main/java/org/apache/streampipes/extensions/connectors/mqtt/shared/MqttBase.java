@@ -55,7 +55,7 @@ public class MqttBase {
                 .identifier(UUID.randomUUID().toString())
                 .serverHost(brokerUri.getHost())
                 .serverPort(resolvePort(brokerUri))
-                .useMqttVersion3(); // mimic FuseSource (MQTT 3.x)
+                .useMqttVersion3(); 
 
         if (mqttConfig.getAuthenticated()) {
             builder.simpleAuth()

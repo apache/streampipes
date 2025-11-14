@@ -22,76 +22,77 @@ import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
-import org.fusesource.mqtt.client.Message;
-import org.fusesource.mqtt.client.QoS;
-import org.fusesource.mqtt.client.Topic;
+import com.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Publish;
 
 import java.io.Serializable;
 
 public class MqttConsumer extends AbstractMqttConnector implements
-    EventConsumer,
-    AutoCloseable, Serializable {
+        EventConsumer,
+        AutoCloseable,
+        Serializable {
 
-  public MqttConsumer(MqttTransportProtocol protocol) {
-    super(protocol);
-  }
-
-  @Override
-  public void connect(InternalEventProcessor<byte[]> eventProcessor)
-      throws SpRuntimeException {
-
-    try {
-      this.createBrokerConnection(protocol);
-      Topic[] topics = {new Topic(protocol.getTopicDefinition().getActualTopicName(), QoS.AT_LEAST_ONCE)};
-      connection.subscribe(topics);
-      new Thread(new ConsumerThread(eventProcessor)).start();
-
-    } catch (Exception e) {
-      throw new SpRuntimeException(e);
-    }
-  }
-
-  private class ConsumerThread implements Runnable {
-
-    private final InternalEventProcessor<byte[]> eventProcessor;
-
-    public ConsumerThread(InternalEventProcessor<byte[]> eventProcessor) {
-      this.eventProcessor = eventProcessor;
+    public MqttConsumer(MqttTransportProtocol protocol) {
+        super(protocol);
     }
 
     @Override
-    public void run() {
-      try {
-        while (connected) {
-          Message message = connection.receive();
-          byte[] payload = message.getPayload();
-          eventProcessor.onEvent(payload);
-          message.ack();
+    public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
+        try {
+            // Create connection using HiveMQ
+            this.createBrokerConnection(protocol);
+
+            // Subscribe to topic
+            client.subscribeWith()
+                    .topicFilter(protocol.getTopicDefinition().getActualTopicName())
+                    .qos(org.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Qos.AT_LEAST_ONCE)
+                    .callback(this::handleMessage)
+                    .send()
+                    .join();
+
+            // Store the event processor for callback
+            this.eventProcessor = eventProcessor;
+
+        } catch (Exception e) {
+            throw new SpRuntimeException("Error connecting to MQTT broker", e);
         }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
     }
-  }
 
-  @Override
-  public void disconnect() throws SpRuntimeException {
-    try {
-      this.connection.disconnect();
-    } catch (Exception e) {
-      throw new SpRuntimeException(e);
-    } finally {
-      this.connected = false;
+    private InternalEventProcessor<byte[]> eventProcessor;
+
+    /**
+     * Called for each incoming message.
+     */
+    private void handleMessage(Mqtt3Publish publish) {
+        try {
+            byte[] payload = publish.getPayloadAsBytes();
+            if (eventProcessor != null) {
+                eventProcessor.onEvent(payload);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-  }
 
-  @Override
-  public boolean isConnected() {
-    return this.connected;
-  }
+    @Override
+    public void disconnect() throws SpRuntimeException {
+        try {
+            if (client != null && connected) {
+                client.disconnect().join();
+            }
+        } catch (Exception e) {
+            throw new SpRuntimeException("Error disconnecting from MQTT broker", e);
+        } finally {
+            connected = false;
+        }
+    }
 
-  @Override
-  public void close() throws Exception {
-    disconnect();
-  }
+    @Override
+    public boolean isConnected() {
+        return this.connected;
+    }
+
+    @Override
+    public void close() throws Exception {
+        disconnect();
+    }
 }

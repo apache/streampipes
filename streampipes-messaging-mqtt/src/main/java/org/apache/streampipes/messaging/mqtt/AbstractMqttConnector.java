@@ -19,13 +19,12 @@ package org.apache.streampipes.messaging.mqtt;
 
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
-import org.fusesource.mqtt.client.BlockingConnection;
-import org.fusesource.mqtt.client.MQTT;
+
+import com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient;
 
 public class AbstractMqttConnector {
 
   protected MQTT mqtt;
-  protected BlockingConnection connection;
   protected boolean connected = false;
 
   protected final MqttTransportProtocol protocol;
@@ -35,11 +34,28 @@ public class AbstractMqttConnector {
   }
 
   protected void createBrokerConnection(MqttTransportProtocol protocolSettings) throws Exception {
-    this.mqtt = new MQTT();
-    this.mqtt.setHost(makeBrokerUrl(protocolSettings));
-    this.connection = mqtt.blockingConnection();
-    this.connection.connect();
-    this.connected = true;
+   try {
+            String brokerUrl = makeBrokerUrl(protocolSettings);
+
+            Mqtt3ClientBuilder builder = Mqtt3Client.builder()
+                    .identifier("mqtt-client-" + System.currentTimeMillis())
+                    .serverHost(protocolSettings.getBrokerHostname())
+                    .serverPort(protocolSettings.getPort());
+
+            // Optional TLS handling
+            if (protocolSettings.isSecure()) {
+                builder.sslWithDefaultConfig(); // Can be customized for certs
+            }
+
+            client = builder.buildAsync();
+
+            // Blocking connect
+            client.connectWith().send().get();
+            connected = true;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Could not connect to MQTT broker: " + e.getMessage(), e);
+        }
   }
 
   private String makeBrokerUrl(MqttTransportProtocol protocolSettings) {
