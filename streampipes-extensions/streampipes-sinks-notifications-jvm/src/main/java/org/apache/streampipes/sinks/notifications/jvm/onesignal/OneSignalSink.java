@@ -19,16 +19,18 @@
 package org.apache.streampipes.sinks.notifications.jvm.onesignal;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
 import org.apache.http.HttpEntity;
@@ -54,6 +56,17 @@ public class OneSignalSink extends StreamPipesNotificationSink {
   private String apiKey;
 
   @Override
+  public IDataSinkConfiguration declareConfig() {
+    var builder = declareModelWithoutSilentPeriod();
+    addSilentPeriodParameter(builder);
+
+    return DataSinkConfiguration.create(
+        OneSignalSink::new,
+        builder.build()
+    );
+  }
+
+  @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
     return DataSinkBuilder
         .create(ONE_SIGNAL_NOTIFICATION_SINK_ID, 1)
@@ -70,9 +83,9 @@ public class OneSignalSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    super.onInvocation(parameters, runtimeContext);
+  public void onPipelineStarted(IDataSinkParameters parameters,
+                                EventSinkRuntimeContext runtimeContext) {
+    super.onPipelineStarted(parameters, runtimeContext);
     var extractor = parameters.extractor();
     content = extractor.singleValueParameter(CONTENT_KEY, String.class);
     appId = extractor.singleValueParameter(APP_ID, String.class);
@@ -108,7 +121,7 @@ public class OneSignalSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
 
   }
 }
