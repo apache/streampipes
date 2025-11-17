@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.connect.iiot.adapters.oi4.migration;
 
+import org.apache.streampipes.connect.iiot.adapters.oi4.Oi4Adapter;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
-import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -37,7 +37,7 @@ public class Oi4AdapterMigrationV1 implements IAdapterMigrator {
     @Override
     public ModelMigratorConfig config() {
         return new ModelMigratorConfig(
-                MqttProtocol.ID,
+                Oi4Adapter.ID,
                 SpServiceTagPrefix.ADAPTER,
                 0,
                 1);
