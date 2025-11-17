@@ -50,10 +50,8 @@ public class MqttConsumer extends MqttBase implements Runnable {
     public void run() {
         this.running = true;
       try {
-            LOG.info("Setup CLient");
             Mqtt3AsyncClient client = super.setupMqttClient();
 
-            LOG.info("Connecting to MQTT broker...");
             client.connectWith()
                     .keepAlive(30)
                     .send()
@@ -64,14 +62,12 @@ public class MqttConsumer extends MqttBase implements Runnable {
                             LOG.info("MQTT connection established");
                         }
                     })
-                    .get();  // wait for completion
+                    .get();  
 
             subscribe(client);
 
-            // block until max messages or stop
             waitUntilFinished();
 
-            LOG.info("Disconnecting MQTT...");
             client.disconnect().get();
 
         } catch (Exception e) {
@@ -81,7 +77,6 @@ public class MqttConsumer extends MqttBase implements Runnable {
     }
 
  private void subscribe(Mqtt3AsyncClient client) throws Exception {
-        LOG.info("Subscribing to topic: {}", super.mqttConfig.getTopic());
 
         CountDownLatch subscribed = new CountDownLatch(1);
 
