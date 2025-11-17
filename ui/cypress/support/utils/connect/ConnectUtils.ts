@@ -291,7 +291,6 @@ export class ConnectUtils {
         });
     }
 
-    // Close adapter preview
     public static closeAdapterPreview() {
         cy.get('button').contains('Close').parent().click();
     }
