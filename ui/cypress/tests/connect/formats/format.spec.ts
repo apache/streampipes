@@ -19,7 +19,6 @@
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
-import { AdapterInput } from '../../../support/model/AdapterInput';
 import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
 
 describe('Test adapter formats', () => {
@@ -46,7 +45,9 @@ describe('Test adapter formats', () => {
             .setFormat('json')
             .addFormatInput('radio', 'json_options-single_object', '');
 
-        navigateToFormatSelection(template.build());
+        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
+            template.build(),
+        );
 
         // Validate result
         validateResult(expected);
@@ -61,7 +62,9 @@ describe('Test adapter formats', () => {
             .setFormat('json')
             .addFormatInput('radio', 'json_options-array', '');
 
-        navigateToFormatSelection(template.build());
+        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
+            template.build(),
+        );
 
         // Validate result
         validateResult(expected);
@@ -77,7 +80,9 @@ describe('Test adapter formats', () => {
             .addFormatInput('radio', 'json_options-array_field', '')
             .addFormatInput('input', ConnectBtns.jsonArrayFieldKey(), 'field');
 
-        navigateToFormatSelection(template.build());
+        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
+            template.build(),
+        );
 
         // Validate result
         validateResult(expected);
@@ -98,7 +103,9 @@ describe('Test adapter formats', () => {
             .setFormat('json')
             .addFormatInput('radio', 'json_options-geojson', '');
 
-        navigateToFormatSelection(template.build());
+        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
+            template.build(),
+        );
 
         // Validate result
         validateResult(geoJsonResultEvent);
@@ -112,7 +119,9 @@ describe('Test adapter formats', () => {
             .setFormat('xml')
             .addFormatInput('input', ConnectBtns.xmlTag(), 'event');
 
-        navigateToFormatSelection(template.build());
+        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
+            template.build(),
+        );
 
         // Validate result
         validateResult(expected);
@@ -127,7 +136,9 @@ describe('Test adapter formats', () => {
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
             .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
 
-        navigateToFormatSelection(template.build());
+        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
+            template.build(),
+        );
 
         // Validate result
         validateResult(expected);
@@ -141,7 +152,9 @@ describe('Test adapter formats', () => {
             .setFormat('csv')
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';');
 
-        navigateToFormatSelection(template.build());
+        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
+            template.build(),
+        );
 
         const expectedNoHeader = {
             key_0: 1667904471000,
@@ -164,22 +177,14 @@ describe('Test adapter formats', () => {
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ',')
             .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
 
-        navigateToFormatSelection(template.build());
+        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
+            template.build(),
+        );
 
         // Validate result
         validateResult(expected);
     });
 });
-
-const navigateToFormatSelection = (adapterInput: AdapterInput) => {
-    ConnectUtils.goToConnect();
-
-    ConnectUtils.goToNewAdapterPage();
-
-    ConnectUtils.selectAdapter('File_Stream');
-
-    ConnectUtils.configureAdapter(adapterInput);
-};
 
 const makeAdapterInputTemplate = (): AdapterBuilder => {
     return AdapterBuilder.create('File_Stream')

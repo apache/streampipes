@@ -99,6 +99,18 @@ export class ConnectUtils {
         );
     }
 
+    public static createAdapterUntilEventSchemaConfiguration(
+        adapterInput: AdapterInput,
+    ) {
+        ConnectUtils.goToConnect();
+
+        ConnectUtils.goToNewAdapterPage();
+
+        ConnectUtils.selectAdapter(adapterInput.adapterType);
+
+        ConnectUtils.configureAdapter(adapterInput);
+    }
+
     private static configureDimensionProperties(
         adapterConfiguration: AdapterInput,
     ) {
@@ -117,6 +129,7 @@ export class ConnectUtils {
         cy.dataCy('sp-adapter-name').clear().type(newName);
         cy.dataCy('sp-adapter-name').should('have.value', newName);
     }
+
     public static addMachineDataSimulator(
         name: string,
         persist: boolean = false,
