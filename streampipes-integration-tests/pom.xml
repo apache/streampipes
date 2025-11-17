@@ -187,7 +187,7 @@
             <configuration>
             <skipTests>false</skipTests>
               <environmentVariables>
-                <SP_SECURITY_KEYSTORE_FILENAME>src/test/resources/cacerts.pfx</SP_SECURITY_KEYSTORE_FILENAME>
+                <SP_SECURITY_KEYSTORE_FILENAME>src/test/resources/truststore.jks</SP_SECURITY_KEYSTORE_FILENAME>
                 <SP_SECURITY_KEYSTORE_PASSWORD>changeit</SP_SECURITY_KEYSTORE_PASSWORD>
               </environmentVariables>
             </configuration>

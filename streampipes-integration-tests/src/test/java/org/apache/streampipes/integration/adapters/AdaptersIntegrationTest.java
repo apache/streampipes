@@ -29,16 +29,16 @@ import org.junit.jupiter.api.TestMethodOrder;
 public class AdaptersIntegrationTest {
 
 
-  @Test
-  @Order(1)
-  public void testMqttAdapter() throws Exception {
+ @Test
+ @Order(1)
+ public void testMqttAdapter() throws Exception {
     try (MqttAdapterTester mqttAdapterTester = new MqttAdapterTester()) {
       mqttAdapterTester.run();
     }
   }
 
     @Test
-      @Order(2)
+     @Order(2)
     //@Tag("selfsigned")
   public void testMqttTLSAdapter() throws Exception {
 

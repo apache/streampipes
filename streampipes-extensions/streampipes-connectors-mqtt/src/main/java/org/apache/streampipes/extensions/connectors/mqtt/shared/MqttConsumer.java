@@ -51,7 +51,7 @@ public class MqttConsumer extends MqttBase implements Runnable {
         this.running = true;
       try {
             Mqtt3AsyncClient client = super.setupMqttClient();
-
+            LOG.info("Start Connect");
             client.connectWith()
                     .keepAlive(30)
                     .send()
@@ -64,11 +64,15 @@ public class MqttConsumer extends MqttBase implements Runnable {
                     })
                     .get();  
 
+             LOG.info("Finish Connect");
+
             subscribe(client);
 
-            waitUntilFinished();
+             LOG.info("Finish Subscribe");
 
-            client.disconnect().get();
+            //waitUntilFinished();
+
+            //client.disconnect().get();
 
         } catch (Exception e) {
             LOG.error("Error in MQTT consumer: ", e);

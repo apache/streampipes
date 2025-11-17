@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
 
 public class SecurityUtils {
 
-    private static final TrustManager[] ACCEPT_ALL = new TrustManager[]{
+    public static final TrustManager[] ACCEPT_ALL = new TrustManager[]{
         new X509TrustManager() {
             @Override
             public X509Certificate[] getAcceptedIssuers() {
@@ -69,7 +69,7 @@ public class SecurityUtils {
     };
 
 
-    private static class AcceptAllTMF extends TrustManagerFactorySpi {
+    public static class AcceptAllTMF extends TrustManagerFactorySpi {
         @Override
         protected void engineInit(KeyStore ks) { }
 
@@ -82,7 +82,7 @@ public class SecurityUtils {
         }
     }
     
-        private static class AcceptAllProvider extends Provider {
+        public static class AcceptAllProvider extends Provider {
 
         AcceptAllProvider() {
             super("AcceptAllProvider", "1.0",
