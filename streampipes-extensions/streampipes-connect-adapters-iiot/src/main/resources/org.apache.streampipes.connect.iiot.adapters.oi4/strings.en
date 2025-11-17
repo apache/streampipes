@@ -19,8 +19,8 @@
 org.apache.streampipes.connect.iiot.adapters.oi4.title=OI4
 org.apache.streampipes.connect.iiot.adapters.oi4.description=Connects to an Open Industry 4.0 (OI4)-compatible device via MQTT
 
-access-mode.title=Access Mode
-access-mode.description=Provide user credentials for the MQTT broker
+access-mode.title=User Authentication
+access-mode.description=Choose an authentication method for the user
 
 anonymous-alternative.title=Unauthenticated
 anonymous-alternative.description=
@@ -34,11 +34,20 @@ username-group.description=
 username.title=Username
 username.description=
 
+client-cert-alternative.title= Client Certificate
+client-cert-alternative.description=
+
+clientcert.title=Certificate PEM
+clientcert.description = Public key in PEM format
+
+clientkey.title=Private Key PEM
+clientkey.description=Private key in PEM format
+
 password.title=Password
 password.description=
 
 broker_url.title=Broker URL
-broker_url.description=Example: tcp://test-server.com:1883 (Protocol required. Port required)"
+broker_url.description=Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)"
 
 topic.title=Topic
 topic.description=Example: test/topic
