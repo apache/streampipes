@@ -36,10 +36,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MqttConnectUtils {
-
-  /**
-   * Keys of user configuration parameters
-   */
   // Adapter
   public static final String ACCESS_MODE = "access-mode";
   public static final String ANONYMOUS_ACCESS = "anonymous-alternative";

@@ -49,10 +49,8 @@ public class MqttConsumer extends AbstractMqttConnector implements
         try {
 
           LOG.info("Call to create Broker COmnmection from Messaging");
-            // Create connection using HiveMQ
             this.createBrokerConnection(protocol);
 
-            // Subscribe to topic
             client.subscribeWith()
                     .topicFilter(protocol.getTopicDefinition().getActualTopicName())
                     .qos(MqttQos.AT_LEAST_ONCE)
@@ -60,7 +58,6 @@ public class MqttConsumer extends AbstractMqttConnector implements
                     .send()
                     .join();
 
-            // Store the event processor for callback
             this.eventProcessor = eventProcessor;
 
         } catch (Exception e) {
@@ -70,9 +67,6 @@ public class MqttConsumer extends AbstractMqttConnector implements
 
     private InternalEventProcessor<byte[]> eventProcessor;
 
-    /**
-     * Called for each incoming message.
-     */
     private void handleMessage(Mqtt3Publish publish) {
         try {
             byte[] payload = publish.getPayloadAsBytes();
