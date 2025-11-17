@@ -105,7 +105,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
         .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAnonymousAccess(),
-            MqttConnectUtils.getUsernameAccess()
+            MqttConnectUtils.getUsernameAccess(), MqttConnectUtils.getClientCertAccess()
         )
         .requiredAlternatives(
             Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_DESCRIPTION),
