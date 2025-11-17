@@ -289,32 +289,30 @@ public class MqttConnectUtils {
         extract.singleValueParameter(BROKER_URL, String.class),
         extract.singleValueParameter(TOPIC, String.class));
 
-    // Set QoS using the setter
     mqttConfig.setQos(MqttConnectUtils.extractQoSFromString(
         extract.selectedSingleValue(QOS_LEVEL_KEY, String.class)));
 
-    // Set clientId using MqttConnectUtils
+
     mqttConfig.setClientId(MqttConnectUtils.runningInstanceId(params.getModel().getElementId()));
 
-    // Set reconnect delay max using the setter
+  
     mqttConfig.setReconnectDelayMaxInMs(MqttConnectUtils
         .fromSecToMs(extract.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class)));
 
-    // Set keep-alive interval using the setter
+
     mqttConfig.setKeepAliveInSec(extract.singleValueParameter(KEEP_ALIVE_IN_SEC, Short.class));
 
-    // Set clean session and retain flags using the setters
+
     mqttConfig
         .setCleanSession(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(CLEAN_SESSION_KEY, String.class)));
     mqttConfig.setRetain(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(RETAIN, String.class)));
 
-    // Set MQTT protocol version if compliant
     boolean isCompliant = MqttConnectUtils.extractBoolean(extract.selectedSingleValue(MQTT_COMPLIANT, String.class));
     if (isCompliant) {
       mqttConfig.setMqttProtocolVersion("3.1.1");
     }
 
-    // Set access mode and credentials if using basic auth
+
     String accessMode = extract.selectedAlternativeInternalId(ACCESS_MODE);
     if (accessMode.equals(USERNAME_ACCESS)) {
       mqttConfig.setAuthenticated(true);
@@ -323,7 +321,6 @@ public class MqttConnectUtils {
     }
 
     if (accessMode.equals(CLIENT_CERT_ACCESS)) {
-      // Set client certificate and key using setters
       mqttConfig.setClientCertificatePath(extract.singleValueParameter(CLIENTCERT, String.class));
       mqttConfig.setClientKey(extract.secretValue(CLIENTKEY));
     } else {
@@ -331,8 +328,6 @@ public class MqttConnectUtils {
       mqttConfig.setClientCertificatePath(null);
       mqttConfig.setClientKey(null);
     }
-
-    // Set last will configuration
     String willMode = extract.selectedAlternativeInternalId(WILL_MODE);
     if (willMode.equals(WILL_ALTERNATIVE)) {
       mqttConfig.setLastWill(true);

@@ -71,16 +71,6 @@ public class MqttBase {
 
         Mqtt3AsyncClient client = builder.buildAsync();
 
-        /**client.toAsync().connectWith()
-                .send()
-                .whenComplete((connAck, throwable) -> {
-                    if (throwable != null) {
-                        LOG.error("MQTT connection failed: {}", throwable.getMessage());
-                    } else {
-                        LOG.info("MQTT connected to {}", mqttConfig.getUrl());
-                    }
-                });*/
-
         return client;
     }
 
@@ -134,7 +124,7 @@ private static boolean tlsEnabled(URI brokerUri) {
             return SecurityUtils.loadServerKeyStore();
         } catch (IOException | NoSuchAlgorithmException | CertificateException | KeyStoreException e) {
             LOG.error("Error loading keystore from file: {}", e);
-            throw e;  // Re-throwing to handle it at the top level
+            throw e;  
         }
     }
 }

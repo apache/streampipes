@@ -33,7 +33,6 @@ import java.net.URI;
 
 public class MqttPublisher extends MqttBase {
 
-  //private final MqttConfig options;
   private URI uri;
   private Mqtt3AsyncClient client;
 
@@ -41,7 +40,6 @@ public class MqttPublisher extends MqttBase {
 
   public MqttPublisher(IDataSinkParameters params) {
 
-    //this.options = MqttConnectUtils.extractDataSinkParams(params);
     super(MqttConnectUtils.extractDataSinkParams(params));
        try {
     this.client = super.setupMqttClient();
@@ -53,9 +51,7 @@ public class MqttPublisher extends MqttBase {
 
   }
 
-  /**
-   * Start blocking connection to MQTT broker.
-   */
+
   public void connect() {
     try {
       LOG.info("Connecting to MQTT broker: {}", super.mqttConfig.getUrl());
@@ -74,11 +70,6 @@ public class MqttPublisher extends MqttBase {
     }
   }
 
-  /**
-   * Publish received event to MQTT broker.
-   *
-   * @param event event to be published
-   */
   public void publish(Event event) {
     JsonDataFormatDefinition dataFormatDefinition = new JsonDataFormatDefinition();
     byte[] payload = new String(dataFormatDefinition.fromMap(event.getRaw())).getBytes();
@@ -102,9 +93,6 @@ public class MqttPublisher extends MqttBase {
     }
   }
 
-  /**
-   * Disconnect from MQTT broker.
-   */
   public void disconnect() {
     try {
       client.disconnect()
