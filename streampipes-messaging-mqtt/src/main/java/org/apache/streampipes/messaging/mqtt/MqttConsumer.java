@@ -24,6 +24,7 @@ import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
 import com.hivemq.client.mqtt.datatypes.MqttQos;
+import com.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Publish;
 
 import java.io.Serializable;
 
