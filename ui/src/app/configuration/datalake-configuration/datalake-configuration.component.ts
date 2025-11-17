@@ -94,6 +94,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         'bucket',
         'editExportProvider',
         'delete',
+        'test',
     ];
 
     pageSize = 15;
