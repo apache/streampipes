@@ -99,7 +99,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
   public IAdapterConfiguration declareConfig() {
 
     return AdapterConfigurationBuilder
-        .create(ID, 0, Oi4Adapter::new)
+        .create(ID, 1, Oi4Adapter::new)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
