@@ -57,7 +57,7 @@ public class Oi4AdapterMigrationV1 implements IAdapterMigrator {
         
         LOG.info("Migrate Broker URL ");
 
-        element = changeUrlDescription(element);
+       changeUrlDescription(element);
 
         LOG.info("Migrate Access Mode ");
 
@@ -78,12 +78,11 @@ public class Oi4AdapterMigrationV1 implements IAdapterMigrator {
 
 
 
-    private AdapterDescription changeUrlDescription(AdapterDescription element){
+    private void changeUrlDescription(AdapterDescription element){
         var url = (FreeTextStaticProperty) element.getConfig().get(0);
         url.setDescription(
                 "Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)");
         element.getConfig().set(0, url);
-        return element;
     }
 
     private void accessModeDescription(AdapterDescription element){
