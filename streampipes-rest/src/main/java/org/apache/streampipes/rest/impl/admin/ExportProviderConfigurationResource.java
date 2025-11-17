@@ -17,7 +17,10 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.dataexplorer.export.ObjectStorge.ExportProviderFactory;
+import org.apache.streampipes.dataexplorer.export.ObjectStorge.IObjectStorage;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
+import org.apache.streampipes.model.configuration.ProviderType;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
@@ -32,9 +35,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -48,14 +56,82 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
   }
 
   @GetMapping(value = "/{providerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-@PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-public ResponseEntity<ExportProviderSettings> getExportProviderSettingById(@PathVariable String providerId) {
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public ResponseEntity<ExportProviderSettings> getExportProviderSettingById(@PathVariable String providerId) {
     return getSpCoreConfigurationStorage().get().getExportProviderSettings().stream()
         .filter(setting -> setting.getProviderId().equalsIgnoreCase(providerId))
         .findFirst()
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
-}
+  }
+
+  @GetMapping(value = "/test/{providerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public String testExportProviderSettingById(@PathVariable String providerId) {
+    // Get Export Provider Settings
+    Optional<ExportProviderSettings> exportProviderSetting = getSpCoreConfigurationStorage().get()
+        .getExportProviderSettings().stream()
+        .filter(setting -> setting.getProviderId().equalsIgnoreCase(providerId))
+        .findFirst();
+
+    if (exportProviderSetting.isPresent()) {
+      ExportProviderSettings setting = exportProviderSetting.get();
+      ProviderType providerType = setting.getProviderType();
+
+      try {
+
+        IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
+            providerType, "TEST", setting,
+            "CSV");
+
+           // Sample CSV data
+      String csvData = "Name,Age,Location\nJohn Doe,30,New York\nJane Smith,25,Los Angeles\n";
+
+      // Create an InputStream from the CSV data string
+      InputStream csvInputStream = new ByteArrayInputStream(csvData.getBytes());
+
+      // Create a StreamingResponseBody that will write the CSV content to the output
+      // stream
+      StreamingResponseBody responseBody = outputStream -> {
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = csvInputStream.read(buffer)) > 0) {
+          outputStream.write(buffer, 0, length);
+        }
+      };
+      try {
+        exportProvider.store(responseBody);
+      } catch (IOException e) {
+        return "";
+
+      }
+      return "Testdata was successfull stored";
+
+
+
+      } catch (Exception e) {
+        return "";
+      }
+
+      /**
+       * StreamingResponseBody streamingOutput = outputStream -> {
+       * try (CSVPrinter csvPrinter = new CSVPrinter(new
+       * OutputStreamWriter(outputStream), CSVFormat.DEFAULT)) {
+       * csvPrinter.printRecord("Name", "Age", "Location");
+       * csvPrinter.printRecord("John Doe", 30, "New York");
+       * csvPrinter.printRecord("Jane Smith", 25, "Los Angeles");
+       * } catch (IOException e) {
+       * e.printStackTrace();
+       * }
+       * };
+       */
+
+     
+    } else {
+      // handle the case when the setting is not present
+      return "";
+    }
+  }
 
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
@@ -74,8 +150,8 @@ public ResponseEntity<ExportProviderSettings> getExportProviderSettingById(@Path
     }
 
     List<ExportProviderSettings> providerSettingsWithoutExisting = providerSettings.stream()
-    .filter(existing -> existing != null && !existing.getProviderId().equals(config.getProviderId()))
-    .collect(Collectors.toList());
+        .filter(existing -> existing != null && !existing.getProviderId().equals(config.getProviderId()))
+        .collect(Collectors.toList());
 
     providerSettingsWithoutExisting.add(config);
 

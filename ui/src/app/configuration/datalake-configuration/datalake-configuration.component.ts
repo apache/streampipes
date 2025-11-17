@@ -238,6 +238,7 @@ export class DatalakeConfigurationComponent implements OnInit {
             }
         });
     }
+    testExportProvider(providerId: string) {}
 
     openDownloadDialog(measurementName: string) {
         this.dialogService.open(DataDownloadDialogComponent, {
