@@ -42,6 +42,15 @@ export class ExportProviderService {
         );
     }
 
+    testExportProviderById(
+        providerId: string,
+    ): Observable<ExportProviderSettings> {
+        //TODO Whats the correct Return type ?
+        return this.http.get<ExportProviderSettings>(
+            `${this.exportProviderBasePath}/test/${providerId}`,
+        );
+    }
+
     updateExportProvider(
         exportProviderSettings: ExportProviderSettings,
     ): Observable<ExportProviderSettings> {

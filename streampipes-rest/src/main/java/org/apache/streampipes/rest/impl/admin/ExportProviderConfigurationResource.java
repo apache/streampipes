@@ -21,6 +21,7 @@ import org.apache.streampipes.dataexplorer.export.ObjectStorge.ExportProviderFac
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.IObjectStorage;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.configuration.ProviderType;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
@@ -67,7 +68,7 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
 
   @GetMapping(value = "/test/{providerId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public String testExportProviderSettingById(@PathVariable String providerId) {
+  public ResponseEntity<?> testExportProviderSettingById(@PathVariable String providerId) {
     // Get Export Provider Settings
     Optional<ExportProviderSettings> exportProviderSetting = getSpCoreConfigurationStorage().get()
         .getExportProviderSettings().stream()
@@ -82,16 +83,13 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
 
         IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
             providerType, "TEST", setting,
-            "CSV");
+            "csv");
 
-           // Sample CSV data
       String csvData = "Name,Age,Location\nJohn Doe,30,New York\nJane Smith,25,Los Angeles\n";
 
-      // Create an InputStream from the CSV data string
       InputStream csvInputStream = new ByteArrayInputStream(csvData.getBytes());
 
-      // Create a StreamingResponseBody that will write the CSV content to the output
-      // stream
+
       StreamingResponseBody responseBody = outputStream -> {
         byte[] buffer = new byte[1024];
         int length;
@@ -102,34 +100,20 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
       try {
         exportProvider.store(responseBody);
       } catch (IOException e) {
-        return "";
+        return serverError(SpLogMessage.from(e));
 
       }
-      return "Testdata was successfull stored";
+      return ok("Testdata was successfull stored");
 
 
 
       } catch (Exception e) {
-        return "";
+        return serverError(SpLogMessage.from(e));
       }
-
-      /**
-       * StreamingResponseBody streamingOutput = outputStream -> {
-       * try (CSVPrinter csvPrinter = new CSVPrinter(new
-       * OutputStreamWriter(outputStream), CSVFormat.DEFAULT)) {
-       * csvPrinter.printRecord("Name", "Age", "Location");
-       * csvPrinter.printRecord("John Doe", 30, "New York");
-       * csvPrinter.printRecord("Jane Smith", 25, "Los Angeles");
-       * } catch (IOException e) {
-       * e.printStackTrace();
-       * }
-       * };
-       */
 
      
     } else {
-      // handle the case when the setting is not present
-      return "";
+      return serverError("No provider found.");
     }
   }
 
