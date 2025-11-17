@@ -26,7 +26,6 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.TrustManagerFactorySpi;
 import javax.net.ssl.X509TrustManager;
 
 
@@ -41,70 +40,30 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SecurityUtils {
 
-    private static final TrustManager[] ACCEPT_ALL = new TrustManager[]{
-        new X509TrustManager() {
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-                return new X509Certificate[0];
-            }
+    public static TrustManager[] acceptAllCerts() {
+        return new TrustManager[] {
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
 
-            @Override
-            public void checkClientTrusted(X509Certificate[] certs, String authType) { }
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
 
-            @Override
-            public void checkServerTrusted(X509Certificate[] certs, String authType) { }
-        }
-    };
-
-
-    private static class AcceptAllTMF extends TrustManagerFactorySpi {
-        @Override
-        protected void engineInit(KeyStore ks) { }
-
-        @Override
-        protected void engineInit(javax.net.ssl.ManagerFactoryParameters spec) { }
-
-        @Override
-        protected TrustManager[] engineGetTrustManagers() {
-            return ACCEPT_ALL;
-        }
-    }
-    
-        private static class AcceptAllProvider extends Provider {
-
-        AcceptAllProvider() {
-            super("AcceptAllProvider", "1.0",
-                  "A provider that supplies an all-trusting TrustManager");
-
-            putService(new Service(
-                this,
-                "TrustManagerFactory",
-                "AcceptAll",
-                AcceptAllTMF.class.getName(),
-                Collections.emptyList(),
-                Collections.emptyMap()
-            ));
-        }
-    }
-
-    public static TrustManagerFactory createAcceptAllFactory() throws Exception {
-        Provider provider = new AcceptAllProvider();
-        Security.addProvider(provider);
-
-        return TrustManagerFactory.getInstance("AcceptAll", provider);
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
     }
 
     public static X509Certificate getServerCertificate(String host, int port)
@@ -138,7 +97,7 @@ public class SecurityUtils {
         }
     }
 
-    public static KeyManagerFactory loadClientKeyManagers(String certPem, String keyPem) throws Exception {
+    public static KeyManager[] loadClientKeyManagers(String certPem, String keyPem) throws Exception {
         X509Certificate certificate = parseCertificateFromPem(certPem);
         PrivateKey privateKey = parsePrivateKeyFromPem(keyPem);
 
@@ -149,7 +108,7 @@ public class SecurityUtils {
 
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(keyStore, password.toCharArray());
-        return kmf;
+        return kmf.getKeyManagers();
     }
 
     public static X509Certificate parseCertificateFromPem(String pem) throws Exception {
