@@ -25,6 +25,9 @@ import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Publish;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.io.Serializable;
 
@@ -34,6 +37,7 @@ public class MqttConsumer extends AbstractMqttConnector implements
         Serializable {
 
     protected final MqttTransportProtocol protocol;
+       private static final Logger LOG = LoggerFactory.getLogger(MqttConsumer.class);
 
     public MqttConsumer(MqttTransportProtocol protocol) {
         super(protocol);
@@ -43,6 +47,8 @@ public class MqttConsumer extends AbstractMqttConnector implements
     @Override
     public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
         try {
+
+          LOG.info("Call to create Broker COmnmection from Messaging");
             // Create connection using HiveMQ
             this.createBrokerConnection(protocol);
 

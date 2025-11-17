@@ -71,7 +71,7 @@ public class MqttBase {
 
         Mqtt3AsyncClient client = builder.buildAsync();
 
-        client.toAsync().connectWith()
+        /**client.toAsync().connectWith()
                 .send()
                 .whenComplete((connAck, throwable) -> {
                     if (throwable != null) {
@@ -79,7 +79,7 @@ public class MqttBase {
                     } else {
                         LOG.info("MQTT connected to {}", mqttConfig.getUrl());
                     }
-                });
+                });*/
 
         return client;
     }

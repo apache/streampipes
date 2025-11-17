@@ -50,6 +50,7 @@ public class MqttConsumer extends MqttBase implements Runnable {
     public void run() {
         this.running = true;
       try {
+            LOG.info("Setup CLient");
             Mqtt3AsyncClient client = super.setupMqttClient();
 
             LOG.info("Connecting to MQTT broker...");
