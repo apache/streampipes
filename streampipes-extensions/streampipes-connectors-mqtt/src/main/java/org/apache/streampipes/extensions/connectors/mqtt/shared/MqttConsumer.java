@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 public class MqttConsumer extends MqttBase implements Runnable {
 
@@ -51,9 +52,8 @@ public class MqttConsumer extends MqttBase implements Runnable {
     @Override
     public void run() {
         this.running = true;
-      try {
+        try {
             this.client = super.setupMqttClient();
-            LOG.info("Start Connect");
             client.connectWith()
                     .keepAlive(30)
                     .send()
@@ -64,14 +64,9 @@ public class MqttConsumer extends MqttBase implements Runnable {
                             LOG.info("MQTT connection established");
                         }
                     })
-                    .get();  
-
-             LOG.info("Finish Connect");
+                    .get();
 
             subscribe(client);
-
-             LOG.info("Finish Subscribe");
-
 
         } catch (Exception e) {
             LOG.error("Error in MQTT consumer: ", e);
@@ -79,7 +74,7 @@ public class MqttConsumer extends MqttBase implements Runnable {
         }
     }
 
- private void subscribe(Mqtt3AsyncClient client) throws Exception {
+    private void subscribe(Mqtt3AsyncClient client) throws Exception {
 
         CountDownLatch subscribed = new CountDownLatch(1);
 
@@ -120,26 +115,18 @@ public class MqttConsumer extends MqttBase implements Runnable {
         }
     }
 
-    private void waitUntilFinished() {
-        while (this.running) {
-            try {
-                Thread.sleep(50); // avoid busy loop
-            } catch (InterruptedException ignored) {
-            }
-        }
-    }
-
     public void close() {
         this.running = false;
-        LOG.info("Disconnext");
         try {
 
             this.client.disconnect().get();
-            
-        } catch (Exception e) {
-            // TODO: handle exception
+
+        } catch (InterruptedException e) {
+            LOG.error("Error disconnecting from MQTT due to thread interruption", e);
+        } catch (ExecutionException e) {
+            LOG.error("Error disconnecting from MQTT", e.getCause());
         }
-        
+
     }
 
     public Integer getMessageCount() {
