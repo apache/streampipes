@@ -29,6 +29,9 @@ import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 public class Oi4AdapterMigrationV1 implements IAdapterMigrator {
@@ -44,13 +47,23 @@ public class Oi4AdapterMigrationV1 implements IAdapterMigrator {
 
     }
 
+
+    private static final Logger LOG = LoggerFactory.getLogger(Oi4AdapterMigrationV1.class);
+
     @Override
     public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
             IStaticPropertyExtractor extractor) throws RuntimeException { 
 
+        
+        LOG.info("Migrate Broker URL ");
+
         changeUrlDescription(element);
 
+        LOG.info("Migrate Access Mode ");
+
         accessModeDescription(element);
+
+         LOG.info("Migrate Security ");
 
         migrateSecurity((StaticPropertyAlternatives) element.getConfig().get(1));
 
@@ -73,10 +86,14 @@ public class Oi4AdapterMigrationV1 implements IAdapterMigrator {
     private void accessModeDescription(AdapterDescription element){
         var accessmode = (StaticPropertyAlternatives) element.getConfig().get(1);
 
+        LOG.info(accessmode.getInternalName());
+         LOG.info(accessmode.getLabel());
+
         accessmode.setLabel("User Authentication");
         accessmode.setDescription(
                 "Choose an authentication method for the user");
-        element.getConfig().set(1, accessmode);
+        LOG.info(accessmode.getLabel());
+                element.getConfig().set(1, accessmode);
     }
 
     private void migrateGroup(List<StaticPropertyAlternative> alternatives) {
