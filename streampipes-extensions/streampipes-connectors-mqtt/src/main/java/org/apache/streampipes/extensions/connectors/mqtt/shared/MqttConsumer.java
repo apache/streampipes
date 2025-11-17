@@ -34,6 +34,8 @@ public class MqttConsumer extends MqttBase implements Runnable {
     private int maxElementsToReceive = -1;
     private int messageCount = 0;
 
+    private Mqtt3AsyncClient client;
+
     private static final Logger LOG = LoggerFactory.getLogger(MqttConsumer.class);
 
     public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer) {
@@ -50,7 +52,7 @@ public class MqttConsumer extends MqttBase implements Runnable {
     public void run() {
         this.running = true;
       try {
-            Mqtt3AsyncClient client = super.setupMqttClient();
+            this.client = super.setupMqttClient();
             LOG.info("Start Connect");
             client.connectWith()
                     .keepAlive(30)
@@ -70,9 +72,6 @@ public class MqttConsumer extends MqttBase implements Runnable {
 
              LOG.info("Finish Subscribe");
 
-            //waitUntilFinished();
-
-            //client.disconnect().get();
 
         } catch (Exception e) {
             LOG.error("Error in MQTT consumer: ", e);
@@ -132,6 +131,15 @@ public class MqttConsumer extends MqttBase implements Runnable {
 
     public void close() {
         this.running = false;
+        LOG.info("Disconnext");
+        try {
+
+            this.client.disconnect().get();
+            
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
     }
 
     public Integer getMessageCount() {
