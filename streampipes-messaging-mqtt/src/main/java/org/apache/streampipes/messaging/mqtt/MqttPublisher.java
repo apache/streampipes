@@ -21,7 +21,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
-import com.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Qos;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +53,7 @@ public class MqttPublisher extends AbstractMqttConnector implements EventProduce
                 client.publishWith()
                         .topic(currentTopic)
                         .payload(event)
-                        .qos(Mqtt3Qos.AT_LEAST_ONCE)
+                        .qos(MqttQos.AT_LEAST_ONCE)
                         .send()
                         .whenComplete((publishResult, throwable) -> {
                             if (throwable != null) {
