@@ -89,8 +89,11 @@ describe('Test Edit Adapter', () => {
         );
 
         // Delete inserted values in edit field
-        ConnectBtns.runtimeNameInput().clear();
-        cy.get('[id="domainproperty"]').clear();
+        ConnectBtns.runtimeNameInput().clear().type('test-density');
+        cy.get('[id="domainproperty"]')
+            .clear()
+            .type('http://schema.org/Numbers');
+
         ConnectBtns.changeRuntimeType()
             .click()
             .get('mat-option')
@@ -98,10 +101,11 @@ describe('Test Edit Adapter', () => {
             .click();
         cy.dataCy('connect-schema-correction-value').clear();
         ConnectBtns.saveEditProperty().click();
-        cy.get('[class="general-panel"]').should(
+        ConnectEventSchemaUtils.schemaPreviewResultEvent().should(
             'include.text',
             'test-property-1',
         );
+
         ConnectBtns.schemaNextBtn().click();
         ConnectBtns.storeEditAdapter().click();
         ConnectUtils.closeAdapterPreview();
@@ -109,6 +113,7 @@ describe('Test Edit Adapter', () => {
         // Configure adapter with pressure instead of flowrate
         ConnectBtns.openActionsMenu('Test Adapter');
         ConnectBtns.editAdapter().click();
+
         const newUserConfiguration = AdapterBuilder.create(
             'Machine_Data_Simulator',
         )
@@ -117,11 +122,11 @@ describe('Test Edit Adapter', () => {
             .build();
         ConnectUtils.configureAdapter(newUserConfiguration);
 
-        // Check if given property still exists and close view afterwards
-        cy.get('[class="general-panel"]').should(
+        ConnectEventSchemaUtils.schemaPreviewResultEvent().should(
             'include.text',
             'test-property-1',
         );
+
         ConnectBtns.schemaNextBtn().click();
         ConnectBtns.storeEditAdapter().click();
         ConnectUtils.closeAdapterPreview();
