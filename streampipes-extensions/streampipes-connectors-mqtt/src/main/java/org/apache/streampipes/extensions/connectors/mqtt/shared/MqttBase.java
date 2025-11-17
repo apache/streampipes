@@ -48,11 +48,9 @@ public class MqttBase {
     }
 
     protected Mqtt3AsyncClient setupMqttClient() throws Exception {
-        LOG.info("URL " + mqttConfig.getUrl());
          URI brokerUri = new URI(mqttConfig.getUrl());
         boolean tls = tlsEnabled(brokerUri);
 
-          LOG.info("TLS " + tls);
 
         var builder = MqttClient.builder()
                 .identifier(UUID.randomUUID().toString())
@@ -93,14 +91,13 @@ private static boolean tlsEnabled(URI brokerUri) {
     return proto.equals("ssl") || proto.equals("tls") || proto.equals("mqtts");
   }
 private  MqttClientSslConfig configureTls() throws Exception {
-        LOG.info("Configuring TLS for MQTT connection...");
+
         KeyStore keyStore = null;
 
         var env = Environments.getEnvironment();
         boolean acceptAllCerts = env.getAllowSelfSignedCertificates().getValueOrDefault();
 
         if (acceptAllCerts) {
-            LOG.info("Accepting all certificates...");
         
             var sslContext = MqttClientSslConfig.builder().keyManagerFactory(null).trustManagerFactory(SecurityUtils.createAcceptAllFactory())
                 .build();
