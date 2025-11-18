@@ -19,15 +19,17 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
+import org.apache.streampipes.resource.management.CrudResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +39,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -44,51 +47,68 @@ import java.util.List;
 @RequestMapping("/api/v2/assets")
 public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AssetManagementResource.class);
-
-  private final CRUDStorage<SpAssetModel> assetStorage;
+  private final CrudResourceManager<SpAssetModel> resourceManager;
 
   public AssetManagementResource() {
-    this.assetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
+    CRUDStorage<SpAssetModel> assetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
+    this.resourceManager = new CrudResourceManager<>(assetStorage, SpAssetModel.class);
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_ASSETS_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
   public List<SpAssetModel> getAll() {
-    return assetStorage.findAll();
+    return resourceManager.findAll();
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public ResponseEntity<?> create(@RequestBody SpAssetModel asset) {
-    assetStorage.persist(asset);
+    resourceManager.create(asset, getAuthenticatedUserSid());
     return ok();
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_READ_ASSETS_PRIVILEGE)
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
   public ResponseEntity<SpAssetModel> getAsset(@PathVariable("id") String elementId) {
-      var obj = assetStorage.getElementById(elementId);
+      var obj = resourceManager.find(elementId);
       if (obj != null) {
         return ok(obj);
       } else {
-        return null;
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
       }
   }
 
   @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
-  public ResponseEntity<SpAssetModel> update(@PathVariable("id") String assetId,
+  @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")
+  public ResponseEntity<SpAssetModel> update(@PathVariable("id") String elementId,
       @RequestBody SpAssetModel asset) {
-    var obj = assetStorage.updateElement(asset);
-    return ok(obj);
+    if (elementId.equals(asset.getElementId())) {
+      resourceManager.update(asset);
+      return ok(resourceManager.find(elementId));
+    } else {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    }
   }
 
   @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
-  public ResponseEntity<Void> delete(@PathVariable("id") String assetId) {
-    var asset = assetStorage.getElementById(assetId);
-    assetStorage.deleteElement(asset);
+  @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")
+  public ResponseEntity<Void> delete(@PathVariable("id") String elementId) {
+    resourceManager.delete(elementId);
     return ok();
+  }
+
+  /**
+   * required by Spring expression
+   */
+  public boolean hasReadAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_ASSETS_VALUE);
+  }
+
+  /**
+   * required by Spring expression
+   */
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE);
   }
 }
