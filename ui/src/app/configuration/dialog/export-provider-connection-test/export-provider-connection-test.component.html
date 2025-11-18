@@ -31,11 +31,9 @@
         </div>
 
         @if (isError) {
-            <div fxLayout="column" class="p-10">
-                <div fxLayout="row" fxLayoutAlign="space-around">
-                    <sp-exception-message [message]="errorMessage">
-                    </sp-exception-message>
-                </div>
+            <div class="sp-dialog-content p-20">
+                <sp-exception-details [title]="title" [message]="errorMessage">
+                </sp-exception-details>
             </div>
         }
 
