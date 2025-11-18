@@ -240,8 +240,6 @@ export class DatalakeConfigurationComponent implements OnInit {
         });
     }
     testExportProvider(providerId: string) {
-        console.log('Start Export Provider Testing');
-
         const dialogRef: DialogRef<ExportProviderConnectionTestComponent> =
             this.dialogService.open(ExportProviderConnectionTestComponent, {
                 panelType: PanelType.STANDARD_PANEL,

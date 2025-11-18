@@ -19,6 +19,7 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { ExportProviderService } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-export-provider-connection-test',
@@ -36,6 +37,7 @@ export class ExportProviderConnectionTestComponent implements OnInit {
         DialogRef<ExportProviderConnectionTestComponent>,
     );
     private exportProviderRestService = inject(ExportProviderService);
+    private translateService = inject(TranslateService);
 
     isInProgress = false;
     currentStatus: any;
@@ -55,11 +57,15 @@ export class ExportProviderConnectionTestComponent implements OnInit {
             .subscribe(
                 data => {
                     this.isInProgress = false;
-                    this.currentStatus =
-                        'Connection was establised and test file was successfully saved';
+                    this.currentStatus = this.translateService.instant(
+                        'Connection was establised and test file was successfully saved.',
+                    );
                     console.log(this.currentStatus);
                 },
                 errorMessage => {
+                    this.currentStatus = this.translateService.instant(
+                        'Connection could not be established.',
+                    );
                     this.errorMessage = errorMessage.error;
                     this.isError = true;
                     this.isInProgress = false;
