@@ -25,6 +25,10 @@ import {
     SpLogMessage,
 } from '../model/gen/streampipes-model';
 
+interface ExportProviderResponse {
+    filePath: string;
+    setting: ExportProviderSettings; // This assumes you already have the ExportProviderSettings interface defined elsewhere
+}
 @Injectable({
     providedIn: 'root',
 })
@@ -47,8 +51,8 @@ export class ExportProviderService {
 
     testExportProviderById(
         providerId: string,
-    ): Observable<ExportProviderSettings> {
-        return this.http.get<ExportProviderSettings>(
+    ): Observable<ExportProviderResponse> {
+        return this.http.get<ExportProviderResponse>(
             `${this.exportProviderBasePath}/test/${providerId}`,
         );
     }

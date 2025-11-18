@@ -30,6 +30,16 @@
             </div>
         </div>
 
+        <div
+            fxLayoutAlign="center center"
+            fxLayout="column"
+            data-cy="connection-testing-in-progress"
+        >
+            <div fxLayout="row" fxLayoutAlign="space-around">
+                {{ filePath }}
+            </div>
+        </div>
+
         @if (isError) {
             <div class="sp-dialog-content p-20">
                 <sp-exception-details [title]="title" [message]="errorMessage">

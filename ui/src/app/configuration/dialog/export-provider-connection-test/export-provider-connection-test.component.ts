@@ -44,6 +44,7 @@ export class ExportProviderConnectionTestComponent implements OnInit {
     errorMessage = '';
     isError = false;
     message = '';
+    filePath = '';
 
     close(refreshDataLakeIndex: boolean) {
         this.dialogRef.close(refreshDataLakeIndex);
@@ -60,9 +61,9 @@ export class ExportProviderConnectionTestComponent implements OnInit {
                 data => {
                     this.isInProgress = false;
                     this.currentStatus = this.translateService.instant(
-                        'Connection was establised and test file was successfully saved.',
+                        'Connection was established and test file was successfully saved:',
                     );
-                    console.log(this.currentStatus);
+                    this.filePath = data.filePath;
                 },
                 errorMessage => {
                     this.currentStatus = this.translateService.instant(
