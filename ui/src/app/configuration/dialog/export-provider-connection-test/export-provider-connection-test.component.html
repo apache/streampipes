@@ -41,7 +41,6 @@
 
         @if (isInProgress) {
             <div
-                fxFlex="100"
                 fxLayoutAlign="center center"
                 fxLayout="column"
                 data-cy="connection-testing-in-progress"
@@ -50,6 +49,7 @@
                     <mat-spinner
                         [mode]="'indeterminate'"
                         color="accent"
+                        diameter="25"
                     ></mat-spinner>
                 </div>
             </div>
