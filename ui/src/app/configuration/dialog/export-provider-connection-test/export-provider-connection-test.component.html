@@ -19,7 +19,6 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div
-            fxFlex="100"
             fxLayoutAlign="center center"
             fxLayout="column"
             data-cy="connection-testing-in-progress"
@@ -32,7 +31,7 @@
         </div>
 
         @if (isError) {
-            <div fxFlex="100" fxLayout="column" class="p-10">
+            <div fxLayout="column" class="p-10">
                 <div fxLayout="row" fxLayoutAlign="space-around">
                     <sp-exception-message [message]="errorMessage">
                     </sp-exception-message>
