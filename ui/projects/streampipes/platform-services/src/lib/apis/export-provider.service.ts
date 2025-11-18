@@ -20,15 +20,8 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import {
-    ExportProviderSettings,
-    SpLogMessage,
-} from '../model/gen/streampipes-model';
-
-interface ExportProviderResponse {
-    filePath: string;
-    setting: ExportProviderSettings; // This assumes you already have the ExportProviderSettings interface defined elsewhere
-}
+import { ExportProviderSettings } from '@streampipes/platform-services';
+import { ExportProviderResponse } from '../model/config/export-provider-config.model';
 @Injectable({
     providedIn: 'root',
 })
