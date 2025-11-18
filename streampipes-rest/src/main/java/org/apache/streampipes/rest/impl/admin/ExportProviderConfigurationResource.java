@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.iotdb.mpp.rpc.thrift.IDataNodeRPCService.AsyncProcessor.sendTsFilePieceNode;
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.ExportProviderFactory;
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.IObjectStorage;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
@@ -43,7 +42,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -85,8 +86,10 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
         IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
             providerType, "TEST", setting,
             "csv");
+        
+            String filePath = exportProvider.getFileName();
 
-      String csvData = "Name,Age,Location\nJohn Doe,30,New York\nJane Smith,25,Los Angeles\n";
+      String csvData = "Message\nThis Testfile was automatically creates as a connectivity test by Streampipes.\n";
 
       InputStream csvInputStream = new ByteArrayInputStream(csvData.getBytes());
 
@@ -104,7 +107,12 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
         return serverError(SpLogMessage.from(e));
 
       }
-      return ok(setting);
+
+           Map<String, Object> response = new HashMap<>();
+            response.put("filePath", filePath);
+            response.put("setting", setting);
+
+      return ok(response);// ok(setting);
 
 
 

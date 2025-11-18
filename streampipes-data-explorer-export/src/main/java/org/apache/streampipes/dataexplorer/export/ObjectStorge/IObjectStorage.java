@@ -23,4 +23,5 @@ import java.io.IOException;
 
 public interface IObjectStorage {
     void store(StreamingResponseBody datastream) throws IOException;
+    String getFileName();
 }
