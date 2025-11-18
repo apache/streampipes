@@ -829,7 +829,7 @@
   "Email preheader": null,
   "Email custom inner content (mandatory)": null,
   "Testing the connection.": null,
-  "Connection was establised and test file was successfully saved.": null,
+  "Connection was established and test file was successfully saved:": null,
   "Connection could not be established.": null,
   "Truncating data...": null,
   "Deleting data...": null,

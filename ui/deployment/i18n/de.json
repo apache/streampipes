@@ -829,7 +829,7 @@
   "Email preheader": "E-Mail Pre-Header",
   "Email custom inner content (mandatory)": "Benutzerdefinierter E-Mail-Inhalt (erforderlich)",
   "Testing the connection.": "Testen der Verbindung.",
-  "Connection was establised and test file was successfully saved.": "Die Verbindung wurde hergestellt und die Testdatei wurde erfolgreich gespeichert.",
+  "Connection was established and test file was successfully saved:": "Die Verbindung wurde hergestellt und die Testdatei wurde erfolgreich gespeichert:",
   "Connection could not be established.": "Die Verbindung konnte nicht hergestellt werden.",
   "Truncating data...": "Daten leeren...",
   "Deleting data...": "Daten löschen...",
