@@ -51,7 +51,9 @@ export class ExportProviderConnectionTestComponent implements OnInit {
 
     testExportProvider() {
         this.isInProgress = true;
-        this.currentStatus = 'Testing the connection.';
+        this.currentStatus = this.translateService.instant(
+            'Testing the connection.',
+        );
         this.exportProviderRestService
             .testExportProviderById(this.providerId)
             .subscribe(
