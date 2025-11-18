@@ -19,7 +19,11 @@
 package org.apache.streampipes.model.assets;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class SpAsset {
 
@@ -30,11 +34,16 @@ public class SpAsset {
   private AssetType assetType;
   private List<AssetLink> assetLinks;
 
+  private AssetSite assetSite;
   private List<SpAsset> assets;
+  private Set<String> labelIds;
+
+  private Map<String, Object> additionalData = new HashMap<>();
 
   public SpAsset() {
     this.assets = new ArrayList<>();
     this.assetLinks = new ArrayList<>();
+    this.labelIds = new HashSet<>();
   }
 
   public String getAssetId() {
@@ -83,5 +92,29 @@ public class SpAsset {
 
   public void setAssets(List<SpAsset> assets) {
     this.assets = assets;
+  }
+
+  public void setAdditionalData(Map<String, Object> additionalData) {
+    this.additionalData = additionalData;
+  }
+
+  public Map<String, Object> getAdditionalData() {
+    return additionalData;
+  }
+
+  public Set<String> getLabelIds() {
+    return labelIds;
+  }
+
+  public void setLabelIds(Set<String> labelIds) {
+    this.labelIds = labelIds;
+  }
+
+  public AssetSite getAssetSite() {
+    return assetSite;
+  }
+
+  public void setAssetSite(AssetSite assetSite) {
+    this.assetSite = assetSite;
   }
 }

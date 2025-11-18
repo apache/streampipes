@@ -16,15 +16,15 @@
  *
  */
 
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { EventEmitter, inject, Injectable, Output } from '@angular/core';
 import {
     AssetConstants,
-    AssetManagementService,
     AssetLink,
+    AssetLinkType,
+    AssetManagementService,
+    GenericStorageService,
     LinkageData,
     SpAssetModel,
-    AssetLinkType,
-    GenericStorageService,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { firstValueFrom } from 'rxjs';
@@ -35,10 +35,11 @@ import { firstValueFrom } from 'rxjs';
 export class AssetSaveService {
     assetLinkTypes: AssetLinkType[] = [];
     currentAsset: SpAssetModel;
-    constructor(
-        private assetService: AssetManagementService,
-        private storageService: GenericStorageService,
-    ) {
+
+    private assetService = inject(AssetManagementService);
+    private storageService = inject(GenericStorageService);
+
+    constructor() {
         this.loadAssetLinkTypes();
     }
 
@@ -119,7 +120,7 @@ export class AssetSaveService {
                         if (path.length > 2) {
                             links.forEach(linkToUpdate => {
                                 this.updateLinkLabelInDict(
-                                    current,
+                                    current as unknown as SpAssetTreeNode,
                                     path,
                                     linkToUpdate,
                                 );
@@ -225,7 +226,11 @@ export class AssetSaveService {
 
                 if (path.length > 2) {
                     links.forEach(linkToRemove => {
-                        this.deleteDictValue(current, path, linkToRemove);
+                        this.deleteDictValue(
+                            current as unknown as SpAssetTreeNode,
+                            path,
+                            linkToRemove,
+                        );
                     });
                 }
             });

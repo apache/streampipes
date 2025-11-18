@@ -16,15 +16,12 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import {
-    GenericStorageService,
     LocationConfig,
     LocationConfigService,
 } from '@streampipes/platform-services';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'sp-view-asset',
@@ -35,14 +32,7 @@ import { ActivatedRoute } from '@angular/router';
 export class SpViewAssetComponent extends BaseAssetDetailsDirective {
     locationConfig: LocationConfig;
 
-    constructor(
-        breadcrumbService: SpBreadcrumbService,
-        genericStorageService: GenericStorageService,
-        route: ActivatedRoute,
-        private locationConfigService: LocationConfigService,
-    ) {
-        super(breadcrumbService, genericStorageService, route);
-    }
+    private locationConfigService = inject(LocationConfigService);
 
     onAssetAvailable() {
         this.locationConfigService

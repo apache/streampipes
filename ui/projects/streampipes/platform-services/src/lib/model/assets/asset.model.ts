@@ -16,6 +16,8 @@
  *
  */
 
+import { AssetLink, AssetLocation, Isa95Type } from '../gen/streampipes-model';
+
 export interface AssetLinkType {
     linkType: string;
     linkLabel: string;
@@ -23,23 +25,6 @@ export interface AssetLinkType {
     linkIcon?: string;
     linkQueryHint?: string;
     navPaths: string[];
-    navigationActive: boolean;
-}
-
-export interface AssetType {
-    assetIcon: string;
-    assetIconColor: string;
-    assetTypeCategory: string;
-    assetTypeLabel: string;
-    isa95AssetType?: Isa95Type;
-}
-
-export interface AssetLink {
-    resourceId: string;
-    linkType: 'data-view' | 'dashboard' | 'adapter' | 'source' | string;
-    linkLabel: string;
-    queryHint: string;
-    editingDisabled: boolean;
     navigationActive: boolean;
 }
 
@@ -56,11 +41,6 @@ export interface Isa95TypeDesc {
     type: Isa95Type;
 }
 
-export interface AssetLocation {
-    coordinates: LatLng;
-    zoom?: number;
-}
-
 export interface AssetSiteDesc {
     _id: string;
     _rev?: string;
@@ -68,38 +48,6 @@ export interface AssetSiteDesc {
     label: string;
     location?: AssetLocation;
     areas: string[];
-}
-
-export interface LatLng {
-    latitude: number;
-    longitude: number;
-}
-
-export interface AssetSite {
-    siteId: string;
-    area: string;
-    hasExactLocation: boolean;
-    location?: AssetLocation;
-}
-
-export interface SpAsset {
-    assetId: string;
-    assetName: string;
-    assetDescription: string;
-    assetType: AssetType;
-    labelIds?: string[];
-    assetLinks: AssetLink[];
-    assetSite?: AssetSite;
-    assets: SpAsset[];
-}
-
-export interface SpAssetModel extends SpAsset {
-    _id: string;
-    _rev: string;
-
-    appDocType: string;
-
-    removable: boolean;
 }
 
 export interface SpAssetTreeNode {
@@ -110,13 +58,3 @@ export interface SpAssetTreeNode {
     spAssetModelId: string;
     flattenPath: any[];
 }
-
-export type Isa95Type =
-    | 'PROCESS_CELL'
-    | 'PRODUCTION_UNIT'
-    | 'PRODUCTION_LINE'
-    | 'STORAGE_ZONE'
-    | 'UNIT'
-    | 'WORK_CELL'
-    | 'STORAGE_UNIT'
-    | 'OTHER';

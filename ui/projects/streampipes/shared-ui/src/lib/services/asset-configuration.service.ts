@@ -16,15 +16,15 @@
  *
  */
 
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
     AssetConstants,
-    AssetManagementService,
     AssetLink,
+    AssetLinkType,
+    AssetManagementService,
+    GenericStorageService,
     LinkageData,
     SpAssetModel,
-    AssetLinkType,
-    GenericStorageService,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { firstValueFrom } from 'rxjs';
@@ -35,15 +35,13 @@ import { firstValueFrom } from 'rxjs';
 export class AssetSaveService {
     assetLinkTypes: AssetLinkType[] = [];
     currentAsset: SpAssetModel;
-    constructor(
-        private assetService: AssetManagementService,
-        private storageService: GenericStorageService,
-    ) {
+
+    private assetService = inject(AssetManagementService);
+    private storageService = inject(GenericStorageService);
+
+    constructor() {
         this.loadAssetLinkTypes();
     }
-
-    @Output() adapterStartedEmitter: EventEmitter<void> =
-        new EventEmitter<void>();
 
     async saveSelectedAssets(
         selectedAssets: SpAssetTreeNode[],
@@ -52,7 +50,6 @@ export class AssetSaveService {
         originalAssets: SpAssetTreeNode[] = [],
     ): Promise<void> {
         const links = this.buildLinks(linkageData);
-
         if (deselectedAssets.length > 0) {
             await this.deleteLinkOnDeselectAssets(deselectedAssets, links);
         }
@@ -73,6 +70,7 @@ export class AssetSaveService {
             }
         }
     }
+
     private filterAssets(
         originalAssets: SpAssetTreeNode[],
         deselectedAssets: SpAssetTreeNode[],
@@ -119,7 +117,7 @@ export class AssetSaveService {
                         if (path.length > 2) {
                             links.forEach(linkToUpdate => {
                                 this.updateLinkLabelInDict(
-                                    current,
+                                    current as unknown as SpAssetTreeNode,
                                     path,
                                     linkToUpdate,
                                 );
@@ -130,11 +128,7 @@ export class AssetSaveService {
                     const updateObservable =
                         this.assetService.updateAsset(current);
 
-                    updateObservable?.subscribe({
-                        next: () => {
-                            this.adapterStartedEmitter.emit();
-                        },
-                    });
+                    updateObservable?.subscribe();
                 },
             });
         });
@@ -225,7 +219,11 @@ export class AssetSaveService {
 
                 if (path.length > 2) {
                     links.forEach(linkToRemove => {
-                        this.deleteDictValue(current, path, linkToRemove);
+                        this.deleteDictValue(
+                            current as unknown as SpAssetTreeNode,
+                            path,
+                            linkToRemove,
+                        );
                     });
                 }
             });
