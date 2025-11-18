@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.iotdb.mpp.rpc.thrift.IDataNodeRPCService.AsyncProcessor.sendTsFilePieceNode;
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.ExportProviderFactory;
 import org.apache.streampipes.dataexplorer.export.ObjectStorge.IObjectStorage;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -103,7 +105,7 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
         return serverError(SpLogMessage.from(e));
 
       }
-      return ok("Testdata was successfull stored");
+      return ok(setting);
 
 
 

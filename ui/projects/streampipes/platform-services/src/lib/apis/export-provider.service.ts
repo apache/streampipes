@@ -20,7 +20,10 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import { ExportProviderSettings } from '../model/gen/streampipes-model';
+import {
+    ExportProviderSettings,
+    SpLogMessage,
+} from '../model/gen/streampipes-model';
 
 @Injectable({
     providedIn: 'root',
@@ -45,7 +48,6 @@ export class ExportProviderService {
     testExportProviderById(
         providerId: string,
     ): Observable<ExportProviderSettings> {
-        //TODO Whats the correct Return type ?
         return this.http.get<ExportProviderSettings>(
             `${this.exportProviderBasePath}/test/${providerId}`,
         );

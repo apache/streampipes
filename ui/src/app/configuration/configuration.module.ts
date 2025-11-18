@@ -31,6 +31,7 @@ import { MessagingConfigurationComponent } from './messaging-configuration/messa
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
 import { DeleteDatalakeIndexComponent } from './dialog/delete-datalake-index/delete-datalake-index-dialog.component';
+import { ExportProviderConnectionTestComponent } from './dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SecurityConfigurationComponent } from './security-configuration/security-configuration.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -224,6 +225,7 @@ import { DeleteExportProviderComponent } from './dialog/delete-export-provider/d
         ServiceConfigsItemComponent,
         ServiceConfigsNumberComponent,
         DeleteDatalakeIndexComponent,
+        ExportProviderConnectionTestComponent,
         EditAssetLocationComponent,
         EditAssetLocationAreaComponent,
         EditRoleDialogComponent,

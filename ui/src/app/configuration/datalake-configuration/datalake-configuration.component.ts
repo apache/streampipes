@@ -48,6 +48,7 @@ import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/da
 import { ExportProviderComponent } from '../dialog/export-provider-dialog/export-provider-dialog.component';
 import { DeleteExportProviderComponent } from '../dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ExportProviderConnectionTestComponent } from '../dialog/export-provider-connection-test/export-provider-connection-test.component';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -238,7 +239,27 @@ export class DatalakeConfigurationComponent implements OnInit {
             }
         });
     }
-    testExportProvider(providerId: string) {}
+    testExportProvider(providerId: string) {
+        console.log('Start Export Provider Testing');
+
+        const dialogRef: DialogRef<ExportProviderConnectionTestComponent> =
+            this.dialogService.open(ExportProviderConnectionTestComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant(
+                    ' Test Export Provider Connection',
+                ),
+                width: '70vw',
+                data: {
+                    providerId: providerId,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.loadAvailableExportProvider();
+            }
+        });
+    }
 
     openDownloadDialog(measurementName: string) {
         this.dialogService.open(DataDownloadDialogComponent, {
