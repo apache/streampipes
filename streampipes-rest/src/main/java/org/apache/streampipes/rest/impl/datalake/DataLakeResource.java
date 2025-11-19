@@ -23,6 +23,7 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
+import org.apache.streampipes.export.DataLakeExportManager;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.RetentionTimeConfig;
@@ -93,6 +94,7 @@ public class DataLakeResource extends AbstractRestResource {
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
+  private static DataLakeExportManager dataLakeExportManager;
 
   public DataLakeResource() {
     this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
@@ -441,6 +443,23 @@ public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId)
     }
     return ok();
 }
+  @PostMapping(
+      path = "/{elementId}/runSyncNow",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+      @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @Operation(summary = "Runs the retention mechanism for a certain measurement", tags = {"Data Lake"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "Successfully stored data")})
+  public ResponseEntity<?> runDataLakeRetentionNow(
+      @PathVariable String elementId){
+        var measure = this.dataExplorerSchemaManagement.getById(elementId);
+       dataLakeExportManager.cleanupSingleMeasurement(measure);
+    return ok();
+  }
+
 
   private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {
     Map<String, String> queryParamMap = new HashMap<>();
