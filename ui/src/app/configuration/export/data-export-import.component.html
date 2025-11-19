@@ -21,11 +21,10 @@
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section
                 [title]="'Export' | translate"
-                [subtitle]="'Export application data' | translate"
+                [subtitle]="
+                    'Export assets and all linked resources' | translate
+                "
             >
-                <div class="subsection-title">
-                    {{ 'Export assets and all linked resources' | translate }}
-                </div>
                 <div fxLayout="column" *ngFor="let asset of assets">
                     <mat-checkbox
                         (change)="handleSelectionChange($event, asset._id)"
@@ -55,12 +54,8 @@
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section
                 [title]="'Import' | translate"
-                [subtitle]="'Import application data' | translate"
+                [subtitle]="'Import from application package' | translate"
             >
-                <div class="subsection-title">
-                    {{ 'Import from application package' | translate }}
-                </div>
-
                 <div class="mt-10">
                     <button
                         mat-button

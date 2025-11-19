@@ -23,7 +23,12 @@
             fxLayoutAlign="start start"
             *ngIf="formReady"
         >
-            <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+            <form
+                [formGroup]="parentForm"
+                fxFlex="100"
+                fxLayout="column"
+                class="w-100"
+            >
                 <sp-split-section
                     [title]="'Basic' | translate"
                     [subtitle]="'Basic settings' | translate"
@@ -37,66 +42,87 @@
                                 | translate
                         }}
                     </div>
-                    <div class="subsection-title">
-                        {{ 'App Name' | translate }}
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxLayoutGap="10px"
+                    >
+                        <div class="subsection-title">
+                            {{ 'App Name' | translate }}
+                        </div>
+                        <mat-form-field appearance="outline" fxFlex>
+                            <input
+                                formControlName="appName"
+                                fxFlex
+                                matInput
+                                required
+                                data-cy="general-config-app-name"
+                            />
+                        </mat-form-field>
                     </div>
-                    <mat-form-field appearance="outline">
-                        <input
-                            formControlName="appName"
-                            fxFlex
-                            matInput
-                            required
-                            data-cy="general-config-app-name"
-                        />
-                    </mat-form-field>
-                    <div class="subsection-title">
-                        {{ 'Host and Port' | translate }}
-                    </div>
-                    <div fxLayout="column" fxFlex="100">
-                        <div fxLayout="row">
-                            <div fxLayout="row" fxLayoutAlign="start center">
-                                <mat-button-toggle-group
-                                    name="protocol"
-                                    [attr.aria-label]="'Protocol' | translate"
-                                    formControlName="protocol"
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxLayoutGap="10px"
+                    >
+                        <div class="subsection-title">
+                            {{ 'Host and Port' | translate }}
+                        </div>
+                        <div fxLayout="column" fxFlex="100">
+                            <div fxLayout="row">
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="start center"
                                 >
-                                    <mat-button-toggle value="http"
-                                        >http
-                                    </mat-button-toggle>
-                                    <mat-button-toggle value="https"
-                                        >https
-                                    </mat-button-toggle>
-                                </mat-button-toggle-group>
+                                    <mat-button-toggle-group
+                                        name="protocol"
+                                        [attr.aria-label]="
+                                            'Protocol' | translate
+                                        "
+                                        formControlName="protocol"
+                                    >
+                                        <mat-button-toggle value="http"
+                                            >http
+                                        </mat-button-toggle>
+                                        <mat-button-toggle value="https"
+                                            >https
+                                        </mat-button-toggle>
+                                    </mat-button-toggle-group>
+                                </div>
+                                <mat-form-field
+                                    color="accent"
+                                    class="ml-10"
+                                    subscriptSizing="dynamic"
+                                >
+                                    <mat-label>{{
+                                        'Host' | translate
+                                    }}</mat-label>
+                                    <input
+                                        formControlName="hostname"
+                                        fxFlex
+                                        matInput
+                                        required
+                                        data-cy="general-config-hostname"
+                                    />
+                                </mat-form-field>
+                                <mat-form-field
+                                    color="accent"
+                                    class="ml-10"
+                                    subscriptSizing="dynamic"
+                                >
+                                    <mat-label>{{
+                                        'Port' | translate
+                                    }}</mat-label>
+                                    <input
+                                        formControlName="port"
+                                        fxFlex
+                                        matInput
+                                        type="number"
+                                        required
+                                        data-cy="general-config-port"
+                                    />
+                                </mat-form-field>
                             </div>
-                            <mat-form-field
-                                color="accent"
-                                class="ml-10"
-                                subscriptSizing="dynamic"
-                            >
-                                <mat-label>{{ 'Host' | translate }}</mat-label>
-                                <input
-                                    formControlName="hostname"
-                                    fxFlex
-                                    matInput
-                                    required
-                                    data-cy="general-config-hostname"
-                                />
-                            </mat-form-field>
-                            <mat-form-field
-                                color="accent"
-                                class="ml-10"
-                                subscriptSizing="dynamic"
-                            >
-                                <mat-label>{{ 'Port' | translate }}</mat-label>
-                                <input
-                                    formControlName="port"
-                                    fxFlex
-                                    matInput
-                                    type="number"
-                                    required
-                                    data-cy="general-config-port"
-                                />
-                            </mat-form-field>
                         </div>
                     </div>
                 </sp-split-section>
@@ -160,20 +186,19 @@
                 </sp-configuration-link-settings>
                 <sp-user-acknowledgment [parentForm]="parentForm">
                 </sp-user-acknowledgment>
-                <sp-split-section>
-                    <div class="mt-10">
-                        <button
-                            mat-flat-button
-                            (click)="updateConfig()"
-                            style="margin-right: 10px"
-                            [disabled]="parentForm.invalid"
-                            data-cy="sp-element-general-config-save"
-                        >
-                            <i class="material-icons">save</i
-                            ><span>&nbsp;{{ 'Save' | translate }}</span>
-                        </button>
-                    </div>
-                </sp-split-section>
+
+                <div class="mt-10">
+                    <button
+                        mat-flat-button
+                        (click)="updateConfig()"
+                        style="margin-right: 10px"
+                        [disabled]="parentForm.invalid"
+                        data-cy="sp-element-general-config-save"
+                    >
+                        <i class="material-icons">save</i
+                        ><span>&nbsp;{{ 'Save' | translate }}</span>
+                    </button>
+                </div>
             </form>
         </div>
     </div>

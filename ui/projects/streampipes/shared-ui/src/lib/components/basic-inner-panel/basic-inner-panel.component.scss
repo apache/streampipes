@@ -29,12 +29,16 @@
 
 .general-panel-header {
     margin-top: -1px;
-    height: 40px;
     min-height: 40px;
     max-height: 40px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     padding: 10px 12px;
+}
+
+.header-collapsed {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
 .bg-highlight {
@@ -53,4 +57,29 @@
     border-left: 3px solid var(--color-primary);
     font-weight: 400;
     white-space: nowrap;
+}
+
+.general-panel {
+    overflow: hidden;
+}
+
+.general-panel-wrapper {
+    overflow: hidden;
+}
+
+.collapse-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+}
+
+.chevron-icon {
+    transition: transform 200ms ease;
+}
+
+.chevron-icon.collapsed {
+    transform: rotate(-180deg);
 }

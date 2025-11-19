@@ -24,9 +24,13 @@
                 | translate
         "
     >
-        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+        <div
+            fxLayout="row"
+            fxLayoutAlign="start start"
+            fxLayoutGap="10px"
+            section-actions
+        >
             <button
-                mat-button
                 mat-flat-button
                 color="accent"
                 (click)="openFileUploadDialog()"

@@ -30,4 +30,7 @@ export class SplitSectionComponent {
 
     @Input()
     subtitle: string;
+
+    @Input() eyebrow = '';
+    @Input() compact = false;
 }

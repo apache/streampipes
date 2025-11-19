@@ -26,12 +26,12 @@ import { SpConnectRoutes } from '../../connect.routes';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
 @Component({
-    selector: 'sp-new-adapter',
-    templateUrl: './new-adapter.component.html',
-    styleUrls: ['./new-adapter.component.scss'],
+    selector: 'sp-create-adapter',
+    templateUrl: './create-adapter.component.html',
+    styleUrls: ['./create-adapter.component.scss'],
     standalone: false,
 })
-export class NewAdapterComponent implements OnInit {
+export class CreateAdapterComponent implements OnInit {
     initialized = false;
     adapterTypeName = '';
     adapter: AdapterDescription = undefined;

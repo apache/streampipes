@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxLayout="row" fxLayoutAlign="start center">
     <mat-checkbox
@@ -25,60 +25,89 @@
         {{ field.runtimeName }}
     </mat-checkbox>
     <div fxFlex fxLayoutAlign="end center">
-        <mat-form-field
-            appearance="outline"
-            color="accent"
-            class="aggregation-width small-form"
-            floatLabel="never"
-            *ngIf="!(sourceConfig.queryType === 'raw')"
-        >
-            <mat-select
-                disableRipple
-                [(ngModel)]="field.aggregations"
-                multiple
-                [panelClass]="'form-field-small-min-width'"
-                (ngModelChange)="triggerConfigurationUpdate()"
+        @if (!(sourceConfig.queryType === 'raw')) {
+            <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="aggregation-width small-form"
+                floatLabel="never"
             >
-                <mat-option [value]="'MEAN'" *ngIf="field.numeric">
-                    <span class="pipeline-name">{{ 'Mean' | translate }}</span>
-                </mat-option>
-                <mat-option [value]="'FIRST'">
-                    <span class="pipeline-name">{{ 'First' | translate }}</span>
-                </mat-option>
-                <mat-option [value]="'LAST'">
-                    <span class="pipeline-name">{{ 'Last' | translate }}</span>
-                </mat-option>
-                <mat-option [value]="'MIN'" *ngIf="field.numeric">
-                    <span class="pipeline-name">{{ 'Min' | translate }}</span>
-                </mat-option>
-                <mat-option [value]="'MAX'" *ngIf="field.numeric">
-                    <span class="pipeline-name">{{ 'Max' | translate }}</span>
-                </mat-option>
-                <mat-option [value]="'MODE'">
-                    <span class="pipeline-name">{{ 'Mode' | translate }}</span>
-                </mat-option>
-                <mat-option [value]="'COUNT'">
-                    <span class="pipeline-name">{{ 'Count' | translate }}</span>
-                </mat-option>
-                <mat-option [value]="'SUM'">
-                    <span class="pipeline-name">{{ 'Sum' | translate }}</span>
-                </mat-option>
-                <mat-option [value]="'MEDIAN'" *ngIf="field.numeric">
-                    <span class="pipeline-name">{{
-                        'Median' | translate
-                    }}</span>
-                </mat-option>
-                <mat-option [value]="'STDDEV'" *ngIf="field.numeric">
-                    <span class="pipeline-name">{{
-                        'Standard deviation' | translate
-                    }}</span>
-                </mat-option>
-                <mat-option [value]="'SPREAD'" *ngIf="field.numeric">
-                    <span class="pipeline-name">{{
-                        'Spread' | translate
-                    }}</span>
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+                <mat-select
+                    disableRipple
+                    [(ngModel)]="field.aggregations"
+                    multiple
+                    [panelClass]="'form-field-small-min-width'"
+                    (ngModelChange)="triggerConfigurationUpdate()"
+                >
+                    @if (field.numeric) {
+                        <mat-option [value]="'MEAN'">
+                            <span class="pipeline-name">{{
+                                'Mean' | translate
+                            }}</span>
+                        </mat-option>
+                    }
+                    <mat-option [value]="'FIRST'">
+                        <span class="pipeline-name">{{
+                            'First' | translate
+                        }}</span>
+                    </mat-option>
+                    <mat-option [value]="'LAST'">
+                        <span class="pipeline-name">{{
+                            'Last' | translate
+                        }}</span>
+                    </mat-option>
+                    @if (field.numeric) {
+                        <mat-option [value]="'MIN'">
+                            <span class="pipeline-name">{{
+                                'Min' | translate
+                            }}</span>
+                        </mat-option>
+                    }
+                    @if (field.numeric) {
+                        <mat-option [value]="'MAX'">
+                            <span class="pipeline-name">{{
+                                'Max' | translate
+                            }}</span>
+                        </mat-option>
+                    }
+                    <mat-option [value]="'MODE'">
+                        <span class="pipeline-name">{{
+                            'Mode' | translate
+                        }}</span>
+                    </mat-option>
+                    <mat-option [value]="'COUNT'">
+                        <span class="pipeline-name">{{
+                            'Count' | translate
+                        }}</span>
+                    </mat-option>
+                    <mat-option [value]="'SUM'">
+                        <span class="pipeline-name">{{
+                            'Sum' | translate
+                        }}</span>
+                    </mat-option>
+                    @if (field.numeric) {
+                        <mat-option [value]="'MEDIAN'">
+                            <span class="pipeline-name">{{
+                                'Median' | translate
+                            }}</span>
+                        </mat-option>
+                    }
+                    @if (field.numeric) {
+                        <mat-option [value]="'STDDEV'">
+                            <span class="pipeline-name">{{
+                                'Standard deviation' | translate
+                            }}</span>
+                        </mat-option>
+                    }
+                    @if (field.numeric) {
+                        <mat-option [value]="'SPREAD'">
+                            <span class="pipeline-name">{{
+                                'Spread' | translate
+                            }}</span>
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        }
     </div>
 </div>

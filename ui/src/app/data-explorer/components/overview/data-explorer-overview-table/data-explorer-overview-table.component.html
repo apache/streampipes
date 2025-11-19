@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxFlex="100" fxLayout="column">
     <sp-basic-header-title-component
@@ -47,14 +47,18 @@
                     {{ 'Last modified' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let element">
-                    <div *ngIf="element.metadata">
-                        {{
-                            this.formatDate(
-                                element.metadata.lastModifiedEpochMs
-                            )
-                        }}
-                    </div>
-                    <div *ngIf="!element.metadata">–</div>
+                    @if (element.metadata) {
+                        <div>
+                            {{
+                                this.formatDate(
+                                    element.metadata.lastModifiedEpochMs
+                                )
+                            }}
+                        </div>
+                    }
+                    @if (!element.metadata) {
+                        <div>–</div>
+                    }
                 </td>
             </ng-container>
 
@@ -63,10 +67,18 @@
                     {{ 'Created' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let element">
-                    <div *ngIf="element.metadata">
-                        {{ this.formatDate(element.metadata.createdAtEpochMs) }}
-                    </div>
-                    <div *ngIf="!element.metadata">–</div>
+                    @if (element.metadata) {
+                        <div>
+                            {{
+                                this.formatDate(
+                                    element.metadata.createdAtEpochMs
+                                )
+                            }}
+                        </div>
+                    }
+                    @if (!element.metadata) {
+                        <div>–</div>
+                    }
                 </td>
             </ng-container>
 
@@ -75,46 +87,46 @@
                     <mat-icon>visibility</mat-icon>
                     <span>{{ 'Show' | translate }}</span>
                 </button>
-                <button
-                    mat-menu-item
-                    *ngIf="hasDataExplorerWritePrivileges"
-                    [attr.data-cy]="
-                        'edit-data-view-' +
-                        element.baseAppearanceConfig.widgetTitle.replaceAll(
-                            ' ',
-                            ''
-                        )
-                    "
-                    (click)="openDataView(element, true)"
-                >
-                    <mat-icon>edit</mat-icon>
-                    <span>{{ 'Edit chart' | translate }}</span>
-                </button>
+                @if (hasDataExplorerWritePrivileges) {
+                    <button
+                        mat-menu-item
+                        [attr.data-cy]="
+                            'edit-data-view-' +
+                            element.baseAppearanceConfig.widgetTitle.replaceAll(
+                                ' ',
+                                ''
+                            )
+                        "
+                        (click)="openDataView(element, true)"
+                    >
+                        <mat-icon>edit</mat-icon>
+                        <span>{{ 'Edit chart' | translate }}</span>
+                    </button>
+                }
                 <button mat-menu-item (click)="showPermissionsDialog(element)">
                     <mat-icon>share</mat-icon>
                     <span>{{ 'Manage permissions' | translate }}</span>
                 </button>
-                <button
-                    mat-menu-item
-                    *ngIf="hasDataExplorerWritePrivileges"
-                    (click)="cloneDataView(element)"
-                >
-                    <mat-icon>flip_to_front</mat-icon>
-                    <span>{{ 'Clone chart' | translate }}</span>
-                </button>
-                <button
-                    mat-menu-item
-                    [matTooltip]=""
-                    *ngIf="hasDataExplorerWritePrivileges"
-                    [attr.data-cy]="
-                        'delete-data-view-' +
-                        element.baseAppearanceConfig.widgetTitle
-                    "
-                    (click)="deleteDataView(element)"
-                >
-                    <mat-icon>delete</mat-icon>
-                    <span>{{ 'Delete chart' | translate }}</span>
-                </button>
+                @if (hasDataExplorerWritePrivileges) {
+                    <button mat-menu-item (click)="cloneDataView(element)">
+                        <mat-icon>flip_to_front</mat-icon>
+                        <span>{{ 'Clone chart' | translate }}</span>
+                    </button>
+                }
+                @if (hasDataExplorerWritePrivileges) {
+                    <button
+                        mat-menu-item
+                        [matTooltip]=""
+                        [attr.data-cy]="
+                            'delete-data-view-' +
+                            element.baseAppearanceConfig.widgetTitle
+                        "
+                        (click)="deleteDataView(element)"
+                    >
+                        <mat-icon>delete</mat-icon>
+                        <span>{{ 'Delete chart' | translate }}</span>
+                    </button>
+                }
             </ng-template>
         </sp-table>
     </div>

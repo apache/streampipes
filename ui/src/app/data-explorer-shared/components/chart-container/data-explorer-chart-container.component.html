@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="h-100">
     <div
@@ -31,143 +31,158 @@
             'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle
         "
     >
-        <div class="widget-header h-40" *ngIf="!previewMode">
-            <div
-                fxFlex="100"
-                fxLayout="row"
-                fxLayoutAlign="start center"
-                class="widget-header-text"
-            >
-                {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
-            </div>
-            @if (!kioskMode) {
-                <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-                    @if (editMode) {
-                        <mat-spinner
-                            [diameter]="20"
-                            color="primary"
-                            class="mr-10"
-                            *ngIf="timerActive"
-                        >
-                        </mat-spinner>
-                        <sp-label
-                            size="small"
-                            [labelBackground]="
-                                configuredWidget.baseAppearanceConfig.textColor
-                            "
-                            [labelText]="loadingTime + 's'"
-                            class="mr-10"
-                        ></sp-label>
-                    }
-                    <button
-                        mat-icon-button
-                        [matMenuTriggerFor]="menu"
-                        [matTooltip]="'More options' | translate"
-                        *ngIf="!dataViewMode"
-                        [attr.data-cy]="
-                            'more-options-' +
-                            configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
-                                ' ',
-                                ''
-                            )
-                        "
-                    >
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="downloadDataAsFile()">
-                            <mat-icon>get_app</mat-icon>
-                            <span>{{ 'Download data' | translate }}</span>
-                        </button>
-                        <button
-                            mat-menu-item
-                            (click)="startEditMode()"
-                            *ngIf="hasDataExplorerWritePrivileges"
-                            [attr.data-cy]="
-                                'start-edit-' +
-                                configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
-                                    ' ',
-                                    ''
-                                )
-                            "
-                        >
-                            <mat-icon>edit</mat-icon>
-                            <span>{{ 'Edit Chart' | translate }}</span>
-                        </button>
-                    </mat-menu>
-                    <button
-                        mat-icon-button
-                        [matMenuTriggerFor]="optMenu"
-                        *ngIf="!globalTimeEnabled"
-                        data-cy="options-data-explorer"
-                        #menuTrigger="matMenuTrigger"
-                        [matTooltip]="tooltipText"
-                        matTooltipClass="no-wrap-tooltip"
-                    >
-                        <mat-icon
-                            [color]="
-                                timeSettingsModified ? 'primary' : 'default'
-                            "
-                            >alarm_clock</mat-icon
-                        >
-                    </button>
-                    <mat-menu #optMenu="matMenu" class="large-menu">
-                        <sp-time-selector-menu
-                            #timeSelectorMenu
-                            *ngIf="quickSelections"
-                            [timeSettings]="clonedTimeSettings"
-                            [quickSelections]="quickSelections"
-                            [enableTimePicker]="enableTimePicker"
-                            [maxDayRange]="maxDayRange"
-                            [labels]="labels"
-                            (timeSettingsEmitter)="
-                                modifyWidgetTimeSettings($event)
-                            "
-                            class="w-100"
-                        >
-                            <button
-                                mat-flat-button
-                                class="mat-basic"
-                                (click)="resetWidgetTimeSettings()"
-                            >
-                                {{ 'Reset' | translate }}
-                            </button>
-                        </sp-time-selector-menu>
-                    </mat-menu>
-                    @if (!dataViewMode) {
-                        <button
-                            mat-icon-button
-                            (click)="removeWidget()"
-                            [matTooltip]="'Delete Chart' | translate"
-                            *ngIf="editMode && hasDataExplorerWritePrivileges"
-                            [attr.data-cy]="
-                                'remove-' +
-                                configuredWidget.baseAppearanceConfig
-                                    .widgetTitle
-                            "
-                        >
-                            <mat-icon>clear</mat-icon>
-                        </button>
-                    }
+        @if (!previewMode) {
+            <div class="widget-header h-40">
+                <div
+                    fxFlex="100"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    class="widget-header-text"
+                >
+                    {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
                 </div>
-            }
-        </div>
+                @if (!kioskMode) {
+                    <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+                        @if (editMode) {
+                            @if (timerActive) {
+                                <mat-spinner
+                                    [diameter]="20"
+                                    color="primary"
+                                    class="mr-10"
+                                >
+                                </mat-spinner>
+                            }
+                            <sp-label
+                                size="small"
+                                [labelBackground]="
+                                    configuredWidget.baseAppearanceConfig
+                                        .textColor
+                                "
+                                [labelText]="loadingTime + 's'"
+                                class="mr-10"
+                            ></sp-label>
+                        }
+                        @if (!dataViewMode) {
+                            <button
+                                mat-icon-button
+                                [matMenuTriggerFor]="menu"
+                                [matTooltip]="'More options' | translate"
+                                [attr.data-cy]="
+                                    'more-options-' +
+                                    configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
+                                        ' ',
+                                        ''
+                                    )
+                                "
+                            >
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                        }
+                        <mat-menu #menu="matMenu">
+                            <button
+                                mat-menu-item
+                                (click)="downloadDataAsFile()"
+                            >
+                                <mat-icon>get_app</mat-icon>
+                                <span>{{ 'Download data' | translate }}</span>
+                            </button>
+                            @if (hasDataExplorerWritePrivileges) {
+                                <button
+                                    mat-menu-item
+                                    (click)="startEditMode()"
+                                    [attr.data-cy]="
+                                        'start-edit-' +
+                                        configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
+                                            ' ',
+                                            ''
+                                        )
+                                    "
+                                >
+                                    <mat-icon>edit</mat-icon>
+                                    <span>{{ 'Edit Chart' | translate }}</span>
+                                </button>
+                            }
+                        </mat-menu>
+                        @if (!globalTimeEnabled) {
+                            <button
+                                mat-icon-button
+                                [matMenuTriggerFor]="optMenu"
+                                data-cy="options-data-explorer"
+                                #menuTrigger="matMenuTrigger"
+                                [matTooltip]="tooltipText"
+                                matTooltipClass="no-wrap-tooltip"
+                            >
+                                <mat-icon
+                                    [color]="
+                                        timeSettingsModified
+                                            ? 'primary'
+                                            : 'default'
+                                    "
+                                    >alarm_clock</mat-icon
+                                >
+                            </button>
+                        }
+                        <mat-menu #optMenu="matMenu" class="large-menu">
+                            @if (quickSelections) {
+                                <sp-time-selector-menu
+                                    #timeSelectorMenu
+                                    [timeSettings]="clonedTimeSettings"
+                                    [quickSelections]="quickSelections"
+                                    [enableTimePicker]="enableTimePicker"
+                                    [maxDayRange]="maxDayRange"
+                                    [labels]="labels"
+                                    (timeSettingsEmitter)="
+                                        modifyWidgetTimeSettings($event)
+                                    "
+                                    class="w-100"
+                                >
+                                    <button
+                                        mat-flat-button
+                                        class="mat-basic"
+                                        (click)="resetWidgetTimeSettings()"
+                                    >
+                                        {{ 'Reset' | translate }}
+                                    </button>
+                                </sp-time-selector-menu>
+                            }
+                        </mat-menu>
+                        @if (!dataViewMode) {
+                            @if (editMode && hasDataExplorerWritePrivileges) {
+                                <button
+                                    mat-icon-button
+                                    (click)="removeWidget()"
+                                    [matTooltip]="'Delete Chart' | translate"
+                                    [attr.data-cy]="
+                                        'remove-' +
+                                        configuredWidget.baseAppearanceConfig
+                                            .widgetTitle
+                                    "
+                                >
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        }
         <div
             fxLayout="column"
             class="widget-content p-0 gridster-item-content ml-0 mr-0 h-100 mw-100"
         >
             <ng-template spWidgetHost class="h-100 p-0"></ng-template>
-            <div
-                fxFlex="100"
-                fxLayout="column"
-                fxLayoutAlign="center center"
-                *ngIf="errorMessage"
-            >
-                <sp-exception-message
-                    [message]="errorMessage"
-                    [showDetails]="true"
-                ></sp-exception-message>
-            </div>
+            @if (errorMessage) {
+                <div
+                    fxFlex="100"
+                    fxLayout="column"
+                    fxLayoutAlign="center center"
+                >
+                    <sp-exception-message
+                        [message]="errorMessage"
+                        [showDetails]="true"
+                    ></sp-exception-message>
+                </div>
+            }
         </div>
     </div>
 </div>

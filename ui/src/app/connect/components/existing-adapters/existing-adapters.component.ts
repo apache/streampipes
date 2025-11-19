@@ -43,7 +43,7 @@ import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
-import { Subscription, zip } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -310,7 +310,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     createNewAdapter(): void {
-        this.router.navigate(['connect', 'create']).then(() => {
+        this.router.navigate(['connect', 'catalog']).then(() => {
             this.shepherdService.trigger('new-adapter-clicked');
         });
     }

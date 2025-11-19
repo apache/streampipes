@@ -17,12 +17,40 @@
  */
 
 import { Component, Input } from '@angular/core';
+import {
+    animate,
+    state,
+    style,
+    transition,
+    trigger,
+} from '@angular/animations';
 
 @Component({
     selector: 'sp-basic-inner-panel',
     templateUrl: './basic-inner-panel.component.html',
     styleUrls: ['./basic-inner-panel.component.scss'],
     standalone: false,
+    animations: [
+        trigger('collapseExpand', [
+            state(
+                'expanded',
+                style({
+                    height: '*',
+                    opacity: 1,
+                    transform: 'translateY(0)',
+                }),
+            ),
+            state(
+                'collapsed',
+                style({
+                    height: '0px',
+                    opacity: 0,
+                    transform: 'translateY(-4px)',
+                }),
+            ),
+            transition('expanded <=> collapsed', animate('200ms ease-in-out')),
+        ]),
+    ],
 })
 export class SpBasicInnerPanelComponent {
     @Input()
@@ -42,4 +70,17 @@ export class SpBasicInnerPanelComponent {
 
     @Input()
     headerBackground = true;
+
+    @Input()
+    headerHeight = '40px';
+
+    @Input()
+    collapsible = false;
+
+    @Input() collapsed = false;
+
+    toggleCollapse(): void {
+        if (!this.collapsible) return;
+        this.collapsed = !this.collapsed;
+    }
 }

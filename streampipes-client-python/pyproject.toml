@@ -66,7 +66,7 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 autoflake = "2.3.0"
-black = "25.9.0"
+black = "25.11.0"
 blacken-docs = "1.20.0"
 flake8 = "7.2.0"
 interrogate = { version = "1.7.0", extras = ["png"] }
@@ -74,9 +74,9 @@ isort = "7.0.0"
 mypy = "1.17.0"
 ruff = "0.11.9"
 pre-commit = "4.3.0"
-pytest = "8.3.1"
+pytest = "9.0.1"
 pytest-cov = "6.2.1"
-pyupgrade = "3.16.0"
+pyupgrade = "3.21.1"
 
 [tool.poetry.group.docs]
 optional = true

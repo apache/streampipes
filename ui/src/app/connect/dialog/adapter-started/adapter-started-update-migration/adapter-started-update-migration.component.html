@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxLayout="column" fxLayoutAlign="start center">
     @if (adapterPipelineUpdateInfos.length > 1) {
@@ -28,30 +28,36 @@
         {{ adapterPipelineUpdateInfos.length }} {{ 'pipelines' | translate }}. ‚
     }
     <div class="migration-infos">
-        <div *ngFor="let updateInfo of adapterPipelineUpdateInfos">
-            <div *ngIf="updateInfo.canAutoMigrate" fxLayoutAlign="start center">
-                <i class="material-icons">check</i>&nbsp;{{
-                    'Pipeline' | translate
-                }}&nbsp;<b>{{ updateInfo.pipelineName }}</b
-                >&nbsp;{{ 'will be automatically migrated' | translate }}.
+        @for (updateInfo of adapterPipelineUpdateInfos; track updateInfo) {
+            <div>
+                @if (updateInfo.canAutoMigrate) {
+                    <div fxLayoutAlign="start center">
+                        <i class="material-icons">check</i>&nbsp;{{
+                            'Pipeline' | translate
+                        }}&nbsp;<b>{{ updateInfo.pipelineName }}</b
+                        >&nbsp;{{
+                            'will be automatically migrated' | translate
+                        }}.
+                    </div>
+                }
+                @if (!updateInfo.canAutoMigrate) {
+                    <div fxLayoutAlign="start center">
+                        <i
+                            class="material-icons"
+                            data-cy="sp-connect-adapter-edit-warning"
+                            >warning</i
+                        >
+                        &nbsp;{{ 'Pipeline' | translate }}&nbsp;<b>{{
+                            updateInfo.pipelineName
+                        }}</b
+                        >&nbsp;{{
+                            'will be stopped and needs manual review'
+                                | translate
+                        }}.
+                    </div>
+                }
             </div>
-            <div
-                *ngIf="!updateInfo.canAutoMigrate"
-                fxLayoutAlign="start center"
-            >
-                <i
-                    class="material-icons"
-                    data-cy="sp-connect-adapter-edit-warning"
-                    >warning</i
-                >
-                &nbsp;{{ 'Pipeline' | translate }}&nbsp;<b>{{
-                    updateInfo.pipelineName
-                }}</b
-                >&nbsp;{{
-                    'will be stopped and needs manual review' | translate
-                }}.
-            </div>
-        </div>
+        }
     </div>
     <div class="migration-infos" fxLayoutAlign="start center">
         <i class="material-icons">warning</i>
