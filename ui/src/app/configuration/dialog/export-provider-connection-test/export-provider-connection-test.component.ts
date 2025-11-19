@@ -40,7 +40,7 @@ export class ExportProviderConnectionTestComponent implements OnInit {
     private translateService = inject(TranslateService);
 
     isInProgress = false;
-    currentStatus: any;
+    currentStatus: string;
     errorMessage = '';
     isError = false;
     message = '';
@@ -60,6 +60,7 @@ export class ExportProviderConnectionTestComponent implements OnInit {
             .subscribe(
                 data => {
                     this.isInProgress = false;
+                    this.isError = false;
                     this.currentStatus = this.translateService.instant(
                         'Connection was established and test file was successfully saved:',
                     );
