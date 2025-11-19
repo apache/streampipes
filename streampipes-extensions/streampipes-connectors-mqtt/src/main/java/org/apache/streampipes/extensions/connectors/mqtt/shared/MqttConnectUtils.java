@@ -284,9 +284,7 @@ public class MqttConnectUtils {
 
     var extract = params.extractor();
 
-    MqttConfig mqttConfig = new MqttConfig(
-        extract.singleValueParameter(BROKER_URL, String.class),
-        extract.singleValueParameter(TOPIC, String.class));
+    MqttConfig mqttConfig = getMqttConfig(extract);
 
     mqttConfig.setQos(MqttConnectUtils.extractQoSFromString(
         extract.selectedSingleValue(QOS_LEVEL_KEY, String.class)));
@@ -307,21 +305,6 @@ public class MqttConnectUtils {
       mqttConfig.setMqttProtocolVersion("3.1.1");
     }
 
-    String accessMode = extract.selectedAlternativeInternalId(ACCESS_MODE);
-    if (accessMode.equals(USERNAME_ACCESS)) {
-      mqttConfig.setAuthenticated(true);
-      mqttConfig.setUsername(extract.singleValueParameter(USERNAME, String.class));
-      mqttConfig.setPassword(extract.secretValue(PASSWORD));
-    }
-
-    if (accessMode.equals(CLIENT_CERT_ACCESS)) {
-      mqttConfig.setClientCertificatePath(extract.singleValueParameter(CLIENTCERT, String.class));
-      mqttConfig.setClientKey(extract.secretValue(CLIENTKEY));
-    } else {
-
-      mqttConfig.setClientCertificatePath(null);
-      mqttConfig.setClientKey(null);
-    }
 
     String willMode = extract.selectedAlternativeInternalId(WILL_MODE);
     if (willMode.equals(WILL_ALTERNATIVE)) {

@@ -17,14 +17,12 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-//import org.junit.jupiter.api.Tag;
+
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-//import org.junit.jupiter.api.extension.ExtendWith;
 
-//@ExtendWith(EnvSetterExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdaptersIntegrationTest {
 
@@ -39,7 +37,6 @@ public class AdaptersIntegrationTest {
 
     @Test
       @Order(2)
-    //@Tag("selfsigned")
   public void testMqttTLSAdapter() throws Exception {
 
 try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
