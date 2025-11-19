@@ -89,7 +89,7 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
         
             String filePath = exportProvider.getFileName();
 
-      String csvData = "Message\nThis Testfile was automatically creates as a connectivity test by Streampipes.\n";
+      String csvData = "Message\nThis test file was automatically created as a connectivity test by StreamPipes.\n";
 
       InputStream csvInputStream = new ByteArrayInputStream(csvData.getBytes());
 
