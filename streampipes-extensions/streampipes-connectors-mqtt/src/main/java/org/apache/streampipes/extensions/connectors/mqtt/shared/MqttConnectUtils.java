@@ -20,7 +20,6 @@ package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
-import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -34,6 +33,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class MqttConnectUtils {
 
@@ -261,9 +261,6 @@ public class MqttConnectUtils {
     throw new SpRuntimeException("Could not retrieve QoS level: QoS " + qos);
   }
 
-  public static String runningInstanceId(String elementId) {
-    return elementId.substring(elementId.lastIndexOf(".") + 1);
-  }
 
   public static boolean extractBoolean(String s) {
     switch (s) {
@@ -280,39 +277,38 @@ public class MqttConnectUtils {
   }
 
 
-  public static MqttConfig extractDataSinkParams(IDataSinkParameters params) {
+  public static MqttConfig extractDataSinkParams(IParameterExtractor extractor) {
 
-    var extract = params.extractor();
 
-    MqttConfig mqttConfig = getMqttConfig(extract);
+    MqttConfig mqttConfig = getMqttConfig(extractor);
 
     mqttConfig.setQos(MqttConnectUtils.extractQoSFromString(
-        extract.selectedSingleValue(QOS_LEVEL_KEY, String.class)));
+        extractor.selectedSingleValue(QOS_LEVEL_KEY, String.class)));
 
-    mqttConfig.setClientId(MqttConnectUtils.runningInstanceId(params.getModel().getElementId()));
+    mqttConfig.setClientId(UUID.randomUUID().toString());
 
     mqttConfig.setReconnectDelayMaxInMs(MqttConnectUtils
-        .fromSecToMs(extract.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class)));
+        .fromSecToMs(extractor.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class)));
 
-    mqttConfig.setKeepAliveInSec(extract.singleValueParameter(KEEP_ALIVE_IN_SEC, Short.class));
+    mqttConfig.setKeepAliveInSec(extractor.singleValueParameter(KEEP_ALIVE_IN_SEC, Short.class));
 
     mqttConfig
-        .setCleanSession(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(CLEAN_SESSION_KEY, String.class)));
-    mqttConfig.setRetain(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(RETAIN, String.class)));
+        .setCleanSession(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(CLEAN_SESSION_KEY, String.class)));
+    mqttConfig.setRetain(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(RETAIN, String.class)));
 
-    boolean isCompliant = MqttConnectUtils.extractBoolean(extract.selectedSingleValue(MQTT_COMPLIANT, String.class));
+    boolean isCompliant = MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(MQTT_COMPLIANT, String.class));
     if (isCompliant) {
       mqttConfig.setMqttProtocolVersion("3.1.1");
     }
 
 
-    String willMode = extract.selectedAlternativeInternalId(WILL_MODE);
+    String willMode = extractor.selectedAlternativeInternalId(WILL_MODE);
     if (willMode.equals(WILL_ALTERNATIVE)) {
       mqttConfig.setLastWill(true);
-      mqttConfig.setWillTopic(extract.singleValueParameter(WILL_TOPIC, String.class));
-      mqttConfig.setWillMessage(extract.singleValueParameter(WILL_MESSAGE, String.class));
-      mqttConfig.setWillQoS(MqttConnectUtils.extractQoSFromString(extract.selectedSingleValue(WILL_QOS, String.class)));
-      mqttConfig.setWillRetain(MqttConnectUtils.extractBoolean(extract.selectedSingleValue(WILL_RETAIN, String.class)));
+      mqttConfig.setWillTopic(extractor.singleValueParameter(WILL_TOPIC, String.class));
+      mqttConfig.setWillMessage(extractor.singleValueParameter(WILL_MESSAGE, String.class));
+      mqttConfig.setWillQoS(MqttConnectUtils.extractQoSFromString(extractor.selectedSingleValue(WILL_QOS, String.class)));
+      mqttConfig.setWillRetain(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(WILL_RETAIN, String.class)));
     }
 
     return mqttConfig;

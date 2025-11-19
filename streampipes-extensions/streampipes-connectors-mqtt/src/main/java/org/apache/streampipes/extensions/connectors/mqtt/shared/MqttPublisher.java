@@ -41,7 +41,7 @@ public class MqttPublisher extends MqttBase {
 
   public MqttPublisher(IDataSinkParameters params) {
 
-    super(MqttConnectUtils.extractDataSinkParams(params));
+    super(MqttConnectUtils.extractDataSinkParams(params.extractor()));
        try {
     this.mqtt = super.setupMqttClient();
 
