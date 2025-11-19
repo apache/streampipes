@@ -33,7 +33,6 @@ import java.net.URI;
 
 public class MqttPublisher extends MqttBase {
 
-  //private final MqttConfig options;
   private URI uri;
   private MQTT mqtt;
   private BlockingConnection conn;
@@ -42,7 +41,6 @@ public class MqttPublisher extends MqttBase {
 
   public MqttPublisher(IDataSinkParameters params) {
 
-    //this.options = MqttConnectUtils.extractDataSinkParams(params);
     super(MqttConnectUtils.extractDataSinkParams(params));
        try {
     this.mqtt = super.setupMqttClient();
