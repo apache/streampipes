@@ -94,11 +94,16 @@ export class PipelineUtils {
         PipelineBtns.pipelinesToEditor().click();
     }
 
+    public static checkDataStreamExists(dataSourceName: string) {
+        PipelineBtns.spPipelineElementSelection().should('be.visible');
+        PipelineBtns.editorAddPipelineElement().click();
+        cy.dataCy(dataSourceName).should('exist');
+        cy.dataCy('cancel-pipeline-element-discovery').click();
+    }
+
     public static selectDataStream(pipelineInput: PipelineInput) {
         // Select a stream
-        cy.dataCy('sp-pipeline-element-selection', { timeout: 10000 }).should(
-            'be.visible',
-        );
+        PipelineBtns.spPipelineElementSelection().should('be.visible');
         PipelineBtns.editorAddPipelineElement().click();
         cy.dataCy(pipelineInput.dataSource, { timeout: 10000 }).click();
     }
