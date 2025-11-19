@@ -94,7 +94,7 @@ public class DataLakeResource extends AbstractRestResource {
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
-  private static DataLakeExportManager dataLakeExportManager;
+  private static DataLakeExportManager dataLakeExportManager = new DataLakeExportManager();
 
   public DataLakeResource() {
     this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
@@ -444,9 +444,7 @@ public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId)
     return ok();
 }
   @PostMapping(
-      path = "/{elementId}/runSyncNow",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+      path = "/{elementId}/runSyncNow")
       @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   @Operation(summary = "Runs the retention mechanism for a certain measurement", tags = {"Data Lake"},
       responses = {

@@ -36,7 +36,7 @@ import java.util.List;
 @Configuration
 public class DataLakeScheduler implements SchedulingConfigurer {
 
-    private static DataLakeExportManager dataLakeExportManager;
+    private static DataLakeExportManager dataLakeExportManager = new DataLakeExportManager();
     private static final Logger LOG = LoggerFactory.getLogger(DataLakeExportManager.class);
 
     private final IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
