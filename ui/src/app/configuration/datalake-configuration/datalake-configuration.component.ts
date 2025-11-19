@@ -244,7 +244,7 @@ export class DatalakeConfigurationComponent implements OnInit {
             this.dialogService.open(ExportProviderConnectionTestComponent, {
                 panelType: PanelType.STANDARD_PANEL,
                 title: this.translateService.instant(
-                    ' Test Export Provider Connection',
+                    'Test Export Provider Connection',
                 ),
                 width: '70vw',
                 data: {
