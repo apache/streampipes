@@ -241,6 +241,15 @@
                                                 >history</i
                                             >
                                         </button>
+                                        <p>
+                                            {{
+                                                configurationEntry?.retention
+                                                    .retentionExportConfig
+                                                    .lastExport
+                                                    | date
+                                                        : 'yyyy-MM-dd HH:mm:ss'
+                                            }}
+                                        </p>
                                     </span>
                                 </div>
                             </td>

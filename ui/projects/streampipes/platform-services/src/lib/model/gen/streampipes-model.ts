@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-11-12 10:22:54.
+// Generated using typescript-generator version 3.2.1263 on 2025-11-19 14:53:31.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -3379,6 +3378,7 @@ export class ResourceMetadata {
 export class RetentionExportConfig {
     exportConfig: ExportConfig;
     exportProviderId: string;
+    lastExport: string;
 
     static fromData(
         data: RetentionExportConfig,
@@ -3390,6 +3390,7 @@ export class RetentionExportConfig {
         const instance = target || new RetentionExportConfig();
         instance.exportConfig = ExportConfig.fromData(data.exportConfig);
         instance.exportProviderId = data.exportProviderId;
+        instance.lastExport = data.lastExport;
         return instance;
     }
 }
@@ -3952,11 +3953,6 @@ export class StaticPropertyAlternatives extends StaticProperty {
         )(data.alternatives);
         return instance;
     }
-}
-
-export interface Storable {
-    elementId: string;
-    rev: string;
 }
 
 export class StreamPipesApplicationPackage {
