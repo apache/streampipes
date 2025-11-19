@@ -42,86 +42,93 @@ describe('Test User Roles for Connect', () => {
         );
     });
 
-    // it('Adapter is not shared with other users', () => {
-    //     // set up
-    //     UserUtils.switchUser(user1);
-    //     ConnectUtils.addMachineDataSimulator(adapterName);
-    //
-    //     // check admin
-    //     UserUtils.switchUser(UserUtils.adminUser);
-    //     validateAdapterIsVisible();
-    //     PermissionUtils.validateUserCanChangePermissions(adapterName);
-    //
-    //     // check other users
-    //     UserUtils.switchUser(user2);
-    //     ConnectUtils.checkAmountOfAdapters(0);
-    // });
-    //
-    //
-    // it('Make adapter public', () => {
-    //     // set up
-    //     UserUtils.switchUser(user1);
-    //     ConnectUtils.addMachineDataSimulator(adapterName);
-    //     PermissionUtils.markElementAsPublic(adapterName);
-    //
-    //     // check admin
-    //     UserUtils.switchUser(UserUtils.adminUser);
-    //     validateAdapterIsVisible();
-    //     PermissionUtils.validateUserCanChangePermissions(adapterName);
-    //
-    //     // check other users
-    //     UserUtils.switchUser(user2);
-    //     validateAdapterIsVisible();
-    //     PermissionUtils.validateUserCanNotChangePermissions(adapterName);
-    // });
-    //
-    // it('Share adapter with other user and change ownership', () => {
-    //     const user3 = UserUtils.createUser(
-    //         'user3',
-    //         UserRole.ROLE_CONNECT_ADMIN,
-    //         UserRole.ROLE_PIPELINE_ADMIN,
-    //     );
-    //
-    //     // set up
-    //     UserUtils.switchUser(user1);
-    //     ConnectUtils.addMachineDataSimulator(adapterName);
-    //     PermissionUtils.authorizeUser(adapterName, user2.email);
-    //
-    //     // check admin
-    //     UserUtils.switchUser(UserUtils.adminUser);
-    //     validateAdapterIsVisible();
-    //     PermissionUtils.validateUserCanChangePermissions(adapterName);
-    //
-    //     // check authorized user
-    //     UserUtils.switchUser(user2);
-    //     validateAdapterIsVisible();
-    //     PermissionUtils.validateUserCanNotChangePermissions(adapterName);
-    //
-    //     UserUtils.switchUser(user3);
-    //     ConnectUtils.checkAmountOfAdapters(0);
-    //
-    //     // change ownership to user3
-    //     UserUtils.switchUser(user1);
-    //     ConnectUtils.goToConnect();
-    //     PermissionUtils.changeOwnership(adapterName, user3.email);
-    //     ConnectUtils.checkAmountOfAdapters(0);
-    //
-    //     UserUtils.switchUser(UserUtils.adminUser);
-    //     validateAdapterIsVisible();
-    //     PermissionUtils.validateUserCanChangePermissions(adapterName);
-    //
-    //     // check authorized user
-    //     UserUtils.switchUser(user2);
-    //     validateAdapterIsVisible();
-    //     PermissionUtils.validateUserCanNotChangePermissions(adapterName);
-    //
-    //     // validate that user3 is owner now
-    //     UserUtils.switchUser(user3);
-    //     validateAdapterIsVisible();
-    //     PermissionUtils.validateUserCanChangePermissions(adapterName);
-    // });
+    it('Adapter is not shared with other users', () => {
+        // set up
+        UserUtils.switchUser(user1);
+        ConnectUtils.addMachineDataSimulator(adapterName);
 
-    it('Adapter is shared with group', () => {
+        // check admin
+        UserUtils.switchUser(UserUtils.adminUser);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
+
+        // check other users
+        UserUtils.switchUser(user2);
+        ConnectUtils.checkAmountOfAdapters(0);
+    });
+
+    it('Make adapter public', () => {
+        // set up
+        UserUtils.switchUser(user1);
+        ConnectUtils.addMachineDataSimulator(adapterName);
+        PermissionUtils.markElementAsPublic(adapterName);
+
+        // check admin
+        UserUtils.switchUser(UserUtils.adminUser);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
+
+        // check other users
+        UserUtils.switchUser(user2);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanNotChangePermissions(adapterName);
+    });
+
+    it('Share adapter with other user and change ownership', () => {
+        const user3 = UserUtils.createUser(
+            'user3',
+            UserRole.ROLE_CONNECT_ADMIN,
+            UserRole.ROLE_PIPELINE_ADMIN,
+        );
+
+        // set up
+        UserUtils.switchUser(user1);
+        ConnectUtils.addMachineDataSimulator(adapterName);
+        PermissionUtils.authorizeUser(adapterName, user2.email);
+
+        // check admin
+        UserUtils.switchUser(UserUtils.adminUser);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
+
+        // check authorized user
+        UserUtils.switchUser(user2);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanNotChangePermissions(adapterName);
+
+        UserUtils.switchUser(user3);
+        ConnectUtils.checkAmountOfAdapters(0);
+
+        // change ownership to user3
+        UserUtils.switchUser(user1);
+        ConnectUtils.goToConnect();
+        PermissionUtils.changeOwnership(adapterName, user3.email);
+        ConnectUtils.checkAmountOfAdapters(0);
+
+        UserUtils.switchUser(UserUtils.adminUser);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
+
+        // check authorized user
+        UserUtils.switchUser(user2);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanNotChangePermissions(adapterName);
+
+        // validate that user3 is owner now
+        UserUtils.switchUser(user3);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
+    });
+
+    it('Adapter is shared with group for user 2', () => {
+        // Add group with connect admin rights
+        UserUtils.createGroup(
+            'connect_admin_group',
+            UserRole.ROLE_CONNECT_ADMIN,
+        );
+        UserUtils.addGroupToUser('connect_admin_group', user2.name);
+        // Add group to user2
+
         // set up
         UserUtils.switchUser(user1);
         ConnectUtils.addMachineDataSimulator(adapterName);
