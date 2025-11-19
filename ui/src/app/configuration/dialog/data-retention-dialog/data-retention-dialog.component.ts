@@ -17,13 +17,15 @@
  */
 
 import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
 import { DataRetentionDialogModel } from './model/data-retention-dialog.model';
 import {
     DatalakeRestService,
     ExportProviderSettings,
     RetentionTimeConfig,
 } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
+import { DataRetentionNowDialogComponent } from '../data-retention-now-dialog/data-retention-now-dialog.component';
 
 @Component({
     selector: 'sp-data-retention-dialog',
@@ -43,6 +45,8 @@ export class DataRetentionDialogComponent implements OnInit {
     disableDelete = false;
 
     dialogRef = inject(DialogRef<DataRetentionDialogComponent>);
+    translateService = inject(TranslateService);
+    dialogService = inject(DialogService);
     datalakeRestService = inject(DatalakeRestService);
 
     ngOnInit() {
@@ -110,12 +114,19 @@ export class DataRetentionDialogComponent implements OnInit {
             });
     }
     runCleanUpNow() {
-        this.datalakeRestService
-            .runCleanupNow(this.measurementIndex)
-            .subscribe(data => {
-                //TODO popUp
-                this.close(true);
+        const dialogRef: DialogRef<DataRetentionNowDialogComponent> =
+            this.dialogService.open(DataRetentionNowDialogComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant('Export Data'),
+                width: '70vw',
+                data: {
+                    measurementIndex: this.measurementIndex,
+                },
             });
+
+        dialogRef.afterClosed().subscribe(data => {
+            this.close(true);
+        });
     }
 
     requiresExportValidation(): boolean {
