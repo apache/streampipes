@@ -109,6 +109,14 @@ export class DataRetentionDialogComponent implements OnInit {
                 this.close(true);
             });
     }
+    runCleanUpNow() {
+        this.datalakeRestService
+            .runCleanupNow(this.measurementIndex)
+            .subscribe(data => {
+                //TODO popUp
+                this.close(true);
+            });
+    }
 
     requiresExportValidation(): boolean {
         const action = this.retentionConfig?.dataRetentionConfig?.action;
