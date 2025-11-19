@@ -21,10 +21,12 @@ public class RetentionExportConfig {
     
     private ExportConfig exportConfig; 
     private String exportProviderId;
+    private String lastExport;
 
-    public RetentionExportConfig(ExportConfig exportConfig, String exportProviderId) {
+    public RetentionExportConfig(ExportConfig exportConfig, String exportProviderId, String lastExport) {
         this.exportConfig = exportConfig;
         this.exportProviderId = exportProviderId;
+        this.lastExport = lastExport;
     }
 
     public ExportConfig getExportConfig() {
@@ -40,5 +42,13 @@ public class RetentionExportConfig {
 
     public void setExportProviderId(String exportProviderId) {
         this.exportProviderId = exportProviderId;
+    }
+    public void setLastExport(String lastExport){
+        this.lastExport = lastExport;
+    }
+
+    public String getLastExport(){
+        return lastExport;
+        
     }
 }

@@ -136,6 +136,11 @@ public class DataLakeExportManager {
         }
     }
 
+    private void updateLastSync(DataLakeMeasure dataLakeMeasure, Instant now){
+        dataLakeMeasure.getRetentionTime().getRetentionExportConfig().setLastExport(now.toString());
+        this.dataExplorerSchemaManagement.updateMeasurement(dataLakeMeasure);
+
+    }
     private void deleteMeasurement(DataLakeMeasure dataLakeMeasure, Instant now, long endDate) {
 
         LOG.info("Current time in millis: " + now.toEpochMilli());
@@ -175,6 +180,7 @@ public class DataLakeExportManager {
                     deleteMeasurement(dataLakeMeasure, now, endDate);
                     LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully deleted");
                 }
+                updateLastSync(dataLakeMeasure, now);
             }
 
     }
