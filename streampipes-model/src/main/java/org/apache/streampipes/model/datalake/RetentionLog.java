@@ -25,7 +25,8 @@ public class RetentionLog {
     private String date;
     private String error; 
 
-    
+    public RetentionLog() {
+    }
 
     public RetentionLog(boolean status, String name, String date) {
         this.status = status;

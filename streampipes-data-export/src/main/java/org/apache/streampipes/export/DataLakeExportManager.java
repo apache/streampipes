@@ -215,9 +215,10 @@ public class DataLakeExportManager {
                 LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully deleted");
             }
             success = true;
+         updateLastSync(dataLakeMeasure, now, success, "-");
 
         }
-        updateLastSync(dataLakeMeasure, now, success, "-");
+   
 
 
     }
