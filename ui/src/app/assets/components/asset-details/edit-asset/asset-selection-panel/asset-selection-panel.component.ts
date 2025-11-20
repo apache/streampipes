@@ -109,6 +109,9 @@ export class SpAssetSelectionPanelComponent implements OnInit {
             assetLinks: [],
             assetType: undefined,
             assets: [],
+            assetSite: undefined,
+            labelIds: [],
+            additionalData: {},
         };
     }
 

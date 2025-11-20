@@ -50,7 +50,7 @@
             title="Assets"
         ></sp-basic-header-title-component>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-            <div fxFlex="90" fxLayout="column">
+            <div fxFlex="100" fxLayout="column">
                 <sp-table
                     fxFlex="100"
                     [columns]="displayedColumns"
@@ -103,6 +103,16 @@
                         >
                             <mat-icon>edit</mat-icon>
                             <span>{{ 'Edit' | translate }}</span>
+                        </button>
+                        <button
+                            mat-menu-item
+                            [attr.data-cy]="
+                                'manage-dashboard-permissions-' + element.name
+                            "
+                            (click)="openPermissionsDialog(element)"
+                        >
+                            <mat-icon>share</mat-icon>
+                            <span>{{ 'Manage permissions' | translate }}</span>
                         </button>
 
                         <button

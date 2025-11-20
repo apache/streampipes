@@ -90,17 +90,19 @@ public class FixImportedPermissionsMigration implements Migration {
     resources.forEach(resource -> {
       // This uses the same sanitization logic as the exporter
       var sanitizedId = sanitize(resource.getElementId());
-      var permissions = permissionStorage.getUserPermissionsForObject(sanitizedId);
+      if (!sanitizedId.equals(resource.getElementId())) {
+        var permissions = permissionStorage.getUserPermissionsForObject(sanitizedId);
 
-      permissions.forEach(permission -> {
-        permission.setObjectInstanceId(resource.getElementId());
-        permissionStorage.updateElement(permission);
-        LOG.info(
-            "Updated permission id from {} to {}",
-            sanitizedId,
-            resource.getElementId()
-        );
-      });
+        permissions.forEach(permission -> {
+          permission.setObjectInstanceId(resource.getElementId());
+          permissionStorage.updateElement(permission);
+          LOG.info(
+              "Updated permission id from {} to {}",
+              sanitizedId,
+              resource.getElementId()
+          );
+        });
+      }
     });
   }
 
