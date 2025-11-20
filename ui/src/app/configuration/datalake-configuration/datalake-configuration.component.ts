@@ -304,7 +304,7 @@ export class DatalakeConfigurationComponent implements OnInit {
             this.dialogService.open(DataRetentionLogDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
                 title: this.translateService.instant('Retention Log'),
-                width: '50vw',
+                width: '100vw',
                 data: {
                     retentionLog: retentionLog,
                 },

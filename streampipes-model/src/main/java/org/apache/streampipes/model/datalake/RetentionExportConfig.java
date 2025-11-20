@@ -26,9 +26,9 @@ import java.util.List;
 
 public class RetentionExportConfig {
 
-    Environment env = Environments.getEnvironment();
+    //Environment env = Environments.getEnvironment();
 
-    int maxSize = env.getDatalakeRetentionLogLength().getValueOrDefault();
+    //int maxSize = env.getDatalakeRetentionLogLength().getValueOrDefault();
 
     private ExportConfig exportConfig;
     private String exportProviderId;
@@ -78,6 +78,10 @@ public class RetentionExportConfig {
 
     public void addRetentionLog(RetentionLog log) {
         // int maxSize = getMaxRetentionLogSize();
+
+        Environment env = Environments.getEnvironment();
+
+        int maxSize = env.getDatalakeRetentionLogLength().getValueOrDefault();
 
         if (this.retentionLog != null) {
 
