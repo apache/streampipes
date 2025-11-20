@@ -671,7 +671,7 @@
   "Path": "Pfad",
   "State": "Status",
   "Success": "Erfolg",
-  "Fail": "Fail",
+  "Fail": "Fehler",
   "Error": "Fehler",
   "Start Sync": "Synchronisierung starten",
   "Run Sync Now": "Sync jetzt ausführen",
