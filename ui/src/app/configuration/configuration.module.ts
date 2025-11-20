@@ -115,6 +115,7 @@ import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/c
 import { SelectDataExportComponent } from './dialog/data-retention-dialog/components/select-export/select-format.component';
 import { DeleteExportProviderComponent } from './dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { DataRetentionNowDialogComponent } from './dialog/data-retention-now-dialog/data-retention-now-dialog.component';
+import { DataRetentionLogDialogComponent } from './dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -227,6 +228,7 @@ import { DataRetentionNowDialogComponent } from './dialog/data-retention-now-dia
         ServiceConfigsNumberComponent,
         DeleteDatalakeIndexComponent,
         DataRetentionNowDialogComponent,
+        DataRetentionLogDialogComponent,
         ExportProviderConnectionTestComponent,
         EditAssetLocationComponent,
         EditAssetLocationAreaComponent,

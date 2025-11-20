@@ -252,6 +252,38 @@
                                                             : 'yyyy-MM-dd HH:mm:ss'
                                                 }}
                                             </p>
+
+                                            <button
+                                                color="accent"
+                                                mat-icon-button
+                                                [matTooltip]="
+                                                    'Open Retention Log'
+                                                        | translate
+                                                "
+                                                data-cy="datalake-retention-log-btn"
+                                                matTooltipPosition="above"
+                                                (click)="
+                                                    openRetentionLog(
+                                                        configurationEntry
+                                                            ?.retention
+                                                            .retentionExportConfig
+                                                            .retentionLog
+                                                    )
+                                                "
+                                            >
+                                                <i
+                                                    class="material-icons"
+                                                    [ngStyle]="{
+                                                        color: configurationEntry
+                                                            ?.retention
+                                                            .retentionExportConfig
+                                                            .lastExport
+                                                            ? 'green'
+                                                            : 'red'
+                                                    }"
+                                                    >list_alt</i
+                                                >
+                                            </button>
                                         }
                                     </span>
                                 </div>

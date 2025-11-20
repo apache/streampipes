@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-11-19 14:53:31.
+// Generated using typescript-generator version 3.2.1263 on 2025-11-20 07:48:17.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -3379,6 +3379,7 @@ export class RetentionExportConfig {
     exportConfig: ExportConfig;
     exportProviderId: string;
     lastExport: string;
+    retentionLog: RetentionLog[];
 
     static fromData(
         data: RetentionExportConfig,
@@ -3391,6 +3392,26 @@ export class RetentionExportConfig {
         instance.exportConfig = ExportConfig.fromData(data.exportConfig);
         instance.exportProviderId = data.exportProviderId;
         instance.lastExport = data.lastExport;
+        instance.retentionLog = __getCopyArrayFn(RetentionLog.fromData)(
+            data.retentionLog,
+        );
+        return instance;
+    }
+}
+
+export class RetentionLog {
+    date: string;
+    name: string;
+    status: boolean;
+
+    static fromData(data: RetentionLog, target?: RetentionLog): RetentionLog {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RetentionLog();
+        instance.date = data.date;
+        instance.name = data.name;
+        instance.status = data.status;
         return instance;
     }
 }
@@ -3953,6 +3974,11 @@ export class StaticPropertyAlternatives extends StaticProperty {
         )(data.alternatives);
         return instance;
     }
+}
+
+export interface Storable {
+    elementId: string;
+    rev: string;
 }
 
 export class StreamPipesApplicationPackage {
