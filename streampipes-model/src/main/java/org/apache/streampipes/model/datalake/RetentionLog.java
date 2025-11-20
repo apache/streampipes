@@ -61,7 +61,7 @@ public class RetentionLog {
         public String getError() {
         return error;
     }
-    public void setError(String date) {
+    public void setError(String error) {
         this.error = error;
     } 
 

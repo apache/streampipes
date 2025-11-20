@@ -18,13 +18,17 @@
 
 package org.apache.streampipes.model.datalake;
 
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class RetentionExportConfig {
 
-    // TODO Move to backedn
-    int maxSize = 10;
+    Environment env = Environments.getEnvironment();
+
+    int maxSize = env.getDatalakeRetentionLogLength().getValueOrDefault();
 
     private ExportConfig exportConfig;
     private String exportProviderId;

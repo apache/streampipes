@@ -206,7 +206,6 @@ public class DataLakeExportManager {
                     updateLastSync(dataLakeMeasure, now, false, e.getMessage());
                     throw new Exception(e);
 
-                    //return false;
                 }
                 LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully saved");
             }
@@ -219,7 +218,7 @@ public class DataLakeExportManager {
 
         }
         updateLastSync(dataLakeMeasure, now, success, "-");
-        //return true;
+
 
     }
 

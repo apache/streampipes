@@ -263,8 +263,20 @@
                                                 color="accent"
                                                 mat-icon-button
                                                 [matTooltip]="
-                                                    'Open Retention Log'
-                                                        | translate
+                                                    ('Open Retention Log'
+                                                        | translate) +
+                                                    (configurationEntry
+                                                        ?.retention
+                                                        ?.retentionExportConfig
+                                                        ?.lastExport
+                                                        ? ' • Last Sync: ' +
+                                                          (configurationEntry
+                                                              .retention
+                                                              .retentionExportConfig
+                                                              .lastExport
+                                                              | date
+                                                                  : 'yyyy-MM-dd HH:mm:ss')
+                                                        : '')
                                                 "
                                                 data-cy="datalake-retention-log-btn"
                                                 matTooltipPosition="above"
@@ -302,16 +314,6 @@
                                                     >list_alt</i
                                                 >
                                             </button>
-                                            <p>
-                                                {{
-                                                    configurationEntry
-                                                        ?.retention
-                                                        .retentionExportConfig
-                                                        .lastExport
-                                                        | date
-                                                            : 'yyyy-MM-dd HH:mm:ss'
-                                                }}
-                                            </p>
                                         } @else {
                                             <p>-</p>
                                         }
