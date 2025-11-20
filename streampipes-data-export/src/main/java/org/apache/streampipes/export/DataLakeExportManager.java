@@ -27,6 +27,7 @@ import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.configuration.ProviderType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.RetentionAction;
+import org.apache.streampipes.model.datalake.RetentionLog;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -52,6 +53,8 @@ public class DataLakeExportManager {
     private final IDataExplorerQueryManagement dataExplorerQueryManagement = new DataExplorerDispatcher()
             .getDataExplorerManager()
             .getQueryManagement(this.dataExplorerSchemaManagement);
+
+    private String savePath = ""; 
 
     private void exportMeasurement(DataLakeMeasure dataLakeMeasure, Instant now, long endDate) {
 
@@ -117,6 +120,7 @@ public class DataLakeExportManager {
                     providerType, dataLakeMeasure.getMeasureName(), exportProviderSetting,
                     dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
             exportProvider.store(streamingOutput);
+            savePath = exportProvider.getFileName();
 
         } catch (IllegalArgumentException e) {
 
@@ -136,8 +140,9 @@ public class DataLakeExportManager {
         }
     }
 
-    private void updateLastSync(DataLakeMeasure dataLakeMeasure, Instant now){
+    private void updateLastSync(DataLakeMeasure dataLakeMeasure, Instant now, boolean success){
         dataLakeMeasure.getRetentionTime().getRetentionExportConfig().setLastExport(now.toString());
+        dataLakeMeasure.getRetentionTime().getRetentionExportConfig().addRetentionLog(new RetentionLog(success, this.savePath, now.toString()));
         this.dataExplorerSchemaManagement.updateMeasurement(dataLakeMeasure);
 
     }
@@ -162,12 +167,14 @@ public class DataLakeExportManager {
     }
 
     public void cleanupSingleMeasurement(DataLakeMeasure dataLakeMeasure){
+        boolean success = false;
+        Instant now = Instant.now();
         if (dataLakeMeasure.getRetentionTime() != null) {
                 LOG.info("Measurement " + dataLakeMeasure.getMeasureName());
 
                 var result = getStartAndEndTime(
                         dataLakeMeasure.getRetentionTime().getDataRetentionConfig().olderThanDays());
-                Instant now = (Instant) result.get("now");
+                now = (Instant) result.get("now");
                 long endDate = (Long) result.get("endDate");
 
                 if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.DELETE) {
@@ -180,8 +187,12 @@ public class DataLakeExportManager {
                     deleteMeasurement(dataLakeMeasure, now, endDate);
                     LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully deleted");
                 }
-                updateLastSync(dataLakeMeasure, now);
+                success = true;
+               
             }
+
+        //TODO how the get path 
+         updateLastSync(dataLakeMeasure, now, success);
 
     }
 
