@@ -156,6 +156,7 @@ public enum Envs {
                                                                            // //@Scheduled(cron = "0
                                                                            // */2 * * *
   // *") //Cron Job in Dev Setting; Running every 2 min
+  SP_RETENTION_LOG_LENGTH("SP_RETENTION_LOG_LENGTH", "10"),
 
   // Logging
   SP_LOGGING_FILE_ENABLED("SP_LOGGING_FILE_ENABLED", "false"),
