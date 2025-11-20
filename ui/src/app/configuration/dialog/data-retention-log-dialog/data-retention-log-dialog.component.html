@@ -48,8 +48,12 @@
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>
                     {{ 'State' | translate }}
                 </th>
-                <td mat-cell *matCellDef="let configurationEntry">
-                    {{ configurationEntry.status }}
+                <td
+                    mat-cell
+                    *matCellDef="let configurationEntry"
+                    [style.color]="configurationEntry.status ? 'green' : 'red'"
+                >
+                    {{ configurationEntry.status ? 'Success' : 'Fail' }}
                 </td>
             </ng-container>
 
