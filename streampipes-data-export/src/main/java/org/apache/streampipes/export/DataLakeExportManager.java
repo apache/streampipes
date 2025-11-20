@@ -54,9 +54,9 @@ public class DataLakeExportManager {
             .getDataExplorerManager()
             .getQueryManagement(this.dataExplorerSchemaManagement);
 
-    private String savePath = ""; 
+    private String savePath = "";
 
-    private void exportMeasurement(DataLakeMeasure dataLakeMeasure, Instant now, long endDate) {
+    private void exportMeasurement(DataLakeMeasure dataLakeMeasure, Instant now, long endDate) throws Exception {
 
         if (System.getenv("SP_RETENTION_LOCAL_DIR") == null || System.getenv("SP_RETENTION_LOCAL_DIR").isEmpty()) {
             LOG.error("For Local Retention Storage, please configure the environment variable SP_RETENTION_LOCAL_DIR");
@@ -107,7 +107,7 @@ public class DataLakeExportManager {
 
         if (exportProviderSetting == null) {
             LOG.error("The desired export provider was not found. No export has been done.");
-            return;
+            throw new Exception("The desired export provider was not found. No export has been done.");
         }
 
         ProviderType providerType = exportProviderSetting.getProviderType();
@@ -124,28 +124,49 @@ public class DataLakeExportManager {
 
         } catch (IllegalArgumentException e) {
 
-            LOG.error("Export provider could not be created. Unsupported provider type: {}. Error: {}", providerType,
-                    e.getMessage(), e);
+            String msg = String.format(
+                    "Export provider could not be created. Unsupported provider type: %s. Error: %s",
+                    providerType, e.getMessage());
+
+            LOG.error(msg, e);
+            throw new IllegalArgumentException(msg, e);
+
         } catch (IOException e) {
 
-            LOG.error("I/O error occurred while trying to store data. Provider Type: {}. Error: {}", providerType,
-                    e.getMessage(), e);
+            String msg = String.format(
+                    "I/O error occurred while trying to store data. Provider Type: %s. Error: %s",
+                    providerType, e.getMessage());
+
+            LOG.error(msg, e);
+            throw new IOException(msg, e);
+
         } catch (RuntimeException e) {
-            LOG.error("Runtime exception occurred while attempting to store data. Provider Type: {}. Error: {}",
-                    providerType, e.getMessage(), e);
+
+            String msg = String.format(
+                    "Runtime exception occurred while attempting to store data. Provider Type: %s. Error: %s",
+                    providerType, e.getMessage());
+
+            LOG.error(msg, e);
+            throw new RuntimeException(msg, e);
         } catch (Exception e) {
 
             LOG.error("An unexpected error occurred during export. Provider Type: {}. Error: {}", providerType,
                     e.getMessage(), e);
+            throw new Exception(
+                    String.format("An unexpected error occurred during export. Provider Type: %s. Error: %s",
+                            providerType, e.getMessage()),
+                    e);
         }
     }
 
-    private void updateLastSync(DataLakeMeasure dataLakeMeasure, Instant now, boolean success){
+    private void updateLastSync(DataLakeMeasure dataLakeMeasure, Instant now, boolean success) {
         dataLakeMeasure.getRetentionTime().getRetentionExportConfig().setLastExport(now.toString());
-        dataLakeMeasure.getRetentionTime().getRetentionExportConfig().addRetentionLog(new RetentionLog(success, this.savePath, now.toString()));
+        dataLakeMeasure.getRetentionTime().getRetentionExportConfig()
+                .addRetentionLog(new RetentionLog(success, this.savePath, now.toString()));
         this.dataExplorerSchemaManagement.updateMeasurement(dataLakeMeasure);
 
     }
+
     private void deleteMeasurement(DataLakeMeasure dataLakeMeasure, Instant now, long endDate) {
 
         LOG.info("Current time in millis: " + now.toEpochMilli());
@@ -166,33 +187,39 @@ public class DataLakeExportManager {
         return result;
     }
 
-    public void cleanupSingleMeasurement(DataLakeMeasure dataLakeMeasure){
+    public void cleanupSingleMeasurement(DataLakeMeasure dataLakeMeasure) throws Exception {
         boolean success = false;
         Instant now = Instant.now();
         if (dataLakeMeasure.getRetentionTime() != null) {
-                LOG.info("Measurement " + dataLakeMeasure.getMeasureName());
+            LOG.info("Measurement " + dataLakeMeasure.getMeasureName());
 
-                var result = getStartAndEndTime(
-                        dataLakeMeasure.getRetentionTime().getDataRetentionConfig().olderThanDays());
-                now = (Instant) result.get("now");
-                long endDate = (Long) result.get("endDate");
+            var result = getStartAndEndTime(
+                    dataLakeMeasure.getRetentionTime().getDataRetentionConfig().olderThanDays());
+            now = (Instant) result.get("now");
+            long endDate = (Long) result.get("endDate");
 
-                if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.DELETE) {
-                    LOG.info("Start saving Measurement " + dataLakeMeasure.getMeasureName());
+            if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.DELETE) {
+                LOG.info("Start saving Measurement " + dataLakeMeasure.getMeasureName());
+                try {
                     exportMeasurement(dataLakeMeasure, now, endDate);
-                    LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully saved");
-                }
-                if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.SAVE) {
-                    LOG.info("Start delete Measurement " + dataLakeMeasure.getMeasureName());
-                    deleteMeasurement(dataLakeMeasure, now, endDate);
-                    LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully deleted");
-                }
-                success = true;
-               
-            }
+                } catch (Exception e) {
+                    updateLastSync(dataLakeMeasure, now, false);
+                    throw new Exception(e);
 
-        //TODO how the get path 
-         updateLastSync(dataLakeMeasure, now, success);
+                    //return false;
+                }
+                LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully saved");
+            }
+            if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.SAVE) {
+                LOG.info("Start delete Measurement " + dataLakeMeasure.getMeasureName());
+                deleteMeasurement(dataLakeMeasure, now, endDate);
+                LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully deleted");
+            }
+            success = true;
+
+        }
+        updateLastSync(dataLakeMeasure, now, success);
+        //return true;
 
     }
 

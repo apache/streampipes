@@ -32,7 +32,6 @@ import org.springframework.scheduling.support.CronTrigger;
 
 import java.util.List;
 
-
 @Configuration
 public class DataLakeScheduler implements SchedulingConfigurer {
 
@@ -43,32 +42,34 @@ public class DataLakeScheduler implements SchedulingConfigurer {
             .getDataExplorerManager()
             .getSchemaManagement();
 
-    
-
     public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");
         for (DataLakeMeasure dataLakeMeasure : allMeasurements) {
-            dataLakeExportManager.cleanupSingleMeasurement(dataLakeMeasure);
-            
+            try {
+                dataLakeExportManager.cleanupSingleMeasurement(dataLakeMeasure);
+            } catch (Exception e) {
+                LOG.error(String.format("An unexpected error occurred during export. Data Measure: %s. Error: %s",
+                        dataLakeMeasure, e.getMessage()), e);
+            }
+
         }
     }
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        var env = Environments.getEnvironment(); 
-         LOG.info("Retention CRON Job triggered.");
+        var env = Environments.getEnvironment();
+        LOG.info("Retention CRON Job triggered.");
         taskRegistrar.addTriggerTask(
 
                 this::cleanupMeasurements,
-
 
                 triggerContext -> new CronTrigger(env.getDatalakeSchedulerCron().getValueOrDefault())
                         .nextExecution(triggerContext)
 
         );
 
-         LOG.info("Retention CRON Job finished.");
+        LOG.info("Retention CRON Job finished.");
 
     }
 }

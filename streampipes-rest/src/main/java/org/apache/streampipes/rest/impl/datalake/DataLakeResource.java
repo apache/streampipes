@@ -350,6 +350,7 @@ public class DataLakeResource extends AbstractRestResource {
       var measure = this.dataExplorerSchemaManagement.getById(elementId);
       dataLakeExportManager.cleanupSingleMeasurement(measure);
       return ok();
+
     } catch (Exception e) {
       return serverError(SpLogMessage.from(e));
     }
