@@ -280,12 +280,24 @@
                                                 <i
                                                     class="material-icons"
                                                     [ngStyle]="{
-                                                        color: configurationEntry
-                                                            ?.retention
-                                                            .retentionExportConfig
-                                                            .lastExport
-                                                            ? 'green'
-                                                            : 'red'
+                                                        color:
+                                                            configurationEntry
+                                                                ?.retention
+                                                                ?.retentionExportConfig
+                                                                ?.retentionLog
+                                                                ?.length &&
+                                                            configurationEntry
+                                                                .retention
+                                                                .retentionExportConfig
+                                                                .retentionLog[
+                                                                configurationEntry
+                                                                    .retention
+                                                                    .retentionExportConfig
+                                                                    .retentionLog
+                                                                    .length - 1
+                                                            ].status
+                                                                ? 'green'
+                                                                : 'red'
                                                     }"
                                                     >list_alt</i
                                                 >
