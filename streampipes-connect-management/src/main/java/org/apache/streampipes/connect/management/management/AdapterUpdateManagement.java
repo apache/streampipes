@@ -60,7 +60,7 @@ public class AdapterUpdateManagement {
 
   public void updateAdapter(AdapterDescription ad)
       throws AdapterException {
-    // update adapter in database
+    // update adapter in database 
     this.adapterResourceManager.encryptAndUpdate(ad);
     boolean shouldRestart = ad.isRunning();
 
@@ -187,6 +187,7 @@ public class AdapterUpdateManagement {
         .peek(s -> {
           if (s.getElementId().equals(updatedAdapter.getCorrespondingDataStreamElementId())) {
             s.setEventSchema(updatedAdapter.getEventSchema());
+            s.setName(updatedAdapter.getName());
           }
         })
         .toList();
