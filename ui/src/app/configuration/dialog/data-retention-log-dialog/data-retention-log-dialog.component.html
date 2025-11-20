@@ -56,7 +56,11 @@
                     *matCellDef="let configurationEntry"
                     [style.color]="configurationEntry.status ? 'green' : 'red'"
                 >
-                    {{ configurationEntry.status ? 'Success' : 'Fail' }}
+                    {{
+                        configurationEntry.status
+                            ? ('Success' | translate)
+                            : ('Fail' | translate)
+                    }}
                 </td>
             </ng-container>
 

@@ -670,6 +670,8 @@
   "Date": null,
   "Path": null,
   "State": null,
+  "Success": null,
+  "Fail": null,
   "Error": null,
   "Start Sync": null,
   "Run Sync Now": null,
