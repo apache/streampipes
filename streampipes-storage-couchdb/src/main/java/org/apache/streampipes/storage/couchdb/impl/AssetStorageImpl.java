@@ -16,28 +16,17 @@
  *
  */
 
-package org.apache.streampipes.manager.setup.tasks;
+package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.model.assets.SpAssetModel;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import java.io.IOException;
+import org.lightcouch.CouchDbClient;
 
-public class CreateDefaultAssetTask implements InstallationTask {
+import java.util.function.Supplier;
 
-  @Override
-  public void execute() {
-    var asset = new SpAssetModel();
-    asset.setElementId(GenericDocTypes.DEFAULT_ASSET_DOC_ID);
-    asset.setAssetId("default-asset");
-    asset.setAssetName("Default Asset");
-    asset.setRemovable(true);
+public class AssetStorageImpl extends DefaultViewCrudStorage<SpAssetModel> {
 
-    try {
-      StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().create(asset, SpAssetModel.class);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  public AssetStorageImpl(Supplier<CouchDbClient> clientSupplier) {
+    super(clientSupplier, SpAssetModel.class, "assets/all-assets");
   }
 }

@@ -19,14 +19,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
-    AssetConstants,
-    GenericStorageService,
+    AssetManagementService,
     SpAssetModel,
 } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
     CurrentUserService,
     DialogService,
+    ObjectPermissionDialogComponent,
     PanelType,
     SpAssetBrowserService,
     SpBreadcrumbService,
@@ -55,7 +55,7 @@ export class SpAssetOverviewComponent implements OnInit {
     hasWritePrivilege = false;
 
     constructor(
-        private genericStorageService: GenericStorageService,
+        private assetService: AssetManagementService,
         private breadcrumbService: SpBreadcrumbService,
         private dialogService: DialogService,
         private router: Router,
@@ -76,26 +76,27 @@ export class SpAssetOverviewComponent implements OnInit {
     }
 
     loadAssets(): void {
-        this.genericStorageService
-            .getAllDocuments(AssetConstants.ASSET_APP_DOC_NAME)
-            .subscribe(result => {
-                this.existingAssets = result as SpAssetModel[];
-                this.dataSource.data = this.existingAssets;
-            });
+        this.assetService.getAllAssets().subscribe(result => {
+            this.existingAssets = result as SpAssetModel[];
+            this.dataSource.data = this.existingAssets;
+        });
     }
 
     createNewAsset() {
-        const assetModel = {
+        const assetModel: SpAssetModel = {
             assetName: 'New Asset',
             assetDescription: '',
             assetLinks: [],
             assetId: this.idGeneratorService.generate(6),
-            _id: this.idGeneratorService.generate(24),
+            elementId: this.idGeneratorService.generate(24),
             appDocType: 'asset-management',
             removable: true,
-            _rev: undefined,
+            rev: undefined,
             assets: [],
             assetType: undefined,
+            assetSite: undefined,
+            additionalData: {},
+            labelIds: [],
         };
         const dialogRef = this.dialogService.open(
             SpCreateAssetDialogComponent,
@@ -118,7 +119,7 @@ export class SpAssetOverviewComponent implements OnInit {
 
     goToDetailsView(asset: SpAssetModel, editMode = false) {
         const mode = editMode ? 'edit' : 'view';
-        this.router.navigate(['assets', 'details', asset._id, mode]);
+        this.router.navigate(['assets', 'details', asset.elementId, mode]);
     }
 
     deleteAsset(asset: SpAssetModel) {
@@ -134,17 +135,27 @@ export class SpAssetOverviewComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.genericStorageService
-                    .deleteDocument(
-                        AssetConstants.ASSET_APP_DOC_NAME,
-                        asset._id,
-                        asset._rev,
-                    )
-                    .subscribe(() => {
-                        this.loadAssets();
-                        this.assetBrowserService.loadAssetData();
-                    });
+                this.assetService.deleteAsset(asset.elementId).subscribe(() => {
+                    this.loadAssets();
+                    this.assetBrowserService.loadAssetData();
+                });
             }
         });
+    }
+
+    openPermissionsDialog(asset: SpAssetModel) {
+        const dialogRef = this.dialogService.open(
+            ObjectPermissionDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: 'Manage permissions',
+                width: '70vw',
+                data: {
+                    objectInstanceId: asset.elementId,
+                    headerTitle:
+                        'Manage permissions for asset ' + asset.assetName,
+                },
+            },
+        );
     }
 }

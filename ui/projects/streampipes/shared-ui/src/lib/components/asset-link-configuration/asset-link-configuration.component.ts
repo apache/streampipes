@@ -16,19 +16,17 @@
  *
  */
 
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import {
+    AssetLinkType,
     AssetManagementService,
     LinkageData,
-    SpAssetModel,
-    AssetLinkType,
     SpAsset,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
-import { Observable } from 'rxjs';
 
 @Component({
     selector: 'sp-asset-link-configuration',
@@ -55,10 +53,7 @@ export class AssetLinkConfigurationComponent implements OnInit {
     treeDropdownOpen = false;
 
     assetsData: SpAssetTreeNode[] = [];
-    currentAsset: SpAssetModel;
     assetLinkTypes: AssetLinkType[] = [];
-    assetLinksLoaded = false;
-    updateObservable: Observable<SpAssetModel>;
     selectedAssets: SpAssetTreeNode[] = [];
     deselectedAssets: SpAssetTreeNode[] = [];
     originalAssets: SpAssetTreeNode[] = [];
@@ -72,10 +67,6 @@ export class AssetLinkConfigurationComponent implements OnInit {
 
     hasChild = (_: number, node: any) =>
         !!node.assets && node.assets.length > 0;
-
-    toggleTreeDropdown() {
-        this.treeDropdownOpen = !this.treeDropdownOpen;
-    }
 
     onAssetSelect(node: SpAssetTreeNode): void {
         const index = this.selectedAssets.findIndex(
@@ -184,8 +175,8 @@ export class AssetLinkConfigurationComponent implements OnInit {
             const currentPath = [...index, assetIndex];
             let flattenedPath = [];
 
-            if (asset['_id']) {
-                parentId = asset['_id'];
+            if (asset['elementId']) {
+                parentId = asset['elementId'];
                 flattenedPath = [parentId, ...currentPath];
             } else {
                 flattenedPath = [...currentPath];
