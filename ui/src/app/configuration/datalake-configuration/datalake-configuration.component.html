@@ -241,18 +241,24 @@
                                                 >history</i
                                             >
                                         </button>
-                                        @if (configurationEntry?.retention) {
-                                            <p>
-                                                {{
-                                                    configurationEntry
-                                                        ?.retention
-                                                        .retentionExportConfig
-                                                        .lastExport
-                                                        | date
-                                                            : 'yyyy-MM-dd HH:mm:ss'
-                                                }}
-                                            </p>
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
 
+                        <ng-container matColumnDef="retentionlog">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'Retention Log' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let configurationEntry">
+                                <div fxLayout="row">
+                                    <span
+                                        fxFlex
+                                        fxFlexOrder="3"
+                                        fxLayout="row"
+                                        fxLayoutAlign="start center"
+                                    >
+                                        @if (configurationEntry?.retention) {
                                             <button
                                                 color="accent"
                                                 mat-icon-button
@@ -284,6 +290,18 @@
                                                     >list_alt</i
                                                 >
                                             </button>
+                                            <p>
+                                                {{
+                                                    configurationEntry
+                                                        ?.retention
+                                                        .retentionExportConfig
+                                                        .lastExport
+                                                        | date
+                                                            : 'yyyy-MM-dd HH:mm:ss'
+                                                }}
+                                            </p>
+                                        } @else {
+                                            <p>-</p>
                                         }
                                     </span>
                                 </div>

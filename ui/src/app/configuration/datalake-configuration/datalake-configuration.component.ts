@@ -89,6 +89,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         'truncate',
         'remove',
         'retention',
+        'retentionlog',
     ];
 
     displayedColumnsExport: string[] = [
