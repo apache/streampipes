@@ -23,11 +23,13 @@
             fxLayout="column"
             data-cy="connection-testing-in-progress"
         >
-            <div fxLayout="row" fxLayoutAlign="space-around">
-                <b
-                    ><h4>{{ currentStatus }}</h4></b
-                >
-            </div>
+            @if (!isInProgress) {
+                <div fxLayout="row" fxLayoutAlign="space-around">
+                    <h4>
+                        <b>{{ currentStatus }}</b>
+                    </h4>
+                </div>
+            }
         </div>
 
         <div

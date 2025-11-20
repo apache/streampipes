@@ -23,6 +23,7 @@ import {
     ExportProviderService,
 } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'sp-data-retention-now-dialog',
@@ -34,35 +35,39 @@ export class DataRetentionNowDialogComponent implements OnInit {
     measurementIndex: string;
 
     datalakeRestService = inject(DatalakeRestService);
-
-    ngOnInit(): void {
-        this.datalakeRestService.runCleanupNow(this.measurementIndex).subscribe(
-            data => {
-                this.isInProgress = false;
-                this.isError = false;
-                this.currentStatus = this.translateService.instant(
-                    'Sync was successful.',
-                );
-            },
-            errorMessage => {
-                this.currentStatus = this.translateService.instant(
-                    'Sync was not successful',
-                );
-                this.errorMessage = errorMessage.error;
-                this.isError = true;
-                this.isInProgress = false;
-            },
-        );
-    }
     private dialogRef = inject(DialogRef<DataRetentionNowDialogComponent>);
     private translateService = inject(TranslateService);
 
-    isInProgress = false;
-    currentStatus: string;
+    isInProgress = true;
+    currentStatus: string = '';
     errorMessage = '';
     isError = false;
     message = '';
     filePath = '';
+
+    ngOnInit(): void {
+        this.isInProgress = true;
+        this.isError = false;
+
+        this.datalakeRestService
+            .runCleanupNow(this.measurementIndex)
+            .pipe(finalize(() => (this.isInProgress = false)))
+            .subscribe(
+                data => {
+                    this.isError = false;
+                    this.currentStatus = this.translateService.instant(
+                        'Sync was successful.',
+                    );
+                },
+                errorMessage => {
+                    this.isError = true;
+                    this.errorMessage = errorMessage.error;
+                    this.currentStatus = this.translateService.instant(
+                        'Sync was not successful',
+                    );
+                },
+            );
+    }
 
     close(refreshDataLakeIndex: boolean) {
         this.dialogRef.close(refreshDataLakeIndex);
