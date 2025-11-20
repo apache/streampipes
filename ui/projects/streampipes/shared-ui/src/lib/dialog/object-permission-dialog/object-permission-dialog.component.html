@@ -152,6 +152,7 @@
                                     <input
                                         matInput
                                         [placeholder]="'Add' | translate"
+                                        data-cy="authorized-group"
                                         #groupInput
                                         [formControl]="groupCtrl"
                                         [matAutocomplete]="groupAuto"
@@ -169,6 +170,9 @@
                                     (optionSelected)="groupSelected($event)"
                                 >
                                     <mat-option
+                                        [attr.data-cy]="
+                                            'group-option-' + group.groupName
+                                        "
                                         *ngFor="
                                             let group of filteredGroups$ | async
                                         "

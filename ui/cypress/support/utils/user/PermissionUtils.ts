@@ -47,6 +47,14 @@ export class PermissionUtils {
         PermissionUtils.save();
     }
 
+    public static authorizeGroup(resourceName: string, groupName: string) {
+        PermissionUtils.openManagePermissions(resourceName);
+        cy.dataCy('authorized-group').type(groupName);
+        cy.get(`[data-cy="group-option-${groupName}"]`).click();
+
+        PermissionUtils.save();
+    }
+
     public static save() {
         cy.dataCy('sp-manage-permissions-save').click();
     }

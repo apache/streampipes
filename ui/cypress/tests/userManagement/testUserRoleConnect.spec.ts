@@ -127,11 +127,12 @@ describe('Test User Roles for Connect', () => {
             UserRole.ROLE_CONNECT_ADMIN,
         );
         UserUtils.addGroupToUser('connect_admin_group', user2.name);
-        // Add group to user2
 
         // set up
         UserUtils.switchUser(user1);
         ConnectUtils.addMachineDataSimulator(adapterName);
+
+        PermissionUtils.authorizeGroup(adapterName, 'connect_admin_group');
 
         // check admin
         UserUtils.switchUser(UserUtils.adminUser);
@@ -140,7 +141,7 @@ describe('Test User Roles for Connect', () => {
 
         // check other users
         UserUtils.switchUser(user2);
-        ConnectUtils.checkAmountOfAdapters(0);
+        ConnectUtils.checkAmountOfAdapters(1);
     });
 
     function validateAdapterIsVisible() {

@@ -227,7 +227,7 @@ export class PipelineUtils {
             // The wait is needed because the default value is the no-table-entries element.
             // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
             cy.wait(1000);
-            cy.dataCy('no-table-entries').should('be.visible');
+            cy.dataCy('no-table-entries').should('have.length', 2);
         } else {
             PipelineBtns.statusPipeline().should('have.length', amount);
         }
