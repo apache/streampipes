@@ -159,10 +159,10 @@ public class DataLakeExportManager {
         }
     }
 
-    private void updateLastSync(DataLakeMeasure dataLakeMeasure, Instant now, boolean success) {
+    private void updateLastSync(DataLakeMeasure dataLakeMeasure, Instant now, boolean success, String error) {
         dataLakeMeasure.getRetentionTime().getRetentionExportConfig().setLastExport(now.toString());
         dataLakeMeasure.getRetentionTime().getRetentionExportConfig()
-                .addRetentionLog(new RetentionLog(success, this.savePath, now.toString()));
+                .addRetentionLog(new RetentionLog(success, this.savePath, now.toString(), error));
         this.dataExplorerSchemaManagement.updateMeasurement(dataLakeMeasure);
 
     }
@@ -203,7 +203,7 @@ public class DataLakeExportManager {
                 try {
                     exportMeasurement(dataLakeMeasure, now, endDate);
                 } catch (Exception e) {
-                    updateLastSync(dataLakeMeasure, now, false);
+                    updateLastSync(dataLakeMeasure, now, false, e.getMessage());
                     throw new Exception(e);
 
                     //return false;
@@ -218,7 +218,7 @@ public class DataLakeExportManager {
             success = true;
 
         }
-        updateLastSync(dataLakeMeasure, now, success);
+        updateLastSync(dataLakeMeasure, now, success, "-");
         //return true;
 
     }

@@ -33,7 +33,7 @@ export class DataRetentionLogDialogComponent {
     @Input()
     retentionLog: string;
 
-    displayedColumns: string[] = ['date', 'path', 'state'];
+    displayedColumns: string[] = ['date', 'path', 'state', 'error'];
 
     private dialogRef = inject(DialogRef<DataRetentionLogDialogComponent>);
     private translateService = inject(TranslateService);

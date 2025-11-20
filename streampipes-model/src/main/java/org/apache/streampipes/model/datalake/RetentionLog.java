@@ -23,6 +23,7 @@ public class RetentionLog {
     private boolean status; 
     private String name; 
     private String date;
+    private String error; 
 
     
 
@@ -30,6 +31,13 @@ public class RetentionLog {
         this.status = status;
         this.name = name;
         this.date = date;
+    }
+
+    public RetentionLog(boolean status, String name, String date, String error) {
+        this.status = status;
+        this.name = name;
+        this.date = date;
+        this.error = error; 
     }
 
     public boolean getStatus() {
@@ -49,6 +57,12 @@ public class RetentionLog {
     }
     public void setDate(String date) {
         this.date = date;
+    } 
+        public String getError() {
+        return error;
+    }
+    public void setError(String date) {
+        this.error = error;
     } 
 
 }

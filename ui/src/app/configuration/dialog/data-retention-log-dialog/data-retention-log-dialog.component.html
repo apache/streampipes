@@ -57,6 +57,19 @@
                 </td>
             </ng-container>
 
+            <ng-container matColumnDef="error">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{ 'Error' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let configurationEntry">
+                    {{
+                        configurationEntry?.error
+                            ? configurationEntry.error
+                            : '-'
+                    }}
+                </td>
+            </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>

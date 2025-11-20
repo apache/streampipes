@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-11-20 07:48:17.
+// Generated using typescript-generator version 3.2.1263 on 2025-11-20 09:12:58.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -3401,6 +3401,7 @@ export class RetentionExportConfig {
 
 export class RetentionLog {
     date: string;
+    error: string;
     name: string;
     status: boolean;
 
@@ -3410,6 +3411,7 @@ export class RetentionLog {
         }
         const instance = target || new RetentionLog();
         instance.date = data.date;
+        instance.error = data.error;
         instance.name = data.name;
         instance.status = data.status;
         return instance;
