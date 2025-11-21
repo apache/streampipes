@@ -21,22 +21,39 @@ package org.apache.streampipes.service.core.migrations.v070;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
+import org.apache.streampipes.model.assets.SpAssetModel;
+import org.apache.streampipes.resource.management.CrudResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class CreateDefaultAssetMigration implements Migration {
+   private static final Logger LOG = LoggerFactory.getLogger(CreateDefaultAssetMigration.class);
 
   @Override
   public boolean shouldExecute() {
-    try {
-      return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage()
-          .findOne(GenericDocTypes.DEFAULT_ASSET_DOC_ID) == null;
-    } catch (IOException e) {
-      return true;
+       try {
+      CRUDStorage<SpAssetModel> assetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
+      var resourceManager = new CrudResourceManager<>(assetStorage, SpAssetModel.class);
+      List<SpAssetModel> assets = resourceManager.findAll();
+      if (assets.size() > 0) {
+        for (SpAssetModel asset : assets) {
+    if ("default-asset".equals(asset.getAssetId())) {  
+        return false;
     }
+}       return true;
+      } else {
+        return true;
+      }
+    } catch (Exception e) {
+      return true;
   }
+}
 
   @Override
   public void executeMigration() {
