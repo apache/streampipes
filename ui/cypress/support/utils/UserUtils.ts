@@ -20,6 +20,7 @@ import { User } from '../model/User';
 import { UserBuilder } from '../builder/UserBuilder';
 import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserBtns } from './user/UserBtns';
+import { ConfigurationBtns } from './configuration/ConfigurationBtns';
 
 export class UserUtils {
     public static adminUser = UserBuilder.create('admin@streampipes.apache.org')
@@ -76,7 +77,7 @@ export class UserUtils {
             0,
         );
 
-        UserBtns.editUserBtn(user.email);
+        UserBtns.editUserBtn(user.name);
 
         UserBtns.userRoleCheckbox(role).click();
 
@@ -116,5 +117,27 @@ export class UserUtils {
 
         UserBtns.deleteUserBtn(user.name).click();
         UserBtns.confirmDeleteBtn().click();
+    }
+
+    public static createGroup(name: string, ...roles: UserRole[]) {
+        this.goToUserConfiguration();
+
+        ConfigurationBtns.newUserGroupBtn().click();
+        ConfigurationBtns.inputGroupName(name);
+        roles.forEach(role => {
+            cy.get(`input[value="${role}"]`).check();
+        });
+        UserBtns.saveEditUserBtn().click();
+    }
+
+    public static addGroupToUser(groupName: string, name: string) {
+        this.goToUserConfiguration();
+        UserBtns.editUserBtn(name);
+
+        cy.dataCy('group-' + groupName)
+            .children()
+            .click();
+
+        UserBtns.saveEditUserBtn().click();
     }
 }

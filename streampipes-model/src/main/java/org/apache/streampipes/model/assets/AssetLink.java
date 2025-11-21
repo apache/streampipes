@@ -27,6 +27,7 @@ public class AssetLink {
   private String linkLabel;
   private String queryHint;
   private boolean editingDisabled;
+  private boolean navigationActive;
 
   public AssetLink() {
   }
@@ -69,6 +70,14 @@ public class AssetLink {
 
   public void setQueryHint(String queryHint) {
     this.queryHint = queryHint;
+  }
+
+  public boolean isNavigationActive() {
+    return navigationActive;
+  }
+
+  public void setNavigationActive(boolean navigationActive) {
+    this.navigationActive = navigationActive;
   }
 
   @Override

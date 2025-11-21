@@ -15,32 +15,18 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.integration.adapters;
 
-import org.junit.jupiter.api.Test;
+package org.apache.streampipes.storage.couchdb.impl;
 
-public class AdaptersTest {
+import org.apache.streampipes.model.assets.SpAssetModel;
 
+import org.lightcouch.CouchDbClient;
 
-  @Test
-  public void testPulsarAdapter() throws Exception {
-    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
-      pulsarAdapterTester.run();
-    }
-  }
+import java.util.function.Supplier;
 
-  @Test
-  public void testMqttAdapter() throws Exception {
-    try (MqttAdapterTester mqttAdapterTester = new MqttAdapterTester()) {
-      mqttAdapterTester.run();
-    }
-  }
+public class AssetStorageImpl extends DefaultViewCrudStorage<SpAssetModel> {
 
-
-  @Test
-  public void testKafkaAdapter() throws Exception {
-    try (KafkaAdapterTester kafkaAdapterTester = new KafkaAdapterTester()) {
-      kafkaAdapterTester.run();
-    }
+  public AssetStorageImpl(Supplier<CouchDbClient> clientSupplier) {
+    super(clientSupplier, SpAssetModel.class, "assets/all-assets");
   }
 }

@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.storage.couchdb;
 
+import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.Privilege;
@@ -49,6 +50,7 @@ import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AssetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataLakeMeasureStorage;
 import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
@@ -248,4 +250,13 @@ public enum CouchDbStorageManager implements INoSqlStorage {
         Certificate.class
     );
   }
+
+  @Override
+  public CRUDStorage<SpAssetModel> getAssetStorage() {
+    return new AssetStorageImpl(
+        () -> Utils.getCouchDbGsonClient("genericstorage")
+    );
+  }
+
+
 }

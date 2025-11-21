@@ -19,53 +19,139 @@ import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
-import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
 import { User } from '../../support/model/User';
+import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 
 describe('Test User Roles for Connect', () => {
-    let connectAdminUser: User;
+    const adapterName = 'simulator';
+    let user1: User;
+    let user2: User;
+
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        connectAdminUser = UserUtils.createUser(
-            'user',
+        user1 = UserUtils.createUser(
+            'user1',
             UserRole.ROLE_CONNECT_ADMIN,
+            UserRole.ROLE_PIPELINE_ADMIN,
         );
-        ConnectUtils.addMachineDataSimulator('simulator');
+
+        user2 = UserUtils.createUser(
+            'user2',
+            UserRole.ROLE_CONNECT_ADMIN,
+            UserRole.ROLE_PIPELINE_ADMIN,
+        );
     });
 
-    it('Connect admin should not see adapters of other users', () => {
-        switchUserAndValidateConnectModuleIsShown();
+    it('Adapter is not shared with other users', () => {
+        // set up
+        UserUtils.switchUser(user1);
+        ConnectUtils.addMachineDataSimulator(adapterName);
 
-        // Validate that no adapter is visible
+        // check admin
+        UserUtils.switchUser(UserUtils.adminUser);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
+
+        // check other users
+        UserUtils.switchUser(user2);
         ConnectUtils.checkAmountOfAdapters(0);
     });
 
-    it('Connect admin should see public adapters of other users', () => {
-        // Set adapter to public
-        PermissionUtils.markElementAsPublic('simulator');
+    it('Make adapter public', () => {
+        // set up
+        UserUtils.switchUser(user1);
+        ConnectUtils.addMachineDataSimulator(adapterName);
+        PermissionUtils.markElementAsPublic(adapterName);
 
-        switchUserAndValidateConnectModuleIsShown();
+        // check admin
+        UserUtils.switchUser(UserUtils.adminUser);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
 
-        // Validate that adapter is visible
+        // check other users
+        UserUtils.switchUser(user2);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanNotChangePermissions(adapterName);
+    });
+
+    it('Share adapter with other user and change ownership', () => {
+        const user3 = UserUtils.createUser(
+            'user3',
+            UserRole.ROLE_CONNECT_ADMIN,
+            UserRole.ROLE_PIPELINE_ADMIN,
+        );
+
+        // set up
+        UserUtils.switchUser(user1);
+        ConnectUtils.addMachineDataSimulator(adapterName);
+        PermissionUtils.authorizeUser(adapterName, user2.email);
+
+        // check admin
+        UserUtils.switchUser(UserUtils.adminUser);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
+
+        // check authorized user
+        UserUtils.switchUser(user2);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanNotChangePermissions(adapterName);
+
+        UserUtils.switchUser(user3);
+        ConnectUtils.checkAmountOfAdapters(0);
+
+        // change ownership to user3
+        UserUtils.switchUser(user1);
+        ConnectUtils.goToConnect();
+        PermissionUtils.changeOwnership(adapterName, user3.email);
+        ConnectUtils.checkAmountOfAdapters(0);
+
+        UserUtils.switchUser(UserUtils.adminUser);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
+
+        // check authorized user
+        UserUtils.switchUser(user2);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanNotChangePermissions(adapterName);
+
+        // validate that user3 is owner now
+        UserUtils.switchUser(user3);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
+    });
+
+    it('Adapter is shared with group for user 2', () => {
+        // Add group with connect admin rights
+        UserUtils.createGroup(
+            'connect_admin_group',
+            UserRole.ROLE_CONNECT_ADMIN,
+        );
+        UserUtils.addGroupToUser('connect_admin_group', user2.name);
+
+        // set up
+        UserUtils.switchUser(user1);
+        ConnectUtils.addMachineDataSimulator(adapterName);
+
+        PermissionUtils.authorizeGroup(adapterName, 'connect_admin_group');
+
+        // check admin
+        UserUtils.switchUser(UserUtils.adminUser);
+        validateAdapterIsVisible();
+        PermissionUtils.validateUserCanChangePermissions(adapterName);
+
+        // check other users
+        UserUtils.switchUser(user2);
         ConnectUtils.checkAmountOfAdapters(1);
     });
 
-    it('Connect admin should see shared adapters of other users', () => {
-        // Share adapter with user
-        PermissionUtils.authorizeUser('simulator', connectAdminUser.email);
-
-        switchUserAndValidateConnectModuleIsShown();
-
-        // Validate that adapter is visible
+    function validateAdapterIsVisible() {
         ConnectUtils.checkAmountOfAdapters(1);
-    });
 
-    function switchUserAndValidateConnectModuleIsShown() {
-        UserUtils.switchUser(connectAdminUser);
+        ConnectUtils.validateEventsInPreview(adapterName, 7);
 
-        NavigationUtils.validateActiveModules([
-            NavigationUtils.CONNECT,
-            NavigationUtils.CONFIGURATION,
-        ]);
+        PipelineUtils.goToPipelineEditor();
+        PipelineUtils.checkDataStreamExists(adapterName);
+
+        ConnectUtils.goToConnect();
     }
 });

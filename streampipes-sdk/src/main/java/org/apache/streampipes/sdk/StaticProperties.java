@@ -33,6 +33,7 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticP
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
+import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
@@ -62,6 +63,20 @@ public class StaticProperties {
     alternativesContainer.setAlternatives(alternatives);
 
     return alternativesContainer;
+  }
+
+  public static SlideToggleStaticProperty toggleAlternative (Label label, boolean defaultValue){
+
+        SlideToggleStaticProperty slideToggle = new SlideToggleStaticProperty(
+        label.getInternalId(),
+        label.getLabel(),
+        label.getDescription(),
+        defaultValue);
+
+    slideToggle.setSelected(defaultValue);
+
+    return slideToggle;
+  
   }
 
   public static MappingPropertyUnary mappingPropertyUnary(Label label, RequirementsSelector requirementsSelector,

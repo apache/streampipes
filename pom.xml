@@ -1498,6 +1498,15 @@
                         <!-- Exclude GO -->
                         <exclude>**/go.sum</exclude>
 
+                       
+
+          <!-- Resource files for Integration Test-->
+          <exclude>streampipes-integration-tests/src/test/resources/mosquitto.crt</exclude>
+          <exclude>streampipes-integration-tests/src/test/resources/mosquitto copy.conf</exclude>
+          <exclude>streampipes-integration-tests/src/test/resources/mosquitto.key</exclude>
+          <exclude>streampipes-integration-tests/src/test/resources/passwd</exclude>
+
+
                     </excludes>
                 </configuration>
             </plugin>

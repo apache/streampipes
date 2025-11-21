@@ -19,29 +19,30 @@
 package org.apache.streampipes.model.assets;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
+import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
-public class SpAssetModel extends SpAsset {
+@TsModel
+public class SpAssetModel extends SpAsset implements Storable {
 
   public static final String APP_DOC_TYPE = GenericDocTypes.DOC_ASSET_MANGEMENT;
 
-  @JsonProperty("_id")
-  private @SerializedName("_id") String id;
+  private final String appDocType = APP_DOC_TYPE;
+
+  @JsonAlias("_id")
+  private @SerializedName("_id") String elementId;
+
+  @JsonAlias("_rev")
+  @SerializedName("_rev")
+  private String rev;
 
   private boolean removable;
 
   public SpAssetModel() {
     super();
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   public boolean isRemovable() {
@@ -50,5 +51,29 @@ public class SpAssetModel extends SpAsset {
 
   public void setRemovable(boolean removable) {
     this.removable = removable;
+  }
+
+  @Override
+  public String getRev() {
+    return rev;
+  }
+
+  @Override
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
+
+  @Override
+  public String getElementId() {
+    return elementId;
+  }
+
+  @Override
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
+
+  public String getAppDocType() {
+    return appDocType;
   }
 }

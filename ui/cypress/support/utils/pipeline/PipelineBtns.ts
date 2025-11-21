@@ -36,6 +36,10 @@ export class PipelineBtns {
         return cy.dataCy('pipelines-navigate-to-editor');
     }
 
+    public static spPipelineElementSelection() {
+        return cy.dataCy('sp-pipeline-element-selection', { timeout: 10000 });
+    }
+
     public static editorAddPipelineElement() {
         return cy.dataCy('sp-editor-add-pipeline-element', { timeout: 10000 });
     }

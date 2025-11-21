@@ -16,10 +16,11 @@
  *
  */
 
-import { Directive, OnInit } from '@angular/core';
+import { Directive, inject, OnInit } from '@angular/core';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import {
     AssetConstants,
+    AssetManagementService,
     AssetSiteDesc,
     GenericStorageService,
     SpAsset,
@@ -39,11 +40,10 @@ export abstract class BaseAssetDetailsDirective implements OnInit {
 
     assetModelId: string;
 
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        protected genericStorageService: GenericStorageService,
-        protected route: ActivatedRoute,
-    ) {}
+    private breadcrumbService = inject(SpBreadcrumbService);
+    protected route = inject(ActivatedRoute);
+    protected assetService = inject(AssetManagementService);
+    private genericStorageService = inject(GenericStorageService);
 
     ngOnInit(): void {
         this.assetModelId = this.route.snapshot.params.assetId;
@@ -51,10 +51,7 @@ export abstract class BaseAssetDetailsDirective implements OnInit {
     }
 
     loadResources(): void {
-        const assetReq = this.genericStorageService.getDocument(
-            AssetConstants.ASSET_APP_DOC_NAME,
-            this.assetModelId,
-        );
+        const assetReq = this.assetService.getAsset(this.assetModelId);
         const locationsReq = this.genericStorageService.getAllDocuments(
             AssetConstants.ASSET_SITES_APP_DOC_NAME,
         );

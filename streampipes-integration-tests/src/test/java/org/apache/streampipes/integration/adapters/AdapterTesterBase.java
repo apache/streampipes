@@ -38,6 +38,7 @@ public abstract class AdapterTesterBase implements AutoCloseable {
 
   private int counter;
 
+
   /**
    Executes the test procedure for the adapter integration test.
    This method performs the necessary actions to test the full integraion of adapters with third party services.
@@ -55,8 +56,7 @@ public abstract class AdapterTesterBase implements AutoCloseable {
   public void run() throws Exception {
     // prepare the third party docker service for the test (e.g. MQTT Broker)
     startAdapterService();
-
-    // generate the AdapterConfiguration for the test adapter
+    // generate the AdapterConfiguraton for the test adapter
     IAdapterConfiguration adapterConfiguration = prepareAdapter();
 
     // start the adapter instance
@@ -70,7 +70,7 @@ public abstract class AdapterTesterBase implements AutoCloseable {
 
     // send events to thrird party service
     publishEvents(expectedEvents);
-
+    
     // validate that events where send correctly
     validate(expectedEvents);
   }
@@ -91,8 +91,11 @@ public abstract class AdapterTesterBase implements AutoCloseable {
 
     adapter.onAdapterStarted(extractor, (event -> {
       // This collector validates that the events are sent correctly and within the right order
+
       assertTrue(Maps.difference(event, expectedEvents.get(counter)).areEqual());
       counter++;
+     
+     
     }), null);
     return adapter;
 
@@ -138,6 +141,8 @@ public abstract class AdapterTesterBase implements AutoCloseable {
    */
   public void validate(List<Map<String, Object>> expectedEvents) throws InterruptedException {
     int retry = 0;
+  
+
     while (counter != expectedEvents.size() && retry < 5) {
       Thread.sleep(1000);
       retry++;

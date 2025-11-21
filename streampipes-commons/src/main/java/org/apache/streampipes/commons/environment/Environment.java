@@ -187,7 +187,7 @@ public interface Environment {
   StringEnvironmentVariable getTruststoreType();
 
   BooleanEnvironmentVariable getAllowSelfSignedCertificates();
-
+  
   IntEnvironmentVariable getPlc4xMaxWaitTimeMs();
 
   IntEnvironmentVariable getPlc4xMaxLeaseTimeMs();

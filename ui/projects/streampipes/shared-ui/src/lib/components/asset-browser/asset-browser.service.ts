@@ -16,10 +16,11 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, zip } from 'rxjs';
 import {
     AssetConstants,
+    AssetManagementService,
     AssetSiteDesc,
     GenericStorageService,
     Isa95TypeDesc,
@@ -46,10 +47,11 @@ export class SpAssetBrowserService {
     loadedAssetData: AssetBrowserData;
     activeAssetLink = undefined;
 
-    constructor(
-        private genericStorageService: GenericStorageService,
-        private typeService: Isa95TypeService,
-    ) {
+    private genericStorageService = inject(GenericStorageService);
+    private typeService = inject(Isa95TypeService);
+    private assetService = inject(AssetManagementService);
+
+    constructor() {
         this.loadAssetData();
     }
 
@@ -61,9 +63,7 @@ export class SpAssetBrowserService {
     }
 
     loadAssetData(): void {
-        const assets$ = this.genericStorageService.getAllDocuments(
-            AssetConstants.ASSET_APP_DOC_NAME,
-        );
+        const assets$ = this.assetService.getAllAssets();
         const assetLinks$ = this.genericStorageService.getAllDocuments(
             AssetConstants.ASSET_LINK_TYPES_DOC_NAME,
         );

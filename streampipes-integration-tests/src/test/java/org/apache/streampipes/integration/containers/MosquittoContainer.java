@@ -20,22 +20,32 @@ package org.apache.streampipes.integration.containers;
 
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
 
 public class MosquittoContainer extends GenericContainer<MosquittoContainer> {
 
-  protected static final int MOSQUITTO_PORT = 1883;
+  protected static final Integer[] MOSQUITTO_PORTS = {1883, 8883};
 
   public MosquittoContainer() {
     super("eclipse-mosquitto:latest");
   }
 
   public void start() {
-    this.waitStrategy = Wait.forLogMessage(".*listen socket on port 1883.*", 1);
-    this.withExposedPorts(MOSQUITTO_PORT);
+    this.withExposedPorts(MOSQUITTO_PORTS);
     this.withClasspathResourceMapping(
         "mosquitto.conf",
         "/mosquitto/config/mosquitto.conf",
+        BindMode.READ_ONLY);
+    this.withClasspathResourceMapping(
+        "mosquitto.crt",
+        "/mosquitto/config/mosquitto.crt",
+        BindMode.READ_ONLY);
+      this.withClasspathResourceMapping(
+        "mosquitto.key",
+        "/mosquitto/config/mosquitto.key",
+       BindMode.READ_ONLY);
+        this.withClasspathResourceMapping(
+        "passwd",
+        "/mosquitto/config/passwd",
         BindMode.READ_ONLY);
     super.start();
   }
@@ -45,10 +55,17 @@ public class MosquittoContainer extends GenericContainer<MosquittoContainer> {
   }
 
   public Integer getBrokerPort() {
-    return getMappedPort(MOSQUITTO_PORT);
+    return getMappedPort(MOSQUITTO_PORTS[0]);
+  }
+  public Integer getBrokerTLSPort() {
+    return getMappedPort(MOSQUITTO_PORTS[1]);
   }
 
   public String getBrokerUrl() {
     return "tcp://" + getBrokerHost() + ":" + getBrokerPort();
+  }
+
+  public String getBrokerUrlTLS() {
+    return "ssl://" + getBrokerHost() + ":" + getBrokerTLSPort();
   }
 }
