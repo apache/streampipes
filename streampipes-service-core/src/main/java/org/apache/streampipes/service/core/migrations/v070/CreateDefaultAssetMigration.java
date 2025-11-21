@@ -26,14 +26,10 @@ import org.apache.streampipes.resource.management.CrudResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 public class CreateDefaultAssetMigration implements Migration {
-   private static final Logger LOG = LoggerFactory.getLogger(CreateDefaultAssetMigration.class);
 
   @Override
   public boolean shouldExecute() {
