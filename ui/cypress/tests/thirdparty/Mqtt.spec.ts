@@ -30,14 +30,13 @@ describe('Test MQTT Integration', () => {
     it('Perform Test', () => {
         const topicName = 'cypresstopic';
         const host: string = ParameterUtils.get('localhost', 'mosquitto');
-        const port: string = ParameterUtils.get('1884', '1883');
+        const port: string = ParameterUtils.get('1883', '1883');
 
         const sink: PipelineElementInput = PipelineElementBuilder.create(
             'mqtt_publisher',
         )
-            .addInput('input', 'host', host)
+            .addInput('input', 'broker_url', 'tcp://' + host + ':' + port)
             .addInput('input', 'topic', topicName)
-            .addInput('input', 'port', port)
             .build();
 
         const adapter = AdapterBuilder.create('MQTT')

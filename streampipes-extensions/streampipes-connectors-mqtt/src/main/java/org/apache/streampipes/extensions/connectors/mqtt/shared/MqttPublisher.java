@@ -61,7 +61,7 @@ public class MqttPublisher extends MqttBase {
       this.conn.connect();
     } catch (Exception e) {
       throw new SpRuntimeException("Could not connect to MQTT broker: "
-          + uri.toString() + ", " + e.getMessage(), e);
+          + mqtt.getHost() + ", " + e.getMessage(), e);
     }
   }
 
