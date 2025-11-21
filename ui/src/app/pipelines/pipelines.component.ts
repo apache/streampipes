@@ -80,8 +80,7 @@ export class PipelinesComponent implements OnInit, OnDestroy {
         this.assetFilterService.applyAssetLinkType('pipeline');
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
-                this.currentFilters =
-                    filter?.activeElementIds || new Set<string>();
+                this.currentFilters = filter?.activeElementIds;
                 this.applyPipelineFilters(this.currentFilters);
             });
         this.breadcrumbService.updateBreadcrumb(
@@ -124,7 +123,9 @@ export class PipelinesComponent implements OnInit, OnDestroy {
 
     applyPipelineFilters(elementIds: Set<string>) {
         this.currentFilters = elementIds;
-        if (elementIds.size == 0) {
+        if (elementIds === undefined) {
+            this.filteredPipelines = [];
+        } else if (elementIds.size === 0) {
             this.filteredPipelines = this.pipelines;
         } else {
             this.filteredPipelines = this.pipelines.filter(p =>
