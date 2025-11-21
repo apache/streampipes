@@ -172,10 +172,16 @@ export class SpAssetBrowserService {
     }
 
     applyAssetFilter(filteredAssets: SpAsset[]) {
-        const elementIds = new Set<string>();
-        filteredAssets.forEach(asset => {
-            this.collectElementIds(asset, this.activeAssetLink, elementIds);
-        });
+        let elementIds: Set<string> | undefined = undefined;
+
+        if (filteredAssets.length === 0) {
+            elementIds = undefined;
+        } else {
+            elementIds = new Set<string>();
+            filteredAssets.forEach(asset => {
+                this.collectElementIds(asset, this.activeAssetLink, elementIds);
+            });
+        }
         const currentFilter = {
             filterActive: true,
             activeElementIds: elementIds,
@@ -259,6 +265,8 @@ export class SpAssetBrowserService {
             asset.assets.forEach((a: SpAsset) => {
                 this.collectElementIds(a, filteredLinkType, elementIds);
             });
+        } else {
+            elementIds = new Set<string>();
         }
     }
 

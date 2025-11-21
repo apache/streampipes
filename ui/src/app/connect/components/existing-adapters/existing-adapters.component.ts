@@ -104,8 +104,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.assetFilterService.applyAssetLinkType('adapter');
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
-                this.currentFilterIds =
-                    filter?.activeElementIds || new Set<string>();
+                this.currentFilterIds = filter?.activeElementIds;
                 this.applyAdapterFilters(this.currentFilterIds);
             });
         this.breadcrumbService.updateBreadcrumb(
@@ -296,7 +295,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.filteredAdapters = this.adapterFilter
             .transform(this.existingAdapters, this.currentFilter)
             .filter(a => {
-                if (elementIds.size === 0) {
+                if (elementIds === undefined) {
+                    return false;
+                } else if (elementIds.size === 0) {
                     return true;
                 } else {
                     return elementIds.has(a.elementId);
