@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
     AssetManagementService,
@@ -37,6 +37,7 @@ import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-a
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-asset-overview',
@@ -46,6 +47,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class SpAssetOverviewComponent implements OnInit {
     existingAssets: SpAssetModel[] = [];
+    filteredAssets: SpAssetModel[] = [];
 
     displayedColumns: string[] = ['name', 'actions'];
 
@@ -53,6 +55,11 @@ export class SpAssetOverviewComponent implements OnInit {
         new MatTableDataSource<SpAssetModel>();
 
     hasWritePrivilege = false;
+
+    assetFilter$: Subscription;
+    currentFilterIds = new Set<string>();
+
+    private assetFilterService = inject(SpAssetBrowserService);
 
     constructor(
         private assetService: AssetManagementService,
@@ -72,6 +79,28 @@ export class SpAssetOverviewComponent implements OnInit {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpAssetRoutes.BASE),
         );
+        this.assetFilter$ =
+            this.assetFilterService.currentAssetFilter$.subscribe(filter => {
+                const elementIdsSet = new Set<string>();
+
+                if (
+                    filter?.selectedAssets &&
+                    Array.isArray(filter.selectedAssets)
+                ) {
+                    filter.selectedAssets.forEach(asset => {
+                        if ((asset as SpAssetModel)?.elementId) {
+                            elementIdsSet.add(
+                                (asset as SpAssetModel)?.elementId,
+                            );
+                        }
+                    });
+                }
+
+                this.currentFilterIds =
+                    elementIdsSet.size > 0 ? elementIdsSet : undefined;
+
+                this.applyAssetFilters(this.currentFilterIds);
+            });
         this.loadAssets();
     }
 
@@ -80,6 +109,19 @@ export class SpAssetOverviewComponent implements OnInit {
             this.existingAssets = result as SpAssetModel[];
             this.dataSource.data = this.existingAssets;
         });
+    }
+
+    applyAssetFilters(elementIds: Set<string>): void {
+        if (elementIds == undefined) {
+            this.filteredAssets = [];
+        } else if (elementIds.size == 0) {
+            this.filteredAssets = this.existingAssets;
+        } else {
+            this.filteredAssets = this.existingAssets.filter(a =>
+                elementIds.has(a.elementId),
+            );
+        }
+        this.dataSource.data = this.filteredAssets;
     }
 
     createNewAsset() {
