@@ -18,12 +18,8 @@
 org.apache.streampipes.sinks.brokers.jvm.mqtt.title=MQTT Publisher
 org.apache.streampipes.sinks.brokers.jvm.mqtt.description=Publishes events to a MQTT topic
 
-host.title=Host
-host.description=IP address or DNS of MQTT broker
-
-port.title=Port
-port.description=Port of MQTT broker (default 1883)
-
+broker_url.title=Broker URL
+broker_url.description=Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)"
 topic.title=Topic
 topic.description=Enter MQTT topic
 
@@ -33,16 +29,31 @@ username.description=The username to authenticate with the broker
 password.title=Password
 password.description=The password to authenticate with the broker
 
-auth-mode.title=Authentication
-auth-mode.description=Unauthenticated or basic auth
+clientcert.title=Certificate PEM
+clientcert.description = Public key in PEM format
 
-no-auth-alternative.title=Unauthenticated
-no-auth-alternative.description=No authentication
+clientkey.title=Private Key PEM
+clientkey.description=Private key in PEM format
 
-basic-auth-alternative.title=Basic auth
-basic-auth-alternative.description=Username and password
+access-mode.title=User Authentication
+access-mode.description=Choose an authentication method for the user
+
+
+anonymous-alternative.title=Unauthenticated
+anonymous-alternative.description=
+
+username-alternative.title=Username/Password
+username-alternative.description=
+
+username-group.title=User Group
+username-group.description=
+
+client-cert-alternative.title=Client Certificate
+client-cert-alternative.description=
 
 username-group.title=Username and password
+
+cert-group.title=Client Certificate
 
 qos-level.title=QoS
 qos-level.description=Quality of Service level (default: at-least-once)
@@ -52,9 +63,6 @@ clean-session.description=Deselect to persist topic subscriptions & ack position
 
 will-retain.title=Retain will message?
 will-retain.description=Select if you want the Will to be published with the retain option (default: No)
-
-encryption-mode.title=Encryption
-encryption-mode.description=Select protocol. TCP (plaintext), SSL/TLS (encrypted, not yet supported!)
 
 reconnect-period.title=Reconnect period (seconds)
 reconnect-period.description=Amount of time to wait between reconnect attempts (default: 30s)

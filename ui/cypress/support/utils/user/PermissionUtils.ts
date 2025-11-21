@@ -25,6 +25,13 @@ export class PermissionUtils {
         cy.dataCy('open-manage-permissions').click();
     }
 
+    public static changeOwnership(resourceName: string, email: string) {
+        PermissionUtils.openManagePermissions(resourceName);
+        cy.dataCy('owner-select').click();
+        cy.get(`[data-cy="owner-option-${email}"]`, { timeout: 10000 }).click();
+        PermissionUtils.save();
+    }
+
     public static markElementAsPublic(resourceName: string) {
         PermissionUtils.openManagePermissions(resourceName);
         StaticPropertyUtils.clickCheckbox('permission-public-element');
@@ -40,7 +47,31 @@ export class PermissionUtils {
         PermissionUtils.save();
     }
 
+    public static authorizeGroup(resourceName: string, groupName: string) {
+        PermissionUtils.openManagePermissions(resourceName);
+        cy.dataCy('authorized-group').type(groupName);
+        cy.get(`[data-cy="group-option-${groupName}"]`).click();
+
+        PermissionUtils.save();
+    }
+
     public static save() {
         cy.dataCy('sp-manage-permissions-save').click();
+    }
+
+    public static cancel() {
+        cy.dataCy('sp-manage-permissions-cancel').click();
+    }
+
+    public static validateUserCanNotChangePermissions(resourceName: string) {
+        PermissionUtils.openManagePermissions(resourceName);
+        cy.dataCy('warning-permissions-managed-by-owner').should('exist');
+        PermissionUtils.cancel();
+    }
+
+    public static validateUserCanChangePermissions(resourceName: string) {
+        PermissionUtils.openManagePermissions(resourceName);
+        cy.dataCy('permission-public-element').should('exist');
+        PermissionUtils.cancel();
     }
 }

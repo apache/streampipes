@@ -27,7 +27,7 @@ import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorer
 import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
-describe('Test User Roles for Pipelines', () => {
+describe('Test that resources can be added to assets on creation', () => {
     let newUser;
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();

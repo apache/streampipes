@@ -22,87 +22,155 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
-import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
+import { User } from '../../support/model/User';
 
 describe('Test User Roles for Pipelines', () => {
+    const pipelineName = 'Persist simulator';
+    let pipelineUser1: User;
+    let pipelineAdmin1: User;
+    let pipelineAdmin2: User;
+
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        // Create a machine data simulator with a sample pipeline for the tests
-        ConnectUtils.addMachineDataSimulator('simulator', true);
-    });
 
-    it('Pipeline admin should not see pipelines of other users', () => {
-        const newUser = UserUtils.createUser(
-            'user',
-            UserRole.ROLE_PIPELINE_ADMIN,
-        );
-
-        // Login as user and check if pipeline is visible to user
-        UserUtils.switchUser(newUser);
-
-        NavigationUtils.validateActiveModules([
-            NavigationUtils.PIPELINES,
-            NavigationUtils.CONFIGURATION,
-        ]);
-
-        PipelineUtils.goToPipelines();
-        PipelineUtils.checkAmountOfPipelinesPipeline(0);
-    });
-
-    it('Pipeline admin should see public pipelines of other users', () => {
-        const newUser = UserUtils.createUser(
-            'user',
-            UserRole.ROLE_PIPELINE_ADMIN,
-        );
-
-        // Add new authorized user to pipeline
-        PipelineUtils.goToPipelines();
-        PermissionUtils.markElementAsPublic('Persist simulator');
-
-        // Login as user and check if pipeline is visible to user
-        UserUtils.switchUser(newUser);
-
-        PipelineUtils.goToPipelines();
-        PipelineUtils.checkAmountOfPipelinesPipeline(1);
-    });
-
-    it(' Pipeline admin should see shared pipelines of other users', () => {
-        const newUser = UserUtils.createUser(
-            'user',
-            UserRole.ROLE_PIPELINE_ADMIN,
-        );
-
-        // Add new authorized user to pipeline
-        PipelineUtils.goToPipelines();
-        PermissionUtils.markElementAsPublic('Persist simulator');
-        PermissionUtils.authorizeUser('Persist simulator', newUser.email);
-
-        // Login as user and check if pipeline is visible to user
-        UserUtils.switchUser(newUser);
-
-        PipelineUtils.goToPipelines();
-        PipelineUtils.checkAmountOfPipelinesPipeline(1);
-    });
-
-    it(' Pipeline user should see shared pipelines of other users but not be able to edit them', () => {
-        const newUser = UserUtils.createUser(
-            'user',
+        pipelineUser1 = UserUtils.createUser(
+            'pipelineUser1',
             UserRole.ROLE_PIPELINE_USER,
         );
 
-        // Add new authorized user to pipeline
+        pipelineAdmin1 = UserUtils.createUser(
+            'pipelineAdmin1',
+            UserRole.ROLE_CONNECT_ADMIN,
+            UserRole.ROLE_PIPELINE_ADMIN,
+        );
+
+        pipelineAdmin2 = UserUtils.createUser(
+            'pipelineAdmin2',
+            UserRole.ROLE_PIPELINE_ADMIN,
+        );
+    });
+
+    it('Pipeline is not shared with other users', () => {
+        UserUtils.switchUser(pipelineAdmin1);
+        ConnectUtils.addMachineDataSimulator('simulator', true);
+
+        assertPipelineIsVisibleAndEditableCanChangePermissions(
+            UserUtils.adminUser,
+        );
+
+        assertPipelineIsNotVisible(pipelineUser1);
+
+        UserUtils.switchUser(pipelineUser1);
+
+        assertPipelineIsNotVisible(pipelineAdmin2);
+    });
+
+    it('Make pipeline public', () => {
+        UserUtils.switchUser(pipelineAdmin1);
+        ConnectUtils.addMachineDataSimulator('simulator', true);
+
         PipelineUtils.goToPipelines();
-        // PermissionUtils.markElementAsPublic();
-        PermissionUtils.authorizeUser('Persist simulator', newUser.email);
+        PermissionUtils.markElementAsPublic(pipelineName);
 
-        // Login as user and check if pipeline is visible to user
-        UserUtils.switchUser(newUser);
+        assertPipelineIsVisibleAndEditableCanChangePermissions(
+            UserUtils.adminUser,
+        );
 
+        assertPipelineIsVisibleButNotEditable(pipelineUser1);
+
+        assertPipelineIsVisibleAndEditableCannotChangePermissions(
+            pipelineAdmin2,
+        );
+    });
+
+    it('Share pipeline with other user and change ownership', () => {
+        UserUtils.switchUser(pipelineAdmin1);
+        ConnectUtils.addMachineDataSimulator('simulator', true);
+
+        PipelineUtils.goToPipelines();
+        PermissionUtils.authorizeUser(pipelineName, pipelineAdmin2.email);
+
+        assertPipelineIsVisibleAndEditableCanChangePermissions(
+            UserUtils.adminUser,
+        );
+
+        assertPipelineIsVisibleAndEditableCannotChangePermissions(
+            pipelineAdmin2,
+        );
+
+        assertPipelineIsNotVisible(pipelineUser1);
+
+        UserUtils.switchUser(pipelineAdmin1);
+        PipelineUtils.goToPipelines();
+        PermissionUtils.changeOwnership(pipelineName, pipelineAdmin2.email);
+
+        assertPipelineIsNotVisible(pipelineAdmin1);
+
+        assertPipelineIsVisibleAndEditableCanChangePermissions(
+            UserUtils.adminUser,
+        );
+
+        assertPipelineIsVisibleAndEditableCanChangePermissions(pipelineAdmin2);
+
+        assertPipelineIsNotVisible(pipelineUser1);
+    });
+
+    it('Pipeline is shared with group for user 2', () => {
+        UserUtils.createGroup(
+            'pipeline_admin_group',
+            UserRole.ROLE_PIPELINE_ADMIN,
+        );
+        UserUtils.addGroupToUser('pipeline_admin_group', pipelineAdmin2.name);
+
+        // set up
+        UserUtils.switchUser(pipelineAdmin1);
+        ConnectUtils.addMachineDataSimulator('simulator', true);
+
+        PipelineUtils.goToPipelines();
+        PermissionUtils.authorizeGroup(pipelineName, 'pipeline_admin_group');
+
+        assertPipelineIsVisibleAndEditableCanChangePermissions(
+            UserUtils.adminUser,
+        );
+
+        assertPipelineIsNotVisible(pipelineUser1);
+
+        assertPipelineIsVisibleAndEditableCannotChangePermissions(
+            pipelineAdmin2,
+        );
+    });
+
+    function assertPipelineIsVisibleAndEditableCanChangePermissions(
+        user: User,
+    ) {
+        UserUtils.switchUser(user);
         PipelineUtils.goToPipelines();
         PipelineUtils.checkAmountOfPipelinesPipeline(1);
+        PipelineBtns.stopPipeline().should('not.be.disabled');
+        PermissionUtils.validateUserCanChangePermissions(pipelineName);
+    }
 
-        // A pipeline user should not be able to stop the pipeline or delete it
-        PipelineBtns.deletePipeline().should('not.exist');
+    function assertPipelineIsVisibleAndEditableCannotChangePermissions(
+        user: User,
+    ) {
+        UserUtils.switchUser(user);
+        PipelineUtils.goToPipelines();
+        PipelineUtils.checkAmountOfPipelinesPipeline(1);
+        PipelineBtns.stopPipeline().should('not.be.disabled');
+        PermissionUtils.validateUserCanNotChangePermissions(pipelineName);
+    }
+
+    function assertPipelineIsVisibleButNotEditable(user: User) {
+        UserUtils.switchUser(user);
+        PipelineUtils.goToPipelines();
+        PipelineUtils.checkAmountOfPipelinesPipeline(1);
         PipelineBtns.stopPipeline().should('be.disabled');
-    });
+        PermissionUtils.validateUserCanNotChangePermissions(pipelineName);
+    }
+
+    function assertPipelineIsNotVisible(user: User) {
+        UserUtils.switchUser(user);
+        PipelineUtils.goToPipelines();
+        PipelineUtils.checkAmountOfPipelinesPipeline(0);
+    }
 });

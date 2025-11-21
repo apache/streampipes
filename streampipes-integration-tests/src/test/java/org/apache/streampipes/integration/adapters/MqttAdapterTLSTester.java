@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MqttAdapterTester extends AdapterTesterBase {
+public class MqttAdapterTLSTester extends AdapterTesterBase {
 
   MosquittoContainer mosquittoContainer;
 
@@ -62,7 +62,8 @@ public class MqttAdapterTester extends AdapterTesterBase {
 
     List<Map<String, Object>> configs = new ArrayList<>();
     configs.add(Map.of(MqttConnectUtils.TOPIC, TOPIC));
-    configs.add(Map.of(MqttConnectUtils.BROKER_URL, mosquittoContainer.getBrokerUrl()));
+    configs.add(Map.of(MqttConnectUtils.BROKER_URL, mosquittoContainer.getBrokerUrlTLS()));
+
 
     var template = new PipelineElementTemplate("name", "description", configs);
 
@@ -84,7 +85,7 @@ public class MqttAdapterTester extends AdapterTesterBase {
     // Set format to Json
     ((StaticPropertyAlternatives) (desc)
         .getConfig()
-        .get(3))
+        .get(3)) 
         .getAlternatives()
         .get(0)
         .setSelected(true);
@@ -101,6 +102,7 @@ public class MqttAdapterTester extends AdapterTesterBase {
   public List<Map<String, Object>> getTestEvents() {
     return Utils.getSimpleTestEvents();
   }
+
 
   @Override
   public void publishEvents(List<Map<String, Object>> events) { 
