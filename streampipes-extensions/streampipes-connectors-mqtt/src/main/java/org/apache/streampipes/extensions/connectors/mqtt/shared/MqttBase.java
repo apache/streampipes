@@ -48,15 +48,14 @@ public class MqttBase {
     }
 
     protected Mqtt3AsyncClient setupMqttClient() throws Exception {
-         URI brokerUri = new URI(mqttConfig.getUrl());
+        URI brokerUri = new URI(mqttConfig.getUrl());
         boolean tls = tlsEnabled(brokerUri);
-
 
         var builder = MqttClient.builder()
                 .identifier(UUID.randomUUID().toString())
                 .serverHost(brokerUri.getHost())
                 .serverPort(resolvePort(brokerUri))
-                .useMqttVersion3(); 
+                .useMqttVersion3();
 
         if (mqttConfig.getAuthenticated()) {
             builder.simpleAuth()
@@ -75,22 +74,21 @@ public class MqttBase {
         return client;
     }
 
-
     private int resolvePort(URI uri) {
         return uri.getPort();
-        
+
     }
 
-
-private static boolean tlsEnabled(URI brokerUri) {
-    String protocol = brokerUri.getScheme();
-    if (protocol == null) {
-      return false;
+    private static boolean tlsEnabled(URI brokerUri) {
+        String protocol = brokerUri.getScheme();
+        if (protocol == null) {
+            return false;
+        }
+        String proto = protocol.toLowerCase();
+        return proto.equals("ssl") || proto.equals("tls") || proto.equals("mqtts");
     }
-    String proto = protocol.toLowerCase();
-    return proto.equals("ssl") || proto.equals("tls") || proto.equals("mqtts");
-  }
-private  MqttClientSslConfig configureTls() throws Exception {
+
+    private MqttClientSslConfig configureTls() throws Exception {
 
         KeyStore keyStore = null;
 
@@ -98,9 +96,10 @@ private  MqttClientSslConfig configureTls() throws Exception {
         boolean acceptAllCerts = env.getAllowSelfSignedCertificates().getValueOrDefault();
 
         if (acceptAllCerts) {
-        
-            var sslContext = MqttClientSslConfig.builder().keyManagerFactory(null).trustManagerFactory(SecurityUtils.createAcceptAllFactory())
-                .build();
+
+            var sslContext = MqttClientSslConfig.builder().keyManagerFactory(null)
+                    .trustManagerFactory(SecurityUtils.createAcceptAllFactory())
+                    .build();
             return sslContext;
         }
 
@@ -114,17 +113,19 @@ private  MqttClientSslConfig configureTls() throws Exception {
                     mqttConfig.getClientKeyPath());
         }
 
-         var sslContext = MqttClientSslConfig.builder().keyManagerFactory(keyManagers).trustManagerFactory(trustManagerFactory)
+        var sslContext = MqttClientSslConfig.builder().keyManagerFactory(keyManagers)
+                .trustManagerFactory(trustManagerFactory)
                 .build();
-       return sslContext;
+        return sslContext;
     }
 
-    private KeyStore loadKeyStore() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
+    private KeyStore loadKeyStore()
+            throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
         try {
             return SecurityUtils.loadServerKeyStore();
         } catch (IOException | NoSuchAlgorithmException | CertificateException | KeyStoreException e) {
             LOG.error("Error loading keystore from file: {}", e);
-            throw e;  
+            throw e;
         }
     }
 }
