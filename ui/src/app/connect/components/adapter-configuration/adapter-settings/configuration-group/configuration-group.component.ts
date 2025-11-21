@@ -22,8 +22,8 @@ import {
     ExtensionDeploymentConfiguration,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
-import { ConfigurationInfo } from '../../model/ConfigurationInfo';
-import { StaticPropertyUtilService } from '../../../core-ui/static-properties/static-property-util.service';
+import { ConfigurationInfo } from '../../../../model/ConfigurationInfo';
+import { StaticPropertyUtilService } from '../../../../../core-ui/static-properties/static-property-util.service';
 
 @Component({
     selector: 'sp-configuration-group',

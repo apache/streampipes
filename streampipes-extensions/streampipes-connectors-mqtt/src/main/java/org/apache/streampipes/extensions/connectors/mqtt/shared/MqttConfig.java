@@ -33,17 +33,17 @@ public class MqttConfig {
   private String clientKey = null;
   private Boolean tls = false;
 
-  private boolean isLastWill = false; // Default: no last will
-  private MqttQos willQoS = MqttQos.AT_MOST_ONCE; // Default: QoS 0 (At most once)
-  private Boolean willRetain = false; // Default: do not retain the last will message
-  private String willTopic = ""; // Default: empty topic
-  private String willMessage = ""; // Default: empty message
-  private String mqttProtocolVersion = "3.1"; // Default: MQTT 3.1 protocol
-  private MqttQos qos = MqttQos.AT_MOST_ONCE; // Default: QoS 0 (At most once)
-  private long reconnectDelayMaxInMs = 10000L; // Default: max reconnect delay of 10 seconds (in milliseconds)
-  private boolean cleanSession = true; // Default: clean session
-  private boolean retain = false; // Default: do not retain the message
-  private short keepAliveInSec = 60; // Default: keep alive interval of 60 seconds
+  private boolean isLastWill = false; 
+  private MqttQos willQoS = MqttQos.AT_MOST_ONCE; 
+  private Boolean willRetain = false; 
+  private String willTopic = ""; 
+  private String willMessage = ""; 
+  private String mqttProtocolVersion = "3.1"; 
+  private MqttQos qos = MqttQos.AT_MOST_ONCE; 
+  private long reconnectDelayMaxInMs = 10000L; 
+  private boolean cleanSession = true; 
+  private boolean retain = false;
+  private short keepAliveInSec = 60; 
   private String clientId = "";
 
   public MqttConfig(String url, String topic) {

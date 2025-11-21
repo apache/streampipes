@@ -21,9 +21,8 @@
     [subtitle]="'Configure application links' | translate"
     [formGroup]="parentForm"
 >
-    <div class="subsection-title">{{ 'Documentation Link' | translate }}</div>
-    <mat-form-field color="accent">
-        <mat-label>{{ 'Documentation URL' | translate }}</mat-label>
+    <mat-form-field color="accent" class="mt-10">
+        <mat-label>{{ 'Documentation Link' | translate }}</mat-label>
         <input formControlName="documentationUrl" fxFlex matInput />
     </mat-form-field>
     <mat-checkbox formControlName="showDocumentationLinkOnStartScreen"
@@ -33,16 +32,12 @@
         >{{ 'Show documentation link in user menu' | translate }}
     </mat-checkbox>
 
-    <div class="subsection-title mt-10">
-        {{ 'API Documentation Link' | translate }}
-    </div>
     <mat-checkbox formControlName="showApiDocumentationLinkOnStartScreen"
         >{{ 'Show API documentation link on login page' | translate }}
     </mat-checkbox>
 
-    <div class="subsection-title mt-10">{{ 'Support Link' | translate }}</div>
-    <mat-form-field color="accent">
-        <mat-label>{{ 'Support URL' | translate }}</mat-label>
+    <mat-form-field color="accent" class="mt-10">
+        <mat-label>{{ 'Support Link' | translate }}</mat-label>
         <input formControlName="supportUrl" fxFlex matInput />
     </mat-form-field>
     <mat-checkbox formControlName="showSupportUrlOnStartScreen"

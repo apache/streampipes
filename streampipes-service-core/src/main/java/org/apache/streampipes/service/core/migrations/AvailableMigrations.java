@@ -31,6 +31,9 @@ import org.apache.streampipes.service.core.migrations.v0980.AddDefaultExportProv
 import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissionsMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinksMigration;
+import org.apache.streampipes.service.core.migrations.v099.AddAssetManagementViewMigration;
+import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
+import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddDataLakePipelineTemplateMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddLinkSettingsMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddRolesToUserDbMigration;
@@ -62,7 +65,10 @@ public class AvailableMigrations {
         new ModifyAssetLinkTypesMigration(),
         new AddDataLakeMeasureViewMigration(),
         new AddDefaultExportProviderMigration(),
-        new FixImportedPermissionsMigration()
+        new FixImportedPermissionsMigration(),
+        new AddAssetManagementViewMigration(),
+        new MoveAssetContentMigration(),
+        new CreateAssetPermissionMigration()
     );
   }
 }

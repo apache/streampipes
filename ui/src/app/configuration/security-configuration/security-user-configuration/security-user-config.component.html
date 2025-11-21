@@ -17,12 +17,6 @@
   -->
 
 <div fxLayout="column">
-    <div>
-        <button mat-flat-button data-cy="add-new-user" (click)="createUser()">
-            <i class="material-icons">add</i
-            ><span>&nbsp;{{ 'New User' | translate }}</span>
-        </button>
-    </div>
     <div fxFlex="100" fxLayout="column">
         <sp-table
             *ngIf="dataSource"
@@ -95,9 +89,7 @@
             </ng-container>
 
             <ng-container matColumnDef="edit">
-                <th mat-header-cell *matHeaderCellDef class="text-right">
-                    {{ 'Actions' | translate }}
-                </th>
+                <th mat-header-cell *matHeaderCellDef class="text-right"></th>
                 <td mat-cell *matCellDef="let account">
                     <div fxLayout="row">
                         <span
@@ -112,7 +104,9 @@
                                     class="mat-basic"
                                     [matTooltip]="'Edit user' | translate"
                                     matTooltipPosition="above"
-                                    [attr.data-cy]="'user-edit-btn'"
+                                    [attr.data-cy]="
+                                        'user-edit-' + account.fullName
+                                    "
                                     (click)="editUser(account)"
                                 >
                                     <i class="material-icons">edit</i>

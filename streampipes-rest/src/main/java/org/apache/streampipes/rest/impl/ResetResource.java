@@ -43,6 +43,8 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<SuccessMessage> reset() {
     ResetManagement.reset(getAuthenticatedUsername());
     var userStorage = getUserStorage();
+
+
     // Delete all users other than current user (admin) and their resources
     var allUsers = new ArrayList<Principal>(userStorage.getAllUsers());
     for (var user : allUsers) {
@@ -52,6 +54,13 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
         userStorage.deleteUser(user.getPrincipalId());
       }
     }
+
+    // Delete all user Groups
+    var allUserGroups = getNoSqlStorage().getUserGroupStorage().findAll();
+    for (var group : allUserGroups) {
+      getNoSqlStorage().getUserGroupStorage().deleteElementById(group.getElementId());
+    }
+
     var message = Notifications.success("Reset of system successfully performed");
     return ok(message);
   }

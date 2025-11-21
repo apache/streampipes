@@ -28,12 +28,12 @@ import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.
 import { SpConnectRoutes } from '../../connect.routes';
 
 @Component({
-    selector: 'sp-data-marketplace',
-    templateUrl: './data-marketplace.component.html',
-    styleUrls: ['./data-marketplace.component.scss'],
+    selector: 'sp-adapter-catalog',
+    templateUrl: './adapter-catalog.component.html',
+    styleUrls: ['./adapter-catalog.component.scss'],
     standalone: false,
 })
-export class DataMarketplaceComponent implements OnInit {
+export class AdapterCatalogComponent implements OnInit {
     adapterDescriptions: AdapterDescription[];
 
     adaptersLoading = true;

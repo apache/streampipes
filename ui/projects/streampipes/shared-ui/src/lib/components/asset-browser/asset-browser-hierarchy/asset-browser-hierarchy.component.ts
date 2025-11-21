@@ -19,12 +19,12 @@
 import {
     Component,
     EventEmitter,
+    inject,
     Input,
     OnChanges,
     Output,
     SimpleChanges,
     ViewChild,
-    inject,
 } from '@angular/core';
 import { AssetBrowserData } from '../asset-browser.model';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -107,6 +107,9 @@ export class AssetBrowserHierarchyComponent implements OnChanges {
             assetLinks: [],
             assets: this.makeAssets(),
             assetType: undefined,
+            assetSite: undefined,
+            additionalData: {},
+            labelIds: [],
         };
     }
 

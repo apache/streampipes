@@ -16,12 +16,22 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { PipelineElementTemplateService } from '@streampipes/platform-services';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
+import {
+    AdapterDescription,
+    PipelineElementTemplate,
+    PipelineElementTemplateService,
+} from '@streampipes/platform-services';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { DialogService } from '@streampipes/shared-ui';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
-import { AdapterTemplateConfigurationDirective } from '../directives/adapter-template-configuration.directive';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
     selector: 'sp-adapter-settings',
@@ -29,30 +39,45 @@ import { AdapterTemplateConfigurationDirective } from '../directives/adapter-tem
     styleUrls: ['./adapter-settings.component.scss'],
     standalone: false,
 })
-export class AdapterSettingsComponent
-    extends AdapterTemplateConfigurationDirective
-    implements OnInit
-{
+export class AdapterSettingsComponent implements OnInit {
+    private _formBuilder = inject(UntypedFormBuilder);
+    private pipelineElementTemplateService = inject(
+        PipelineElementTemplateService,
+    );
+    private adapterTemplateService = inject(AdapterTemplateService);
+
+    /**
+     * Adapter description the selected format is added to
+     */
+    @Input()
+    adapterDescription: AdapterDescription;
+
+    @Output()
+    updateAdapterDescriptionEmitter: EventEmitter<AdapterDescription> =
+        new EventEmitter<AdapterDescription>();
+
+    /**
+     * Cancels the adapter configuration process
+     */
+    @Output() removeSelectionEmitter: EventEmitter<boolean> =
+        new EventEmitter();
+
+    /**
+     * Go to next configuration step when this is complete
+     */
+    @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+
+    cachedAdapterDescription: AdapterDescription;
+    availableTemplates: PipelineElementTemplate[];
+
+    selectedTemplate: any = false;
+
     specificAdapterSettingsFormValid: boolean;
 
     specificAdapterForm: UntypedFormGroup;
 
-    constructor(
-        _formBuilder: UntypedFormBuilder,
-        dialogService: DialogService,
-        pipelineElementTemplateService: PipelineElementTemplateService,
-        adapterTemplateService: AdapterTemplateService,
-    ) {
-        super(
-            _formBuilder,
-            dialogService,
-            pipelineElementTemplateService,
-            adapterTemplateService,
-        );
-    }
-
     ngOnInit(): void {
-        super.onInit();
+        this.loadPipelineElementTemplates();
         this.cachedAdapterDescription = { ...this.adapterDescription };
         // initialize form for validation
         this.specificAdapterForm = this._formBuilder.group({});
@@ -76,6 +101,39 @@ export class AdapterSettingsComponent
         dialogRef.afterClosed().subscribe(_ => {
             this.loadPipelineElementTemplates();
         });
+    }
+
+    loadPipelineElementTemplates() {
+        this.pipelineElementTemplateService
+            .getPipelineElementTemplates(this.adapterDescription.appId)
+            .subscribe(templates => {
+                this.availableTemplates = templates;
+            });
+    }
+
+    public removeSelection() {
+        this.removeSelectionEmitter.emit();
+    }
+
+    public clickNext() {
+        this.clickNextEmitter.emit();
+    }
+
+    loadTemplate(event: any) {
+        if (!event.value) {
+            this.adapterDescription = { ...this.cachedAdapterDescription };
+            this.selectedTemplate = false;
+        } else {
+            this.selectedTemplate = event.value;
+            this.pipelineElementTemplateService
+                .getConfiguredAdapterForTemplate(
+                    event.value.elementId,
+                    this.adapterDescription,
+                )
+                .subscribe(adapterDescription => {
+                    this.afterTemplateReceived(adapterDescription);
+                });
+        }
     }
 
     afterTemplateReceived(adapterDescription: any) {

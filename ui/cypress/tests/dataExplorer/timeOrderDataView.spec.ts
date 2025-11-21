@@ -17,7 +17,6 @@
  */
 
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 import { DataExplorerWidget } from '../../support/model/DataExplorerWidget';
 
 describe('Test Time Order in Data Explorer', () => {
@@ -53,7 +52,7 @@ describe('Test Time Order in Data Explorer', () => {
 
         // Save and leave view, edit view again and check ascending order
         DataExplorerUtils.saveDataViewConfiguration();
-        DataExplorerBtns.editDataViewButton('New chart');
+        DataExplorerUtils.editDataView('New chart');
         DataExplorerUtils.clickOrderBy('ascending');
         DataExplorerUtils.openVisualizationConfig();
         DataExplorerUtils.selectVisualizationType(DataExplorerWidget.TABLE);

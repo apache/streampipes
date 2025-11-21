@@ -24,12 +24,7 @@
                 'Manage Kafka settings for pipeline communication' | translate
             "
         >
-            <div
-                fxFlex="100"
-                fxLayout="column"
-                fxLayoutAlign="start start"
-                class="page-container-padding-inner"
-            >
+            <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
                 <form
                     (ngSubmit)="updateMessagingSettings()"
                     class="form-width"
@@ -80,7 +75,8 @@
                             type="submit"
                             class="md-raised md-primary submit-button"
                         >
-                            {{ 'Update' | translate }}
+                            <mat-icon>save</mat-icon>
+                            <span>{{ 'Save' | translate }}</span>
                         </button>
                     </div>
                 </form>
@@ -92,12 +88,7 @@
             [title]="'Protocols' | translate"
             [subtitle]="'Manage the priority of protocols used' | translate"
         >
-            <div
-                fxFlex="100"
-                fxLayout="column"
-                fxLayoutAlign="start start"
-                class="page-container-padding-inner"
-            >
+            <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
                 <div
                     cdkDropList
                     class="data-format-list"
@@ -122,7 +113,8 @@
                         class="md-raised md-primary submit-button"
                         (click)="updateMessagingSettings()"
                     >
-                        {{ 'Update' | translate }}
+                        <mat-icon>save</mat-icon>
+                        <span>{{ 'Save' | translate }}</span>
                     </button>
                 </div>
             </div>
@@ -172,7 +164,8 @@
                     class="md-raised md-primary submit-button"
                     (click)="updateMessagingSettings()"
                 >
-                    {{ 'Update' | translate }}
+                    <mat-icon>save</mat-icon>
+                    <span>{{ 'Save' | translate }}</span>
                 </button>
             </div>
         </sp-split-section>

@@ -22,17 +22,17 @@
         'Manage your organization\'s sites and production areas' | translate
     "
 >
-    <div fxLayout="row">
-        <button
-            mat-flat-button
-            color="accent"
-            data-cy="sites-manage-sites-button"
-            (click)="openManageSitesDialog(undefined)"
-        >
-            <mat-icon>add</mat-icon>
-            <span>{{ 'New site' | translate }}</span>
-        </button>
-    </div>
+    <button
+        section-actions
+        mat-flat-button
+        color="accent"
+        data-cy="sites-manage-sites-button"
+        (click)="openManageSitesDialog(undefined)"
+    >
+        <mat-icon>add</mat-icon>
+        <span>{{ 'New' | translate }}</span>
+    </button>
+
     <sp-table
         class="mt-10"
         [dataSource]="dataSource"

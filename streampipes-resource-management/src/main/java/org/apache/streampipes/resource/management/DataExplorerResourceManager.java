@@ -27,7 +27,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import java.util.List;
 import java.util.Map;
 
-public class DataExplorerResourceManager extends AbstractCRUDResourceManager<DashboardModel> {
+public class DataExplorerResourceManager extends CrudResourceManager<DashboardModel> {
 
   private final CRUDStorage<DataExplorerWidgetModel> widgetStorage;
   private final IDataLakeMeasureStorage dataLakeMeasureStorage;

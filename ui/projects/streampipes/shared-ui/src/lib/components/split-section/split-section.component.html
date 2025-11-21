@@ -16,14 +16,22 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-    <div fxLayout="row">
-        <div fxFlex="210px" fxLayout="column" class="split-section">
-            <div class="split-section-title">{{ title }}</div>
-            <div class="split-section-description">{{ subtitle }}</div>
+<section class="section" [class.compact]="compact">
+    <header class="section-header">
+        <div class="eyebrow" *ngIf="eyebrow">{{ eyebrow }}</div>
+
+        <h2 class="title">{{ title }}</h2>
+
+        <div class="header-actions">
+            <ng-content select="[section-actions]"></ng-content>
         </div>
-        <div fxFlex fxLayout="column">
-            <ng-content></ng-content>
-        </div>
+
+        <p class="description" *ngIf="subtitle">
+            {{ subtitle }}
+        </p>
+    </header>
+
+    <div class="section-body" role="group" fxLayout="column">
+        <ng-content></ng-content>
     </div>
-</div>
+</section>

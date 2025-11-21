@@ -45,6 +45,7 @@ export class AssetDetailsSiteComponent implements OnChanges {
                 area: undefined,
                 siteId: undefined,
                 hasExactLocation: false,
+                location: undefined,
             };
             if (this.sites.length > 0) {
                 if (this.asset.assetSite.siteId !== undefined) {

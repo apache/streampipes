@@ -150,7 +150,7 @@ public class SpCachedPlcConnectionManager implements PlcConnectionManager, AutoC
       this.connectionManager = connectionManager;
       this.maxLeaseTime = Duration.ofSeconds(4);
       this.maxWaitTime = Duration.ofSeconds(20);
-      this.maxIdleTime = Duration.ofMinutes(5);
+      this.maxIdleTime = Duration.ofMinutes(1);
     }
 
     public SpCachedPlcConnectionManager build() {

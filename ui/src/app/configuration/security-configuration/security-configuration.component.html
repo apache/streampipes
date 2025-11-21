@@ -23,9 +23,15 @@
                 [title]="'User Accounts' | translate"
                 [subtitle]="'Add and edit user accounts' | translate"
             >
-                <div class="subsection-title">
-                    {{ 'Existing user accounts' | translate }}
-                </div>
+                <button
+                    section-actions
+                    mat-flat-button
+                    data-cy="add-new-user"
+                    (click)="createUserAccount()"
+                >
+                    <i class="material-icons">add</i
+                    ><span>&nbsp;{{ 'New' | translate }}</span>
+                </button>
                 <sp-security-user-config></sp-security-user-config>
             </sp-split-section>
         </div>
@@ -35,9 +41,16 @@
                 [title]="'Service Accounts' | translate"
                 [subtitle]="'Add and edit service accounts' | translate"
             >
-                <div class="subsection-title">
-                    {{ 'Existing service accounts' | translate }}
-                </div>
+                <button
+                    section-actions
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    (click)="createServiceAccount()"
+                >
+                    <i class="material-icons">add</i
+                    ><span>&nbsp;{{ 'New' | translate }}</span>
+                </button>
                 <sp-security-service-config></sp-security-service-config>
             </sp-split-section>
         </div>
@@ -47,9 +60,17 @@
                 [title]="'Groups' | translate"
                 [subtitle]="'Manage user groups' | translate"
             >
-                <div class="subsection-title">
-                    {{ 'Existing groups' | translate }}
-                </div>
+                <button
+                    section-actions
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    data-cy="new-user-group-btn"
+                    (click)="createGroup()"
+                >
+                    <i class="material-icons">add</i
+                    ><span>&nbsp;{{ 'New' | translate }}</span>
+                </button>
                 <sp-security-user-group-config></sp-security-user-group-config>
             </sp-split-section>
         </div>
@@ -58,9 +79,16 @@
                 [title]="'Roles' | translate"
                 [subtitle]="'Manage roles' | translate"
             >
-                <div class="subsection-title">
-                    {{ 'Existing roles' | translate }}
-                </div>
+                <button
+                    section-actions
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    (click)="createRole()"
+                >
+                    <i class="material-icons">add</i
+                    ><span>&nbsp;{{ 'New' | translate }}</span>
+                </button>
                 <sp-security-role-config></sp-security-role-config>
             </sp-split-section>
         </div>
