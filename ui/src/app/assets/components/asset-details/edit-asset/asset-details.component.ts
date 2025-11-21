@@ -16,16 +16,9 @@
  *
  */
 
-import { Component } from '@angular/core';
-import {
-    SpAssetBrowserService,
-    SpBreadcrumbService,
-} from '@streampipes/shared-ui';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-    AssetConstants,
-    GenericStorageService,
-} from '@streampipes/platform-services';
+import { Component, inject } from '@angular/core';
+import { SpAssetBrowserService } from '@streampipes/shared-ui';
+import { Router } from '@angular/router';
 import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
 
 @Component({
@@ -37,23 +30,14 @@ import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
 export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
     activeTab = 'basic';
 
-    constructor(
-        breadcrumbService: SpBreadcrumbService,
-        genericStorageService: GenericStorageService,
-        private assetBrowserService: SpAssetBrowserService,
-        route: ActivatedRoute,
-        private router: Router,
-    ) {
-        super(breadcrumbService, genericStorageService, route);
-    }
+    private router = inject(Router);
+    private assetBrowserService = inject(SpAssetBrowserService);
 
     saveAsset() {
-        this.genericStorageService
-            .updateDocument(AssetConstants.ASSET_APP_DOC_NAME, this.asset)
-            .subscribe(res => {
-                this.assetBrowserService.loadAssetData();
-                this.router.navigate(['assets']);
-            });
+        this.assetService.updateAsset(this.asset).subscribe(res => {
+            this.assetBrowserService.loadAssetData();
+            this.router.navigate(['assets']);
+        });
     }
 
     onAssetAvailable() {}

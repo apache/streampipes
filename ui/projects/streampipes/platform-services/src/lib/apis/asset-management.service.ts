@@ -20,6 +20,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
+import { SpAssetModel } from '../model/gen/streampipes-model';
 
 @Injectable({
     providedIn: 'root',
@@ -28,24 +29,24 @@ export class AssetManagementService {
     private http = inject(HttpClient);
     private platformServicesCommons = inject(PlatformServicesCommons);
 
-    createAsset(asset: any): Observable<any> {
+    createAsset(asset: SpAssetModel): Observable<any> {
         return this.http.post(this.assetBasePath, asset);
     }
 
-    getAllAssets(): Observable<any> {
-        return this.http.get(this.assetBasePath);
+    getAllAssets(): Observable<SpAssetModel[]> {
+        return this.http.get<SpAssetModel[]>(this.assetBasePath);
     }
 
-    getAsset(assetId: string): Observable<any> {
-        return this.http.get(`${this.assetBasePath}/${assetId}`);
+    getAsset(assetId: string): Observable<SpAssetModel> {
+        return this.http.get<SpAssetModel>(`${this.assetBasePath}/${assetId}`);
     }
 
-    updateAsset(asset: any): Observable<any> {
-        return this.http.put(`${this.assetBasePath}/${asset._id}`, asset);
+    updateAsset(asset: SpAssetModel): Observable<any> {
+        return this.http.put(`${this.assetBasePath}/${asset.elementId}`, asset);
     }
 
-    deleteAsset(assetId: string, rev: string): Observable<any> {
-        return this.http.delete(`${this.assetBasePath}/${assetId}/${rev}`);
+    deleteAsset(assetId: string): Observable<any> {
+        return this.http.delete(`${this.assetBasePath}/${assetId}`);
     }
 
     private get assetBasePath() {

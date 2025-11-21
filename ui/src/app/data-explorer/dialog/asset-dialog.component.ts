@@ -16,8 +16,7 @@
  *
  */
 
-import { Component, inject, Inject, Input, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { SpAssetTreeNode } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
@@ -31,6 +30,7 @@ export class AssetDialogComponent implements OnInit {
     @Input() deselectedAssets: SpAssetTreeNode[];
     @Input() originalAssets: SpAssetTreeNode[];
     @Input() dataViewId: string;
+    // TODO why is this a string and not a boolean
     @Input() editMode: string;
     @Input() cancelTitle: string;
     @Input() okTitle: string;

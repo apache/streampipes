@@ -35,10 +35,18 @@
                         }}</span>
                         <mat-form-field color="accent">
                             <mat-label>{{ 'Owner' | translate }}</mat-label>
-                            <mat-select formControlName="owner" fxFlex required>
+                            <mat-select
+                                data-cy="owner-select"
+                                formControlName="owner"
+                                fxFlex
+                                required
+                            >
                                 <mat-option
                                     *ngFor="let user of allUsers"
                                     [value]="user.principalId"
+                                    [attr.data-cy]="
+                                        'owner-option-' + user.email
+                                    "
                                     >{{ user.email }}
                                 </mat-option>
                             </mat-select>
@@ -144,6 +152,7 @@
                                     <input
                                         matInput
                                         [placeholder]="'Add' | translate"
+                                        data-cy="authorized-group"
                                         #groupInput
                                         [formControl]="groupCtrl"
                                         [matAutocomplete]="groupAuto"
@@ -161,6 +170,9 @@
                                     (optionSelected)="groupSelected($event)"
                                 >
                                     <mat-option
+                                        [attr.data-cy]="
+                                            'group-option-' + group.groupName
+                                        "
                                         *ngFor="
                                             let group of filteredGroups$ | async
                                         "
@@ -219,7 +231,10 @@
             </div>
         </div>
     } @else {
-        <div class="sp-dialog-content">
+        <div
+            class="sp-dialog-content"
+            data-cy="warning-permissions-managed-by-owner"
+        >
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <mat-icon>block</mat-icon>
                 <h5>
@@ -252,6 +267,7 @@
                 mat-button
                 mat-flat-button
                 class="mat-basic"
+                data-cy="sp-manage-permissions-cancel"
                 (click)="close(false)"
             >
                 {{ 'Cancel' | translate }}

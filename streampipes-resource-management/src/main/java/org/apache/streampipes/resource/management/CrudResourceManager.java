@@ -24,13 +24,13 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 
 import java.util.List;
 
-public abstract class AbstractCRUDResourceManager<T extends Storable>
+public class CrudResourceManager<T extends Storable>
     extends AbstractResourceManager<CRUDStorage<T>> {
 
   private final Class<T> elementClass;
 
-  public AbstractCRUDResourceManager(CRUDStorage<T> db,
-                                     Class<T> elementClass) {
+  public CrudResourceManager(CRUDStorage<T> db,
+                             Class<T> elementClass) {
     super(db);
     this.elementClass = elementClass;
   }

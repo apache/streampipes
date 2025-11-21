@@ -94,11 +94,16 @@ export class PipelineUtils {
         PipelineBtns.pipelinesToEditor().click();
     }
 
+    public static checkDataStreamExists(dataSourceName: string) {
+        PipelineBtns.spPipelineElementSelection().should('be.visible');
+        PipelineBtns.editorAddPipelineElement().click();
+        cy.dataCy(dataSourceName).should('exist');
+        cy.dataCy('cancel-pipeline-element-discovery').click();
+    }
+
     public static selectDataStream(pipelineInput: PipelineInput) {
         // Select a stream
-        cy.dataCy('sp-pipeline-element-selection', { timeout: 10000 }).should(
-            'be.visible',
-        );
+        PipelineBtns.spPipelineElementSelection().should('be.visible');
         PipelineBtns.editorAddPipelineElement().click();
         cy.dataCy(pipelineInput.dataSource, { timeout: 10000 }).click();
     }
@@ -222,7 +227,7 @@ export class PipelineUtils {
             // The wait is needed because the default value is the no-table-entries element.
             // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
             cy.wait(1000);
-            cy.dataCy('no-table-entries').should('be.visible');
+            cy.dataCy('no-table-entries').should('have.length', 2);
         } else {
             PipelineBtns.statusPipeline().should('have.length', amount);
         }

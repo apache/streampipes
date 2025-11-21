@@ -29,7 +29,7 @@ public class CreateDefaultAssetTask implements InstallationTask {
   @Override
   public void execute() {
     var asset = new SpAssetModel();
-    asset.setId(GenericDocTypes.DEFAULT_ASSET_DOC_ID);
+    asset.setElementId(GenericDocTypes.DEFAULT_ASSET_DOC_ID);
     asset.setAssetId("default-asset");
     asset.setAssetName("Default Asset");
     asset.setRemovable(true);

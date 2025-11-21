@@ -20,7 +20,7 @@ package org.apache.streampipes.integration.client;
 
 import org.junit.jupiter.api.Test;
 
-public class ClientLiveDataTest {
+public class ClientLiveDataIntegrationTest {
 
   @Test
   public void testNatsClient() throws Exception {

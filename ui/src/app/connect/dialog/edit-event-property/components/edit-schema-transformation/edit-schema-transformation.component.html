@@ -65,9 +65,7 @@
                         <input
                             matInput
                             placeholder="Semantic Type"
-                            class="dmainProperty"
-                            name="domainproperty"
-                            id="domainproperty"
+                            data-cy="semantic-type"
                             [(ngModel)]="cachedProperty.semanticType"
                             [matAutocomplete]="st"
                             [disabled]="isTimestampProperty"

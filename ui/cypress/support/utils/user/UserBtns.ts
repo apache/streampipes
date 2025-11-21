@@ -17,20 +17,16 @@
  */
 
 export class UserBtns {
-    public static editUserBtn(username) {
-        cy.get('[data-cy="security-user-config"]')
-            .find('tr')
-            .contains('b', username)
-            .closest('tr')
-            .within(() => {
-                cy.get('[data-cy="user-edit-btn"]')
-                    .should('be.visible')
-                    .click();
-            });
+    public static editUserBtn(name: string) {
+        cy.dataCy(`user-edit-${name}`).click();
     }
 
     public static userRoleCheckbox(role) {
         return cy.dataCy('role-' + role).children();
+    }
+
+    public static groupCheckbox(group: string) {
+        return cy.dataCy('group-' + group).children();
     }
 
     public static saveEditUserBtn() {

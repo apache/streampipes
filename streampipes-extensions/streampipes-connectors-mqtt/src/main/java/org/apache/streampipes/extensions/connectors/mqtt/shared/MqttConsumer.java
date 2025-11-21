@@ -24,63 +24,64 @@ import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.Message;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class MqttConsumer implements Runnable {
+public class MqttConsumer extends MqttBase implements Runnable {
 
-  private final InternalEventProcessor<byte[]> consumer;
-  private boolean running;
-  private int maxElementsToReceive = -1;
-  private int messageCount = 0;
+    private final InternalEventProcessor<byte[]> consumer;
+    private boolean running;
+    private int maxElementsToReceive = -1;
+    private int messageCount = 0;
 
-  private final MqttConfig mqttConfig;
+    private static final Logger LOG = LoggerFactory.getLogger(MqttConsumer.class);
 
-  public MqttConsumer(MqttConfig mqttConfig,
-                      InternalEventProcessor<byte[]> consumer) {
-    this.mqttConfig = mqttConfig;
-    this.consumer = consumer;
-  }
-
-  public MqttConsumer(MqttConfig mqttConfig,
-                      InternalEventProcessor<byte[]> consumer,
-                      int maxElementsToReceive) {
-    this(mqttConfig, consumer);
-    this.maxElementsToReceive = maxElementsToReceive;
-  }
-
-  @Override
-  public void run() {
-    this.running = true;
-    MQTT mqtt = new MQTT();
-    try {
-      mqtt.setHost(mqttConfig.getUrl());
-      mqtt.setConnectAttemptsMax(1);
-      if (mqttConfig.getAuthenticated()) {
-        mqtt.setUserName(mqttConfig.getUsername());
-        mqtt.setPassword(mqttConfig.getPassword());
-      }
-      BlockingConnection connection = mqtt.blockingConnection();
-      connection.connect();
-      Topic[] topics = {new Topic(mqttConfig.getTopic(), QoS.AT_LEAST_ONCE)};
-      byte[] qoses = connection.subscribe(topics);
-
-      while (running && ((maxElementsToReceive == -1) || (this.messageCount <= maxElementsToReceive))) {
-        Message message = connection.receive();
-        byte[] payload = message.getPayload();
-        consumer.onEvent(payload);
-        message.ack();
-        this.messageCount++;
-      }
-      connection.disconnect();
-    } catch (Exception e) {
-      throw new RuntimeException("Error when receiving data from MQTT", e);
+    public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer) {
+        super(mqttConfig);
+        this.consumer = consumer;
     }
-  }
 
-  public void close() {
-    this.running = false;
-  }
+    public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer, int maxElementsToReceive) {
+        this(mqttConfig, consumer);
+        this.maxElementsToReceive = maxElementsToReceive;
+    }
 
-  public Integer getMessageCount() {
-    return messageCount;
-  }
+    @Override
+    public void run() {
+        this.running = true;
+        try {
+            MQTT mqtt = super.setupMqttClient();
+            BlockingConnection connection = mqtt.blockingConnection();
+            connection.connect();
+            subscribeToTopic(connection);
+            processMessages(connection);
+            connection.disconnect();
+        } catch (Exception e) {
+            LOG.error("Error in MQTT consumer: ", e);
+            throw new RuntimeException("Error when receiving data from MQTT", e);
+        }
+    }
+
+    private void processMessages(BlockingConnection connection) throws Exception {
+        while (running && (maxElementsToReceive == -1 || messageCount < maxElementsToReceive)) {
+            Message message = connection.receive();
+            byte[] payload = message.getPayload();
+            consumer.onEvent(payload);
+            message.ack();
+            messageCount++;
+        }
+    }
+
+    private void subscribeToTopic(BlockingConnection connection) throws Exception {
+        Topic[] topics = { new Topic(super.mqttConfig.getTopic(), QoS.AT_LEAST_ONCE) };
+        connection.subscribe(topics);
+    }
+
+    public void close() {
+        this.running = false;
+    }
+
+    public Integer getMessageCount() {
+        return messageCount;
+    }
 }
