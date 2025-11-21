@@ -190,7 +190,7 @@ public class MqttConnectUtils {
       URI uri = new URI(brokeruri);
       protocol = uri.getScheme();
     } catch (URISyntaxException e) {
-
+      throw new SpRuntimeException("No valid URI");
     }
 
     return protocol;
@@ -257,7 +257,6 @@ public class MqttConnectUtils {
     throw new SpRuntimeException("Could not retrieve QoS level: QoS " + qos);
   }
 
-
   public static boolean extractBoolean(String s) {
     switch (s) {
       case "Yes":
@@ -272,9 +271,7 @@ public class MqttConnectUtils {
     return value * 1000;
   }
 
-
   public static MqttConfig extractDataSinkParams(IParameterExtractor extractor) {
-
 
     MqttConfig mqttConfig = getMqttConfig(extractor);
 
@@ -289,7 +286,8 @@ public class MqttConnectUtils {
     mqttConfig.setKeepAliveInSec(extractor.singleValueParameter(KEEP_ALIVE_IN_SEC, Short.class));
 
     mqttConfig
-        .setCleanSession(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(CLEAN_SESSION_KEY, String.class)));
+        .setCleanSession(
+            MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(CLEAN_SESSION_KEY, String.class)));
     mqttConfig.setRetain(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(RETAIN, String.class)));
 
     boolean isCompliant = MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(MQTT_COMPLIANT, String.class));
@@ -297,14 +295,15 @@ public class MqttConnectUtils {
       mqttConfig.setMqttProtocolVersion("3.1.1");
     }
 
-
     String willMode = extractor.selectedAlternativeInternalId(WILL_MODE);
     if (willMode.equals(WILL_ALTERNATIVE)) {
       mqttConfig.setLastWill(true);
       mqttConfig.setWillTopic(extractor.singleValueParameter(WILL_TOPIC, String.class));
       mqttConfig.setWillMessage(extractor.singleValueParameter(WILL_MESSAGE, String.class));
-      mqttConfig.setWillQoS(MqttConnectUtils.extractQoSFromString(extractor.selectedSingleValue(WILL_QOS, String.class)));
-      mqttConfig.setWillRetain(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(WILL_RETAIN, String.class)));
+      mqttConfig
+          .setWillQoS(MqttConnectUtils.extractQoSFromString(extractor.selectedSingleValue(WILL_QOS, String.class)));
+      mqttConfig
+          .setWillRetain(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(WILL_RETAIN, String.class)));
     }
 
     return mqttConfig;

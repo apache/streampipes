@@ -643,19 +643,15 @@
                 <artifactId>rdf4j-rio-rdfxml</artifactId>
                 <version>${rdf4j.version}</version>
             </dependency>
-
             <dependency>
-      <groupId>org.reactivestreams</groupId>
-      <artifactId>reactive-streams</artifactId>
-      <version>${reactive-streams.version}</version>
-    </dependency>
-        <dependency>
-                   <groupId>com.hivemq</groupId>
-    <artifactId>hivemq-mqtt-client</artifactId>
+                <groupId>org.reactivestreams</groupId>
+                <artifactId>reactive-streams</artifactId>
+                <version>${reactive-streams.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hivemq</groupId>
+                <artifactId>hivemq-mqtt-client</artifactId>
                 <version>${mqtt-client.version}</version>
-
-                    <exclusions>
-    </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.fusesource.hawtbuf</groupId>

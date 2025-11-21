@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
-
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 
 public class MqttConfig {
@@ -33,17 +32,17 @@ public class MqttConfig {
   private String clientKey = null;
   private Boolean tls = false;
 
-  private boolean isLastWill = false; 
-  private MqttQos willQoS = MqttQos.AT_MOST_ONCE; 
-  private Boolean willRetain = false; 
-  private String willTopic = ""; 
-  private String willMessage = ""; 
-  private String mqttProtocolVersion = "3.1"; 
-  private MqttQos qos = MqttQos.AT_MOST_ONCE; 
-  private long reconnectDelayMaxInMs = 10000L; 
-  private boolean cleanSession = true; 
+  private boolean isLastWill = false;
+  private MqttQos willQoS = MqttQos.AT_MOST_ONCE;
+  private Boolean willRetain = false;
+  private String willTopic = "";
+  private String willMessage = "";
+  private String mqttProtocolVersion = "3.1";
+  private MqttQos qos = MqttQos.AT_MOST_ONCE;
+  private long reconnectDelayMaxInMs = 10000L;
+  private boolean cleanSession = true;
   private boolean retain = false;
-  private short keepAliveInSec = 60; 
+  private short keepAliveInSec = 60;
   private String clientId = "";
 
   public MqttConfig(String url, String topic) {
@@ -113,11 +112,12 @@ public class MqttConfig {
   public String getPassword() {
     return password;
   }
-    public String getClientId() {
+
+  public String getClientId() {
     return clientId;
   }
 
-      public void setClientId(String clientId) {
+  public void setClientId(String clientId) {
     this.clientId = clientId;
   }
 

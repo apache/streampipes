@@ -33,7 +33,6 @@ import java.util.List;
 
 public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
 
-
     @Override
     public ModelMigratorConfig config() {
         return new ModelMigratorConfig(
@@ -41,12 +40,11 @@ public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
                 SpServiceTagPrefix.ADAPTER,
                 0,
                 1);
-
     }
 
     @Override
     public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
-            IStaticPropertyExtractor extractor) throws RuntimeException { 
+            IStaticPropertyExtractor extractor) throws RuntimeException {
 
         changeUrlDescription(element);
 
@@ -61,16 +59,14 @@ public class MQTTAdapterMigrationV1 implements IAdapterMigrator {
         migrateGroup(securityAlternatives.getAlternatives());
     }
 
-
-
-    private void changeUrlDescription(AdapterDescription element){
+    private void changeUrlDescription(AdapterDescription element) {
         var url = (FreeTextStaticProperty) element.getConfig().get(0);
         url.setDescription(
                 "Example: tcp://test-server.com:1883 (Protocol required. Port required), with TLS ssl://test-server.com:8883 (Protocol required. Port required)");
         element.getConfig().set(0, url);
     }
 
-    private void accessModeDescription(AdapterDescription element){
+    private void accessModeDescription(AdapterDescription element) {
         var accessmode = (StaticPropertyAlternatives) element.getConfig().get(1);
 
         accessmode.setLabel("User Authentication");
