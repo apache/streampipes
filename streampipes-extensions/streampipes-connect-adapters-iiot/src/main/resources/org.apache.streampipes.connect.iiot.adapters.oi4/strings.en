@@ -34,7 +34,7 @@ username-group.description=
 username.title=Username
 username.description=
 
-client-cert-alternative.title= Client Certificate
+client-cert-alternative.title=Client Certificate
 client-cert-alternative.description=
 
 clientcert.title=Certificate PEM
