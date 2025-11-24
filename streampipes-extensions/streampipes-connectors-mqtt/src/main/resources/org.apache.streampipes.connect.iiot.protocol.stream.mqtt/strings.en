@@ -31,7 +31,7 @@ username-alternative.description=
 username-group.title=User Group
 username-group.description=
 
-client-cert-alternative.title= Client Certificate
+client-cert-alternative.title=Client Certificate
 client-cert-alternative.description=
 
 username.title=Username
