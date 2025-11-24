@@ -48,7 +48,7 @@ public class MqttConsumer extends AbstractMqttConnector implements
     public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
         try {
 
-          LOG.info("Call to create Broker COmnmection from Messaging");
+          LOG.info("Call to create Broker Connection from Messaging");
             this.createBrokerConnection(protocol);
 
             client.subscribeWith()
