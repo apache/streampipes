@@ -174,7 +174,6 @@ export class SpAssetBrowserService {
     }
 
     applyAssetFilter(filteredAssets: SpAsset[]) {
-        console.log('assetData', this.assetData$);
         let elementIds: Set<string> | undefined = undefined;
 
         if (filteredAssets.length === 0) {
