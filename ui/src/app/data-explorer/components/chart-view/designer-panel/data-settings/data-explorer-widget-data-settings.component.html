@@ -30,13 +30,17 @@
             >
                 <mat-expansion-panel-header class="expansion-panel-header">
                     <div fxFlex="100" fxLayout="row">
-                        <div fxFlex fxLayoutAlign="start center">
+                        <span
+                            fxFlex
+                            fxLayoutAlign="start center"
+                            class="measure-name"
+                        >
                             {{
                                 sourceConfig?.measureName ||
                                     ('New Data Source' | translate)
                             }}
-                        </div>
-                        <div fxFlex fxLayoutAlign="end center">
+                        </span>
+                        <div fxLayoutAlign="end center">
                             <button
                                 mat-icon-button
                                 color="accent"
