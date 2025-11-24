@@ -24,7 +24,6 @@ import {
 } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
-    CurrentUserService,
     DateFormatService,
     SpAssetBrowserService,
 } from '@streampipes/shared-ui';
@@ -33,7 +32,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
 import { Subscription } from 'rxjs';
-import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Component({
     selector: 'sp-data-explorer-overview-table',
@@ -62,7 +60,6 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
     private dateFormatService = inject(DateFormatService);
     private routingService = inject(DataExplorerRoutingService);
     private assetFilterService = inject(SpAssetBrowserService);
-    private currentUserService = inject(CurrentUserService);
 
     assetFilter$: Subscription;
     currentFilterIds = new Set<string>();
