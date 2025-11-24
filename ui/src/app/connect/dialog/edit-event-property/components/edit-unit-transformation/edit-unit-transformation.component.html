@@ -27,7 +27,12 @@
         >
             <div fxLayout="row">
                 <div class="w-100" fxLayoutAlign="start center" fxFlex="45">
-                    <mat-form-field class="w-100" color="accent" fxFlex="100">
+                    <mat-form-field
+                        class="w-100"
+                        color="accent"
+                        fxFlex="100"
+                        subscriptSizing="dynamic"
+                    >
                         <input
                             matInput
                             placeholder="Unit"
@@ -55,13 +60,12 @@
                 </div>
                 <div fxFlex="10" fxLayoutAlign="center center">
                     <button
-                        mat-button
+                        mat-icon-button
                         [disabled]="!this.cachedProperty.measurementUnit"
                         (click)="transformUnit()"
                         color="accent"
                         class="form-group"
                         fxFlexAlign="center"
-                        style="min-width: 60px; max-width: 60px"
                         data-cy="connect-schema-unit-transform-btn"
                     >
                         @if (!transformUnitEnable) {
@@ -80,6 +84,7 @@
                             class="w-100"
                             color="accent"
                             fxFlex="100"
+                            subscriptSizing="dynamic"
                         >
                             <mat-select
                                 placeholder="New Unit"
