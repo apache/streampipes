@@ -22,8 +22,6 @@ import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import java.io.IOException;
-
 public class CreateDefaultAssetTask implements InstallationTask {
 
   @Override
@@ -34,10 +32,6 @@ public class CreateDefaultAssetTask implements InstallationTask {
     asset.setAssetName("Default Asset");
     asset.setRemovable(true);
 
-    try {
-      StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().create(asset, SpAssetModel.class);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage().persist(asset);
   }
 }

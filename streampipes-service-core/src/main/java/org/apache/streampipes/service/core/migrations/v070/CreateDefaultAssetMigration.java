@@ -24,18 +24,12 @@ import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import java.io.IOException;
-
 public class CreateDefaultAssetMigration implements Migration {
 
   @Override
   public boolean shouldExecute() {
-    try {
-      return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage()
-          .findOne(GenericDocTypes.DEFAULT_ASSET_DOC_ID) == null;
-    } catch (IOException e) {
-      return true;
-    }
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage()
+        .getElementById(GenericDocTypes.DEFAULT_ASSET_DOC_ID) == null;
   }
 
   @Override
