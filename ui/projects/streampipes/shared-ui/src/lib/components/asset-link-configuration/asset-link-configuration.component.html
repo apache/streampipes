@@ -41,9 +41,15 @@
                                     : 'chevron_right'
                             }}</mat-icon>
                         </button>
-                        <span [class.selected-node]="isSelected(node)">{{
-                            node.assetName
-                        }}</span>
+                        <span
+                            [class.selected-node]="isSelected(node)"
+                            fxLayoutAlign="start center"
+                        >
+                            {{ node.assetName }}
+                            @if (isSelected(node)) {
+                                &nbsp;<i class="material-icons">check_circle</i>
+                            }
+                        </span>
                     </div>
                     <div *ngIf="treeControl.isExpanded(node)" role="group">
                         <ng-container matTreeNodeOutlet></ng-container>
@@ -56,9 +62,14 @@
                         <span class="mat-icon-button placeholder-icon">
                             <mat-icon class="invisible"></mat-icon>
                         </span>
-                        <span [class.selected-node]="isSelected(node)">{{
-                            node.assetName
-                        }}</span>
+                        <span
+                            [class.selected-node]="isSelected(node)"
+                            fxLayoutAlign="start center"
+                            >{{ node.assetName }}
+                            @if (isSelected(node)) {
+                                &nbsp;<i class="material-icons">check_circle</i>
+                            }
+                        </span>
                     </div>
                 </mat-tree-node>
             </mat-tree>
