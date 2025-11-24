@@ -29,7 +29,10 @@ describe('Test Deletion of Data View and Dashboard', () => {
 
         DataExplorerUtils.goToDatalake();
 
-        DataExplorerUtils.addDataViewAndTableWidget(dataView, 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget(
+            dataView,
+            DataExplorerUtils.ADAPTER_NAME,
+        );
 
         DataExplorerUtils.saveDataViewConfiguration();
 

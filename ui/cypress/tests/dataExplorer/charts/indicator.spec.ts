@@ -17,6 +17,7 @@
  */
 
 import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
 describe('Test Indicator View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
@@ -26,7 +27,7 @@ describe('Test Indicator View in Data Explorer', () => {
     it('Perform Test', () => {
         DataExplorerUtils.addDataViewAndWidget(
             'view',
-            'Persist',
+            PrepareTestDataUtils.dataName,
             'indicator-chart',
         );
 
