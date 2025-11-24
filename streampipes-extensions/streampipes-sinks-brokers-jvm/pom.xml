@@ -65,9 +65,9 @@
             <artifactId>fluent-hc</artifactId>
         </dependency>
          <dependency>
-    <groupId>com.hivemq</groupId>
-    <artifactId>hivemq-mqtt-client</artifactId>
-</dependency>
+            <groupId>com.hivemq</groupId>
+            <artifactId>hivemq-mqtt-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.fusesource.hawtbuf</groupId>
             <artifactId>hawtbuf</artifactId>

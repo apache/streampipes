@@ -35,11 +35,11 @@
         </dependency>
 
         <!-- External dependencies -->
-              <dependency>
-    <groupId>com.hivemq</groupId>
-    <artifactId>hivemq-mqtt-client</artifactId>
-</dependency>
-<dependency>
+        <dependency>
+            <groupId>com.hivemq</groupId>
+            <artifactId>hivemq-mqtt-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.fusesource.hawtbuf</groupId>
             <artifactId>hawtbuf</artifactId>
         </dependency>
