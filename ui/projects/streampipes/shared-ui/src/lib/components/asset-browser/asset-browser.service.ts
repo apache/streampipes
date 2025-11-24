@@ -278,7 +278,7 @@ export class SpAssetBrowserService {
             .map(a => a.resourceId);
     }
 
-    hasAssetFilterPermission(): boolean {
+    hasNoAssetFilterPermission(): boolean {
         return !this.currentUserService.hasAnyRole([
             'ROLE_ADMIN',
             'ROLE_ASSET_ADMIN',

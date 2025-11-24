@@ -141,7 +141,7 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
     }
 
     applyChartFilters(elementIds: Set<string>): void {
-        if (this.assetFilterService.hasAssetFilterPermission()) {
+        if (this.assetFilterService.hasNoAssetFilterPermission()) {
             elementIds = new Set<string>();
         }
         if (elementIds === undefined) {
