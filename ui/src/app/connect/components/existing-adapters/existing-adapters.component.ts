@@ -46,6 +46,7 @@ import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { TranslateService } from '@ngx-translate/core';
+import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -291,6 +292,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {
+        if (this.assetFilterService.hasAssetFilterPermission()) {
+            elementIds = new Set<string>();
+        }
         this.currentFilterIds = elementIds;
         this.filteredAdapters = this.adapterFilter
             .transform(this.existingAdapters, this.currentFilter)

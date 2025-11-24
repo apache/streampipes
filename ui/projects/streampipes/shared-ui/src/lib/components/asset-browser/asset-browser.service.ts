@@ -33,6 +33,7 @@ import {
     AssetFilter,
     FilterResult,
 } from './asset-browser.model';
+import { CurrentUserService } from '../../services/current-user.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpAssetBrowserService {
@@ -50,6 +51,7 @@ export class SpAssetBrowserService {
     private genericStorageService = inject(GenericStorageService);
     private typeService = inject(Isa95TypeService);
     private assetService = inject(AssetManagementService);
+    private currentUserService = inject(CurrentUserService);
 
     constructor() {
         this.loadAssetData();
@@ -172,6 +174,7 @@ export class SpAssetBrowserService {
     }
 
     applyAssetFilter(filteredAssets: SpAsset[]) {
+        console.log('assetData', this.assetData$);
         let elementIds: Set<string> | undefined = undefined;
 
         if (filteredAssets.length === 0) {
@@ -274,5 +277,13 @@ export class SpAssetBrowserService {
         return asset.assetLinks
             .filter(a => a.linkType === filteredLinkType)
             .map(a => a.resourceId);
+    }
+
+    hasAssetFilterPermission(): boolean {
+        return !this.currentUserService.hasAnyRole([
+            'ROLE_ADMIN',
+            'ROLE_ASSET_ADMIN',
+            'ROLE_ASSET_USER',
+        ]);
     }
 }

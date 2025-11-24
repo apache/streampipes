@@ -21,6 +21,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
+    CurrentUserService,
     DateFormatService,
     DialogService,
     PanelType,
@@ -34,6 +35,7 @@ import { Router } from '@angular/router';
 import { CloneDashboardDialogComponent } from '../../../dialogs/clone-dashboard/clone-dashboard-dialog.component';
 import { Subscription } from 'rxjs';
 import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
+import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
@@ -67,6 +69,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     private assetFilterService = inject(SpAssetBrowserService);
     private routingService = inject(DataExplorerRoutingService);
     private dialogService = inject(DialogService);
+    private currentUserService = inject(CurrentUserService);
 
     assetFilter$: Subscription;
     currentFilterIds = new Set<string>();
@@ -152,6 +155,9 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     }
 
     applyDashboardFilters(elementIds: Set<string>): void {
+        if (this.assetFilterService.hasAssetFilterPermission()) {
+            elementIds = new Set<string>();
+        }
         if (elementIds == undefined) {
             this.filteredDashboards = [];
         } else if (elementIds.size == 0) {
