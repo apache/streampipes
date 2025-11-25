@@ -222,6 +222,9 @@ export class SpAssetBrowserService {
         asset: SpAsset,
         selectedAssets: SpAsset[],
     ): boolean {
+        //console.log('filter ASset', asset)
+        //console.log('selected Assets', selectedAssets)
+        //console.log(selectedAssets.find(a => a.assetId === asset.assetId) !== undefined)
         return (
             selectedAssets.find(a => a.assetId === asset.assetId) !== undefined
         );
@@ -237,18 +240,53 @@ export class SpAssetBrowserService {
         );
     }
 
+    /**private filterLabels(asset: SpAsset, selectedLabels: SpLabel[]): boolean {
+    const selLabelIds = selectedLabels.map(l => l._id); 
+    const labelIds = asset.labelIds ?? [];
+    const matchesSelf = selLabelIds.some(id => labelIds.includes(id));
+
+    if (!asset.assets || asset.assets.length === 0) {
+        console.log('lengh is 0', matchesSelf)
+        return matchesSelf;
+    }
+
+    const filteredChildren = asset.assets
+        .map(a => ({ ...a }))
+        .filter(a => this.filterLabels(a, selectedLabels));
+    console.log("parent filteredChildren.length:", filteredChildren.length);
+    asset.assets = filteredChildren;
+           console.log('lengh > 0', matchesSelf)
+    return matchesSelf || filteredChildren.length > 0;
+}*/
+
     private filterLabels(asset: SpAsset, selectedLabels: SpLabel[]): boolean {
         const labelIds = asset.labelIds || [];
         const matchesSelf = selectedLabels.every(label =>
             labelIds.includes(label._id),
         );
+        console.log(matchesSelf);
+        let filteredChildren: SpAsset[] = [];
 
         if (asset.assets?.length) {
-            asset.assets = asset.assets
-                .map(a => ({ ...a }))
-                .filter(a => this.filterLabels(a, selectedLabels));
-            return matchesSelf || asset.assets.length > 0;
+            filteredChildren = asset.assets
+                .map(child => ({ ...child })) // clone
+                .filter(child => this.filterLabels(child, selectedLabels));
         }
+
+        //const hasMatchingChild = filteredChildren.length > 0;
+
+        // parent is kept if it matches itself OR a child matches
+        //const assetMatches = matchesSelf || hasMatchingChild;
+
+        // overwrite children *only if* parent is kept
+        /**if (matchesSelf && asset.assets?.length) {
+    asset.assets = filteredChildren;
+  }
+  else{
+     asset.assets = filteredChildren;
+     return false;
+
+  }*/
 
         return matchesSelf;
     }

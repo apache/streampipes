@@ -56,6 +56,7 @@ export class AssetBrowserFilterComponent implements OnInit, OnDestroy {
     }
 
     applyFilters(): void {
+        console.log(this.activeFilters);
         this.assetBrowserService.applyFilters(this.activeFilters);
         this.closeMenu.emit();
     }
