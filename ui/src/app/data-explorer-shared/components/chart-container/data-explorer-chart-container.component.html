@@ -146,21 +146,23 @@
                                 </sp-time-selector-menu>
                             }
                         </mat-menu>
-                        @if (!dataViewMode) {
-                            @if (editMode && hasDataExplorerWritePrivileges) {
-                                <button
-                                    mat-icon-button
-                                    (click)="removeWidget()"
-                                    [matTooltip]="'Delete Chart' | translate"
-                                    [attr.data-cy]="
-                                        'remove-' +
-                                        configuredWidget.baseAppearanceConfig
-                                            .widgetTitle
-                                    "
-                                >
-                                    <mat-icon>clear</mat-icon>
-                                </button>
-                            }
+                        @if (
+                            !dataViewMode &&
+                            editMode &&
+                            hasDashboardWritePrivileges
+                        ) {
+                            <button
+                                mat-icon-button
+                                (click)="removeWidget()"
+                                [matTooltip]="'Delete Chart' | translate"
+                                [attr.data-cy]="
+                                    'remove-' +
+                                    configuredWidget.baseAppearanceConfig
+                                        .widgetTitle
+                                "
+                            >
+                                <mat-icon>clear</mat-icon>
+                            </button>
                         }
                     </div>
                 }

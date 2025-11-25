@@ -24,6 +24,7 @@
     <div nav fxFlex="100" fxLayoutAlign="start center" class="mr-5">
         <sp-pipeline-details-toolbar
             fxFlex="100"
+            [hasPipelineWritePrivileges]="hasPipelineWritePrivileges"
             [autoRefresh]="autoRefresh"
             [previewModeActive]="previewModeActive"
             (togglePreviewEmitter)="toggleLivePreview()"
