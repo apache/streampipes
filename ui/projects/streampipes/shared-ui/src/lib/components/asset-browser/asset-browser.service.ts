@@ -244,6 +244,7 @@ export class SpAssetBrowserService {
         asset: SpAsset,
         selectedLabels: SpLabel[],
         recursionStep: boolean = false,
+        previousMatchesSelf: boolean = false,
     ): SpAsset | null {
         const labelIds = asset.labelIds || [];
         const matchesSelf = selectedLabels.some(label =>
@@ -261,10 +262,11 @@ export class SpAssetBrowserService {
             filteredChildren = asset.assets
                 .map(child => ({ ...child }))
                 .filter(child =>
-                    this.filterLabels(child, selectedLabels, true),
+                    this.filterLabels(child, selectedLabels, true, matchesSelf),
                 );
 
-            if (!recursionStep) {
+            if (!recursionStep || !previousMatchesSelf) {
+                // remove asset Links not of interest
                 asset.assetLinks = [];
             }
         }
