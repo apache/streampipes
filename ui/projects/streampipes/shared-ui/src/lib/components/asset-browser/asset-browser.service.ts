@@ -206,16 +206,10 @@ export class SpAssetBrowserService {
     private filterType(
         asset: SpAsset,
         selectedTypes: Isa95TypeDesc[],
-        anyMatch: boolean = false,
     ): SpAsset | null {
         const matchesSelf = selectedTypes.some(
             type => type.type === asset.assetType?.isa95AssetType,
         );
-
-        if (matchesSelf) {
-            // necessary to filter Assetview as in such a case the links are irrelevant
-            anyMatch = true;
-        }
 
         if (!matchesSelf) {
             // remove asset Links not of interest
@@ -227,17 +221,11 @@ export class SpAssetBrowserService {
         if (asset.assets?.length) {
             filteredChildren = asset.assets
                 .map(child => ({ ...child }))
-                .filter(child =>
-                    this.filterType(child, selectedTypes, anyMatch),
-                );
+                .filter(child => this.filterType(child, selectedTypes));
             asset.assets = filteredChildren;
         }
 
-        if (anyMatch) {
-            return asset;
-        } else {
-            return null;
-        }
+        return asset;
     }
 
     private filterAssetModel(
@@ -264,17 +252,11 @@ export class SpAssetBrowserService {
         selectedLabels: SpLabel[],
         recursionStep: boolean = false,
         previousMatchesSelf: boolean = false,
-        anyMatch: boolean = false,
     ): SpAsset | null {
         const labelIds = asset.labelIds || [];
         const matchesSelf = selectedLabels.some(label =>
             labelIds.includes(label._id),
         );
-
-        if (matchesSelf) {
-            // necessary to filter Assetview as in such a case the links are irrelevant
-            anyMatch = true;
-        }
 
         if (!recursionStep && matchesSelf) {
             // If it already matches on top level --> labels are inherited
@@ -292,22 +274,12 @@ export class SpAssetBrowserService {
             filteredChildren = asset.assets
                 .map(child => ({ ...child }))
                 .filter(child =>
-                    this.filterLabels(
-                        child,
-                        selectedLabels,
-                        true,
-                        matchesSelf,
-                        anyMatch,
-                    ),
+                    this.filterLabels(child, selectedLabels, true, matchesSelf),
                 );
             asset.assets = filteredChildren;
         }
 
-        if (anyMatch) {
-            return asset;
-        } else {
-            return null;
-        }
+        return asset;
     }
 
     collectElementIds(
