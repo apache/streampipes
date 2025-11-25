@@ -171,15 +171,12 @@ export class SpAssetBrowserService {
                 )
                 .filter((a: SpAsset | null) => a !== null); // remove nulls from the array
 
-            console.log('filteredAssets', filteredAssets);
             this.applyAssetFilter(filteredAssets);
         }
     }
 
     applyAssetFilter(filteredAssets: SpAsset[]) {
         let elementIds: Set<string> | undefined = undefined;
-
-        console.log('asset link type', this.activeAssetLink);
 
         if (filteredAssets.length === 0) {
             elementIds = undefined;
