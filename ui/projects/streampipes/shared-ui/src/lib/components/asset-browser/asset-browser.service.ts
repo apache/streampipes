@@ -287,7 +287,6 @@ export class SpAssetBrowserService {
         filteredLinkType: string,
         elementIds: Set<string>,
     ): void {
-        console.log('final asset', asset);
         const assetLinkValues = this.findAssetLinkValues(
             asset,
             filteredLinkType,
