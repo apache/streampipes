@@ -38,6 +38,29 @@ export class DataExplorerUtils {
         cy.visit('#/dashboard');
     }
 
+    public static checkAmountOfCharts(amount: number) {
+        DataExplorerUtils.goToDatalake();
+
+        if (amount === 0) {
+            // The wait is needed because the default value is the no-table-entries element.
+            // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
+            cy.wait(1000);
+            cy.dataCy('no-table-entries').should('be.visible');
+        } else {
+            ConnectBtns.moreOptions().should('have.length', amount);
+        }
+    }
+
+    public static checkChartCanBeEdited(chartName: string) {
+        GeneralUtils.openMenuForRow(chartName);
+        DataExplorerBtns.editDataViewButton(chartName).should('exist');
+    }
+
+    public static checkChartCanNotBeEdited(chartName: string) {
+        GeneralUtils.openMenuForRow(chartName);
+        DataExplorerBtns.editDataViewButton(chartName).should('not.exist');
+    }
+
     public static initDataLakeTests() {
         cy.initStreamPipesTest();
         DataExplorerUtils.loadRandomDataSetIntoDataLake();
@@ -95,14 +118,18 @@ export class DataExplorerUtils {
         dataViewName: string,
         dataSet: string,
         widgetType: string,
+        ignoreTimeSelection = false,
     ) {
         DataExplorerUtils.goToDatalake();
         DataExplorerUtils.createAndEditDataView();
 
-        DataExplorerUtils.selectTimeRange(
-            new Date(2020, 10, 20, 22, 44),
-            DataExplorerUtils.getFutureDate(),
-        );
+        if (!ignoreTimeSelection) {
+            DataExplorerUtils.selectTimeRange(
+                new Date(2020, 10, 20, 22, 44),
+                DataExplorerUtils.getFutureDate(),
+            );
+        }
+
         // DataExplorerUtils.addNewWidget();
         DataExplorerUtils.selectDataSet(dataSet);
         DataExplorerUtils.dataConfigSelectAllFields();
@@ -115,6 +142,7 @@ export class DataExplorerUtils {
 
         cy.wait(1000);
     }
+
     public static addAssetsToDashboard(assetNameList) {
         cy.dataCy('sp-show-dashboard-asset-checkbox')
             .find('input[type="checkbox"]')
@@ -140,6 +168,7 @@ export class DataExplorerUtils {
         // Configure data view
         cy.dataCy('data-view-name').type(name);
     }
+
     public static createDashboardWithLinkedAssets(
         dataView,
         name,
@@ -165,11 +194,13 @@ export class DataExplorerUtils {
     public static addDataViewAndTableWidget(
         dataViewName: string,
         dataSet: string,
+        ignoreTimeSelection = false,
     ) {
         this.addDataViewAndWidget(
             dataViewName,
             dataSet,
             DataExplorerWidget.TABLE,
+            ignoreTimeSelection,
         );
     }
 
