@@ -174,6 +174,7 @@ export class SpAssetBrowserService {
     }
 
     applyAssetFilter(filteredAssets: SpAsset[]) {
+        console.log('apply Asset Filter', filteredAssets);
         let elementIds: Set<string> | undefined = undefined;
 
         if (filteredAssets.length === 0) {
@@ -222,9 +223,6 @@ export class SpAssetBrowserService {
         asset: SpAsset,
         selectedAssets: SpAsset[],
     ): boolean {
-        //console.log('filter ASset', asset)
-        //console.log('selected Assets', selectedAssets)
-        //console.log(selectedAssets.find(a => a.assetId === asset.assetId) !== undefined)
         return (
             selectedAssets.find(a => a.assetId === asset.assetId) !== undefined
         );
@@ -260,6 +258,7 @@ export class SpAssetBrowserService {
 }*/
 
     private filterLabels(asset: SpAsset, selectedLabels: SpLabel[]): boolean {
+        console.log('asset ', asset);
         const labelIds = asset.labelIds || [];
         const matchesSelf = selectedLabels.every(label =>
             labelIds.includes(label._id),
