@@ -17,10 +17,8 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.dataexplorer.export.ObjectStorge.ExportProviderFactory;
-import org.apache.streampipes.dataexplorer.export.ObjectStorge.IObjectStorage;
+import org.apache.streampipes.dataexplorer.export.ObjectStorge.TestExportProviderConnection;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
-import org.apache.streampipes.model.configuration.ProviderType;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -36,13 +34,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -78,45 +71,13 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
         .findFirst();
 
     if (exportProviderSetting.isPresent()) {
-      ExportProviderSettings setting = exportProviderSetting.get();
-      ProviderType providerType = setting.getProviderType();
-
       try {
+        Map<String, Object> response = TestExportProviderConnection.connectionTest(exportProviderSetting.get());
+ 
 
-        IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
-            providerType, "TEST", setting,
-            "csv");
-        
-            String filePath = exportProvider.getFileName();
-
-      String csvData = "Message\nThis test file was automatically created as a connectivity test by StreamPipes.\n";
-
-      InputStream csvInputStream = new ByteArrayInputStream(csvData.getBytes());
-
-
-      StreamingResponseBody responseBody = outputStream -> {
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = csvInputStream.read(buffer)) > 0) {
-          outputStream.write(buffer, 0, length);
-        }
-      };
-      try {
-        exportProvider.store(responseBody);
-      } catch (IOException e) {
-        return serverError(SpLogMessage.from(e));
-
-      }
-
-           Map<String, Object> response = new HashMap<>();
-            response.put("filePath", filePath);
-            response.put("setting", setting);
-
-      return ok(response);// ok(setting);
-
-
-
-      } catch (Exception e) {
+      return ok(response);
+   
+      }  catch (Exception e) {
         return serverError(SpLogMessage.from(e));
       }
 

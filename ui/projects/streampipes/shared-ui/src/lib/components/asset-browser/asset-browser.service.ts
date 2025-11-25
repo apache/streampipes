@@ -33,6 +33,7 @@ import {
     AssetFilter,
     FilterResult,
 } from './asset-browser.model';
+import { CurrentUserService } from '../../services/current-user.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpAssetBrowserService {
@@ -50,6 +51,7 @@ export class SpAssetBrowserService {
     private genericStorageService = inject(GenericStorageService);
     private typeService = inject(Isa95TypeService);
     private assetService = inject(AssetManagementService);
+    private currentUserService = inject(CurrentUserService);
 
     constructor() {
         this.loadAssetData();
@@ -172,10 +174,16 @@ export class SpAssetBrowserService {
     }
 
     applyAssetFilter(filteredAssets: SpAsset[]) {
-        const elementIds = new Set<string>();
-        filteredAssets.forEach(asset => {
-            this.collectElementIds(asset, this.activeAssetLink, elementIds);
-        });
+        let elementIds: Set<string> | undefined = undefined;
+
+        if (filteredAssets.length === 0) {
+            elementIds = undefined;
+        } else {
+            elementIds = new Set<string>();
+            filteredAssets.forEach(asset => {
+                this.collectElementIds(asset, this.activeAssetLink, elementIds);
+            });
+        }
         const currentFilter = {
             filterActive: true,
             activeElementIds: elementIds,
@@ -259,6 +267,8 @@ export class SpAssetBrowserService {
             asset.assets.forEach((a: SpAsset) => {
                 this.collectElementIds(a, filteredLinkType, elementIds);
             });
+        } else {
+            elementIds = new Set<string>();
         }
     }
 
@@ -266,5 +276,13 @@ export class SpAssetBrowserService {
         return asset.assetLinks
             .filter(a => a.linkType === filteredLinkType)
             .map(a => a.resourceId);
+    }
+
+    hasNoAssetFilterPermission(): boolean {
+        return !this.currentUserService.hasAnyRole([
+            'ROLE_ADMIN',
+            'ROLE_ASSET_ADMIN',
+            'ROLE_ASSET_USER',
+        ]);
     }
 }

@@ -75,8 +75,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         this.assetFilterService.applyAssetLinkType('dashboard');
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
-                this.currentFilterIds =
-                    filter?.activeElementIds || new Set<string>();
+                this.currentFilterIds = filter?.activeElementIds;
                 this.applyDashboardFilters(this.currentFilterIds);
             });
         this.getDashboards();
@@ -152,8 +151,13 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         });
     }
 
-    applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
-        if (elementIds.size == 0) {
+    applyDashboardFilters(elementIds: Set<string>): void {
+        if (this.assetFilterService.hasNoAssetFilterPermission()) {
+            elementIds = new Set<string>();
+        }
+        if (elementIds == undefined) {
+            this.filteredDashboards = [];
+        } else if (elementIds.size == 0) {
             this.filteredDashboards = this.dashboards;
         } else {
             this.filteredDashboards = this.dashboards.filter(a =>

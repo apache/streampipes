@@ -100,7 +100,7 @@
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #optMenu="matMenu">
-            @if (!editMode && hasDataExplorerWritePrivileges) {
+            @if (!editMode && hasDashboardWritePrivileges) {
                 <button
                     mat-menu-item
                     (click)="triggerEditModeEmitter.emit()"
@@ -122,7 +122,7 @@
                     <span>{{ 'Hide time range selector' | translate }}</span>
                 </button>
             }
-            @if (hasDataExplorerWritePrivileges) {
+            @if (hasDashboardWritePrivileges) {
                 <button mat-menu-item (click)="deleteDashboardEmitter.emit()">
                     <mat-icon>clear</mat-icon>
                     <span>{{ 'Delete dashboard' | translate }}</span>

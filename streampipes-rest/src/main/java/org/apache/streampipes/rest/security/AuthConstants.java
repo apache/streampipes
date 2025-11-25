@@ -29,6 +29,7 @@ import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constant
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE;
+import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_FILES_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_GENERIC_STORAGE_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_ELEMENT_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE;
@@ -86,6 +87,9 @@ public class AuthConstants {
 
   public static final String HAS_READ_FILE_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_FILES_VALUE + Q + BE2;
+
+  public static final String HAS_WRITE_FILE_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_FILES_VALUE + Q + BE2;
 
   public static final String HAS_READ_ASSETS_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_ASSETS_VALUE + Q + BE2;

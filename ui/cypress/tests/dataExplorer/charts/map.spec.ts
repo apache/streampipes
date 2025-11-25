@@ -17,6 +17,7 @@
  */
 
 import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
 describe('Test Map View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
@@ -24,7 +25,11 @@ describe('Test Map View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.addDataViewAndWidget('view', 'Persist', 'map');
+        DataExplorerUtils.addDataViewAndWidget(
+            'view',
+            PrepareTestDataUtils.dataName,
+            'map',
+        );
 
         // Change marker positions
         DataExplorerUtils.openVisualizationConfig();

@@ -70,7 +70,7 @@ describe('Test add Assets To Dashboard', () => {
         DataExplorerUtils.renameDashboard('NEW');
         const assetNameList2 = [assetName2, assetName3];
         DataExplorerUtils.addToAsset(assetNameList2);
-        DataExplorerUtils.saveDashboard();
+        DataExplorerUtils.saveDataView();
 
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);

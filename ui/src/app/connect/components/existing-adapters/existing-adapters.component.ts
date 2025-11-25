@@ -46,6 +46,7 @@ import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { TranslateService } from '@ngx-translate/core';
+import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -104,8 +105,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.assetFilterService.applyAssetLinkType('adapter');
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
-                this.currentFilterIds =
-                    filter?.activeElementIds || new Set<string>();
+                this.currentFilterIds = filter?.activeElementIds;
                 this.applyAdapterFilters(this.currentFilterIds);
             });
         this.breadcrumbService.updateBreadcrumb(
@@ -292,11 +292,16 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {
+        if (this.assetFilterService.hasNoAssetFilterPermission()) {
+            elementIds = new Set<string>();
+        }
         this.currentFilterIds = elementIds;
         this.filteredAdapters = this.adapterFilter
             .transform(this.existingAdapters, this.currentFilter)
             .filter(a => {
-                if (elementIds.size === 0) {
+                if (elementIds === undefined) {
+                    return false;
+                } else if (elementIds.size === 0) {
                     return true;
                 } else {
                     return elementIds.has(a.elementId);
