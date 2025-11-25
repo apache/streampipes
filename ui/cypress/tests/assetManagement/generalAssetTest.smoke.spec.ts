@@ -32,7 +32,6 @@ describe('Creates a new adapter, add to assets', () => {
 
         // // Leave and navigate back to Assets
         DashboardUtils.goToDashboard();
-        AssetUtils.goToAssets();
         AssetUtils.checkAmountOfAssets(1);
 
         // Check that everything was stored correctly
@@ -41,7 +40,6 @@ describe('Creates a new adapter, add to assets', () => {
         AssetUtils.checkAmountOfLinkedResources(2);
 
         // Check that deletion of asset works
-        AssetUtils.goToAssets();
         AssetUtils.checkAmountOfAssets(1);
         AssetUtils.deleteAsset(assetName);
         AssetUtils.checkAmountOfAssets(0);

@@ -42,6 +42,11 @@ public class LocalFolder implements IObjectStorage {
                 + Instant.now().toString() + "." + format);
 
     }
+    
+    @Override
+    public String getFileName(){
+        return this.filePath.toString();
+    }
 
     @Override
     public void store(StreamingResponseBody datastream) throws IOException {

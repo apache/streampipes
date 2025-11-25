@@ -34,7 +34,6 @@ import {
     FilterResult,
 } from './asset-browser.model';
 import { CurrentUserService } from '../../services/current-user.service';
-import { any } from 'cypress/types/bluebird';
 
 @Injectable({ providedIn: 'root' })
 export class SpAssetBrowserService {

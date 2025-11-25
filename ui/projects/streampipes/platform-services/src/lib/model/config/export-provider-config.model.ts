@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,13 +15,9 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.export.ObjectStorge;
 
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
-import java.io.IOException;
-
-public interface IObjectStorage {
-    void store(StreamingResponseBody datastream) throws IOException;
-    String getFileName();
+import { ExportProviderSettings } from '../gen/streampipes-model';
+export interface ExportProviderResponse {
+    filePath: string;
+    setting: ExportProviderSettings;
 }

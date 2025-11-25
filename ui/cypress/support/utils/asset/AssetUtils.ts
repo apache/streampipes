@@ -23,7 +23,7 @@ import { GeneralUtils } from '../GeneralUtils';
 export class AssetUtils {
     public static goToAssets() {
         cy.visit('#/assets/overview');
-        cy.dataCy('create-new-asset-button').should('be.visible');
+        cy.dataCy('asset-title').should('be.visible');
     }
 
     public static goBackToOverview() {
@@ -58,13 +58,32 @@ export class AssetUtils {
     }
 
     public static checkAmountOfAssets(amount: number) {
-        cy.dataCy('assets-table').should('have.length', amount);
+        AssetUtils.goToAssets();
+
+        if (amount === 0) {
+            // The wait is needed because the default value is the no-table-entries element.
+            // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
+            cy.wait(1000);
+            cy.dataCy('no-table-entries').should('be.visible');
+        } else {
+            cy.dataCy('assets-table').should('have.length', amount);
+        }
     }
 
     public static checkAmountOfLinkedResources(amount: number) {
         cy.dataCy('linked-resources-list')
             .children()
             .should('have.length', amount);
+    }
+
+    public static checkAssetCanBeEdited(assetName: string) {
+        GeneralUtils.openMenuForRow(assetName);
+        AssetBtns.editAssetBtn(assetName).should('exist');
+    }
+
+    public static checkAssetCanNotBeEdited(assetName: string) {
+        GeneralUtils.openMenuForRow(assetName);
+        AssetBtns.editAssetBtn(assetName).should('not.exist');
     }
 
     public static checkAmountOfAssetsGreaterThan(amount: number) {

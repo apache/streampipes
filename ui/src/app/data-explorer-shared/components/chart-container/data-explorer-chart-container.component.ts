@@ -138,6 +138,7 @@ export class DataExplorerChartContainerComponent
     };
 
     hasDataExplorerWritePrivileges = false;
+    hasDashboardWritePrivileges = false;
 
     authSubscription: Subscription;
     widgetTypeChangedSubscription: Subscription;
@@ -174,6 +175,9 @@ export class DataExplorerChartContainerComponent
             user => {
                 this.hasDataExplorerWritePrivileges = this.authService.hasRole(
                     UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
+                );
+                this.hasDashboardWritePrivileges = this.authService.hasRole(
+                    UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
                 );
             },
         );

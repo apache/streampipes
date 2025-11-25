@@ -91,6 +91,7 @@ public class RoleManager {
         Role.createDefaultRole(DefaultRole.Constants.ROLE_CONNECT_ADMIN_VALUE, "Connect Admin", List.of(
             DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_READ_ADAPTER_VALUE,
+            DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_READ_FILES_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_WRITE_FILES_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE
