@@ -54,12 +54,10 @@ describe('Test User Roles for Charts', () => {
         setup();
 
         // check admin
-        assertChartIsVisibleAndEditableCanChangePermissions(
-            UserUtils.adminUser,
-        );
+        chartIsVisibleAndEditableCanChangePermissions(UserUtils.adminUser);
 
         // check other users
-        assertChartIsNotVisible(chartAdmin2);
+        chartIsNotVisible(chartAdmin2);
     });
 
     it('Make chart public', () => {
@@ -67,13 +65,11 @@ describe('Test User Roles for Charts', () => {
 
         PermissionUtils.markElementAsPublic(chartName);
 
-        assertChartIsVisibleAndEditableCanChangePermissions(
-            UserUtils.adminUser,
-        );
+        chartIsVisibleAndEditableCanChangePermissions(UserUtils.adminUser);
 
-        assertChartIsVisibleButNotEditable(chartUser1);
+        chartIsVisibleButNotEditable(chartUser1);
 
-        assertChartIsVisibleAndEditableCannotChangePermissions(chartAdmin2);
+        chartIsVisibleAndEditableCannotChangePermissions(chartAdmin2);
     });
 
     it('Share chart with other user and change ownership', () => {
@@ -81,27 +77,23 @@ describe('Test User Roles for Charts', () => {
 
         PermissionUtils.authorizeUser(chartName, chartAdmin2.email);
 
-        assertChartIsVisibleAndEditableCanChangePermissions(
-            UserUtils.adminUser,
-        );
+        chartIsVisibleAndEditableCanChangePermissions(UserUtils.adminUser);
 
-        assertChartIsVisibleAndEditableCannotChangePermissions(chartAdmin2);
+        chartIsVisibleAndEditableCannotChangePermissions(chartAdmin2);
 
-        assertChartIsNotVisible(chartUser1);
+        chartIsNotVisible(chartUser1);
 
         UserUtils.switchUser(chartAdmin1);
         DataExplorerUtils.goToDatalake();
         PermissionUtils.changeOwnership(chartName, chartAdmin2.email);
 
-        assertChartIsNotVisible(chartAdmin1);
+        chartIsNotVisible(chartAdmin1);
 
-        assertChartIsVisibleAndEditableCanChangePermissions(
-            UserUtils.adminUser,
-        );
+        chartIsVisibleAndEditableCanChangePermissions(UserUtils.adminUser);
 
-        assertChartIsVisibleAndEditableCanChangePermissions(chartAdmin2);
+        chartIsVisibleAndEditableCanChangePermissions(chartAdmin2);
 
-        assertChartIsNotVisible(chartUser1);
+        chartIsNotVisible(chartUser1);
     });
 
     it('Chart is shared with group for user 2', () => {
@@ -116,13 +108,11 @@ describe('Test User Roles for Charts', () => {
 
         PermissionUtils.authorizeGroup(chartName, chartAdminGroup);
 
-        assertChartIsVisibleAndEditableCanChangePermissions(
-            UserUtils.adminUser,
-        );
+        chartIsVisibleAndEditableCanChangePermissions(UserUtils.adminUser);
 
-        assertChartIsNotVisible(chartUser1);
+        chartIsNotVisible(chartUser1);
 
-        assertChartIsVisibleAndEditableCannotChangePermissions(chartAdmin2);
+        chartIsVisibleAndEditableCannotChangePermissions(chartAdmin2);
     });
 
     function setup() {
@@ -137,38 +127,32 @@ describe('Test User Roles for Charts', () => {
         DataExplorerUtils.goToDatalake();
     }
 
-    function assertChartIsVisibleAndEditableCanChangePermissions(user: User) {
+    function chartIsVisibleAndEditableCanChangePermissions(user: User) {
         UserUtils.switchUser(user);
-        DataExplorerUtils.goToDatalake();
         DataExplorerUtils.checkAmountOfCharts(1);
         DataExplorerUtils.checkChartCanBeEdited(chartName);
 
         PermissionUtils.validateUserCanChangePermissions(chartName);
     }
 
-    function assertChartIsVisibleAndEditableCannotChangePermissions(
-        user: User,
-    ) {
+    function chartIsVisibleAndEditableCannotChangePermissions(user: User) {
         UserUtils.switchUser(user);
-        DataExplorerUtils.goToDatalake();
         DataExplorerUtils.checkAmountOfCharts(1);
         DataExplorerUtils.checkChartCanBeEdited(chartName);
 
         PermissionUtils.validateUserCanNotChangePermissions(chartName);
     }
 
-    function assertChartIsVisibleButNotEditable(user: User) {
+    function chartIsVisibleButNotEditable(user: User) {
         UserUtils.switchUser(user);
-        DataExplorerUtils.goToDatalake();
         DataExplorerUtils.checkAmountOfCharts(1);
         DataExplorerUtils.checkChartCanNotBeEdited(chartName);
 
         PermissionUtils.validateUserCanNotChangePermissions(chartName);
     }
 
-    function assertChartIsNotVisible(user: User) {
+    function chartIsNotVisible(user: User) {
         UserUtils.switchUser(user);
-        DataExplorerUtils.goToDatalake();
         DataExplorerUtils.checkAmountOfCharts(0);
     }
 });

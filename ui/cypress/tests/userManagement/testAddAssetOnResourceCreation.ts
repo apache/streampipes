@@ -123,7 +123,7 @@ describe('Test that resources can be added to assets on creation', () => {
     it('Check Role Asset Admin in Dashboard', () => {
         UserUtils.switchUser(newUser);
         DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.createDashboard('Test');
+        DataExplorerUtils.addNewDashboard('Test');
 
         DataExplorerBtns.dashboardAssetCheckboxBtn().should('exist');
         DataExplorerBtns.closeDashboardCreate().click();
@@ -133,7 +133,7 @@ describe('Test that resources can be added to assets on creation', () => {
         UserUtils.switchUser(newUser);
 
         DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.createDashboard('Test');
+        DataExplorerUtils.addNewDashboard('Test');
         DataExplorerBtns.dashboardAssetCheckboxBtn().should('not.exist');
     });
 });
