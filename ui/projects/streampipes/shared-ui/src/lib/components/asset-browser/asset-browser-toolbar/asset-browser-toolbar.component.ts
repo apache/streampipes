@@ -56,7 +56,6 @@ export class AssetBrowserToolbarComponent implements OnInit, OnDestroy {
                 });
             this.assetBrowserService.currentAssetFilter$.subscribe(
                 assetFilter => {
-                    console.log(assetFilter);
                     this.filterActive = assetFilter.filterActive;
                     this.filterDisabled = assetFilter.filterDisabled;
                     this.allAssetCount = assetFilter.allAssetCount;

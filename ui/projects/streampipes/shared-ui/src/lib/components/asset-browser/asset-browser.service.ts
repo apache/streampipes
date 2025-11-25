@@ -176,7 +176,6 @@ export class SpAssetBrowserService {
     }
 
     applyAssetFilter(filteredAssets: SpAsset[]) {
-        console.log('apply Asset Filter', filteredAssets);
         let elementIds: Set<string> | undefined = undefined;
 
         if (filteredAssets.length === 0) {
@@ -278,7 +277,6 @@ export class SpAssetBrowserService {
         filteredLinkType: string,
         elementIds: Set<string>,
     ): void {
-        console.log('Collect elementIDs for', asset);
         const assetLinkValues = this.findAssetLinkValues(
             asset,
             filteredLinkType,
