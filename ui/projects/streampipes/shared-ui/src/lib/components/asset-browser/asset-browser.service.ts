@@ -171,12 +171,15 @@ export class SpAssetBrowserService {
                 )
                 .filter((a: SpAsset | null) => a !== null); // remove nulls from the array
 
+            console.log('filteredAssets', filteredAssets);
             this.applyAssetFilter(filteredAssets);
         }
     }
 
     applyAssetFilter(filteredAssets: SpAsset[]) {
         let elementIds: Set<string> | undefined = undefined;
+
+        console.log('asset link type', this.activeAssetLink);
 
         if (filteredAssets.length === 0) {
             elementIds = undefined;
@@ -244,11 +247,17 @@ export class SpAssetBrowserService {
         selectedLabels: SpLabel[],
         recursionStep: boolean = false,
         previousMatchesSelf: boolean = false,
+        anyMatch: boolean = false,
     ): SpAsset | null {
         const labelIds = asset.labelIds || [];
         const matchesSelf = selectedLabels.some(label =>
             labelIds.includes(label._id),
         );
+
+        if (matchesSelf) {
+            // necessary to filter Assetview as in such a case the links are irrelevant
+            anyMatch = true;
+        }
 
         if (!recursionStep && matchesSelf) {
             // If it already matches on top level --> labels are inherited
@@ -271,7 +280,11 @@ export class SpAssetBrowserService {
             asset.assets = filteredChildren;
         }
 
-        return asset;
+        if (anyMatch) {
+            return asset;
+        } else {
+            return null;
+        }
     }
 
     collectElementIds(
