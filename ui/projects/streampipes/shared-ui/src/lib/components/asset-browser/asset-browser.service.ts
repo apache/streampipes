@@ -163,11 +163,13 @@ export class SpAssetBrowserService {
                         allSitesSelected ||
                         this.filterSites(a, filter.selectedSites),
                 )
-                .filter(
-                    a =>
-                        allLabelsSelected ||
-                        this.filterLabels(a, filter.selectedLabels),
-                );
+                .map(a =>
+                    allLabelsSelected ||
+                    this.filterLabels(a, filter.selectedLabels)
+                        ? a
+                        : null,
+                )
+                .filter((a: SpAsset | null) => a !== null); // remove nulls from the array
 
             this.applyAssetFilter(filteredAssets);
         }
@@ -238,56 +240,35 @@ export class SpAssetBrowserService {
         );
     }
 
-    /**private filterLabels(asset: SpAsset, selectedLabels: SpLabel[]): boolean {
-    const selLabelIds = selectedLabels.map(l => l._id); 
-    const labelIds = asset.labelIds ?? [];
-    const matchesSelf = selLabelIds.some(id => labelIds.includes(id));
-
-    if (!asset.assets || asset.assets.length === 0) {
-        console.log('lengh is 0', matchesSelf)
-        return matchesSelf;
-    }
-
-    const filteredChildren = asset.assets
-        .map(a => ({ ...a }))
-        .filter(a => this.filterLabels(a, selectedLabels));
-    console.log("parent filteredChildren.length:", filteredChildren.length);
-    asset.assets = filteredChildren;
-           console.log('lengh > 0', matchesSelf)
-    return matchesSelf || filteredChildren.length > 0;
-}*/
-
-    private filterLabels(asset: SpAsset, selectedLabels: SpLabel[]): boolean {
-        console.log('asset ', asset);
+    private filterLabels(
+        asset: SpAsset,
+        selectedLabels: SpLabel[],
+        recursionStep: boolean = false,
+    ): SpAsset | null {
         const labelIds = asset.labelIds || [];
-        const matchesSelf = selectedLabels.every(label =>
+        const matchesSelf = selectedLabels.some(label =>
             labelIds.includes(label._id),
         );
-        console.log(matchesSelf);
+
+        if (!recursionStep && matchesSelf) {
+            // Id it already matches on top level --> labels are inherited
+            return asset;
+        }
+
         let filteredChildren: SpAsset[] = [];
 
         if (asset.assets?.length) {
             filteredChildren = asset.assets
-                .map(child => ({ ...child })) // clone
-                .filter(child => this.filterLabels(child, selectedLabels));
+                .map(child => ({ ...child }))
+                .filter(child =>
+                    this.filterLabels(child, selectedLabels, true),
+                );
+
+            if (!recursionStep) {
+                asset.assetLinks = [];
+            }
         }
-
-        //const hasMatchingChild = filteredChildren.length > 0;
-
-        // parent is kept if it matches itself OR a child matches
-        //const assetMatches = matchesSelf || hasMatchingChild;
-
-        // overwrite children *only if* parent is kept
-        /**if (matchesSelf && asset.assets?.length) {
-    asset.assets = filteredChildren;
-  }
-  else{
-     asset.assets = filteredChildren;
-     return false;
-
-  }*/
-
-        return matchesSelf;
+        return asset;
     }
 
     collectElementIds(
@@ -295,6 +276,7 @@ export class SpAssetBrowserService {
         filteredLinkType: string,
         elementIds: Set<string>,
     ): void {
+        console.log('Collect elementIDs for', asset);
         const assetLinkValues = this.findAssetLinkValues(
             asset,
             filteredLinkType,
