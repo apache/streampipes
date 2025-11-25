@@ -268,7 +268,7 @@ export class SpAssetBrowserService {
             labelIds.includes(label._id),
         );
 
-        if (!recursionStep && matchesSelf) {
+        if (matchesSelf) {
             // If it already matches on top level --> labels are inherited
             return asset;
         }
@@ -295,7 +295,11 @@ export class SpAssetBrowserService {
                 .map(child => child as SpAsset);
         }
 
-        if (!matchesSelf && filteredChildren.length === 0) {
+        if (
+            !matchesSelf &&
+            !previousMatchesSelf &&
+            filteredChildren.length === 0
+        ) {
             return null;
         }
         asset.assets = filteredChildren;
