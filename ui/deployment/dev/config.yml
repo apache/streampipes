@@ -25,4 +25,5 @@ modules:
     - spDashboard
     - spDataExplorer
     - spAssets
+    - spDatasets
     - spConfiguration

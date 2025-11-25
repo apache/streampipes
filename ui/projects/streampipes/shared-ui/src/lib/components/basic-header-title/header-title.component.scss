@@ -29,3 +29,10 @@
         )
         1;
 }
+
+.header-description {
+    font-size: clamp(0.875rem, 1.2vw, 0.95rem);
+    line-height: 1.35;
+    color: var(--fg-muted);
+    font-weight: 300;
+}

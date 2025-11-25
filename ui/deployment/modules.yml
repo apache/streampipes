@@ -28,6 +28,19 @@ spAssets:
     pageNames: 'PageName.ASSETS'
     showStatusBox: false
     category: 'management'
+spDatasets:
+    componentImport: False
+    moduleName: 'DatasetModule'
+    path: './dataset/dataset.module'
+    link: 'datasets'
+    url: '/datasets'
+    title: 'Datasets'
+    description: 'Manage datasets'
+    icon: 'dataset'
+    privileges: '[UserPrivilege.PRIVILEGE_READ_PIPELINE, UserPrivilege.PRIVILEGE_WRITE_PIPELINE, UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
+    pageNames: 'PageName.DATASETS'
+    showStatusBox: false
+    category: 'management'
 spHome:
     streamPipesModule: True
     moduleName: 'HomeModule'

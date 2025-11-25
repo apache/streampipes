@@ -29,6 +29,9 @@ export class SpBasicHeaderTitleComponent implements OnInit {
     title: string;
 
     @Input()
+    description: string;
+
+    @Input()
     margin = '20px 0px';
 
     ngOnInit(): void {}

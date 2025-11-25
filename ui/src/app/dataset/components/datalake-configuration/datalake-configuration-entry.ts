@@ -1,5 +1,5 @@
 import { RetentionTimeConfig } from '@streampipes/platform-services';
-import { RetentionConfig } from '../dialog/data-retention-dialog/model/retention-config.model';
+import { RetentionConfig } from '../../dialog/data-retention-dialog/model/retention-config.model';
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more

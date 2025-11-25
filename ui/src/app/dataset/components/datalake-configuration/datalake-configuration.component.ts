@@ -41,12 +41,12 @@ import {
     SpBreadcrumbService,
     SpNavigationItem,
 } from '@streampipes/shared-ui';
-import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
-import { SpConfigurationTabsService } from '../configuration-tabs.service';
-import { SpConfigurationRoutes } from '../configuration.routes';
-import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/data-retention-dialog.component';
-import { ExportProviderComponent } from '../dialog/export-provider-dialog/export-provider-dialog.component';
-import { DeleteExportProviderComponent } from '../dialog/delete-export-provider/delete-export-provider-dialog.component';
+import { DeleteDatalakeIndexComponent } from '../../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
+import { SpConfigurationTabsService } from '../../../configuration/configuration-tabs.service';
+import { SpConfigurationRoutes } from '../../../configuration/configuration.routes';
+import { DataRetentionDialogComponent } from '../../dialog/data-retention-dialog/data-retention-dialog.component';
+import { ExportProviderComponent } from '../../dialog/export-provider-dialog/export-provider-dialog.component';
+import { DeleteExportProviderComponent } from '../../dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
