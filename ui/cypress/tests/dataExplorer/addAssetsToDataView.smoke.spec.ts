@@ -34,7 +34,6 @@ describe('Creates a new adapter with a linked asset', () => {
 
     it('Add Assets during Chart generation', () => {
         DataExplorerUtils.createDataViewWithAssets([assetName1, assetName2]);
-        AssetUtils.goToAssets();
         AssetUtils.checkAmountOfAssets(3);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
@@ -43,7 +42,6 @@ describe('Creates a new adapter with a linked asset', () => {
 
     it('Edit Assets during Chart generation', () => {
         DataExplorerUtils.createDataViewWithAssets([assetName1, assetName2]);
-        AssetUtils.goToAssets();
         AssetUtils.checkAmountOfAssets(3);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
@@ -58,7 +56,6 @@ describe('Creates a new adapter with a linked asset', () => {
         //Neceassary for Background Task to finish
         cy.wait(500);
 
-        AssetUtils.goToAssets();
         AssetUtils.checkAmountOfAssets(3);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);
