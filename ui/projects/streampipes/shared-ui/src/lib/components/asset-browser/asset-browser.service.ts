@@ -251,8 +251,13 @@ export class SpAssetBrowserService {
         );
 
         if (!recursionStep && matchesSelf) {
-            // Id it already matches on top level --> labels are inherited
+            // If it already matches on top level --> labels are inherited
             return asset;
+        }
+
+        if (!matchesSelf) {
+            // remove asset Links not of interest
+            asset.assetLinks = [];
         }
 
         let filteredChildren: SpAsset[] = [];
@@ -263,12 +268,9 @@ export class SpAssetBrowserService {
                 .filter(child =>
                     this.filterLabels(child, selectedLabels, true, matchesSelf),
                 );
-
-            if (!recursionStep || !previousMatchesSelf) {
-                // remove asset Links not of interest
-                asset.assetLinks = [];
-            }
+            asset.assets = filteredChildren;
         }
+
         return asset;
     }
 
