@@ -928,5 +928,6 @@
   "Error Details": "Fehler-Details",
   "All {{allResourcesAlias}}": "Alle {{allResourcesAlias}}",
   "{{ widgetTitle }} Clone": "{{ widgetTitle }} Kopie",
-  "Do you really want to delete the data index {{index}}?": "Möchten Sie den Datensatz mit dem Index {{index}} wirklich löschen?"
+  "Do you really want to delete the data index {{index}}?": "Möchten Sie den Datensatz mit dem Index {{index}} wirklich löschen?",
+  "Do you really want to truncate the data in {{index}}?": "Möchten Sie die Daten im Index {{index}} wirklich kürzen?"
 }
