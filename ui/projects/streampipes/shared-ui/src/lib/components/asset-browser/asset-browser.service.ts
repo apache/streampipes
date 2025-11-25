@@ -34,6 +34,7 @@ import {
     FilterResult,
 } from './asset-browser.model';
 import { CurrentUserService } from '../../services/current-user.service';
+import { any } from 'cypress/types/bluebird';
 
 @Injectable({ providedIn: 'root' })
 export class SpAssetBrowserService {
@@ -205,19 +206,38 @@ export class SpAssetBrowserService {
     private filterType(
         asset: SpAsset,
         selectedTypes: Isa95TypeDesc[],
-    ): boolean {
+        anyMatch: boolean = false,
+    ): SpAsset | null {
         const matchesSelf = selectedTypes.some(
             type => type.type === asset.assetType?.isa95AssetType,
         );
 
-        if (asset.assets?.length) {
-            asset.assets = asset.assets
-                .map(a => ({ ...a }))
-                .filter(a => this.filterType(a, selectedTypes));
-            return matchesSelf || asset.assets.length > 0;
+        if (matchesSelf) {
+            // necessary to filter Assetview as in such a case the links are irrelevant
+            anyMatch = true;
         }
 
-        return matchesSelf;
+        if (!matchesSelf) {
+            // remove asset Links not of interest
+            asset.assetLinks = [];
+        }
+
+        let filteredChildren: SpAsset[] = [];
+
+        if (asset.assets?.length) {
+            filteredChildren = asset.assets
+                .map(child => ({ ...child }))
+                .filter(child =>
+                    this.filterType(child, selectedTypes, anyMatch),
+                );
+            asset.assets = filteredChildren;
+        }
+
+        if (anyMatch) {
+            return asset;
+        } else {
+            return null;
+        }
     }
 
     private filterAssetModel(
@@ -272,7 +292,13 @@ export class SpAssetBrowserService {
             filteredChildren = asset.assets
                 .map(child => ({ ...child }))
                 .filter(child =>
-                    this.filterLabels(child, selectedLabels, true, matchesSelf),
+                    this.filterLabels(
+                        child,
+                        selectedLabels,
+                        true,
+                        matchesSelf,
+                        anyMatch,
+                    ),
                 );
             asset.assets = filteredChildren;
         }
