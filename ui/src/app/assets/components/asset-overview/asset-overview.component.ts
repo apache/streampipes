@@ -118,7 +118,7 @@ export class SpAssetOverviewComponent implements OnInit {
     }
 
     goToDetailsView(asset: SpAssetModel, editMode = false) {
-        const mode = editMode ? 'edit' : 'view';
+        const mode = editMode && this.hasWritePrivilege ? 'edit' : 'view';
         this.router.navigate(['assets', 'details', asset.elementId, mode]);
     }
 
