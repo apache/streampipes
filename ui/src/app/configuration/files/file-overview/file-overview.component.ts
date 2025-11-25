@@ -62,9 +62,11 @@ export class FileOverviewComponent implements OnInit {
                 title: this.translateService.instant(
                     'Do you really want to delete this file?',
                 ),
-                subtitle: 'This cannot be undone.',
-                cancelTitle: 'No',
-                okTitle: 'Yes',
+                subtitle: this.translateService.instant(
+                    'This cannot be undone.',
+                ),
+                cancelTitle: this.translateService.instant('No'),
+                okTitle: this.translateService.instant('Yes'),
                 confirmAndCancel: true,
             },
         });

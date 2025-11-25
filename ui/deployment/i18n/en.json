@@ -929,5 +929,8 @@
   "All {{allResourcesAlias}}": "All {{allResourcesAlias}}",
   "{{ widgetTitle }} Clone": "{{ widgetTitle }} Clone",
   "Do you really want to delete the data index {{index}}?": "Do you really want to delete the data index {{index}}?",
-  "Do you really want to truncate the data in {{index}}?": "Do you really want to truncate the data in {{index}}?"
+  "Do you really want to truncate the data in {{index}}?": "Do you really want to truncate the data in {{index}}?",
+  "Yes": null,
+  "No": null,
+  "This cannot be undone.": null
 }
