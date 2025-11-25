@@ -413,6 +413,44 @@
                         </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="test">
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{ 'Test' | translate }}
+                        </th>
+                        <td mat-cell *matCellDef="let configurationEntry">
+                            <div>
+                                <div fxLayout="row">
+                                    <span
+                                        fxFlex
+                                        fxFlexOrder="3"
+                                        fxLayout="row"
+                                        fxLayoutAlign="start center"
+                                    >
+                                        <button
+                                            color="accent"
+                                            mat-icon-button
+                                            matTooltip="{{
+                                                'Test export provider configuration'
+                                                    | translate
+                                            }}"
+                                            data-cy="exportProvider-test-btn"
+                                            matTooltipPosition="above"
+                                            (click)="
+                                                testExportProvider(
+                                                    configurationEntry.providerId
+                                                )
+                                            "
+                                        >
+                                            <i class="material-icons"
+                                                >bug_report</i
+                                            >
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+
                     <tr
                         mat-header-row
                         *matHeaderRowDef="displayedColumnsExport"

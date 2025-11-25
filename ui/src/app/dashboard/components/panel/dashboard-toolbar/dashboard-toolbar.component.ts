@@ -43,7 +43,7 @@ export class DashboardToolbarComponent {
     timeRangeVisible: boolean;
 
     @Input()
-    hasDataExplorerWritePrivileges: boolean;
+    hasDashboardWritePrivileges: boolean;
 
     @Input()
     timeSettings: TimeSettings;

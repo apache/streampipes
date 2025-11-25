@@ -80,7 +80,7 @@ export class DashboardPanelComponent
     _dashboardGrid: DashboardGridViewComponent;
     _dashboardSlide: DashboardSlideViewComponent;
 
-    hasDataExplorerWritePrivileges = false;
+    hasDashboardWritePrivileges = false;
 
     public items: Dashboard[];
 
@@ -114,10 +114,10 @@ export class DashboardPanelComponent
         this.getDashboard(params.id, startTime, endTime);
 
         this.authSubscription = this.currentUserService.user$.subscribe(_ => {
-            this.hasDataExplorerWritePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
+            this.hasDashboardWritePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
-            if (queryParams.editMode && this.hasDataExplorerWritePrivileges) {
+            if (queryParams.editMode && this.hasDashboardWritePrivileges) {
                 this.editMode = true;
             }
         });

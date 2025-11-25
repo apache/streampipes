@@ -66,8 +66,8 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     previewModeActive = false;
     pipelineNotFound = false;
 
-    currentUserSub: Subscription;
-    autoRefreshSub: Subscription;
+    currentUser$: Subscription;
+    autoRefresh$: Subscription;
 
     @ViewChild('pipelinePreviewComponent')
     pipelinePreviewComponent: PipelinePreviewComponent;
@@ -84,7 +84,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.currentUserSub = this.currentUserService.user$.subscribe(user => {
+        this.currentUser$ = this.currentUserService.user$.subscribe(user => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );
@@ -147,7 +147,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     }
 
     setupAutoRefresh(): void {
-        this.autoRefreshSub = interval(5000)
+        this.autoRefresh$ = interval(5000)
             .pipe(
                 filter(() => this.autoRefresh),
                 switchMap(() => this.getMonitoringObservables(true)),
@@ -212,7 +212,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.currentUserSub?.unsubscribe();
-        this.autoRefreshSub?.unsubscribe();
+        this.currentUser$?.unsubscribe();
+        this.autoRefresh$?.unsubscribe();
     }
 }

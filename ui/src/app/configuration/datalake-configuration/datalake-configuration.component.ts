@@ -48,6 +48,7 @@ import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/da
 import { ExportProviderComponent } from '../dialog/export-provider-dialog/export-provider-dialog.component';
 import { DeleteExportProviderComponent } from '../dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ExportProviderConnectionTestComponent } from '../dialog/export-provider-connection-test/export-provider-connection-test.component';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -94,6 +95,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         'bucket',
         'editExportProvider',
         'delete',
+        'test',
     ];
 
     pageSize = 15;
@@ -225,6 +227,25 @@ export class DatalakeConfigurationComponent implements OnInit {
             this.dialogService.open(DeleteExportProviderComponent, {
                 panelType: PanelType.STANDARD_PANEL,
                 title: this.translateService.instant('Delete Export Provider'),
+                width: '70vw',
+                data: {
+                    providerId: providerId,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.loadAvailableExportProvider();
+            }
+        });
+    }
+    testExportProvider(providerId: string) {
+        const dialogRef: DialogRef<ExportProviderConnectionTestComponent> =
+            this.dialogService.open(ExportProviderConnectionTestComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant(
+                    'Test Export Provider Connection',
+                ),
                 width: '70vw',
                 data: {
                     providerId: providerId,

@@ -87,7 +87,10 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
     }
 
     openDataView(dataView: DataExplorerWidgetModel, editMode: boolean): void {
-        this.routingService.navigateToDataView(editMode, dataView.elementId);
+        this.routingService.navigateToDataView(
+            editMode && this.hasDataExplorerWritePrivileges,
+            dataView.elementId,
+        );
     }
 
     showPermissionsDialog(chart: DataExplorerWidgetModel) {

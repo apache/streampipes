@@ -17,7 +17,9 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.dataexplorer.export.ObjectStorge.TestExportProviderConnection;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
@@ -35,6 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -48,14 +52,40 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
   }
 
   @GetMapping(value = "/{providerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-@PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-public ResponseEntity<ExportProviderSettings> getExportProviderSettingById(@PathVariable String providerId) {
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public ResponseEntity<ExportProviderSettings> getExportProviderSettingById(@PathVariable String providerId) {
     return getSpCoreConfigurationStorage().get().getExportProviderSettings().stream()
         .filter(setting -> setting.getProviderId().equalsIgnoreCase(providerId))
         .findFirst()
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
-}
+  }
+
+  @GetMapping(value = "/test/{providerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public ResponseEntity<?> testExportProviderSettingById(@PathVariable String providerId) {
+    // Get Export Provider Settings
+    Optional<ExportProviderSettings> exportProviderSetting = getSpCoreConfigurationStorage().get()
+        .getExportProviderSettings().stream()
+        .filter(setting -> setting.getProviderId().equalsIgnoreCase(providerId))
+        .findFirst();
+
+    if (exportProviderSetting.isPresent()) {
+      try {
+        Map<String, Object> response = TestExportProviderConnection.connectionTest(exportProviderSetting.get());
+ 
+
+      return ok(response);
+   
+      }  catch (Exception e) {
+        return serverError(SpLogMessage.from(e));
+      }
+
+     
+    } else {
+      return serverError("No provider found.");
+    }
+  }
 
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
@@ -74,8 +104,8 @@ public ResponseEntity<ExportProviderSettings> getExportProviderSettingById(@Path
     }
 
     List<ExportProviderSettings> providerSettingsWithoutExisting = providerSettings.stream()
-    .filter(existing -> existing != null && !existing.getProviderId().equals(config.getProviderId()))
-    .collect(Collectors.toList());
+        .filter(existing -> existing != null && !existing.getProviderId().equals(config.getProviderId()))
+        .collect(Collectors.toList());
 
     providerSettingsWithoutExisting.add(config);
 

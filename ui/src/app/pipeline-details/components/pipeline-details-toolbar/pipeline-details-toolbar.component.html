@@ -34,18 +34,20 @@
             >
         </div>
     </button>
-    <button
-        mat-button
-        color="accent"
-        [matTooltip]="'Pipeline as code' | translate"
-        [matTooltipPosition]="'above'"
-        (click)="openCodeDialogEmitter.emit()"
-    >
-        <div fxLayoutAlign="start center" fxLayout="row">
-            <i class="material-icons">code</i>
-            <span>&nbsp;{{ 'View pipeline as code' | translate }}</span>
-        </div>
-    </button>
+    @if (hasPipelineWritePrivileges) {
+        <button
+            mat-button
+            color="accent"
+            [matTooltip]="'Pipeline as code' | translate"
+            [matTooltipPosition]="'above'"
+            (click)="openCodeDialogEmitter.emit()"
+        >
+            <div fxLayoutAlign="start center" fxLayout="row">
+                <i class="material-icons">code</i>
+                <span>&nbsp;{{ 'View pipeline as code' | translate }}</span>
+            </div>
+        </button>
+    }
     <div fxFlex></div>
     <div fxLayoutAlign="end center">
         <button

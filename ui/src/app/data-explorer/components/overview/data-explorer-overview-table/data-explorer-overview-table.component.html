@@ -103,7 +103,11 @@
                         <span>{{ 'Edit chart' | translate }}</span>
                     </button>
                 }
-                <button mat-menu-item (click)="showPermissionsDialog(element)">
+                <button
+                    data-cy="open-manage-permissions"
+                    mat-menu-item
+                    (click)="showPermissionsDialog(element)"
+                >
                     <mat-icon>share</mat-icon>
                     <span>{{ 'Manage permissions' | translate }}</span>
                 </button>
