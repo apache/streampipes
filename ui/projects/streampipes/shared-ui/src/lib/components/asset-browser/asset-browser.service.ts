@@ -252,26 +252,25 @@ export class SpAssetBrowserService {
         selectedLabels: SpLabel[],
         recursionStep: boolean = false,
         previousMatchesSelf: boolean = false,
-        changed: boolean = false, // Track whether anything changed
     ): SpAsset | null {
-        console.log(asset);
         const labelIds = asset.labelIds || [];
         const matchesSelf = selectedLabels.some(label =>
             labelIds.includes(label._id),
         );
 
         if (!recursionStep && matchesSelf) {
+            // If it already matches on top level --> labels are inherited
             return asset;
         }
 
-        let localChanged = changed;
-
         if (!matchesSelf && !previousMatchesSelf) {
             // remove asset Links not of interest
-            if (asset.assetLinks.length > 0) {
-                asset.assetLinks = [];
-                localChanged = true;
-            }
+            asset.assetLinks = [];
+        }
+
+        if (!matchesSelf && !asset.assets?.length) {
+            // If the asset does not match the labels at the current level and recursion is not going to match either, return null
+            return null;
         }
 
         let filteredChildren: SpAsset[] = [];
@@ -279,28 +278,19 @@ export class SpAssetBrowserService {
         if (asset.assets?.length) {
             filteredChildren = asset.assets
                 .map(child => ({ ...child }))
-                .filter(child => {
-                    const filteredChild = this.filterLabels(
-                        child,
-                        selectedLabels,
-                        true,
-                        matchesSelf,
-                        localChanged,
-                    );
-                    if (filteredChild) {
-                        localChanged = true;
-                    }
-                    return filteredChild !== null;
-                });
-
-            if (filteredChildren.length !== asset.assets.length) {
-                localChanged = true;
-            }
-
-            asset.assets = filteredChildren;
+                .map(child =>
+                    this.filterLabels(child, selectedLabels, true, matchesSelf),
+                )
+                .filter(child => child !== null)
+                .map(child => child as SpAsset);
         }
-        console.log('lc', localChanged);
-        return localChanged ? asset : null;
+
+        if (!matchesSelf && filteredChildren.length === 0) {
+            return null;
+        }
+        asset.assets = filteredChildren;
+
+        return asset;
     }
 
     collectElementIds(
