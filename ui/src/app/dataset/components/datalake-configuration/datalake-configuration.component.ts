@@ -56,8 +56,6 @@ import { TranslateService } from '@ngx-translate/core';
     standalone: false,
 })
 export class DatalakeConfigurationComponent implements OnInit {
-    tabs: SpNavigationItem[] = [];
-
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -65,7 +63,6 @@ export class DatalakeConfigurationComponent implements OnInit {
     private dataViewDataExplorerService = inject(ChartService);
     private dialogService = inject(DialogService);
     private breadcrumbService = inject(SpBreadcrumbService);
-    private tabService = inject(SpConfigurationTabsService);
     private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
     private cdr = inject(ChangeDetectorRef);
@@ -82,10 +79,8 @@ export class DatalakeConfigurationComponent implements OnInit {
         'name',
         'pipeline',
         'events',
-        'download',
-        'truncate',
-        'remove',
         'retention',
+        'actions',
     ];
 
     displayedColumnsExport: string[] = [
@@ -100,10 +95,9 @@ export class DatalakeConfigurationComponent implements OnInit {
     pageIndex = 0;
 
     ngOnInit(): void {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
-            { label: this.tabService.getTabTitle('datalake') },
+            { label: 'Datasets' },
         ]);
         this.loadAvailableMeasurements();
         this.loadAvailableExportProvider();

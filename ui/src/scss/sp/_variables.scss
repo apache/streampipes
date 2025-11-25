@@ -27,6 +27,7 @@ $sp-color-error: #b71c1c;
 
 :root {
     --mat-sys-body-medium-size: 10pt;
+    --fg-muted: color-mix(in oklab, currentColor 60%, transparent);
 
     --color-data-view: rgb(122, 206, 227);
     --color-dashboard: rgb(76, 115, 164);
