@@ -216,14 +216,25 @@ export class SpAssetBrowserService {
             asset.assetLinks = [];
         }
 
+        if (!matchesSelf && !asset.assets?.length) {
+            // If the asset does not match the labels at the current level and recursion is not going to match either, return null
+            return null;
+        }
+
         let filteredChildren: SpAsset[] = [];
 
         if (asset.assets?.length) {
             filteredChildren = asset.assets
                 .map(child => ({ ...child }))
-                .filter(child => this.filterType(child, selectedTypes));
-            asset.assets = filteredChildren;
+                .map(child => this.filterType(child, selectedTypes))
+                .filter(child => child !== null)
+                .map(child => child as SpAsset);
         }
+
+        if (!matchesSelf && filteredChildren.length === 0) {
+            return null;
+        }
+        asset.assets = filteredChildren;
 
         return asset;
     }
@@ -298,7 +309,6 @@ export class SpAssetBrowserService {
         filteredLinkType: string,
         elementIds: Set<string>,
     ): void {
-        console.log('final asset', asset);
         const assetLinkValues = this.findAssetLinkValues(
             asset,
             filteredLinkType,
