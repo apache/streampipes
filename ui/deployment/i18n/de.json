@@ -927,5 +927,6 @@
   "Preview": "Vorschau",
   "Error Details": "Fehler-Details",
   "All {{allResourcesAlias}}": "Alle {{allResourcesAlias}}",
-  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Kopie"
+  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Kopie",
+  "Do you really want to delete the data index {{index}}?": "Möchten Sie den Datensatz mit dem Index {{index}} wirklich löschen?"
 }
