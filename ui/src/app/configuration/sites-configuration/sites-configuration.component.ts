@@ -16,14 +16,19 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
     LocationConfig,
     LocationConfigService,
 } from '@streampipes/platform-services';
-import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    SpBreadcrumbService,
+    SpNavigationItem,
+} from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.routes';
+import { UserRole } from '../../_enums/user-role.enum';
 
 @Component({
     selector: 'sp-sites-configuration',
@@ -34,15 +39,16 @@ export class SitesConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];
 
     locationConfig: LocationConfig;
+    isAdminUser = false;
 
-    constructor(
-        private locationConfigService: LocationConfigService,
-        private tabService: SpConfigurationTabsService,
-        private breadcrumbService: SpBreadcrumbService,
-    ) {}
+    private currentUserService = inject(CurrentUserService);
+    private locationConfigService = inject(LocationConfigService);
+    private tabService = inject(SpConfigurationTabsService);
+    private breadcrumbService = inject(SpBreadcrumbService);
 
     ngOnInit() {
         this.tabs = this.tabService.getTabs();
+        this.isAdminUser = this.currentUserService.hasRole(UserRole.ROLE_ADMIN);
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('sites') },

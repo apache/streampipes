@@ -29,6 +29,8 @@ import { GeneralUtils } from '../GeneralUtils';
 import { DataExplorerBtns } from './DataExplorerBtns';
 
 export class DataExplorerUtils {
+    public static ADAPTER_NAME = 'datalake_configuration';
+
     public static goToDatalake() {
         cy.visit('#/dataexplorer');
     }
@@ -123,7 +125,7 @@ export class DataExplorerUtils {
         FileManagementUtils.addFile(dataSet);
 
         const adapter = this.getDataLakeTestSetAdapter(
-            'datalake_configuration',
+            DataExplorerUtils.ADAPTER_NAME,
             true,
             format,
         );
@@ -197,7 +199,10 @@ export class DataExplorerUtils {
     ) {
         DataExplorerUtils.goToDatalake();
 
-        DataExplorerUtils.addDataViewAndTableWidget(dataView, 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget(
+            dataView,
+            DataExplorerUtils.ADAPTER_NAME,
+        );
 
         DataExplorerUtils.saveDataViewConfiguration();
 
@@ -712,7 +717,10 @@ export class DataExplorerUtils {
         DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
 
         // Create Diagram
-        DataExplorerUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget(
+            'NewWidget',
+            DataExplorerUtils.ADAPTER_NAME,
+        );
         //Save
         DataExplorerUtils.addChartsToAsset(assetNames);
         DataExplorerUtils.saveDataViewConfiguration();
