@@ -25,11 +25,16 @@
                 subscriptSizing="dynamic"
             >
                 <mat-select
+                    data-cy="asset-site-select"
                     [disabled]="!editMode"
                     [(ngModel)]="asset.assetSite.siteId"
                     (selectionChange)="handleLocationChange($event)"
                 >
-                    <mat-option *ngFor="let site of sites" [value]="site._id">
+                    <mat-option
+                        *ngFor="let site of sites"
+                        [attr.data-cy]="'option-' + site.label"
+                        [value]="site._id"
+                    >
                         {{ site.label }}
                     </mat-option>
                 </mat-select>

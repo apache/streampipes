@@ -41,10 +41,20 @@
         </sp-asset-browser-filter-labels>
         <mat-divider></mat-divider>
         <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-            <button mat-flat-button class="mat-basic" (click)="resetFilters()">
+            <button
+                data-cy="reset-filters-btn"
+                mat-flat-button
+                class="mat-basic"
+                (click)="resetFilters()"
+            >
                 {{ 'Reset filters' | translate }}
             </button>
-            <button mat-flat-button color="accent" (click)="applyFilters()">
+            <button
+                data-cy="apply-filters-btn"
+                mat-flat-button
+                color="accent"
+                (click)="applyFilters()"
+            >
                 {{ 'Apply' | translate }}
             </button>
         </div>

@@ -19,6 +19,9 @@
 import { AssetBtns } from './AssetBtns';
 import { ConnectUtils } from '../connect/ConnectUtils';
 import { GeneralUtils } from '../GeneralUtils';
+import { Asset } from '../../model/Asset';
+import { Isa95Type } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { AssetBuilder } from '../../builder/AssetBuilder';
 
 export class AssetUtils {
     public static goToAssets() {
@@ -30,18 +33,58 @@ export class AssetUtils {
         AssetBtns.goBackToOverviewBtn().click();
     }
 
-    public static addNewAsset(assetName: string) {
-        AssetBtns.createAssetBtn().click();
-        AssetBtns.assetNameInput().clear();
-        AssetBtns.assetNameInput().type(assetName);
-        AssetBtns.createAssetPanelBtn().click();
-    }
-
-    public static addAndSaveAsset(assetName: string) {
-        AssetUtils.addNewAsset(assetName);
+    public static addAndSaveAsset(asset: Asset) {
+        AssetUtils.addNewAsset(asset);
 
         AssetBtns.saveAssetBtn().click();
         AssetBtns.createAssetBtn().should('be.visible');
+    }
+
+    public static addNewAsset(asset: Asset) {
+        AssetBtns.createAssetBtn().click();
+        AssetBtns.assetNameInput().clear().type(asset.name);
+        AssetBtns.createAssetPanelBtn().click();
+
+        this.selectAssetType(asset.assetType);
+        if (asset.site) {
+            this.selectSite(asset.site);
+        }
+        if (asset.labels.length > 0) {
+            this.addLabels(asset.labels);
+        }
+
+        for (const subAsset of asset.subAssets) {
+            this.clickAddSubAssetBtn(asset.name);
+            this.selectSubAsset('New\\ Asset');
+            AssetBtns.assetNameInput().clear().type(subAsset.name);
+            this.selectAssetType(subAsset.assetType);
+            this.addLabels(subAsset.labels);
+        }
+    }
+
+    public static clickAddSubAssetBtn(assetName: string) {
+        cy.dataCy(`add-asset-${assetName}`).click();
+    }
+
+    public static selectSubAsset(assetName: string) {
+        cy.dataCy(`select-asset-${assetName}`).click();
+    }
+
+    public static addLabels(labels: string[]) {
+        AssetBtns.labelSelect().click();
+        for (const label of labels) {
+            AssetBtns.labelSelectOption(label).click();
+        }
+    }
+
+    public static selectSite(site: string) {
+        AssetBtns.siteSelect().click();
+        AssetBtns.siteSelectOption(site).click();
+    }
+
+    public static selectAssetType(type: Isa95Type) {
+        AssetBtns.assetTypeSelect().click();
+        AssetBtns.assetTypeSelectOption(type).click();
     }
 
     public static openManageAssetLinks() {
@@ -130,7 +173,7 @@ export class AssetUtils {
         // Create new asset from adapters
         AssetUtils.goToAssets();
 
-        AssetUtils.addNewAsset(assetName);
+        AssetUtils.addNewAsset(AssetBuilder.create(assetName).build());
 
         AssetBtns.assetLinksTab().click();
         AssetUtils.openManageAssetLinks();
