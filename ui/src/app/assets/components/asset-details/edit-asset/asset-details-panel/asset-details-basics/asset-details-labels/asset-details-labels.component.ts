@@ -104,6 +104,7 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (changes['asset']) {
             this.refreshCurrentLabels();
+            this.updateFilteredLabels();
         }
     }
 

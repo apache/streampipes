@@ -46,7 +46,6 @@ import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { TranslateService } from '@ngx-translate/core';
-import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Component({
     selector: 'sp-existing-adapters',
