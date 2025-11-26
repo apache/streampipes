@@ -203,12 +203,14 @@ export class SpAssetOverviewComponent implements OnInit {
             ObjectPermissionDialogComponent,
             {
                 panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Manage permissions',
+                title: this.translateService.instant('Manage permissions'),
                 width: '70vw',
                 data: {
                     objectInstanceId: asset.elementId,
                     headerTitle:
-                        'Manage permissions for asset ' + asset.assetName,
+                        this.translateService.instant(
+                            'Manage permissions for asset ',
+                        ) + asset.assetName,
                 },
             },
         );
