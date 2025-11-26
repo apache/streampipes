@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
@@ -47,7 +47,9 @@ export class SpBasicViewComponent {
         if (this?.confirmClose) {
             this.confirmClose().subscribe(shouldNavigate => {
                 if (shouldNavigate) {
-                    this.router.navigate(this.backLinkTarget);
+                    this.router.navigate(this.backLinkTarget).then(() => {
+                        window.location.reload();
+                    });
                 }
             });
         } else {
