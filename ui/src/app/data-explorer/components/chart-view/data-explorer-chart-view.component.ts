@@ -107,6 +107,8 @@ export class DataExplorerChartViewComponent
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
 
+    confirmClose = false;
+
     @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
     ngOnInit() {
@@ -182,19 +184,28 @@ export class DataExplorerChartViewComponent
         return this.timeSelectionService.getDefaultTimeSettings();
     }
 
-    setShouldShowConfirm(): boolean {
-        const originalTimeSettings = this.originalDataView
-            .timeSettings as TimeSettings;
-        const currentTimeSettings = this.dataView.timeSettings as TimeSettings;
-        return this.detectChangesService.shouldShowConfirm(
+    public setShouldShowConfirm(): Observable<boolean> {
+        if (!this.originalDataView || !this.dataView) {
+            return of(false); // Return false if data views aren't available
+        }
+
+        const originalTimeSettings =
+            (this.originalDataView.timeSettings as TimeSettings) || {};
+        const currentTimeSettings =
+            (this.dataView.timeSettings as TimeSettings) || {};
+
+        const shouldConfirm = this.detectChangesService.shouldShowConfirm(
             this.originalDataView,
             this.dataView,
-            originalTimeSettings,
-            currentTimeSettings,
+            originalTimeSettings as TimeSettings,
+            currentTimeSettings as TimeSettings,
             model => {
                 model.timeSettings = undefined;
             },
         );
+
+        this.confirmClose = shouldConfirm;
+        return of(shouldConfirm); // Ensure it's an Observable<boolean>
     }
 
     createWidget() {
@@ -269,10 +280,7 @@ export class DataExplorerChartViewComponent
         });
     }
 
-    confirmLeaveDialog(
-        _route: ActivatedRouteSnapshot,
-        _state: RouterStateSnapshot,
-    ): Observable<boolean> {
+    confirmLeaveDialog(): Observable<boolean> {
         if (this.editMode && this.setShouldShowConfirm()) {
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
                 width: '500px',

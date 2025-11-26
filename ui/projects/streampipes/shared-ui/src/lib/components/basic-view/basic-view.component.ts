@@ -18,9 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../../dialog/confirm-dialog/confirm-dialog.component';
+import { Observable, of } from 'rxjs';
 
 @Component({
     selector: 'sp-basic-view',
@@ -35,8 +33,7 @@ export class SpBasicViewComponent {
     @Input()
     showBackLink = false;
 
-    @Input()
-    confirmClose = false;
+    @Input() confirmClose: () => Observable<boolean> = () => of(true);
 
     @Input()
     backLinkTarget: string[];
@@ -44,38 +41,17 @@ export class SpBasicViewComponent {
     @Input()
     hideNavbar = false;
 
-    constructor(
-        private router: Router,
-        private dialogService: MatDialog,
-        private translateService: TranslateService,
-    ) {}
+    constructor(private router: Router) {}
 
     navigateBack() {
-        if (this.confirmClose) {
-            this.openConfirmationDialog();
+        if (this?.confirmClose) {
+            this.confirmClose().subscribe(shouldNavigate => {
+                if (shouldNavigate) {
+                    this.router.navigate(this.backLinkTarget);
+                }
+            });
         } else {
             this.router.navigate(this.backLinkTarget);
         }
-    }
-
-    openConfirmationDialog() {
-        const dialogRef = this.dialogService.open(ConfirmDialogComponent, {
-            width: '600px',
-            data: {
-                title: this.translateService.instant(
-                    'Are you sure you want to leave this page?',
-                ),
-                subtitle: '',
-
-                cancelTitle: this.translateService.instant('No'),
-                okTitle: this.translateService.instant('Yes'),
-                confirmAndCancel: true,
-            },
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.router.navigate(this.backLinkTarget);
-            }
-        });
     }
 }

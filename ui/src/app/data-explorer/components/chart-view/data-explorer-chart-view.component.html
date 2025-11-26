@@ -20,7 +20,7 @@
     <sp-basic-view
         [backLinkTarget]="['dataexplorer']"
         [showBackLink]="true"
-        [confirmClose]="true"
+        [confirmClose]="confirmLeaveDialog.bind(this)"
     >
         <div
             nav
