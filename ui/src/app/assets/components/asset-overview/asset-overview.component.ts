@@ -153,7 +153,7 @@ export class SpAssetOverviewComponent implements OnInit {
             SpCreateAssetDialogComponent,
             {
                 panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Create asset',
+                title: this.translateService.instant('Create asset'),
                 width: '50vw',
                 data: {
                     assetModel: assetModel,
