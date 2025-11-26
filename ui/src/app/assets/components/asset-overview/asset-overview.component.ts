@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
     AssetManagementService,
@@ -39,6 +39,7 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'sp-asset-overview',
@@ -50,7 +51,10 @@ export class SpAssetOverviewComponent implements OnInit {
     existingAssets: SpAssetModel[] = [];
     filteredAssets: SpAssetModel[] = [];
 
-    displayedColumns: string[] = ['name', 'actions'];
+    displayedColumns: string[] = ['assetName', 'actions'];
+
+    @ViewChild(MatSort)
+    sort: MatSort;
 
     dataSource: MatTableDataSource<SpAssetModel> =
         new MatTableDataSource<SpAssetModel>();
@@ -103,12 +107,14 @@ export class SpAssetOverviewComponent implements OnInit {
 
                 this.applyAssetFilters(this.currentFilterIds);
             });
+
         this.loadAssets();
     }
 
     loadAssets(): void {
         this.assetService.getAllAssets().subscribe(result => {
             this.existingAssets = result as SpAssetModel[];
+            this.dataSource.sort = this.sort;
             this.dataSource.data = this.existingAssets;
         });
     }
@@ -123,6 +129,7 @@ export class SpAssetOverviewComponent implements OnInit {
                 elementIds.has(a.elementId),
             );
         }
+        this.dataSource.sort = this.sort;
         this.dataSource.data = this.filteredAssets;
     }
 
