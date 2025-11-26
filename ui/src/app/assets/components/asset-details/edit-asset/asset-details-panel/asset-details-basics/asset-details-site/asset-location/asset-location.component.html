@@ -21,7 +21,7 @@
         [disabled]="!editMode"
         [(ngModel)]="asset.assetSite.hasExactLocation"
     >
-        Add exact location
+        {{ 'Add exact location' | translate }}
     </mat-checkbox>
     <div *ngIf="asset.assetSite.hasExactLocation">
         <sp-single-marker-map
