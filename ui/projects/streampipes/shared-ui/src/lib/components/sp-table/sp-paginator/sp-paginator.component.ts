@@ -27,9 +27,6 @@ export class PaginatorService extends MatPaginatorIntl {
             this.translateService.instant('Items per page');
         this.nextPageLabel = this.translateService.instant('Next page');
         this.previousPageLabel = this.translateService.instant('Previous page');
-        //this.getRangeLabel = (page: number, pageSize: number, length: number) =>
-        //  `${page * pageSize + 1} - ${Math.min((page + 1) * pageSize, length)} of ${length} items`;
-
         this.getRangeLabel = (
             page: number,
             pageSize: number,
