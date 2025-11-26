@@ -957,6 +957,11 @@
   "List": null,
   "Nested": null,
   "Preview": null,
+  "Items per page": null,
+  "Next page": null,
+  "Previous page": null,
+  " of ": null,
+  " items ": null,
   "Error Details": null,
   "All {{allResourcesAlias}}": "All {{allResourcesAlias}}",
   "{{ widgetTitle }} Clone": "{{ widgetTitle }} Clone"
