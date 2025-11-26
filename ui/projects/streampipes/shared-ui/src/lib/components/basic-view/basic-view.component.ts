@@ -51,18 +51,14 @@ export class SpBasicViewComponent {
     ) {}
 
     navigateBack() {
-        console.log('Confirm close', this.confirmClose);
         if (this.confirmClose) {
             this.openConfirmationDialog();
-            console.log('finsihed');
         } else {
             this.router.navigate(this.backLinkTarget);
         }
     }
 
     openConfirmationDialog() {
-        console.log('Start Dialog');
-
         const dialogRef = this.dialogService.open(ConfirmDialogComponent, {
             width: '600px',
             data: {
@@ -77,7 +73,6 @@ export class SpBasicViewComponent {
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            console.log('result', result);
             if (result) {
                 this.router.navigate(this.backLinkTarget);
             }
