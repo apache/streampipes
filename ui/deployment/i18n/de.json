@@ -932,5 +932,7 @@
   "Do you really want to truncate the data in {{index}}?": "Möchten Sie die Daten im Index {{index}} wirklich kürzen?",
   "Yes": "Ja",
   "No": "Nein",
-  "This cannot be undone.": "Dies kann nicht rückgängig gemacht werden."
+  "This cannot be undone.": "Dies kann nicht rückgängig gemacht werden.",
+  "Are you sure you want to delete this asset?": "Möchten Sie dieses Asset wirklich löschen?",
+  "Delete Asset": "Lösche Asset"
 }

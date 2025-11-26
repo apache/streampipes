@@ -932,5 +932,7 @@
   "Do you really want to truncate the data in {{index}}?": "Do you really want to truncate the data in {{index}}?",
   "Yes": null,
   "No": null,
-  "This cannot be undone.": null
+  "This cannot be undone.": null,
+  "Are you sure you want to delete this asset?": null,
+  "Delete Asset": null
 }

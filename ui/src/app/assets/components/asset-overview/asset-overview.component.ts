@@ -38,6 +38,7 @@ import { IdGeneratorService } from '../../../core-services/id-generator/id-gener
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-overview',
@@ -70,6 +71,7 @@ export class SpAssetOverviewComponent implements OnInit {
         private assetBrowserService: SpAssetBrowserService,
         private currentUserService: CurrentUserService,
         private dialog: MatDialog,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -168,10 +170,14 @@ export class SpAssetOverviewComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
-                title: 'Are you sure you want to delete this asset?',
-                subtitle: 'This action cannot be reversed!',
-                cancelTitle: 'Cancel',
-                okTitle: 'Delete Asset',
+                title: this.translateService.instant(
+                    'Are you sure you want to delete this asset?',
+                ),
+                subtitle: this.translateService.instant(
+                    'This action cannot be reversed!',
+                ),
+                cancelTitle: this.translateService.instant('Cancel'),
+                okTitle: this.translateService.instant('Delete Asset'),
                 confirmAndCancel: true,
             },
         });
