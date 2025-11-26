@@ -61,9 +61,8 @@ public class DataLakeExportManager {
 
     private void exportMeasurement(DataLakeMeasure dataLakeMeasure, Instant now, long endDate) throws Exception {
 
-
-
-        if (env.getRetentionLocalDir().getValueOrDefault() == null || env.getRetentionLocalDir().getValueOrDefault().isEmpty()) {
+        if (env.getRetentionLocalDir().getValueOrDefault() == null
+                || env.getRetentionLocalDir().getValueOrDefault().isEmpty()) {
             LOG.error("For Local Retention Storage, please configure the environment variable SP_RETENTION_LOCAL_DIR");
         }
 
@@ -116,8 +115,6 @@ public class DataLakeExportManager {
         }
 
         ProviderType providerType = exportProviderSetting.getProviderType();
-
-        LOG.info("Write to " + System.getenv("SP_RETENTION_LOCAL_DIR"));
 
         try {
 
@@ -174,9 +171,6 @@ public class DataLakeExportManager {
 
     private void deleteMeasurement(DataLakeMeasure dataLakeMeasure, Instant now, long endDate) {
 
-        LOG.info("Current time in millis: " + now.toEpochMilli());
-        LOG.info("Current time in millis to delete: " + endDate);
-
         this.dataExplorerQueryManagement.deleteData(dataLakeMeasure.getMeasureName(), null, endDate);
     }
 
@@ -204,7 +198,6 @@ public class DataLakeExportManager {
             long endDate = (Long) result.get("endDate");
 
             if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.DELETE) {
-                LOG.info("Start saving Measurement " + dataLakeMeasure.getMeasureName());
                 try {
                     exportMeasurement(dataLakeMeasure, now, endDate);
                 } catch (Exception e) {
@@ -215,16 +208,13 @@ public class DataLakeExportManager {
                 LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully saved");
             }
             if (dataLakeMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.SAVE) {
-                LOG.info("Start delete Measurement " + dataLakeMeasure.getMeasureName());
                 deleteMeasurement(dataLakeMeasure, now, endDate);
                 LOG.info("Measurements " + dataLakeMeasure.getMeasureName() + " successfully deleted");
             }
             success = true;
-         updateLastSync(dataLakeMeasure, now, success, "-");
+            updateLastSync(dataLakeMeasure, now, success, "-");
 
         }
-   
-
 
     }
 
