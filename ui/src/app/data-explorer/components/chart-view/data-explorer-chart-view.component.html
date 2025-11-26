@@ -17,7 +17,11 @@
 -->
 
 @if (dataViewLoaded) {
-    <sp-basic-view [backLinkTarget]="['dataexplorer']" [showBackLink]="true">
+    <sp-basic-view
+        [backLinkTarget]="['dataexplorer']"
+        [showBackLink]="true"
+        [confirmClose]="true"
+    >
         <div
             nav
             fxFlex="100"

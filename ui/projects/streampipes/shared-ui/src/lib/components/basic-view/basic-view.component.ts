@@ -18,6 +18,9 @@
 
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../dialog/confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'sp-basic-view',
@@ -33,14 +36,51 @@ export class SpBasicViewComponent {
     showBackLink = false;
 
     @Input()
+    confirmClose = false;
+
+    @Input()
     backLinkTarget: string[];
 
     @Input()
     hideNavbar = false;
 
-    constructor(private router: Router) {}
+    constructor(
+        private router: Router,
+        private dialogService: MatDialog,
+        private translateService: TranslateService,
+    ) {}
 
     navigateBack() {
-        this.router.navigate(this.backLinkTarget);
+        console.log('Confirm close', this.confirmClose);
+        if (this.confirmClose) {
+            this.openConfirmationDialog();
+            console.log('finsihed');
+        } else {
+            this.router.navigate(this.backLinkTarget);
+        }
+    }
+
+    openConfirmationDialog() {
+        console.log('Start Dialog');
+
+        const dialogRef = this.dialogService.open(ConfirmDialogComponent, {
+            width: '600px',
+            data: {
+                title: this.translateService.instant(
+                    'Are you sure you want to leave this page?',
+                ),
+                subtitle: '',
+
+                cancelTitle: this.translateService.instant('No'),
+                okTitle: this.translateService.instant('Yes'),
+                confirmAndCancel: true,
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('result', result);
+            if (result) {
+                this.router.navigate(this.backLinkTarget);
+            }
+        });
     }
 }
