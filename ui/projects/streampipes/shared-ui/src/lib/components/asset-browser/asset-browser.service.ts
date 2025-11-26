@@ -163,11 +163,13 @@ export class SpAssetBrowserService {
                         allSitesSelected ||
                         this.filterSites(a, filter.selectedSites),
                 )
-                .filter(
-                    a =>
-                        allLabelsSelected ||
-                        this.filterLabels(a, filter.selectedLabels),
-                );
+                .map(a =>
+                    allLabelsSelected ||
+                    this.filterLabels(a, filter.selectedLabels)
+                        ? a
+                        : null,
+                )
+                .filter((a: SpAsset | null) => a !== null); // remove nulls from the array
 
             this.applyAssetFilter(filteredAssets);
         }
@@ -203,19 +205,37 @@ export class SpAssetBrowserService {
     private filterType(
         asset: SpAsset,
         selectedTypes: Isa95TypeDesc[],
-    ): boolean {
+    ): SpAsset | null {
         const matchesSelf = selectedTypes.some(
             type => type.type === asset.assetType?.isa95AssetType,
         );
 
-        if (asset.assets?.length) {
-            asset.assets = asset.assets
-                .map(a => ({ ...a }))
-                .filter(a => this.filterType(a, selectedTypes));
-            return matchesSelf || asset.assets.length > 0;
+        if (!matchesSelf) {
+            // remove asset Links not of interest
+            asset.assetLinks = [];
         }
 
-        return matchesSelf;
+        if (!matchesSelf && !asset.assets?.length) {
+            // If the asset does not match the labels at the current level and recursion is not going to match either, return null
+            return null;
+        }
+
+        let filteredChildren: SpAsset[] = [];
+
+        if (asset.assets?.length) {
+            filteredChildren = asset.assets
+                .map(child => ({ ...child }))
+                .map(child => this.filterType(child, selectedTypes))
+                .filter(child => child !== null)
+                .map(child => child as SpAsset);
+        }
+
+        if (!matchesSelf && filteredChildren.length === 0) {
+            return null;
+        }
+        asset.assets = filteredChildren;
+
+        return asset;
     }
 
     private filterAssetModel(
@@ -237,20 +257,54 @@ export class SpAssetBrowserService {
         );
     }
 
-    private filterLabels(asset: SpAsset, selectedLabels: SpLabel[]): boolean {
+    private filterLabels(
+        asset: SpAsset,
+        selectedLabels: SpLabel[],
+        recursionStep: boolean = false,
+        previousMatchesSelf: boolean = false,
+    ): SpAsset | null {
         const labelIds = asset.labelIds || [];
-        const matchesSelf = selectedLabels.every(label =>
+        const matchesSelf = selectedLabels.some(label =>
             labelIds.includes(label._id),
         );
 
-        if (asset.assets?.length) {
-            asset.assets = asset.assets
-                .map(a => ({ ...a }))
-                .filter(a => this.filterLabels(a, selectedLabels));
-            return matchesSelf || asset.assets.length > 0;
+        if (matchesSelf) {
+            // If it already matches on top level --> labels are inherited
+            return asset;
         }
 
-        return matchesSelf;
+        if (!matchesSelf && !previousMatchesSelf) {
+            // remove asset Links not of interest
+            asset.assetLinks = [];
+        }
+
+        if (!matchesSelf && !asset.assets?.length) {
+            // If the asset does not match the labels at the current level and recursion is not going to match either, return null
+            return null;
+        }
+
+        let filteredChildren: SpAsset[] = [];
+
+        if (asset.assets?.length) {
+            filteredChildren = asset.assets
+                .map(child => ({ ...child }))
+                .map(child =>
+                    this.filterLabels(child, selectedLabels, true, matchesSelf),
+                )
+                .filter(child => child !== null)
+                .map(child => child as SpAsset);
+        }
+
+        if (
+            !matchesSelf &&
+            !previousMatchesSelf &&
+            filteredChildren.length === 0
+        ) {
+            return null;
+        }
+        asset.assets = filteredChildren;
+
+        return asset;
     }
 
     collectElementIds(

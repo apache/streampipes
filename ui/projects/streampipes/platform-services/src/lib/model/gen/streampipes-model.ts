@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
@@ -3475,6 +3474,8 @@ export class ResourceMetadata {
 export class RetentionExportConfig {
     exportConfig: ExportConfig;
     exportProviderId: string;
+    lastExport: string;
+    retentionLog: RetentionLog[];
 
     static fromData(
         data: RetentionExportConfig,
@@ -3486,6 +3487,29 @@ export class RetentionExportConfig {
         const instance = target || new RetentionExportConfig();
         instance.exportConfig = ExportConfig.fromData(data.exportConfig);
         instance.exportProviderId = data.exportProviderId;
+        instance.lastExport = data.lastExport;
+        instance.retentionLog = __getCopyArrayFn(RetentionLog.fromData)(
+            data.retentionLog,
+        );
+        return instance;
+    }
+}
+
+export class RetentionLog {
+    date: string;
+    error: string;
+    name: string;
+    status: boolean;
+
+    static fromData(data: RetentionLog, target?: RetentionLog): RetentionLog {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RetentionLog();
+        instance.date = data.date;
+        instance.error = data.error;
+        instance.name = data.name;
+        instance.status = data.status;
         return instance;
     }
 }

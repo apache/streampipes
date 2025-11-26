@@ -30,6 +30,7 @@ import {
     DatalakeRestService,
     ExportProviderSettings,
     ExportProviderService,
+    RetentionLog,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -49,6 +50,7 @@ import { ExportProviderComponent } from '../dialog/export-provider-dialog/export
 import { DeleteExportProviderComponent } from '../dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ExportProviderConnectionTestComponent } from '../dialog/export-provider-connection-test/export-provider-connection-test.component';
+import { DataRetentionLogDialogComponent } from '../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -87,6 +89,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         'truncate',
         'remove',
         'retention',
+        'retentionlog',
     ];
 
     displayedColumnsExport: string[] = [
@@ -139,6 +142,7 @@ export class DatalakeConfigurationComponent implements OnInit {
                             if (measurement?.retentionTime != null) {
                                 entry.retention = measurement.retentionTime;
                             }
+                            console.log(entry.retention);
                             inUseMeasurements.forEach(inUseMeasurement => {
                                 if (
                                     inUseMeasurement.measureName ===
@@ -283,6 +287,26 @@ export class DatalakeConfigurationComponent implements OnInit {
                         measureName: measurementId,
                     },
                     measurementIndex: measurementId,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                setTimeout(() => {
+                    this.loadAvailableMeasurements();
+                }, 1000);
+            }
+        });
+    }
+
+    openRetentionLog(retentionLog: RetentionLog[]) {
+        const dialogRef: DialogRef<DataRetentionLogDialogComponent> =
+            this.dialogService.open(DataRetentionLogDialogComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant('Retention Log'),
+                width: '100vw',
+                data: {
+                    retentionLog: retentionLog,
                 },
             });
 

@@ -246,6 +246,82 @@
                             </td>
                         </ng-container>
 
+                        <ng-container matColumnDef="retentionlog">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'Retention Log' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let configurationEntry">
+                                <div fxLayout="row">
+                                    <span
+                                        fxFlex
+                                        fxFlexOrder="3"
+                                        fxLayout="row"
+                                        fxLayoutAlign="start center"
+                                    >
+                                        @if (configurationEntry?.retention) {
+                                            <button
+                                                color="accent"
+                                                mat-icon-button
+                                                [matTooltip]="
+                                                    ('Open Retention Log'
+                                                        | translate) +
+                                                    (configurationEntry
+                                                        ?.retention
+                                                        ?.retentionExportConfig
+                                                        ?.lastExport
+                                                        ? ' • ' +
+                                                          (configurationEntry
+                                                              .retention
+                                                              .retentionExportConfig
+                                                              .lastExport
+                                                              | date
+                                                                  : 'yyyy-MM-dd HH:mm:ss')
+                                                        : '')
+                                                "
+                                                data-cy="datalake-retention-log-btn"
+                                                matTooltipPosition="above"
+                                                (click)="
+                                                    openRetentionLog(
+                                                        configurationEntry
+                                                            ?.retention
+                                                            .retentionExportConfig
+                                                            .retentionLog
+                                                    )
+                                                "
+                                            >
+                                                <i
+                                                    class="material-icons"
+                                                    [ngStyle]="{
+                                                        color:
+                                                            configurationEntry
+                                                                ?.retention
+                                                                ?.retentionExportConfig
+                                                                ?.retentionLog
+                                                                ?.length &&
+                                                            configurationEntry
+                                                                .retention
+                                                                .retentionExportConfig
+                                                                .retentionLog[
+                                                                configurationEntry
+                                                                    .retention
+                                                                    .retentionExportConfig
+                                                                    .retentionLog
+                                                                    .length - 1
+                                                            ].status
+                                                                ? 'green'
+                                                                : 'red'
+                                                    }"
+                                                    >list_alt</i
+                                                >
+                                            </button>
+                                        } @else {
+                                            <p>-</p>
+                                        }
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+
                         <tr
                             mat-header-row
                             *matHeaderRowDef="displayedColumns"

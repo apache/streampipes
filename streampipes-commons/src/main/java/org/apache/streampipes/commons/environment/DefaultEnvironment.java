@@ -591,4 +591,9 @@ public class DefaultEnvironment implements Environment {
   public StringEnvironmentVariable getDatalakeSchedulerCron() {
     return new StringEnvironmentVariable(Envs.SP_DATALAKE_SCHEDULER_CRON);
   }
+
+  @Override
+  public IntEnvironmentVariable getDatalakeRetentionLogLength() {
+    return new IntEnvironmentVariable(Envs.SP_RETENTION_LOG_LENGTH);
+  }
 }
