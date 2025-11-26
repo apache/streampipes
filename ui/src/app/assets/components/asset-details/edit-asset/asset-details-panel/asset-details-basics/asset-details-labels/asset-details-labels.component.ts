@@ -90,7 +90,6 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     }
 
     refreshCurrentLabels(): void {
-        this.asset.labelIds ??= [];
         this.asset.labelIds =
             this.asset.labelIds?.filter(id =>
                 this.allLabels.find(l => l._id === id),
