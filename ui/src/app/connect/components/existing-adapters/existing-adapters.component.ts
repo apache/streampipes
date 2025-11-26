@@ -121,9 +121,11 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         );
         this.dataSource.sortingDataAccessor = (adapter, column) => {
             if (column === 'status') {
-                return adapter.running; // Use the 'running' property to sort
+                return adapter.running;
+            } else if (column === 'lastModified') {
+                return adapter.createdAt;
             }
-            return adapter[column]; // Default sorting
+            return adapter[column];
         };
     }
 

@@ -109,6 +109,14 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
 
     addPipelinesToTable() {
         this.dataSource = new MatTableDataSource<Pipeline>(this._pipelines);
+        this.dataSource.sortingDataAccessor = (pipeline, column) => {
+            if (column === 'status') {
+                return pipeline.running;
+            } else if (column === 'lastModified') {
+                return pipeline.createdAt;
+            }
+            return pipeline[column];
+        };
         setTimeout(() => {
             this.dataSource.sort = this.sort;
         });
