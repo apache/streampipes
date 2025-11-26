@@ -119,6 +119,12 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 this.tutorialActive = tutorialActive;
             },
         );
+        this.dataSource.sortingDataAccessor = (adapter, column) => {
+            if (column === 'status') {
+                return adapter.running; // Use the 'running' property to sort
+            }
+            return adapter[column]; // Default sorting
+        };
     }
 
     startAdapter(adapter: AdapterDescription) {
