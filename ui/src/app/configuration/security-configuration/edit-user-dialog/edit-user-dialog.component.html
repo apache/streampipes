@@ -157,6 +157,7 @@
                             [value]="group.groupId"
                             [checked]="user.groups.indexOf(group.groupId) > -1"
                             (change)="changeGroupAssignment($event)"
+                            [attr.data-cy]="'group-' + group.groupName"
                         >
                             {{ group.groupName }}
                         </mat-checkbox>

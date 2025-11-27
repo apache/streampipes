@@ -114,8 +114,8 @@ export class ConnectEventSchemaUtils {
     public static numberTransformation(propertyName: string, value: string) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
         // cy.wait(1000);
-        cy.dataCy('connect-schema-correction-value').type(value);
-        cy.dataCy('connect-schema-correction-operator')
+        ConnectBtns.connectSchemaCorrectionValueInput().type(value);
+        ConnectBtns.connectSchemaCorrectionOperatorInput()
             .click()
             .get('mat-option')
             .contains('Multiply')
@@ -125,7 +125,7 @@ export class ConnectEventSchemaUtils {
         cy.dataCy('edit-' + propertyName.toLowerCase(), {
             timeout: 10000,
         }).click({ force: true });
-        cy.dataCy('connect-schema-correction-value', { timeout: 10000 }).should(
+        ConnectBtns.connectSchemaCorrectionValueInput().should(
             'have.value',
             value,
         );
@@ -257,6 +257,12 @@ export class ConnectEventSchemaUtils {
         ConnectBtns.saveEditProperty().click();
     }
 
+    public static changeSemanticType(propertyName: string, value: string) {
+        ConnectEventSchemaUtils.clickEditProperty(propertyName);
+        ConnectBtns.semanticTypeInput().clear().type(value);
+        ConnectBtns.saveEditProperty().click();
+    }
+
     private static checkIfWarningIsShown(warningIsShown: boolean) {
         if (warningIsShown) {
             cy.dataCy('warning-change-data-type').should('be.visible');
@@ -285,11 +291,14 @@ export class ConnectEventSchemaUtils {
         cy.dataCy('sp-event-schema-next-button').click();
     }
 
-    public static clickEditProperty(propertyName: string) {
+    public static clickEditProperty(propertyName: string, validation = true) {
         cy.dataCy(`edit-${ConnectEventSchemaUtils.escape(propertyName)}`, {
             timeout: 10000,
         }).click();
-        ConnectEventSchemaUtils.validateRuntimeName(propertyName);
+
+        if (validation) {
+            ConnectEventSchemaUtils.validateRuntimeName(propertyName);
+        }
     }
 
     public static regexValueInput() {

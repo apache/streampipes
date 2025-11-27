@@ -1,0 +1,97 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<sp-basic-view
+    [showBackLink]="true"
+    [backLinkTarget]="['connect']"
+    [padding]="true"
+>
+    <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row">
+        <sp-connect-filter-toolbar
+            class="filter-bar-margin"
+            (filterChangedEmitter)="applyFilter($event)"
+        >
+        </sp-connect-filter-toolbar>
+    </div>
+    <div fxLayout="column" fxFlex="100">
+        <sp-basic-header-title-component
+            [title]="'Select Adapter' | translate"
+        ></sp-basic-header-title-component>
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
+            @if (adapterLoadingError) {
+                <div
+                    class="container-fluid marketplace-container"
+                    fxFlex="100"
+                    fxLayoutAlign="center center"
+                    fxLayout="row"
+                >
+                    <h4>
+                        Available adapters could not be loaded. Did you start a
+                        Connect worker node?
+                    </h4>
+                </div>
+            }
+            @if (adaptersLoading) {
+                <div
+                    class="container-fluid marketplace-container"
+                    fxFlex="100"
+                    fxLayoutAlign="center center"
+                    fxLayout="row"
+                >
+                    <mat-spinner
+                        [mode]="'indeterminate'"
+                        [diameter]="20"
+                        color="accent"
+                    ></mat-spinner>
+                    <h4>
+                        &nbsp;&nbsp;Searching for available adapters, please
+                        wait...
+                    </h4>
+                </div>
+            }
+            @if (!adaptersLoading && !adapterLoadingError && currentFilter) {
+                <div class="container-fluid marketplace-container">
+                    <div
+                        fxLayout="row wrap"
+                        fxLayoutAlign="start stretch"
+                        class="adapter-description-container"
+                    >
+                        @for (
+                            adapterDescription of adapterDescriptions
+                                | adapterFilter: currentFilter;
+                            track adapterDescription
+                        ) {
+                            <sp-adapter-description
+                                attr.id="{{
+                                    adapterDescription.name.replaceAll(' ', '_')
+                                }}"
+                                class="adapter-description"
+                                fxFlex="33"
+                                (createEmitter)="selectAdapter($event)"
+                                (click)="
+                                    selectAdapter(adapterDescription.appId)
+                                "
+                                [adapter]="adapterDescription"
+                            ></sp-adapter-description>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</sp-basic-view>

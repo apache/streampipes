@@ -21,7 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
 import { ExportProviderSettings } from '../model/gen/streampipes-model';
-
+import { ExportProviderResponse } from '../model/config/export-provider-config.model';
 @Injectable({
     providedIn: 'root',
 })
@@ -39,6 +39,14 @@ export class ExportProviderService {
     ): Observable<ExportProviderSettings> {
         return this.http.get<ExportProviderSettings>(
             `${this.exportProviderBasePath}/${providerId}`,
+        );
+    }
+
+    testExportProviderById(
+        providerId: string,
+    ): Observable<ExportProviderResponse> {
+        return this.http.get<ExportProviderResponse>(
+            `${this.exportProviderBasePath}/test/${providerId}`,
         );
     }
 

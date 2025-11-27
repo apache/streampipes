@@ -59,7 +59,13 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-flat-button class="mat-basic" (click)="hide()">
+        <button
+            data-cy="cancel-pipeline-element-discovery"
+            mat-button
+            mat-flat-button
+            class="mat-basic"
+            (click)="hide()"
+        >
             Cancel
         </button>
     </div>

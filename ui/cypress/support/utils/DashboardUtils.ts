@@ -16,6 +16,8 @@
  *
  */
 
+import { ConnectBtns } from './connect/ConnectBtns';
+
 export class DashboardUtils {
     public static goToDashboard() {
         cy.visit('#/dashboard');
@@ -116,5 +118,25 @@ export class DashboardUtils {
         }
 
         DashboardUtils.removeWidgetFromDashboard(dashboardName);
+    }
+
+    public static checkAmountOfDashboards(amount: number) {
+        if (amount === 0) {
+            // The wait is needed because the default value is the no-table-entries element.
+            // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
+            cy.wait(1000);
+            cy.dataCy('no-table-entries').should('be.visible');
+        } else {
+            ConnectBtns.moreOptions().should('have.length', amount);
+        }
+    }
+
+    public static checkInList(resources: string[]) {
+        this.checkAmountOfDashboards(resources.length);
+        resources.forEach(resource => {
+            cy.dataCy('dashboard-table-overview')
+                .contains(resource)
+                .should('exist');
+        });
     }
 }

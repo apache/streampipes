@@ -18,8 +18,12 @@
 
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'sites'">
     <div fxLayout="column" *ngIf="locationConfig">
-        <sp-location-features-configuration [locationConfig]="locationConfig">
-        </sp-location-features-configuration>
+        @if (isAdminUser) {
+            <sp-location-features-configuration
+                [locationConfig]="locationConfig"
+            >
+            </sp-location-features-configuration>
+        }
 
         <sp-site-area-configuration [locationConfig]="locationConfig">
         </sp-site-area-configuration>

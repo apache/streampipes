@@ -32,10 +32,12 @@
             multiple
             [compareWith]="compare"
             [(ngModel)]="activeFilters.selectedSites"
+            data-cy="filters-sites-select"
         >
             <mat-option
                 *ngFor="let site of sites; let i = index"
                 [value]="site"
+                [attr.data-cy]="'site-option-' + site.label"
                 class="smaller-font-size"
             >
                 {{ site.label }}

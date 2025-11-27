@@ -33,7 +33,6 @@
   <properties>
     <owasp.check.skip>true</owasp.check.skip>
     <maven.deploy.skip>false</maven.deploy.skip>
-
     <pulsar.version>3.2.2</pulsar.version>
   </properties>
 
@@ -134,13 +133,67 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
-        	<propertyExpansion>
-				checkstyle.config.base.path=${project.parent.basedir}/tools/maven
-            </propertyExpansion>
+          <propertyExpansion>
+            checkstyle.config.base.path=${project.parent.basedir}/tools/maven
+          </propertyExpansion>
+        </configuration>
+      </plugin>
+
+      <!-- Surefire Plugin for Test Execution -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <skipTests>true</skipTests> <!-- Skip tests during mvn clean package -->
         </configuration>
       </plugin>
     </plugins>
   </build>
 
+  <profiles>
+    <!-- Self-Signed Certificate Profile -->
+    <profile>
+      <id>selfsigned</id>
+      <activation>
+        <activeByDefault>true</activeByDefault> <!-- You can change this to false if you don't want it to be active by default -->
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.2.5</version>
+            <configuration>
+            <skipTests>false</skipTests>
+              <environmentVariables>
+                <SP_SECURITY_ALLOW_SELFSIGNED>true</SP_SECURITY_ALLOW_SELFSIGNED>
+              </environmentVariables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
+    <!-- Keystore Profile -->
+    <profile>
+      <id>keystore</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.2.5</version>
+            <configuration>
+            <skipTests>false</skipTests>
+              <environmentVariables>
+                <SP_SECURITY_KEYSTORE_FILENAME>src/test/resources/cacerts.pfx</SP_SECURITY_KEYSTORE_FILENAME>
+                <SP_SECURITY_KEYSTORE_PASSWORD>changeit</SP_SECURITY_KEYSTORE_PASSWORD>
+              </environmentVariables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

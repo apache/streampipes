@@ -48,9 +48,10 @@
     <div fxFlex="100" fxLayout="column">
         <sp-basic-header-title-component
             title="Assets"
+            data-cy="asset-title"
         ></sp-basic-header-title-component>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-            <div fxFlex="90" fxLayout="column">
+            <div fxFlex="100" fxLayout="column">
                 <sp-table
                     fxFlex="100"
                     [columns]="displayedColumns"
@@ -103,6 +104,14 @@
                         >
                             <mat-icon>edit</mat-icon>
                             <span>{{ 'Edit' | translate }}</span>
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-cy="open-manage-permissions"
+                            (click)="openPermissionsDialog(element)"
+                        >
+                            <mat-icon>share</mat-icon>
+                            <span>{{ 'Manage permissions' | translate }}</span>
                         </button>
 
                         <button

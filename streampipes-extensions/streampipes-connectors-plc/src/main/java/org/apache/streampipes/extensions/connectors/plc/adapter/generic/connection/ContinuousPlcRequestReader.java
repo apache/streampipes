@@ -76,29 +76,34 @@ public class ContinuousPlcRequestReader
         processPlcReadResponse(readResponse);
       } else {
         LOG.error("Not connected to PLC with connection string {}", settings.connectionString());
+        handleFailingPlcRead();
       }
     } catch (Exception e) {
-      handleFailingPlcRead(e.getMessage());
+      handleFailingPlcReadAndRemoveFromCache(e.getMessage());
     }
   }
 
-  private void handleFailingPlcRead(String problem) {
+  private void handleFailingPlcReadAndRemoveFromCache(String problem) {
     // ensure that the cached connection manager removes the broken connection
     if (connectionManager instanceof SpCachedPlcConnectionManager) {
       ((SpCachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
-    }
-
-    // Increase backoff counter on failure
-    if (idlePullsBeforeNextAttempt == 0) {
-      idlePullsBeforeNextAttempt = 1;
-    } else {
-      idlePullsBeforeNextAttempt = Math.min(idlePullsBeforeNextAttempt * 2, MAX_IDLE_PULLS);
     }
 
     LOG.error(
         "Error while reading from PLC with connection string {}. Setting adapter to idle for {} attempts. {} ",
         settings.connectionString(), idlePullsBeforeNextAttempt, problem
     );
+
+    handleFailingPlcRead();
+  }
+
+  private void handleFailingPlcRead() {
+    // Increase backoff counter on failure
+    if (idlePullsBeforeNextAttempt == 0) {
+      idlePullsBeforeNextAttempt = 1;
+    } else {
+      idlePullsBeforeNextAttempt = Math.min(idlePullsBeforeNextAttempt * 2, MAX_IDLE_PULLS);
+    }
 
     currentIdlePulls = 0;
   }

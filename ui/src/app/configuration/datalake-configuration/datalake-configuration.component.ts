@@ -30,6 +30,7 @@ import {
     DatalakeRestService,
     ExportProviderSettings,
     ExportProviderService,
+    RetentionLog,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -48,6 +49,8 @@ import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/da
 import { ExportProviderComponent } from '../dialog/export-provider-dialog/export-provider-dialog.component';
 import { DeleteExportProviderComponent } from '../dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ExportProviderConnectionTestComponent } from '../dialog/export-provider-connection-test/export-provider-connection-test.component';
+import { DataRetentionLogDialogComponent } from '../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -86,6 +89,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         'truncate',
         'remove',
         'retention',
+        'retentionlog',
     ];
 
     displayedColumnsExport: string[] = [
@@ -94,6 +98,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         'bucket',
         'editExportProvider',
         'delete',
+        'test',
     ];
 
     pageSize = 15;
@@ -137,6 +142,7 @@ export class DatalakeConfigurationComponent implements OnInit {
                             if (measurement?.retentionTime != null) {
                                 entry.retention = measurement.retentionTime;
                             }
+                            console.log(entry.retention);
                             inUseMeasurements.forEach(inUseMeasurement => {
                                 if (
                                     inUseMeasurement.measureName ===
@@ -237,6 +243,25 @@ export class DatalakeConfigurationComponent implements OnInit {
             }
         });
     }
+    testExportProvider(providerId: string) {
+        const dialogRef: DialogRef<ExportProviderConnectionTestComponent> =
+            this.dialogService.open(ExportProviderConnectionTestComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant(
+                    'Test Export Provider Connection',
+                ),
+                width: '70vw',
+                data: {
+                    providerId: providerId,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.loadAvailableExportProvider();
+            }
+        });
+    }
 
     openDownloadDialog(measurementName: string) {
         this.dialogService.open(DataDownloadDialogComponent, {
@@ -262,6 +287,26 @@ export class DatalakeConfigurationComponent implements OnInit {
                         measureName: measurementId,
                     },
                     measurementIndex: measurementId,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                setTimeout(() => {
+                    this.loadAvailableMeasurements();
+                }, 1000);
+            }
+        });
+    }
+
+    openRetentionLog(retentionLog: RetentionLog[]) {
+        const dialogRef: DialogRef<DataRetentionLogDialogComponent> =
+            this.dialogService.open(DataRetentionLogDialogComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant('Retention Log'),
+                width: '100vw',
+                data: {
+                    retentionLog: retentionLog,
                 },
             });
 

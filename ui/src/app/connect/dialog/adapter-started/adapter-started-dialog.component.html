@@ -1,59 +1,67 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-            <sp-adapter-started-loading
-                fxFlex="100"
-                [textMessage]="loadingText"
-                *ngIf="loading"
-            ></sp-adapter-started-loading>
-            <div fxFlex="100" fxLayout="column" *ngIf="!loading" class="w-100">
-                <sp-adapter-started-update-migration
+            @if (loading) {
+                <sp-adapter-started-loading
                     fxFlex="100"
-                    *ngIf="
+                    [textMessage]="loadingText"
+                ></sp-adapter-started-loading>
+            }
+            @if (!loading) {
+                <div fxFlex="100" fxLayout="column" class="w-100">
+                    @if (
                         adapterUpdatePreflight &&
                         editMode &&
                         !adapterInstalled &&
                         !loading
-                    "
-                    [adapterPipelineUpdateInfos]="adapterPipelineUpdateInfos"
-                    (startUpdateEmitter)="updateAdapter()"
-                ></sp-adapter-started-update-migration>
-                <sp-adapter-started-success
-                    fxFlex="100"
-                    *ngIf="adapterInstalled"
-                    [adapterInstallationSuccessMessage]="
-                        adapterInstallationSuccessMessage
-                    "
-                    [pipelineOperationStatus]="pipelineOperationStatus"
-                    [saveInDataLake]="saveInDataLake"
-                    [saveInAsset]="addToAssetText"
-                    [deletedFromAsset]="deletedFromAssetText"
-                    [templateErrorMessage]="templateErrorMessage"
-                    [adapterErrorMessage]="adapterErrorMessage"
-                ></sp-adapter-started-success>
-                <sp-adapter-started-preview
-                    *ngIf="showPreview"
-                    [adapterElementId]="adapterElementId"
-                ></sp-adapter-started-preview>
-            </div>
+                    ) {
+                        <sp-adapter-started-update-migration
+                            fxFlex="100"
+                            [adapterPipelineUpdateInfos]="
+                                adapterPipelineUpdateInfos
+                            "
+                            (startUpdateEmitter)="updateAdapter()"
+                        ></sp-adapter-started-update-migration>
+                    }
+                    @if (adapterInstalled) {
+                        <sp-adapter-started-success
+                            fxFlex="100"
+                            [adapterInstallationSuccessMessage]="
+                                adapterInstallationSuccessMessage
+                            "
+                            [pipelineOperationStatus]="pipelineOperationStatus"
+                            [saveInDataLake]="saveInDataLake"
+                            [saveInAsset]="addToAssetText"
+                            [deletedFromAsset]="deletedFromAssetText"
+                            [templateErrorMessage]="templateErrorMessage"
+                            [adapterErrorMessage]="adapterErrorMessage"
+                        ></sp-adapter-started-success>
+                    }
+                    @if (showPreview) {
+                        <sp-adapter-started-preview
+                            [adapterElementId]="adapterElementId"
+                        ></sp-adapter-started-preview>
+                    }
+                </div>
+            }
         </div>
     </div>
     <mat-divider></mat-divider>

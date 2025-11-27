@@ -85,16 +85,9 @@ describe('Test Group Management for Pipelines', () => {
             3,
         );
 
-        // Add new user group with pipeline admin role
-        ConfigurationBtns.newUserGroupBtn().click();
-        ConfigurationBtns.inputGroupName('User_Group');
-        cy.get('input[value="ROLE_PIPELINE_ADMIN"]').check();
-        UserBtns.saveEditUserBtn().click();
+        UserUtils.createGroup('User_Group', UserRole.ROLE_PIPELINE_ADMIN);
 
-        // Add first user to group
-        UserBtns.firstEditUserBtn().click();
-        cy.get('input[type="checkbox"]').eq(0).check();
-        UserBtns.saveEditUserBtn().click();
+        UserUtils.addGroupToUser('User_Group', user.name);
 
         // Add user group to pipeline
         PipelineUtils.goToPipelines();

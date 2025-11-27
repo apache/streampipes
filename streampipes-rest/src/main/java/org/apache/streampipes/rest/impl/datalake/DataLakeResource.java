@@ -23,6 +23,7 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
+import org.apache.streampipes.export.DataLakeExportManager;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.RetentionTimeConfig;
@@ -93,6 +94,7 @@ public class DataLakeResource extends AbstractRestResource {
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
+  private static DataLakeExportManager dataLakeExportManager = new DataLakeExportManager();
 
   public DataLakeResource() {
     this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
@@ -111,19 +113,16 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}")
-  @Operation(summary = "Remove data from a single measurement series with given id", tags = {"Data Lake"},
-      responses = {
+  @Operation(summary = "Remove data from a single measurement series with given id", tags = {
+      "Data Lake" }, responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
-          @ApiResponse(responseCode = "400", description = "Measurement series with given id not found")})
+          @ApiResponse(responseCode = "400", description = "Measurement series with given id not found") })
   public ResponseEntity<?> deleteData(
-      @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathVariable("measurementID") String measurementID
-      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
-      @RequestParam(value = "startDate", required = false) Long startDate
-      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
-      @RequestParam(value = "endDate", required = false) Long endDate) {
+      @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathVariable("measurementID") String measurementID,
+      @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(value = "startDate", required = false) Long startDate,
+      @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(value = "endDate", required = false) Long endDate) {
 
-    if (this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)){
+    if (this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)) {
       return ok();
     } else {
       return ResponseEntity
@@ -134,19 +133,12 @@ public class DataLakeResource extends AbstractRestResource {
 
   @DeleteMapping(path = "/measurements/{measurementID}/drop")
   @Operation(summary = "Drop a single measurement series with given id from Data Lake and "
-      + "remove related event property",
-      tags = {
-          "Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "200",
-              description = "Measurement series successfully dropped from Data Lake"),
-          @ApiResponse(
-              responseCode = "400",
-              description = "Measurement series with given id or related event property not found")})
+      + "remove related event property", tags = {
+          "Data Lake" }, responses = {
+              @ApiResponse(responseCode = "200", description = "Measurement series successfully dropped from Data Lake"),
+              @ApiResponse(responseCode = "400", description = "Measurement series with given id or related event property not found") })
   public ResponseEntity<?> dropMeasurementSeries(
-      @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathVariable("measurementID") String measurementID) {
+      @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathVariable("measurementID") String measurementID) {
 
     boolean isSuccessDataLake = this.dataExplorerQueryManagement.deleteData(measurementID);
 
@@ -167,12 +159,8 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Get a list of all measurement series", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "200",
-              description = "array of stored measurement series",
-              content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class))))})
+  @Operation(summary = "Get a list of all measurement series", tags = { "Data Lake" }, responses = {
+      @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class)))) })
   public ResponseEntity<List<DataLakeMeasure>> getAll() {
     List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
     return ok(allMeasurements);
@@ -180,69 +168,34 @@ public class DataLakeResource extends AbstractRestResource {
 
   @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
-                                                          @RequestParam("fields") String fields) {
+      @RequestParam("fields") String fields) {
     Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measurementId, fields);
     return ok(tagValues);
   }
 
-
   @GetMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Get data from a single measurement series by a given id", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "400",
-              description = "Measurement series with given id and requested query specification not found"),
-          @ApiResponse(
-              responseCode = "200",
-              description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
+  @Operation(summary = "Get data from a single measurement series by a given id", tags = { "Data Lake" }, responses = {
+      @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
+      @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class))) })
   public ResponseEntity<?> getData(
-      @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathVariable("measurementID") String measurementID
-      , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)")
-      @RequestParam(value = QP_COLUMNS, required = false) String columns
-      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
-      @RequestParam(value = QP_START_DATE, required = false) Long startDate
-      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
-      @RequestParam(value = QP_END_DATE, required = false) Long endDate
-      , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation")
-      @RequestParam(value = QP_PAGE, required = false) Integer page
-      , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results")
-      @RequestParam(value = QP_LIMIT, required = false) Integer limit
-      , @Parameter(in = ParameterIn.QUERY, description = "offset")
-      @RequestParam(value = QP_OFFSET, required = false) Integer offset
-      , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation")
-      @RequestParam(value = QP_GROUP_BY, required = false) String groupBy
-      ,
-      @Parameter(
-          in = ParameterIn.QUERY,
-          description = "ordering of retrieved query results (ASC or DESC - default is ASC)")
-      @RequestParam(value = QP_ORDER, required = false) String order
-      , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation")
-      @RequestParam(value = QP_AGGREGATION_FUNCTION, required = false) String aggregationFunction
-      ,
-      @Parameter(
-          in = ParameterIn.QUERY,
-          description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation")
-      @RequestParam(value = QP_TIME_INTERVAL, required = false) String timeInterval
-      , @Parameter(in = ParameterIn.QUERY, description = "only return the number of results")
-      @RequestParam(value = QP_COUNT_ONLY, required = false) String countOnly
-      ,
-      @Parameter(in = ParameterIn.QUERY, description = "auto-aggregate the number of results to avoid browser overload")
-      @RequestParam(value = QP_AUTO_AGGREGATE, required = false) boolean autoAggregate
-      ,
-      @Parameter(
-          in = ParameterIn.QUERY,
-          description = "filter conditions (a comma-separated list of filter conditions"
-              + "such as [field,operator,condition])")
-      @RequestParam(value = QP_FILTER, required = false) String filter
-      , @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)")
-      @RequestParam(value = QP_MISSING_VALUE_BEHAVIOUR, required = false) String missingValueBehaviour
-      ,
-      @Parameter(
-          in = ParameterIn.QUERY,
-          description = "the maximum amount of resulting events,"
-              + "when too high the query status is set to TOO_MUCH_DATA")
-      @RequestParam(value = QP_MAXIMUM_AMOUNT_OF_EVENTS, required = false) Integer maximumAmountOfResults,
+      @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathVariable("measurementID") String measurementID,
+      @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @RequestParam(value = QP_COLUMNS, required = false) String columns,
+      @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(value = QP_START_DATE, required = false) Long startDate,
+      @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(value = QP_END_DATE, required = false) Long endDate,
+      @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @RequestParam(value = QP_PAGE, required = false) Integer page,
+      @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results") @RequestParam(value = QP_LIMIT, required = false) Integer limit,
+      @Parameter(in = ParameterIn.QUERY, description = "offset") @RequestParam(value = QP_OFFSET, required = false) Integer offset,
+      @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation") @RequestParam(value = QP_GROUP_BY, required = false) String groupBy,
+      @Parameter(in = ParameterIn.QUERY, description = "ordering of retrieved query results (ASC or DESC - default is ASC)") @RequestParam(value = QP_ORDER, required = false) String order,
+      @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @RequestParam(value = QP_AGGREGATION_FUNCTION, required = false) String aggregationFunction,
+      @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @RequestParam(value = QP_TIME_INTERVAL, required = false) String timeInterval,
+      @Parameter(in = ParameterIn.QUERY, description = "only return the number of results") @RequestParam(value = QP_COUNT_ONLY, required = false) String countOnly,
+      @Parameter(in = ParameterIn.QUERY, description = "auto-aggregate the number of results to avoid browser overload") @RequestParam(value = QP_AUTO_AGGREGATE, required = false) boolean autoAggregate,
+      @Parameter(in = ParameterIn.QUERY, description = "filter conditions (a comma-separated list of filter conditions"
+          + "such as [field,operator,condition])") @RequestParam(value = QP_FILTER, required = false) String filter,
+      @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)") @RequestParam(value = QP_MISSING_VALUE_BEHAVIOUR, required = false) String missingValueBehaviour,
+      @Parameter(in = ParameterIn.QUERY, description = "the maximum amount of resulting events,"
+          + "when too high the query status is set to TOO_MUCH_DATA") @RequestParam(value = QP_MAXIMUM_AMOUNT_OF_EVENTS, required = false) Integer maximumAmountOfResults,
       @RequestParam Map<String, String> queryParams) {
 
     if (!(checkProvidedQueryParams(queryParams))) {
@@ -250,8 +203,8 @@ public class DataLakeResource extends AbstractRestResource {
     } else {
       ProvidedRestQueryParams sanitizedParams = populate(measurementID, queryParams);
       try {
-        SpQueryResult result =
-            this.dataExplorerQueryManagement.getData(sanitizedParams, isIgnoreMissingValues(missingValueBehaviour));
+        SpQueryResult result = this.dataExplorerQueryManagement.getData(sanitizedParams,
+            isIgnoreMissingValues(missingValueBehaviour));
         return ok(result);
       } catch (RuntimeException e) {
         return badRequest(SpLogMessage.from(e));
@@ -259,10 +212,7 @@ public class DataLakeResource extends AbstractRestResource {
     }
   }
 
-  @PostMapping(
-      path = "/query",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<SpQueryResult>> getData(@RequestBody List<Map<String, String>> queryParams) {
     var results = queryParams
         .stream()
@@ -274,68 +224,32 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  @Operation(summary = "Download data from a single measurement series by a given id", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "400",
-              description = "Measurement series with given id and requested query specification not found"),
-          @ApiResponse(
-              responseCode = "200",
-              description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
+  @Operation(summary = "Download data from a single measurement series by a given id", tags = {
+      "Data Lake" }, responses = {
+          @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
+          @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class))) })
   public ResponseEntity<StreamingResponseBody> downloadData(
-      @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathVariable("measurementID") String measurementID
-      , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)")
-      @RequestParam(value = QP_COLUMNS, required = false) String columns
-      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
-      @RequestParam(value = QP_START_DATE, required = false) Long startDate
-      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
-      @RequestParam(value = QP_END_DATE, required = false) Long endDate
-      , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation")
-      @RequestParam(value = QP_PAGE, required = false) Integer page
-      , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results")
-      @RequestParam(value = QP_LIMIT, required = false) Integer limit
-      , @Parameter(in = ParameterIn.QUERY, description = "offset")
-      @RequestParam(value = QP_OFFSET, required = false) Integer offset
-      , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation")
-      @RequestParam(value = QP_GROUP_BY, required = false) String groupBy
-      ,
-      @Parameter(
-          in = ParameterIn.QUERY,
-          description = "ordering of retrieved query results (ASC or DESC - default is ASC)")
-      @RequestParam(value = QP_ORDER, required = false) String order
-      , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation")
-      @RequestParam(value = QP_AGGREGATION_FUNCTION, required = false) String aggregationFunction
-      ,
-      @Parameter(
-          in = ParameterIn.QUERY,
-          description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation")
-      @RequestParam(value = QP_TIME_INTERVAL, required = false) String timeInterval
-      ,
-      @Parameter(
-          in = ParameterIn.QUERY,
-          description = "format specification (csv, json - default is csv) for data download")
-      @RequestParam(value = QP_FORMAT, required = false) String format
-      , @Parameter(in = ParameterIn.QUERY, description = "csv delimiter (comma or semicolon)")
-      @RequestParam(value = QP_CSV_DELIMITER, required = false) String csvDelimiter
-      , @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)")
-      @RequestParam(value = QP_MISSING_VALUE_BEHAVIOUR, required = false) String missingValueBehaviour
-      ,
-      @Parameter(
-          in = ParameterIn.QUERY,
-          description = "filter conditions (a comma-separated list of filter conditions"
-              + "such as [field,operator,condition])")
-      @RequestParam(value = QP_FILTER, required = false) String filter,
-      @Parameter(in = ParameterIn.QUERY, description = "Excel export with template")
-      @RequestParam(value = QP_XLSX_USE_TEMPLATE, required = false) boolean useTemplate
-      , @Parameter(in = ParameterIn.QUERY, description = "ID of the excel template file to use")
-      @RequestParam(value = QP_XLSX_TEMPLATE_ID, required = false) String templateId
-      , @Parameter(in = ParameterIn.QUERY, description = "The first row in the excel file where data should be written")
-      @RequestParam(value = QP_XLSX_START_ROW, required = false) Integer startRow,
-      @Parameter(in = ParameterIn.QUERY, description = "Use either label or key as the column header")
-      @RequestParam(value = QP_HEADER_COLUMN_NAME, required = false) String headerColumnName,
+      @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathVariable("measurementID") String measurementID,
+      @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @RequestParam(value = QP_COLUMNS, required = false) String columns,
+      @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(value = QP_START_DATE, required = false) Long startDate,
+      @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(value = QP_END_DATE, required = false) Long endDate,
+      @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @RequestParam(value = QP_PAGE, required = false) Integer page,
+      @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results") @RequestParam(value = QP_LIMIT, required = false) Integer limit,
+      @Parameter(in = ParameterIn.QUERY, description = "offset") @RequestParam(value = QP_OFFSET, required = false) Integer offset,
+      @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation") @RequestParam(value = QP_GROUP_BY, required = false) String groupBy,
+      @Parameter(in = ParameterIn.QUERY, description = "ordering of retrieved query results (ASC or DESC - default is ASC)") @RequestParam(value = QP_ORDER, required = false) String order,
+      @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @RequestParam(value = QP_AGGREGATION_FUNCTION, required = false) String aggregationFunction,
+      @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @RequestParam(value = QP_TIME_INTERVAL, required = false) String timeInterval,
+      @Parameter(in = ParameterIn.QUERY, description = "format specification (csv, json - default is csv) for data download") @RequestParam(value = QP_FORMAT, required = false) String format,
+      @Parameter(in = ParameterIn.QUERY, description = "csv delimiter (comma or semicolon)") @RequestParam(value = QP_CSV_DELIMITER, required = false) String csvDelimiter,
+      @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)") @RequestParam(value = QP_MISSING_VALUE_BEHAVIOUR, required = false) String missingValueBehaviour,
+      @Parameter(in = ParameterIn.QUERY, description = "filter conditions (a comma-separated list of filter conditions"
+          + "such as [field,operator,condition])") @RequestParam(value = QP_FILTER, required = false) String filter,
+      @Parameter(in = ParameterIn.QUERY, description = "Excel export with template") @RequestParam(value = QP_XLSX_USE_TEMPLATE, required = false) boolean useTemplate,
+      @Parameter(in = ParameterIn.QUERY, description = "ID of the excel template file to use") @RequestParam(value = QP_XLSX_TEMPLATE_ID, required = false) String templateId,
+      @Parameter(in = ParameterIn.QUERY, description = "The first row in the excel file where data should be written") @RequestParam(value = QP_XLSX_START_ROW, required = false) Integer startRow,
+      @Parameter(in = ParameterIn.QUERY, description = "Use either label or key as the column header") @RequestParam(value = QP_HEADER_COLUMN_NAME, required = false) String headerColumnName,
       @RequestParam Map<String, String> queryParams) {
-
 
     if (!(checkProvidedQueryParams(queryParams))) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error("Wrong query parameters provided"));
@@ -363,23 +277,15 @@ public class DataLakeResource extends AbstractRestResource {
     }
   }
 
-  @PostMapping(
-      path = "/measurements/{measurementID}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Store a measurement series to a data lake with the given id", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "400",
-              description = "Can't store the given data to this data lake"),
-          @ApiResponse(
-              responseCode = "200",
-              description = "Successfully stored data")})
+  @PostMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Store a measurement series to a data lake with the given id", tags = {
+      "Data Lake" }, responses = {
+          @ApiResponse(responseCode = "400", description = "Can't store the given data to this data lake"),
+          @ApiResponse(responseCode = "200", description = "Successfully stored data") })
   public ResponseEntity<?> storeDataToMeasurement(
       @PathVariable String measurementID,
       @RequestBody SpQueryResult queryResult,
-      @Parameter(in = ParameterIn.QUERY, description = "should not identical schemas be stored")
-      @RequestParam(value = "ignoreSchemaMismatch", required = false) boolean ignoreSchemaMismatch) {
+      @Parameter(in = ParameterIn.QUERY, description = "should not identical schemas be stored") @RequestParam(value = "ignoreSchemaMismatch", required = false) boolean ignoreSchemaMismatch) {
     var dataWriter = new DataLakeDataWriter(ignoreSchemaMismatch);
     try {
       dataWriter.writeData(measurementID, queryResult);
@@ -391,9 +297,8 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @DeleteMapping(path = "/measurements")
-  @Operation(summary = "Remove all stored measurement series from Data Lake", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(responseCode = "200", description = "All measurement series successfully removed")})
+  @Operation(summary = "Remove all stored measurement series from Data Lake", tags = { "Data Lake" }, responses = {
+      @ApiResponse(responseCode = "200", description = "All measurement series successfully removed") })
   public ResponseEntity<?> removeAll() {
     boolean isSuccess = this.dataExplorerQueryManagement.deleteAllData();
     return ResponseEntity.ok(isSuccess);
@@ -403,44 +308,54 @@ public class DataLakeResource extends AbstractRestResource {
     return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
   }
 
-    @PostMapping(
-      path = "/{elementId}/cleanup",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-      @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  @Operation(summary = "Sets the retention mechanism for a certain measurement", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "400",
-              description = "Can't store the given data to this data lake"),
-          @ApiResponse(
-              responseCode = "200",
-              description = "Successfully stored data")})
+  @PostMapping(path = "/{elementId}/cleanup", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @Operation(summary = "Sets the retention mechanism for a certain measurement", tags = { "Data Lake" }, responses = {
+      @ApiResponse(responseCode = "400", description = "Can't store the given data to this data lake"),
+      @ApiResponse(responseCode = "200", description = "Successfully stored data") })
   public ResponseEntity<?> setDataLakeRetention(
       @PathVariable String elementId,
-      @RequestBody RetentionTimeConfig retention){
-        var measure = this.dataExplorerSchemaManagement.getById(elementId);
-        measure.setRetentionTime(retention);
-      try {
-        this.dataExplorerSchemaManagement.updateMeasurement(measure);
-      } catch (IllegalArgumentException e) {
-        return badRequest(e.getMessage());
+      @RequestBody RetentionTimeConfig retention) {
+    var measure = this.dataExplorerSchemaManagement.getById(elementId);
+    measure.setRetentionTime(retention);
+    try {
+      this.dataExplorerSchemaManagement.updateMeasurement(measure);
+    } catch (IllegalArgumentException e) {
+      return badRequest(e.getMessage());
     }
-  
+
     return ok();
   }
 
-@DeleteMapping(path = "/{elementId}/cleanup")
-public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId) {
+  @DeleteMapping(path = "/{elementId}/cleanup")
+  public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId) {
     var measure = this.dataExplorerSchemaManagement.getById(elementId);
     measure.deleteRetentionTime();
     try {
-        this.dataExplorerSchemaManagement.updateMeasurement(measure);
+      this.dataExplorerSchemaManagement.updateMeasurement(measure);
     } catch (IllegalArgumentException e) {
-        return badRequest(e.getMessage());
+      return badRequest(e.getMessage());
     }
     return ok();
-}
+  }
+
+  @PostMapping(path = "/{elementId}/runSyncNow")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @Operation(summary = "Runs the retention mechanism for a certain measurement", tags = { "Data Lake" }, responses = {
+      @ApiResponse(responseCode = "200", description = "Successfully stored data") })
+  public ResponseEntity<?> runDataLakeRetentionNow(
+      @PathVariable String elementId) {
+
+    try {
+      var measure = this.dataExplorerSchemaManagement.getById(elementId);
+      dataLakeExportManager.cleanupSingleMeasurement(measure);
+      return ok();
+
+    } catch (Exception e) {
+      return serverError(SpLogMessage.from(e));
+    }
+
+  }
 
   private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {
     Map<String, String> queryParamMap = new HashMap<>();

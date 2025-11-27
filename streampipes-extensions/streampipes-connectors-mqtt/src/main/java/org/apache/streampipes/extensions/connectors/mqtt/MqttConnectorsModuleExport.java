@@ -23,9 +23,10 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
+import org.apache.streampipes.extensions.connectors.mqtt.migration.MQTTAdapterMigrationV1;
+import org.apache.streampipes.extensions.connectors.mqtt.migration.MQTTSinkMigrationV1;
 import org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink;
 
-import java.util.Collections;
 import java.util.List;
 
 public class MqttConnectorsModuleExport implements IExtensionModuleExport {
@@ -45,6 +46,9 @@ public class MqttConnectorsModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return Collections.emptyList();
+    return List.of(
+ new MQTTAdapterMigrationV1(),
+ new MQTTSinkMigrationV1()
+    );
   }
 }

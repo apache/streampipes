@@ -16,6 +16,8 @@
  *
  */
 
+import { Isa95Type } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+
 export class AssetBtns {
     public static createAssetBtn() {
         return cy.dataCy('create-new-asset-button', { timeout: 10000 });
@@ -23,6 +25,30 @@ export class AssetBtns {
 
     public static assetNameInput() {
         return cy.dataCy('asset-name', { timeout: 10000 });
+    }
+
+    public static assetTypeSelect() {
+        return cy.dataCy('asset-type-select', { timeout: 10000 });
+    }
+
+    public static assetTypeSelectOption(type: Isa95Type) {
+        return cy.dataCy(`option-${type}`, { timeout: 10000 });
+    }
+
+    public static siteSelect() {
+        return cy.dataCy('asset-site-select', { timeout: 10000 });
+    }
+
+    public static siteSelectOption(site: string) {
+        return cy.dataCy(`option-${site}`, { timeout: 10000 });
+    }
+
+    public static labelSelect() {
+        return cy.dataCy('asset-label-input', { timeout: 10000 });
+    }
+
+    public static labelSelectOption(label: string) {
+        return cy.dataCy(`option-${label}`, { timeout: 10000 });
     }
 
     public static saveAssetBtn() {

@@ -65,14 +65,14 @@ public class MqttProtocol implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, 0, MqttProtocol::new)
+        .create(ID, 1, MqttProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
-            MqttConnectUtils.getAlternativesTwo())
+        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAnonymousAccess(),
+            MqttConnectUtils.getUsernameAccess(),  MqttConnectUtils.getClientCertAccess())
         .requiredTextParameter(MqttConnectUtils.getTopicLabel())
         .buildConfiguration();
   }

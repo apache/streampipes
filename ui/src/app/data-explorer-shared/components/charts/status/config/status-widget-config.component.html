@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <sp-visualization-config-outer
     [configurationValid]="
@@ -46,122 +46,125 @@
                 </mat-radio-group>
             </div>
 
-            <div
-                *ngIf="
-                    currentlyConfiguredWidget.visualizationConfig
-                        .selectedDataType === 'number'
-                "
-                fxLayout="column"
-                fxLayoutGap="10px"
-            >
-                <div
-                    fxLayout="row"
-                    fxLayoutGap="10px"
-                    fxLayoutAlign="start center"
-                    fxFlex="100"
-                >
-                    <small
-                        fxFlex="30"
-                        [matTooltip]="
-                            'Interval in seconds in which an event must arrive'
-                                | translate
-                        "
-                        matTooltipPosition="above"
-                        >{{ 'Interval [sec]' | translate }}</small
+            @if (
+                currentlyConfiguredWidget.visualizationConfig
+                    .selectedDataType === 'number'
+            ) {
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <div
+                        fxLayout="row"
+                        fxLayoutGap="10px"
+                        fxLayoutAlign="start center"
+                        fxFlex="100"
                     >
-                    <mat-form-field color="accent" appearance="outline" fxFlex>
-                        <input
-                            type="number"
+                        <small
+                            fxFlex="30"
+                            [matTooltip]="
+                                'Interval in seconds in which an event must arrive'
+                                    | translate
+                            "
+                            matTooltipPosition="above"
+                            >{{ 'Interval [sec]' | translate }}</small
+                        >
+                        <mat-form-field
+                            color="accent"
+                            appearance="outline"
+                            fxFlex
+                        >
+                            <input
+                                type="number"
+                                [(ngModel)]="
+                                    currentlyConfiguredWidget
+                                        .visualizationConfig.selectedInterval
+                                "
+                                matInput
+                                (input)="selectInterval($event.target.value)"
+                                min="0"
+                            />
+                        </mat-form-field>
+                    </div>
+                    <div
+                        fxLayout="row"
+                        fxLayoutGap="10px"
+                        fxLayoutAlign="start center"
+                        fxFlex="100"
+                    >
+                        <small>{{
+                            'Show Last Seen Timestamp' | translate
+                        }}</small>
+                        <mat-checkbox
+                            color="accent"
                             [(ngModel)]="
                                 currentlyConfiguredWidget.visualizationConfig
-                                    .selectedInterval
+                                    .selectedLastSeen
                             "
-                            matInput
-                            (input)="selectInterval($event.target.value)"
-                            min="0"
-                        />
-                    </mat-form-field>
+                            (ngModelChange)="showLastSeen($event)"
+                        >
+                        </mat-checkbox>
+                    </div>
                 </div>
-                <div
-                    fxLayout="row"
-                    fxLayoutGap="10px"
-                    fxLayoutAlign="start center"
-                    fxFlex="100"
-                >
-                    <small>{{ 'Show Last Seen Timestamp' | translate }}</small>
-                    <mat-checkbox
-                        color="accent"
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .selectedLastSeen
-                        "
-                        (ngModelChange)="showLastSeen($event)"
-                    >
-                    </mat-checkbox>
-                </div>
-            </div>
+            }
 
-            <div
-                *ngIf="
-                    currentlyConfiguredWidget.visualizationConfig
-                        .selectedDataType === 'boolean'
-                "
-                fxLayout="column"
-                fxLayoutGap="10px"
-            >
-                <div
-                    fxLayout="row"
-                    fxLayoutGap="10px"
-                    fxLayoutAlign="start center"
-                    fxFlex="100"
-                >
-                    <small fxFlex="30">{{ 'Field' | translate }}</small>
-                    <sp-select-single-property-config
-                        [availableProperties]="fieldProvider.booleanFields"
-                        [selectedProperty]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .selectedBooleanFieldToObserve
-                        "
-                        (changeSelectedProperty)="
-                            selectBooleanFieldToObserve($event)
-                        "
-                        fxFlex
-                    ></sp-select-single-property-config>
-                </div>
-
-                <div
-                    fxLayout="row"
-                    fxLayoutGap="10px"
-                    fxLayoutAlign="start center"
-                    fxFlex="100"
-                >
-                    <small fxFlex="30">{{
-                        'Select Mapping' | translate
-                    }}</small>
-                    <mat-radio-group
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .selectedMappingGreenTrue
-                        "
-                        (change)="selectMappingGreenTrue($event.source.value)"
+            @if (
+                currentlyConfiguredWidget.visualizationConfig
+                    .selectedDataType === 'boolean'
+            ) {
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <div
+                        fxLayout="row"
+                        fxLayoutGap="10px"
+                        fxLayoutAlign="start center"
+                        fxFlex="100"
                     >
-                        <mat-radio-button [value]="true">
-                            <span class="color-box green-box"></span>
-                            {{ 'True' | translate }}
-                            <span class="spacing"></span>
-                            <span class="color-box red-box"></span>
-                            {{ 'False' | translate }}
-                        </mat-radio-button>
-                        <mat-radio-button [value]="false">
-                            <span class="color-box red-box"></span>
-                            {{ 'True' | translate }}
-                            <span class="spacing"></span>
-                            <span class="color-box green-box"></span>
-                            {{ 'False' | translate }}
-                        </mat-radio-button>
-                    </mat-radio-group>
+                        <small fxFlex="30">{{ 'Field' | translate }}</small>
+                        <sp-select-single-property-config
+                            [availableProperties]="fieldProvider.booleanFields"
+                            [selectedProperty]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .selectedBooleanFieldToObserve
+                            "
+                            (changeSelectedProperty)="
+                                selectBooleanFieldToObserve($event)
+                            "
+                            fxFlex
+                        ></sp-select-single-property-config>
+                    </div>
+                    <div
+                        fxLayout="row"
+                        fxLayoutGap="10px"
+                        fxLayoutAlign="start center"
+                        fxFlex="100"
+                    >
+                        <small fxFlex="30">{{
+                            'Select Mapping' | translate
+                        }}</small>
+                        <mat-radio-group
+                            [(ngModel)]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .selectedMappingGreenTrue
+                            "
+                            (change)="
+                                selectMappingGreenTrue($event.source.value)
+                            "
+                        >
+                            <mat-radio-button [value]="true">
+                                <span class="color-box green-box"></span>
+                                {{ 'True' | translate }}
+                                <span class="spacing"></span>
+                                <span class="color-box red-box"></span>
+                                {{ 'False' | translate }}
+                            </mat-radio-button>
+                            <mat-radio-button [value]="false">
+                                <span class="color-box red-box"></span>
+                                {{ 'True' | translate }}
+                                <span class="spacing"></span>
+                                <span class="color-box green-box"></span>
+                                {{ 'False' | translate }}
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </sp-configuration-box>
 </sp-visualization-config-outer>

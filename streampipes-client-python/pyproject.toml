@@ -76,7 +76,7 @@ ruff = "0.11.9"
 pre-commit = "4.3.0"
 pytest = "9.0.1"
 pytest-cov = "6.2.1"
-pyupgrade = "3.16.0"
+pyupgrade = "3.21.1"
 
 [tool.poetry.group.docs]
 optional = true

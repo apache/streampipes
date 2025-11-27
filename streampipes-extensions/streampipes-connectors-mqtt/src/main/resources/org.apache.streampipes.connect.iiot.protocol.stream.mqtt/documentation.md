@@ -37,7 +37,7 @@ The MQTT protocol adapter enables StreamPipes to consume messages from an MQTT b
 ## Configuration
 
 ### Broker Settings
-* **Broker URL**: The URL of the MQTT broker (e.g., tcp://test-server.com:1883). The protocol (tcp://) and port are required.
+* **Broker URL**: The URL of the MQTT broker (e.g., tcp://test-server.com:1883 for tcp or ssl://test-server.com:8883 for TLS). The protocol (tcp://) or (ssl://) and port are required.
 
 ### Topic Settings
 * **Topic**: The MQTT topic to subscribe to (e.g., test/topic)
@@ -48,6 +48,9 @@ The MQTT protocol adapter enables StreamPipes to consume messages from an MQTT b
   * **Username/Password**: Basic authentication with username and password
     * **Username**: The username for authentication
     * **Password**: The password for authentication
+  * **Client Certificate** 
+    * **Certificate PEM**: Public Key in PEM format
+    * **Private Key PEM**: Private (RSA) Key in PEM format (without password !)
 
 ***
 
@@ -61,7 +64,7 @@ The MQTT protocol adapter enables StreamPipes to consume messages from an MQTT b
 * **Security**:
   * Basic authentication support
   * TCP protocol support
-  * SSL/TLS support (coming soon)
+  * SSL/TLS support
 
 * **Protocol Support**:
   * MQTT 3.1

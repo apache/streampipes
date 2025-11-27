@@ -16,17 +16,17 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
-    AssetConstants,
-    GenericStorageService,
+    AssetManagementService,
     SpAssetModel,
 } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
     CurrentUserService,
     DialogService,
+    ObjectPermissionDialogComponent,
     PanelType,
     SpAssetBrowserService,
     SpBreadcrumbService,
@@ -37,6 +37,7 @@ import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-a
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-asset-overview',
@@ -46,6 +47,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class SpAssetOverviewComponent implements OnInit {
     existingAssets: SpAssetModel[] = [];
+    filteredAssets: SpAssetModel[] = [];
 
     displayedColumns: string[] = ['name', 'actions'];
 
@@ -54,8 +56,13 @@ export class SpAssetOverviewComponent implements OnInit {
 
     hasWritePrivilege = false;
 
+    assetFilter$: Subscription;
+    currentFilterIds = new Set<string>();
+
+    private assetFilterService = inject(SpAssetBrowserService);
+
     constructor(
-        private genericStorageService: GenericStorageService,
+        private assetService: AssetManagementService,
         private breadcrumbService: SpBreadcrumbService,
         private dialogService: DialogService,
         private router: Router,
@@ -72,30 +79,66 @@ export class SpAssetOverviewComponent implements OnInit {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpAssetRoutes.BASE),
         );
+        this.assetFilter$ =
+            this.assetFilterService.currentAssetFilter$.subscribe(filter => {
+                const elementIdsSet = new Set<string>();
+
+                if (
+                    filter?.selectedAssets &&
+                    Array.isArray(filter.selectedAssets)
+                ) {
+                    filter.selectedAssets.forEach(asset => {
+                        if ((asset as SpAssetModel)?.elementId) {
+                            elementIdsSet.add(
+                                (asset as SpAssetModel)?.elementId,
+                            );
+                        }
+                    });
+                }
+
+                this.currentFilterIds =
+                    elementIdsSet.size > 0 ? elementIdsSet : undefined;
+
+                this.applyAssetFilters(this.currentFilterIds);
+            });
         this.loadAssets();
     }
 
     loadAssets(): void {
-        this.genericStorageService
-            .getAllDocuments(AssetConstants.ASSET_APP_DOC_NAME)
-            .subscribe(result => {
-                this.existingAssets = result as SpAssetModel[];
-                this.dataSource.data = this.existingAssets;
-            });
+        this.assetService.getAllAssets().subscribe(result => {
+            this.existingAssets = result as SpAssetModel[];
+            this.dataSource.data = this.existingAssets;
+        });
+    }
+
+    applyAssetFilters(elementIds: Set<string>): void {
+        if (elementIds == undefined) {
+            this.filteredAssets = [];
+        } else if (elementIds.size == 0) {
+            this.filteredAssets = this.existingAssets;
+        } else {
+            this.filteredAssets = this.existingAssets.filter(a =>
+                elementIds.has(a.elementId),
+            );
+        }
+        this.dataSource.data = this.filteredAssets;
     }
 
     createNewAsset() {
-        const assetModel = {
+        const assetModel: SpAssetModel = {
             assetName: 'New Asset',
             assetDescription: '',
             assetLinks: [],
             assetId: this.idGeneratorService.generate(6),
-            _id: this.idGeneratorService.generate(24),
+            elementId: this.idGeneratorService.generate(24),
             appDocType: 'asset-management',
             removable: true,
-            _rev: undefined,
+            rev: undefined,
             assets: [],
             assetType: undefined,
+            assetSite: undefined,
+            additionalData: {},
+            labelIds: [],
         };
         const dialogRef = this.dialogService.open(
             SpCreateAssetDialogComponent,
@@ -117,8 +160,8 @@ export class SpAssetOverviewComponent implements OnInit {
     }
 
     goToDetailsView(asset: SpAssetModel, editMode = false) {
-        const mode = editMode ? 'edit' : 'view';
-        this.router.navigate(['assets', 'details', asset._id, mode]);
+        const mode = editMode && this.hasWritePrivilege ? 'edit' : 'view';
+        this.router.navigate(['assets', 'details', asset.elementId, mode]);
     }
 
     deleteAsset(asset: SpAssetModel) {
@@ -134,17 +177,27 @@ export class SpAssetOverviewComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.genericStorageService
-                    .deleteDocument(
-                        AssetConstants.ASSET_APP_DOC_NAME,
-                        asset._id,
-                        asset._rev,
-                    )
-                    .subscribe(() => {
-                        this.loadAssets();
-                        this.assetBrowserService.loadAssetData();
-                    });
+                this.assetService.deleteAsset(asset.elementId).subscribe(() => {
+                    this.loadAssets();
+                    this.assetBrowserService.loadAssetData();
+                });
             }
         });
+    }
+
+    openPermissionsDialog(asset: SpAssetModel) {
+        const dialogRef = this.dialogService.open(
+            ObjectPermissionDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: 'Manage permissions',
+                width: '70vw',
+                data: {
+                    objectInstanceId: asset.elementId,
+                    headerTitle:
+                        'Manage permissions for asset ' + asset.assetName,
+                },
+            },
+        );
     }
 }
