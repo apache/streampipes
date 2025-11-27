@@ -28,12 +28,12 @@ import {
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
-import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
+import { ChartSharedService } from '../../../../data-explorer-shared/services/chart-shared.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { CloneDashboardDialogComponent } from '../../../dialogs/clone-dashboard/clone-dashboard-dialog.component';
 import { Subscription } from 'rxjs';
-import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
+import { ChartRoutingService } from '../../../../data-explorer-shared/services/chart-routing.service';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
@@ -59,13 +59,13 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
 
     private dashboardService = inject(DashboardService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
-    private dataExplorerSharedService = inject(DataExplorerSharedService);
+    private dataExplorerSharedService = inject(ChartSharedService);
     private dialog = inject(MatDialog);
     protected translateService = inject(TranslateService);
     protected dateFormatService = inject(DateFormatService);
     private router = inject(Router);
     private assetFilterService = inject(SpAssetBrowserService);
-    private routingService = inject(DataExplorerRoutingService);
+    private routingService = inject(ChartRoutingService);
     private dialogService = inject(DialogService);
 
     assetFilter$: Subscription;

@@ -37,7 +37,7 @@ import { ChartConfigurationService } from '../../../../../data-explorer-shared/s
 import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
 import { GroupSelectionPanelComponent } from './group-selection-panel/group-selection-panel.component';
 import { TableVisConfig } from '../../../../../data-explorer-shared/components/charts/table/model/table-widget.model';
-import { DataExplorerFieldProviderService } from '../../../../../data-explorer-shared/services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../../data-explorer-shared/services/chart-field-provider.service';
 import { FieldProvider } from '../../../../../data-explorer-shared/models/dataview-dashboard.model';
 import { ChartTypeService } from '../../../../../data-explorer-shared/services/chart-type.service';
 
@@ -78,7 +78,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     constructor(
         private datalakeRestService: DatalakeRestService,
         private widgetConfigService: ChartConfigurationService,
-        private fieldProviderService: DataExplorerFieldProviderService,
+        private fieldProviderService: ChartFieldProviderService,
         private widgetTypeService: ChartTypeService,
         private router: Router,
     ) {}

@@ -34,7 +34,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ObservableGenerator } from '../models/dataview-dashboard.model';
 
 @Injectable({ providedIn: 'root' })
-export class DataExplorerSharedService {
+export class ChartSharedService {
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
     private dataViewQueryGeneratorService = inject(

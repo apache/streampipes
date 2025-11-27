@@ -26,7 +26,7 @@ import { Observable } from 'rxjs';
 import { SupportsUnsavedChangeDialog } from '../models/dataview-dashboard.model';
 
 @Injectable({ providedIn: 'root' })
-export class DataExplorerPanelCanDeactivateGuard {
+export class ChartPanelCanDeactivateGuard {
     constructor(private router: Router) {}
     canDeactivate(
         component: SupportsUnsavedChangeDialog,

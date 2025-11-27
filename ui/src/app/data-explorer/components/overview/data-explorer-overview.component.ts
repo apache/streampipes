@@ -23,7 +23,7 @@ import {
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
-import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
+import { ChartRoutingService } from '../../../data-explorer-shared/services/chart-routing.service';
 import { SpDataExplorerDataViewOverviewComponent } from './data-explorer-overview-table/data-explorer-overview-table.component';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { Subscription } from 'rxjs';
@@ -42,7 +42,7 @@ export class DataExplorerOverviewComponent implements OnInit, OnDestroy {
     hasDataExplorerWritePrivileges = false;
 
     private breadcrumbService = inject(SpBreadcrumbService);
-    private routingService = inject(DataExplorerRoutingService);
+    private routingService = inject(ChartRoutingService);
     private currentUserService = inject(CurrentUserService);
     private authService = inject(AuthService);
 

@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
-export class DataExplorerRoutingService {
+export class ChartRoutingService {
     private dataViewPath = ['dataexplorer'];
     private dashboardPath = ['dashboard'];
 

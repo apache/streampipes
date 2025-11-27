@@ -20,7 +20,7 @@ import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
-import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
@@ -35,7 +35,7 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
 > {
     constructor(
         widgetConfigurationService: ChartConfigurationService,
-        fieldService: DataExplorerFieldProviderService,
+        fieldService: ChartFieldProviderService,
     ) {
         super(widgetConfigurationService, fieldService);
     }

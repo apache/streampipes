@@ -46,12 +46,12 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { SpDashboardRoutes } from '../../dashboard.routes';
-import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
+import { ChartRoutingService } from '../../../data-explorer-shared/services/chart-routing.service';
 import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { TranslateService } from '@ngx-translate/core';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
-import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
+import { ChartSharedService } from '../../../data-explorer-shared/services/chart-shared.service';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -95,11 +95,11 @@ export class DashboardPanelComponent
     private currentUserService = inject(CurrentUserService);
     private dashboardService = inject(DashboardService);
     private route = inject(ActivatedRoute);
-    private routingService = inject(DataExplorerRoutingService);
+    private routingService = inject(ChartRoutingService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private translateService = inject(TranslateService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
-    private dataExplorerSharedService = inject(DataExplorerSharedService);
+    private dataExplorerSharedService = inject(ChartSharedService);
 
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();

@@ -46,7 +46,7 @@ import { DataExplorerVisualisationSettingsComponent } from './components/chart-v
 import { GroupSelectionPanelComponent } from './components/chart-view/designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
-import { DataExplorerPanelCanDeactivateGuard } from '../data-explorer-shared/services/data-explorer-panel.can-deactivate.guard';
+import { ChartPanelCanDeactivateGuard } from '../data-explorer-shared/services/chart-panel-can-deactivate-guard.service';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -151,7 +151,7 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
                     {
                         path: 'chart/:id',
                         component: DataExplorerChartViewComponent,
-                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
+                        canDeactivate: [ChartPanelCanDeactivateGuard],
                     },
                 ],
             },

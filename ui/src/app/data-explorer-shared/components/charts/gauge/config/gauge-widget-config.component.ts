@@ -19,7 +19,7 @@
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
-import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { GaugeVisConfig, GaugeWidgetModel } from '../model/gauge-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 
@@ -34,7 +34,7 @@ export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
 > {
     constructor(
         widgetConfigurationService: ChartConfigurationService,
-        fieldService: DataExplorerFieldProviderService,
+        fieldService: ChartFieldProviderService,
     ) {
         super(widgetConfigurationService, fieldService);
     }

@@ -60,7 +60,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
 import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
-import { DataExplorerPanelCanDeactivateGuard } from '../data-explorer-shared/services/data-explorer-panel.can-deactivate.guard';
+import { ChartPanelCanDeactivateGuard } from '../data-explorer-shared/services/chart-panel-can-deactivate-guard.service';
 import { DashboardToolbarComponent } from './components/panel/dashboard-toolbar/dashboard-toolbar.component';
 import { ChartSelectionPanelComponent } from './components/panel/chart-selection-panel/chart-selection-panel.component';
 import { ChartPreviewComponent } from './components/panel/chart-selection-panel/chart-selection/chart-preview/chart-preview.component';
@@ -128,12 +128,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
                     {
                         path: ':id',
                         component: DashboardPanelComponent,
-                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
+                        canDeactivate: [ChartPanelCanDeactivateGuard],
                     },
                     {
                         path: ':id/:startTime/:endTime',
                         component: DashboardPanelComponent,
-                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
+                        canDeactivate: [ChartPanelCanDeactivateGuard],
                     },
                 ],
             },
