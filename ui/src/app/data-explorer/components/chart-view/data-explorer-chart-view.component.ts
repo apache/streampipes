@@ -58,6 +58,7 @@ import { ResizeEchartsService } from '../../../data-explorer-shared/services/res
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';
+import { ChartTypeService } from 'src/app/data-explorer-shared/services/chart-type.service';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -125,6 +126,9 @@ export class DataExplorerChartViewComponent
         } else {
             this.createWidget();
             this.timeSettings = this.makeDefaultTimeSettings();
+            this.dataView.timeSettings = this.timeSettings;
+            this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
+
             this.afterDataViewLoaded();
         }
     }
@@ -183,8 +187,13 @@ export class DataExplorerChartViewComponent
     }
 
     setShouldShowConfirm(): boolean {
-        const originalTimeSettings = this.originalDataView
-            .timeSettings as TimeSettings;
+        let originalTimeSettings: TimeSettings;
+        if (this.originalDataView?.timeSettings) {
+            originalTimeSettings = this.originalDataView
+                .timeSettings as TimeSettings;
+        } else {
+            originalTimeSettings = this.dataView.timeSettings as TimeSettings;
+        }
         const currentTimeSettings = this.dataView.timeSettings as TimeSettings;
         return this.detectChangesService.shouldShowConfirm(
             this.originalDataView,
@@ -212,6 +221,7 @@ export class DataExplorerChartViewComponent
             createdAtEpochMs: Date.now(),
             lastModifiedEpochMs: Date.now(),
         };
+
         this.dataView = { ...this.dataView };
     }
 
@@ -273,6 +283,8 @@ export class DataExplorerChartViewComponent
         _route: ActivatedRouteSnapshot,
         _state: RouterStateSnapshot,
     ): Observable<boolean> {
+        console.log(this.setShouldShowConfirm());
+        console.log(this.editMode);
         if (this.editMode && this.setShouldShowConfirm()) {
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
                 width: '500px',

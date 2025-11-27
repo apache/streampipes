@@ -161,6 +161,7 @@ export class DataExplorerChartContainerComponent
     ) {}
 
     ngOnChanges(changes: SimpleChanges): void {
+        console.log('changes ', changes);
         if (changes.widgetIndex && this.componentRef?.instance) {
             this.componentRef.instance.widgetIndex =
                 changes.widgetIndex.currentValue;
@@ -193,6 +194,7 @@ export class DataExplorerChartContainerComponent
                     }
                 },
             );
+        console.log('test ', this.configuredWidget.widgetType);
         this.chooseWidget(this.configuredWidget.widgetType);
         this.timeSelectionService.updateTimeSettings(
             this.quickSelections,
@@ -236,9 +238,12 @@ export class DataExplorerChartContainerComponent
     }
 
     chooseWidget(widgetTypeId: string) {
-        const widgetToDisplay =
-            this.chartRegistryService.getChartTemplate(widgetTypeId);
-        this.loadComponent(widgetToDisplay.widgetComponent);
+        console.log('widgetTypeID', widgetTypeId);
+        if (widgetTypeId != undefined) {
+            const widgetToDisplay =
+                this.chartRegistryService.getChartTemplate(widgetTypeId);
+            this.loadComponent(widgetToDisplay.widgetComponent);
+        }
     }
 
     loadComponent(widgetToDisplay) {
