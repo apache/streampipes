@@ -283,8 +283,6 @@ export class DataExplorerChartViewComponent
         _route: ActivatedRouteSnapshot,
         _state: RouterStateSnapshot,
     ): Observable<boolean> {
-        console.log(this.setShouldShowConfirm());
-        console.log(this.editMode);
         if (this.editMode && this.setShouldShowConfirm()) {
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
                 width: '500px',
