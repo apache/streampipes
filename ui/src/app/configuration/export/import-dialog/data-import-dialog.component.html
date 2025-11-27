@@ -1,214 +1,221 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
-        <div
-            fxFlex="100"
-            fxLayout="column"
-            class="p-15"
-            *ngIf="currentImportStep === 0"
-        >
-            <h4>{{ 'Upload application package file' | translate }}</h4>
-            <mat-form-field
-                style="width: 95%"
-                (click)="fileInput.click()"
-                color="accent"
-            >
-                <input
-                    matInput
-                    [placeholder]="'File' | translate"
-                    disabled
-                    (value)="(fileName)"
-                />
-                <input
-                    #fileInput
-                    type="file"
-                    style="display: none"
-                    (change)="handleFileInput($event.target.files)"
-                />
-                <div>
-                    {{ fileName }}
-                    <mat-progress-bar
-                        mode="determinate"
-                        value="{{ uploadStatus }}"
-                        *ngIf="uploadStatus > 0"
+        @if (currentImportStep === 0) {
+            <div fxFlex="100" fxLayout="column" class="p-15">
+                <h4>{{ 'Upload application package file' | translate }}</h4>
+                <mat-form-field
+                    style="width: 95%"
+                    (click)="fileInput.click()"
+                    color="accent"
+                >
+                    <input
+                        matInput
+                        [placeholder]="'File' | translate"
+                        disabled
+                        (value)="(fileName)"
+                    />
+                    <input
+                        #fileInput
+                        type="file"
+                        style="display: none"
+                        (change)="handleFileInput($event.target.files)"
+                    />
+                    <div>
+                        {{ fileName }}
+                        @if (uploadStatus > 0) {
+                            <mat-progress-bar
+                                mode="determinate"
+                                value="{{ uploadStatus }}"
+                                color="accent"
+                            >
+                            </mat-progress-bar>
+                        }
+                    </div>
+                    <button
                         color="accent"
+                        matSuffix
+                        mat-button
+                        style="min-width: 0px"
+                        data-cy="select-upload-file-button"
                     >
-                    </mat-progress-bar>
-                </div>
-                <button
-                    color="accent"
-                    matSuffix
-                    mat-button
-                    style="min-width: 0px"
-                    data-cy="select-upload-file-button"
-                >
-                    <mat-icon *ngIf="uploadStatus < 99"
-                        >insert_drive_file
-                    </mat-icon>
-                    <mat-icon *ngIf="uploadStatus === 100" class="green-icon"
-                        >check_circle
-                    </mat-icon>
-                </button>
-                <mat-error *ngIf="!hasInput">
-                    {{ errorMessage }}
-                </mat-error>
-            </mat-form-field>
-        </div>
-        <div
-            fxFlex="100"
-            fxLayout="column"
-            class="p-15"
-            *ngIf="currentImportStep === 1"
-        >
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <h4>{{ 'Select resources to import' | translate }}</h4>
-                <button
-                    mat-flat-button
-                    color="accent"
-                    class="small-button ml-5"
-                    (click)="toggleSelect(true)"
-                >
-                    {{ 'Select all' | translate }}
-                </button>
-                <button
-                    mat-flat-button
-                    class="small-button mat-basic"
-                    (click)="toggleSelect(false)"
-                >
-                    {{ 'Deselect all' | translate }}
-                </button>
+                        @if (uploadStatus < 99) {
+                            <mat-icon>insert_drive_file </mat-icon>
+                        }
+                        @if (uploadStatus === 100) {
+                            <mat-icon class="green-icon"
+                                >check_circle
+                            </mat-icon>
+                        }
+                    </button>
+                    @if (!hasInput) {
+                        <mat-error>
+                            {{ errorMessage }}
+                        </mat-error>
+                    }
+                </mat-form-field>
             </div>
-            <sp-data-export-item
-                [exportItems]="importConfiguration.assets"
-                [sectionTitle]="'Assets' | translate"
-            ></sp-data-export-item>
-            <sp-data-export-item
-                [exportItems]="importConfiguration.adapters"
-                [sectionTitle]="'Adapters' | translate"
-            ></sp-data-export-item>
-            <sp-data-export-item
-                [exportItems]="importConfiguration.dashboards"
-                [sectionTitle]="'Dashboards' | translate"
-            ></sp-data-export-item>
-            <sp-data-export-item
-                [exportItems]="importConfiguration.dataViews"
-                [sectionTitle]="'Charts' | translate"
-            ></sp-data-export-item>
-            <sp-data-export-item
-                [exportItems]="importConfiguration.dataSources"
-                [sectionTitle]="'Data Streams' | translate"
-            ></sp-data-export-item>
-            <sp-data-export-item
-                [exportItems]="importConfiguration.dataLakeMeasures"
-                [sectionTitle]="'Data Lake Storage' | translate"
-            ></sp-data-export-item>
-            <sp-data-export-item
-                [exportItems]="importConfiguration.files"
-                [sectionTitle]="'Files' | translate"
-            ></sp-data-export-item>
-            <sp-data-export-item
-                [exportItems]="importConfiguration.pipelines"
-                [sectionTitle]="'Pipelines' | translate"
-            ></sp-data-export-item>
-            <sp-generic-storage-items
-                [exportItems]="importConfiguration.genericStorageDocuments"
-                [importMode]="true"
-            >
-            </sp-generic-storage-items>
+        }
+        @if (currentImportStep === 1) {
+            <div fxFlex="100" fxLayout="column" class="p-15">
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <h4>{{ 'Select resources to import' | translate }}</h4>
+                    <button
+                        mat-flat-button
+                        color="accent"
+                        class="small-button ml-5"
+                        (click)="toggleSelect(true)"
+                    >
+                        {{ 'Select all' | translate }}
+                    </button>
+                    <button
+                        mat-flat-button
+                        class="small-button mat-basic"
+                        (click)="toggleSelect(false)"
+                    >
+                        {{ 'Deselect all' | translate }}
+                    </button>
+                </div>
+                <sp-data-export-item
+                    [exportItems]="importConfiguration.assets"
+                    [sectionTitle]="'Assets' | translate"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="importConfiguration.adapters"
+                    [sectionTitle]="'Adapters' | translate"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="importConfiguration.dashboards"
+                    [sectionTitle]="'Dashboards' | translate"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="importConfiguration.dataViews"
+                    [sectionTitle]="'Charts' | translate"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="importConfiguration.dataSources"
+                    [sectionTitle]="'Data Streams' | translate"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="importConfiguration.dataLakeMeasures"
+                    [sectionTitle]="'Data Lake Storage' | translate"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="importConfiguration.files"
+                    [sectionTitle]="'Files' | translate"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="importConfiguration.pipelines"
+                    [sectionTitle]="'Pipelines' | translate"
+                ></sp-data-export-item>
+                <sp-generic-storage-items
+                    [exportItems]="importConfiguration.genericStorageDocuments"
+                    [importMode]="true"
+                >
+                </sp-generic-storage-items>
+                @if (currentImportStep === 1) {
+                    <div fxFlex="100" fxLayout="column" class="mt-10">
+                        <h4>{{ 'Import options' | translate }}</h4>
+                        @if (importConfiguration) {
+                            <div fxLayout="column">
+                                <mat-checkbox
+                                    [(ngModel)]="
+                                        importConfiguration.overrideBrokerSettings
+                                    "
+                                    >{{
+                                        'Use broker settings from this instance'
+                                            | translate
+                                    }}
+                                </mat-checkbox>
+                                <div class="warning-box">
+                                    <mat-checkbox
+                                        [(ngModel)]="
+                                            importConfiguration.overwriteExistingDocuments
+                                        "
+                                        >{{
+                                            'Update/overwrite existing documents with the same ID (operation may break things)'
+                                                | translate
+                                        }}
+                                    </mat-checkbox>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        @if (currentImportStep === 2) {
             <div
                 fxFlex="100"
                 fxLayout="column"
-                *ngIf="currentImportStep === 1"
                 class="mt-10"
+                fxLayoutAlign="center center"
             >
-                <h4>{{ 'Import options' | translate }}</h4>
-                <div fxLayout="column" *ngIf="importConfiguration">
-                    <mat-checkbox
-                        [(ngModel)]="importConfiguration.overrideBrokerSettings"
-                        >{{
-                            'Use broker settings from this instance' | translate
-                        }}
-                    </mat-checkbox>
-                    <div class="warning-box">
-                        <mat-checkbox
-                            [(ngModel)]="
-                                importConfiguration.overwriteExistingDocuments
-                            "
-                            >{{
-                                'Update/overwrite existing documents with the same ID (operation may break things)'
-                                    | translate
-                            }}
-                        </mat-checkbox>
-                    </div>
-                </div>
+                <mat-spinner [diameter]="50" color="accent"></mat-spinner>
+                <h4 class="mt-10">
+                    {{ 'Importing resources...' | translate }}
+                </h4>
             </div>
-        </div>
-        <div
-            fxFlex="100"
-            fxLayout="column"
-            *ngIf="currentImportStep === 2"
-            class="mt-10"
-            fxLayoutAlign="center center"
-        >
-            <mat-spinner [diameter]="50" color="accent"></mat-spinner>
-            <h4 class="mt-10">{{ 'Importing resources...' | translate }}</h4>
-        </div>
+        }
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <div fxLayout="column">
             <div fxLayout="row">
-                <button
-                    mat-button
-                    mat-flat-button
-                    color="accent"
-                    style="margin-right: 10px"
-                    (click)="performPreview()"
-                    *ngIf="currentImportStep === 0"
-                    [disabled]="!hasInput"
-                    data-cy="next-import-button"
-                >
-                    <span>&nbsp;{{ 'Next' | translate }}</span>
-                </button>
-                <button
-                    mat-button
-                    mat-flat-button
-                    color="accent"
-                    style="margin-right: 10px"
-                    *ngIf="currentImportStep === 1"
-                    (click)="performImport()"
-                    data-cy="import-button"
-                >
-                    <i class="material-icons">file_download</i
-                    ><span>&nbsp;{{ 'Import data' | translate }}</span>
-                </button>
-                <button
-                    mat-button
-                    mat-flat-button
-                    class="mat-basic"
-                    style="margin-right: 10px"
-                    (click)="back()"
-                    *ngIf="currentImportStep > 0"
-                >
-                    {{ 'Back' | translate }}
-                </button>
+                @if (currentImportStep === 0) {
+                    <button
+                        mat-button
+                        mat-flat-button
+                        color="accent"
+                        style="margin-right: 10px"
+                        (click)="performPreview()"
+                        [disabled]="!hasInput"
+                        data-cy="next-import-button"
+                    >
+                        <span>&nbsp;{{ 'Next' | translate }}</span>
+                    </button>
+                }
+                @if (currentImportStep === 1) {
+                    <button
+                        mat-button
+                        mat-flat-button
+                        color="accent"
+                        style="margin-right: 10px"
+                        (click)="performImport()"
+                        data-cy="import-button"
+                    >
+                        <i class="material-icons">file_download</i
+                        ><span>&nbsp;{{ 'Import data' | translate }}</span>
+                    </button>
+                }
+                @if (currentImportStep > 0) {
+                    <button
+                        mat-button
+                        mat-flat-button
+                        class="mat-basic"
+                        style="margin-right: 10px"
+                        (click)="back()"
+                    >
+                        {{ 'Back' | translate }}
+                    </button>
+                }
                 <button
                     mat-button
                     mat-flat-button

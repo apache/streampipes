@@ -1,183 +1,203 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 @if (formAvailable) {
     <div class="sp-dialog-container">
         <div class="sp-dialog-content">
             <div fxFlex="100" fxLayout="column" class="p-15">
-                <sp-warning-box *ngIf="isUserAccount && isExternalProvider">
-                    {{
-                        'Settings of externally-managed users cannot be changed.'
-                            | translate
-                    }}
-                </sp-warning-box>
+                @if (isUserAccount && isExternalProvider) {
+                    <sp-warning-box>
+                        {{
+                            'Settings of externally-managed users cannot be changed.'
+                                | translate
+                        }}
+                    </sp-warning-box>
+                }
                 <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                     <div class="general-options-panel" fxLayout="column">
                         <span class="general-options-header">{{
                             'Basics' | translate
                         }}</span>
-                        <mat-error *ngIf="registrationError">{{
-                            registrationError
-                        }}</mat-error>
-                        <mat-form-field color="accent" *ngIf="!isUserAccount">
-                            <mat-label>{{ 'Username' | translate }}</mat-label>
-                            <input
-                                formControlName="username"
-                                fxFlex
-                                matInput
-                                required
-                            />
-                        </mat-form-field>
-                        <mat-form-field color="accent" *ngIf="isUserAccount">
-                            <mat-label>{{ 'Email' | translate }}</mat-label>
-                            <input
-                                formControlName="username"
-                                fxFlex
-                                type="email"
-                                matInput
-                                data-cy="new-user-email"
-                            />
-                            <mat-error>{{
-                                'Must be a valid email address.' | translate
-                            }}</mat-error>
-                        </mat-form-field>
-                        <div class="email-changed" *ngIf="emailChanged">
-                            {{
-                                "Changing the current user's email will require a re-login."
-                                    | translate
-                            }}
+                        @if (registrationError) {
+                            <mat-error>{{ registrationError }}</mat-error>
+                        }
+                        @if (!isUserAccount) {
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'Username' | translate
+                                }}</mat-label>
+                                <input
+                                    formControlName="username"
+                                    fxFlex
+                                    matInput
+                                    required
+                                />
+                            </mat-form-field>
+                        }
+                        @if (isUserAccount) {
+                            <mat-form-field color="accent">
+                                <mat-label>{{ 'Email' | translate }}</mat-label>
+                                <input
+                                    formControlName="username"
+                                    fxFlex
+                                    type="email"
+                                    matInput
+                                    data-cy="new-user-email"
+                                />
+                                <mat-error>{{
+                                    'Must be a valid email address.' | translate
+                                }}</mat-error>
+                            </mat-form-field>
+                        }
+                        @if (emailChanged) {
+                            <div class="email-changed">
+                                {{
+                                    "Changing the current user's email will require a re-login."
+                                        | translate
+                                }}
+                            </div>
+                        }
+                        @if (isUserAccount) {
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'Full Name' | translate
+                                }}</mat-label>
+                                <input
+                                    formControlName="fullName"
+                                    fxFlex
+                                    matInput
+                                    data-cy="new-user-full-name"
+                                />
+                            </mat-form-field>
+                        }
+                    </div>
+                    @if (!editMode && isUserAccount) {
+                        <div fxLayout="column" class="general-options-panel">
+                            <span class="general-options-header">{{
+                                'Password' | translate
+                            }}</span>
+                            @if (emailConfigured) {
+                                <mat-checkbox
+                                    formControlName="sendPasswordToUser"
+                                    >{{
+                                        'Auto-create password and send to user'
+                                            | translate
+                                    }}</mat-checkbox
+                                >
+                            }
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'Initial password' | translate
+                                }}</mat-label>
+                                <input
+                                    formControlName="password"
+                                    fxFlex
+                                    type="password"
+                                    matInput
+                                    required
+                                    data-cy="new-user-password"
+                                />
+                            </mat-form-field>
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'Repeat password' | translate
+                                }}</mat-label>
+                                <input
+                                    formControlName="repeatPassword"
+                                    fxFlex
+                                    type="password"
+                                    matInput
+                                    required
+                                    data-cy="new-user-password-repeat"
+                                />
+                            </mat-form-field>
+                            @if (parentForm.hasError('notMatching')) {
+                                <mat-error>{{
+                                    'Passwords do not match.' | translate
+                                }}</mat-error>
+                            }
                         </div>
-                        <mat-form-field color="accent" *ngIf="isUserAccount">
-                            <mat-label>{{ 'Full Name' | translate }}</mat-label>
-                            <input
-                                formControlName="fullName"
-                                fxFlex
-                                matInput
-                                data-cy="new-user-full-name"
-                            />
-                        </mat-form-field>
-                    </div>
-                    <div
-                        fxLayout="column"
-                        class="general-options-panel"
-                        *ngIf="!editMode && isUserAccount"
-                    >
-                        <span class="general-options-header">{{
-                            'Password' | translate
-                        }}</span>
-                        <mat-checkbox
-                            formControlName="sendPasswordToUser"
-                            *ngIf="emailConfigured"
-                            >{{
-                                'Auto-create password and send to user'
-                                    | translate
-                            }}</mat-checkbox
-                        >
-                        <mat-form-field color="accent">
-                            <mat-label>{{
-                                'Initial password' | translate
-                            }}</mat-label>
-                            <input
-                                formControlName="password"
-                                fxFlex
-                                type="password"
-                                matInput
-                                required
-                                data-cy="new-user-password"
-                            />
-                        </mat-form-field>
-                        <mat-form-field color="accent">
-                            <mat-label>{{
-                                'Repeat password' | translate
-                            }}</mat-label>
-                            <input
-                                formControlName="repeatPassword"
-                                fxFlex
-                                type="password"
-                                matInput
-                                required
-                                data-cy="new-user-password-repeat"
-                            />
-                        </mat-form-field>
-                        <mat-error *ngIf="parentForm.hasError('notMatching')">{{
-                            'Passwords do not match.' | translate
-                        }}</mat-error>
-                    </div>
-                    <div
-                        fxLayout="column"
-                        class="general-options-panel"
-                        *ngIf="!isUserAccount"
-                    >
-                        <span class="general-options-header">{{
-                            'Authentication' | translate
-                        }}</span>
-                        <mat-form-field color="accent">
-                            <mat-label>{{
-                                'Client Secret' | translate
-                            }}</mat-label>
-                            <input
-                                formControlName="clientSecret"
-                                fxFlex
-                                type="password"
-                                matInput
-                                required
-                            />
-                        </mat-form-field>
-                        <mat-error
-                            *ngIf="parentForm.controls.clientSecret.errors"
-                            >{{
-                                'Minimum length 35 characters.' | translate
-                            }}</mat-error
-                        >
-                    </div>
+                    }
+                    @if (!isUserAccount) {
+                        <div fxLayout="column" class="general-options-panel">
+                            <span class="general-options-header">{{
+                                'Authentication' | translate
+                            }}</span>
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'Client Secret' | translate
+                                }}</mat-label>
+                                <input
+                                    formControlName="clientSecret"
+                                    fxFlex
+                                    type="password"
+                                    matInput
+                                    required
+                                />
+                            </mat-form-field>
+                            @if (parentForm.controls.clientSecret.errors) {
+                                <mat-error>{{
+                                    'Minimum length 35 characters.' | translate
+                                }}</mat-error>
+                            }
+                        </div>
+                    }
                     <div fxLayout="column" class="general-options-panel">
                         <span class="general-options-header">{{
                             'Groups' | translate
                         }}</span>
-                        <mat-checkbox
-                            *ngFor="let group of availableGroups"
-                            [disabled]="
-                                isExternalProvider && isExternallyManagedRoles
-                            "
-                            [value]="group.groupId"
-                            [checked]="user.groups.indexOf(group.groupId) > -1"
-                            (change)="changeGroupAssignment($event)"
-                            [attr.data-cy]="'group-' + group.groupName"
-                        >
-                            {{ group.groupName }}
-                        </mat-checkbox>
+                        @for (group of availableGroups; track group) {
+                            <mat-checkbox
+                                [disabled]="
+                                    isExternalProvider &&
+                                    isExternallyManagedRoles
+                                "
+                                [value]="group.groupId"
+                                [checked]="
+                                    user.groups.indexOf(group.groupId) > -1
+                                "
+                                (change)="changeGroupAssignment($event)"
+                                [attr.data-cy]="'group-' + group.groupName"
+                            >
+                                {{ group.groupName }}
+                            </mat-checkbox>
+                        }
                     </div>
                     <div fxLayout="column" class="general-options-panel">
                         <span class="general-options-header">{{
                             'Roles' | translate
                         }}</span>
-                        <mat-checkbox
-                            *ngFor="let role of availableRoles$ | async"
-                            [value]="role.elementId"
-                            [disabled]="
-                                isExternalProvider && isExternallyManagedRoles
-                            "
-                            [checked]="user.roles.indexOf(role.elementId) > -1"
-                            (change)="changeRoleAssignment($event)"
-                            [attr.data-cy]="'role-' + role.elementId"
-                        >
-                            {{ role.label }}
-                        </mat-checkbox>
+                        @for (role of availableRoles$ | async; track role) {
+                            <mat-checkbox
+                                [value]="role.elementId"
+                                [disabled]="
+                                    isExternalProvider &&
+                                    isExternallyManagedRoles
+                                "
+                                [checked]="
+                                    user.roles.indexOf(role.elementId) > -1
+                                "
+                                (change)="changeRoleAssignment($event)"
+                                [attr.data-cy]="'role-' + role.elementId"
+                            >
+                                {{ role.label }}
+                            </mat-checkbox>
+                        }
                     </div>
                     @if (!isExternalProvider) {
                         <div fxLayout="column" class="general-options-panel">

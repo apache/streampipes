@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'messaging'">
     <div fxLayout="column" class="page-container-padding">
@@ -25,61 +25,62 @@
             "
         >
             <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-                <form
-                    (ngSubmit)="updateMessagingSettings()"
-                    class="form-width"
-                    fxFlex="100"
-                    fxLayout="column"
-                    *ngIf="loadingCompleted"
-                >
-                    <mat-form-field class="form-field" fxFlex="100">
-                        <input
-                            matInput
-                            [(ngModel)]="messagingSettings.batchSize"
-                            [placeholder]="'Batch Size' | translate"
-                            type="text"
-                            [ngModelOptions]="{ standalone: true }"
-                        />
-                    </mat-form-field>
-                    <mat-form-field class="form-field" fxFlex="100">
-                        <input
-                            matInput
-                            [(ngModel)]="messagingSettings.messageMaxBytes"
-                            [placeholder]="'Message Max Bytes' | translate"
-                            type="text"
-                            [ngModelOptions]="{ standalone: true }"
-                        />
-                    </mat-form-field>
-                    <mat-form-field class="form-field" fxFlex="100">
-                        <input
-                            matInput
-                            [(ngModel)]="messagingSettings.acks"
-                            [placeholder]="'Acks' | translate"
-                            type="text"
-                            [ngModelOptions]="{ standalone: true }"
-                        />
-                    </mat-form-field>
-                    <mat-form-field class="form-field" fxFlex="100">
-                        <input
-                            matInput
-                            [(ngModel)]="messagingSettings.lingerMs"
-                            [placeholder]="'Linger MS' | translate"
-                            type="text"
-                            [ngModelOptions]="{ standalone: true }"
-                        />
-                    </mat-form-field>
-                    <div fxLayoutAlign="start center" class="mt-10">
-                        <button
-                            mat-flat-button
-                            color="accent"
-                            type="submit"
-                            class="md-raised md-primary submit-button"
-                        >
-                            <mat-icon>save</mat-icon>
-                            <span>{{ 'Save' | translate }}</span>
-                        </button>
-                    </div>
-                </form>
+                @if (loadingCompleted) {
+                    <form
+                        (ngSubmit)="updateMessagingSettings()"
+                        class="form-width"
+                        fxFlex="100"
+                        fxLayout="column"
+                    >
+                        <mat-form-field class="form-field" fxFlex="100">
+                            <input
+                                matInput
+                                [(ngModel)]="messagingSettings.batchSize"
+                                [placeholder]="'Batch Size' | translate"
+                                type="text"
+                                [ngModelOptions]="{ standalone: true }"
+                            />
+                        </mat-form-field>
+                        <mat-form-field class="form-field" fxFlex="100">
+                            <input
+                                matInput
+                                [(ngModel)]="messagingSettings.messageMaxBytes"
+                                [placeholder]="'Message Max Bytes' | translate"
+                                type="text"
+                                [ngModelOptions]="{ standalone: true }"
+                            />
+                        </mat-form-field>
+                        <mat-form-field class="form-field" fxFlex="100">
+                            <input
+                                matInput
+                                [(ngModel)]="messagingSettings.acks"
+                                [placeholder]="'Acks' | translate"
+                                type="text"
+                                [ngModelOptions]="{ standalone: true }"
+                            />
+                        </mat-form-field>
+                        <mat-form-field class="form-field" fxFlex="100">
+                            <input
+                                matInput
+                                [(ngModel)]="messagingSettings.lingerMs"
+                                [placeholder]="'Linger MS' | translate"
+                                type="text"
+                                [ngModelOptions]="{ standalone: true }"
+                            />
+                        </mat-form-field>
+                        <div fxLayoutAlign="start center" class="mt-10">
+                            <button
+                                mat-flat-button
+                                color="accent"
+                                type="submit"
+                                class="md-raised md-primary submit-button"
+                            >
+                                <mat-icon>save</mat-icon>
+                                <span>{{ 'Save' | translate }}</span>
+                            </button>
+                        </div>
+                    </form>
+                }
             </div>
         </sp-split-section>
         <mat-divider></mat-divider>
@@ -89,22 +90,22 @@
             [subtitle]="'Manage the priority of protocols used' | translate"
         >
             <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-                <div
-                    cdkDropList
-                    class="data-format-list"
-                    (cdkDropListDropped)="dropProtocol($event)"
-                    *ngIf="loadingCompleted"
-                >
+                @if (loadingCompleted) {
                     <div
-                        class="data-format-box"
-                        *ngFor="
-                            let protocol of messagingSettings.prioritizedProtocols
-                        "
-                        cdkDrag
+                        cdkDropList
+                        class="data-format-list"
+                        (cdkDropListDropped)="dropProtocol($event)"
                     >
-                        {{ protocol }}
+                        @for (
+                            protocol of messagingSettings.prioritizedProtocols;
+                            track protocol
+                        ) {
+                            <div class="data-format-box" cdkDrag>
+                                {{ protocol }}
+                            </div>
+                        }
                     </div>
-                </div>
+                }
                 <div fxLayoutAlign="start center" class="mt-10">
                     <button
                         mat-flat-button
@@ -120,54 +121,59 @@
             </div>
         </sp-split-section>
         <mat-divider></mat-divider>
-        <sp-split-section
-            [title]="'Broker Configuration' | translate"
-            [subtitle]="'Manage broker connectivity' | translate"
-            *ngIf="loadingCompleted"
-        >
-            <sp-messaging-broker-config
-                title="JMS"
-                [(host)]="messagingSettings.jmsHost"
-                [(port)]="messagingSettings.jmsPort"
-            ></sp-messaging-broker-config>
-            <sp-messaging-broker-config
-                title="Kafka"
-                [(host)]="messagingSettings.kafkaHost"
-                [(port)]="messagingSettings.kafkaPort"
-            ></sp-messaging-broker-config>
-            <sp-messaging-broker-config
-                title="MQTT"
-                [(host)]="messagingSettings.mqttHost"
-                [(port)]="messagingSettings.mqttPort"
-            ></sp-messaging-broker-config>
-            <sp-messaging-broker-config
-                title="Nats"
-                [(host)]="messagingSettings.natsHost"
-                [(port)]="messagingSettings.natsPort"
-            ></sp-messaging-broker-config>
-            <div fxLayout="column">
-                <div class="subsection-title">Pulsar</div>
-                <mat-form-field class="form-field" fxFlex="100" color="accent">
-                    <mat-label>URL</mat-label>
-                    <input
-                        matInput
-                        [(ngModel)]="messagingSettings.pulsarUrl"
-                        type="text"
-                    />
-                </mat-form-field>
-            </div>
-            <div fxLayoutAlign="start center" class="mt-10">
-                <button
-                    mat-flat-button
-                    color="accent"
-                    type="submit"
-                    class="md-raised md-primary submit-button"
-                    (click)="updateMessagingSettings()"
-                >
-                    <mat-icon>save</mat-icon>
-                    <span>{{ 'Save' | translate }}</span>
-                </button>
-            </div>
-        </sp-split-section>
+        @if (loadingCompleted) {
+            <sp-split-section
+                [title]="'Broker Configuration' | translate"
+                [subtitle]="'Manage broker connectivity' | translate"
+            >
+                <sp-messaging-broker-config
+                    title="JMS"
+                    [(host)]="messagingSettings.jmsHost"
+                    [(port)]="messagingSettings.jmsPort"
+                ></sp-messaging-broker-config>
+                <sp-messaging-broker-config
+                    title="Kafka"
+                    [(host)]="messagingSettings.kafkaHost"
+                    [(port)]="messagingSettings.kafkaPort"
+                ></sp-messaging-broker-config>
+                <sp-messaging-broker-config
+                    title="MQTT"
+                    [(host)]="messagingSettings.mqttHost"
+                    [(port)]="messagingSettings.mqttPort"
+                ></sp-messaging-broker-config>
+                <sp-messaging-broker-config
+                    title="Nats"
+                    [(host)]="messagingSettings.natsHost"
+                    [(port)]="messagingSettings.natsPort"
+                ></sp-messaging-broker-config>
+                <div fxLayout="column">
+                    <div class="subsection-title">Pulsar</div>
+                    <mat-form-field
+                        class="form-field"
+                        fxFlex="100"
+                        color="accent"
+                    >
+                        <mat-label>URL</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="messagingSettings.pulsarUrl"
+                            type="text"
+                        />
+                    </mat-form-field>
+                </div>
+                <div fxLayoutAlign="start center" class="mt-10">
+                    <button
+                        mat-flat-button
+                        color="accent"
+                        type="submit"
+                        class="md-raised md-primary submit-button"
+                        (click)="updateMessagingSettings()"
+                    >
+                        <mat-icon>save</mat-icon>
+                        <span>{{ 'Save' | translate }}</span>
+                    </button>
+                </div>
+            </sp-split-section>
+        }
     </div>
 </sp-basic-nav-tabs>
