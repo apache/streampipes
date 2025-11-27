@@ -53,24 +53,25 @@ public class JmsPublisherSink implements IStreamPipesDataSink {
     return DataSinkConfiguration.create(
         JmsPublisherSink::new,
         DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.jms", 0)
-            .category(DataSinkType.MESSAGING)
-            .withLocales(Locales.EN)
-            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredProperty(EpRequirements.anyProperty())
-                .build())
-            .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
-            .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
-            .requiredIntegerParameter(Labels.withId(PORT_KEY), 61616)
-            .build()
+                       .category(DataSinkType.MESSAGING)
+                       .withLocales(Locales.EN)
+                       .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+                       .requiredStream(StreamRequirementsBuilder
+                                           .create()
+                                           .requiredProperty(EpRequirements.anyProperty())
+                                           .build())
+                       .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
+                       .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
+                       .requiredIntegerParameter(Labels.withId(PORT_KEY), 61616)
+                       .build()
     );
   }
 
   @Override
   public void onPipelineStarted(
       IDataSinkParameters parameters,
-      EventSinkRuntimeContext runtimeContext) {
+      EventSinkRuntimeContext runtimeContext
+  ) {
 
     var extractor = parameters.extractor();
     this.jsonDataFormatDefinition = new JsonDataFormatDefinition();
@@ -93,13 +94,9 @@ public class JmsPublisherSink implements IStreamPipesDataSink {
   }
 
   @Override
-  public void onEvent(Event inputEvent) throws SpRuntimeException {
-    try {
-      Map<String, Object> event = inputEvent.getRaw();
-      this.publisher.publish(jsonDataFormatDefinition.fromMap(event));
-    } catch (SpRuntimeException e) {
-      throw e;
-    }
+  public void onEvent(Event inputEvent) {
+    Map<String, Object> event = inputEvent.getRaw();
+    this.publisher.publish(jsonDataFormatDefinition.fromMap(event));
   }
 
   @Override
