@@ -154,11 +154,6 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
                         component: DataExplorerChartViewComponent,
                         canDeactivate: [DataExplorerPanelCanDeactivateGuard],
                     },
-                    {
-                        path: 'chart/:id/:startTime/:endTime',
-                        component: DataExplorerChartViewComponent,
-                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
-                    },
                 ],
             },
         ]),
