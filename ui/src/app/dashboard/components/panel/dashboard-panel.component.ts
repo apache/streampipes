@@ -47,7 +47,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { SpDashboardRoutes } from '../../dashboard.routes';
 import { ChartRoutingService } from '../../../data-explorer-shared/services/chart-routing.service';
-import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
+import { ChartDetectChangesService } from '../../../data-explorer/services/chart-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { TranslateService } from '@ngx-translate/core';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
@@ -88,7 +88,7 @@ export class DashboardPanelComponent
     authSubscription: Subscription;
     refreshSubscription: Subscription;
 
-    private detectChangesService = inject(DataExplorerDetectChangesService);
+    private detectChangesService = inject(ChartDetectChangesService);
     private dialog = inject(MatDialog);
     private timeSelectionService = inject(TimeSelectionService);
     private authService = inject(AuthService);
