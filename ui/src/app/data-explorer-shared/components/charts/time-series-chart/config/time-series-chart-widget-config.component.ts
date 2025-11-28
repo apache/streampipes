@@ -24,7 +24,7 @@ import {
 } from '../model/time-series-chart-widget.model';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 
 @Component({
     selector: 'sp-data-explorer-time-series-chart-widget-config',
@@ -37,7 +37,7 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
 > {
     constructor(
         widgetConfigurationService: ChartConfigurationService,
-        fieldService: DataExplorerFieldProviderService,
+        fieldService: ChartFieldProviderService,
     ) {
         super(widgetConfigurationService, fieldService);
     }

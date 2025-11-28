@@ -23,7 +23,7 @@ import {
     StatusHeatmapVisConfig,
     StatusHeatmapWidgetModel,
 } from '../model/status-heatmap-widget.model';
-import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
@@ -37,7 +37,7 @@ export class StatusHeatmapWidgetConfigComponent extends BaseWidgetConfig<
 > {
     constructor(
         widgetConfigurationService: ChartConfigurationService,
-        fieldService: DataExplorerFieldProviderService,
+        fieldService: ChartFieldProviderService,
     ) {
         super(widgetConfigurationService, fieldService);
     }

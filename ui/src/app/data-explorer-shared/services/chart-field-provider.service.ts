@@ -30,7 +30,7 @@ import {
 } from '@streampipes/platform-services';
 
 @Injectable({ providedIn: 'root' })
-export class DataExplorerFieldProviderService {
+export class ChartFieldProviderService {
     constructor() {}
 
     public generateFieldLists(sourceConfigs: SourceConfig[]): FieldProvider {

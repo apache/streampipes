@@ -27,10 +27,10 @@ import {
     DateFormatService,
     SpAssetBrowserService,
 } from '@streampipes/shared-ui';
-import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
+import { ChartSharedService } from '../../../../data-explorer-shared/services/chart-shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
+import { ChartRoutingService } from '../../../../data-explorer-shared/services/chart-routing.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -54,11 +54,11 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
     filteredCharts: DataExplorerWidgetModel[] = [];
 
     private dataViewService = inject(ChartService);
-    private dataExplorerDashboardService = inject(DataExplorerSharedService);
+    private dataExplorerDashboardService = inject(ChartSharedService);
     private dialog = inject(MatDialog);
     private translateService = inject(TranslateService);
     private dateFormatService = inject(DateFormatService);
-    private routingService = inject(DataExplorerRoutingService);
+    private routingService = inject(ChartRoutingService);
     private assetFilterService = inject(SpAssetBrowserService);
 
     assetFilter$: Subscription;

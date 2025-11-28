@@ -48,9 +48,9 @@ import {
     PanelType,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
-import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
-import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
-import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
+import { ChartRoutingService } from '../../../data-explorer-shared/services/chart-routing.service';
+import { ChartSharedService } from '../../../data-explorer-shared/services/chart-shared.service';
+import { ChartDetectChangesService } from '../../services/chart-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { Observable, of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -90,12 +90,12 @@ export class DataExplorerChartViewComponent
 
     resizeEchartsService = inject(ResizeEchartsService);
 
-    private dataExplorerSharedService = inject(DataExplorerSharedService);
-    private detectChangesService = inject(DataExplorerDetectChangesService);
+    private dataExplorerSharedService = inject(ChartSharedService);
+    private detectChangesService = inject(ChartDetectChangesService);
     private route = inject(ActivatedRoute);
     private router = inject(Router);
     private dialog = inject(MatDialog);
-    private routingService = inject(DataExplorerRoutingService);
+    private routingService = inject(ChartRoutingService);
     private dataViewService = inject(ChartService);
     private timeSelectionService = inject(TimeSelectionService);
     private translateService = inject(TranslateService);

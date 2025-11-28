@@ -57,7 +57,7 @@ import {
     BaseWidgetData,
     ObservableGenerator,
 } from '../../models/dataview-dashboard.model';
-import { DataExplorerSharedService } from '../../services/data-explorer-shared.service';
+import { ChartSharedService } from '../../services/chart-shared.service';
 import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
@@ -152,7 +152,7 @@ export class DataExplorerChartContainerComponent
 
     constructor(
         private chartRegistryService: DataExplorerChartRegistry,
-        private dashboardService: DataExplorerSharedService,
+        private dashboardService: ChartSharedService,
         private componentFactoryResolver: ComponentFactoryResolver,
         private widgetTypeService: ChartTypeService,
         private authService: AuthService,

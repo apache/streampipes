@@ -23,7 +23,7 @@ import {
     StatusVisConfig,
     StatusWidgetModel,
 } from '../model/status-widget.model';
-import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
@@ -38,7 +38,7 @@ export class StatusWidgetConfigComponent extends BaseWidgetConfig<
 > {
     constructor(
         widgetConfigurationService: ChartConfigurationService,
-        fieldService: DataExplorerFieldProviderService,
+        fieldService: ChartFieldProviderService,
     ) {
         super(widgetConfigurationService, fieldService);
     }

@@ -24,7 +24,7 @@ import {
 } from '@streampipes/platform-services';
 
 @Injectable({ providedIn: 'root' })
-export class DataExplorerDetectChangesService {
+export class ChartDetectChangesService {
     constructor() {}
 
     shouldShowConfirm<T extends Dashboard | DataExplorerWidgetModel>(
