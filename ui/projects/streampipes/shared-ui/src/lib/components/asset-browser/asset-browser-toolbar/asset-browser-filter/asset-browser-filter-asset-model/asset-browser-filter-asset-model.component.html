@@ -32,10 +32,12 @@
             multiple
             [compareWith]="compare"
             [(ngModel)]="activeFilters.selectedAssetModels"
+            data-cy="filters-asset-select"
         >
             <mat-option
                 *ngFor="let asset of assets; let i = index"
                 [value]="asset"
+                [attr.data-cy]="'asset-option-' + asset.assetName"
                 class="smaller-font-size"
             >
                 {{ asset.assetName }}

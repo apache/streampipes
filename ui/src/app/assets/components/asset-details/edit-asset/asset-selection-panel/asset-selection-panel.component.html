@@ -47,6 +47,9 @@
                                 "
                                 fxLayout="row"
                                 fxFlex="100"
+                                [attr.data-cy]="
+                                    'select-asset-' + node.assetName
+                                "
                                 (click)="selectNode(node, false)"
                             >
                                 <span fxLayoutAlign="end center" class="ml-5">{{
@@ -59,6 +62,9 @@
                                 >
                                     <button
                                         mat-icon-button
+                                        [attr.data-cy]="
+                                            'add-asset-' + node.assetName
+                                        "
                                         (click)="addAsset(node)"
                                         color="accent"
                                     >
@@ -115,6 +121,9 @@
                                         <button
                                             mat-icon-button
                                             (click)="addAsset(node)"
+                                            [attr.data-cy]="
+                                                'add-asset-' + node.assetName
+                                            "
                                             color="accent"
                                         >
                                             <i class="material-icons">add</i>

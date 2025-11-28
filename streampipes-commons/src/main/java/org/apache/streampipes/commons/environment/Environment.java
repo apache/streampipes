@@ -253,4 +253,5 @@ public interface Environment {
   DoubleEnvironmentVariable getMemoryManagerUsageThreshold();
   DoubleEnvironmentVariable getMemoryWarningThreshold();
   StringEnvironmentVariable getDatalakeSchedulerCron();
+  IntEnvironmentVariable getDatalakeRetentionLogLength();
 }

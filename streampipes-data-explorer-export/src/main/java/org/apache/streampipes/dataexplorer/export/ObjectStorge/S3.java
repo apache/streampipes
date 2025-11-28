@@ -60,6 +60,11 @@ public class S3 implements IObjectStorage{
     }
 
     @Override
+    public String getFileName(){
+        return this.fileName;
+    }
+
+    @Override
     public void store(StreamingResponseBody datastream) throws IOException {
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()

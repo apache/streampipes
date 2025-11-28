@@ -134,6 +134,21 @@
     padding: 12px 8px 14px;
     overflow-y: auto;
     overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+.menubar-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.menubar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.menubar-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 6px;
 }
 
 /* Ungrouped items */

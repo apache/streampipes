@@ -64,6 +64,8 @@ import { ViewAssetLinksComponent } from './components/asset-details/view-asset/v
 import { AssetLinkCardComponent } from './components/asset-details/view-asset/view-asset-links/asset-link-card/asset-link-card.component';
 import { MatMenuItem } from '@angular/material/menu';
 import { TranslatePipe } from '@ngx-translate/core';
+import { UserPrivilege } from '../_enums/user-privilege.enum';
+import { PageAuthGuard } from '../_guards/page-auth.can-active.guard';
 
 @NgModule({
     imports: [
@@ -111,6 +113,10 @@ import { TranslatePipe } from '@ngx-translate/core';
                     {
                         path: 'details/:assetId/edit',
                         component: SpAssetDetailsComponent,
+                        data: {
+                            privileges: [UserPrivilege.PRIVILEGE_WRITE_ASSETS],
+                        },
+                        canActivate: [PageAuthGuard],
                     },
                 ],
             },

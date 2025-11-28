@@ -91,6 +91,7 @@
                 <button
                     mat-menu-item
                     (click)="showDashboard(element); $event.stopPropagation()"
+                    [attr.data-cy]="'view-dashboard-' + element.name"
                 >
                     <mat-icon>visibility</mat-icon>
                     <span>{{ 'Show' | translate }}</span>
@@ -135,9 +136,7 @@
                 }
                 <button
                     mat-menu-item
-                    [attr.data-cy]="
-                        'manage-dashboard-permissions-' + element.name
-                    "
+                    data-cy="open-manage-permissions"
                     (click)="showPermissionsDialog(element)"
                 >
                     <mat-icon>share</mat-icon>

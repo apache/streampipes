@@ -27,7 +27,9 @@
             >
                 <div fxLayout="column" *ngFor="let asset of assets">
                     <mat-checkbox
-                        (change)="handleSelectionChange($event, asset._id)"
+                        (change)="
+                            handleSelectionChange($event, asset.elementId)
+                        "
                         ><h4>{{ asset.assetName }}</h4></mat-checkbox
                     >
                 </div>

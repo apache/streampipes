@@ -50,6 +50,7 @@
                             ? 'No labels available - Click \'Manage Labels\''
                             : 'Click to add label'
                     "
+                    data-cy="asset-label-input"
                     #labelInput
                     [formControl]="labelCtrl"
                     [matChipInputFor]="chipGrid"
@@ -63,9 +64,11 @@
                     (optionSelected)="selected($event)"
                 >
                     @for (label of filteredLabels | async; track label) {
-                        <mat-option [value]="label._id">{{
-                            label.label
-                        }}</mat-option>
+                        <mat-option
+                            [value]="label._id"
+                            [attr.data-cy]="'option-' + label.label"
+                            >{{ label.label }}</mat-option
+                        >
                     }
                 </mat-autocomplete>
             </mat-form-field>

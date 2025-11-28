@@ -16,12 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import {
     ChartService,
     DataExplorerWidgetModel,
 } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../../services/auth.service';
+import { UserPrivilege } from '../../../../../_enums/user-privilege.enum';
 
 @Component({
     selector: 'sp-chart-selection',
@@ -30,10 +32,14 @@ import { Router } from '@angular/router';
     standalone: false,
 })
 export class ChartSelectionComponent implements OnInit {
+    private authService = inject(AuthService);
+
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter();
 
     charts: DataExplorerWidgetModel[] = [];
+
+    hasChartWritePrivileges: boolean = false;
 
     constructor(
         private dataViewService: ChartService,
@@ -48,6 +54,10 @@ export class ChartSelectionComponent implements OnInit {
                 ),
             );
         });
+
+        this.hasChartWritePrivileges = this.authService.hasRole(
+            UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
+        );
     }
 
     navigateToDataViewCreation(): void {

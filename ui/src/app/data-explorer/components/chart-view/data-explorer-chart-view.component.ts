@@ -20,6 +20,7 @@ import {
     Component,
     ElementRef,
     inject,
+    OnDestroy,
     OnInit,
     ViewChild,
 } from '@angular/core';
@@ -40,6 +41,7 @@ import {
 import {
     AssetSaveService,
     ConfirmDialogComponent,
+    CurrentUserService,
     DialogService,
     PanelType,
     TimeSelectionService,
@@ -48,12 +50,14 @@ import { DataExplorerRoutingService } from '../../../data-explorer-shared/servic
 import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
 import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../data-explorer-shared/services/resize-echarts.service';
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
+import { AuthService } from '../../../services/auth.service';
+import { UserRole } from '../../../_enums/user-role.enum';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -62,7 +66,7 @@ import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
     standalone: false,
 })
 export class DataExplorerChartViewComponent
-    implements OnInit, SupportsUnsavedChangeDialog
+    implements OnInit, OnDestroy, SupportsUnsavedChangeDialog
 {
     dataViewLoaded = false;
     timeSettings: TimeSettings;
@@ -91,8 +95,12 @@ export class DataExplorerChartViewComponent
     private timeSelectionService = inject(TimeSelectionService);
     private translateService = inject(TranslateService);
     private dialogService = inject(DialogService);
+    private currentUserService = inject(CurrentUserService);
+    private authService = inject(AuthService);
 
     private assetSaveService = inject(AssetSaveService);
+
+    currentUser$: Subscription;
 
     chartNotFound = false;
 
@@ -103,7 +111,14 @@ export class DataExplorerChartViewComponent
 
     ngOnInit() {
         const dataViewId = this.route.snapshot.params.id;
-        this.editMode = this.route.snapshot.queryParams.editMode;
+
+        this.currentUser$ = this.currentUserService.user$.subscribe(user => {
+            if (!this.authService.hasRole(UserRole.ROLE_DATA_EXPLORER_ADMIN)) {
+                this.editMode = false;
+            } else {
+                this.editMode = this.route.snapshot.queryParams.editMode;
+            }
+        });
 
         if (dataViewId) {
             this.loadDataView(dataViewId);
@@ -342,7 +357,6 @@ export class DataExplorerChartViewComponent
             this.deselectedAssets,
             this.originalAssets,
         );
-        //this.dialogRef.close(true);
     }
 
     saveToAssets(data: DataExplorerWidgetModel): void {
@@ -363,5 +377,9 @@ export class DataExplorerChartViewComponent
                 name: data.baseAppearanceConfig.widgetTitle,
             },
         ];
+    }
+
+    ngOnDestroy() {
+        this.currentUser$?.unsubscribe();
     }
 }

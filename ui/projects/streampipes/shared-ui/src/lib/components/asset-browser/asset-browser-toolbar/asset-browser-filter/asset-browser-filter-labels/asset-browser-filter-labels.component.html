@@ -32,10 +32,12 @@
             multiple
             [compareWith]="compare"
             [(ngModel)]="activeFilters.selectedLabels"
+            data-cy="filters-labels-select"
         >
             <mat-option
                 *ngFor="let label of labels; let i = index"
                 [value]="label"
+                [attr.data-cy]="'label-option-' + label.label"
             >
                 <sp-label
                     [labelText]="label.label"
