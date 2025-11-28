@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AssetConstants,
@@ -45,10 +45,8 @@ export class ManageSiteDialogComponent implements OnInit {
     clonedSite: AssetSiteDesc;
     createMode = false;
 
-    constructor(
-        private dialogRef: DialogRef<ManageSiteDialogComponent>,
-        private genericStorageService: GenericStorageService,
-    ) {}
+    private dialogRef = inject(DialogRef<ManageSiteDialogComponent>);
+    private genericStorageService = inject(GenericStorageService);
 
     ngOnInit(): void {
         if (this.site !== undefined) {

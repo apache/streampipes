@@ -29,7 +29,10 @@ describe('Test data explorer data download dialog', () => {
             'json_array',
         );
 
-        DataExplorerUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget(
+            dataViewName,
+            PrepareTestDataUtils.dataName,
+        );
         DataExplorerUtils.saveDataViewConfiguration();
     });
 

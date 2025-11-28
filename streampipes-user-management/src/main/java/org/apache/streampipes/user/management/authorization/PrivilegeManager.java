@@ -27,31 +27,47 @@ public class PrivilegeManager {
 
   public List<Privilege> makeDefaultPrivileges() {
     return List.of(
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE),
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_ELEMENT_VALUE),
 
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE),
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE),
-
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_WIDGET_VALUE),
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DASHBOARD_WIDGET_VALUE),
-
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE),
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE),
-
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_WIDGET_VALUE),
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_WIDGET_VALUE),
-
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_NOTIFICATIONS_VALUE),
-
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_FILES_VALUE),
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_FILES_VALUE),
-
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_ADAPTER_VALUE),
         Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_ASSETS_VALUE),
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE),
-
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_FILES_VALUE),
         Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE),
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_GENERIC_STORAGE_VALUE)
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_NOTIFICATIONS_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE),
+
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_FILES_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_GENERIC_STORAGE_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_ELEMENT_VALUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     );
   }
 }

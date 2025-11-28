@@ -19,6 +19,7 @@
 import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 import { DataExplorerWidgetTableUtils } from '../../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 import { DataExplorerWidget } from '../../../support/model/DataExplorerWidget';
+import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
 describe('Test Table View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
@@ -28,7 +29,7 @@ describe('Test Table View in Data Explorer', () => {
     it('Perform Test', () => {
         DataExplorerUtils.addDataViewAndWidget(
             'view',
-            'Persist',
+            PrepareTestDataUtils.dataName,
             DataExplorerWidget.TABLE,
         );
 

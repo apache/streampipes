@@ -32,7 +32,10 @@ describe('Test missing properties in data lake', () => {
     });
 
     it('Test table with missing properties', () => {
-        DataExplorerUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget(
+            dataViewName,
+            PrepareTestDataUtils.dataName,
+        );
 
         DataExplorerWidgetTableUtils.checkAmountOfRows(5);
 

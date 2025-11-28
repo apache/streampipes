@@ -103,7 +103,7 @@ export class FileUploadDialogComponent {
                         this.uploadErrorMessage =
                             error.error.notifications[0].title;
                     } else {
-                        this.uploadErrorMessage = error.error;
+                        this.uploadErrorMessage = error.message;
                     }
                 },
             );

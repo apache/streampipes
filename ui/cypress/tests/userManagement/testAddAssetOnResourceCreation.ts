@@ -26,6 +26,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
+import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
 describe('Test that resources can be added to assets on creation', () => {
     let newUser;
@@ -41,7 +42,8 @@ describe('Test that resources can be added to assets on creation', () => {
         );
 
         AssetUtils.goToAssets();
-        AssetUtils.addAndSaveAsset('Asset');
+        const asset = AssetBuilder.create('Asset').build();
+        AssetUtils.addAndSaveAsset(asset);
     });
 
     it('Check Role Asset Admin in Connect', () => {
@@ -123,7 +125,7 @@ describe('Test that resources can be added to assets on creation', () => {
     it('Check Role Asset Admin in Dashboard', () => {
         UserUtils.switchUser(newUser);
         DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.createDashboard('Test');
+        DataExplorerUtils.addNewDashboard('Test');
 
         DataExplorerBtns.dashboardAssetCheckboxBtn().should('exist');
         DataExplorerBtns.closeDashboardCreate().click();
@@ -133,7 +135,7 @@ describe('Test that resources can be added to assets on creation', () => {
         UserUtils.switchUser(newUser);
 
         DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.createDashboard('Test');
+        DataExplorerUtils.addNewDashboard('Test');
         DataExplorerBtns.dashboardAssetCheckboxBtn().should('not.exist');
     });
 });

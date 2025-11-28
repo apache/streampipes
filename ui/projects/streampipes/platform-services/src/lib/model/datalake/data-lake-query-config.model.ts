@@ -67,7 +67,6 @@ export interface SourceConfig {
     measure?: DataLakeMeasure;
     queryConfig: QueryConfig;
     queryType: 'raw' | 'aggregated' | 'single';
-    sourceType: 'pipeline' | 'measurement';
 }
 
 export interface DataExplorerDataConfig {

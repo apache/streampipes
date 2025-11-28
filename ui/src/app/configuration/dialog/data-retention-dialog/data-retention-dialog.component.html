@@ -59,12 +59,23 @@
         <button
             mat-flat-button
             color="accent"
-            data-cy="download-configuration-download-btn"
+            data-cy="run-retention-now-btn"
+            [disabled]="!disableDelete"
+            (click)="runCleanUpNow()"
+        >
+            {{ 'Run Sync Now' | translate }}
+        </button>
+
+        <button
+            mat-flat-button
+            color="accent"
+            data-cy="delete-retention-configuration-btn"
             [disabled]="!disableDelete"
             (click)="deleteCleanUp()"
         >
             {{ 'Delete Sync' | translate }}
         </button>
+
         <button
             mat-flat-button
             class="mat-basic"

@@ -62,6 +62,7 @@
                     mat-button
                     mat-flat-button
                     class="small-button mat-basic btn-margin"
+                    [attr.data-cy]="'filters-deselect-' + title"
                     (click)="deselectAllEmitter.emit()"
                 >
                     {{ 'None' | translate }}

@@ -23,7 +23,6 @@ import org.apache.streampipes.manager.setup.tasks.AddAssetManagementViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddDataLakeMeasureViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddDefaultPipelineTemplatesTask;
 import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
-import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -51,7 +50,6 @@ public class CouchDbInstallationStep extends InstallationStep {
     createDatabases();
     createViews();
     new CreateAssetLinkTypeTask().execute();
-    new CreateDefaultAssetTask().execute();
     new AddDefaultPipelineTemplatesTask(
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineTemplateStorage()
     ).execute();
