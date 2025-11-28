@@ -30,11 +30,7 @@ export class ChartPanelCanDeactivateGuard {
     constructor(private router: Router) {}
     checkQueryParams(queryParams: { [key: string]: any }): boolean {
         const { editMode, startDate, endDate } = queryParams;
-        return (
-            editMode &&
-            startDate &&
-            endDate
-        );
+        return editMode && startDate && endDate;
     }
     canDeactivate(
         component: SupportsUnsavedChangeDialog,
