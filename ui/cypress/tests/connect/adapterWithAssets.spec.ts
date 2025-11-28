@@ -21,6 +21,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AssetBtns } from '../../support/utils/asset/AssetBtns';
+import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
 describe('Creates a new adapter with a linked asset', () => {
     const assetName1 = 'TestAsset1';
@@ -35,9 +36,12 @@ describe('Creates a new adapter with a linked asset', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         AssetUtils.goToAssets();
-        AssetUtils.addAndSaveAsset(assetName3);
-        AssetUtils.addAndSaveAsset(assetName2);
-        AssetUtils.addAndSaveAsset(assetName1);
+        const asset1 = AssetBuilder.create(assetName1).build();
+        const asset2 = AssetBuilder.create(assetName2).build();
+        const asset3 = AssetBuilder.create(assetName3).build();
+        AssetUtils.addAndSaveAsset(asset3);
+        AssetUtils.addAndSaveAsset(asset2);
+        AssetUtils.addAndSaveAsset(asset1);
     });
 
     it('Add Assets during Adapter generation', () => {

@@ -34,6 +34,7 @@
                     subscriptSizing="dynamic"
                 >
                     <input
+                        data-cy="asset-name"
                         matInput
                         [(ngModel)]="asset.assetName"
                         [disabled]="!editMode"
@@ -84,6 +85,7 @@
             >
                 <mat-form-field class="w-100">
                     <mat-select
+                        data-cy="asset-type-select"
                         [disabled]="!editMode"
                         [(ngModel)]="asset.assetType.isa95AssetType"
                         aria-label="Asset Type"
@@ -91,6 +93,7 @@
                         <mat-option
                             *ngFor="let isaType of isa95Types"
                             [value]="isaType.type"
+                            [attr.data-cy]="'option-' + isaType.type"
                             >{{ isaType.label }}
                         </mat-option>
                     </mat-select>

@@ -33,6 +33,7 @@
                         <button
                             mat-icon-button
                             matTreeNodeToggle
+                            [attr.data-cy]="'toggle-' + node.assetName"
                             [attr.aria-label]="'Toggle ' + node.assetName"
                         >
                             <mat-icon>{{
