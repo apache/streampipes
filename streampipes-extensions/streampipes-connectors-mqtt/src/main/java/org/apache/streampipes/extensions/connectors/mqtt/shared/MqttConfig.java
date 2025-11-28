@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
-import org.fusesource.mqtt.client.QoS;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 
 public class MqttConfig {
 
@@ -33,12 +33,12 @@ public class MqttConfig {
   private Boolean tls = false;
 
   private boolean isLastWill = false;
-  private QoS willQoS = QoS.AT_MOST_ONCE;
+  private MqttQos willQoS = MqttQos.AT_MOST_ONCE;
   private Boolean willRetain = false;
   private String willTopic = "";
   private String willMessage = "";
   private String mqttProtocolVersion = "3.1";
-  private QoS qos = QoS.AT_MOST_ONCE;
+  private MqttQos qos = MqttQos.AT_MOST_ONCE;
   private long reconnectDelayMaxInMs = 10000L;
   private boolean cleanSession = true;
   private boolean retain = false;
@@ -112,11 +112,12 @@ public class MqttConfig {
   public String getPassword() {
     return password;
   }
-    public String getClientId() {
+
+  public String getClientId() {
     return clientId;
   }
 
-      public void setClientId(String clientId) {
+  public void setClientId(String clientId) {
     this.clientId = clientId;
   }
 
@@ -156,11 +157,11 @@ public class MqttConfig {
     this.isLastWill = lastWill;
   }
 
-  public QoS getWillQoS() {
+  public MqttQos getWillQoS() {
     return willQoS;
   }
 
-  public void setWillQoS(QoS willQoS) {
+  public void setWillQoS(MqttQos willQoS) {
     this.willQoS = willQoS;
   }
 
@@ -196,11 +197,11 @@ public class MqttConfig {
     this.mqttProtocolVersion = mqttProtocolVersion;
   }
 
-  public QoS getQos() {
+  public MqttQos getQos() {
     return qos;
   }
 
-  public void setQos(QoS qos) {
+  public void setQos(MqttQos qos) {
     this.qos = qos;
   }
 

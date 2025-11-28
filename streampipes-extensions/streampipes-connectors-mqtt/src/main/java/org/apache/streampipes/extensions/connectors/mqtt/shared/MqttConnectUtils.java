@@ -27,7 +27,7 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
 
-import org.fusesource.mqtt.client.QoS;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -36,10 +36,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class MqttConnectUtils {
-
-  /**
-   * Keys of user configuration parameters
-   */
   // Adapter
   public static final String ACCESS_MODE = "access-mode";
   public static final String ANONYMOUS_ACCESS = "anonymous-alternative";
@@ -194,7 +190,7 @@ public class MqttConnectUtils {
       URI uri = new URI(brokeruri);
       protocol = uri.getScheme();
     } catch (URISyntaxException e) {
-
+      throw new SpRuntimeException("No valid URI");
     }
 
     return protocol;
@@ -248,19 +244,18 @@ public class MqttConnectUtils {
     return mqttConfig;
   }
 
-  public static QoS extractQoSFromString(String s) {
+  public static MqttQos extractQoSFromString(String s) {
     int qos = Integer.parseInt(s.replaceAll("\\D+", ""));
     switch (qos) {
       case 0:
-        return QoS.AT_MOST_ONCE;
+        return MqttQos.AT_MOST_ONCE;
       case 1:
-        return QoS.AT_LEAST_ONCE;
+        return MqttQos.AT_LEAST_ONCE;
       case 2:
-        return QoS.EXACTLY_ONCE;
+        return MqttQos.EXACTLY_ONCE;
     }
     throw new SpRuntimeException("Could not retrieve QoS level: QoS " + qos);
   }
-
 
   public static boolean extractBoolean(String s) {
     switch (s) {
@@ -276,9 +271,7 @@ public class MqttConnectUtils {
     return value * 1000;
   }
 
-
   public static MqttConfig extractDataSinkParams(IParameterExtractor extractor) {
-
 
     MqttConfig mqttConfig = getMqttConfig(extractor);
 
@@ -293,7 +286,8 @@ public class MqttConnectUtils {
     mqttConfig.setKeepAliveInSec(extractor.singleValueParameter(KEEP_ALIVE_IN_SEC, Short.class));
 
     mqttConfig
-        .setCleanSession(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(CLEAN_SESSION_KEY, String.class)));
+        .setCleanSession(
+            MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(CLEAN_SESSION_KEY, String.class)));
     mqttConfig.setRetain(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(RETAIN, String.class)));
 
     boolean isCompliant = MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(MQTT_COMPLIANT, String.class));
@@ -301,14 +295,15 @@ public class MqttConnectUtils {
       mqttConfig.setMqttProtocolVersion("3.1.1");
     }
 
-
     String willMode = extractor.selectedAlternativeInternalId(WILL_MODE);
     if (willMode.equals(WILL_ALTERNATIVE)) {
       mqttConfig.setLastWill(true);
       mqttConfig.setWillTopic(extractor.singleValueParameter(WILL_TOPIC, String.class));
       mqttConfig.setWillMessage(extractor.singleValueParameter(WILL_MESSAGE, String.class));
-      mqttConfig.setWillQoS(MqttConnectUtils.extractQoSFromString(extractor.selectedSingleValue(WILL_QOS, String.class)));
-      mqttConfig.setWillRetain(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(WILL_RETAIN, String.class)));
+      mqttConfig
+          .setWillQoS(MqttConnectUtils.extractQoSFromString(extractor.selectedSingleValue(WILL_QOS, String.class)));
+      mqttConfig
+          .setWillRetain(MqttConnectUtils.extractBoolean(extractor.selectedSingleValue(WILL_RETAIN, String.class)));
     }
 
     return mqttConfig;

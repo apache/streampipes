@@ -63,6 +63,7 @@
                                 <sp-data-explorer-designer-panel
                                     [currentlyConfiguredWidget]="dataView"
                                     [dataLakeMeasure]="dataLakeMeasure"
+                                    (addWidgetEmitter)="onAddWidget($event)"
                                     fxFlex="100"
                                 >
                                 </sp-data-explorer-designer-panel>

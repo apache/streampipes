@@ -144,6 +144,7 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
                     {
                         path: 'chart',
                         component: DataExplorerChartViewComponent,
+                        canDeactivate: [ChartPanelCanDeactivateGuard],
                     },
                     {
                         path: 'chart/:id',

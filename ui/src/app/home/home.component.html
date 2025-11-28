@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <sp-basic-view [hideNavbar]="true">
     <div fxFlex fxLayout="row" fxLayoutAlign="start start">
@@ -24,20 +24,22 @@
                     <div class="welcome-text">Welcome!</div>
                 </div>
                 <div fxLayout="column" fxFlex="100" class="home-margin">
-                    <div
-                        fxFlex="100"
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                        fxLayoutGap="10px"
-                        *ngIf="showStatus"
-                    >
-                        <sp-status
-                            [fxFlex]="100 / statusBoxes.length"
-                            [statusBox]="box"
-                            [currentUser]="currentUser"
-                            *ngFor="let box of statusBoxes"
-                        ></sp-status>
-                    </div>
+                    @if (showStatus) {
+                        <div
+                            fxFlex="100"
+                            fxLayout="row"
+                            fxLayoutAlign="start center"
+                            fxLayoutGap="10px"
+                        >
+                            @for (box of statusBoxes; track box) {
+                                <sp-status
+                                    [fxFlex]="100 / statusBoxes.length"
+                                    [statusBox]="box"
+                                    [currentUser]="currentUser"
+                                ></sp-status>
+                            }
+                        </div>
+                    }
                     <div fxFlex="100">
                         <sp-basic-inner-panel
                             innerPadding="0"
@@ -45,34 +47,37 @@
                         >
                             <div fxFlex="100" fxLayout="column">
                                 <mat-list class="modules-list">
-                                    <mat-list-item
-                                        *ngFor="let link of serviceLinks"
-                                        (click)="openLink(link)"
-                                        class="list-item"
-                                    >
-                                        <div
-                                            matListItemAvatar
-                                            class="pipeline-avatar sp-primary-bg"
+                                    @for (link of serviceLinks; track link) {
+                                        <mat-list-item
+                                            (click)="openLink(link)"
+                                            class="list-item"
                                         >
-                                            <mat-icon>{{ link.icon }}</mat-icon>
-                                        </div>
-                                        <span
-                                            matListItemTitle
-                                            style="
-                                                font-weight: bold;
-                                                font-size: 14pt;
-                                            "
-                                        >
-                                            {{ link.name }}
-                                        </span>
-                                        <span
-                                            matListItemLine
-                                            class="module-description"
-                                        >
-                                            {{ link.description }}
-                                        </span>
-                                        <mat-divider></mat-divider>
-                                    </mat-list-item>
+                                            <div
+                                                matListItemAvatar
+                                                class="pipeline-avatar sp-primary-bg"
+                                            >
+                                                <mat-icon>{{
+                                                    link.icon
+                                                }}</mat-icon>
+                                            </div>
+                                            <span
+                                                matListItemTitle
+                                                style="
+                                                    font-weight: bold;
+                                                    font-size: 14pt;
+                                                "
+                                            >
+                                                {{ link.name }}
+                                            </span>
+                                            <span
+                                                matListItemLine
+                                                class="module-description"
+                                            >
+                                                {{ link.description }}
+                                            </span>
+                                            <mat-divider></mat-divider>
+                                        </mat-list-item>
+                                    }
                                 </mat-list>
                             </div>
                         </sp-basic-inner-panel>

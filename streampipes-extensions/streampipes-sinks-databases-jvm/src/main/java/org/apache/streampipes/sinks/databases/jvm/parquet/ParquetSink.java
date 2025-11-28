@@ -19,10 +19,12 @@
 package org.apache.streampipes.sinks.databases.jvm.parquet;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.AbstractField;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -30,13 +32,12 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.vocabulary.XSD;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
@@ -60,7 +61,7 @@ import java.util.Map;
 import java.util.Random;
 
 
-public class ParquetSink extends StreamPipesDataSink {
+public class ParquetSink implements IStreamPipesDataSink {
 
   private static final Logger log = LoggerFactory.getLogger(ParquetSink.class);
   private static final String SCHEMA_NAME_KEY = "schema_name";
@@ -111,29 +112,32 @@ public class ParquetSink extends StreamPipesDataSink {
   };
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.databases.jvm.parquet", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).
-        category(DataSinkType.DATABASE)
-        .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredProperty(EpRequirements.anyProperty())
-                .build())
-        .requiredTextParameter(Labels.withId(SCHEMA_NAME_KEY))
-        .requiredTextParameter(Labels.withId(SCHEMA_NAMESPACE_KEY))
-        .requiredTextParameter(Labels.withId(PARQUET_FILE_NAME_KEY))
-        .requiredTextParameter(Labels.withId(PARQUET_GENERATION_DIRECTORY_KRY))
-        .requiredIntegerParameter(Labels.withId(ROW_GROUP_SIZE_KEY), 134217728)
-        .requiredIntegerParameter(Labels.withId(PAGE_SIZE_KEY), 1048576)
-        .requiredSingleValueSelection(Labels.withId(COMPRESSION_CODEC_NAME_KEY),
-                Options.from(COMPRESSION_CODEC_NAME_MAP.keySet().toArray(new String[0])))
-        .build();
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        ParquetSink::new,
+        DataSinkBuilder
+            .create("org.apache.streampipes.sinks.databases.jvm.parquet", 0)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).
+            category(DataSinkType.DATABASE)
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
+            .requiredTextParameter(Labels.withId(SCHEMA_NAME_KEY))
+            .requiredTextParameter(Labels.withId(SCHEMA_NAMESPACE_KEY))
+            .requiredTextParameter(Labels.withId(PARQUET_FILE_NAME_KEY))
+            .requiredTextParameter(Labels.withId(PARQUET_GENERATION_DIRECTORY_KRY))
+            .requiredIntegerParameter(Labels.withId(ROW_GROUP_SIZE_KEY), 134217728)
+            .requiredIntegerParameter(Labels.withId(PAGE_SIZE_KEY), 1048576)
+            .requiredSingleValueSelection(Labels.withId(COMPRESSION_CODEC_NAME_KEY),
+                    Options.from(COMPRESSION_CODEC_NAME_MAP.keySet().toArray(new String[0])))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataSinkParameters parameters, EventSinkRuntimeContext runtimeContext) {
     this.schemaName = parameters.extractor().singleValueParameter(SCHEMA_NAME_KEY, String.class);
     this.schemaNamespace = parameters.extractor().singleValueParameter(SCHEMA_NAMESPACE_KEY, String.class);
     this.parquetFileName = parameters.extractor().singleValueParameter(PARQUET_FILE_NAME_KEY, String.class);
@@ -157,7 +161,7 @@ public class ParquetSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onDetach() {
+  public void onPipelineStopped() {
     try {
       if (writer != null){
         writer.close();

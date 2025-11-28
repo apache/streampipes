@@ -19,20 +19,21 @@
 package org.apache.streampipes.extensions.connectors.influx.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.connectors.influx.shared.InfluxConfigs;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,16 +43,38 @@ import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxK
 import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.MAX_FLUSH_DURATION_KEY;
 import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.TIMESTAMP_MAPPING_KEY;
 
-public class InfluxDbSink extends StreamPipesDataSink {
+public class InfluxDbSink implements IStreamPipesDataSink {
 
   private static final Logger LOG = LoggerFactory.getLogger(InfluxDbSink.class);
 
   private InfluxDbClient influxDbClient;
 
+  @Override
+  public IDataSinkConfiguration declareConfig() {
+    var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.influxdb", 0)
+        .withLocales(Locales.EN)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+        .category(DataSinkType.DATABASE);
+
+    InfluxConfigs.appendSharedInfluxConfig(builder);
+
+    builder.requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+            EpRequirements.timestampReq(),
+            Labels.withId(TIMESTAMP_MAPPING_KEY),
+            PropertyScope.NONE).build())
+        .requiredIntegerParameter(Labels.withId(BATCH_INTERVAL_ACTIONS_KEY))
+        .requiredIntegerParameter(Labels.withId(MAX_FLUSH_DURATION_KEY), 2000);
+
+    return DataSinkConfiguration.create(
+        InfluxDbSink::new,
+        builder.build()
+    );
+  }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(
+      IDataSinkParameters parameters,
+      EventSinkRuntimeContext runtimeContext) {
 
     var extractor = parameters.extractor();
 
@@ -82,30 +105,11 @@ public class InfluxDbSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     influxDbClient.disconnect();
   }
 
   public static String prepareString(String s) {
     return s.toLowerCase().replaceAll("[^a-zA-Z0-9]", "");
-  }
-
-  @Override
-  public DataSinkDescription declareModel() {
-    var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.influxdb", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.DATABASE);
-
-    InfluxConfigs.appendSharedInfluxConfig(builder);
-
-    builder.requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
-            EpRequirements.timestampReq(),
-            Labels.withId(TIMESTAMP_MAPPING_KEY),
-            PropertyScope.NONE).build())
-        .requiredIntegerParameter(Labels.withId(BATCH_INTERVAL_ACTIONS_KEY))
-        .requiredIntegerParameter(Labels.withId(MAX_FLUSH_DURATION_KEY), 2000);
-
-    return builder.build();
   }
 }

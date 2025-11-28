@@ -21,55 +21,66 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
-import org.fusesource.mqtt.client.QoS;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class MqttPublisher extends AbstractMqttConnector implements EventProducer {
 
-  private static final Logger LOG = LoggerFactory.getLogger(MqttPublisher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MqttPublisher.class);
 
-  private String currentTopic;
+    private String currentTopic;
 
-  public MqttPublisher(MqttTransportProtocol protocol) {
-    super(protocol);
-  }
-
-  @Override
-  public void connect() throws SpRuntimeException {
-    try {
-      this.createBrokerConnection(protocol);
-      this.currentTopic = protocol.getTopicDefinition().getActualTopicName();
-    } catch (Exception e) {
-      throw new SpRuntimeException(e);
+    public MqttPublisher(MqttTransportProtocol protocol) {
+        super(protocol);
     }
-  }
 
-  @Override
-  public void publish(byte[] event) {
-    if (connected && currentTopic != null) {
-      try {
-        this.connection.publish(currentTopic, event, QoS.AT_LEAST_ONCE, false);
-      } catch (Exception e) {
-        // TODO exception handling once system-wide logging is implemented
-        LOG.error(e.getMessage());
-      }
+    @Override
+    public void connect() throws SpRuntimeException {
+        try {
+            this.createBrokerConnection(protocol);
+            this.currentTopic = protocol.getTopicDefinition().getActualTopicName();
+        } catch (Exception e) {
+            throw new SpRuntimeException("Failed to connect to MQTT broker", e);
+        }
     }
-  }
 
-  @Override
-  public void disconnect() throws SpRuntimeException {
-    try {
-      this.connection.disconnect();
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      this.connected = false;
+    @Override
+    public void publish(byte[] event) {
+        if (connected && currentTopic != null) {
+            try {
+                client.publishWith()
+                        .topic(currentTopic)
+                        .payload(event)
+                        .qos(MqttQos.AT_LEAST_ONCE)
+                        .send()
+                        .whenComplete((publishResult, throwable) -> {
+                            if (throwable != null) {
+                                LOG.error("Failed to publish message to topic {}: {}", currentTopic, throwable.getMessage());
+                            }
+                        });
+            } catch (Exception e) {
+                LOG.error("Exception while publishing message: {}", e.getMessage());
+            }
+        }
     }
-  }
 
-  @Override
-  public boolean isConnected() {
-    return connected;
-  }
+    @Override
+    public void disconnect() throws SpRuntimeException {
+        try {
+            if (client != null && connected) {
+                client.disconnect().join();
+            }
+        } catch (Exception e) {
+            throw new SpRuntimeException("Failed to disconnect from MQTT broker", e);
+        } finally {
+            connected = false;
+        }
+    }
+
+    @Override
+    public boolean isConnected() {
+        return connected;
+    }
 }

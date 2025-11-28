@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'labels'">
     <div fxLayout="column" class="page-container-padding">
@@ -42,66 +42,72 @@
                     ><span>&nbsp;{{ 'New' | translate }}</span>
                 </button>
             </div>
-            <div *ngIf="createLabelMode" class="mb-10">
-                <sp-edit-label
-                    (cancelEmitter)="createLabelMode = false"
-                    (saveEmitter)="saveLabel($event)"
-                ></sp-edit-label>
-            </div>
-            <div
-                fxLayout="column"
-                *ngFor="let label of allLabels"
-                class="label-item"
-                data-cy="available-labels-list"
-            >
-                <div
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    fxLayoutGap="10px"
-                >
-                    <sp-label
-                        size="small"
-                        fxFlex="20"
-                        [labelText]="label.label"
-                        [labelBackground]="label.color"
-                        data-cy="label-text"
-                    >
-                    </sp-label>
-                    <span fxFlex="50" *ngIf="!isEditMode(label._id)">{{
-                        label.description
-                    }}</span>
-                    <div fxFlex fxLayoutAlign="end center">
-                        <button
-                            mat-icon-button
-                            [matTooltip]="'Edit label' | translate"
-                            color="accent"
-                            (click)="editedLabels.push(label._id)"
-                            *ngIf="!isEditMode(label._id)"
-                        >
-                            <i class="material-icons">edit</i>
-                        </button>
-                        <button
-                            mat-icon-button
-                            [matTooltip]="'Delete label' | translate"
-                            class="btn-warn"
-                            (click)="deleteLabel(label)"
-                            data-cy="delete-label-button"
-                        >
-                            <i class="material-icons">delete</i>
-                        </button>
-                    </div>
-                </div>
-                <div fxLayout="column" *ngIf="isEditMode(label._id)">
+            @if (createLabelMode) {
+                <div class="mb-10">
                     <sp-edit-label
-                        [editMode]="true"
-                        [showPreview]="false"
-                        [label]="label"
-                        (cancelEmitter)="removeEditedLabel(label._id)"
-                        (saveEmitter)="updateLabel(label)"
-                    >
-                    </sp-edit-label>
+                        (cancelEmitter)="createLabelMode = false"
+                        (saveEmitter)="saveLabel($event)"
+                    ></sp-edit-label>
                 </div>
-            </div>
+            }
+            @for (label of allLabels; track label) {
+                <div
+                    fxLayout="column"
+                    class="label-item"
+                    data-cy="available-labels-list"
+                >
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxLayoutGap="10px"
+                    >
+                        <sp-label
+                            size="small"
+                            fxFlex="20"
+                            [labelText]="label.label"
+                            [labelBackground]="label.color"
+                            data-cy="label-text"
+                        >
+                        </sp-label>
+                        @if (!isEditMode(label._id)) {
+                            <span fxFlex="50">{{ label.description }}</span>
+                        }
+                        <div fxFlex fxLayoutAlign="end center">
+                            @if (!isEditMode(label._id)) {
+                                <button
+                                    mat-icon-button
+                                    [matTooltip]="'Edit label' | translate"
+                                    color="accent"
+                                    (click)="editedLabels.push(label._id)"
+                                >
+                                    <i class="material-icons">edit</i>
+                                </button>
+                            }
+                            <button
+                                mat-icon-button
+                                [matTooltip]="'Delete label' | translate"
+                                class="btn-warn"
+                                (click)="deleteLabel(label)"
+                                data-cy="delete-label-button"
+                            >
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </div>
+                    </div>
+                    @if (isEditMode(label._id)) {
+                        <div fxLayout="column">
+                            <sp-edit-label
+                                [editMode]="true"
+                                [showPreview]="false"
+                                [label]="label"
+                                (cancelEmitter)="removeEditedLabel(label._id)"
+                                (saveEmitter)="updateLabel(label)"
+                            >
+                            </sp-edit-label>
+                        </div>
+                    }
+                </div>
+            }
         </sp-split-section>
     </div>
 </sp-basic-nav-tabs>

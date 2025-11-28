@@ -18,130 +18,142 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15" fxLayout="column">
-        <sp-warning-box *ngIf="uploadError" style="font-size: smaller">
-            {{ uploadErrorMessage }}
-        </sp-warning-box>
-        <div fxFlex="100" *ngIf="this.duplicateFileNames.length === 0">
-            <div fxFlex="100" style="margin: 5px; width: 100%">
-                <mat-form-field
-                    style="width: 95%"
-                    (click)="fileInput.click()"
-                    color="accent"
-                >
-                    <input
-                        matInput
-                        [placeholder]="'File' | translate"
-                        disabled
-                        (value)="(fileNames)"
-                    />
-                    <input
-                        #fileInput
-                        type="file"
-                        style="display: none"
-                        (change)="handleFileInput($event.target.files)"
-                        data-cy="sp-file-management-file-input"
-                        multiple
-                    />
-                    <div>
-                        <div
-                            fxLayout="column"
-                            *ngFor="let filename of fileNames"
-                        >
-                            {{ filename }}
-                        </div>
-                        <mat-progress-bar
-                            mode="determinate"
-                            value="{{ uploadStatus }}"
-                            *ngIf="uploadStatus > 0"
-                            color="accent"
-                        ></mat-progress-bar>
-                    </div>
-                    <button
+        @if (uploadError) {
+            <sp-warning-box style="font-size: smaller">
+                {{ uploadErrorMessage }}
+            </sp-warning-box>
+        }
+        @if (this.duplicateFileNames.length === 0) {
+            <div fxFlex="100">
+                <div fxFlex="100" style="margin: 5px; width: 100%">
+                    <mat-form-field
+                        style="width: 95%"
+                        (click)="fileInput.click()"
                         color="accent"
-                        matSuffix
-                        mat-button
-                        style="min-width: 0"
                     >
-                        <mat-icon *ngIf="uploadStatus < 99"
-                            >insert_drive_file</mat-icon
+                        <input
+                            matInput
+                            [placeholder]="'File' | translate"
+                            disabled
+                            (value)="(fileNames)"
+                        />
+                        <input
+                            #fileInput
+                            type="file"
+                            style="display: none"
+                            (change)="handleFileInput($event.target.files)"
+                            data-cy="sp-file-management-file-input"
+                            multiple
+                        />
+                        <div>
+                            @for (filename of fileNames; track filename) {
+                                <div fxLayout="column">
+                                    {{ filename }}
+                                </div>
+                            }
+                            @if (uploadStatus > 0) {
+                                <mat-progress-bar
+                                    mode="determinate"
+                                    value="{{ uploadStatus }}"
+                                    color="accent"
+                                ></mat-progress-bar>
+                            }
+                        </div>
+                        <button
+                            color="accent"
+                            matSuffix
+                            mat-button
+                            style="min-width: 0"
                         >
-                        <mat-icon
-                            *ngIf="uploadStatus === 100"
-                            class="green-icon"
-                            >check_circle</mat-icon
-                        >
+                            @if (uploadStatus < 99) {
+                                <mat-icon>insert_drive_file</mat-icon>
+                            }
+                            @if (uploadStatus === 100) {
+                                <mat-icon class="green-icon"
+                                    >check_circle</mat-icon
+                                >
+                            }
+                        </button>
+                        @if (!hasInput) {
+                            <mat-error>
+                                {{ errorMessage }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                    <button
+                        mat-button
+                        mat-flat-button
+                        class="mat-basic"
+                        (click)="removeFilesFromUpload()"
+                    >
+                        {{ 'Clear' | translate }}
                     </button>
-                    <mat-error *ngIf="!hasInput">
-                        {{ errorMessage }}
-                    </mat-error>
-                </mat-form-field>
-                <button
-                    mat-button
-                    mat-flat-button
-                    class="mat-basic"
-                    (click)="removeFilesFromUpload()"
-                >
-                    {{ 'Clear' | translate }}
-                </button>
-            </div>
-        </div>
-        <div
-            *ngIf="this.duplicateFileNames.length !== 0"
-            fxLayout="column"
-            style="width: 100%"
-        >
-            <div fxFlex="100" fxLayoutAlign="center" fxLayout="column">
-                <b>
-                    <h4>
-                        {{
-                            'The following files already exist. Please rename them.'
-                                | translate
-                        }}
-                    </h4>
-                </b>
-                <div
-                    *ngFor="let name of this.duplicateFileNames; let i = index"
-                >
-                    <div class="input-group">
-                        <span style="margin-right: 10px">{{ name }}:</span>
-                        <mat-form-field>
-                            <input
-                                matInput
-                                placeholder="e.g. {{ '_' + name }}"
-                                [(ngModel)]="this.renamedFileNames[i]"
-                            />
-                        </mat-form-field>
-                    </div>
                 </div>
             </div>
-        </div>
+        }
+        @if (this.duplicateFileNames.length !== 0) {
+            <div fxLayout="column" style="width: 100%">
+                <div fxFlex="100" fxLayoutAlign="center" fxLayout="column">
+                    <b>
+                        <h4>
+                            {{
+                                'The following files already exist. Please rename them.'
+                                    | translate
+                            }}
+                        </h4>
+                    </b>
+                    @for (
+                        name of this.duplicateFileNames;
+                        track name;
+                        let i = $index
+                    ) {
+                        <div>
+                            <div class="input-group">
+                                <span style="margin-right: 10px"
+                                    >{{ name }}:</span
+                                >
+                                <mat-form-field>
+                                    <input
+                                        matInput
+                                        placeholder="e.g. {{ '_' + name }}"
+                                        [(ngModel)]="this.renamedFileNames[i]"
+                                    />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button
-            *ngIf="this.duplicateFileNames.length === 0"
-            mat-button
-            mat-flat-button
-            color="accent"
-            (click)="store()"
-            [disabled]="fileNames.length === 0"
-            data-cy="sp-file-management-store-file"
-            style="margin-right: 10px"
-        >
-            {{ 'Import files' | translate }}
-        </button>
+        @if (this.duplicateFileNames.length === 0) {
+            <button
+                mat-button
+                mat-flat-button
+                color="accent"
+                (click)="store()"
+                [disabled]="fileNames.length === 0"
+                data-cy="sp-file-management-store-file"
+                style="margin-right: 10px"
+            >
+                {{ 'Import files' | translate }}
+            </button>
+        }
 
-        <button
-            *ngIf="this.duplicateFileNames.length !== 0"
-            mat-button
-            mat-flat-button
-            color="accent"
-            (click)="renameDuplicateFiles()"
-            [disabled]="fileNames.length === 0"
-            style="margin-right: 10px"
-        >
-            {{ 'Rename files' | translate }}
-        </button>
+        @if (this.duplicateFileNames.length !== 0) {
+            <button
+                mat-button
+                mat-flat-button
+                color="accent"
+                (click)="renameDuplicateFiles()"
+                [disabled]="fileNames.length === 0"
+                style="margin-right: 10px"
+            >
+                {{ 'Rename files' | translate }}
+            </button>
+        }
         <button
             mat-button
             mat-flat-button

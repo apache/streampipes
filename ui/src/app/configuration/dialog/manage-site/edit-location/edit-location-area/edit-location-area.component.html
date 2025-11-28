@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div
     fxLayout="column"
@@ -22,31 +22,31 @@
     fxLayoutGap="10px"
     [formGroup]="areaControlGroup"
 >
-    <div
-        *ngFor="let area of site.areas; let i = index"
-        fxLayout="row"
-        fxFlex="100"
-        class="area"
-    >
-        <div fxFlex fxLayoutAlign="start center">{{ area }}</div>
-        <div fxLayoutAlign="end center">
-            <button
-                [attr.data-cy]="
-                    'sites-dialog-remove-area-button_' + area.replace(' ', '_')
-                "
-                mat-icon-button
-                color="accent"
-                (click)="removeArea(area)"
-            >
-                <mat-icon>remove</mat-icon>
-            </button>
+    @for (area of site.areas; track area; let i = $index) {
+        <div fxLayout="row" fxFlex="100" class="area">
+            <div fxFlex fxLayoutAlign="start center">{{ area }}</div>
+            <div fxLayoutAlign="end center">
+                <button
+                    [attr.data-cy]="
+                        'sites-dialog-remove-area-button_' +
+                        area.replace(' ', '_')
+                    "
+                    mat-icon-button
+                    color="accent"
+                    (click)="removeArea(area)"
+                >
+                    <mat-icon>remove</mat-icon>
+                </button>
+            </div>
         </div>
-    </div>
-    <div *ngIf="site.areas.length === 0" fxLayoutAlign="start center">
-        <div class="no-areas-defined">
-            {{ 'No areas defined yet.' | translate }}
+    }
+    @if (site.areas.length === 0) {
+        <div fxLayoutAlign="start center">
+            <div class="no-areas-defined">
+                {{ 'No areas defined yet.' | translate }}
+            </div>
         </div>
-    </div>
+    }
     <div fxLayout="row" fxLayoutGap="10px" class="w-100 mt-10">
         <div fxFlex fxLayoutAlign="start center">
             <mat-form-field
@@ -59,14 +59,15 @@
                     matInput
                     formControlName="areaControl"
                 />
-                <mat-error
-                    *ngIf="
-                        areaControlGroup
-                            .get('areaControl')
-                            .hasError('forbiddenName')
-                    "
-                    >{{ 'This site already exists' | translate }}</mat-error
-                >
+                @if (
+                    areaControlGroup
+                        .get('areaControl')
+                        .hasError('forbiddenName')
+                ) {
+                    <mat-error>{{
+                        'This site already exists' | translate
+                    }}</mat-error>
+                }
             </mat-form-field>
         </div>
         <div fxLayoutAlign="end center">

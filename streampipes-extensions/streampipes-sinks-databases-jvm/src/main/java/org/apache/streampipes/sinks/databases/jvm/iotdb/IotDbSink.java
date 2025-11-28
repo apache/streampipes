@@ -19,20 +19,21 @@
 package org.apache.streampipes.sinks.databases.jvm.iotdb;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.AbstractField;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
@@ -45,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class IotDbSink extends StreamPipesDataSink {
+public class IotDbSink implements IStreamPipesDataSink {
 
   private static final Logger LOG = LoggerFactory.getLogger(IotDbSink.class);
 
@@ -72,29 +73,33 @@ public class IotDbSink extends StreamPipesDataSink {
   private SessionPool sessionPool;
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.databases.jvm.iotdb", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).
-        category(DataSinkType.DATABASE)
-        .requiredStream(
-            StreamRequirementsBuilder.create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_MAPPING_KEY),
-                    PropertyScope.NONE).build()
-        )
-        .requiredTextParameter(Labels.withId(HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(PORT_KEY), 6667)
-        .requiredTextParameter(Labels.withId(USER_KEY), "root")
-        .requiredSecret(Labels.withId(PASSWORD_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_KEY))
-        .requiredTextParameter(Labels.withId(DEVICE_KEY))
-        .build();
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        IotDbSink::new,
+        DataSinkBuilder
+            .create("org.apache.streampipes.sinks.databases.jvm.iotdb", 0)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).
+            category(DataSinkType.DATABASE)
+            .requiredStream(
+                StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_MAPPING_KEY),
+                        PropertyScope.NONE).build()
+            )
+            .requiredTextParameter(Labels.withId(HOST_KEY))
+            .requiredIntegerParameter(Labels.withId(PORT_KEY), 6667)
+            .requiredTextParameter(Labels.withId(USER_KEY), "root")
+            .requiredSecret(Labels.withId(PASSWORD_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_KEY))
+            .requiredTextParameter(Labels.withId(DEVICE_KEY))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(
+      IDataSinkParameters parameters,
+      EventSinkRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
     final String host = extractor.singleValueParameter(HOST_KEY, String.class);
     final Integer port = extractor.singleValueParameter(PORT_KEY, Integer.class);
@@ -181,7 +186,7 @@ public class IotDbSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     sessionPool.close();
   }
 }

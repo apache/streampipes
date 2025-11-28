@@ -28,6 +28,8 @@ import {
     ChartService,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    EventPropertyUnion,
+    FieldConfig,
     LinkageData,
     TimeSettings,
 } from '@streampipes/platform-services';
@@ -57,6 +59,8 @@ import { ResizeEchartsService } from '../../../data-explorer-shared/services/res
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';
+import { Tuple2 } from 'src/app/core-model/base/Tuple2';
+import { ChartFieldProviderService } from 'src/app/data-explorer-shared/services/chart-field-provider.service';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -95,7 +99,7 @@ export class DataExplorerChartViewComponent
     private dialogService = inject(DialogService);
     private currentUserService = inject(CurrentUserService);
     private authService = inject(AuthService);
-
+    private fieldProvider = inject(ChartFieldProviderService);
     private assetSaveService = inject(AssetSaveService);
 
     currentUser$: Subscription;
@@ -123,8 +127,48 @@ export class DataExplorerChartViewComponent
         } else {
             this.createWidget();
             this.timeSettings = this.makeDefaultTimeSettings();
+            this.dataView.timeSettings = this.timeSettings;
             this.afterDataViewLoaded();
         }
+    }
+
+    onAddWidget(event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
+        if (!this.originalDataView?.visualizationConfig) {
+            this.setDefaultValuesOnOriginalDataViewForNewCharts();
+        }
+    }
+
+    setDefaultValuesOnOriginalDataViewForNewCharts() {
+        //Change original Data View if default Config does not exist
+        this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
+        this.originalDataView.elementId = undefined;
+        this.originalDataView.rev = undefined;
+        this.originalDataView.widgetId = undefined;
+        //Set default
+        this.originalDataView.dataConfig.sourceConfigs[0].queryConfig.order ??=
+            'DESC';
+        this.addAllFields();
+    }
+
+    addAllFields() {
+        this.originalDataView.dataConfig.sourceConfigs[0].measure.eventSchema.eventProperties.forEach(
+            property => {
+                if (this.fieldProvider.isDimensionProperty(property)) {
+                    this.addField(property);
+                }
+            },
+        );
+    }
+
+    addField(property: EventPropertyUnion) {
+        const selection: FieldConfig = {
+            runtimeName: property.runtimeName,
+            selected: false,
+            numeric: this.fieldProvider.isNumber(property),
+        };
+        this.originalDataView.dataConfig.sourceConfigs[0].queryConfig.groupBy.push(
+            selection,
+        );
     }
 
     loadDataView(dataViewId: string): void {
@@ -180,8 +224,13 @@ export class DataExplorerChartViewComponent
     }
 
     setShouldShowConfirm(): boolean {
-        const originalTimeSettings = this.originalDataView
-            .timeSettings as TimeSettings;
+        let originalTimeSettings: TimeSettings;
+        if (this.originalDataView?.timeSettings) {
+            originalTimeSettings = this.originalDataView
+                .timeSettings as TimeSettings;
+        } else {
+            originalTimeSettings = this.dataView.timeSettings as TimeSettings;
+        }
         const currentTimeSettings = this.dataView.timeSettings as TimeSettings;
         return this.detectChangesService.shouldShowConfirm(
             this.originalDataView,
@@ -209,6 +258,7 @@ export class DataExplorerChartViewComponent
             createdAtEpochMs: Date.now(),
             lastModifiedEpochMs: Date.now(),
         };
+
         this.dataView = { ...this.dataView };
     }
 

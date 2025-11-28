@@ -191,6 +191,11 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
                 widgetId: this.currentlyConfiguredWidget.elementId,
                 newWidgetTypeId: this.currentlyConfiguredWidget.widgetType,
             });
+
+            this.createWidgetEmitter.emit({
+                a: this.dataLakeMeasure,
+                b: this.currentlyConfiguredWidget,
+            });
         }
     }
 

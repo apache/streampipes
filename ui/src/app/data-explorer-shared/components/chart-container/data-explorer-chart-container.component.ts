@@ -261,9 +261,11 @@ export class DataExplorerChartContainerComponent
     }
 
     chooseWidget(widgetTypeId: string) {
-        const widgetToDisplay =
-            this.chartRegistryService.getChartTemplate(widgetTypeId);
-        this.loadComponent(widgetToDisplay.widgetComponent);
+        if (widgetTypeId != undefined) {
+            const widgetToDisplay =
+                this.chartRegistryService.getChartTemplate(widgetTypeId);
+            this.loadComponent(widgetToDisplay.widgetComponent);
+        }
     }
 
     loadComponent(widgetToDisplay) {

@@ -339,6 +339,7 @@ export class DataExplorerUtils {
         DataExplorerBtns.saveDataViewButton().click({
             force: true,
         });
+        DataExplorerBtns.confirmSave().click();
     }
 
     public static saveDashboardConfiguration() {

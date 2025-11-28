@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="page-container-padding-inner">
     <sp-basic-header-title-component
@@ -90,12 +90,13 @@
                         [(ngModel)]="asset.assetType.isa95AssetType"
                         aria-label="Asset Type"
                     >
-                        <mat-option
-                            *ngFor="let isaType of isa95Types"
-                            [value]="isaType.type"
-                            [attr.data-cy]="'option-' + isaType.type"
-                            >{{ isaType.label }}
-                        </mat-option>
+                        @for (isaType of isa95Types; track isaType) {
+                            <mat-option
+                                [value]="isaType.type"
+                                [attr.data-cy]="'option-' + isaType.type"
+                                >{{ isaType.label }}
+                            </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </sp-basic-field-description>
@@ -112,21 +113,22 @@
                 >
                 </sp-asset-details-labels>
             </sp-basic-field-description>
-            <sp-basic-field-description
-                *ngIf="rootNode"
-                fxFlex="100"
-                descriptionPanelWidth="30"
-                label="Sites"
-                description="Assign a location (site and area) to this asset"
-            >
-                <sp-asset-details-site
-                    class="w-100"
-                    [asset]="asset"
-                    [sites]="sites"
-                    [editMode]="editMode"
+            @if (rootNode) {
+                <sp-basic-field-description
+                    fxFlex="100"
+                    descriptionPanelWidth="30"
+                    label="Sites"
+                    description="Assign a location (site and area) to this asset"
                 >
-                </sp-asset-details-site>
-            </sp-basic-field-description>
+                    <sp-asset-details-site
+                        class="w-100"
+                        [asset]="asset"
+                        [sites]="sites"
+                        [editMode]="editMode"
+                    >
+                    </sp-asset-details-site>
+                </sp-basic-field-description>
+            }
         </div>
     </div>
 </div>

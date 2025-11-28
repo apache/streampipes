@@ -28,12 +28,19 @@ import { SupportsUnsavedChangeDialog } from '../models/dataview-dashboard.model'
 @Injectable({ providedIn: 'root' })
 export class ChartPanelCanDeactivateGuard {
     constructor(private router: Router) {}
+    checkQueryParams(queryParams: { [key: string]: any }): boolean {
+        const { editMode, startDate, endDate } = queryParams;
+        return editMode && startDate && endDate;
+    }
     canDeactivate(
         component: SupportsUnsavedChangeDialog,
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
     ): Observable<boolean> | boolean {
-        if (!this.router.getCurrentNavigation().extras?.state?.omitConfirm) {
+        if (
+            this.checkQueryParams(route.queryParams) ||
+            !this.router.getCurrentNavigation().extras?.state?.omitConfirm
+        ) {
             return component.confirmLeaveDialog(route, state);
         } else {
             return true;
