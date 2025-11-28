@@ -18,237 +18,234 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15 mt-10">
-        <div fxFlex="100" fxLayout="column" *ngIf="clonedAssetLink">
-            <div fxLayout="column" class="link-configuration">
-                <mat-form-field color="accent">
-                    <mat-label>Link Type</mat-label>
-                    <mat-select
-                        fxFlex
-                        [(value)]="selectedLinkType"
-                        required
-                        (selectionChange)="onLinkTypeChanged($event)"
-                    >
-                        <mat-option
-                            *ngFor="let assetLinkType of assetLinkTypes"
-                            [value]="assetLinkType"
-                            >{{ assetLinkType.linkLabel }}</mat-option
+        @if (clonedAssetLink) {
+            <div fxFlex="100" fxLayout="column">
+                <div fxLayout="column" class="link-configuration">
+                    <mat-form-field color="accent">
+                        <mat-label>Link Type</mat-label>
+                        <mat-select
+                            fxFlex
+                            [(value)]="selectedLinkType"
+                            required
+                            (selectionChange)="onLinkTypeChanged($event)"
                         >
-                    </mat-select>
-                </mat-form-field>
+                            @for (
+                                assetLinkType of assetLinkTypes;
+                                track assetLinkType
+                            ) {
+                                <mat-option [value]="assetLinkType">{{
+                                    assetLinkType.linkLabel
+                                }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                @if (selectedLinkType.linkQueryHint === 'pipeline') {
+                    <div fxLayout="column" class="link-configuration">
+                        <mat-form-field color="accent" fxFlex="100">
+                            <mat-label>Pipelines</mat-label>
+                            <mat-select
+                                [(ngModel)]="currentResource"
+                                fxFlex
+                                (selectionChange)="
+                                    changeLabel(
+                                        $event.value.elementId,
+                                        $event.value.name,
+                                        $event.value
+                                    )
+                                "
+                                required
+                            >
+                                @for (pipeline of pipelines; track pipeline) {
+                                    <mat-option [value]="pipeline">{{
+                                        pipeline.name
+                                    }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                }
+                @if (selectedLinkType.linkQueryHint === 'data-source') {
+                    <div fxLayout="column" class="link-configuration">
+                        <mat-form-field color="accent" fxFlex="100">
+                            <mat-label>Data Stream</mat-label>
+                            <mat-select
+                                (selectionChange)="
+                                    changeLabel(
+                                        $event.value.elementId,
+                                        $event.value.name,
+                                        $event.value
+                                    )
+                                "
+                                [(value)]="currentResource"
+                                fxFlex
+                                required
+                            >
+                                @for (source of dataSources; track source) {
+                                    <mat-option [value]="source">{{
+                                        source.name
+                                    }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                }
+                @if (selectedLinkType.linkQueryHint === 'dashboard') {
+                    <div fxLayout="column" class="link-configuration">
+                        <mat-form-field color="accent" fxFlex="100">
+                            <mat-label>Dashboards</mat-label>
+                            <mat-select
+                                (selectionChange)="
+                                    changeLabel(
+                                        $event.value.elementId,
+                                        $event.value.name,
+                                        $event.value
+                                    )
+                                "
+                                [(value)]="currentResource"
+                                fxFlex
+                                required
+                            >
+                                @for (
+                                    dashboard of dashboards;
+                                    track dashboard
+                                ) {
+                                    <mat-option [value]="dashboard">{{
+                                        dashboard.name
+                                    }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                }
+                @if (selectedLinkType.linkQueryHint === 'chart') {
+                    <div fxLayout="column" class="link-configuration">
+                        <mat-form-field color="accent" fxFlex="100">
+                            <mat-label>Chart</mat-label>
+                            <mat-select
+                                (selectionChange)="
+                                    changeLabel(
+                                        $event.value.elementId,
+                                        $event.value.name,
+                                        $event.value
+                                    )
+                                "
+                                [(value)]="currentResource"
+                                fxFlex
+                                required
+                            >
+                                @for (chart of charts; track chart) {
+                                    <mat-option [value]="chart">{{
+                                        chart.baseAppearanceConfig.widgetTitle
+                                    }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                }
+                @if (selectedLinkType.linkQueryHint === 'adapter') {
+                    <div fxLayout="column" class="link-configuration">
+                        <mat-form-field color="accent" fxFlex="100">
+                            <mat-label>Adapter</mat-label>
+                            <mat-select
+                                (selectionChange)="
+                                    changeLabel(
+                                        $event.value.elementId,
+                                        $event.value.name,
+                                        $event.value
+                                    )
+                                "
+                                [(value)]="currentResource"
+                                fxFlex
+                                required
+                            >
+                                @for (adapter of adapters; track adapter) {
+                                    <mat-option [value]="adapter">{{
+                                        adapter.name
+                                    }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                }
+                @if (selectedLinkType.linkQueryHint === 'measurement') {
+                    <div fxLayout="column" class="link-configuration">
+                        <mat-form-field color="accent" fxFlex="100">
+                            <mat-label>Data Lake Storage</mat-label>
+                            <mat-select
+                                (selectionChange)="
+                                    changeLabel(
+                                        $event.value.elementId,
+                                        $event.value.measureName,
+                                        $event.value
+                                    )
+                                "
+                                [(value)]="currentResource"
+                                fxFlex
+                                required
+                            >
+                                @for (
+                                    measure of dataLakeMeasures;
+                                    track measure
+                                ) {
+                                    <mat-option [value]="measure">{{
+                                        measure.measureName
+                                    }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                }
+                @if (selectedLinkType.linkQueryHint === 'file') {
+                    <div fxLayout="column" class="link-configuration">
+                        <mat-form-field color="accent" fxFlex="100">
+                            <mat-label>Files</mat-label>
+                            <mat-select
+                                (selectionChange)="
+                                    changeLabel(
+                                        $event.value.fileId,
+                                        $event.value.originalFilename,
+                                        $event.value
+                                    )
+                                "
+                                [(value)]="currentResource"
+                                fxFlex
+                                required
+                            >
+                                @for (file of files; track file) {
+                                    <mat-option [value]="file">{{
+                                        file.filename
+                                    }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                }
+                <div fxLayout="column" class="link-configuration">
+                    <mat-form-field color="accent">
+                        <mat-label>Label</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="clonedAssetLink.linkLabel"
+                            [disabled]="true"
+                            required
+                        />
+                    </mat-form-field>
+                </div>
+                <div fxLayout="column" class="link-configuration">
+                    <mat-form-field color="accent">
+                        <mat-label>Resource ID</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="clonedAssetLink.resourceId"
+                            required
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+                <div fxFlex="100"></div>
             </div>
-            <div
-                *ngIf="selectedLinkType.linkQueryHint === 'pipeline'"
-                fxLayout="column"
-                class="link-configuration"
-            >
-                <mat-form-field color="accent" fxFlex="100">
-                    <mat-label>Pipelines</mat-label>
-                    <mat-select
-                        [(ngModel)]="currentResource"
-                        fxFlex
-                        (selectionChange)="
-                            changeLabel(
-                                $event.value.elementId,
-                                $event.value.name,
-                                $event.value
-                            )
-                        "
-                        required
-                    >
-                        <mat-option
-                            *ngFor="let pipeline of pipelines"
-                            [value]="pipeline"
-                            >{{ pipeline.name }}</mat-option
-                        >
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div
-                *ngIf="selectedLinkType.linkQueryHint === 'data-source'"
-                fxLayout="column"
-                class="link-configuration"
-            >
-                <mat-form-field color="accent" fxFlex="100">
-                    <mat-label>Data Stream</mat-label>
-                    <mat-select
-                        (selectionChange)="
-                            changeLabel(
-                                $event.value.elementId,
-                                $event.value.name,
-                                $event.value
-                            )
-                        "
-                        [(value)]="currentResource"
-                        fxFlex
-                        required
-                    >
-                        <mat-option
-                            *ngFor="let source of dataSources"
-                            [value]="source"
-                            >{{ source.name }}</mat-option
-                        >
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div
-                *ngIf="selectedLinkType.linkQueryHint === 'dashboard'"
-                fxLayout="column"
-                class="link-configuration"
-            >
-                <mat-form-field color="accent" fxFlex="100">
-                    <mat-label>Dashboards</mat-label>
-                    <mat-select
-                        (selectionChange)="
-                            changeLabel(
-                                $event.value.elementId,
-                                $event.value.name,
-                                $event.value
-                            )
-                        "
-                        [(value)]="currentResource"
-                        fxFlex
-                        required
-                    >
-                        <mat-option
-                            *ngFor="let dashboard of dashboards"
-                            [value]="dashboard"
-                            >{{ dashboard.name }}</mat-option
-                        >
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div
-                *ngIf="selectedLinkType.linkQueryHint === 'chart'"
-                fxLayout="column"
-                class="link-configuration"
-            >
-                <mat-form-field color="accent" fxFlex="100">
-                    <mat-label>Chart</mat-label>
-                    <mat-select
-                        (selectionChange)="
-                            changeLabel(
-                                $event.value.elementId,
-                                $event.value.name,
-                                $event.value
-                            )
-                        "
-                        [(value)]="currentResource"
-                        fxFlex
-                        required
-                    >
-                        <mat-option
-                            *ngFor="let chart of charts"
-                            [value]="chart"
-                            >{{
-                                chart.baseAppearanceConfig.widgetTitle
-                            }}</mat-option
-                        >
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div
-                *ngIf="selectedLinkType.linkQueryHint === 'adapter'"
-                fxLayout="column"
-                class="link-configuration"
-            >
-                <mat-form-field color="accent" fxFlex="100">
-                    <mat-label>Adapter</mat-label>
-                    <mat-select
-                        (selectionChange)="
-                            changeLabel(
-                                $event.value.elementId,
-                                $event.value.name,
-                                $event.value
-                            )
-                        "
-                        [(value)]="currentResource"
-                        fxFlex
-                        required
-                    >
-                        <mat-option
-                            *ngFor="let adapter of adapters"
-                            [value]="adapter"
-                            >{{ adapter.name }}</mat-option
-                        >
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div
-                *ngIf="selectedLinkType.linkQueryHint === 'measurement'"
-                fxLayout="column"
-                class="link-configuration"
-            >
-                <mat-form-field color="accent" fxFlex="100">
-                    <mat-label>Data Lake Storage</mat-label>
-                    <mat-select
-                        (selectionChange)="
-                            changeLabel(
-                                $event.value.elementId,
-                                $event.value.measureName,
-                                $event.value
-                            )
-                        "
-                        [(value)]="currentResource"
-                        fxFlex
-                        required
-                    >
-                        <mat-option
-                            *ngFor="let measure of dataLakeMeasures"
-                            [value]="measure"
-                            >{{ measure.measureName }}</mat-option
-                        >
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div
-                *ngIf="selectedLinkType.linkQueryHint === 'file'"
-                fxLayout="column"
-                class="link-configuration"
-            >
-                <mat-form-field color="accent" fxFlex="100">
-                    <mat-label>Files</mat-label>
-                    <mat-select
-                        (selectionChange)="
-                            changeLabel(
-                                $event.value.fileId,
-                                $event.value.originalFilename,
-                                $event.value
-                            )
-                        "
-                        [(value)]="currentResource"
-                        fxFlex
-                        required
-                    >
-                        <mat-option *ngFor="let file of files" [value]="file">{{
-                            file.filename
-                        }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div fxLayout="column" class="link-configuration">
-                <mat-form-field color="accent">
-                    <mat-label>Label</mat-label>
-                    <input
-                        matInput
-                        [(ngModel)]="clonedAssetLink.linkLabel"
-                        [disabled]="true"
-                        required
-                    />
-                </mat-form-field>
-            </div>
-            <div fxLayout="column" class="link-configuration">
-                <mat-form-field color="accent">
-                    <mat-label>Resource ID</mat-label>
-                    <input
-                        matInput
-                        [(ngModel)]="clonedAssetLink.resourceId"
-                        required
-                        [disabled]="true"
-                    />
-                </mat-form-field>
-            </div>
-            <div fxFlex="100"></div>
-        </div>
+        }
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
