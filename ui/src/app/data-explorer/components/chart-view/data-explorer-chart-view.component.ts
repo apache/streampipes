@@ -60,9 +60,8 @@ import { ResizeEchartsService } from '../../../data-explorer-shared/services/res
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';
-import { ChartTypeService } from 'src/app/data-explorer-shared/services/chart-type.service';
 import { Tuple2 } from 'src/app/core-model/base/Tuple2';
-import { DataExplorerFieldProviderService } from 'src/app/data-explorer-shared/services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from 'src/app/data-explorer-shared/services/chart-field-provider.service';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -102,7 +101,7 @@ export class DataExplorerChartViewComponent
     private dialogService = inject(DialogService);
     private currentUserService = inject(CurrentUserService);
     private authService = inject(AuthService);
-    private fieldProvider = inject(DataExplorerFieldProviderService);
+    private fieldProvider = inject(ChartFieldProviderService);
     private assetSaveService = inject(AssetSaveService);
 
     currentUser$: Subscription;
