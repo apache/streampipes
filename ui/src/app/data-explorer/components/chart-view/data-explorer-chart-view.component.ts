@@ -131,12 +131,6 @@ export class DataExplorerChartViewComponent
             this.createWidget();
             this.timeSettings = this.makeDefaultTimeSettings();
             this.dataView.timeSettings = this.timeSettings;
-            /**this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
-            this.originalDataView.widgetId = this.dataView.widgetId;
-            this.originalDataView.widgetType = 'table';
-            this.originalDataView.elementId = undefined;
-            this.originalDataView.rev = undefined;*/
-
             this.afterDataViewLoaded();
         }
     }
