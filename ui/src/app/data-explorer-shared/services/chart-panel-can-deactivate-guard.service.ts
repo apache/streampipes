@@ -31,12 +31,9 @@ export class ChartPanelCanDeactivateGuard {
     checkQueryParams(queryParams: { [key: string]: any }): boolean {
         const { editMode, startDate, endDate } = queryParams;
         return (
-            editMode !== undefined &&
-            editMode !== null &&
-            startDate !== undefined &&
-            startDate !== null &&
-            endDate !== undefined &&
-            endDate !== null
+            editMode &&
+            startDate &&
+            endDate
         );
     }
     canDeactivate(
