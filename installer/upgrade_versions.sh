@@ -14,9 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-NEW_VERSION=$1
+NEW_VERSION=$2
 # get old version from ./cli/.env
-OLD_VERSION=$(grep -oP '^SP_VERSION=\K\S*' ./cli/.env)
+OLD_VERSION=$1
 
 FILES=(
   # cli
