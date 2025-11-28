@@ -34,24 +34,6 @@ export class DataExplorerDetectChangesService {
         currentTimeSettings: TimeSettings,
         clearTimestampFn: (model: T) => void,
     ): boolean {
-        console.log('A', JSON.stringify(originalItem));
-        console.log('B', JSON.stringify(currentItem));
-
-        console.log(
-            'T',
-            JSON.stringify(originalItem) !== JSON.stringify(currentItem),
-        );
-
-        console.log(
-            'WIdget',
-            this.hasWidgetChanged(originalItem, currentItem, clearTimestampFn),
-        );
-        console.log(
-            this.hasTimeSettingsChanged(
-                originalTimeSettings,
-                currentTimeSettings,
-            ),
-        );
         return (
             this.hasWidgetChanged(
                 originalItem,

@@ -180,7 +180,6 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     }
 
     createDefaultWidget(): void {
-        console.log('Default Widget');
         if (this.checkIfDefaultTableShouldBeShown()) {
             const fields = this.fieldProviderService.generateFieldLists(
                 this.dataConfig.sourceConfigs,

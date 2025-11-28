@@ -131,49 +131,35 @@ export class DataExplorerChartViewComponent
             this.createWidget();
             this.timeSettings = this.makeDefaultTimeSettings();
             this.dataView.timeSettings = this.timeSettings;
-            this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
+            /**this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
             this.originalDataView.widgetId = this.dataView.widgetId;
             this.originalDataView.widgetType = 'table';
             this.originalDataView.elementId = undefined;
-            this.originalDataView.rev = undefined;
-            // Also set fdefault on Viz Config
+            this.originalDataView.rev = undefined;*/
 
             this.afterDataViewLoaded();
         }
     }
 
-    // Method to handle the emitted data
     onAddWidget(event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
-        const dataLakeMeasure = event.a;
-        const dataExplorerWidgetModel = event.b;
-
-        // You can now access the emitted values:
-        console.log('FROMN EMIT', dataLakeMeasure);
-        console.log('FROM EMIT', dataExplorerWidgetModel);
         if (!this.originalDataView?.visualizationConfig) {
-            //Change original Data View if default Config does not exist
-            console.log('Set default data Explorer Widget');
-            this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
-            this.originalDataView.elementId = undefined;
-            this.originalDataView.rev = undefined;
-            this.originalDataView.widgetId = undefined;
-            //Set default
-            console.log('data config', this.originalDataView.dataConfig);
-            this.originalDataView.dataConfig.sourceConfigs[0].queryConfig.order ??=
-                'DESC';
-            this.addAllFields();
-            console.log(this.originalDataView);
-
-            console.log(
-                'RERS',
-                JSON.stringify(this.dataView) !==
-                    JSON.stringify(this.originalDataView),
-            );
+            this.setDefaultValuesOnOriginalDataViewForNewCharts();
         }
     }
 
+    setDefaultValuesOnOriginalDataViewForNewCharts() {
+        //Change original Data View if default Config does not exist
+        this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
+        this.originalDataView.elementId = undefined;
+        this.originalDataView.rev = undefined;
+        this.originalDataView.widgetId = undefined;
+        //Set default
+        this.originalDataView.dataConfig.sourceConfigs[0].queryConfig.order ??=
+            'DESC';
+        this.addAllFields();
+    }
+
     addAllFields() {
-        console.log(this.originalDataView.dataConfig.sourceConfigs);
         this.originalDataView.dataConfig.sourceConfigs[0].measure.eventSchema.eventProperties.forEach(
             property => {
                 if (this.fieldProvider.isDimensionProperty(property)) {
@@ -256,8 +242,6 @@ export class DataExplorerChartViewComponent
             originalTimeSettings = this.dataView.timeSettings as TimeSettings;
         }
         const currentTimeSettings = this.dataView.timeSettings as TimeSettings;
-        console.log(this.originalDataView);
-        console.log(this.dataView);
         return this.detectChangesService.shouldShowConfirm(
             this.originalDataView,
             this.dataView,
