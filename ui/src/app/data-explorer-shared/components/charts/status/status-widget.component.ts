@@ -58,10 +58,10 @@ export class StatusWidgetComponent
 
     ngOnInit(): void {
         super.ngOnInit();
-        this.onResize(
-            this.gridsterItemComponent.width - this.widthOffset,
-            this.gridsterItemComponent.height - this.heightOffset,
-        );
+        // this.onResize(
+        //     this.gridsterItemComponent.width - this.widthOffset,
+        //     this.gridsterItemComponent.height - this.heightOffset,
+        // );
         this.updateSettings();
     }
 

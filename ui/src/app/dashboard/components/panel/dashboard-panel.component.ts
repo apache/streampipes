@@ -134,6 +134,8 @@ export class DashboardPanelComponent
         dashboardItem.id = dataViewElementId;
         dashboardItem.cols = 3;
         dashboardItem.rows = 4;
+        dashboardItem.w = 3;
+        dashboardItem.h = 4;
         dashboardItem.x = 0;
         dashboardItem.y = 0;
         dashboardItem.widgetId =

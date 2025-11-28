@@ -17,9 +17,11 @@
  */
 
 import {
+    AfterViewInit,
     Component,
     ComponentFactoryResolver,
     ComponentRef,
+    ElementRef,
     EventEmitter,
     Input,
     OnChanges,
@@ -29,7 +31,6 @@ import {
     SimpleChanges,
     ViewChild,
 } from '@angular/core';
-import { GridsterItemComponent } from 'angular-gridster2';
 import {
     ClientDashboardItem,
     DataExplorerWidgetModel,
@@ -53,12 +54,13 @@ import {
     TimeSelectionService,
     TimeSelectorLabel,
 } from '@streampipes/shared-ui';
+import { ChartSharedService } from '../../services/chart-shared.service';
 import {
     BaseWidgetData,
     ObservableGenerator,
 } from '../../models/dataview-dashboard.model';
-import { ChartSharedService } from '../../services/chart-shared.service';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { ResizeService } from '../../services/resize.service';
 
 @Component({
     selector: 'sp-data-explorer-chart-container',
@@ -67,7 +69,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
     standalone: false,
 })
 export class DataExplorerChartContainerComponent
-    implements OnInit, OnDestroy, OnChanges
+    implements OnInit, OnDestroy, OnChanges, AfterViewInit
 {
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
     @ViewChild('timeSelectorMenu')
@@ -86,9 +88,6 @@ export class DataExplorerChartContainerComponent
 
     @Input()
     dataViewMode = false;
-
-    @Input()
-    gridsterItemComponent: GridsterItemComponent;
 
     @Input()
     previewMode = false;
@@ -158,7 +157,32 @@ export class DataExplorerChartContainerComponent
         private authService: AuthService,
         private currentUserService: CurrentUserService,
         private timeSelectionService: TimeSelectionService,
+        private el: ElementRef<HTMLDivElement>,
+        private resizeService: ResizeService,
     ) {}
+
+    resizeObserver: ResizeObserver;
+    resizeTimeout: any;
+
+    ngAfterViewInit(): void {
+        const container = this.el.nativeElement.querySelector(
+            '.widget-content',
+        ) as HTMLDivElement;
+        const obs = new ResizeObserver(entries => {
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = setTimeout(() => {
+                const { width, height } =
+                    entries[entries.length - 1].contentRect;
+
+                this.resizeService.notify({
+                    width,
+                    height,
+                    widgetId: this.dashboardItem?.widgetId || undefined,
+                });
+            }, 150);
+        });
+        obs.observe(container);
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.widgetIndex && this.componentRef?.instance) {
@@ -230,6 +254,7 @@ export class DataExplorerChartContainerComponent
     }
 
     ngOnDestroy() {
+        this.resizeObserver?.disconnect();
         this.componentRef?.destroy();
         this.authSubscription?.unsubscribe();
         this.widgetTypeChangedSubscription?.unsubscribe();
@@ -261,9 +286,7 @@ export class DataExplorerChartContainerComponent
             this.getTimeSettings(),
             new Date(),
         );
-        this.componentRef.instance.gridsterItem = this.dashboardItem;
-        this.componentRef.instance.gridsterItemComponent =
-            this.gridsterItemComponent;
+        this.componentRef.instance.dataViewMode = this.dataViewMode;
         this.componentRef.instance.editMode = this.editMode;
         this.componentRef.instance.kioskMode = this.kioskMode;
         this.componentRef.instance.dataViewDashboardItem = this.dashboardItem;

@@ -16,17 +16,10 @@
  *
  */
 
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    OnInit,
-    ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import {
     ClientDashboardItem,
-    DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
 } from '@streampipes/platform-services';
@@ -39,12 +32,9 @@ import {
 })
 export class DashboardSlideViewComponent
     extends AbstractChartViewDirective
-    implements OnInit, AfterViewInit
+    implements OnInit
 {
     selectedWidgetIndex = 0;
-
-    gridsterItemComponent: any = { width: 100, height: 100 };
-
     currentWidget: DataExplorerWidgetModel;
     currentMeasure: DataLakeMeasure;
     currentDashboardItem: ClientDashboardItem;
@@ -69,23 +59,22 @@ export class DashboardSlideViewComponent
         });
     }
 
-    ngAfterViewInit(): void {
-        const obs = new ResizeObserver(entries => {
-            entries.forEach(entry => {
-                const cr = entry.contentRect;
-                this.gridsterItemComponent.width = cr.width;
-                this.gridsterItemComponent.height = cr.height;
-                this.resizeService.notify({
-                    gridsterItem:
-                        this.dashboard.widgets[this.selectedWidgetIndex],
-                    gridsterItemComponent: this.gridsterItemComponent,
-                });
-            });
-        });
-        obs.observe(document.getElementById('slideViewOuter'));
-    }
-
-    onOptionsChanged() {}
+    // ngAfterViewInit(): void {
+    //     const obs = new ResizeObserver(entries => {
+    //         entries.forEach(entry => {
+    //             const cr = entry.contentRect;
+    //             this.gridsterItemComponent.width = cr.width;
+    //             this.gridsterItemComponent.height = cr.height;
+    //             console.log(entry);
+    //             this.resizeService.notify({
+    //                 gridsterItem:
+    //                     this.dashboard.widgets[this.selectedWidgetIndex],
+    //                 gridsterItemComponent: this.gridsterItemComponent,
+    //             });
+    //         });
+    //     });
+    //     obs.observe(document.getElementById('slideViewOuter'));
+    // }
 
     onWidgetsAvailable(): void {
         this.selectWidget(0, this.dashboard.widgets[0].id);

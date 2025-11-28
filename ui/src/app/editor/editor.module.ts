@@ -19,7 +19,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
-import { GridsterModule } from 'angular-gridster2';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditorComponent } from './editor.component';
@@ -117,7 +116,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         CommonModule,
         MatTabsModule,
         MatListModule,
-        GridsterModule,
         FlexLayoutModule,
         FormsModule,
         MatProgressSpinnerModule,

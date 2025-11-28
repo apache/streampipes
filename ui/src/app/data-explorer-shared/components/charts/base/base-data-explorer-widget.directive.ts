@@ -25,7 +25,6 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
-import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import {
     ClientDashboardItem,
@@ -68,10 +67,9 @@ export abstract class BaseDataExplorerWidgetDirective<
     errorCallback: EventEmitter<SpLogMessage> =
         new EventEmitter<SpLogMessage>();
 
-    @Input() gridsterItem: GridsterItem;
-    @Input() gridsterItemComponent: GridsterItemComponent;
     @Input() editMode: boolean;
     @Input() kioskMode: boolean;
+    @Input() dataViewMode: boolean;
     @Input() observableGenerator: ObservableGenerator;
 
     @Input() timeSettings: TimeSettings;
@@ -182,14 +180,10 @@ export abstract class BaseDataExplorerWidgetDirective<
             this.resizeSub = this.resizeService.resizeSubject.subscribe(
                 info => {
                     if (
-                        info.gridsterItem.id ===
-                        this.dataExplorerWidget.elementId
+                        this.dataViewMode ||
+                        info.widgetId === this.dataViewDashboardItem.widgetId
                     ) {
-                        this.onResize(
-                            this.gridsterItemComponent.width - this.widthOffset,
-                            this.gridsterItemComponent.height -
-                                this.heightOffset,
-                        );
+                        this.onResize(info.width, info.height);
                     }
                 },
             );
@@ -216,10 +210,6 @@ export abstract class BaseDataExplorerWidgetDirective<
                 },
             );
         this.updateData();
-        this.onResize(
-            this.gridsterItemComponent.width - this.widthOffset,
-            this.gridsterItemComponent.height - this.heightOffset,
-        );
     }
 
     public cleanupSubscriptions(): void {

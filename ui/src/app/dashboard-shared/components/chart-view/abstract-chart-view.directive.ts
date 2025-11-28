@@ -78,6 +78,8 @@ export abstract class AbstractChartViewDirective {
 
     loadWidgetConfigs() {
         this.dashboard.widgets.forEach(widgetConfig => {
+            widgetConfig.w ??= widgetConfig.cols;
+            widgetConfig.h ??= widgetConfig.rows;
             const availableWidget = this.widgets.find(
                 w => w.elementId === widgetConfig.id,
             );
@@ -133,10 +135,7 @@ export abstract class AbstractChartViewDirective {
         } else {
             this.currentlyConfiguredWidgetId = undefined;
         }
-        this.onOptionsChanged();
     }
-
-    abstract onOptionsChanged(): void;
 
     abstract onWidgetsAvailable(): void;
 

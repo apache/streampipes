@@ -55,9 +55,6 @@
                     widgetsVisible
                 ) {
                     <sp-data-explorer-chart-container
-                        [ngStyle]="{
-                            height: gridsterItemComponent.height - 15 + 'px'
-                        }"
                         [timeSettings]="timeSettings"
                         [globalTimeEnabled]="
                             dashboard.dashboardGeneralSettings.globalTimeEnabled
@@ -71,7 +68,6 @@
                         [editMode]="editMode"
                         [gridMode]="false"
                         [widgetIndex]="i"
-                        [gridsterItemComponent]="gridsterItemComponent"
                     ></sp-data-explorer-chart-container>
                 }
             </div>
