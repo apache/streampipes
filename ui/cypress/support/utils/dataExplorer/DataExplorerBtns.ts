@@ -24,6 +24,9 @@ export class DataExplorerBtns {
     public static saveDataViewButton() {
         return cy.dataCy('save-data-view-btn', { timeout: 10000 });
     }
+    public static confirmSave() {
+        return cy.dataCy('confirm-delete', { timeout: 10000 });
+    }
 
     public static saveDataViewBtn() {
         return cy.dataCy('save-data-view');
