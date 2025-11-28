@@ -180,6 +180,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     }
 
     createDefaultWidget(): void {
+        console.log('Default Widget');
         if (this.checkIfDefaultTableShouldBeShown()) {
             const fields = this.fieldProviderService.generateFieldLists(
                 this.dataConfig.sourceConfigs,
@@ -190,6 +191,11 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
             this.widgetTypeService.notify({
                 widgetId: this.currentlyConfiguredWidget.elementId,
                 newWidgetTypeId: this.currentlyConfiguredWidget.widgetType,
+            });
+
+            this.createWidgetEmitter.emit({
+                a: this.dataLakeMeasure,
+                b: this.currentlyConfiguredWidget,
             });
         }
     }

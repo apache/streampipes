@@ -29,6 +29,8 @@ import {
     DashboardConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    EventPropertyUnion,
+    FieldConfig,
     LinkageData,
     TimeSettings,
 } from '@streampipes/platform-services';
@@ -59,6 +61,8 @@ import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { ChartTypeService } from 'src/app/data-explorer-shared/services/chart-type.service';
+import { Tuple2 } from 'src/app/core-model/base/Tuple2';
+import { DataExplorerFieldProviderService } from 'src/app/data-explorer-shared/services/data-explorer-field-provider-service';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -98,7 +102,7 @@ export class DataExplorerChartViewComponent
     private dialogService = inject(DialogService);
     private currentUserService = inject(CurrentUserService);
     private authService = inject(AuthService);
-
+    private fieldProvider = inject(DataExplorerFieldProviderService);
     private assetSaveService = inject(AssetSaveService);
 
     currentUser$: Subscription;
@@ -128,9 +132,66 @@ export class DataExplorerChartViewComponent
             this.timeSettings = this.makeDefaultTimeSettings();
             this.dataView.timeSettings = this.timeSettings;
             this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
+            this.originalDataView.widgetId = this.dataView.widgetId;
+            this.originalDataView.widgetType = 'table';
+            this.originalDataView.elementId = undefined;
+            this.originalDataView.rev = undefined;
+            // Also set fdefault on Viz Config
 
             this.afterDataViewLoaded();
         }
+    }
+
+    // Method to handle the emitted data
+    onAddWidget(event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
+        const dataLakeMeasure = event.a;
+        const dataExplorerWidgetModel = event.b;
+
+        // You can now access the emitted values:
+        console.log('FROMN EMIT', dataLakeMeasure);
+        console.log('FROM EMIT', dataExplorerWidgetModel);
+        if (!this.originalDataView?.visualizationConfig) {
+            //Change original Data View if default Config does not exist
+            console.log('Set default data Explorer Widget');
+            this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
+            this.originalDataView.elementId = undefined;
+            this.originalDataView.rev = undefined;
+            this.originalDataView.widgetId = undefined;
+            //Set default
+            console.log('data config', this.originalDataView.dataConfig);
+            this.originalDataView.dataConfig.sourceConfigs[0].queryConfig.order ??=
+                'DESC';
+            this.addAllFields();
+            console.log(this.originalDataView);
+
+            console.log(
+                'RERS',
+                JSON.stringify(this.dataView) !==
+                    JSON.stringify(this.originalDataView),
+            );
+        }
+    }
+
+    addAllFields() {
+        console.log(this.originalDataView.dataConfig.sourceConfigs);
+        this.originalDataView.dataConfig.sourceConfigs[0].measure.eventSchema.eventProperties.forEach(
+            property => {
+                if (this.fieldProvider.isDimensionProperty(property)) {
+                    this.addField(property);
+                }
+            },
+        );
+    }
+
+    addField(property: EventPropertyUnion) {
+        const selection: FieldConfig = {
+            runtimeName: property.runtimeName,
+            selected: false,
+            numeric: this.fieldProvider.isNumber(property),
+        };
+        this.originalDataView.dataConfig.sourceConfigs[0].queryConfig.groupBy.push(
+            selection,
+        );
     }
 
     loadDataView(dataViewId: string): void {
@@ -195,6 +256,8 @@ export class DataExplorerChartViewComponent
             originalTimeSettings = this.dataView.timeSettings as TimeSettings;
         }
         const currentTimeSettings = this.dataView.timeSettings as TimeSettings;
+        console.log(this.originalDataView);
+        console.log(this.dataView);
         return this.detectChangesService.shouldShowConfirm(
             this.originalDataView,
             this.dataView,
