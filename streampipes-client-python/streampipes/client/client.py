@@ -82,11 +82,11 @@ class StreamPipesClient:
     ```python
     client_config = StreamPipesClientConfig(
         credential_provider=StreamPipesApiKeyCredentials(
-             username="test-user",
-             api_key="api-key"
-         ),
-         host_address="localhost",
-         https_disabled=True
+            username="test-user",
+            api_key="api-key"
+        ),
+        host_address="localhost",
+        https_disabled=True
     )
     ```
 
@@ -180,7 +180,8 @@ class StreamPipesClient:
         """Updates the header of the request session"""
         self.request_session.headers.clear()
         self.request_session.headers.update(self.http_headers)
-        self.request_session.headers.update(self.client_config.additional_headers)
+        if self.client_config.additional_headers:
+            self.request_session.headers.update(self.client_config.additional_headers)
 
     @staticmethod
     def _set_up_logging(logging_level: int) -> None:
