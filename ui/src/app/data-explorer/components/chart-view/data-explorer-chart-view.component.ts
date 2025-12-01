@@ -284,6 +284,7 @@ export class DataExplorerChartViewComponent
             ) {
                 this.saveToAssets(data);
             }
+
             this.routingService.navigateToDataViewOverview(true);
         });
     }

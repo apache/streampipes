@@ -335,11 +335,13 @@ export class DataExplorerUtils {
         DataExplorerBtns.editDataViewButton(dataViewName).click();
     }
 
-    public static saveDataViewConfiguration() {
+    public static saveDataViewConfiguration(confirmSave: boolean = false) {
         DataExplorerBtns.saveDataViewButton().click({
             force: true,
         });
-        DataExplorerBtns.confirmSave().click();
+        if (confirmSave) {
+            DataExplorerBtns.confirmSave().click();
+        }
     }
 
     public static saveDashboardConfiguration() {
