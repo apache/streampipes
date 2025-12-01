@@ -124,8 +124,7 @@ describe('Test User Roles for Charts', () => {
             true,
         );
         DataExplorerUtils.saveDataViewConfiguration();
-        // needed otherwise wrong route is still there and popup is triggered
-        cy.wait(1000);
+        DataExplorerUtils.checkAmount(1);
         DataExplorerUtils.goToDatalake();
     }
 
