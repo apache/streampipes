@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div [formGroup]="parentForm" id="formWrapper" fxFlex="100" fxLayout="column">
     <div>
@@ -31,41 +31,46 @@
             <span>{{ 'Reload' | translate }}</span>
         </button>
     </div>
-    <div fxLayout="column" *ngIf="error" class="mt-10">
-        <sp-exception-message [message]="errorMessage"></sp-exception-message>
-    </div>
-    <div *ngIf="!loading" fxLayout="column">
-        <div fxFlex fxLayout="row">
-            <div
-                fxLayout="column"
-                *ngIf="showOptions || staticProperty.options"
-                style="margin-left: 10px"
-            >
-                <mat-radio-button
-                    *ngFor="let option of staticProperty.options"
-                    (click)="select(option.elementId)"
-                    [attr.data-cy]="option.name"
-                    [checked]="option.selected"
-                >
-                    <label style="font-weight: normal">
-                        {{ option.name }}
-                    </label>
-                </mat-radio-button>
-            </div>
-            <div
-                fxLayout="column"
-                *ngIf="!showOptions && !loading"
-                class="mt-10"
-            >
-                <span>{{ '(waiting for input)' | translate }}</span>
-            </div>
-            <div fxLayout="column" *ngIf="loading">
-                <mat-spinner
-                    color="accent"
-                    [mode]="'indeterminate'"
-                    [diameter]="20"
-                ></mat-spinner>
+    @if (error) {
+        <div fxLayout="column" class="mt-10">
+            <sp-exception-message
+                [message]="errorMessage"
+            ></sp-exception-message>
+        </div>
+    }
+    @if (!loading) {
+        <div fxLayout="column">
+            <div fxFlex fxLayout="row">
+                @if (showOptions || staticProperty.options) {
+                    <div fxLayout="column" style="margin-left: 10px">
+                        @for (option of staticProperty.options; track option) {
+                            <mat-radio-button
+                                (click)="select(option.elementId)"
+                                [attr.data-cy]="option.name"
+                                [checked]="option.selected"
+                            >
+                                <label style="font-weight: normal">
+                                    {{ option.name }}
+                                </label>
+                            </mat-radio-button>
+                        }
+                    </div>
+                }
+                @if (!showOptions && !loading) {
+                    <div fxLayout="column" class="mt-10">
+                        <span>{{ '(waiting for input)' | translate }}</span>
+                    </div>
+                }
+                @if (loading) {
+                    <div fxLayout="column">
+                        <mat-spinner
+                            color="accent"
+                            [mode]="'indeterminate'"
+                            [diameter]="20"
+                        ></mat-spinner>
+                    </div>
+                }
             </div>
         </div>
-    </div>
+    }
 </div>
