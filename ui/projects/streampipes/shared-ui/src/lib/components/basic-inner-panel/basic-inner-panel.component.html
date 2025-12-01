@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div
     fxLayout="column"
@@ -22,36 +22,42 @@
     class="panel-outer"
     [ngStyle]="{ margin: outerMargin }"
 >
-    <div
-        class="general-panel-header"
-        [class.header-collapsed]="collapsed"
-        [ngClass]="headerBackground ? 'bg-highlight' : 'bg-no-highlight'"
-        [style.height]="headerHeight"
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        *ngIf="!hideToolbar"
-    >
-        <div fxLayout="fill" fxFlex="100">
-            <div fxLayoutAlign="start center" fxLayout="row">
-                <div class="content-box-title" *ngIf="showTitle">
-                    {{ panelTitle }}
+    @if (!hideToolbar) {
+        <div
+            class="general-panel-header"
+            [class.header-collapsed]="collapsed"
+            [ngClass]="headerBackground ? 'bg-highlight' : 'bg-no-highlight'"
+            [style.height]="headerHeight"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+        >
+            <div fxLayout="fill" fxFlex="100">
+                <div fxLayoutAlign="start center" fxLayout="row">
+                    @if (showTitle) {
+                        <div class="content-box-title">
+                            {{ panelTitle }}
+                        </div>
+                    }
                 </div>
+                <ng-content select="[header]" class="pr-5"></ng-content>
+                <div fxFlex></div>
+                @if (collapsible) {
+                    <button
+                        type="button"
+                        class="collapse-btn"
+                        (click)="toggleCollapse(); $event.stopPropagation()"
+                    >
+                        <mat-icon
+                            class="chevron-icon"
+                            [class.collapsed]="collapsed"
+                        >
+                            expand_less
+                        </mat-icon>
+                    </button>
+                }
             </div>
-            <ng-content select="[header]" class="pr-5"></ng-content>
-            <div fxFlex></div>
-
-            <button
-                *ngIf="collapsible"
-                type="button"
-                class="collapse-btn"
-                (click)="toggleCollapse(); $event.stopPropagation()"
-            >
-                <mat-icon class="chevron-icon" [class.collapsed]="collapsed">
-                    expand_less
-                </mat-icon>
-            </button>
         </div>
-    </div>
+    }
 
     <div
         class="general-panel-wrapper"
