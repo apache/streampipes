@@ -16,7 +16,7 @@
  *
  */
 
-.adapter-description-box {
+.adapter-catalog-item {
     height: 100%;
     border: 1px solid var(--color-bg-2);
     background: var(--color-bg-0);
@@ -24,7 +24,7 @@
     border-radius: 5px;
 }
 
-.adapter-description-box:hover {
+.adapter-catalog-item:hover {
     border-color: var(--color-bg-3);
     background: var(--color-bg-1);
 }
@@ -32,29 +32,6 @@
 .adapter-name {
     font-size: var(--mat-sys-body-large-size);
     margin-top: 10px;
-}
-
-.edit {
-    margin-right: 5px;
-}
-
-.delete {
-    cursor: pointer;
-}
-
-.type p {
-    padding: 4px;
-    margin: 0;
-}
-
-.iconImg {
-    max-height: 50px;
-    max-width: 80%;
-}
-
-.real-time {
-    cursor: pointer;
-    color: #ffeb3b;
 }
 
 .adapter-icon {

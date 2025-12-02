@@ -37,6 +37,12 @@ export class ChartPanelCanDeactivateGuard {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
     ): Observable<boolean> | boolean {
+        const omitConfirm =
+            this.router.getCurrentNavigation()?.extras?.state?.omitConfirm ===
+            true;
+        if (omitConfirm) {
+            return true;
+        }
         if (
             this.checkQueryParams(route.queryParams) ||
             !this.router.getCurrentNavigation().extras?.state?.omitConfirm

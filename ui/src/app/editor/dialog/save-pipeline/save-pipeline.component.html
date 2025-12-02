@@ -1,96 +1,99 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content padding-20">
         <div fxFlex="100" fxLayout="column">
-            <sp-save-pipeline-settings
-                *ngIf="!operationCompleted && !operationProgress"
-                [currentPipelineName]="pipeline.name"
-                [submitPipelineForm]="submitPipelineForm"
-                [pipeline]="pipeline"
-                [storageOptions]="storageOptions"
-                [(selectedAssets)]="selectedAssets"
-                [(deselectedAssets)]="deselectedAssets"
-                [(originalAssets)]="originalAssets"
-            >
-            </sp-save-pipeline-settings>
-
-            <sp-multi-step-status-indicator
-                *ngIf="operationProgress || operationCompleted"
-                [statusIndicators]="statusIndicators"
-            >
-            </sp-multi-step-status-indicator>
-
-            <div *ngIf="finalPipelineOperationStatus" class="mt-10">
-                <mat-divider></mat-divider>
-                <sp-pipeline-started-status
-                    class="mt-10"
-                    [forceStopDisabled]="true"
-                    [action]="pipelineAction"
-                    [pipelineOperationStatus]="finalPipelineOperationStatus"
+            @if (!operationCompleted && !operationProgress) {
+                <sp-save-pipeline-settings
+                    [currentPipelineName]="pipeline.name"
+                    [submitPipelineForm]="submitPipelineForm"
+                    [pipeline]="pipeline"
+                    [storageOptions]="storageOptions"
+                    [(selectedAssets)]="selectedAssets"
+                    [(deselectedAssets)]="deselectedAssets"
+                    [(originalAssets)]="originalAssets"
                 >
-                </sp-pipeline-started-status>
-            </div>
+                </sp-save-pipeline-settings>
+            }
+
+            @if (operationProgress || operationCompleted) {
+                <sp-multi-step-status-indicator
+                    [statusIndicators]="statusIndicators"
+                >
+                </sp-multi-step-status-indicator>
+            }
+
+            @if (finalPipelineOperationStatus) {
+                <div class="mt-10">
+                    <mat-divider></mat-divider>
+                    <sp-pipeline-started-status
+                        class="mt-10"
+                        [forceStopDisabled]="true"
+                        [action]="pipelineAction"
+                        [pipelineOperationStatus]="finalPipelineOperationStatus"
+                    >
+                    </sp-pipeline-started-status>
+                </div>
+            }
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions" fxLayoutGap="10px">
-        <button
-            mat-flat-button
-            (click)="hide(false)"
-            *ngIf="operationCompleted"
-        >
-            Create another pipeline
-        </button>
-        <button
-            mat-flat-button
-            class="mat-basic"
-            data-cy="sp-navigate-to-pipeline-overview"
-            (click)="navigateToPipelineOverview()"
-            *ngIf="operationCompleted"
-        >
-            Open pipeline overview
-        </button>
-        <button
-            *ngIf="!operationCompleted && !operationSuccess"
-            [disabled]="
-                !submitPipelineForm.valid ||
-                operationProgress ||
-                operationCompleted
-            "
-            mat-flat-button
-            color="accent"
-            (click)="savePipeline()"
-            data-cy="sp-editor-apply"
-        >
-            Apply
-        </button>
-        <button
-            *ngIf="
-                !operationProgress && (!operationCompleted || !operationSuccess)
-            "
-            mat-flat-button
-            class="mat-basic"
-            (click)="hide(true)"
-            data-cy="sp-editor-cancel"
-        >
-            {{ 'Cancel' }}
-        </button>
+        @if (operationCompleted) {
+            <button mat-flat-button (click)="hide(false)">
+                Create another pipeline
+            </button>
+        }
+        @if (operationCompleted) {
+            <button
+                mat-flat-button
+                class="mat-basic"
+                data-cy="sp-navigate-to-pipeline-overview"
+                (click)="navigateToPipelineOverview()"
+            >
+                Open pipeline overview
+            </button>
+        }
+        @if (!operationCompleted && !operationSuccess) {
+            <button
+                [disabled]="
+                    !submitPipelineForm.valid ||
+                    operationProgress ||
+                    operationCompleted
+                "
+                mat-flat-button
+                color="accent"
+                (click)="savePipeline()"
+                data-cy="sp-editor-apply"
+            >
+                Apply
+            </button>
+        }
+        @if (!operationProgress && (!operationCompleted || !operationSuccess)) {
+            <button
+                mat-flat-button
+                class="mat-basic"
+                (click)="hide(true)"
+                data-cy="sp-editor-cancel"
+            >
+                {{ 'Cancel' }}
+            </button>
+        }
     </div>
 </div>

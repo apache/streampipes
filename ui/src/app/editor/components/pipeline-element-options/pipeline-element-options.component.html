@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 <div>
     <div>
         <div
@@ -25,37 +25,39 @@
             "
             class="sp-fade-options"
         >
-            <span
-                class="options-button customize-button"
-                *ngIf="pipelineElement.type !== 'stream'"
-                style="z-index: 10"
-            >
-                <button
-                    class="options-icon-button"
-                    mat-icon-button
-                    [matTooltip]="'Configure Element' | translate"
-                    [matTooltipPosition]="'above'"
-                    (click)="customizeElement(pipelineElement)"
-                    data-cy="settings-pipeline-element-button"
+            @if (pipelineElement.type !== 'stream') {
+                <span
+                    class="options-button customize-button"
+                    style="z-index: 10"
                 >
-                    <i class="material-icons options-icon-size">settings</i>
-                </button>
-            </span>
-            <span
-                class="options-button customize-button"
-                *ngIf="pipelineElement.type === 'stream' && isWildcardTopic()"
-                style="z-index: 10"
-            >
-                <button
-                    class="options-icon-button"
-                    mat-icon-button
-                    [matTooltip]="'Configure Element' | translate"
-                    [matTooltipPosition]="'above'"
-                    (click)="openCustomizeStreamDialog()"
+                    <button
+                        class="options-icon-button"
+                        mat-icon-button
+                        [matTooltip]="'Configure Element' | translate"
+                        [matTooltipPosition]="'above'"
+                        (click)="customizeElement(pipelineElement)"
+                        data-cy="settings-pipeline-element-button"
+                    >
+                        <i class="material-icons options-icon-size">settings</i>
+                    </button>
+                </span>
+            }
+            @if (pipelineElement.type === 'stream' && isWildcardTopic()) {
+                <span
+                    class="options-button customize-button"
+                    style="z-index: 10"
                 >
-                    <i class="material-icons options-icon-size">settings</i>
-                </button>
-            </span>
+                    <button
+                        class="options-icon-button"
+                        mat-icon-button
+                        [matTooltip]="'Configure Element' | translate"
+                        [matTooltipPosition]="'above'"
+                        (click)="openCustomizeStreamDialog()"
+                    >
+                        <i class="material-icons options-icon-size">settings</i>
+                    </button>
+                </span>
+            }
             <span class="options-button delete-button" style="z-index: 10">
                 <button
                     class="options-icon-button"
@@ -67,31 +69,34 @@
                     <i class="material-icons options-icon-size">clear</i>
                 </button>
             </span>
-            <span
-                class="options-button possible-button"
-                *ngIf="pipelineElement.type !== 'action'"
-                style="z-index: 10"
-            >
-                <button
-                    class="options-icon-button"
-                    mat-icon-button
-                    [matTooltip]="'Compatible Elements' | translate"
-                    [matTooltipPosition]="'below'"
-                    [disabled]="
-                        !possibleElements || possibleElements.length === 0
-                    "
-                    (click)="openPossibleElementsDialog()"
-                    [attr.data-cy]="
-                        'sp-possible-elements-' +
-                        pipelineElement.payload.name
-                            .toLowerCase()
-                            .replaceAll(' ', '_')
-                    "
-                    _
+            @if (pipelineElement.type !== 'action') {
+                <span
+                    class="options-button possible-button"
+                    style="z-index: 10"
                 >
-                    <i class="material-icons options-icon-size">account_tree</i>
-                </button>
-            </span>
+                    <button
+                        class="options-icon-button"
+                        mat-icon-button
+                        [matTooltip]="'Compatible Elements' | translate"
+                        [matTooltipPosition]="'below'"
+                        [disabled]="
+                            !possibleElements || possibleElements.length === 0
+                        "
+                        (click)="openPossibleElementsDialog()"
+                        [attr.data-cy]="
+                            'sp-possible-elements-' +
+                            pipelineElement.payload.name
+                                .toLowerCase()
+                                .replaceAll(' ', '_')
+                        "
+                        _
+                    >
+                        <i class="material-icons options-icon-size"
+                            >account_tree</i
+                        >
+                    </button>
+                </span>
+            }
             <span class="options-button help-button" style="z-index: 10">
                 <button
                     class="options-icon-button"

@@ -142,6 +142,10 @@ export class DataExplorerChartViewComponent
 
     setDefaultValuesOnOriginalDataViewForNewCharts() {
         //Change original Data View if default Config does not exist
+
+        //Reset name as widget generation sets name to  datalakename - chart
+        this.dataView.baseAppearanceConfig.widgetTitle =
+            this.translateService.instant('New chart');
         this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
         this.originalDataView.elementId = undefined;
         this.originalDataView.rev = undefined;
@@ -284,6 +288,7 @@ export class DataExplorerChartViewComponent
             ) {
                 this.saveToAssets(data);
             }
+
             this.routingService.navigateToDataViewOverview(true);
         });
     }

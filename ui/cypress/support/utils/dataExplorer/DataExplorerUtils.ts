@@ -50,7 +50,7 @@ export class DataExplorerUtils {
         this.checkAmount(amount);
     }
 
-    private static checkAmount(amount: number) {
+    public static checkAmount(amount: number) {
         if (amount === 0) {
             // The wait is needed because the default value is the no-table-entries element.
             // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
@@ -335,11 +335,13 @@ export class DataExplorerUtils {
         DataExplorerBtns.editDataViewButton(dataViewName).click();
     }
 
-    public static saveDataViewConfiguration() {
+    public static saveDataViewConfiguration(confirmSave: boolean = false) {
         DataExplorerBtns.saveDataViewButton().click({
             force: true,
         });
-        DataExplorerBtns.confirmSave().click();
+        if (confirmSave) {
+            DataExplorerBtns.confirmSave().click();
+        }
     }
 
     public static saveDashboardConfiguration() {
