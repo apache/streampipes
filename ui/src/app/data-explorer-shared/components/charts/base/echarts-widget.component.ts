@@ -60,7 +60,7 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
         this.renderer = this.getRenderer();
         this.resizeEcharts$ =
             this.resizeEchartsService.echartsResizeSubject.subscribe(width => {
-                this.currentWidth = width - this.widthOffset;
+                this.currentWidth = width;
                 this.refreshView();
             });
         this.renderSubject$ = this.renderSubject

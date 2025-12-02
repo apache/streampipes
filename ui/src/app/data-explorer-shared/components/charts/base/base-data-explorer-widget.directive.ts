@@ -109,9 +109,6 @@ export abstract class BaseDataExplorerWidgetDirective<
     resize$: Subscription;
     timeSelection$: Subscription;
 
-    widthOffset: number;
-    heightOffset: number;
-
     requestQueue$: Subject<Observable<SpQueryResult>[]> = new Subject<
         Observable<SpQueryResult>[]
     >();
@@ -124,8 +121,6 @@ export abstract class BaseDataExplorerWidgetDirective<
     public fieldService = inject(ChartFieldProviderService);
 
     ngOnInit(): void {
-        this.heightOffset = this.gridMode ? 70 : 65;
-        this.widthOffset = this.gridMode ? 10 : 10;
         this.currentWidth = this.initialSize.width;
         this.currentHeight = this.initialSize.height;
         this.showData = true;
