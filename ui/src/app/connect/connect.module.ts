@@ -29,7 +29,7 @@ import { EventSchemaComponent } from './components/adapter-configuration/schema-
 
 import { MatInputModule } from '@angular/material/input';
 import { AdapterStartedDialog } from './dialog/adapter-started/adapter-started-dialog.component';
-import { AdapterDescriptionComponent } from './components/adapter-catalog/adapter-description/adapter-description.component';
+import { AdapterCatalogItemComponent } from './components/adapter-catalog/adapter-description/adapter-catalog-item.component';
 import { AdapterCatalogComponent } from './components/adapter-catalog/adapter-catalog.component';
 
 import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
@@ -206,7 +206,7 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
     declarations: [
         AdapterCodePanelComponent,
         AdapterConfigurationComponent,
-        AdapterDescriptionComponent,
+        AdapterCatalogItemComponent,
         AdapterDetailsCodeComponent,
         AdapterDetailsDataComponent,
         AdapterStartedDialog,
