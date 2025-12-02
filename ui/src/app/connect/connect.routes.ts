@@ -19,13 +19,18 @@
 import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
 export class SpConnectRoutes {
-    static BASE: SpBreadcrumbItem = { label: 'Connect', link: ['connect'] };
+    static BASE: SpBreadcrumbItem = {
+        label: 'Connect',
+        link: ['connect'],
+    };
+
     static CREATE: SpBreadcrumbItem = {
         label: 'New Adapter',
-        link: ['connect', 'create'],
+        link: ['connect', 'catalog'],
     };
+
     static EDIT: SpBreadcrumbItem = {
         label: 'Edit Adapter',
-        link: ['connect', 'edit'],
+        link: ['connect'],
     };
 }
