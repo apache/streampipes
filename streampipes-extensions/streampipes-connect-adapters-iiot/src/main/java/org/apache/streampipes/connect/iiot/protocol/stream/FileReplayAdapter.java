@@ -32,7 +32,6 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.CsvPa
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ImageParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
@@ -101,7 +100,6 @@ public class FileReplayAdapter implements StreamPipesAdapter {
         )
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic)
         .requiredFile(
             Labels.withId(FILE_PATH),
             Filetypes.CSV,

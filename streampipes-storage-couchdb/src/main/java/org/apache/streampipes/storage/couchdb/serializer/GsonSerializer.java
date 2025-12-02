@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.storage.couchdb.serializer;
 
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.SpDataStream;
@@ -82,7 +81,6 @@ public class GsonSerializer {
     builder.registerTypeAdapter(MappingProperty.class, new CouchDbJsonSerializer<MappingProperty>());
     builder.registerTypeAdapter(ValueSpecification.class, new CouchDbJsonSerializer<ValueSpecification>());
     builder.registerTypeAdapter(DataSinkType.class, new EcTypeAdapter());
-    builder.registerTypeAdapter(AdapterType.class, new AdapterTypeAdapter());
     builder.registerTypeAdapter(Message.class, new CouchDbJsonSerializer<Message>());
     builder.registerTypeAdapter(DataProcessorType.class, new EpaTypeAdapter());
     builder.registerTypeAdapter(URI.class, new UriSerializer());
