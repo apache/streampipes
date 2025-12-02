@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-11-17 21:13:12.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-02 15:38:14.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -98,7 +98,6 @@ export class VersionedNamedStreamPipesEntity extends NamedStreamPipesEntity {
 
 export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     '@class': 'org.apache.streampipes.model.connect.adapter.AdapterDescription';
-    'category': string[];
     'config': StaticPropertyUnion[];
     'correspondingDataStreamElementId': string;
     /**
@@ -127,9 +126,6 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         }
         const instance = target || new AdapterDescription();
         super.fromData(data, instance);
-        instance.category = __getCopyArrayFn(__identity<string>())(
-            data.category,
-        );
         instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
             data.config,
         );
@@ -179,23 +175,6 @@ export class AdapterEventPreview {
         instance.rules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
-        return instance;
-    }
-}
-
-export class AdapterType {
-    code: string;
-    description: string;
-    label: string;
-
-    static fromData(data: AdapterType, target?: AdapterType): AdapterType {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new AdapterType();
-        instance.code = data.code;
-        instance.description = data.description;
-        instance.label = data.label;
         return instance;
     }
 }
