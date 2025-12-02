@@ -21,7 +21,7 @@
     [ngStyle]="{
         background: configuredWidget.baseAppearanceConfig.backgroundColor,
         color: configuredWidget.baseAppearanceConfig.textColor,
-        height: 'calc(100% - 4px)'
+        height: '100%'
     }"
     [attr.data-cy]="
         'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle
@@ -166,10 +166,7 @@
             </div>
         </div>
     }
-    <div
-        fxLayout="column"
-        class="widget-content p-0 gridster-item-content ml-0 mr-0 h-100 mw-100"
-    >
+    <div fxLayout="column" class="widget-content p-0 ml-0 mr-0 h-100 mw-100">
         <ng-template spWidgetHost class="h-100 p-0"></ng-template>
         @if (errorMessage) {
             <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">

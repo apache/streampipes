@@ -59,7 +59,7 @@
                         [globalTimeEnabled]="
                             dashboard.dashboardGeneralSettings.globalTimeEnabled
                         "
-                        (deleteCallback)="propagateItemRemoval($event)"
+                        (deleteCallback)="deleteCallback.emit($event)"
                         (startEditModeEmitter)="startEditMode($event)"
                         [dashboardItem]="currentDashboardItem"
                         [configuredWidget]="currentWidget"

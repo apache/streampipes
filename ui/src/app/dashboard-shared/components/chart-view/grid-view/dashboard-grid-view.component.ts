@@ -27,7 +27,7 @@ import {
 } from '@angular/core';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import { GridStack, GridStackOptions } from 'gridstack';
-import { GridstackComponent } from 'gridstack/dist/angular';
+import { GridstackComponent, nodesCB } from 'gridstack/dist/angular';
 
 @Component({
     selector: 'sp-dashboard-grid-view',
@@ -61,10 +61,13 @@ export class DashboardGridViewComponent
             minRow: 5,
             column: this.dashboard.gridColumns,
             margin: 2,
-            cellHeight: 'auto',
+            cellHeight: 'initial',
             disableResize: !this.editMode,
             disableDrag: !this.editMode,
             float: true,
+            resizable: {
+                handles: 'w,e,se',
+            },
         };
     }
 
@@ -74,6 +77,20 @@ export class DashboardGridViewComponent
             this.gridOptions.disableDrag = !this.editMode;
             this.grid.updateOptions(this.gridOptions);
         }
+    }
+
+    onGridChange(data: nodesCB): void {
+        data.nodes.forEach(changed => {
+            const widget = this.dashboard.widgets.find(
+                w => w.id === (changed as any).id,
+            );
+            if (widget) {
+                widget.x = changed.x;
+                widget.y = changed.y;
+                widget.w = changed.w;
+                widget.h = changed.h;
+            }
+        });
     }
 
     onWidgetsAvailable(): void {}

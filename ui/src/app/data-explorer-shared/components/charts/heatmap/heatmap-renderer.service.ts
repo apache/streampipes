@@ -109,10 +109,7 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
         options: EChartsOption,
         widgetConfig: HeatmapWidgetModel,
     ): void {
-        options.grid = {
-            height: '80%',
-            top: '80',
-        };
+        options.grid = {};
         options.xAxis = {
             type: 'category',
             splitArea: {

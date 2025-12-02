@@ -46,18 +46,25 @@ export class SpGaugeRendererService
         fieldName: string,
         value: number,
         widgetConfig: GaugeWidgetModel,
+        widgetSize: WidgetSize,
     ): GaugeSeriesOption {
         const visConfig = widgetConfig.visualizationConfig;
+        const clamp = Math.min(Math.max(widgetSize.width / 400, 0.7), 1.4);
         return {
             name: seriesName,
             type: 'gauge',
             progress: {
                 show: true,
             },
+            axisLabel: {
+                fontSize: 10 * clamp,
+            },
             detail: {
                 show: true,
                 valueAnimation: false,
                 formatter: '{value}',
+                fontSize: 14 * clamp,
+                offsetCenter: [0, '70%'],
             },
             min: visConfig.min,
             max: visConfig.max,
@@ -87,7 +94,7 @@ export class SpGaugeRendererService
     render(
         queryResult: SpQueryResult[],
         widgetConfig: GaugeWidgetModel,
-        _widgetSize: WidgetSize,
+        widgetSize: WidgetSize,
     ): EChartsOption {
         const option = this.echartsBaseOptionsGenerator.makeBaseConfig(
             widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig,
@@ -110,6 +117,7 @@ export class SpGaugeRendererService
                 selectedField.fullDbName,
                 data,
                 widgetConfig,
+                widgetSize,
             ),
         });
 

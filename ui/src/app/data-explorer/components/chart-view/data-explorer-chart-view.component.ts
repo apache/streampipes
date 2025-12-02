@@ -59,8 +59,8 @@ import { ResizeEchartsService } from '../../../data-explorer-shared/services/res
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';
-import { Tuple2 } from 'src/app/core-model/base/Tuple2';
-import { ChartFieldProviderService } from 'src/app/data-explorer-shared/services/chart-field-provider.service';
+import { ChartFieldProviderService } from '../../../data-explorer-shared/services/chart-field-provider.service';
+import { Tuple2 } from '../../../core-model/base/Tuple2';
 
 @Component({
     selector: 'sp-data-explorer-data-view',

@@ -24,7 +24,7 @@ import {
 } from '../gen/streampipes-model';
 
 export interface ClientDashboardItem {
-    widgetId: string;
+    dataViewElementId: string;
     widgetType: string;
     timeSettings?: TimeSettings;
     id: string;

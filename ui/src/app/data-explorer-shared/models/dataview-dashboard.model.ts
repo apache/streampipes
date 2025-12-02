@@ -40,7 +40,7 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     editMode: boolean;
     kioskMode: boolean;
     observableGenerator: ObservableGenerator;
-
+    initialSize: WidgetSize;
     timeSettings: TimeSettings;
 
     dataViewDashboardItem: ClientDashboardItem;

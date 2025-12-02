@@ -54,27 +54,9 @@ export class DashboardSlideViewComponent
             this.currentWidget = this.configuredWidgets.get(widgetId);
             this.currentMeasure = this.dataLakeMeasures.get(widgetId);
             this.currentDashboardItem = this.dashboard.widgets[index];
-            this.currentlyConfiguredWidgetId = widgetId;
             this.displayWidget = true;
         });
     }
-
-    // ngAfterViewInit(): void {
-    //     const obs = new ResizeObserver(entries => {
-    //         entries.forEach(entry => {
-    //             const cr = entry.contentRect;
-    //             this.gridsterItemComponent.width = cr.width;
-    //             this.gridsterItemComponent.height = cr.height;
-    //             console.log(entry);
-    //             this.resizeService.notify({
-    //                 gridsterItem:
-    //                     this.dashboard.widgets[this.selectedWidgetIndex],
-    //                 gridsterItemComponent: this.gridsterItemComponent,
-    //             });
-    //         });
-    //     });
-    //     obs.observe(document.getElementById('slideViewOuter'));
-    // }
 
     onWidgetsAvailable(): void {
         this.selectWidget(0, this.dashboard.widgets[0].id);

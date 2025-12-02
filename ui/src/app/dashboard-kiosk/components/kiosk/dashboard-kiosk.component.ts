@@ -63,7 +63,7 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
                 if (res.ok) {
                     const cd = res.body;
                     cd.dashboard.widgets.forEach(w => {
-                        w.widgetId ??=
+                        w.id ??=
                             this.dataExplorerDashboardService.makeUniqueWidgetId();
                     });
                     const eTag = res.headers.get('ETag');
