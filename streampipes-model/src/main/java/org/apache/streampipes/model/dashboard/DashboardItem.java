@@ -114,7 +114,7 @@ public class DashboardItem {
     this.timeSettings = timeSettings;
   }
 
-  @Deprecated
+  @Deprecated(since = "0.99.0", forRemoval = true)
   public String getWidgetId() {
     return widgetId;
   }
