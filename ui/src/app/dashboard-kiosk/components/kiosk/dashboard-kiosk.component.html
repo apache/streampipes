@@ -18,7 +18,7 @@
 
 <div
     fxLayout="column"
-    style="height: 100vh"
+    style="height: 100%"
     class="light-mode w-100 standalone-outer"
 >
     <mat-toolbar class="standalone-toolbar">
@@ -55,7 +55,7 @@
             </div>
         </div>
     </mat-toolbar>
-    <div fxLayout="column" style="height: calc(100vh - 40px)">
+    <div fxLayout="column" style="height: calc(100% - 40px)">
         @if (dashboard) {
             @if (dashboard?.widgets.length > 0) {
                 <sp-dashboard-grid-view

@@ -22,41 +22,39 @@
         <h3>{{ dashboard.description }}</h3>
     </div>
 }
-<gridster
-    [options]="options"
-    [ngClass]="editMode ? 'edit' : ''"
-    class="custom-gridster-style"
+<gridstack
+    [options]="gridOptions"
+    (changeCB)="onGridChange($event)"
+    class="dashboard-outer"
+    #grid
 >
-    @for (item of dashboard.widgets; let i = $index; track item.widgetId) {
-        <ng-container>
-            <gridster-item
-                [item]="item"
-                #gridsterItemComponent
-                class="widget-outer"
-            >
-                @if (widgetsAvailable && configuredWidgets.has(item.id)) {
-                    <sp-data-explorer-chart-container
-                        [ngStyle]="{
-                            height: gridsterItemComponent.height - 13 + 'px'
-                        }"
-                        [timeSettings]="timeSettings"
-                        [globalTimeEnabled]="
-                            dashboard.dashboardGeneralSettings.globalTimeEnabled
-                        "
-                        (deleteCallback)="propagateItemRemoval($event)"
-                        (startEditModeEmitter)="startEditMode($event)"
-                        [dashboardItem]="item"
-                        [configuredWidget]="configuredWidgets.get(item.id)"
-                        [dataLakeMeasure]="dataLakeMeasures.get(item.id)"
-                        [observableGenerator]="observableGenerator"
-                        [editMode]="editMode"
-                        [kioskMode]="kioskMode"
-                        [gridMode]="true"
-                        [widgetIndex]="i"
-                        [gridsterItemComponent]="gridsterItemComponent"
-                    ></sp-data-explorer-chart-container>
-                }
-            </gridster-item>
-        </ng-container>
+    @for (item of dashboard.widgets; let i = $index; track item.id) {
+        <gridstack-item [options]="item">
+            @if (
+                widgetsAvailable &&
+                configuredWidgets.has(item.dataViewElementId)
+            ) {
+                <sp-data-explorer-chart-container
+                    [timeSettings]="timeSettings"
+                    [globalTimeEnabled]="
+                        dashboard.dashboardGeneralSettings.globalTimeEnabled
+                    "
+                    (deleteCallback)="deleteCallback.emit($event)"
+                    (startEditModeEmitter)="startEditMode($event)"
+                    [dashboardItem]="item"
+                    [configuredWidget]="
+                        configuredWidgets.get(item.dataViewElementId)
+                    "
+                    [dataLakeMeasure]="
+                        dataLakeMeasures.get(item.dataViewElementId)
+                    "
+                    [observableGenerator]="observableGenerator"
+                    [editMode]="editMode"
+                    [kioskMode]="kioskMode"
+                    [gridMode]="true"
+                    [widgetIndex]="i"
+                ></sp-data-explorer-chart-container>
+            }
+        </gridstack-item>
     }
-</gridster>
+</gridstack>

@@ -72,7 +72,6 @@ export class StaticFreeInputComponent
         this.addValidator(this.staticProperty.value, this.collectValidators());
         this.enableValidators();
         this.emitUpdate();
-        console.log(this.staticProperty);
     }
 
     collectValidators() {

@@ -34,6 +34,7 @@ import org.apache.streampipes.service.core.migrations.v099.AddAssetManagementVie
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
+import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddDataLakePipelineTemplateMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddLinkSettingsMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddRolesToUserDbMigration;
@@ -68,7 +69,8 @@ public class AvailableMigrations {
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(),
-        new RemoveObsoletePrivilegesMigration()
+        new RemoveObsoletePrivilegesMigration(),
+        new UniqueDashboardIdMigration()
     );
   }
 }

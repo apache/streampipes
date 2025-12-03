@@ -31,23 +31,18 @@
         </sp-no-data-in-date-range>
     }
 
-    <div fxLayoutAlign="center center">
-        <div
-            class="tl-container"
-            [ngStyle]="{
-                width: containerWidth + 'px',
-                height: containerHeight + 'px'
-            }"
-        >
+    <div
+        class="status-light-wrapper"
+        fxFlex
+        fxLayout="column"
+        fxLayoutAlign="center center"
+    >
+        <div class="tl-container">
             <div
                 class="light"
                 [ngClass]="{
                     'light-red': !active,
                     'light-green': active
-                }"
-                [ngStyle]="{
-                    width: lightWidth + 'px',
-                    height: lightHeight + 'px'
                 }"
             ></div>
         </div>
