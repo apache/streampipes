@@ -186,7 +186,8 @@ public class ResetManagement {
   private static void clearGenericStorage() {
     var appDocTypesToDelete = List.of(
         "asset-management",
-        "asset-sites"
+        "asset-sites",
+        "sp-labels"
     );
     var genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
                                                    .getGenericStorage();

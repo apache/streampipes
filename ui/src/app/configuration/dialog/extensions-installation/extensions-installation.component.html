@@ -1,86 +1,94 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div
-            fxFlex="100"
-            class="md-dialog-content"
-            style="padding: 20px"
-            *ngIf="page === 'preview'"
-        >
-            <h4>
-                {{ 'You are about to {{ action }} the following elements:' |
-                translate:{ action: (install ? ('install' | translate) :
-                ('uninstall' | translate)) } }}
-            </h4>
-            <div *ngFor="let endpointItem of endpointItemsToInstall">
-                <h5>{{ endpointItem.name }}</h5>
-            </div>
-            <h5>
-                <b>{{ "Press 'Next' to start the process." | translate }}</b>
-            </h5>
-        </div>
-        <div
-            fxFlex="100"
-            class="md-dialog-content"
-            style="padding: 20px"
-            *ngIf="page === 'installation'"
-        >
-            <div *ngFor="let status of installationStatus">
+        @if (page === 'preview') {
+            <div fxFlex="100" class="md-dialog-content" style="padding: 20px">
                 <h4>
-                    {{ '{{action}} {{ current }} of {{ total }} ({{
-                        name
-                    }})...{{ status }}' | translate:{ action: (install ?
-                    ('Installing' | translate) : ('Uninstalling' | translate)),
-                    current: (status.id + 1), total:
-                    endpointItemsToInstall.length, name: status.name, status:
-                    status.status } }}
+                    {{ 'You are about to {{ action }} the following elements:' |
+                    translate:{ action: (install ? ('install' | translate) :
+                    ('uninstall' | translate)) } }}
                 </h4>
-                <div>
-                    <div fxFlex fxLayout="column" *ngIf="status.details">
-                        <b>{{ 'More Details:' | translate }}</b>
-                        <div class="error-message">{{ status.details }}</div>
+                @for (
+                    endpointItem of endpointItemsToInstall;
+                    track endpointItem
+                ) {
+                    <div>
+                        <h5>{{ endpointItem.name }}</h5>
                     </div>
-                </div>
+                }
+                <h5>
+                    <b>{{
+                        "Press 'Next' to start the process." | translate
+                    }}</b>
+                </h5>
             </div>
-        </div>
+        }
+        @if (page === 'installation') {
+            <div fxFlex="100" class="md-dialog-content" style="padding: 20px">
+                @for (status of installationStatus; track status) {
+                    <div>
+                        <h4>
+                            {{ '{{action}} {{ current }} of {{ total }} ({{
+                                name
+                            }})...{{ status }}' | translate:{ action: (install ?
+                            ('Installing' | translate) : ('Uninstalling' |
+                            translate)), current: (status.id + 1), total:
+                            endpointItemsToInstall.length, name: status.name,
+                            status: status.status } }}
+                        </h4>
+                        <div>
+                            @if (status.details) {
+                                <div fxFlex fxLayout="column">
+                                    <b>{{ 'More Details:' | translate }}</b>
+                                    <div class="error-message">
+                                        {{ status.details }}
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <mat-checkbox
-            class="mr-15"
-            [(ngModel)]="installAsPublicElement"
-            *ngIf="install"
-            >{{
-                'Make available to all users with appropriate role' | translate
-            }}
-        </mat-checkbox>
-        <button
-            mat-button
-            mat-flat-button
-            class="mat-basic"
-            (click)="close()"
-            style="margin-right: 10px"
-            *ngIf="nextButton !== 'Close'"
-        >
-            {{ 'Close' | translate }}
-        </button>
+        @if (install) {
+            <mat-checkbox class="mr-15" [(ngModel)]="installAsPublicElement"
+                >{{
+                    'Make available to all users with appropriate role'
+                        | translate
+                }}
+            </mat-checkbox>
+        }
+        @if (nextButton !== 'Close') {
+            <button
+                mat-button
+                mat-flat-button
+                class="mat-basic"
+                (click)="close()"
+                style="margin-right: 10px"
+            >
+                {{ 'Close' | translate }}
+            </button>
+        }
         <button
             mat-button
             mat-flat-button

@@ -124,6 +124,7 @@ describe('Test User Roles for Charts', () => {
             true,
         );
         DataExplorerUtils.saveDataViewConfiguration();
+        DataExplorerUtils.checkAmount(1);
         DataExplorerUtils.goToDatalake();
     }
 

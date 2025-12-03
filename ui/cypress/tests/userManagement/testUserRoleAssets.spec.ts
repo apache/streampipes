@@ -21,6 +21,7 @@ import { UserUtils } from '../../support/utils/UserUtils';
 import { User } from '../../support/model/User';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
+import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
 describe('Test User Roles for Dashboards', () => {
     const assetName = 'test-asset';
@@ -112,7 +113,8 @@ describe('Test User Roles for Dashboards', () => {
     function setup() {
         UserUtils.switchUser(assetAdmin1);
         AssetUtils.goToAssets();
-        AssetUtils.addAndSaveAsset(assetName);
+        const asset = AssetBuilder.create(assetName).build();
+        AssetUtils.addAndSaveAsset(asset);
     }
 
     function assetIsVisibleAndEditableCanChangePermissions(user: User) {

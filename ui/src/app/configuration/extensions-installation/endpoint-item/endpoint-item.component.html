@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div
     fxFlex="100"
@@ -53,83 +53,98 @@
     </div>
     <div fxFlex fxLayout="row" style="width: 100%">
         <div style="margin-right: 10px; margin-left: 10px; margin-top: 10px">
-            <div
-                *ngIf="!item.includesIcon || iconError"
-                class="draggable-icon {{ cssMapper[item.serviceTagPrefix] }}"
-            >
-                {{ iconText(item.name) }}
-            </div>
-            <div
-                *ngIf="item.includesIcon && iconReady"
-                class="draggable-icon {{ cssMapper[item.serviceTagPrefix] }}"
-            >
-                <img class="icon" [src]="image" />
-            </div>
+            @if (!item.includesIcon || iconError) {
+                <div
+                    class="draggable-icon {{
+                        cssMapper[item.serviceTagPrefix]
+                    }}"
+                >
+                    {{ iconText(item.name) }}
+                </div>
+            }
+            @if (item.includesIcon && iconReady) {
+                <div
+                    class="draggable-icon {{
+                        cssMapper[item.serviceTagPrefix]
+                    }}"
+                >
+                    <img class="icon" [src]="image" />
+                </div>
+            }
         </div>
         <div fxFlex fxLayout="column">
             <div class="ml-5">
-                <small *ngIf="!item.editable"
-                    >{{ 'Internally managed by {{appName}}' | translate: {
-                    appName: appConstants.APP_NAME } }}
-                </small>
+                @if (!item.editable) {
+                    <small
+                        >{{ 'Internally managed by {{appName}}' | translate: {
+                        appName: appConstants.APP_NAME } }}
+                    </small>
+                }
             </div>
             <div fxFlex fxLayoutAlign="start end" class="ml-5">
-                <button
-                    class="small-button-add"
-                    mat-button
-                    mat-flat-button
-                    color="accent"
-                    [disabled]="!item.editable"
-                    (click)="installSingleElement($event, item)"
-                    *ngIf="!item.installed"
-                >
-                    <span>&nbsp;{{ 'Install' | translate }}</span>
-                </button>
-                <button
-                    class="small-button-add-inverted"
-                    mat-button
-                    mat-flat-button
-                    [disabled]="!item.editable"
-                    (click)="uninstallSingleElement($event, item)"
-                    *ngIf="item.installed"
-                >
-                    <span>&nbsp;{{ 'Uninstall' | translate }}</span>
-                </button>
-                <div *ngIf="item.installed" style="margin-left: 5px">
+                @if (!item.installed) {
                     <button
-                        class="small-button-add mat-basic no-min-width"
-                        [disabled]="!item.editable"
-                        mat-flat-button
+                        class="small-button-add"
                         mat-button
-                        [matMenuTriggerFor]="menu"
+                        mat-flat-button
+                        color="accent"
+                        [disabled]="!item.editable"
+                        (click)="installSingleElement($event, item)"
                     >
-                        <span style="font-size: 12px">...</span>
+                        <span>&nbsp;{{ 'Install' | translate }}</span>
                     </button>
-                    <mat-menu #menu="matMenu">
+                }
+                @if (item.installed) {
+                    <button
+                        class="small-button-add-inverted"
+                        mat-button
+                        mat-flat-button
+                        [disabled]="!item.editable"
+                        (click)="uninstallSingleElement($event, item)"
+                    >
+                        <span>&nbsp;{{ 'Uninstall' | translate }}</span>
+                    </button>
+                }
+                @if (item.installed) {
+                    <div style="margin-left: 5px">
                         <button
-                            mat-menu-item
-                            (click)="refresh(item)"
-                            [disabled]="!item.available"
+                            class="small-button-add mat-basic no-min-width"
+                            [disabled]="!item.editable"
+                            mat-flat-button
+                            mat-button
+                            [matMenuTriggerFor]="menu"
                         >
-                            <mat-icon>refresh</mat-icon>
-                            <span>&nbsp;{{ 'Update' | translate }}</span>
+                            <span style="font-size: 12px">...</span>
                         </button>
-                        <button
-                            mat-menu-item
-                            (click)="
-                                showPermissionsDialog(item.elementId, item.name)
-                            "
-                            [disabled]="!item.available"
-                        >
-                            <mat-icon>share</mat-icon>
-                            <span
-                                >&nbsp;{{
-                                    'Manage permissions' | translate
-                                }}</span
+                        <mat-menu #menu="matMenu">
+                            <button
+                                mat-menu-item
+                                (click)="refresh(item)"
+                                [disabled]="!item.available"
                             >
-                        </button>
-                    </mat-menu>
-                </div>
+                                <mat-icon>refresh</mat-icon>
+                                <span>&nbsp;{{ 'Update' | translate }}</span>
+                            </button>
+                            <button
+                                mat-menu-item
+                                (click)="
+                                    showPermissionsDialog(
+                                        item.elementId,
+                                        item.name
+                                    )
+                                "
+                                [disabled]="!item.available"
+                            >
+                                <mat-icon>share</mat-icon>
+                                <span
+                                    >&nbsp;{{
+                                        'Manage permissions' | translate
+                                    }}</span
+                                >
+                            </button>
+                        </mat-menu>
+                    </div>
+                }
             </div>
         </div>
     </div>

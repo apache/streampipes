@@ -28,7 +28,7 @@ import { EChartsOption } from 'echarts';
 import { GeneratedDataset, WidgetSize } from '../models/dataset.model';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 import { inject } from '@angular/core';
-import { DataExplorerFieldProviderService } from '../services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../services/chart-field-provider.service';
 import { EchartsAxisGeneratorService } from './echarts-axis-generator.service';
 import { EchartsBasicOptionsGeneratorService } from './echarts-basic-options-generator.service';
 import { EchartsDatasetGeneratorService } from './echarts-dataset-generator.service';
@@ -36,14 +36,14 @@ import { EchartsGridGeneratorService } from './echarts-grid-generator.service';
 import { EchartsUtilsService } from './echarts-utils.service';
 import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
 import { EchartsDatasetUtilsService } from './echarts-dataset-utils.service';
-import { DataExplorerColorizationService } from '../services/data-explorer-colorization.service';
+import { ChartColorizationService } from '../services/chart-colorization.service';
 import { SpFieldUpdateService } from '../services/field-update.service';
 import { FieldUpdateInfo } from '../models/field-update.model';
 
 export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
     implements SpEchartsRenderer<T>
 {
-    protected fieldProvider = inject(DataExplorerFieldProviderService);
+    protected fieldProvider = inject(ChartFieldProviderService);
 
     protected basicOptionsGeneratorService = inject(
         EchartsBasicOptionsGeneratorService,
@@ -55,7 +55,7 @@ export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
     protected datasetUtilsService = inject(EchartsDatasetUtilsService);
     protected gridGeneratorService = inject(EchartsGridGeneratorService);
     protected echartsUtilsService = inject(EchartsUtilsService);
-    protected colorizationService = inject(DataExplorerColorizationService);
+    protected colorizationService = inject(ChartColorizationService);
     protected fieldUpdateService = inject(SpFieldUpdateService);
 
     public render(

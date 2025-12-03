@@ -78,10 +78,6 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
                             label.color,
                         )),
             );
-            this.asset.labelIds =
-                this.asset.labelIds?.filter(id =>
-                    this.allLabels.find(l => l._id === id),
-                ) || [];
             this.refreshCurrentLabels();
             this.labelsAvailable = true;
             this.updateFilteredLabels();
@@ -94,7 +90,10 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     }
 
     refreshCurrentLabels(): void {
-        this.asset.labelIds ??= [];
+        this.asset.labelIds =
+            this.asset.labelIds?.filter(id =>
+                this.allLabels.find(l => l._id === id),
+            ) || [];
         this.labels =
             this.asset.labelIds?.map(id =>
                 this.allLabels.find(l => l._id === id),
@@ -102,7 +101,7 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['asset']) {
+        if (changes['asset'] && this.labelsAvailable) {
             this.refreshCurrentLabels();
             this.updateFilteredLabels();
         }

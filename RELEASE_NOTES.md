@@ -21,6 +21,130 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+# [0.98.0]
+
+## What's Changed
+
+### Enhancement 🌟
+* [[#3798](https://github.com/apache/streampipes/issues/3798)]: Add creation and last login date to user object
+* [[#3398](https://github.com/apache/streampipes/issues/3398)]: Migrate IconBar Component to Control Flow Syntax
+* [[#3822](https://github.com/apache/streampipes/issues/3822)]: OPC-UA X.509 user authentication
+* [[#3802](https://github.com/apache/streampipes/pull/3802)]: Show creation and last login date in user configuration …
+* [[#3754](https://github.com/apache/streampipes/pull/3754)]: Add optional terms acknowledgment
+* [[#3674](https://github.com/apache/streampipes/pull/3674)]: Add icons and description to chart type dropdown
+* [[#3658](https://github.com/apache/streampipes/pull/3658)]: Add adapter API to StreamPipes client
+* [[#3585](https://github.com/apache/streampipes/pull/3585)]: Add panel resize component
+* [[#3594](https://github.com/apache/streampipes/pull/3594)]: Add clone button to data explorer overview
+* [[#3527](https://github.com/apache/streampipes/pull/3527)]: Add aggregation functions MEDIAN, SPREAD and STDDEV
+* [[#3440](https://github.com/apache/streampipes/pull/3440)]: Harmonize data explorer and live dashboard
+* [[#3416](https://github.com/apache/streampipes/pull/3416)]: Update asset and file directories upon restart
+* [[#3553](https://github.com/apache/streampipes/pull/3553)]: Add configurable wait and lease time to PLC connectors
+* [[#3563](https://github.com/apache/streampipes/pull/3563)]: Rename pipelines and add cypress test
+* [[#3556](https://github.com/apache/streampipes/pull/3556)]: Add ResourceMetadata model
+* [[#3516](https://github.com/apache/streampipes/pull/3516)]: Add status heatmap and create color mapping component
+* [[#3810](https://github.com/apache/streampipes/issues/3810)]: Support dashboard clones
+* [[#3725](https://github.com/apache/streampipes/issues/3725)]: Add dashboard kiosk mode
+* [[#3721](https://github.com/apache/streampipes/issues/3721)]: Support file logging
+* [[#3717](https://github.com/apache/streampipes/issues/3717)]: Support external role assignment in OAuth configuration
+* [[#3710](https://github.com/apache/streampipes/issues/3710)]: Centrally manage OPC-UA certificates
+* [[#3579](https://github.com/apache/streampipes/issues/3579)]: Support ExtensionObjects in OPC-UA adapter
+* [[#3544](https://github.com/apache/streampipes/issues/3544)]: Simplify Pipeline Name Editing
+* [[#3543](https://github.com/apache/streampipes/issues/3543)]: Overview of Dashboard and Charts Missing Information
+* [[#3525](https://github.com/apache/streampipes/issues/3525)]: Extend capabilities of asset export feature
+* [[#3489](https://github.com/apache/streampipes/issues/3489)]: Add translation framework for UI
+* [[#3483](https://github.com/apache/streampipes/issues/3483)]: Use KRaft based kafka as default for internal messaging
+* [[#3453](https://github.com/apache/streampipes/issues/3453)]: Extend StaticMetadataEnricher with additional schema options
+* [[#3443](https://github.com/apache/streampipes/issues/3443)]: Move data explorer dashboard sources to dashboard module
+* [[#3439](https://github.com/apache/streampipes/issues/3439)]: Extract shared data explorer components to shared module
+* [[#3412](https://github.com/apache/streampipes/issues/3412)]: Move Resources to `streampipes-rest` and remove `streampipes-platform-services`
+* [[#3200](https://github.com/apache/streampipes/issues/3200)]: Migration to New Data Processor API
+* [[#3158](https://github.com/apache/streampipes/issues/3158)]: Move data explorer dashboard to live dashboard view
+* [[#1871](https://github.com/apache/streampipes/issues/1871)]: Consolidate visualization tools
+* [[#3448](https://github.com/apache/streampipes/issues/3448)]: Add Excel export feature
+* [[#3734](https://github.com/apache/streampipes/pull/3734)]: Load OpenID config for external authentication
+* [[#3730](https://github.com/apache/streampipes/pull/3731)]: Upgrade design system to material3
+* [[#3738](https://github.com/apache/streampipes/pull/3738)]: Support alternate ids for groups and roles
+* [[#3739](https://github.com/apache/streampipes/pull/3739)]: Extend certificate information shown in UI
+* [[#3685](https://github.com/apache/streampipes/pull/3685)]: Add measurement unit resource identifier to data explorer field
+* [[#3640](https://github.com/apache/streampipes/pull/3640)]: Switch Operator Processors
+* [[#3618](https://github.com/apache/streampipes/pull/3618)]: Add reactive forms to Configuration/sites
+* [[#3620](https://github.com/apache/streampipes/pull/3620)]: Replace native federation with default Angular builder
+* [[#3580](https://github.com/apache/streampipes/pull/3580)]: feat(#3579): Add support for OPC-UA extension objects
+* [[#3601](https://github.com/apache/streampipes/pull/3601)]: Feat:Support ParquetSink
+* [[#3526](https://github.com/apache/streampipes/pull/3526)]: feat(#3525): Extend capabilities of asset export
+* [[#3490](https://github.com/apache/streampipes/pull/3490)]: feat(#3489): Add initial UI translation framework
+* [[#3517](https://github.com/apache/streampipes/pull/3517)]: feat: Add translation to "data download" component
+* [[#3534](https://github.com/apache/streampipes/pull/3534)]: Support chart appearance settings in heatmaps
+
+
+
+### Bug fixes 🧰
+* [[#3632](https://github.com/apache/streampipes/issues/3632)]: OPC UA Adapter "Could not guess shchema"
+* [[#3613](https://github.com/apache/streampipes/issues/3613)]: pipeline name bug (to long? or  unescaped "/")
+* [[#3531](https://github.com/apache/streampipes/issues/3531)]: Invalid adapter state after stopping adapter with errors
+* [[#3482](https://github.com/apache/streampipes/issues/3482)]: Data Explorer appearance chart settings does not work for every chart
+* [[#3481](https://github.com/apache/streampipes/issues/3481)]: Marker type 'Car' in map not available and tooltip-filter for map does not work
+* [[#3428](https://github.com/apache/streampipes/issues/3428)]: OPC UA Adapter: Duplicate Field Runtime Names
+* [[#1838](https://github.com/apache/streampipes/issues/1838)]: Standalone dashboard without login.
+* [[#3762](https://github.com/apache/streampipes/pull/3762)]: Modify swagger config to solve auth issue in Swagger interface
+* [[#3751](https://github.com/apache/streampipes/pull/3751)]: Add time settings to query parameters in data explorer
+* [[#3637](https://github.com/apache/streampipes/pull/3637)]: Move rule in schema guessing
+* [[#3590](https://github.com/apache/streampipes/pull/3590)]: Improve adapter management
+* [[#3576](https://github.com/apache/streampipes/pull/3576)]: Ignore export items that are not explicitly selected
+* [[#3572](https://github.com/apache/streampipes/pull/3572)]: Pulsar container
+* [[#3555](https://github.com/apache/streampipes/pull/3555)]: Breadcrumb dashboard
+* [[#3550](https://github.com/apache/streampipes/pull/3550)]: Asset filters and labels for assets
+* [[#3549](https://github.com/apache/streampipes/pull/3549)]: Resolve color mapping issue
+* [[#3535](https://github.com/apache/streampipes/pull/3535)]: Properly update asset tree when adding assets
+* [[#3533](https://github.com/apache/streampipes/pull/3533)]: Various bug fixes in map visualization
+* [[#3532](https://github.com/apache/streampipes/pull/3532)]: Add option to reset an invalid adapter state in API and UI
+* [[#3519](https://github.com/apache/streampipes/pull/3519)]: Keep asset filters when modifying pipelines anda adapters, impro…
+* [[#3487](https://github.com/apache/streampipes/pull/3487)]: Fix Heatmap and add option to modify visual min and max
+* [[#3542](https://github.com/apache/streampipes/issues/3542)]: Breadcrumb in Dashboard Still Shows "Data Explorer"
+
+
+### Breaking Change 💣
+* **Default messaging system switched to NATS** The default `docker-compose` setup shipped in the **installer directory** now uses **NATS** instead of **Apache Kafka**. This change only affects users who rely on the default installer setup. When your existing StreamPipes instance uses Kafka, use the **docker-compose.kafka.yml** file.
+
+
+### Deprecation ⚠️
+* [[#3441](https://github.com/apache/streampipes/issues/3441)]: Remove deprecated live dashboard
+* [[#3278](https://github.com/apache/streampipes/issues/3278)]: Remove @deprecated methods related to 'domain properties' after 0.97.0 release
+* [[#3153](https://github.com/apache/streampipes/issues/3153)]: Remove Create Nested Rule Functionality
+* [[#3139](https://github.com/apache/streampipes/issues/3139)]: Remove deprecated method in `IParameterExtractor`
+* [[#3169](https://github.com/apache/streampipes/issues/3169)]: Remove Deprecated Functions Related to Configurable Data Formats
+* **Deprecate `StreamPipesDataProcessor`** — this API is deprecated and will be removed in a future version.
+* **Deprecate `StreamPipesDataSink`** — this API is deprecated and will be removed in a future version.
+* **Deprecate Flink Wrapper** — the Flink-based wrapper is deprecated and will be removed in a future version.
+* **Deprecate IO-Link IFM adapter** — this adapter is deprecated and scheduled for removal in a future version.
+* **Deprecate NetIO adapter** — this adapter is deprecated and scheduled for removal in a future version.
+
+
+
+### Documentation & Website 📚
+* [[#3636](https://github.com/apache/streampipes/pull/3636)]: docs: Add german translations for pipeline elements
+* [[#3601](https://github.com/apache/streampipes/pull/3601)]: Feat:Support ParquetSink
+* [[#3559](https://github.com/apache/streampipes/pull/3559)]: Feat : support MilvusSink dev
+* [[#3484](https://github.com/apache/streampipes/pull/3484)]: feat(#3483): Use Kraft-based Kafka as default for internal messaging
+
+
+
+### Dependency Updates 📦
+* [[#3630](https://github.com/apache/streampipes/pull/3630)]: chore(deps): Bump Angular to v19
+* [[#1833](https://github.com/apache/streampipes/issues/1833)]: Bump Kafka to v3.5
+* [[#3559](https://github.com/apache/streampipes/pull/3559)]: Feat : support MilvusSink dev
+* [[#3474](https://github.com/apache/streampipes/pull/3474)]: chore(deps): Update test dependencies in maven plugin
+* [[#3473](https://github.com/apache/streampipes/pull/3473)]: chore(deps): Bump Spring Boot and Spring dependencies
+* [[#3472](https://github.com/apache/streampipes/issues/3472)]: Bump Spring dependencies
+* [[#3468](https://github.com/apache/streampipes/pull/3468)]: chore: Cleanup npm dependencies
+* [[#3467](https://github.com/apache/streampipes/pull/3467)]: chore: Remove obsolete ngx-charts module
+* [[#3463](https://github.com/apache/streampipes/issues/3463)]: Bump Angular to v18
+* [[#2866](https://github.com/apache/streampipes/issues/2866)]: Upgrade to recent prometheus client
+
+
+
+
+
 # [0.97.0]
 
 ## What's Changed

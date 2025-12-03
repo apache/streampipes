@@ -23,7 +23,7 @@ import {
     SourceConfig,
 } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../data-explorer-shared/services/chart-configuration.service';
-import { DataExplorerFieldProviderService } from '../../../../../../data-explorer-shared/services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../../../data-explorer-shared/services/chart-field-provider.service';
 
 @Component({
     selector: 'sp-filter-selection-panel',
@@ -37,7 +37,7 @@ export class FilterSelectionPanelComponent implements OnInit {
 
     constructor(
         private widgetConfigService: ChartConfigurationService,
-        private fieldProviderService: DataExplorerFieldProviderService,
+        private fieldProviderService: ChartFieldProviderService,
         private dataLakeRestService: DatalakeRestService,
     ) {}
 

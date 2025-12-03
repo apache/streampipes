@@ -26,6 +26,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
+import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
 describe('Test that resources can be added to assets on creation', () => {
     let newUser;
@@ -41,7 +42,8 @@ describe('Test that resources can be added to assets on creation', () => {
         );
 
         AssetUtils.goToAssets();
-        AssetUtils.addAndSaveAsset('Asset');
+        const asset = AssetBuilder.create('Asset').build();
+        AssetUtils.addAndSaveAsset(asset);
     });
 
     it('Check Role Asset Admin in Connect', () => {

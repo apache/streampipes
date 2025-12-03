@@ -1,84 +1,89 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
-        <div
-            fxFlex="100"
-            fxLayout="column"
-            class="p-15"
-            *ngIf="preview && !exportInProgress"
-        >
-            <div *ngFor="let config of preview.assetExportConfiguration">
-                <h4>
-                    {{ 'Exported items {{assetName}}' | translate:{ assetName :
-                    config.assetName} }}
-                </h4>
-                <sp-data-export-item
-                    [exportItems]="config.adapters"
-                    [sectionTitle]="'Adapters' | translate"
-                ></sp-data-export-item>
-                <sp-data-export-item
-                    [exportItems]="config.dashboards"
-                    [sectionTitle]="'Dashboards' | translate"
-                ></sp-data-export-item>
-                <sp-data-export-item
-                    [exportItems]="config.dataViews"
-                    [sectionTitle]="'Charts' | translate"
-                ></sp-data-export-item>
-                <sp-data-export-item
-                    [exportItems]="config.dataSources"
-                    [sectionTitle]="'Data Streams' | translate"
-                ></sp-data-export-item>
-                <sp-data-export-item
-                    [exportItems]="config.dataLakeMeasures"
-                    [sectionTitle]="'Data Lake Storage' | translate"
-                ></sp-data-export-item>
-                <sp-data-export-item
-                    [exportItems]="config.files"
-                    [sectionTitle]="'Files' | translate"
-                ></sp-data-export-item>
-                <sp-data-export-item
-                    [exportItems]="config.pipelines"
-                    [sectionTitle]="'Pipelines' | translate"
-                ></sp-data-export-item>
-                <sp-generic-storage-items
-                    [exportItems]="config.genericStorageDocuments"
-                >
-                </sp-generic-storage-items>
+        @if (preview && !exportInProgress) {
+            <div fxFlex="100" fxLayout="column" class="p-15">
+                @for (
+                    config of preview.assetExportConfiguration;
+                    track config
+                ) {
+                    <div>
+                        <h4>
+                            {{ 'Exported items {{assetName}}' | translate:{
+                            assetName : config.assetName} }}
+                        </h4>
+                        <sp-data-export-item
+                            [exportItems]="config.adapters"
+                            [sectionTitle]="'Adapters' | translate"
+                        ></sp-data-export-item>
+                        <sp-data-export-item
+                            [exportItems]="config.dashboards"
+                            [sectionTitle]="'Dashboards' | translate"
+                        ></sp-data-export-item>
+                        <sp-data-export-item
+                            [exportItems]="config.dataViews"
+                            [sectionTitle]="'Charts' | translate"
+                        ></sp-data-export-item>
+                        <sp-data-export-item
+                            [exportItems]="config.dataSources"
+                            [sectionTitle]="'Data Streams' | translate"
+                        ></sp-data-export-item>
+                        <sp-data-export-item
+                            [exportItems]="config.dataLakeMeasures"
+                            [sectionTitle]="'Data Lake Storage' | translate"
+                        ></sp-data-export-item>
+                        <sp-data-export-item
+                            [exportItems]="config.files"
+                            [sectionTitle]="'Files' | translate"
+                        ></sp-data-export-item>
+                        <sp-data-export-item
+                            [exportItems]="config.pipelines"
+                            [sectionTitle]="'Pipelines' | translate"
+                        ></sp-data-export-item>
+                        <sp-generic-storage-items
+                            [exportItems]="config.genericStorageDocuments"
+                        >
+                        </sp-generic-storage-items>
+                    </div>
+                }
             </div>
-        </div>
-        <div
-            fxFlex="100"
-            fxLayout="column"
-            *ngIf="exportInProgress"
-            class="mt-10"
-            fxLayoutAlign="center center"
-        >
-            <mat-spinner [diameter]="50" color="accent"></mat-spinner>
-            <h4 class="mt-10">{{ 'Exporting resources...' | translate }}</h4>
-            <h5 class="mt-10">
-                {{
-                    'Depending on number and size of exported files, this might take a while...'
-                        | translate
-                }}
-            </h5>
-        </div>
+        }
+        @if (exportInProgress) {
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                class="mt-10"
+                fxLayoutAlign="center center"
+            >
+                <mat-spinner [diameter]="50" color="accent"></mat-spinner>
+                <h4 class="mt-10">
+                    {{ 'Exporting resources...' | translate }}
+                </h4>
+                <h5 class="mt-10">
+                    {{
+                        'Depending on number and size of exported files, this might take a while...'
+                            | translate
+                    }}
+                </h5>
+            </div>
+        }
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">

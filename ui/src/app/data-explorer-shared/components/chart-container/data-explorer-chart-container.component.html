@@ -32,7 +32,7 @@
         "
     >
         @if (!previewMode) {
-            <div class="widget-header h-40">
+            <div class="widget-header h-40 w-100">
                 <div fxFlex="100" fxLayout="row">
                     <div
                         fxFlex
@@ -43,11 +43,7 @@
                         {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
                     </div>
                     @if (!kioskMode) {
-                        <div
-                            fxFlex="100"
-                            fxLayout="row"
-                            fxLayoutAlign="end center"
-                        >
+                        <div fxLayout="row" fxLayoutAlign="end center">
                             @if (editMode) {
                                 @if (timerActive) {
                                     <mat-spinner

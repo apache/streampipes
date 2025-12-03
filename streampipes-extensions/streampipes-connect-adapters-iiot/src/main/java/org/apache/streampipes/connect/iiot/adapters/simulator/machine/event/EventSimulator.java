@@ -16,27 +16,16 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    Router,
-    RouterStateSnapshot,
-} from '@angular/router';
-import { Observable } from 'rxjs';
-import { SupportsUnsavedChangeDialog } from '../models/dataview-dashboard.model';
+package org.apache.streampipes.connect.iiot.adapters.simulator.machine.event;
 
-@Injectable({ providedIn: 'root' })
-export class DataExplorerPanelCanDeactivateGuard {
-    constructor(private router: Router) {}
-    canDeactivate(
-        component: SupportsUnsavedChangeDialog,
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean> | boolean {
-        if (!this.router.getCurrentNavigation().extras?.state?.omitConfirm) {
-            return component.confirmLeaveDialog(route, state);
-        } else {
-            return true;
-        }
-    }
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+
+import java.util.Map;
+
+public interface EventSimulator {
+
+  Map<String, Object> buildEvent(int simulationPhase, int sensorIndex, long timestamp);
+
+  GuessSchema getSchema();
+
 }

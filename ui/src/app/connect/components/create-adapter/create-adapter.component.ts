@@ -44,21 +44,43 @@ export class CreateAdapterComponent implements OnInit {
 
     ngOnInit(): void {
         this.adapterService.getAdapterDescriptions().subscribe(adapters => {
-            const adapter = adapters.find(
-                a => a.appId === this.route.snapshot.params.appId,
-            );
-            this.adapterTypeName = adapter.name;
-            this.adapter = AdapterDescription.fromData(adapter);
+            const adapter = this.findAdapterWithAppIdFromRoute(adapters);
 
-            this.breadcrumbService.updateBreadcrumb(
-                this.breadcrumbService.makeRoute(
-                    [SpConnectRoutes.BASE, SpConnectRoutes.CREATE],
-                    this.adapterTypeName,
-                ),
-            );
-            this.adapter.name = '';
-            this.adapter.description = '';
-            this.initialized = true;
+            this.updateAdapterTypeAndBreadcrumb(adapter);
+
+            this.initializeAdapterInstance(adapter);
         });
+    }
+
+    private findAdapterWithAppIdFromRoute(
+        adapters: AdapterDescription[],
+    ): AdapterDescription {
+        const appId = this.route.snapshot.params.appId;
+        return adapters.find(a => a.appId === appId);
+    }
+
+    private initializeAdapterInstance(adapter: AdapterDescription) {
+        this.adapter = this.copyAdapter(adapter);
+        this.adapter.name = '';
+        this.adapter.description = '';
+        this.initialized = true;
+    }
+
+    /**
+     * Create a copy of the adapter description.
+     * Input is the adapter description with the app id and output is the new instance.
+     */
+    private copyAdapter(adapter: AdapterDescription): AdapterDescription {
+        return AdapterDescription.fromData(adapter);
+    }
+
+    private updateAdapterTypeAndBreadcrumb(adapter: AdapterDescription) {
+        this.adapterTypeName = adapter.name;
+        this.breadcrumbService.updateBreadcrumb(
+            this.breadcrumbService.makeRoute(
+                [SpConnectRoutes.BASE, SpConnectRoutes.CREATE],
+                this.adapterTypeName,
+            ),
+        );
     }
 }

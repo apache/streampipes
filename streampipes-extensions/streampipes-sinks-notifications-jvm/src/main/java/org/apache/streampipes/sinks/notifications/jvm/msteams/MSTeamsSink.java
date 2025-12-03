@@ -19,7 +19,9 @@
 package org.apache.streampipes.sinks.notifications.jvm.msteams;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
@@ -27,11 +29,11 @@ import org.apache.streampipes.pe.shared.PlaceholderExtractor;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -78,11 +80,22 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onInvocation(
-      SinkParams parameters,
+  public IDataSinkConfiguration declareConfig() {
+    var builder = declareModelWithoutSilentPeriod();
+    addSilentPeriodParameter(builder);
+
+    return DataSinkConfiguration.create(
+        MSTeamsSink::new,
+        builder.build()
+    );
+  }
+
+  @Override
+  public void onPipelineStarted(
+      IDataSinkParameters parameters,
       EventSinkRuntimeContext runtimeContext
-  ) throws SpRuntimeException {
-    super.onInvocation(parameters, runtimeContext);
+  ) {
+    super.onPipelineStarted(parameters, runtimeContext);
 
     this.objectMapper = new ObjectMapper();
 
@@ -173,7 +186,7 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onDetach() {
+  public void onPipelineStopped() {
     // nothing to do
   }
 

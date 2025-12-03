@@ -1,244 +1,293 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'email'">
     <div fxLayout="column" class="page-container-padding">
-        <div
-            fxFlex="100"
-            fxLayout="column"
-            fxLayoutAlign="start start"
-            *ngIf="formReady"
-        >
-            <sp-split-section
-                [title]="'Mail Settings' | translate"
-                [subtitle]="'Settings to connect to a mail server' | translate"
-            >
-                <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                    <div class="subsection-title">
-                        {{ 'Mail Server' | translate }}
-                    </div>
-                    <mat-form-field color="accent">
-                        <mat-label>SMTP Host</mat-label>
-                        <input
-                            formControlName="smtpServerHost"
-                            fxFlex
-                            matInput
-                            required
-                        />
-                    </mat-form-field>
-                    <mat-form-field color="accent">
-                        <mat-label>SMTP Port</mat-label>
-                        <input
-                            type="number"
-                            formControlName="smtpServerPort"
-                            fxFlex
-                            matInput
-                            required
-                        />
-                    </mat-form-field>
-                    <div class="subsection-title">
-                        {{ 'Transport' | translate }}
-                    </div>
-                    <mat-radio-group
+        @if (formReady) {
+            <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+                <sp-split-section
+                    [title]="'Mail Settings' | translate"
+                    [subtitle]="
+                        'Settings to connect to a mail server' | translate
+                    "
+                >
+                    <form
+                        [formGroup]="parentForm"
+                        fxFlex="100"
                         fxLayout="column"
-                        formControlName="transport"
                     >
-                        <mat-radio-button value="SMTP" class="m-5"
-                            >SMTP</mat-radio-button
-                        >
-                        <mat-radio-button value="SMTPS" class="m-5"
-                            >SMTPS</mat-radio-button
-                        >
-                        <mat-radio-button value="SMTP_TLS" class="m-5"
-                            >TLS</mat-radio-button
-                        >
-                    </mat-radio-group>
-                    <div class="subsection-title mt-20">
-                        {{ 'Authentication' | translate }}
-                    </div>
-                    <mat-checkbox formControlName="usesAuthentication"
-                        >{{ 'SMTP server requires authentication' | translate }}
-                    </mat-checkbox>
-                    <mat-form-field
-                        color="accent"
-                        *ngIf="mailConfig.usesAuthentication"
-                    >
-                        <mat-label>{{ 'SMTP Username' | translate }}</mat-label>
-                        <input formControlName="smtpUsername" fxFlex matInput />
-                    </mat-form-field>
-                    <mat-form-field
-                        color="accent"
-                        *ngIf="mailConfig.usesAuthentication"
-                    >
-                        <mat-label>{{ 'SMTP Password' | translate }}</mat-label>
-                        <input
-                            formControlName="smtpPassword"
-                            fxFlex
-                            type="password"
-                            matInput
-                        />
-                    </mat-form-field>
-                    <div class="subsection-title mt-20">
-                        {{ 'Proxy' | translate }}
-                    </div>
-                    <mat-checkbox formControlName="usesProxy">{{
-                        'Uses proxy' | translate
-                    }}</mat-checkbox>
-                    <mat-form-field color="accent" *ngIf="mailConfig.usesProxy">
-                        <mat-label>{{ 'Proxy Host' | translate }}</mat-label>
-                        <input formControlName="proxyHost" fxFlex matInput />
-                    </mat-form-field>
-                    <mat-form-field color="accent" *ngIf="mailConfig.usesProxy">
-                        <mat-label>{{ 'Proxy Port' | translate }}</mat-label>
-                        <input formControlName="proxyPort" fxFlex matInput />
-                    </mat-form-field>
-                    <mat-checkbox
-                        formControlName="usesProxyAuthentication"
-                        *ngIf="mailConfig.usesProxy"
-                    >
-                        {{ 'Proxy requires authentication' | translate }}
-                    </mat-checkbox>
-                    <mat-form-field
-                        color="accent"
-                        *ngIf="
-                            mailConfig.usesProxy &&
-                            mailConfig.usesProxyAuthentication
-                        "
-                    >
-                        <mat-label>{{
-                            'Proxy Username' | translate
-                        }}</mat-label>
-                        <input
-                            formControlName="proxyUsername"
-                            fxFlex
-                            matInput
-                        />
-                    </mat-form-field>
-                    <mat-form-field
-                        color="accent"
-                        *ngIf="
-                            mailConfig.usesProxy &&
-                            mailConfig.usesProxyAuthentication
-                        "
-                    >
-                        <mat-label>Proxy Password</mat-label>
-                        <input
-                            formControlName="proxyPassword"
-                            fxFlex
-                            type="password"
-                            matInput
-                        />
-                    </mat-form-field>
-                    <div class="subsection-title mt-20">
-                        {{ 'Sender' | translate }}
-                    </div>
-                    <mat-form-field color="accent">
-                        <mat-label>{{
-                            'Sender Email Address' | translate
-                        }}</mat-label>
-                        <input
-                            formControlName="senderAddress"
-                            fxFlex
-                            matInput
-                            required
-                        />
-                    </mat-form-field>
-                    <mat-form-field color="accent">
-                        <mat-label>{{ 'Sender Name' | translate }}</mat-label>
-                        <input formControlName="senderName" fxFlex matInput />
-                    </mat-form-field>
-                    <mat-form-field color="accent">
-                        <mat-label>{{
-                            'Recipient for test mail' | translate
-                        }}</mat-label>
-                        <input
-                            formControlName="defaultRecipient"
-                            fxFlex
-                            matInput
-                        />
-                    </mat-form-field>
-                    <div fxLayout="row">
-                        <button
-                            mat-button
-                            mat-flat-button
-                            color="accent"
-                            (click)="save()"
-                            style="margin-right: 10px"
-                            [disabled]="!parentForm.valid"
-                            data-cy="sp-element-email-config-save"
-                        >
-                            <i class="material-icons">save</i
-                            ><span>&nbsp;{{ 'Save' | translate }}</span>
-                        </button>
-                        <button
-                            mat-button
-                            mat-flat-button
-                            class="mat-basic"
-                            (click)="sendTestMail()"
-                            style="margin-right: 10px"
-                            [disabled]="
-                                !parentForm.valid || sendingTestMailInProgress
-                            "
-                            data-cy="sp-element-email-config-test"
-                        >
-                            <span>{{ 'Send Test Mail' | translate }}</span>
-                        </button>
-                    </div>
-                    <div fxLayout="column" *ngIf="attemptSendingTestMail">
-                        <div fxLayout="row" *ngIf="sendingTestMailInProgress">
-                            <mat-progress-spinner
-                                diameter="10"
-                            ></mat-progress-spinner>
-                            <h5>
-                                {{ 'Trying to send test mail...' | translate }}
-                            </h5>
+                        <div class="subsection-title">
+                            {{ 'Mail Server' | translate }}
                         </div>
-                        <div fxLayout="row">
-                            <h5
-                                *ngIf="
-                                    !sendingTestMailInProgress &&
-                                    sendingTestMailSuccess
-                                "
+                        <mat-form-field color="accent">
+                            <mat-label>SMTP Host</mat-label>
+                            <input
+                                formControlName="smtpServerHost"
+                                fxFlex
+                                matInput
+                                required
+                            />
+                        </mat-form-field>
+                        <mat-form-field color="accent">
+                            <mat-label>SMTP Port</mat-label>
+                            <input
+                                type="number"
+                                formControlName="smtpServerPort"
+                                fxFlex
+                                matInput
+                                required
+                            />
+                        </mat-form-field>
+                        <div class="subsection-title">
+                            {{ 'Transport' | translate }}
+                        </div>
+                        <mat-radio-group
+                            fxLayout="column"
+                            formControlName="transport"
+                        >
+                            <mat-radio-button value="SMTP" class="m-5"
+                                >SMTP</mat-radio-button
+                            >
+                            <mat-radio-button value="SMTPS" class="m-5"
+                                >SMTPS</mat-radio-button
+                            >
+                            <mat-radio-button value="SMTP_TLS" class="m-5"
+                                >TLS</mat-radio-button
+                            >
+                        </mat-radio-group>
+                        <div class="subsection-title mt-20">
+                            {{ 'Authentication' | translate }}
+                        </div>
+                        <mat-checkbox formControlName="usesAuthentication"
+                            >{{
+                                'SMTP server requires authentication'
+                                    | translate
+                            }}
+                        </mat-checkbox>
+                        @if (mailConfig.usesAuthentication) {
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'SMTP Username' | translate
+                                }}</mat-label>
+                                <input
+                                    formControlName="smtpUsername"
+                                    fxFlex
+                                    matInput
+                                />
+                            </mat-form-field>
+                        }
+                        @if (mailConfig.usesAuthentication) {
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'SMTP Password' | translate
+                                }}</mat-label>
+                                <input
+                                    formControlName="smtpPassword"
+                                    fxFlex
+                                    type="password"
+                                    matInput
+                                />
+                            </mat-form-field>
+                        }
+                        <div class="subsection-title mt-20">
+                            {{ 'Proxy' | translate }}
+                        </div>
+                        <mat-checkbox formControlName="usesProxy">{{
+                            'Uses proxy' | translate
+                        }}</mat-checkbox>
+                        @if (mailConfig.usesProxy) {
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'Proxy Host' | translate
+                                }}</mat-label>
+                                <input
+                                    formControlName="proxyHost"
+                                    fxFlex
+                                    matInput
+                                />
+                            </mat-form-field>
+                        }
+                        @if (mailConfig.usesProxy) {
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'Proxy Port' | translate
+                                }}</mat-label>
+                                <input
+                                    formControlName="proxyPort"
+                                    fxFlex
+                                    matInput
+                                />
+                            </mat-form-field>
+                        }
+                        @if (mailConfig.usesProxy) {
+                            <mat-checkbox
+                                formControlName="usesProxyAuthentication"
                             >
                                 {{
-                                    'Success - please check your mail inbox.'
-                                        | translate
+                                    'Proxy requires authentication' | translate
                                 }}
-                            </h5>
-                            <div
-                                fxLayout="column"
-                                *ngIf="
-                                    !sendingTestMailInProgress &&
-                                    !sendingTestMailSuccess
-                                "
+                            </mat-checkbox>
+                        }
+                        @if (
+                            mailConfig.usesProxy &&
+                            mailConfig.usesProxyAuthentication
+                        ) {
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'Proxy Username' | translate
+                                }}</mat-label>
+                                <input
+                                    formControlName="proxyUsername"
+                                    fxFlex
+                                    matInput
+                                />
+                            </mat-form-field>
+                        }
+                        @if (
+                            mailConfig.usesProxy &&
+                            mailConfig.usesProxyAuthentication
+                        ) {
+                            <mat-form-field color="accent">
+                                <mat-label>Proxy Password</mat-label>
+                                <input
+                                    formControlName="proxyPassword"
+                                    fxFlex
+                                    type="password"
+                                    matInput
+                                />
+                            </mat-form-field>
+                        }
+                        <div class="subsection-title mt-20">
+                            {{ 'Sender' | translate }}
+                        </div>
+                        <mat-form-field color="accent">
+                            <mat-label>{{
+                                'Sender Email Address' | translate
+                            }}</mat-label>
+                            <input
+                                formControlName="senderAddress"
+                                fxFlex
+                                matInput
+                                required
+                            />
+                        </mat-form-field>
+                        <mat-form-field color="accent">
+                            <mat-label>{{
+                                'Sender Name' | translate
+                            }}</mat-label>
+                            <input
+                                formControlName="senderName"
+                                fxFlex
+                                matInput
+                            />
+                        </mat-form-field>
+                        <mat-form-field color="accent">
+                            <mat-label>{{
+                                'Recipient for test mail' | translate
+                            }}</mat-label>
+                            <input
+                                formControlName="defaultRecipient"
+                                fxFlex
+                                matInput
+                            />
+                        </mat-form-field>
+                        <div fxLayout="row">
+                            <button
+                                mat-button
+                                mat-flat-button
+                                color="accent"
+                                (click)="save()"
+                                style="margin-right: 10px"
+                                [disabled]="!parentForm.valid"
+                                data-cy="sp-element-email-config-save"
                             >
-                                <div class="error-panel">
-                                    <h4>
-                                        {{ 'Could not send email' | translate }}
-                                    </h4>
-                                    <h5>{{ sendingEmailErrorMessage }}</h5>
+                                <i class="material-icons">save</i
+                                ><span>&nbsp;{{ 'Save' | translate }}</span>
+                            </button>
+                            <button
+                                mat-button
+                                mat-flat-button
+                                class="mat-basic"
+                                (click)="sendTestMail()"
+                                style="margin-right: 10px"
+                                [disabled]="
+                                    !parentForm.valid ||
+                                    sendingTestMailInProgress
+                                "
+                                data-cy="sp-element-email-config-test"
+                            >
+                                <span>{{ 'Send Test Mail' | translate }}</span>
+                            </button>
+                        </div>
+                        @if (attemptSendingTestMail) {
+                            <div fxLayout="column">
+                                @if (sendingTestMailInProgress) {
+                                    <div fxLayout="row">
+                                        <mat-progress-spinner
+                                            diameter="10"
+                                        ></mat-progress-spinner>
+                                        <h5>
+                                            {{
+                                                'Trying to send test mail...'
+                                                    | translate
+                                            }}
+                                        </h5>
+                                    </div>
+                                }
+                                <div fxLayout="row">
+                                    @if (
+                                        !sendingTestMailInProgress &&
+                                        sendingTestMailSuccess
+                                    ) {
+                                        <h5>
+                                            {{
+                                                'Success - please check your mail inbox.'
+                                                    | translate
+                                            }}
+                                        </h5>
+                                    }
+                                    @if (
+                                        !sendingTestMailInProgress &&
+                                        !sendingTestMailSuccess
+                                    ) {
+                                        <div fxLayout="column">
+                                            <div class="error-panel">
+                                                <h4>
+                                                    {{
+                                                        'Could not send email'
+                                                            | translate
+                                                    }}
+                                                </h4>
+                                                <h5>
+                                                    {{
+                                                        sendingEmailErrorMessage
+                                                    }}
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </form>
-            </sp-split-section>
-        </div>
+                        }
+                    </form>
+                </sp-split-section>
+            </div>
+        }
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-email-template-configuration
                 fxFlex="100"

@@ -64,7 +64,6 @@ public class MqttAdapterTLSTester extends AdapterTesterBase {
     configs.add(Map.of(MqttConnectUtils.TOPIC, TOPIC));
     configs.add(Map.of(MqttConnectUtils.BROKER_URL, mosquittoContainer.getBrokerUrlTLS()));
 
-
     var template = new PipelineElementTemplate("name", "description", configs);
 
     var desc =

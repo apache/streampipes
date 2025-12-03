@@ -19,22 +19,23 @@
 package org.apache.streampipes.sinks.databases.jvm.postgresql;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.Tuple2;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-public class PostgreSqlSink extends StreamPipesDataSink {
+public class PostgreSqlSink implements IStreamPipesDataSink {
 
   private static final String DATABASE_HOST_KEY = "db_host";
   private static final String DATABASE_PORT_KEY = "db_port";
@@ -49,31 +50,35 @@ public class PostgreSqlSink extends StreamPipesDataSink {
   private PostgreSql postgreSql;
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.databases.jvm.postgresql", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.DATABASE)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 5432)
-        .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
-        .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
-        .requiredSingleValueSelection(Labels.withId(SSL_MODE),
-            Options.from(
-                new Tuple2<>("Yes", SSL_ENABLED),
-                new Tuple2<>("No", SSL_DISABLED)))
-        .build();
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        PostgreSqlSink::new,
+        DataSinkBuilder
+            .create("org.apache.streampipes.sinks.databases.jvm.postgresql", 0)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .category(DataSinkType.DATABASE)
+            .requiredStream(StreamRequirementsBuilder.create()
+                .requiredProperty(EpRequirements.anyProperty())
+                .build())
+            .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
+            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 5432)
+            .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
+            .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
+            .requiredSingleValueSelection(Labels.withId(SSL_MODE),
+                Options.from(
+                    new Tuple2<>("Yes", SSL_ENABLED),
+                    new Tuple2<>("No", SSL_DISABLED)))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(
+      IDataSinkParameters parameters,
+      EventSinkRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
@@ -103,7 +108,7 @@ public class PostgreSqlSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     postgreSql.onDetach();
   }
 }

@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 <div
     fxLayout="row"
     class="draggable-pipeline-element"
@@ -52,24 +52,24 @@
         >
             {{ element.name }}
         </div>
-        <div
-            class="element-description"
-            *ngIf="currentMouseOver"
-            fxLayoutAlign="start start"
-        >
-            <small>{{ element.description }}</small>
+        @if (currentMouseOver) {
+            <div class="element-description" fxLayoutAlign="start start">
+                <small>{{ element.description }}</small>
+            </div>
+        }
+    </div>
+    @if (currentMouseOver) {
+        <div fxLayoutAlign="end start">
+            <button
+                style="height: 20px"
+                mat-flat-button
+                color="accent"
+                class="help-button-stand"
+                data-cy="help-button-icon-stand"
+                (click)="openHelpDialog(element)"
+            >
+                ?
+            </button>
         </div>
-    </div>
-    <div fxLayoutAlign="end start" *ngIf="currentMouseOver">
-        <button
-            style="height: 20px"
-            mat-flat-button
-            color="accent"
-            class="help-button-stand"
-            data-cy="help-button-icon-stand"
-            (click)="openHelpDialog(element)"
-        >
-            ?
-        </button>
-    </div>
+    }
 </div>

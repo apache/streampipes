@@ -22,7 +22,7 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { DataExplorerFieldProviderService } from '../../../../../../data-explorer-shared/services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../../../data-explorer-shared/services/chart-field-provider.service';
 import { ChartConfigurationService } from '../../../../../../data-explorer-shared/services/chart-configuration.service';
 
 @Component({
@@ -42,7 +42,7 @@ export class FieldSelectionPanelComponent implements OnInit {
     expandFields = false;
 
     constructor(
-        private fieldProvider: DataExplorerFieldProviderService,
+        private fieldProvider: ChartFieldProviderService,
         private widgetConfigService: ChartConfigurationService,
     ) {}
 

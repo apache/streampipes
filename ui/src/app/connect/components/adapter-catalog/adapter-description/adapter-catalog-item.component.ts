@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import {
     AdapterDescription,
     PipelineElementAssetService,
@@ -24,38 +24,32 @@ import {
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
+import { Router } from '@angular/router';
+import { ShepherdService } from '../../../../services/tour/shepherd.service';
 
 @Component({
-    selector: 'sp-adapter-description',
-    templateUrl: './adapter-description.component.html',
-    styleUrls: ['./adapter-description.component.scss'],
+    selector: 'sp-adapter-catalog-item',
+    templateUrl: './adapter-catalog-item.component.html',
+    styleUrls: ['./adapter-catalog-item.component.scss'],
     standalone: false,
 })
-export class AdapterDescriptionComponent implements OnInit {
+export class AdapterCatalogItemComponent implements OnInit {
+    private pipelineElementAssetService = inject(PipelineElementAssetService);
+    private sanitizer = inject(DomSanitizer);
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+    private shepherdService = inject(ShepherdService);
+
     @Input()
     adapter: AdapterDescription;
 
-    @Output()
-    createEmitter = new EventEmitter<string>();
-
-    isRunningAdapter = false;
-    adapterLabel: string;
     iconUrl: SafeUrl;
-
-    constructor(
-        private pipelineElementAssetService: PipelineElementAssetService,
-        private sanitizer: DomSanitizer,
-        private dialogService: DialogService,
-    ) {}
 
     ngOnInit() {
         if (this.adapter.name == null) {
             this.adapter.name = '';
         }
-        this.isRunningAdapter =
-            this.adapter.elementId !== undefined &&
-            !(this.adapter as any).isTemplate;
-        this.adapterLabel = this.adapter.name.split(' ').join('_');
+
         this.iconUrl = this.sanitizer.bypassSecurityTrustUrl(
             this.makeAssetIconUrl(),
         );
@@ -66,6 +60,12 @@ export class AdapterDescriptionComponent implements OnInit {
             this.pipelineElementAssetService.getAssetUrl(this.adapter.appId) +
             '/icon'
         );
+    }
+
+    selectAdapter(appId: string) {
+        this.router.navigate(['connect', 'create', appId]).then(() => {
+            this.shepherdService.trigger('new-adapter-selected');
+        });
     }
 
     openDocumentation(event: MouseEvent): void {

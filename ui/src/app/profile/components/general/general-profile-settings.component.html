@@ -1,128 +1,129 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxLayout="row" class="page-container-padding">
-    <div
-        fxFlex="100"
-        fxLayout="column"
-        fxLayoutAlign="start start"
-        *ngIf="profileLoaded"
-    >
-        <sp-split-section
-            [title]="'Profile' | translate"
-            [subtitle]="'Manage your basic profile settings here' | translate"
-        >
-            <sp-warning-box *ngIf="isExternalUser">
-                {{
-                    'Settings for externally-managed users cannot be changed'
-                        | translate
-                }}
-            </sp-warning-box>
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <span>{{ userData.username }}</span>
-                <button
-                    [disabled]="isExternalUser"
-                    mat-button
-                    mat-flat-button
-                    color="accent"
-                    class="ml-15"
-                    (click)="openChangeEmailDialog()"
-                >
-                    {{ 'Change email' | translate }}
-                </button>
-            </div>
-            <mat-form-field fxFlex color="accent" class="mt-10 mb-10">
-                <mat-label>{{ 'Full name' | translate }}</mat-label>
-                <input
-                    [disabled]="isExternalUser"
-                    [(ngModel)]="userData.fullName"
-                    matInput
-                />
-            </mat-form-field>
-            <mat-form-field fxFlex color="accent" class="mt-10 mb-10">
-                <mat-label>{{ 'Language' | translate }}</mat-label>
-                <mat-select [(ngModel)]="selectedLanguage">
-                    <mat-option
-                        *ngFor="let lang of availableLanguages"
-                        [value]="lang.id"
-                    >
-                        {{ lang.label }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <button
-                    mat-button
-                    mat-flat-button
-                    color="accent"
-                    (click)="saveProfileSettings()"
-                >
-                    {{ 'Update profile' | translate }}
-                </button>
-                <button
-                    [disabled]="isExternalUser"
-                    mat-button
-                    mat-flat-button
-                    color="accent"
-                    class="ml-15"
-                    (click)="openChangePasswordDialog()"
-                >
-                    {{ 'Change password' | translate }}
-                </button>
-            </div>
-        </sp-split-section>
-        <mat-divider></mat-divider>
-        <div fxLayout="row" fxFlex="100" class="mt-30">
+    @if (profileLoaded) {
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section
-                [title]="'Appearance' | translate"
+                [title]="'Profile' | translate"
                 [subtitle]="
-                    'Change the look and feel of your installation' | translate
+                    'Manage your basic profile settings here' | translate
                 "
             >
-                <label id="radio-group-label">Color Scheme</label>
-                <mat-radio-group
-                    [(ngModel)]="darkMode"
-                    aria-labelledby="radio-group-label"
-                    class="appearance-radio-group"
-                    (ngModelChange)="changeModePreview($event)"
-                >
-                    <mat-radio-button
-                        [value]="false"
-                        class="appearance-radio-button"
-                        >{{ 'Light mode' | translate }}</mat-radio-button
+                @if (isExternalUser) {
+                    <sp-warning-box>
+                        {{
+                            'Settings for externally-managed users cannot be changed'
+                                | translate
+                        }}
+                    </sp-warning-box>
+                }
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <span>{{ userData.username }}</span>
+                    <button
+                        [disabled]="isExternalUser"
+                        mat-button
+                        mat-flat-button
+                        color="accent"
+                        class="ml-15"
+                        (click)="openChangeEmailDialog()"
                     >
-                    <mat-radio-button
-                        [value]="true"
-                        class="appearance-radio-button"
-                        >{{ 'Dark mode' | translate }}</mat-radio-button
-                    >
-                </mat-radio-group>
-                <div>
+                        {{ 'Change email' | translate }}
+                    </button>
+                </div>
+                <mat-form-field fxFlex color="accent" class="mt-10 mb-10">
+                    <mat-label>{{ 'Full name' | translate }}</mat-label>
+                    <input
+                        [disabled]="isExternalUser"
+                        [(ngModel)]="userData.fullName"
+                        matInput
+                    />
+                </mat-form-field>
+                <mat-form-field fxFlex color="accent" class="mt-10 mb-10">
+                    <mat-label>{{ 'Language' | translate }}</mat-label>
+                    <mat-select [(ngModel)]="selectedLanguage">
+                        @for (lang of availableLanguages; track lang) {
+                            <mat-option [value]="lang.id">
+                                {{ lang.label }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <div fxLayout="row" fxLayoutAlign="start center">
                     <button
                         mat-button
                         mat-flat-button
                         color="accent"
-                        (click)="updateAppearanceMode()"
+                        (click)="saveProfileSettings()"
                     >
-                        {{ 'Save color schema' | translate }}
+                        {{ 'Update profile' | translate }}
+                    </button>
+                    <button
+                        [disabled]="isExternalUser"
+                        mat-button
+                        mat-flat-button
+                        color="accent"
+                        class="ml-15"
+                        (click)="openChangePasswordDialog()"
+                    >
+                        {{ 'Change password' | translate }}
                     </button>
                 </div>
             </sp-split-section>
+            <mat-divider></mat-divider>
+            <div fxLayout="row" fxFlex="100" class="mt-30">
+                <sp-split-section
+                    [title]="'Appearance' | translate"
+                    [subtitle]="
+                        'Change the look and feel of your installation'
+                            | translate
+                    "
+                >
+                    <label id="radio-group-label">Color Scheme</label>
+                    <mat-radio-group
+                        [(ngModel)]="darkMode"
+                        aria-labelledby="radio-group-label"
+                        class="appearance-radio-group"
+                        (ngModelChange)="changeModePreview($event)"
+                    >
+                        <mat-radio-button
+                            [value]="false"
+                            class="appearance-radio-button"
+                            >{{ 'Light mode' | translate }}</mat-radio-button
+                        >
+                        <mat-radio-button
+                            [value]="true"
+                            class="appearance-radio-button"
+                            >{{ 'Dark mode' | translate }}</mat-radio-button
+                        >
+                    </mat-radio-group>
+                    <div>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            (click)="updateAppearanceMode()"
+                        >
+                            {{ 'Save color schema' | translate }}
+                        </button>
+                    </div>
+                </sp-split-section>
+            </div>
         </div>
-    </div>
+    }
 </div>

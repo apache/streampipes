@@ -1,157 +1,162 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <mat-toolbar class="md-primary md-hue-2 toolbar">
     <div class="md-toolbar-tools sp-toolbar">
         <div fxFlex="100" fxLayout fxLayoutAlign="start center">
             <sp-breadcrumb></sp-breadcrumb>
-            <div
-                fxFlex
-                fxLayout
-                fxLayoutAlign="end center"
-                *ngIf="authenticated"
-                fxLayoutGap="10px"
-                style="height: 100%"
-            >
-                <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
-                <!--                <div>-->
-                <!--                    <mat-slide-toggle-->
-                <!--                        color="accent"-->
-                <!--                        [formControl]="appearanceControl"-->
-                <!--                        >Dark Mode</mat-slide-toggle-->
-                <!--                    >-->
-                <!--                </div>-->
-                <sp-asset-browser-toolbar> </sp-asset-browser-toolbar>
+            @if (authenticated) {
                 <div
-                    [ngClass]="
-                        'notifications' === activePage
-                            ? 'sp-navbar-item-selected'
-                            : 'sp-navbar-item'
-                    "
-                    *ngIf="notificationsVisible"
-                    class="h-100"
+                    fxFlex
+                    fxLayout
+                    fxLayoutAlign="end center"
+                    fxLayoutGap="10px"
+                    style="height: 100%"
                 >
-                    <button
-                        mat-icon-button
-                        class="md-icon-button button-margin-iconbar iconbar-size"
-                        (click)="go('notifications')"
-                        fxLayout
-                        fxLayoutAlign="center center"
-                        matTooltip="Notifications"
-                        matTooltipPosition="below"
-                    >
-                        <mat-icon
-                            [matBadge]="unreadNotificationCount"
-                            matBadgeColor="accent"
-                            matBadgePosition="below after"
-                            [matBadgeHidden]="unreadNotificationCount === 0"
+                    <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
+                    <!--                <div>-->
+                    <!--                    <mat-slide-toggle-->
+                    <!--                        color="accent"-->
+                    <!--                        [formControl]="appearanceControl"-->
+                    <!--                        >Dark Mode</mat-slide-toggle-->
+                    <!--                    >-->
+                    <!--                </div>-->
+                    <sp-asset-browser-toolbar> </sp-asset-browser-toolbar>
+                    @if (notificationsVisible) {
+                        <div
                             [ngClass]="
                                 'notifications' === activePage
-                                    ? 'sp-navbar-icon-selected'
-                                    : 'sp-navbar-icon'
+                                    ? 'sp-navbar-item-selected'
+                                    : 'sp-navbar-item'
                             "
-                            data-cy="navigation-icon"
-                            >notifications
-                        </mat-icon>
-                    </button>
-                </div>
-                <div style="height: 100%">
-                    <div
-                        [ngClass]="
-                            accountMenuOpen.menuOpen
-                                ? 'sp-navbar-item-selected'
-                                : 'sp-navbar-item'
-                        "
-                        fxLayout
-                        fxLayoutAlign="center center"
-                        style="height: 100%"
-                    >
-                        <button
-                            mat-icon-button
+                            class="h-100"
+                        >
+                            <button
+                                mat-icon-button
+                                class="md-icon-button button-margin-iconbar iconbar-size"
+                                (click)="go('notifications')"
+                                fxLayout
+                                fxLayoutAlign="center center"
+                                matTooltip="Notifications"
+                                matTooltipPosition="below"
+                            >
+                                <mat-icon
+                                    [matBadge]="unreadNotificationCount"
+                                    matBadgeColor="accent"
+                                    matBadgePosition="below after"
+                                    [matBadgeHidden]="
+                                        unreadNotificationCount === 0
+                                    "
+                                    [ngClass]="
+                                        'notifications' === activePage
+                                            ? 'sp-navbar-icon-selected'
+                                            : 'sp-navbar-icon'
+                                    "
+                                    data-cy="navigation-icon"
+                                    >notifications
+                                </mat-icon>
+                            </button>
+                        </div>
+                    }
+                    <div style="height: 100%">
+                        <div
+                            [ngClass]="
+                                accountMenuOpen.menuOpen
+                                    ? 'sp-navbar-item-selected'
+                                    : 'sp-navbar-item'
+                            "
                             fxLayout
                             fxLayoutAlign="center center"
-                            [class.sp-navbar-icon-button-selected]="
-                                accountMenuOpen.menuOpen
-                            "
-                            style="min-width: 0"
-                            [matMenuTriggerFor]="menu"
-                            #accountMenuOpen="matMenuTrigger"
-                            matTooltip="User Preferences"
-                            matTooltipPosition="below"
-                            data-cy="sp-user-preferences"
+                            style="height: 100%"
                         >
-                            <mat-icon
-                                class="sp-navbar-icon"
-                                [class.sp-navbar-icon-selected]="
-                                    accountMenuOpen
+                            <button
+                                mat-icon-button
+                                fxLayout
+                                fxLayoutAlign="center center"
+                                [class.sp-navbar-icon-button-selected]="
+                                    accountMenuOpen.menuOpen
                                 "
-                                >account_circle</mat-icon
+                                style="min-width: 0"
+                                [matMenuTriggerFor]="menu"
+                                #accountMenuOpen="matMenuTrigger"
+                                matTooltip="User Preferences"
+                                matTooltipPosition="below"
+                                data-cy="sp-user-preferences"
                             >
-                        </button>
+                                <mat-icon
+                                    class="sp-navbar-icon"
+                                    [class.sp-navbar-icon-selected]="
+                                        accountMenuOpen
+                                    "
+                                    >account_circle</mat-icon
+                                >
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <mat-menu #menu="matMenu" id="account" class="toolbar-menu">
-                    <div class="current-user">
-                        <span class="user-email">{{
-                            userEmail | shorten: 30
-                        }}</span>
-                    </div>
-                    <mat-divider></mat-divider>
-                    <button
-                        mat-menu-item
-                        (click)="openProfile()"
-                        style="min-width: 0px"
-                    >
-                        <mat-icon aria-label="Info">perm_identity</mat-icon>
-                        Profile
-                    </button>
-                    <button
-                        mat-menu-item
-                        (click)="openInfo()"
-                        style="min-width: 0px"
-                    >
-                        <mat-icon aria-label="Info">help</mat-icon>
-                        Info
-                    </button>
-                    <button
-                        *ngIf="documentationLinkActive"
-                        mat-menu-item
-                        (click)="openDocumentation()"
-                        style="min-width: 0px"
-                    >
-                        <mat-icon aria-label="Documentation"
-                            >description</mat-icon
+                    <mat-menu #menu="matMenu" id="account" class="toolbar-menu">
+                        <div class="current-user">
+                            <span class="user-email">{{
+                                userEmail | shorten: 30
+                            }}</span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <button
+                            mat-menu-item
+                            (click)="openProfile()"
+                            style="min-width: 0px"
                         >
-                        Documentation
-                    </button>
-                    <mat-divider></mat-divider>
-                    <button
-                        mat-menu-item
-                        id="sp_logout"
-                        (click)="logout()"
-                        style="min-width: 0px"
-                        data-cy="sp-logout"
-                    >
-                        <mat-icon aria-label="Logout">exit_to_app</mat-icon>
-                        Logout
-                    </button>
-                </mat-menu>
-            </div>
+                            <mat-icon aria-label="Info">perm_identity</mat-icon>
+                            Profile
+                        </button>
+                        <button
+                            mat-menu-item
+                            (click)="openInfo()"
+                            style="min-width: 0px"
+                        >
+                            <mat-icon aria-label="Info">help</mat-icon>
+                            Info
+                        </button>
+                        @if (documentationLinkActive) {
+                            <button
+                                mat-menu-item
+                                (click)="openDocumentation()"
+                                style="min-width: 0px"
+                            >
+                                <mat-icon aria-label="Documentation"
+                                    >description</mat-icon
+                                >
+                                Documentation
+                            </button>
+                        }
+                        <mat-divider></mat-divider>
+                        <button
+                            mat-menu-item
+                            id="sp_logout"
+                            (click)="logout()"
+                            style="min-width: 0px"
+                            data-cy="sp-logout"
+                        >
+                            <mat-icon aria-label="Logout">exit_to_app</mat-icon>
+                            Logout
+                        </button>
+                    </mat-menu>
+                </div>
+            }
         </div>
     </div>
 </mat-toolbar>
