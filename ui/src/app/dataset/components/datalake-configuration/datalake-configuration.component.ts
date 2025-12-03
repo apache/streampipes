@@ -49,8 +49,8 @@ import { DataRetentionDialogComponent } from '../../dialog/data-retention-dialog
 import { ExportProviderComponent } from '../../dialog/export-provider-dialog/export-provider-dialog.component';
 import { DeleteExportProviderComponent } from '../../dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
-import { ExportProviderConnectionTestComponent } from '../dialog/export-provider-connection-test/export-provider-connection-test.component';
-import { DataRetentionLogDialogComponent } from '../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
+import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
+import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -83,8 +83,8 @@ export class DatalakeConfigurationComponent implements OnInit {
         'pipeline',
         'events',
         'retention',
-        'actions',
         'retentionlog',
+        'actions',
     ];
 
     displayedColumnsExport: string[] = [

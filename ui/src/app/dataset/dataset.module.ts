@@ -50,6 +50,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { DataRetentionNowDialogComponent } from './dialog/data-retention-now-dialog/data-retention-now-dialog.component';
+import { DataRetentionLogDialogComponent } from './dialog/data-retention-log-dialog/data-retention-log-dialog.component';
+import { ExportProviderConnectionTestComponent } from './dialog/export-provider-connection-test/export-provider-connection-test.component';
 
 @NgModule({
     imports: [
@@ -88,6 +91,9 @@ import { MatMenuModule } from '@angular/material/menu';
     ],
     declarations: [
         DeleteDatalakeIndexComponent,
+        DataRetentionNowDialogComponent,
+        DataRetentionLogDialogComponent,
+        ExportProviderConnectionTestComponent,
         DatalakeConfigurationComponent,
         DataRetentionDialogComponent,
         ExportProviderComponent,
