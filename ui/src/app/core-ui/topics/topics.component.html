@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15" fxLayout="column">
@@ -39,164 +39,196 @@
             [selectedIndex]="selectedTabIndex"
             (selectedIndexChange)="selectedTabIndex = $event"
         >
-            <mat-tab *ngFor="let tab of tabs" [label]="tab"></mat-tab>
+            @for (tab of tabs; track tab) {
+                <mat-tab [label]="tab"></mat-tab>
+            }
         </mat-tab-group>
 
-        <div *ngIf="selectedTabIndex === 0">
-            <ng-container *ngIf="isSpDataStream()">
-                <table
-                    mat-table
-                    [dataSource]="
-                        pipelineElement?.eventGrounding?.transportProtocols
-                    "
-                >
-                    <ng-container matColumnDef="outputTopics">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <strong>{{ 'Output Topics' | translate }}</strong>
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div
-                                fxLayout="row"
-                                fxLayoutAlign="space-between center"
-                            >
-                                <span>{{
-                                    element?.topicDefinition?.actualTopicName
-                                }}</span>
-                                <button
-                                    mat-icon-button
-                                    [cdkCopyToClipboard]="
-                                        element.topicDefinition.actualTopicName
-                                    "
-                                    [matTooltip]="'Copy' | translate"
+        @if (selectedTabIndex === 0) {
+            <div>
+                @if (isSpDataStream()) {
+                    <table
+                        mat-table
+                        [dataSource]="
+                            pipelineElement?.eventGrounding?.transportProtocols
+                        "
+                    >
+                        <ng-container matColumnDef="outputTopics">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <strong>{{
+                                    'Output Topics' | translate
+                                }}</strong>
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="space-between center"
                                 >
-                                    <mat-icon>content_copy</mat-icon>
-                                </button>
-                            </div>
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="['outputTopics']"></tr>
-                    <tr
-                        mat-row
-                        *matRowDef="let row; columns: ['outputTopics']"
-                    ></tr>
-                </table>
-            </ng-container>
-
-            <ng-container *ngIf="isDataProcessorInvocation()">
-                <table mat-table [dataSource]="pipelineElement?.inputStreams">
-                    <ng-container matColumnDef="inputTopics">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <strong>{{ 'Input Topics' | translate }}</strong>
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div
-                                fxLayout="row"
-                                fxLayoutAlign="space-between center"
-                            >
-                                <span>{{
-                                    element?.eventGrounding
-                                        ?.transportProtocols?.[0]
-                                        ?.topicDefinition?.actualTopicName
-                                }}</span>
-                                <button
-                                    mat-icon-button
-                                    [cdkCopyToClipboard]="
-                                        element?.eventGrounding
-                                            ?.transportProtocols?.[0]
-                                            ?.topicDefinition?.actualTopicName
-                                    "
-                                    [matTooltip]="'Copy' | translate"
-                                >
-                                    <mat-icon>content_copy</mat-icon>
-                                </button>
-                            </div>
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="['inputTopics']"></tr>
-                    <tr
-                        mat-row
-                        *matRowDef="let row; columns: ['inputTopics']"
-                    ></tr>
-                </table>
-
-                <table
-                    mat-table
-                    [dataSource]="
-                        pipelineElement?.outputStream?.eventGrounding
-                            ?.transportProtocols
-                    "
-                >
-                    <ng-container matColumnDef="outputTopics">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <strong>{{ 'Output Topics' | translate }}</strong>
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div
-                                fxLayout="row"
-                                fxLayoutAlign="space-between center"
-                            >
-                                <span>{{
-                                    element?.topicDefinition?.actualTopicName
-                                }}</span>
-                                <button
-                                    mat-icon-button
-                                    [cdkCopyToClipboard]="
+                                    <span>{{
                                         element?.topicDefinition
                                             ?.actualTopicName
-                                    "
-                                    [matTooltip]="'Copy' | translate"
+                                    }}</span>
+                                    <button
+                                        mat-icon-button
+                                        [cdkCopyToClipboard]="
+                                            element.topicDefinition
+                                                .actualTopicName
+                                        "
+                                        [matTooltip]="'Copy' | translate"
+                                    >
+                                        <mat-icon>content_copy</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr
+                            mat-header-row
+                            *matHeaderRowDef="['outputTopics']"
+                        ></tr>
+                        <tr
+                            mat-row
+                            *matRowDef="let row; columns: ['outputTopics']"
+                        ></tr>
+                    </table>
+                }
+                @if (isDataProcessorInvocation()) {
+                    <table
+                        mat-table
+                        [dataSource]="pipelineElement?.inputStreams"
+                    >
+                        <ng-container matColumnDef="inputTopics">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <strong>{{
+                                    'Input Topics' | translate
+                                }}</strong>
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="space-between center"
                                 >
-                                    <mat-icon>content_copy</mat-icon>
-                                </button>
-                            </div>
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="['outputTopics']"></tr>
-                    <tr
-                        mat-row
-                        *matRowDef="let row; columns: ['outputTopics']"
-                    ></tr>
-                </table>
-            </ng-container>
-
-            <ng-container *ngIf="isDataSinkInvocation()">
-                <table mat-table [dataSource]="pipelineElement?.inputStreams">
-                    <ng-container matColumnDef="inputTopics">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <strong>{{ 'Input Topics' | translate }}</strong>
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div
-                                fxLayout="row"
-                                fxLayoutAlign="space-between center"
-                            >
-                                <span>{{
-                                    element?.eventGrounding
-                                        ?.transportProtocols?.[0]
-                                        ?.topicDefinition?.actualTopicName
-                                }}</span>
-                                <button
-                                    mat-icon-button
-                                    [cdkCopyToClipboard]="
+                                    <span>{{
                                         element?.eventGrounding
                                             ?.transportProtocols?.[0]
                                             ?.topicDefinition?.actualTopicName
-                                    "
-                                    [matTooltip]="'Copy' | translate"
+                                    }}</span>
+                                    <button
+                                        mat-icon-button
+                                        [cdkCopyToClipboard]="
+                                            element?.eventGrounding
+                                                ?.transportProtocols?.[0]
+                                                ?.topicDefinition
+                                                ?.actualTopicName
+                                        "
+                                        [matTooltip]="'Copy' | translate"
+                                    >
+                                        <mat-icon>content_copy</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr
+                            mat-header-row
+                            *matHeaderRowDef="['inputTopics']"
+                        ></tr>
+                        <tr
+                            mat-row
+                            *matRowDef="let row; columns: ['inputTopics']"
+                        ></tr>
+                    </table>
+                    <table
+                        mat-table
+                        [dataSource]="
+                            pipelineElement?.outputStream?.eventGrounding
+                                ?.transportProtocols
+                        "
+                    >
+                        <ng-container matColumnDef="outputTopics">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <strong>{{
+                                    'Output Topics' | translate
+                                }}</strong>
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="space-between center"
                                 >
-                                    <mat-icon>content_copy</mat-icon>
-                                </button>
-                            </div>
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="['inputTopics']"></tr>
-                    <tr
-                        mat-row
-                        *matRowDef="let row; columns: ['inputTopics']"
-                    ></tr>
-                </table>
-            </ng-container>
-        </div>
+                                    <span>{{
+                                        element?.topicDefinition
+                                            ?.actualTopicName
+                                    }}</span>
+                                    <button
+                                        mat-icon-button
+                                        [cdkCopyToClipboard]="
+                                            element?.topicDefinition
+                                                ?.actualTopicName
+                                        "
+                                        [matTooltip]="'Copy' | translate"
+                                    >
+                                        <mat-icon>content_copy</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr
+                            mat-header-row
+                            *matHeaderRowDef="['outputTopics']"
+                        ></tr>
+                        <tr
+                            mat-row
+                            *matRowDef="let row; columns: ['outputTopics']"
+                        ></tr>
+                    </table>
+                }
+                @if (isDataSinkInvocation()) {
+                    <table
+                        mat-table
+                        [dataSource]="pipelineElement?.inputStreams"
+                    >
+                        <ng-container matColumnDef="inputTopics">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <strong>{{
+                                    'Input Topics' | translate
+                                }}</strong>
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="space-between center"
+                                >
+                                    <span>{{
+                                        element?.eventGrounding
+                                            ?.transportProtocols?.[0]
+                                            ?.topicDefinition?.actualTopicName
+                                    }}</span>
+                                    <button
+                                        mat-icon-button
+                                        [cdkCopyToClipboard]="
+                                            element?.eventGrounding
+                                                ?.transportProtocols?.[0]
+                                                ?.topicDefinition
+                                                ?.actualTopicName
+                                        "
+                                        [matTooltip]="'Copy' | translate"
+                                    >
+                                        <mat-icon>content_copy</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr
+                            mat-header-row
+                            *matHeaderRowDef="['inputTopics']"
+                        ></tr>
+                        <tr
+                            mat-row
+                            *matRowDef="let row; columns: ['inputTopics']"
+                        ></tr>
+                    </table>
+                }
+            </div>
+        }
     </div>
 
     <mat-divider></mat-divider>

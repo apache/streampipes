@@ -24,7 +24,7 @@ import {
 } from '../model/pie-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
-import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 
 @Component({
     selector: 'sp-pie-chart-widget-config',
@@ -37,7 +37,7 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
 > {
     constructor(
         widgetConfigurationService: ChartConfigurationService,
-        fieldService: DataExplorerFieldProviderService,
+        fieldService: ChartFieldProviderService,
     ) {
         super(widgetConfigurationService, fieldService);
     }

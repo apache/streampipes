@@ -25,7 +25,6 @@ import {
     ViewChild,
 } from '@angular/core';
 import {
-    ChartService,
     DataExplorerDataConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
@@ -33,13 +32,12 @@ import {
     SourceConfig,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../../core-model/base/Tuple2';
-import { zip } from 'rxjs';
 import { Router } from '@angular/router';
 import { ChartConfigurationService } from '../../../../../data-explorer-shared/services/chart-configuration.service';
 import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
 import { GroupSelectionPanelComponent } from './group-selection-panel/group-selection-panel.component';
 import { TableVisConfig } from '../../../../../data-explorer-shared/components/charts/table/model/table-widget.model';
-import { DataExplorerFieldProviderService } from '../../../../../data-explorer-shared/services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../../data-explorer-shared/services/chart-field-provider.service';
 import { FieldProvider } from '../../../../../data-explorer-shared/models/dataview-dashboard.model';
 import { ChartTypeService } from '../../../../../data-explorer-shared/services/chart-type.service';
 
@@ -70,7 +68,6 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     @ViewChild('groupSelectionPanel')
     groupSelectionPanel: GroupSelectionPanelComponent;
 
-    availablePipelines: DataLakeMeasure[] = [];
     availableMeasurements: DataLakeMeasure[] = [];
 
     step = 0;
@@ -79,10 +76,9 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     expandFieldsQuery = true;
 
     constructor(
-        private dataExplorerService: ChartService,
         private datalakeRestService: DatalakeRestService,
         private widgetConfigService: ChartConfigurationService,
-        private fieldProviderService: DataExplorerFieldProviderService,
+        private fieldProviderService: ChartFieldProviderService,
         private widgetTypeService: ChartTypeService,
         private router: Router,
     ) {}
@@ -92,85 +88,36 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     }
 
     loadPipelinesAndMeasurements() {
-        zip(
-            this.dataExplorerService.getAllPersistedDataStreams(),
-            this.datalakeRestService.getAllMeasurementSeries(),
-        ).subscribe(response => {
-            this.availablePipelines = response[0].filter(
-                p =>
-                    response[1].find(m => m.measureName === p.measureName) !==
-                    undefined,
-            );
-            this.availableMeasurements = response[1];
-
-            this.availablePipelines.sort((a, b) =>
-                a.pipelineName.localeCompare(b.pipelineName),
-            );
-            this.availableMeasurements.sort((a, b) =>
-                a.measureName.localeCompare(b.measureName),
-            );
-
-            // replace pipeline event schemas. Reason: Available measures do not contain field for timestamp
-            this.availablePipelines.forEach(p => {
-                const measurement = this.availableMeasurements.find(m => {
-                    return m.measureName === p.measureName;
-                });
-                p.eventSchema = measurement.eventSchema;
-            });
-
-            if (!this.dataConfig.sourceConfigs) {
-                const defaultConfigs = this.findDefaultConfig();
-                this.addDataSource(
-                    defaultConfigs.measureName,
-                    defaultConfigs.sourceType,
+        this.datalakeRestService
+            .getAllMeasurementSeries()
+            .subscribe(response => {
+                this.availableMeasurements = response;
+                this.availableMeasurements.sort((a, b) =>
+                    a.measureName.localeCompare(b.measureName),
                 );
-                if (defaultConfigs.measureName !== undefined) {
-                    this.updateMeasure(
-                        this.dataConfig.sourceConfigs[0],
-                        defaultConfigs.measureName,
-                    );
+
+                if (!this.dataConfig.sourceConfigs) {
+                    const defaultConfigs = this.findDefaultConfig();
+                    this.addDataSource(defaultConfigs.measureName);
+                    if (defaultConfigs.measureName !== undefined) {
+                        this.updateMeasure(
+                            this.dataConfig.sourceConfigs[0],
+                            defaultConfigs.measureName,
+                        );
+                    }
                 }
-            } else {
-                this.checkSourceTypes();
-            }
-        });
-    }
-
-    checkSourceTypes() {
-        this.dataConfig.sourceConfigs.forEach(sourceConfig => {
-            if (
-                sourceConfig.sourceType === 'pipeline' &&
-                !this.existsPipelineWithMeasure(sourceConfig.measureName)
-            ) {
-                sourceConfig.sourceType = 'measurement';
-            }
-        });
-    }
-
-    existsPipelineWithMeasure(measureName: string) {
-        return (
-            this.availablePipelines.find(
-                pipeline => pipeline.measureName === measureName,
-            ) !== undefined
-        );
+            });
     }
 
     findDefaultConfig(): {
         measureName: string;
-        sourceType: 'pipeline' | 'measurement';
     } {
-        if (this.availablePipelines.length > 0) {
-            return {
-                measureName: this.availablePipelines[0].measureName,
-                sourceType: 'pipeline',
-            };
-        } else if (this.availableMeasurements.length > 0) {
+        if (this.availableMeasurements.length > 0) {
             return {
                 measureName: this.availableMeasurements[0].measureName,
-                sourceType: 'measurement',
             };
         } else {
-            return { measureName: undefined, sourceType: undefined };
+            return { measureName: undefined };
         }
     }
 
@@ -189,11 +136,8 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     }
 
     findMeasure(measureName: string) {
-        return (
-            this.availablePipelines.find(
-                pipeline => pipeline.measureName === measureName,
-            ) ||
-            this.availableMeasurements.find(m => m.measureName === measureName)
+        return this.availableMeasurements.find(
+            m => m.measureName === measureName,
         );
     }
 
@@ -206,22 +150,14 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
         this.triggerDataRefresh();
     }
 
-    addDataSource(
-        measureName = '',
-        sourceType: 'pipeline' | 'measurement' = 'pipeline',
-    ) {
+    addDataSource(measureName = '') {
         if (!this.dataConfig.sourceConfigs) {
             this.dataConfig.sourceConfigs = [];
         }
-        this.dataConfig.sourceConfigs.push(
-            this.makeSourceConfig(measureName, sourceType),
-        );
+        this.dataConfig.sourceConfigs.push(this.makeSourceConfig(measureName));
     }
 
-    makeSourceConfig(
-        measureName = '',
-        sourceType: 'pipeline' | 'measurement' = 'pipeline',
-    ): SourceConfig {
+    makeSourceConfig(measureName = ''): SourceConfig {
         return {
             measureName,
             queryConfig: {
@@ -232,7 +168,6 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
                 aggregationValue: 1,
             },
             queryType: 'raw',
-            sourceType,
         };
     }
 
@@ -255,6 +190,11 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
             this.widgetTypeService.notify({
                 widgetId: this.currentlyConfiguredWidget.elementId,
                 newWidgetTypeId: this.currentlyConfiguredWidget.widgetType,
+            });
+
+            this.createWidgetEmitter.emit({
+                a: this.dataLakeMeasure,
+                b: this.currentlyConfiguredWidget,
             });
         }
     }

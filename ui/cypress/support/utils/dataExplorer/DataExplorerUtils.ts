@@ -29,6 +29,8 @@ import { GeneralUtils } from '../GeneralUtils';
 import { DataExplorerBtns } from './DataExplorerBtns';
 
 export class DataExplorerUtils {
+    public static ADAPTER_NAME = 'datalake_configuration';
+
     public static goToDatalake() {
         cy.visit('#/dataexplorer');
     }
@@ -36,6 +38,47 @@ export class DataExplorerUtils {
     public static goToDashboard() {
         cy.wait(1000);
         cy.visit('#/dashboard');
+    }
+
+    public static checkAmountOfCharts(amount: number) {
+        DataExplorerUtils.goToDatalake();
+        this.checkAmount(amount);
+    }
+
+    public static checkAmountOfDashboards(amount: number) {
+        DataExplorerUtils.goToDashboard();
+        this.checkAmount(amount);
+    }
+
+    public static checkAmount(amount: number) {
+        if (amount === 0) {
+            // The wait is needed because the default value is the no-table-entries element.
+            // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
+            cy.wait(1000);
+            cy.dataCy('no-table-entries').should('be.visible');
+        } else {
+            ConnectBtns.moreOptions().should('have.length', amount);
+        }
+    }
+
+    public static checkChartCanBeEdited(chartName: string) {
+        GeneralUtils.openMenuForRow(chartName);
+        DataExplorerBtns.editDataViewButton(chartName).should('exist');
+    }
+
+    public static checkChartCanNotBeEdited(chartName: string) {
+        GeneralUtils.openMenuForRow(chartName);
+        DataExplorerBtns.editDataViewButton(chartName).should('not.exist');
+    }
+
+    public static checkDashboardCanBeEdited(dashboardName: string) {
+        GeneralUtils.openMenuForRow(dashboardName);
+        DataExplorerBtns.editDashboardBtn(dashboardName).should('exist');
+    }
+
+    public static checkDashboardCanNotBeEdited(dashboardName: string) {
+        GeneralUtils.openMenuForRow(dashboardName);
+        DataExplorerBtns.editDashboardBtn(dashboardName).should('not.exist');
     }
 
     public static initDataLakeTests() {
@@ -82,7 +125,7 @@ export class DataExplorerUtils {
         FileManagementUtils.addFile(dataSet);
 
         const adapter = this.getDataLakeTestSetAdapter(
-            'datalake_configuration',
+            DataExplorerUtils.ADAPTER_NAME,
             true,
             format,
         );
@@ -95,14 +138,18 @@ export class DataExplorerUtils {
         dataViewName: string,
         dataSet: string,
         widgetType: string,
+        ignoreTimeSelection = false,
     ) {
         DataExplorerUtils.goToDatalake();
         DataExplorerUtils.createAndEditDataView();
 
-        DataExplorerUtils.selectTimeRange(
-            new Date(2020, 10, 20, 22, 44),
-            DataExplorerUtils.getFutureDate(),
-        );
+        if (!ignoreTimeSelection) {
+            DataExplorerUtils.selectTimeRange(
+                new Date(2020, 10, 20, 22, 44),
+                DataExplorerUtils.getFutureDate(),
+            );
+        }
+
         // DataExplorerUtils.addNewWidget();
         DataExplorerUtils.selectDataSet(dataSet);
         DataExplorerUtils.dataConfigSelectAllFields();
@@ -115,7 +162,8 @@ export class DataExplorerUtils {
 
         cy.wait(1000);
     }
-    public static addAssetsToDashboard(assetNameList) {
+
+    public static addAssetsToDashboard(assetNameList: string[]) {
         cy.dataCy('sp-show-dashboard-asset-checkbox')
             .find('input[type="checkbox"]')
             .then($checkbox => {
@@ -126,20 +174,42 @@ export class DataExplorerUtils {
 
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
         assetNameList.forEach(assetName => {
+            const assetHierarchy = assetName.split('.');
+            const lastElement = assetHierarchy[assetHierarchy.length - 1];
+            const firstElements = assetHierarchy.slice(0, -1);
+
+            firstElements.forEach(el => {
+                cy.dataCy(`toggle-${el}`).click();
+            });
+
             cy.get('mat-tree.asset-tree')
                 .find('.mat-tree-node')
-                .contains(assetName)
+                .contains(lastElement)
                 .click();
         });
     }
 
-    public static createDashboard(name) {
-        // Create new data view
-        DataExplorerBtns.newDashboardDialogBtn().click();
+    public static createNewDashboard(name: string) {
+        DataExplorerUtils.goToDashboard();
+        DataExplorerUtils.addNewDashboard(name);
+        DataExplorerUtils.saveDataView();
+    }
 
-        // Configure data view
+    public static createNewDashboardWithAssetLinks(
+        name: string,
+        assetNameList: string[],
+    ) {
+        DataExplorerUtils.goToDashboard();
+        DataExplorerUtils.addNewDashboard(name);
+        DataExplorerUtils.addAssetsToDashboard(assetNameList);
+        DataExplorerUtils.saveDataView();
+    }
+
+    public static addNewDashboard(name: string) {
+        DataExplorerBtns.newDashboardDialogBtn().click();
         cy.dataCy('data-view-name').type(name);
     }
+
     public static createDashboardWithLinkedAssets(
         dataView,
         name,
@@ -147,29 +217,39 @@ export class DataExplorerUtils {
     ) {
         DataExplorerUtils.goToDatalake();
 
-        DataExplorerUtils.addDataViewAndTableWidget(dataView, 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget(
+            dataView,
+            DataExplorerUtils.ADAPTER_NAME,
+        );
 
         DataExplorerUtils.saveDataViewConfiguration();
 
         DataExplorerUtils.goToDashboard();
 
         //ADD Assets
-        DataExplorerUtils.createDashboard(name);
+        DataExplorerUtils.addNewDashboard(name);
         DataExplorerUtils.addAssetsToDashboard(assetNameList);
-        DataExplorerUtils.saveDashboard();
+        DataExplorerUtils.saveDataView();
+    }
+
+    public static saveDataView() {
+        return DataExplorerBtns.saveDataViewBtn().click();
     }
 
     public static saveDashboard() {
-        return DataExplorerBtns.saveDashboard().click();
+        return DataExplorerBtns.saveDashboardBtn().click();
     }
+
     public static addDataViewAndTableWidget(
         dataViewName: string,
         dataSet: string,
+        ignoreTimeSelection = false,
     ) {
         this.addDataViewAndWidget(
             dataViewName,
             dataSet,
             DataExplorerWidget.TABLE,
+            ignoreTimeSelection,
         );
     }
 
@@ -206,7 +286,7 @@ export class DataExplorerUtils {
 
         // Configure data view
         cy.dataCy('data-view-name').type(name);
-        DataExplorerBtns.saveDashboard().click();
+        DataExplorerBtns.saveDataViewBtn().click();
 
         this.editDashboard(name);
     }
@@ -238,6 +318,11 @@ export class DataExplorerUtils {
         DataExplorerBtns.editDashboardBtn(dashboardName).click();
     }
 
+    public static viewDashboard(dashboardName: string) {
+        GeneralUtils.openMenuForRow(dashboardName);
+        DataExplorerBtns.viewDashboardBtn(dashboardName).click();
+    }
+
     public static editDashboardSettings(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
         DataExplorerBtns.editDashboardSettingsBtn(dashboardName).click();
@@ -250,10 +335,13 @@ export class DataExplorerUtils {
         DataExplorerBtns.editDataViewButton(dataViewName).click();
     }
 
-    public static saveDataViewConfiguration() {
+    public static saveDataViewConfiguration(confirmSave: boolean = false) {
         DataExplorerBtns.saveDataViewButton().click({
             force: true,
         });
+        if (confirmSave) {
+            DataExplorerBtns.confirmSave().click();
+        }
     }
 
     public static saveDashboardConfiguration() {
@@ -650,7 +738,10 @@ export class DataExplorerUtils {
         DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
 
         // Create Diagram
-        DataExplorerUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget(
+            'NewWidget',
+            DataExplorerUtils.ADAPTER_NAME,
+        );
         //Save
         DataExplorerUtils.addChartsToAsset(assetNames);
         DataExplorerUtils.saveDataViewConfiguration();

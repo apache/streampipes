@@ -17,6 +17,7 @@
  */
 
 import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
 describe('Test Heatmap View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
@@ -24,7 +25,11 @@ describe('Test Heatmap View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.addDataViewAndWidget('view', 'Persist', 'heatmap');
+        DataExplorerUtils.addDataViewAndWidget(
+            'view',
+            PrepareTestDataUtils.dataName,
+            'heatmap',
+        );
 
         // Check checkbox
         DataExplorerUtils.openVisualizationConfig();

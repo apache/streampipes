@@ -1,19 +1,19 @@
 <!-- ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
@@ -23,80 +23,83 @@
             fxLayoutAlign="center center"
             fxFlex="100"
         >
-            <div
-                fxFlex="100"
-                fxLayoutAlign="center center"
-                fxLayout="column"
-                *ngIf="operationInProgress"
-            >
-                <div fxFlex="100" fxLayoutAlign="center center">
-                    <mat-spinner
-                        color="accent"
-                        [diameter]="30"
-                        fxLayoutAlign="center"
-                        style="margin: 10px 0 5px 0"
-                    >
-                        @if (action === 0) {
-                            {{ 'Starting' | translate }}
-                        } @else {
-                            {{ 'Stopping' | translate }}
-                        }
-                    </mat-spinner>
-                </div>
+            @if (operationInProgress) {
                 <div
                     fxFlex="100"
                     fxLayoutAlign="center center"
                     fxLayout="column"
                 >
-                    <span class="success-message">
-                        @if (action === 0) {
-                            {{
-                                'Please wait while the pipeline is starting'
-                                    | translate
-                            }}
-                        } @else {
-                            {{
-                                'Please wait while the pipeline is stopping'
-                                    | translate
-                            }}
-                        }
-                    </span>
-                </div>
-            </div>
-
-            <div
-                *ngIf="!operationInProgress && forceStopActive"
-                fxLayout="column"
-                fxLayoutAlign="center center"
-                fxFlex="100"
-            >
-                <div
-                    class="success-message"
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
-                >
-                    <div fxLayout="row">
-                        <mat-icon color="accent">done</mat-icon>
-                        <span
-                            >&nbsp;{{
-                                'Forced stop successful' | translate
-                            }}</span
+                    <div fxFlex="100" fxLayoutAlign="center center">
+                        <mat-spinner
+                            color="accent"
+                            [diameter]="30"
+                            fxLayoutAlign="center"
+                            style="margin: 10px 0 5px 0"
                         >
+                            @if (action === 0) {
+                                {{ 'Starting' | translate }}
+                            } @else {
+                                {{ 'Stopping' | translate }}
+                            }
+                        </mat-spinner>
+                    </div>
+                    <div
+                        fxFlex="100"
+                        fxLayoutAlign="center center"
+                        fxLayout="column"
+                    >
+                        <span class="success-message">
+                            @if (action === 0) {
+                                {{
+                                    'Please wait while the pipeline is starting'
+                                        | translate
+                                }}
+                            } @else {
+                                {{
+                                    'Please wait while the pipeline is stopping'
+                                        | translate
+                                }}
+                            }
+                        </span>
                     </div>
                 </div>
-            </div>
+            }
 
-            <sp-pipeline-started-status
-                *ngIf="!operationInProgress && !forceStopActive"
-                [pipelineOperationStatus]="pipelineOperationStatus"
-                [action]="action"
-                (forceStopPipelineEmitter)="forceStopPipeline()"
-                fxLayout="column"
-                fxLayoutAlign="center center"
-                fxFlex="100"
-            >
-            </sp-pipeline-started-status>
+            @if (!operationInProgress && forceStopActive) {
+                <div
+                    fxLayout="column"
+                    fxLayoutAlign="center center"
+                    fxFlex="100"
+                >
+                    <div
+                        class="success-message"
+                        fxFlex="100"
+                        fxLayoutAlign="center center"
+                        fxLayout="column"
+                    >
+                        <div fxLayout="row">
+                            <mat-icon color="accent">done</mat-icon>
+                            <span
+                                >&nbsp;{{
+                                    'Forced stop successful' | translate
+                                }}</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (!operationInProgress && !forceStopActive) {
+                <sp-pipeline-started-status
+                    [pipelineOperationStatus]="pipelineOperationStatus"
+                    [action]="action"
+                    (forceStopPipelineEmitter)="forceStopPipeline()"
+                    fxLayout="column"
+                    fxLayoutAlign="center center"
+                    fxFlex="100"
+                >
+                </sp-pipeline-started-status>
+            }
         </div>
     </div>
 

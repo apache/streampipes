@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DataExplorerFieldProviderService } from '../../../../../../data-explorer-shared/services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../../../data-explorer-shared/services/chart-field-provider.service';
 import { ChartConfigurationService } from '../../../../../../data-explorer-shared/services/chart-configuration.service';
 import {
     EventPropertyUnion,
@@ -34,7 +34,7 @@ export class GroupSelectionPanelComponent implements OnInit {
     @Input() sourceConfig: SourceConfig;
 
     constructor(
-        private fieldProvider: DataExplorerFieldProviderService,
+        private fieldProvider: ChartFieldProviderService,
         private widgetConfigService: ChartConfigurationService,
     ) {}
 

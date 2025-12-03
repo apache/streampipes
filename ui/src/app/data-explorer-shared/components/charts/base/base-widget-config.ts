@@ -26,7 +26,7 @@ import {
     DataExplorerVisConfig,
     FieldProvider,
 } from '../../../models/dataview-dashboard.model';
-import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../services/chart-field-provider.service';
 import { Subscription } from 'rxjs';
 
 @Directive()
@@ -44,7 +44,7 @@ export abstract class BaseWidgetConfig<
 
     constructor(
         protected widgetConfigurationService: ChartConfigurationService,
-        protected fieldService: DataExplorerFieldProviderService,
+        protected fieldService: ChartFieldProviderService,
     ) {}
 
     ngOnInit(): void {

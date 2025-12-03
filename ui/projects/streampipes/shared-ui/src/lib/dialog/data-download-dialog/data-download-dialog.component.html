@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
@@ -57,35 +57,38 @@
         >
             {{ 'Close' | translate }}
         </button>
-        <button
-            mat-button
-            mat-flat-button
-            class="mat-basic"
-            style="margin-right: 10px"
-            *ngIf="downloadDialogStepper.selectedIndex === 1"
-            (click)="previousStep()"
-        >
-            {{ 'Previous' | translate }}
-        </button>
-        <button
-            mat-button
-            mat-flat-button
-            *ngIf="downloadDialogStepper.selectedIndex < 1"
-            color="accent"
-            (click)="nextStep()"
-            data-cy="download-configuration-next-btn"
-        >
-            {{ 'Next' | translate }}
-        </button>
-        <button
-            mat-button
-            mat-flat-button
-            *ngIf="downloadDialogStepper.selectedIndex === 1"
-            color="accent"
-            (click)="downloadData()"
-            data-cy="download-configuration-download-btn"
-        >
-            {{ 'Download' | translate }}
-        </button>
+        @if (downloadDialogStepper.selectedIndex === 1) {
+            <button
+                mat-button
+                mat-flat-button
+                class="mat-basic"
+                style="margin-right: 10px"
+                (click)="previousStep()"
+            >
+                {{ 'Previous' | translate }}
+            </button>
+        }
+        @if (downloadDialogStepper.selectedIndex < 1) {
+            <button
+                mat-button
+                mat-flat-button
+                color="accent"
+                (click)="nextStep()"
+                data-cy="download-configuration-next-btn"
+            >
+                {{ 'Next' | translate }}
+            </button>
+        }
+        @if (downloadDialogStepper.selectedIndex === 1) {
+            <button
+                mat-button
+                mat-flat-button
+                color="accent"
+                (click)="downloadData()"
+                data-cy="download-configuration-download-btn"
+            >
+                {{ 'Download' | translate }}
+            </button>
+        }
     </div>
 </div>

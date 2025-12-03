@@ -40,7 +40,7 @@ export class AdapterConfigurationComponent implements OnInit {
      */
     @Input() displayName = '';
     @Input() adapter: AdapterDescription;
-    @Input() isEditMode;
+    @Input() isEditMode: boolean;
 
     myStepper: MatStepper;
     parentForm: UntypedFormGroup;

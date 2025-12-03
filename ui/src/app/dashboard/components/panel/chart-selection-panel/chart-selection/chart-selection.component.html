@@ -33,14 +33,18 @@
                 'No charts found - create a new chart first to add it to this dashboard.'
                     | translate
             }}</span>
-            <button
-                mat-button
-                color="accent"
-                class="mt-10"
-                (click)="navigateToDataViewCreation()"
-            >
-                {{ 'Create chart' | translate }}
-            </button>
+
+            @if (hasChartWritePrivileges) {
+                <button
+                    mat-button
+                    color="accent"
+                    class="mt-10"
+                    data-cy="create-chart-button"
+                    (click)="navigateToDataViewCreation()"
+                >
+                    {{ 'Create chart' | translate }}
+                </button>
+            }
         </div>
     }
 </div>

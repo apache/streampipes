@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <sp-table
     [dataSource]="dataSource"
@@ -32,69 +32,68 @@
         <td mat-cell *matCellDef="let pipeline">
             <div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="150px">
-                    <div
-                        data-cy="status-pipeline-green"
-                        *ngIf="
-                            pipeline.running && pipeline.healthStatus === 'OK'
-                        "
-                        class="light light-green"
-                    ></div>
-                    <div
-                        *ngIf="
-                            pipeline.running &&
-                            pipeline.healthStatus === 'REQUIRES_ATTENTION'
-                        "
-                        class="light light-yellow"
-                    ></div>
-                    <div
-                        *ngIf="
-                            pipeline.running &&
-                            pipeline.healthStatus === 'FAILURE'
-                        "
-                        class="light light-red"
-                    ></div>
-                    <div
-                        *ngIf="!pipeline.running"
-                        class="light light-neutral"
-                        [matTooltip]="'Stopped' | translate"
-                    ></div>
+                    @if (pipeline.running && pipeline.healthStatus === 'OK') {
+                        <div
+                            data-cy="status-pipeline-green"
+                            class="light light-green"
+                        ></div>
+                    }
+                    @if (
+                        pipeline.running &&
+                        pipeline.healthStatus === 'REQUIRES_ATTENTION'
+                    ) {
+                        <div class="light light-yellow"></div>
+                    }
+                    @if (
+                        pipeline.running && pipeline.healthStatus === 'FAILURE'
+                    ) {
+                        <div class="light light-red"></div>
+                    }
+                    @if (!pipeline.running) {
+                        <div
+                            class="light light-neutral"
+                            [matTooltip]="'Stopped' | translate"
+                        ></div>
+                    }
                     <div class="notification-icon">
-                        <button
-                            class="ml-10"
-                            mat-icon-button
-                            [disabled]="!hasPipelineWritePrivileges"
-                            (click)="
-                                openPipelineNotificationsDialog(pipeline);
-                                $event.stopPropagation()
-                            "
-                            *ngIf="pipeline.pipelineNotifications.length > 0"
-                            matTooltip="{{
-                                pipeline.pipelineNotifications.length
-                            }} notification{{
-                                pipeline.pipelineNotifications.length > 1
-                                    ? 's'
-                                    : ''
-                            }}"
-                            data-cy="pipeline-warning-icon"
-                        >
-                            <i class="material-icons pipeline-notification"
-                                >warning</i
+                        @if (pipeline.pipelineNotifications.length > 0) {
+                            <button
+                                class="ml-10"
+                                mat-icon-button
+                                [disabled]="!hasPipelineWritePrivileges"
+                                (click)="
+                                    openPipelineNotificationsDialog(pipeline);
+                                    $event.stopPropagation()
+                                "
+                                matTooltip="{{
+                                    pipeline.pipelineNotifications.length
+                                }} notification{{
+                                    pipeline.pipelineNotifications.length > 1
+                                        ? 's'
+                                        : ''
+                                }}"
+                                data-cy="pipeline-warning-icon"
                             >
-                        </button>
+                                <i class="material-icons pipeline-notification"
+                                    >warning</i
+                                >
+                            </button>
+                        }
                     </div>
                     <div
                         class="ml-10 notification-icon"
                         data-cy="pipeline-sync-problem-icon"
                     >
-                        <mat-icon
-                            color="warn"
-                            [matTooltip]="
-                                'Invalid pipeline: Modify to fix problems'
-                                    | translate
-                            "
-                            *ngIf="!pipeline.valid"
-                            >sync_problem
-                        </mat-icon>
+                        @if (!pipeline.valid) {
+                            <mat-icon
+                                color="warn"
+                                [matTooltip]="
+                                    'Invalid pipeline: Modify to fix problems'
+                                        | translate
+                                "
+                                >sync_problem
+                            </mat-icon>
+                        }
                     </div>
                 </div>
             </div>
@@ -104,48 +103,50 @@
         <th mat-header-cell *matHeaderCellDef>{{ 'Start' | translate }}</th>
         <td mat-cell *matCellDef="let pipeline">
             <div fxLayoutAlign="start start">
-                <button
-                    color="accent"
-                    mat-icon-button
-                    [matTooltip]="'Start pipeline' | translate"
-                    matTooltipPosition="above"
-                    data-cy="start-pipeline-button"
-                    (click)="
-                        pipelineOperationsService.startPipeline(
-                            pipeline._id,
-                            refreshPipelinesEmitter,
-                            toggleRunningOperation
-                        );
-                        $event.stopPropagation()
-                    "
-                    [disabled]="
-                        !hasPipelineWritePrivileges ||
-                        starting ||
-                        !pipeline.valid
-                    "
-                    *ngIf="!pipeline.running"
-                >
-                    <i class="material-icons">play_arrow</i>
-                </button>
-                <button
-                    color="accent"
-                    mat-icon-button
-                    [matTooltip]="'Stop pipeline' | translate"
-                    matTooltipPosition="above"
-                    data-cy="stop-pipeline-button"
-                    (click)="
-                        pipelineOperationsService.stopPipeline(
-                            pipeline._id,
-                            refreshPipelinesEmitter,
-                            toggleRunningOperation
-                        );
-                        $event.stopPropagation()
-                    "
-                    [disabled]="!hasPipelineWritePrivileges || stopping"
-                    *ngIf="pipeline.running"
-                >
-                    <i class="material-icons">stop</i>
-                </button>
+                @if (!pipeline.running) {
+                    <button
+                        color="accent"
+                        mat-icon-button
+                        [matTooltip]="'Start pipeline' | translate"
+                        matTooltipPosition="above"
+                        data-cy="start-pipeline-button"
+                        (click)="
+                            pipelineOperationsService.startPipeline(
+                                pipeline._id,
+                                refreshPipelinesEmitter,
+                                toggleRunningOperation
+                            );
+                            $event.stopPropagation()
+                        "
+                        [disabled]="
+                            !hasPipelineWritePrivileges ||
+                            starting ||
+                            !pipeline.valid
+                        "
+                    >
+                        <i class="material-icons">play_arrow</i>
+                    </button>
+                }
+                @if (pipeline.running) {
+                    <button
+                        color="accent"
+                        mat-icon-button
+                        [matTooltip]="'Stop pipeline' | translate"
+                        matTooltipPosition="above"
+                        data-cy="stop-pipeline-button"
+                        (click)="
+                            pipelineOperationsService.stopPipeline(
+                                pipeline._id,
+                                refreshPipelinesEmitter,
+                                toggleRunningOperation
+                            );
+                            $event.stopPropagation()
+                        "
+                        [disabled]="!hasPipelineWritePrivileges || stopping"
+                    >
+                        <i class="material-icons">stop</i>
+                    </button>
+                }
             </div>
         </td>
     </ng-container>
@@ -179,15 +180,16 @@
             <mat-icon>visibility</mat-icon>
             <span>{{ 'Show' | translate }}</span>
         </button>
-        <button
-            mat-menu-item
-            *ngIf="hasPipelineWritePrivileges"
-            (click)="pipelineOperationsService.modifyPipeline(element._id)"
-            data-cy="modify-pipeline-btn"
-        >
-            <mat-icon>mode_edit</mat-icon>
-            <span>{{ 'Edit' | translate }}</span>
-        </button>
+        @if (hasPipelineWritePrivileges) {
+            <button
+                mat-menu-item
+                (click)="pipelineOperationsService.modifyPipeline(element._id)"
+                data-cy="modify-pipeline-btn"
+            >
+                <mat-icon>mode_edit</mat-icon>
+                <span>{{ 'Edit' | translate }}</span>
+            </button>
+        }
         <button
             mat-menu-item
             (click)="
@@ -201,19 +203,20 @@
             <mat-icon>share</mat-icon>
             <span>{{ 'Manage permissions' | translate }}</span>
         </button>
-        <button
-            mat-menu-item
-            *ngIf="hasPipelineWritePrivileges"
-            (click)="
-                pipelineOperationsService.showDeleteDialog(
-                    element,
-                    refreshPipelinesEmitter
-                )
-            "
-            data-cy="delete-pipeline"
-        >
-            <mat-icon>delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
+        @if (hasPipelineWritePrivileges) {
+            <button
+                mat-menu-item
+                (click)="
+                    pipelineOperationsService.showDeleteDialog(
+                        element,
+                        refreshPipelinesEmitter
+                    )
+                "
+                data-cy="delete-pipeline"
+            >
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        }
     </ng-template>
 </sp-table>

@@ -21,24 +21,25 @@ package org.apache.streampipes.sinks.brokers.jvm.jms;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import java.util.Map;
 
-public class JmsPublisherSink extends StreamPipesDataSink {
+public class JmsPublisherSink implements IStreamPipesDataSink {
 
   private static final String TOPIC_KEY = "topic";
   private static final String HOST_KEY = "host";
@@ -48,24 +49,29 @@ public class JmsPublisherSink extends StreamPipesDataSink {
   private JsonDataFormatDefinition jsonDataFormatDefinition;
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.jms", 0)
-        .category(DataSinkType.MESSAGING)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
-        .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
-        .requiredIntegerParameter(Labels.withId(PORT_KEY), 61616)
-        .build();
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        JmsPublisherSink::new,
+        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.jms", 0)
+                       .category(DataSinkType.MESSAGING)
+                       .withLocales(Locales.EN)
+                       .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+                       .requiredStream(StreamRequirementsBuilder
+                                           .create()
+                                           .requiredProperty(EpRequirements.anyProperty())
+                                           .build())
+                       .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
+                       .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
+                       .requiredIntegerParameter(Labels.withId(PORT_KEY), 61616)
+                       .build()
+    );
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(
+      IDataSinkParameters parameters,
+      EventSinkRuntimeContext runtimeContext
+  ) {
 
     var extractor = parameters.extractor();
     this.jsonDataFormatDefinition = new JsonDataFormatDefinition();
@@ -88,17 +94,13 @@ public class JmsPublisherSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onEvent(Event inputEvent) throws SpRuntimeException {
-    try {
-      Map<String, Object> event = inputEvent.getRaw();
-      this.publisher.publish(jsonDataFormatDefinition.fromMap(event));
-    } catch (SpRuntimeException e) {
-      e.printStackTrace();
-    }
+  public void onEvent(Event inputEvent) {
+    Map<String, Object> event = inputEvent.getRaw();
+    this.publisher.publish(jsonDataFormatDefinition.fromMap(event));
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     this.publisher.disconnect();
   }
 }

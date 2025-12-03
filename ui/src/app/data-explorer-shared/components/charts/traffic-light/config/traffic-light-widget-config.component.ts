@@ -23,7 +23,7 @@ import {
     TrafficLightVisConfig,
     TrafficLightWidgetModel,
 } from '../model/traffic-light-widget.model';
-import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -40,7 +40,7 @@ export class TrafficLightWidgetConfigComponent extends BaseWidgetConfig<
     translateService: TranslateService = inject(TranslateService);
     constructor(
         widgetConfigurationService: ChartConfigurationService,
-        fieldService: DataExplorerFieldProviderService,
+        fieldService: ChartFieldProviderService,
     ) {
         super(widgetConfigurationService, fieldService);
     }

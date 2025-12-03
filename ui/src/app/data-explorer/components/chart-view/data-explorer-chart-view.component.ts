@@ -20,6 +20,7 @@ import {
     Component,
     ElementRef,
     inject,
+    OnDestroy,
     OnInit,
     ViewChild,
 } from '@angular/core';
@@ -28,6 +29,8 @@ import {
     DashboardConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    EventPropertyUnion,
+    FieldConfig,
     LinkageData,
     TimeSettings,
 } from '@streampipes/platform-services';
@@ -40,20 +43,25 @@ import {
 import {
     AssetSaveService,
     ConfirmDialogComponent,
+    CurrentUserService,
     DialogService,
     PanelType,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
-import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
-import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
-import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
+import { ChartRoutingService } from '../../../data-explorer-shared/services/chart-routing.service';
+import { ChartSharedService } from '../../../data-explorer-shared/services/chart-shared.service';
+import { ChartDetectChangesService } from '../../services/chart-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../data-explorer-shared/services/resize-echarts.service';
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
+import { AuthService } from '../../../services/auth.service';
+import { UserRole } from '../../../_enums/user-role.enum';
+import { Tuple2 } from 'src/app/core-model/base/Tuple2';
+import { ChartFieldProviderService } from 'src/app/data-explorer-shared/services/chart-field-provider.service';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -62,7 +70,7 @@ import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
     standalone: false,
 })
 export class DataExplorerChartViewComponent
-    implements OnInit, SupportsUnsavedChangeDialog
+    implements OnInit, OnDestroy, SupportsUnsavedChangeDialog
 {
     dataViewLoaded = false;
     timeSettings: TimeSettings;
@@ -81,18 +89,22 @@ export class DataExplorerChartViewComponent
 
     resizeEchartsService = inject(ResizeEchartsService);
 
-    private dataExplorerSharedService = inject(DataExplorerSharedService);
-    private detectChangesService = inject(DataExplorerDetectChangesService);
+    private dataExplorerSharedService = inject(ChartSharedService);
+    private detectChangesService = inject(ChartDetectChangesService);
     private route = inject(ActivatedRoute);
     private router = inject(Router);
     private dialog = inject(MatDialog);
-    private routingService = inject(DataExplorerRoutingService);
+    private routingService = inject(ChartRoutingService);
     private dataViewService = inject(ChartService);
     private timeSelectionService = inject(TimeSelectionService);
     private translateService = inject(TranslateService);
     private dialogService = inject(DialogService);
-
+    private currentUserService = inject(CurrentUserService);
+    private authService = inject(AuthService);
+    private fieldProvider = inject(ChartFieldProviderService);
     private assetSaveService = inject(AssetSaveService);
+
+    currentUser$: Subscription;
 
     chartNotFound = false;
 
@@ -103,15 +115,66 @@ export class DataExplorerChartViewComponent
 
     ngOnInit() {
         const dataViewId = this.route.snapshot.params.id;
-        this.editMode = this.route.snapshot.queryParams.editMode;
+
+        this.currentUser$ = this.currentUserService.user$.subscribe(user => {
+            if (!this.authService.hasRole(UserRole.ROLE_DATA_EXPLORER_ADMIN)) {
+                this.editMode = false;
+            } else {
+                this.editMode = this.route.snapshot.queryParams.editMode;
+            }
+        });
 
         if (dataViewId) {
             this.loadDataView(dataViewId);
         } else {
             this.createWidget();
             this.timeSettings = this.makeDefaultTimeSettings();
+            this.dataView.timeSettings = this.timeSettings;
             this.afterDataViewLoaded();
         }
+    }
+
+    onAddWidget(event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
+        if (!this.originalDataView?.visualizationConfig) {
+            this.setDefaultValuesOnOriginalDataViewForNewCharts();
+        }
+    }
+
+    setDefaultValuesOnOriginalDataViewForNewCharts() {
+        //Change original Data View if default Config does not exist
+
+        //Reset name as widget generation sets name to  datalakename - chart
+        this.dataView.baseAppearanceConfig.widgetTitle =
+            this.translateService.instant('New chart');
+        this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
+        this.originalDataView.elementId = undefined;
+        this.originalDataView.rev = undefined;
+        this.originalDataView.widgetId = undefined;
+        //Set default
+        this.originalDataView.dataConfig.sourceConfigs[0].queryConfig.order ??=
+            'DESC';
+        this.addAllFields();
+    }
+
+    addAllFields() {
+        this.originalDataView.dataConfig.sourceConfigs[0].measure.eventSchema.eventProperties.forEach(
+            property => {
+                if (this.fieldProvider.isDimensionProperty(property)) {
+                    this.addField(property);
+                }
+            },
+        );
+    }
+
+    addField(property: EventPropertyUnion) {
+        const selection: FieldConfig = {
+            runtimeName: property.runtimeName,
+            selected: false,
+            numeric: this.fieldProvider.isNumber(property),
+        };
+        this.originalDataView.dataConfig.sourceConfigs[0].queryConfig.groupBy.push(
+            selection,
+        );
     }
 
     loadDataView(dataViewId: string): void {
@@ -168,8 +231,13 @@ export class DataExplorerChartViewComponent
     }
 
     setShouldShowConfirm(): boolean {
-        const originalTimeSettings = this.originalDataView
-            .timeSettings as TimeSettings;
+        let originalTimeSettings: TimeSettings;
+        if (this.originalDataView?.timeSettings) {
+            originalTimeSettings = this.originalDataView
+                .timeSettings as TimeSettings;
+        } else {
+            originalTimeSettings = this.dataView.timeSettings as TimeSettings;
+        }
         const currentTimeSettings = this.dataView.timeSettings as TimeSettings;
         return this.detectChangesService.shouldShowConfirm(
             this.originalDataView,
@@ -197,6 +265,7 @@ export class DataExplorerChartViewComponent
             createdAtEpochMs: Date.now(),
             lastModifiedEpochMs: Date.now(),
         };
+
         this.dataView = { ...this.dataView };
     }
 
@@ -219,6 +288,7 @@ export class DataExplorerChartViewComponent
             ) {
                 this.saveToAssets(data);
             }
+
             this.routingService.navigateToDataViewOverview(true);
         });
     }
@@ -342,7 +412,6 @@ export class DataExplorerChartViewComponent
             this.deselectedAssets,
             this.originalAssets,
         );
-        //this.dialogRef.close(true);
     }
 
     saveToAssets(data: DataExplorerWidgetModel): void {
@@ -363,5 +432,9 @@ export class DataExplorerChartViewComponent
                 name: data.baseAppearanceConfig.widgetTitle,
             },
         ];
+    }
+
+    ngOnDestroy() {
+        this.currentUser$?.unsubscribe();
     }
 }

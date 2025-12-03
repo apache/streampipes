@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdaptersIntegrationTest {
-
 
   @Test
   @Order(1)
@@ -35,15 +33,16 @@ public class AdaptersIntegrationTest {
     }
   }
 
-    @Test
-      @Order(2)
+  @Test
+  @Order(2)
+
   public void testMqttTLSAdapter() throws Exception {
 
-try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
+    try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
       mqttAdapterTLSTester.run();
     }
   }
-  
+
   @Test
   @Order(3)
   public void testPulsarAdapter() throws Exception {
@@ -51,10 +50,6 @@ try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
       pulsarAdapterTester.run();
     }
   }
-
-
-
-
 
   @Test
   @Order(4)
@@ -64,6 +59,5 @@ try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
       kafkaAdapterTester.run();
     }
 
-   
   }
 }

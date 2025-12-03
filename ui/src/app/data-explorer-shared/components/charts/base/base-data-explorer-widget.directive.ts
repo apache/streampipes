@@ -44,7 +44,7 @@ import {
     ObservableGenerator,
 } from '../../../models/dataview-dashboard.model';
 import { Observable, Subject, Subscription, zip } from 'rxjs';
-import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { ChartFieldProviderService } from '../../../services/chart-field-provider.service';
 import { catchError, switchMap } from 'rxjs/operators';
 import { DataExplorerChartRegistry } from '../../../registry/data-explorer-chart-registry';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
@@ -120,7 +120,7 @@ export abstract class BaseDataExplorerWidgetDirective<
     protected timeSelectionService = inject(TimeSelectionService);
     protected widgetRegistryService = inject(DataExplorerChartRegistry);
     protected fieldUpdateService = inject(SpFieldUpdateService);
-    public fieldService = inject(DataExplorerFieldProviderService);
+    public fieldService = inject(ChartFieldProviderService);
 
     ngOnInit(): void {
         this.heightOffset = this.gridMode ? 70 : 65;

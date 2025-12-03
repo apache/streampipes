@@ -19,10 +19,12 @@
 package org.apache.streampipes.sinks.databases.jvm.milvus;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyNested;
@@ -31,13 +33,12 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.vocabulary.XSD;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -63,7 +64,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MilvusSink extends StreamPipesDataSink {
+public class MilvusSink implements IStreamPipesDataSink {
   public static final String MILVUS_URI_KEY = "milvus_uri";
   public static final String MILVUS_TOKEN_KEY = "milvus_token";
 
@@ -123,22 +124,24 @@ public class MilvusSink extends StreamPipesDataSink {
   };
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.databases.jvm.milvus", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).
-        category(DataSinkType.DATABASE)
-        .requiredTextParameter(Labels.withId(MILVUS_URI_KEY))
-        .requiredTextParameter(Labels.withId(MILVUS_TOKEN_KEY), "root:Milvus")
-        .requiredTextParameter(Labels.withId(MILVUS_DBNAME_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_REPLICA_NUMBER_KEY), "2")
-        .requiredTextParameter(Labels.withId(COLLECTION_NAME_KEY))
-        .requiredTextParameter(Labels.withId(PRIMARY), "id")
-        .requiredIntegerParameter(Labels.withId(DIMENSION), 2)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        MilvusSink::new,
+        DataSinkBuilder
+            .create("org.apache.streampipes.sinks.databases.jvm.milvus", 0)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).
+            category(DataSinkType.DATABASE)
+            .requiredTextParameter(Labels.withId(MILVUS_URI_KEY))
+            .requiredTextParameter(Labels.withId(MILVUS_TOKEN_KEY), "root:Milvus")
+            .requiredTextParameter(Labels.withId(MILVUS_DBNAME_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_REPLICA_NUMBER_KEY), "2")
+            .requiredTextParameter(Labels.withId(COLLECTION_NAME_KEY))
+            .requiredTextParameter(Labels.withId(PRIMARY), "id")
+            .requiredIntegerParameter(Labels.withId(DIMENSION), 2)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
                 Labels.withId(VECTOR_KEY),
                 PropertyScope.NONE)
             .build())
@@ -146,12 +149,13 @@ public class MilvusSink extends StreamPipesDataSink {
              Options.from(INDEX_MAP.keySet().toArray(new String[0])))
         .requiredSingleValueSelection(Labels.withId(METRIC_TYPE),
              Options.from(METRIC_TYPE_MAP.keySet().toArray(new String[0])))
-        .build();
+        .build()
+    );
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataSinkParameters parameters,
+                                EventSinkRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
     final String uri = extractor.singleValueParameter(MILVUS_URI_KEY, String.class);
     final String token = extractor.singleValueParameter(MILVUS_TOKEN_KEY, String.class);
@@ -234,7 +238,7 @@ public class MilvusSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onDetach() {
+  public void onPipelineStopped() {
     client.close();
     pool.close();
   }

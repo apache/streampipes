@@ -18,13 +18,12 @@
 
 package org.apache.streampipes.wrapper.standalone;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
-import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
 import java.time.Instant;
 
@@ -33,10 +32,10 @@ import java.time.Instant;
  * <p>
  * It provides some share functionalities for all notification sinks in StreamPipes.
  * Thereby, it slightly modifies the interfaces to implement for the actual data sink compared
- * to sinks directly inheriting from {@link StreamPipesDataSink}.
+ * to sinks directly implementing {@link IStreamPipesDataSink}.
  */
 
-public abstract class StreamPipesNotificationSink extends StreamPipesDataSink {
+public abstract class StreamPipesNotificationSink implements IStreamPipesDataSink {
 
   /**
    * Default waiting time in minutes between two consecutive notifications.
@@ -75,12 +74,12 @@ public abstract class StreamPipesNotificationSink extends StreamPipesDataSink {
   /**
    * This method is meant to be overridden by child classes.
    * It contains some important logic, and child classes are expected to call
-   * the super.onInvocation() to ensure proper behavior.
+   * the super.onPipelineStarted() to ensure proper behavior.
    */
-  public void onInvocation(
-      SinkParams parameters,
+  public void onPipelineStarted(
+      IDataSinkParameters parameters,
       EventSinkRuntimeContext runtimeContext
-  ) throws SpRuntimeException {
+  ) {
     // convert input given in minutes to seconds
     // this is later used to determine if a notification should be sent
     this.silentPeriodInSeconds = parameters.extractor()
@@ -106,12 +105,23 @@ public abstract class StreamPipesNotificationSink extends StreamPipesDataSink {
    */
   public abstract void onNotificationEvent(Event inputEvent);
 
-  @Override
-  public DataSinkDescription declareModel() {
+  /**
+   * Abstract method to be implemented by subclasses for declaring the description of the data sink.
+   * Unlike {@link IStreamPipesDataSink#declareConfig()} it is expected to return a {@link DataSinkBuilder}
+   *
+   * @return The DataSinkBuilder representing the notification model.
+   */
+  public abstract DataSinkBuilder declareModelWithoutSilentPeriod();
 
-    var builder = declareModelWithoutSilentPeriod();
-
-    builder.requiredIntegerParameter(
+  /**
+   * Helper method to add the silent period parameter to the data sink builder.
+   * This is typically called by subclasses when building their configuration.
+   *
+   * @param builder The DataSinkBuilder to add the silent period parameter to.
+   * @return The DataSinkBuilder with the silent period parameter added.
+   */
+  protected DataSinkBuilder addSilentPeriodParameter(DataSinkBuilder builder) {
+    return builder.requiredIntegerParameter(
         Labels.from(
             KEY_SILENT_PERIOD,
             "Silent Period [min]",
@@ -119,18 +129,6 @@ public abstract class StreamPipesNotificationSink extends StreamPipesDataSink {
         ),
         DEFAULT_WAITING_TIME_MINUTES
     );
-
-    return builder.build();
-
   }
-
-  /**
-   * Abstract method to be implemented by subclasses for declaring the description of the data sink.
-   * Unlike {@link StreamPipesDataSink#declareModel()} it is expected to return a {@link DataSinkBuilder}
-   *
-   * @return The DataSinkBuilder representing the notification model.
-   */
-
-  public abstract DataSinkBuilder declareModelWithoutSilentPeriod();
 
 }

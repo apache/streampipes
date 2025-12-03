@@ -27,10 +27,10 @@ import {
     DateFormatService,
     SpAssetBrowserService,
 } from '@streampipes/shared-ui';
-import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
+import { ChartSharedService } from '../../../../data-explorer-shared/services/chart-shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
+import { ChartRoutingService } from '../../../../data-explorer-shared/services/chart-routing.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -54,11 +54,11 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
     filteredCharts: DataExplorerWidgetModel[] = [];
 
     private dataViewService = inject(ChartService);
-    private dataExplorerDashboardService = inject(DataExplorerSharedService);
+    private dataExplorerDashboardService = inject(ChartSharedService);
     private dialog = inject(MatDialog);
     private translateService = inject(TranslateService);
     private dateFormatService = inject(DateFormatService);
-    private routingService = inject(DataExplorerRoutingService);
+    private routingService = inject(ChartRoutingService);
     private assetFilterService = inject(SpAssetBrowserService);
 
     assetFilter$: Subscription;
@@ -68,8 +68,7 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
         this.assetFilterService.applyAssetLinkType('chart');
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
-                this.currentFilterIds =
-                    filter?.activeElementIds || new Set<string>();
+                this.currentFilterIds = filter?.activeElementIds;
                 this.applyChartFilters(this.currentFilterIds);
             });
         this.getDataViews();
@@ -87,7 +86,10 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
     }
 
     openDataView(dataView: DataExplorerWidgetModel, editMode: boolean): void {
-        this.routingService.navigateToDataView(editMode, dataView.elementId);
+        this.routingService.navigateToDataView(
+            editMode && this.hasDataExplorerWritePrivileges,
+            dataView.elementId,
+        );
     }
 
     showPermissionsDialog(chart: DataExplorerWidgetModel) {
@@ -138,8 +140,13 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
         });
     }
 
-    applyChartFilters(elementIds: Set<string> = new Set<string>()): void {
-        if (elementIds.size == 0) {
+    applyChartFilters(elementIds: Set<string>): void {
+        if (this.assetFilterService.hasNoAssetFilterPermission()) {
+            elementIds = new Set<string>();
+        }
+        if (elementIds === undefined) {
+            this.filteredCharts = [];
+        } else if (elementIds.size === 0) {
             this.filteredCharts = this.charts;
         } else {
             this.filteredCharts = this.charts.filter(a =>

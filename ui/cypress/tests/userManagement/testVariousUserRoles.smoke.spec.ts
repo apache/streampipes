@@ -22,6 +22,7 @@ import { UserUtils } from '../../support/utils/UserUtils';
 import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
 
 const testedRoles = [
+    UserRole.ROLE_DASHBOARD_USER,
     UserRole.ROLE_PIPELINE_ADMIN,
     UserRole.ROLE_DASHBOARD_ADMIN,
     UserRole.ROLE_DATA_EXPLORER_ADMIN,
@@ -72,14 +73,16 @@ for (let i = 0; i < testedRoles.length; i++) {
                     NavigationUtils.PIPELINES,
                     NavigationUtils.CONFIGURATION,
                 ]);
-            } else if (testRole == UserRole.ROLE_DASHBOARD_ADMIN) {
+            } else if (
+                testRole == UserRole.ROLE_DASHBOARD_ADMIN ||
+                testRole == UserRole.ROLE_DASHBOARD_USER
+            ) {
                 NavigationUtils.validateActiveModules([
-                    NavigationUtils.PIPELINES,
+                    NavigationUtils.DATA_EXPLORER,
                     NavigationUtils.DASHBOARD,
                 ]);
             } else if (testRole == UserRole.ROLE_DATA_EXPLORER_ADMIN) {
                 NavigationUtils.validateActiveModules([
-                    NavigationUtils.PIPELINES,
                     NavigationUtils.DATA_EXPLORER,
                 ]);
             } else if (testRole == UserRole.ROLE_CONNECT_ADMIN) {

@@ -17,22 +17,28 @@
  */
 
 import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
 const testView1 = 'TestView1';
 const testView2 = 'TestView2';
-const dataSet = 'Persist';
 
 describe('Test if widget configuration is updated correctly', () => {
     beforeEach('Setup Test', () => {
         DataExplorerUtils.initDataLakeTests();
 
         // Create first test data view with one time series widget
-        DataExplorerUtils.addDataViewAndTimeSeriesWidget(testView1, dataSet);
+        DataExplorerUtils.addDataViewAndTimeSeriesWidget(
+            testView1,
+            PrepareTestDataUtils.dataName,
+        );
         DataExplorerUtils.saveDataViewConfiguration();
 
         cy.wait(1000);
         // Create second test data view with one time series widget
-        DataExplorerUtils.addDataViewAndTimeSeriesWidget(testView2, dataSet);
+        DataExplorerUtils.addDataViewAndTimeSeriesWidget(
+            testView2,
+            PrepareTestDataUtils.dataName,
+        );
         DataExplorerUtils.saveDataViewConfiguration();
     });
 

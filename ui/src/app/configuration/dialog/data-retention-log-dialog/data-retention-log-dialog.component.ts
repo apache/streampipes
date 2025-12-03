@@ -16,27 +16,29 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { DialogRef } from '@streampipes/shared-ui';
 import {
-    ActivatedRouteSnapshot,
-    Router,
-    RouterStateSnapshot,
-} from '@angular/router';
-import { Observable } from 'rxjs';
-import { SupportsUnsavedChangeDialog } from '../models/dataview-dashboard.model';
+    DatalakeRestService,
+    ExportProviderService,
+} from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
-@Injectable({ providedIn: 'root' })
-export class DataExplorerPanelCanDeactivateGuard {
-    constructor(private router: Router) {}
-    canDeactivate(
-        component: SupportsUnsavedChangeDialog,
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean> | boolean {
-        if (!this.router.getCurrentNavigation().extras?.state?.omitConfirm) {
-            return component.confirmLeaveDialog(route, state);
-        } else {
-            return true;
-        }
+@Component({
+    selector: 'sp-data-retention-log-dialog',
+    templateUrl: './data-retention-log-dialog.component.html',
+    standalone: false,
+})
+export class DataRetentionLogDialogComponent {
+    @Input()
+    retentionLog: string;
+
+    displayedColumns: string[] = ['date', 'path', 'state', 'error'];
+
+    private dialogRef = inject(DialogRef<DataRetentionLogDialogComponent>);
+    private translateService = inject(TranslateService);
+
+    close(refreshDataLakeIndex: boolean) {
+        this.dialogRef.close(refreshDataLakeIndex);
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import {
@@ -33,15 +33,12 @@ import { SpConnectRoutes } from '../../connect.routes';
     standalone: false,
 })
 export class EditAdapterComponent implements OnInit {
-    initialized = false;
+    private adapterService = inject(AdapterService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private route = inject(ActivatedRoute);
+
     adapterName = '';
     adapter: AdapterDescription = undefined;
-
-    constructor(
-        private adapterService: AdapterService,
-        private breadcrumbService: SpBreadcrumbService,
-        private route: ActivatedRoute,
-    ) {}
 
     ngOnInit(): void {
         this.adapterService
@@ -49,14 +46,17 @@ export class EditAdapterComponent implements OnInit {
             .subscribe(adapter => {
                 this.adapter = adapter;
                 this.adapterName = adapter.name;
-                this.initialized = true;
 
-                this.breadcrumbService.updateBreadcrumb(
-                    this.breadcrumbService.makeRoute(
-                        [SpConnectRoutes.BASE, SpConnectRoutes.EDIT],
-                        this.adapterName,
-                    ),
-                );
+                this.updateBreadcrumb();
             });
+    }
+
+    private updateBreadcrumb(): void {
+        this.breadcrumbService.updateBreadcrumb(
+            this.breadcrumbService.makeRoute(
+                [SpConnectRoutes.BASE, SpConnectRoutes.EDIT],
+                this.adapterName,
+            ),
+        );
     }
 }

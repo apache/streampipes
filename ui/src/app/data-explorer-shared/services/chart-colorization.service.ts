@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Injectable({ providedIn: 'root' })
-export class DataExplorerColorizationService {
+export class ChartColorizationService {
     makeColor(
         chosenColor: Record<string, string>,
         field: DataExplorerField,

@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxFlex="100" fxLayout="column">
     <div
@@ -37,63 +37,59 @@
         </button>
     </div>
 
-    <div
-        fxFlex="100"
-        fxLayout="row"
-        fxLayoutGap="10px"
-        *ngFor="let ep of outputStrategy.eventProperties; let i = index"
-    >
-        <div fxLayout="column" fxFlex="30">
-            <mat-form-field fxFlex color="accent">
-                <mat-label>{{ 'Runtime name' | translate }}</mat-label>
-                <input
-                    [(ngModel)]="ep.runtimeName"
-                    data-cy="runtime-name"
-                    fxFlex
-                    matInput
-                />
-            </mat-form-field>
-        </div>
-        <div fxLayout="column" fxFlex="30">
-            <mat-form-field class="example-full-width" color="accent">
-                <mat-label>{{ 'Runtime type' | translate }}</mat-label>
-                <mat-select
-                    [(ngModel)]="ep.runtimeType"
-                    [disabled]="restrictedEditMode"
-                    data-cy="runtime-type"
-                >
-                    <mat-option
-                        *ngFor="let primitive of primitiveClasses"
-                        [value]="primitive.id"
+    @for (ep of outputStrategy.eventProperties; track ep; let i = $index) {
+        <div fxFlex="100" fxLayout="row" fxLayoutGap="10px">
+            <div fxLayout="column" fxFlex="30">
+                <mat-form-field fxFlex color="accent">
+                    <mat-label>{{ 'Runtime name' | translate }}</mat-label>
+                    <input
+                        [(ngModel)]="ep.runtimeName"
+                        data-cy="runtime-name"
+                        fxFlex
+                        matInput
+                    />
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="30">
+                <mat-form-field class="example-full-width" color="accent">
+                    <mat-label>{{ 'Runtime type' | translate }}</mat-label>
+                    <mat-select
+                        [(ngModel)]="ep.runtimeType"
+                        [disabled]="restrictedEditMode"
+                        data-cy="runtime-type"
                     >
-                        {{ primitive.label }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div fxLayout="column" fxFlex="30">
-            <mat-form-field fxFlex color="accent">
-                <mat-label>{{ 'Semantic type' | translate }}</mat-label>
-                <input
-                    [(ngModel)]="ep.semanticType"
+                        @for (primitive of primitiveClasses; track primitive) {
+                            <mat-option [value]="primitive.id">
+                                {{ primitive.label }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="30">
+                <mat-form-field fxFlex color="accent">
+                    <mat-label>{{ 'Semantic type' | translate }}</mat-label>
+                    <input
+                        [(ngModel)]="ep.semanticType"
+                        [disabled]="restrictedEditMode"
+                        data-cy="semantic-type"
+                        fxFlex
+                        matInput
+                    />
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="10">
+                <button
+                    mat-icon-button
+                    class="icon-button"
+                    (click)="removeProperty(ep)"
                     [disabled]="restrictedEditMode"
-                    data-cy="semantic-type"
-                    fxFlex
-                    matInput
-                />
-            </mat-form-field>
+                >
+                    <mat-icon class="icon">remove</mat-icon>
+                </button>
+            </div>
         </div>
-        <div fxLayout="column" fxFlex="10">
-            <button
-                mat-icon-button
-                class="icon-button"
-                (click)="removeProperty(ep)"
-                [disabled]="restrictedEditMode"
-            >
-                <mat-icon class="icon">remove</mat-icon>
-            </button>
-        </div>
-    </div>
+    }
     <div>
         <button
             mat-button

@@ -19,13 +19,14 @@ package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
 import org.apache.streampipes.messaging.InternalEventProcessor;
 
-import org.fusesource.mqtt.client.BlockingConnection;
-import org.fusesource.mqtt.client.MQTT;
-import org.fusesource.mqtt.client.Message;
-import org.fusesource.mqtt.client.QoS;
-import org.fusesource.mqtt.client.Topic;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient;
+import com.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Publish;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 public class MqttConsumer extends MqttBase implements Runnable {
 
@@ -33,6 +34,8 @@ public class MqttConsumer extends MqttBase implements Runnable {
     private boolean running;
     private int maxElementsToReceive = -1;
     private int messageCount = 0;
+
+    private Mqtt3AsyncClient client;
 
     private static final Logger LOG = LoggerFactory.getLogger(MqttConsumer.class);
 
@@ -50,35 +53,80 @@ public class MqttConsumer extends MqttBase implements Runnable {
     public void run() {
         this.running = true;
         try {
-            MQTT mqtt = super.setupMqttClient();
-            BlockingConnection connection = mqtt.blockingConnection();
-            connection.connect();
-            subscribeToTopic(connection);
-            processMessages(connection);
-            connection.disconnect();
+            this.client = super.setupMqttClient();
+            client.connectWith()
+                    .keepAlive(30)
+                    .send()
+                    .whenComplete((cAck, throwable) -> {
+                        if (throwable != null) {
+                            LOG.error("MQTT connection failed", throwable);
+                        } else {
+                            LOG.info("MQTT connection established");
+                        }
+                    })
+                    .get();
+
+            subscribe(client);
+
         } catch (Exception e) {
             LOG.error("Error in MQTT consumer: ", e);
             throw new RuntimeException("Error when receiving data from MQTT", e);
         }
     }
 
-    private void processMessages(BlockingConnection connection) throws Exception {
-        while (running && (maxElementsToReceive == -1 || messageCount < maxElementsToReceive)) {
-            Message message = connection.receive();
-            byte[] payload = message.getPayload();
-            consumer.onEvent(payload);
-            message.ack();
-            messageCount++;
-        }
+    private void subscribe(Mqtt3AsyncClient client) throws Exception {
+
+        CountDownLatch subscribed = new CountDownLatch(1);
+
+        client.subscribeWith()
+                .topicFilter(super.mqttConfig.getTopic())
+                .qos(MqttQos.AT_LEAST_ONCE)
+                .callback(this::handleMessage)
+                .send()
+                .whenComplete((subAck, throwable) -> {
+                    if (throwable != null) {
+                        LOG.error("MQTT subscribe failed", throwable);
+                    } else {
+                        LOG.info("Successfully subscribed to topic {}", super.mqttConfig.getTopic());
+                    }
+                    subscribed.countDown();
+                });
+
+        subscribed.await();
     }
 
-    private void subscribeToTopic(BlockingConnection connection) throws Exception {
-        Topic[] topics = { new Topic(super.mqttConfig.getTopic(), QoS.AT_LEAST_ONCE) };
-        connection.subscribe(topics);
+    private void handleMessage(Mqtt3Publish publish) {
+        if (!this.running) {
+            return;
+        }
+
+        try {
+            byte[] payload = publish.getPayloadAsBytes();
+            consumer.onEvent(payload);
+            messageCount++;
+
+            if (maxElementsToReceive != -1 && messageCount >= maxElementsToReceive) {
+                LOG.info("Max elements ({}) received. Stopping consumer.", maxElementsToReceive);
+                this.running = false;
+            }
+
+        } catch (Exception e) {
+            LOG.error("Error processing MQTT message", e);
+        }
     }
 
     public void close() {
         this.running = false;
+        try {
+
+            this.client.disconnect().get();
+
+        } catch (InterruptedException e) {
+            LOG.error("Error disconnecting from MQTT due to thread interruption", e);
+        } catch (ExecutionException e) {
+            LOG.error("Error disconnecting from MQTT", e.getCause());
+        }
+
     }
 
     public Integer getMessageCount() {

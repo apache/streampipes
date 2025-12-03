@@ -64,34 +64,8 @@
                     </div>
                 </mat-expansion-panel-header>
                 <div fxFlex="100" fxLayout="column" class="mt-10">
-                    <sp-configuration-box [title]="'Data Source' | translate">
-                        <div header fxFlex class="header-container">
-                            <span fxFlex></span>
-                            <button
-                                mat-icon-button
-                                class="pull-btn-right"
-                                [matTooltip]="
-                                    expandFieldsDataSource
-                                        ? ('Expand Less' | translate)
-                                        : ('Expand More' | translate)
-                                "
-                                (click)="toggleExpandFieldsDataSource()"
-                                [disabled]="
-                                    availablePipelines.length === 0 &&
-                                    availableMeasurements.length === 0
-                                "
-                            >
-                                <mat-icon>{{
-                                    expandFieldsDataSource
-                                        ? 'expand_less'
-                                        : 'expand_more'
-                                }}</mat-icon>
-                            </button>
-                        </div>
-                        @if (
-                            availablePipelines.length === 0 &&
-                            availableMeasurements.length === 0
-                        ) {
+                    <sp-configuration-box [title]="'Dataset' | translate">
+                        @if (availableMeasurements.length === 0) {
                             <div
                                 class="warning-container"
                                 fxLayout="column"
@@ -139,186 +113,37 @@
                                 </div>
                             </div>
                         }
-                        @if (
-                            availablePipelines.length !== 0 ||
-                            availableMeasurements.length !== 0
-                        ) {
-                            <div>
-                                <mat-radio-group
-                                    class="selection-radio-group"
-                                    [(ngModel)]="sourceConfig.sourceType"
+                        @if (availableMeasurements.length !== 0) {
+                            <mat-form-field
+                                color="accent"
+                                fxFlex="100"
+                                appearance="outline"
+                                subscriptSizing="dynamic"
+                            >
+                                <mat-select
+                                    data-cy="data-explorer-select-data-set"
+                                    [(value)]="sourceConfig.measureName"
+                                    (selectionChange)="
+                                        updateMeasure(
+                                            sourceConfig,
+                                            $event.value
+                                        )
+                                    "
                                 >
-                                    @if (
-                                        expandFieldsDataSource ||
-                                        sourceConfig.sourceType === 'pipeline'
+                                    @for (
+                                        measurement of availableMeasurements;
+                                        track measurement
                                     ) {
-                                        <div
-                                            class="radio-option-box"
-                                            fxLayout="column"
-                                            [ngClass]="{
-                                                'radio-option-box-accent':
-                                                    sourceConfig.sourceType ===
-                                                    'pipeline'
-                                            }"
+                                        <mat-option
+                                            [value]="measurement.measureName"
                                         >
-                                            <mat-radio-button
-                                                class="selection-radio-button"
-                                                [value]="'pipeline'"
-                                                [disabled]="
-                                                    availablePipelines.length ===
-                                                    0
-                                                "
-                                            >
-                                                <b>{{
-                                                    'Pipeline' | translate
-                                                }}</b>
-                                            </mat-radio-button>
-                                            <p class="description">
-                                                {{
-                                                    'Select this option if you want to use data from one of your pipelines.'
-                                                        | translate
-                                                }}
-                                            </p>
-                                            @if (
-                                                sourceConfig.sourceType ===
-                                                    'pipeline' &&
-                                                availablePipelines.length !== 0
-                                            ) {
-                                                <div
-                                                    class="selection-form-field"
-                                                >
-                                                    <mat-form-field
-                                                        color="accent"
-                                                        fxFlex="100"
-                                                        appearance="outline"
-                                                    >
-                                                        <mat-select
-                                                            [panelClass]="
-                                                                'form-field-small'
-                                                            "
-                                                            [(value)]="
-                                                                sourceConfig.measureName
-                                                            "
-                                                            (selectionChange)="
-                                                                updateMeasure(
-                                                                    sourceConfig,
-                                                                    $event.value
-                                                                )
-                                                            "
-                                                            data-cy="data-explorer-select-data-set"
-                                                        >
-                                                            @for (
-                                                                pipeline of availablePipelines;
-                                                                track pipeline
-                                                            ) {
-                                                                <mat-option
-                                                                    [value]="
-                                                                        pipeline.measureName
-                                                                    "
-                                                                >
-                                                                    <span
-                                                                        class="pipeline-name"
-                                                                        >{{
-                                                                            pipeline.pipelineName
-                                                                        }}</span
-                                                                    ><br />
-                                                                    <span
-                                                                        class="measure-name"
-                                                                        >{{
-                                                                            pipeline.measureName
-                                                                        }}</span
-                                                                    >
-                                                                </mat-option>
-                                                            }
-                                                        </mat-select>
-                                                    </mat-form-field>
-                                                </div>
-                                            }
-                                        </div>
+                                            <span class="pipeline-name">{{
+                                                measurement.measureName
+                                            }}</span>
+                                        </mat-option>
                                     }
-                                    @if (
-                                        expandFieldsDataSource ||
-                                        sourceConfig.sourceType ===
-                                            'measurement'
-                                    ) {
-                                        <div
-                                            class="radio-option-box"
-                                            fxLayout="column"
-                                            [ngClass]="{
-                                                'radio-option-box-accent':
-                                                    sourceConfig.sourceType ===
-                                                    'measurement'
-                                            }"
-                                        >
-                                            <mat-radio-button
-                                                class="selection-radio-button"
-                                                [value]="'measurement'"
-                                                [disabled]="
-                                                    availableMeasurements.length ===
-                                                    0
-                                                "
-                                            >
-                                                <b>{{
-                                                    'Database Identifier'
-                                                        | translate
-                                                }}</b>
-                                            </mat-radio-button>
-                                            <p class="description">
-                                                {{
-                                                    'Choose this option to work with individual measurements from a Data Lake.'
-                                                        | translate
-                                                }}
-                                            </p>
-                                            @if (
-                                                sourceConfig.sourceType ===
-                                                    'measurement' &&
-                                                availableMeasurements.length !==
-                                                    0
-                                            ) {
-                                                <div
-                                                    class="selection-form-field"
-                                                >
-                                                    <mat-form-field
-                                                        color="accent"
-                                                        fxFlex="100"
-                                                        appearance="outline"
-                                                    >
-                                                        <mat-select
-                                                            [(value)]="
-                                                                sourceConfig.measureName
-                                                            "
-                                                            (selectionChange)="
-                                                                updateMeasure(
-                                                                    sourceConfig,
-                                                                    $event.value
-                                                                )
-                                                            "
-                                                        >
-                                                            @for (
-                                                                measurement of availableMeasurements;
-                                                                track measurement
-                                                            ) {
-                                                                <mat-option
-                                                                    [value]="
-                                                                        measurement.measureName
-                                                                    "
-                                                                >
-                                                                    <span
-                                                                        class="pipeline-name"
-                                                                        >{{
-                                                                            measurement.measureName
-                                                                        }}</span
-                                                                    >
-                                                                </mat-option>
-                                                            }
-                                                        </mat-select>
-                                                    </mat-form-field>
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                </mat-radio-group>
-                            </div>
+                                </mat-select>
+                            </mat-form-field>
                         }
                     </sp-configuration-box>
                     @if (sourceConfig.measureName) {

@@ -1,135 +1,142 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxLayout="column">
     <div fxFlex="100" fxLayout="column">
-        <sp-table
-            *ngIf="dataSource"
-            data-cy="security-user-config"
-            [dataSource]="dataSource"
-            [columns]="displayedColumns"
-            matSort
-        >
-            <ng-container matColumnDef="username">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    {{ 'Email' | translate }}
-                </th>
-                <td
-                    mat-cell
-                    *matCellDef="let account"
-                    data-cy="user-accounts-table-row"
-                >
-                    <b>{{ account.username }}</b>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="provider">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    {{ 'Type' | translate }}
-                </th>
-                <td
-                    mat-cell
-                    *matCellDef="let account"
-                    data-cy="user-provider-table-row"
-                >
-                    <sp-label
-                        size="small"
-                        [labelText]="account.provider"
-                    ></sp-label>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="fullName">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    {{ 'Full Name' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let account">
-                    {{ account.fullName }}
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="createdAtMillis">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    {{ 'Created' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let account">
-                    {{
-                        this.dateFormatService.formatDate(
-                            account.createdAtMillis
-                        )
-                    }}
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="lastLoginAtMillis">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    {{ 'Last Login' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let account">
-                    {{
-                        this.dateFormatService.formatDate(
-                            account.lastLoginAtMillis
-                        )
-                    }}
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="edit">
-                <th mat-header-cell *matHeaderCellDef class="text-right"></th>
-                <td mat-cell *matCellDef="let account">
-                    <div fxLayout="row">
-                        <span
-                            fxFlex
-                            fxFlexOrder="3"
-                            fxLayout="row"
-                            fxLayoutAlign="end center"
-                        >
-                            <div class="mr-15">
+        @if (dataSource) {
+            <sp-table
+                data-cy="security-user-config"
+                [dataSource]="dataSource"
+                [columns]="displayedColumns"
+                matSort
+            >
+                <ng-container matColumnDef="username">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ 'Email' | translate }}
+                    </th>
+                    <td
+                        mat-cell
+                        *matCellDef="let account"
+                        data-cy="user-accounts-table-row"
+                    >
+                        <b>{{ account.username }}</b>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="provider">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ 'Type' | translate }}
+                    </th>
+                    <td
+                        mat-cell
+                        *matCellDef="let account"
+                        data-cy="user-provider-table-row"
+                    >
+                        <sp-label
+                            size="small"
+                            [labelText]="account.provider"
+                        ></sp-label>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="fullName">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ 'Full Name' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let account">
+                        {{ account.fullName }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="createdAtMillis">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ 'Created' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let account">
+                        {{
+                            this.dateFormatService.formatDate(
+                                account.createdAtMillis
+                            )
+                        }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="lastLoginAtMillis">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ 'Last Login' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let account">
+                        {{
+                            this.dateFormatService.formatDate(
+                                account.lastLoginAtMillis
+                            )
+                        }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="edit">
+                    <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="text-right"
+                    ></th>
+                    <td mat-cell *matCellDef="let account">
+                        <div fxLayout="row">
+                            <span
+                                fxFlex
+                                fxFlexOrder="3"
+                                fxLayout="row"
+                                fxLayoutAlign="end center"
+                            >
+                                <div class="mr-15">
+                                    <button
+                                        mat-flat-button
+                                        class="mat-basic"
+                                        [matTooltip]="'Edit user' | translate"
+                                        matTooltipPosition="above"
+                                        [attr.data-cy]="
+                                            'user-edit-' + account.fullName
+                                        "
+                                        (click)="editUser(account)"
+                                    >
+                                        <i class="material-icons">edit</i>
+                                        <span
+                                            >&nbsp;{{
+                                                'Edit' | translate
+                                            }}</span
+                                        >
+                                    </button>
+                                </div>
                                 <button
+                                    class="btn-warn"
                                     mat-flat-button
-                                    class="mat-basic"
-                                    [matTooltip]="'Edit user' | translate"
+                                    [matTooltip]="'Delete user' | translate"
                                     matTooltipPosition="above"
                                     [attr.data-cy]="
-                                        'user-edit-' + account.fullName
+                                        'user-delete-btn-' + account.fullName
                                     "
-                                    (click)="editUser(account)"
+                                    (click)="deleteUser(account)"
                                 >
-                                    <i class="material-icons">edit</i>
-                                    <span>&nbsp;{{ 'Edit' | translate }}</span>
+                                    <i class="material-icons">delete</i>
+                                    <span
+                                        >&nbsp;{{ 'Delete' | translate }}</span
+                                    >
                                 </button>
-                            </div>
-                            <button
-                                class="btn-warn"
-                                mat-flat-button
-                                [matTooltip]="'Delete user' | translate"
-                                matTooltipPosition="above"
-                                [attr.data-cy]="
-                                    'user-delete-btn-' + account.fullName
-                                "
-                                (click)="deleteUser(account)"
-                            >
-                                <i class="material-icons">delete</i>
-                                <span>&nbsp;{{ 'Delete' | translate }}</span>
-                            </button>
-                        </span>
-                    </div>
-                </td>
-            </ng-container>
-        </sp-table>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+            </sp-table>
+        }
     </div>
 </div>

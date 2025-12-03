@@ -46,12 +46,12 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { SpDashboardRoutes } from '../../dashboard.routes';
-import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
-import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
+import { ChartRoutingService } from '../../../data-explorer-shared/services/chart-routing.service';
+import { ChartDetectChangesService } from '../../../data-explorer/services/chart-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { TranslateService } from '@ngx-translate/core';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
-import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
+import { ChartSharedService } from '../../../data-explorer-shared/services/chart-shared.service';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -80,7 +80,7 @@ export class DashboardPanelComponent
     _dashboardGrid: DashboardGridViewComponent;
     _dashboardSlide: DashboardSlideViewComponent;
 
-    hasDataExplorerWritePrivileges = false;
+    hasDashboardWritePrivileges = false;
 
     public items: Dashboard[];
 
@@ -88,18 +88,18 @@ export class DashboardPanelComponent
     authSubscription: Subscription;
     refreshSubscription: Subscription;
 
-    private detectChangesService = inject(DataExplorerDetectChangesService);
+    private detectChangesService = inject(ChartDetectChangesService);
     private dialog = inject(MatDialog);
     private timeSelectionService = inject(TimeSelectionService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private dashboardService = inject(DashboardService);
     private route = inject(ActivatedRoute);
-    private routingService = inject(DataExplorerRoutingService);
+    private routingService = inject(ChartRoutingService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private translateService = inject(TranslateService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
-    private dataExplorerSharedService = inject(DataExplorerSharedService);
+    private dataExplorerSharedService = inject(ChartSharedService);
 
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
@@ -114,10 +114,10 @@ export class DashboardPanelComponent
         this.getDashboard(params.id, startTime, endTime);
 
         this.authSubscription = this.currentUserService.user$.subscribe(_ => {
-            this.hasDataExplorerWritePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
+            this.hasDashboardWritePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
-            if (queryParams.editMode && this.hasDataExplorerWritePrivileges) {
+            if (queryParams.editMode && this.hasDashboardWritePrivileges) {
                 this.editMode = true;
             }
         });

@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
     <div
@@ -25,31 +25,26 @@
         data-cy="sp-pipeline-started-dialog"
     >
         <div fxLayout="row">
-            <mat-icon
-                data-cy="sp-pipeline-started-success"
-                color="accent"
-                *ngIf="pipelineOperationStatus.success"
-                >done</mat-icon
-            >
-            <mat-icon
-                style="color: red"
-                *ngIf="!pipelineOperationStatus.success"
-                >error</mat-icon
-            >
+            @if (pipelineOperationStatus.success) {
+                <mat-icon data-cy="sp-pipeline-started-success" color="accent"
+                    >done</mat-icon
+                >
+            }
+            @if (!pipelineOperationStatus.success) {
+                <mat-icon style="color: red">error</mat-icon>
+            }
             <span>&nbsp;{{ pipelineOperationStatus.title }}.</span>
         </div>
-        <span
-            *ngIf="
-                action === 1 &&
-                !pipelineOperationStatus.success &&
-                !forceStopDisabled
-            "
-            class="message-small"
-            >{{
+        @if (
+            action === 1 &&
+            !pipelineOperationStatus.success &&
+            !forceStopDisabled
+        ) {
+            <span class="message-small">{{
                 'You can perform a forced stop, which will stop and reset the pipeline status.'
                     | translate
-            }}</span
-        >
+            }}</span>
+        }
     </div>
     <div fxLayout="row">
         <button
@@ -58,39 +53,41 @@
             class="mat-basic"
             (click)="toggleStatusDetailsVisible()"
         >
-            <div *ngIf="!statusDetailsVisible">
-                {{ 'Show Details' | translate }}
-            </div>
-            <div *ngIf="statusDetailsVisible">
-                {{ 'Hide Details' | translate }}
-            </div>
+            @if (!statusDetailsVisible) {
+                <div>
+                    {{ 'Show Details' | translate }}
+                </div>
+            }
+            @if (statusDetailsVisible) {
+                <div>
+                    {{ 'Hide Details' | translate }}
+                </div>
+            }
         </button>
-        <button
-            mat-button
-            mat-flat-button
-            class="ml-10"
-            color="accent"
-            (click)="forceStopPipeline()"
-            *ngIf="
-                action === 1 &&
-                !pipelineOperationStatus.success &&
-                !forceStopDisabled
-            "
-        >
-            <div>{{ 'Force stop' | translate }}</div>
-        </button>
+        @if (
+            action === 1 &&
+            !pipelineOperationStatus.success &&
+            !forceStopDisabled
+        ) {
+            <button
+                mat-button
+                mat-flat-button
+                class="ml-10"
+                color="accent"
+                (click)="forceStopPipeline()"
+            >
+                <div>{{ 'Force stop' | translate }}</div>
+            </button>
+        }
     </div>
 
-    <div
-        fxFlex="100"
-        fxLayout="column"
-        *ngIf="statusDetailsVisible"
-        class="w-100"
-    >
-        <sp-pipeline-operation-status
-            fxLayout="column"
-            [pipelineOperationStatus]="pipelineOperationStatus"
-        >
-        </sp-pipeline-operation-status>
-    </div>
+    @if (statusDetailsVisible) {
+        <div fxFlex="100" fxLayout="column" class="w-100">
+            <sp-pipeline-operation-status
+                fxLayout="column"
+                [pipelineOperationStatus]="pipelineOperationStatus"
+            >
+            </sp-pipeline-operation-status>
+        </div>
+    }
 </div>

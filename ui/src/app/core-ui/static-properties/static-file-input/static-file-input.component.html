@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxFlex="100" fxLayout="column" [formGroup]="parentForm">
     <div fxFlex="100" fxLayout="column">
@@ -31,98 +31,106 @@
                 }}</mat-radio-button>
             </mat-radio-group>
         </div>
-        <div
-            *ngIf="chooseExistingFileControl.value && filesLoaded"
-            class="mt-10"
-        >
-            <mat-form-field color="accent" class="w-100">
-                <input
-                    data-cy="file-input-file-name"
-                    type="text"
-                    [placeholder]="'Select file' | translate"
-                    formControlName="{{ fieldName }}"
-                    matInput
-                    [matAutocomplete]="auto"
-                />
-                <button
-                    *ngIf="selectedFile"
-                    matSuffix
-                    mat-icon-button
-                    [attr.aria-label]="'Clear' | translate"
-                    (click)="selectedFile = {}"
-                >
-                    <mat-icon>close</mat-icon>
-                </button>
-                <mat-autocomplete
-                    #auto="matAutocomplete"
-                    (optionSelected)="selectOption($event.option.value)"
-                    [displayWith]="displayFn"
-                    style="width: 50%"
-                >
-                    <mat-option
-                        *ngFor="let fileMetadata of fileMetadata"
-                        [value]="fileMetadata"
+        @if (chooseExistingFileControl.value && filesLoaded) {
+            <div class="mt-10">
+                <mat-form-field color="accent" class="w-100">
+                    <input
+                        data-cy="file-input-file-name"
+                        type="text"
+                        [placeholder]="'Select file' | translate"
+                        formControlName="{{ fieldName }}"
+                        matInput
+                        [matAutocomplete]="auto"
+                    />
+                    @if (selectedFile) {
+                        <button
+                            matSuffix
+                            mat-icon-button
+                            [attr.aria-label]="'Clear' | translate"
+                            (click)="selectedFile = {}"
+                        >
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    }
+                    <mat-autocomplete
+                        #auto="matAutocomplete"
+                        (optionSelected)="selectOption($event.option.value)"
+                        [displayWith]="displayFn"
+                        style="width: 50%"
                     >
-                        {{ fileMetadata.filename }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </div>
-        <div *ngIf="!chooseExistingFileControl.value">
-            <mat-form-field
-                style="width: 95%"
-                (click)="fileInput.click()"
-                *ngIf="!chooseExistingFileControl.value"
-            >
-                <input
-                    matInput
-                    placeholder="{{ staticProperty.label }}"
-                    disabled
-                    (value)="(fileName)"
-                />
-                <input
-                    #fileInput
-                    type="file"
-                    style="display: none"
-                    (change)="handleFileInput($event.target.files)"
-                />
-                <div>
-                    {{ fileName }}
-                    <mat-progress-bar
-                        mode="determinate"
-                        value="{{ uploadStatus }}"
-                        *ngIf="uploadStatus > 0"
-                    ></mat-progress-bar>
-                </div>
-
-                <button
-                    color="accent"
-                    matSuffix
-                    mat-button
-                    style="min-width: 0px"
-                >
-                    <mat-icon *ngIf="uploadStatus < 99"
-                        >insert_drive_file</mat-icon
-                    >
-                    <mat-icon *ngIf="uploadStatus === 100" class="green-icon"
-                        >check_circle</mat-icon
-                    >
-                </button>
-
-                <mat-error *ngIf="!hasInput">
-                    {{ errorMessage }}
-                </mat-error>
-            </mat-form-field>
-            <div>
-                <button
-                    color="accent"
-                    mat-flat-button
-                    (click)="upload()"
-                    [disabled]="!fileName"
-                >
-                    {{ 'Upload' | translate }}
-                </button>
+                        @for (
+                            fileMetadata of fileMetadata;
+                            track fileMetadata
+                        ) {
+                            <mat-option [value]="fileMetadata">
+                                {{ fileMetadata.filename }}
+                            </mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
             </div>
-        </div>
+        }
+        @if (!chooseExistingFileControl.value) {
+            <div>
+                @if (!chooseExistingFileControl.value) {
+                    <mat-form-field
+                        style="width: 95%"
+                        (click)="fileInput.click()"
+                    >
+                        <input
+                            matInput
+                            placeholder="{{ staticProperty.label }}"
+                            disabled
+                            (value)="(fileName)"
+                        />
+                        <input
+                            #fileInput
+                            type="file"
+                            style="display: none"
+                            (change)="handleFileInput($event.target.files)"
+                        />
+                        <div>
+                            {{ fileName }}
+                            @if (uploadStatus > 0) {
+                                <mat-progress-bar
+                                    mode="determinate"
+                                    value="{{ uploadStatus }}"
+                                ></mat-progress-bar>
+                            }
+                        </div>
+                        <button
+                            color="accent"
+                            matSuffix
+                            mat-button
+                            style="min-width: 0px"
+                        >
+                            @if (uploadStatus < 99) {
+                                <mat-icon>insert_drive_file</mat-icon>
+                            }
+                            @if (uploadStatus === 100) {
+                                <mat-icon class="green-icon"
+                                    >check_circle</mat-icon
+                                >
+                            }
+                        </button>
+                        @if (!hasInput) {
+                            <mat-error>
+                                {{ errorMessage }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                }
+                <div>
+                    <button
+                        color="accent"
+                        mat-flat-button
+                        (click)="upload()"
+                        [disabled]="!fileName"
+                    >
+                        {{ 'Upload' | translate }}
+                    </button>
+                </div>
+            </div>
+        }
     </div>
 </div>
