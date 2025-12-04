@@ -36,11 +36,11 @@ import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'sp-data-explorer-overview-table',
-    templateUrl: './data-explorer-overview-table.component.html',
-    styleUrls: ['../data-explorer-overview.component.scss'],
+    templateUrl: './chart-overview-table.component.html',
+    styleUrls: ['../chart-overview-table.component.scss'],
     standalone: false,
 })
-export class SpDataExplorerDataViewOverviewComponent implements OnInit {
+export class ChartOverviewTableComponent implements OnInit {
     @Input()
     hasDataExplorerWritePrivileges: boolean;
 

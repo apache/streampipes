@@ -32,7 +32,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { ColorPickerComponent, ColorPickerDirective } from 'ngx-color-picker';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-import { DataExplorerOverviewComponent } from './components/overview/data-explorer-overview.component';
+import { ChartOverviewComponent } from './components/chart-overview/chart-overview.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DataExplorerDesignerPanelComponent } from './components/chart-view/designer-panel/data-explorer-designer-panel.component';
 import { DataExplorerWidgetAppearanceSettingsComponent } from './components/chart-view/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
@@ -72,7 +72,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { SpDataExplorerDataViewOverviewComponent } from './components/overview/data-explorer-overview-table/data-explorer-overview-table.component';
+import { ChartOverviewTableComponent } from './components/chart-overview/chart-overview-table/chart-overview-table.component';
 import { ChartViewComponent } from './components/chart-view/chart-view.component';
 import { ChartViewToolbarComponent } from './components/chart-view/toolbar/chart-view-toolbar.component';
 import { OrderSelectionPanelComponent } from './components/chart-view/designer-panel/data-settings/order-selection-panel/order-selection-panel.component';
@@ -139,7 +139,7 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
                 children: [
                     {
                         path: '',
-                        component: DataExplorerOverviewComponent,
+                        component: ChartOverviewComponent,
                     },
                     {
                         path: 'create',
@@ -159,7 +159,7 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
     ],
     declarations: [
         AggregateConfigurationComponent,
-        DataExplorerOverviewComponent,
+        ChartOverviewComponent,
         DataExplorerDesignerPanelComponent,
         DataExplorerWidgetAppearanceSettingsComponent,
         DataExplorerWidgetDataSettingsComponent,
@@ -173,7 +173,7 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
         GroupSelectionPanelComponent,
         DataExplorerVisualisationSettingsComponent,
         OrderSelectionPanelComponent,
-        SpDataExplorerDataViewOverviewComponent,
+        ChartOverviewTableComponent,
         FilterSelectionPanelRowPropertySelectionComponent,
         FilterSelectionPanelRowOperationSelectionComponent,
         FilterSelectionPanelRowValueInputComponent,

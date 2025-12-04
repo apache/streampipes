@@ -24,19 +24,19 @@ import {
 import { AuthService } from '../../../services/auth.service';
 import { SpChartRoutes } from '../../chart.routes';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
-import { SpDataExplorerDataViewOverviewComponent } from './data-explorer-overview-table/data-explorer-overview-table.component';
+import { ChartOverviewTableComponent } from './chart-overview-table/chart-overview-table.component';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'sp-data-explorer-overview',
-    templateUrl: './data-explorer-overview.component.html',
-    styleUrls: ['./data-explorer-overview.component.scss'],
+    selector: 'sp-chart-overview',
+    templateUrl: './chart-overview.component.html',
+    styleUrls: ['./chart-overview.component.scss'],
     standalone: false,
 })
-export class DataExplorerOverviewComponent implements OnInit, OnDestroy {
-    @ViewChild(SpDataExplorerDataViewOverviewComponent)
-    chartsOverview: SpDataExplorerDataViewOverviewComponent;
+export class ChartOverviewComponent implements OnInit, OnDestroy {
+    @ViewChild(ChartOverviewTableComponent)
+    chartsOverview: ChartOverviewTableComponent;
 
     auth$: Subscription;
     hasDataExplorerWritePrivileges = false;
