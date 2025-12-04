@@ -19,19 +19,33 @@
     height: 100%;
 }
 
+.status-light-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .tl-container {
     background-color: #222;
     display: flex;
     align-items: center;
-    flex-direction: column;
-    padding: 20px;
+    padding: 10%;
     border-radius: 10px;
+    box-sizing: border-box;
+    height: 90%;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
 }
 
 .light {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
     border-radius: 50%;
-    background-color: #3d3535;
-    background: repeating-linear-gradient(#333, #443 5px);
+    background: #3d3535 repeating-linear-gradient(#333, #443 5px);
 }
 
 .light-red,

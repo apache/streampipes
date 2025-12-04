@@ -19,7 +19,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
-import { GridsterModule } from 'angular-gridster2';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerComponent } from 'ngx-color-picker';
@@ -99,7 +98,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         CommonModule,
         CoreUiModule,
         MatTabsModule,
-        GridsterModule,
         FlexLayoutModule,
         FormsModule,
         ColorPickerComponent,

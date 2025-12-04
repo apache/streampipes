@@ -85,8 +85,8 @@ export class DashboardPanelComponent
     public items: Dashboard[];
 
     dataLakeMeasure: DataLakeMeasure;
-    authSubscription: Subscription;
-    refreshSubscription: Subscription;
+    auth$: Subscription;
+    refresh$: Subscription;
 
     private detectChangesService = inject(ChartDetectChangesService);
     private dialog = inject(MatDialog);
@@ -113,7 +113,7 @@ export class DashboardPanelComponent
 
         this.getDashboard(params.id, startTime, endTime);
 
-        this.authSubscription = this.currentUserService.user$.subscribe(_ => {
+        this.auth$ = this.currentUserService.user$.subscribe(_ => {
             this.hasDashboardWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
@@ -124,26 +124,28 @@ export class DashboardPanelComponent
     }
 
     ngOnDestroy() {
-        this.authSubscription?.unsubscribe();
-        this.refreshSubscription?.unsubscribe();
+        this.auth$?.unsubscribe();
+        this.refresh$?.unsubscribe();
     }
 
     addChartToDashboard(dataViewElementId: string) {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const dashboardItem = {} as ClientDashboardItem;
-        dashboardItem.id = dataViewElementId;
+        dashboardItem.id =
+            this.dataExplorerDashboardService.makeUniqueWidgetId();
         dashboardItem.cols = 3;
         dashboardItem.rows = 4;
+        dashboardItem.w = 3;
+        dashboardItem.h = 4;
         dashboardItem.x = 0;
         dashboardItem.y = 0;
-        dashboardItem.widgetId =
-            this.dataExplorerDashboardService.makeUniqueWidgetId();
+        dashboardItem.dataViewElementId = dataViewElementId;
         this.dashboard.widgets.push(dashboardItem);
         setTimeout(() => {
             if (this.viewMode === 'grid') {
-                this.dashboardGrid.loadWidgetConfig(dataViewElementId, true);
+                this.dashboardGrid.loadWidgetConfig(dashboardItem);
             } else {
-                this.dashboardSlide.loadWidgetConfig(dataViewElementId, true);
+                this.dashboardSlide.loadWidgetConfig(dashboardItem);
             }
         });
     }
@@ -231,7 +233,7 @@ export class DashboardPanelComponent
                 if (resp.ok) {
                     const compositeDashboard = resp.body;
                     compositeDashboard.dashboard.widgets.forEach(w => {
-                        w.widgetId ??=
+                        w.id ??=
                             this.dataExplorerDashboardService.makeUniqueWidgetId();
                     });
                     this.dashboard = compositeDashboard.dashboard;
@@ -329,14 +331,14 @@ export class DashboardPanelComponent
 
     modifyRefreshInterval(liveSettings: DashboardLiveSettings): void {
         this.dashboard.dashboardLiveSettings = liveSettings;
-        this.refreshSubscription?.unsubscribe();
+        this.refresh$?.unsubscribe();
         if (this.dashboard.dashboardLiveSettings.refreshModeActive) {
             this.createQuerySubscription();
         }
     }
 
     createQuerySubscription() {
-        this.refreshSubscription = timer(
+        this.refresh$ = timer(
             0,
             this.dashboard.dashboardLiveSettings.refreshIntervalInSeconds *
                 1000,

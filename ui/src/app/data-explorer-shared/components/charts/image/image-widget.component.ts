@@ -51,10 +51,7 @@ export class ImageWidgetComponent
 
     ngOnInit(): void {
         super.ngOnInit();
-        this.onResize(
-            this.gridsterItemComponent.width,
-            this.gridsterItemComponent.height - 53,
-        );
+        this.onResize(this.currentWidth, this.currentHeight - 53);
         this.imageBaseUrl = this.dataLakeRestService.dataLakeUrl + '/images/';
     }
 

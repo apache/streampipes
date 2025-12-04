@@ -38,15 +38,6 @@ export class TrafficLightWidgetComponent
     header: string[];
     fieldIndex: number;
 
-    width: number;
-    height: number;
-
-    containerWidth: number;
-    containerHeight: number;
-
-    lightWidth: number;
-    lightHeight: number;
-
     selectedWarningRange: number;
     selectedFieldToObserve: DataExplorerField;
     selectedUpperLimit: boolean;
@@ -58,10 +49,6 @@ export class TrafficLightWidgetComponent
 
     ngOnInit(): void {
         super.ngOnInit();
-        this.onResize(
-            this.gridsterItemComponent.width - this.widthOffset,
-            this.gridsterItemComponent.height - this.heightOffset,
-        );
         this.updateSettings();
     }
 
@@ -155,12 +142,7 @@ export class TrafficLightWidgetComponent
         }
     }
 
-    onResize(width: number, heigth: number) {
-        this.containerHeight = heigth * 0.8;
-        this.containerWidth = this.containerHeight / 3;
-        this.lightWidth = (this.containerHeight * 0.9) / 3;
-        this.lightHeight = this.lightWidth;
-    }
+    onResize(width: number, heigth: number) {}
 
     handleUpdatedFields(
         addedFields: DataExplorerField[],

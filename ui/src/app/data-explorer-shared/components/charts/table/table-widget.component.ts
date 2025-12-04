@@ -142,7 +142,7 @@ export class TableWidgetComponent
         this.refreshColumns();
     }
 
-    onResize(width: number, height: number) {}
+    onResize(_width: number, _height: number) {}
 
     beforeDataFetched() {}
 

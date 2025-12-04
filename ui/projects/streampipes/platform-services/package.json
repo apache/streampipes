@@ -6,8 +6,7 @@
     "@angular/core": "^19.2.13",
     "@angular/platform-browser": "^19.2.13",
     "@ngx-loading-bar/http-client": "6.0.2",
-    "rxjs": "^7.8.0",
-    "angular-gridster2": "^19.0.0"
+    "rxjs": "^7.8.0"
   },
   "dependencies": {
     "tslib": "^2.6.2"

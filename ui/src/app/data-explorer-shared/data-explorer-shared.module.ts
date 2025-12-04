@@ -43,7 +43,6 @@ import { CommonModule } from '@angular/common';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { MatTabsModule } from '@angular/material/tabs';
-import { GridsterModule } from 'angular-gridster2';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ColorPickerComponent, ColorPickerDirective } from 'ngx-color-picker';
@@ -127,7 +126,6 @@ import { ColorMappingOptionsConfigComponent } from './components/chart-config/co
         LeafletModule,
         CoreUiModule,
         MatTabsModule,
-        GridsterModule,
         FlexLayoutModule,
         FormsModule,
         ColorPickerComponent,

@@ -29,8 +29,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
-
-import { GridsterModule } from 'angular-gridster2';
 import { ColorPickerComponent, ColorPickerDirective } from 'ngx-color-picker';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -118,7 +116,6 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
         LeafletModule,
         CoreUiModule,
         MatTabsModule,
-        GridsterModule,
         FlexLayoutModule,
         FormsModule,
         ColorPickerComponent,

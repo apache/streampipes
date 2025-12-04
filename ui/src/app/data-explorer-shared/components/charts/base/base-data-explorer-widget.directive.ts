@@ -25,14 +25,12 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
-import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import {
     ClientDashboardItem,
     DataExplorerDataConfig,
     DataExplorerField,
     DataExplorerWidgetModel,
-    DataViewQueryGeneratorService,
     SpLogMessage,
     SpQueryResult,
     TimeSettings,
@@ -49,6 +47,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { DataExplorerChartRegistry } from '../../../registry/data-explorer-chart-registry';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
 import { TimeSelectionService } from '@streampipes/shared-ui';
+import { WidgetSize } from '../../../models/dataset.model';
 
 @Directive()
 export abstract class BaseDataExplorerWidgetDirective<
@@ -68,10 +67,9 @@ export abstract class BaseDataExplorerWidgetDirective<
     errorCallback: EventEmitter<SpLogMessage> =
         new EventEmitter<SpLogMessage>();
 
-    @Input() gridsterItem: GridsterItem;
-    @Input() gridsterItemComponent: GridsterItemComponent;
     @Input() editMode: boolean;
     @Input() kioskMode: boolean;
+    @Input() dataViewMode: boolean;
     @Input() observableGenerator: ObservableGenerator;
 
     @Input() timeSettings: TimeSettings;
@@ -90,6 +88,12 @@ export abstract class BaseDataExplorerWidgetDirective<
 
     @HostBinding('class') className = 'h-100';
 
+    @Input()
+    initialSize: WidgetSize;
+
+    currentWidth: number;
+    currentHeight: number;
+
     public selectedProperties: string[];
 
     public showNoDataInDateRange: boolean;
@@ -101,12 +105,9 @@ export abstract class BaseDataExplorerWidgetDirective<
 
     fieldProvider: FieldProvider;
 
-    widgetConfigurationSub: Subscription;
-    resizeSub: Subscription;
-    timeSelectionSub: Subscription;
-
-    widthOffset: number;
-    heightOffset: number;
+    widgetConfiguration$: Subscription;
+    resize$: Subscription;
+    timeSelection$: Subscription;
 
     requestQueue$: Subject<Observable<SpQueryResult>[]> = new Subject<
         Observable<SpQueryResult>[]
@@ -114,17 +115,14 @@ export abstract class BaseDataExplorerWidgetDirective<
 
     protected widgetConfigurationService = inject(ChartConfigurationService);
     protected resizeService = inject(ResizeService);
-    protected dataViewQueryGeneratorService = inject(
-        DataViewQueryGeneratorService,
-    );
     protected timeSelectionService = inject(TimeSelectionService);
     protected widgetRegistryService = inject(DataExplorerChartRegistry);
     protected fieldUpdateService = inject(SpFieldUpdateService);
     public fieldService = inject(ChartFieldProviderService);
 
     ngOnInit(): void {
-        this.heightOffset = this.gridMode ? 70 : 65;
-        this.widthOffset = this.gridMode ? 10 : 10;
+        this.currentWidth = this.initialSize.width;
+        this.currentHeight = this.initialSize.height;
         this.showData = true;
         const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
         this.fieldProvider =
@@ -153,7 +151,7 @@ export abstract class BaseDataExplorerWidgetDirective<
                 });
             });
 
-        this.widgetConfigurationSub =
+        this.widgetConfiguration$ =
             this.widgetConfigurationService.configurationChangedSubject.subscribe(
                 refreshMessage => {
                     if (refreshMessage.refreshData) {
@@ -179,22 +177,18 @@ export abstract class BaseDataExplorerWidgetDirective<
                 },
             );
         if (!this.previewMode) {
-            this.resizeSub = this.resizeService.resizeSubject.subscribe(
-                info => {
-                    if (
-                        info.gridsterItem.id ===
-                        this.dataExplorerWidget.elementId
-                    ) {
-                        this.onResize(
-                            this.gridsterItemComponent.width - this.widthOffset,
-                            this.gridsterItemComponent.height -
-                                this.heightOffset,
-                        );
-                    }
-                },
-            );
+            this.resize$ = this.resizeService.resizeSubject.subscribe(info => {
+                if (
+                    this.dataViewMode ||
+                    info.widgetId === this.dataViewDashboardItem.id
+                ) {
+                    this.currentWidth = info.width;
+                    this.currentHeight = info.height;
+                    this.onResize(info.width, info.height);
+                }
+            });
         }
-        this.timeSelectionSub =
+        this.timeSelection$ =
             this.timeSelectionService.timeSelectionChangeSubject.subscribe(
                 widgetTimeSettings => {
                     if (
@@ -216,16 +210,12 @@ export abstract class BaseDataExplorerWidgetDirective<
                 },
             );
         this.updateData();
-        this.onResize(
-            this.gridsterItemComponent.width - this.widthOffset,
-            this.gridsterItemComponent.height - this.heightOffset,
-        );
     }
 
     public cleanupSubscriptions(): void {
-        this.widgetConfigurationSub?.unsubscribe();
-        this.resizeSub?.unsubscribe();
-        this.timeSelectionSub?.unsubscribe();
+        this.widgetConfiguration$?.unsubscribe();
+        this.resize$?.unsubscribe();
+        this.timeSelection$.unsubscribe();
         this.requestQueue$?.unsubscribe();
     }
 
