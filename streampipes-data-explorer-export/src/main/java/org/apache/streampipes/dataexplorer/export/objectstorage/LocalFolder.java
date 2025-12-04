@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.export.ObjectStorge;
+
+package org.apache.streampipes.dataexplorer.export.objectstorage;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -34,11 +35,12 @@ public class LocalFolder implements IObjectStorage {
 
     public LocalFolder(String measurementName, String format) throws RuntimeException, IOException {
 
-        var env = Environments.getEnvironment(); 
+        var env = Environments.getEnvironment();
+        var localDir = env.getRetentionLocalDir().getValueOrDefault();
 
-        Files.createDirectories(Paths.get(env.getRetentionLocalDir().getValueOrDefault() + "/" + measurementName));   
+        Files.createDirectories(Paths.get(localDir + "/" + measurementName));
 
-        this.filePath = Paths.get(System.getenv("SP_RETENTION_LOCAL_DIR") + "/" + measurementName + "/dump_"
+        this.filePath = Paths.get(localDir + "/" + measurementName + "/dump_"
                 + Instant.now().toString() + "." + format);
 
     }

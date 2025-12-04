@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.export.ObjectStorge;
+
+package org.apache.streampipes.dataexplorer.export.objectstorage;
 
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 

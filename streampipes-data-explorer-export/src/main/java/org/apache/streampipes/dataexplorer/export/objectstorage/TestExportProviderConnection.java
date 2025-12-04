@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.export.ObjectStorge;
+package org.apache.streampipes.dataexplorer.export.objectstorage;
 
 
 import org.apache.streampipes.model.configuration.ExportProviderSettings;

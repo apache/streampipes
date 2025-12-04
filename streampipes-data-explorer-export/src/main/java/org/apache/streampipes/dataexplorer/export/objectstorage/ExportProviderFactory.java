@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.export.ObjectStorge;
+
+package org.apache.streampipes.dataexplorer.export.objectstorage;
 
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.configuration.ProviderType;
@@ -29,15 +30,10 @@ public class ExportProviderFactory {
             ExportProviderSettings settings, 
             String format) throws Exception {
 
-        switch (providerType) {
-            case FOLDER: 
-                return new LocalFolder(measurementName, format);
-                
-            case S3: 
-                return new S3(measurementName, format, settings); 
-
-            default:
-                throw new IllegalArgumentException("Unsupported provider: " + providerType);
-        }
+      return switch (providerType) {
+        case FOLDER -> new LocalFolder(measurementName, format);
+        case S3 -> new S3(measurementName, format, settings);
+        default -> throw new IllegalArgumentException("Unsupported provider: " + providerType);
+      };
     }
 }

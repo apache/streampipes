@@ -15,19 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.export.ObjectStorge;
+package org.apache.streampipes.dataexplorer.export.objectstorage;
 
 
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
