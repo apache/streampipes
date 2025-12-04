@@ -24,14 +24,12 @@ import { ChartRegistry } from '../../../../../chart-shared/registry/chart-regist
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'sp-data-explorer-widget-appearance-settings',
-    templateUrl: './data-explorer-widget-appearance-settings.component.html',
-    styleUrls: ['./data-explorer-widget-appearance-settings.component.scss'],
+    selector: 'sp-chart-appearance-settings',
+    templateUrl: './chart-appearance-settings.component.html',
+    styleUrls: ['./chart-appearance-settings.component.scss'],
     standalone: false,
 })
-export class DataExplorerWidgetAppearanceSettingsComponent
-    implements OnInit, OnDestroy
-{
+export class ChartAppearanceSettingsComponent implements OnInit, OnDestroy {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
     backgroundOption: 'default' | 'custom' = 'default';

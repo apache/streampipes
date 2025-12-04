@@ -42,12 +42,12 @@ import { FieldProvider } from '../../../../../chart-shared/models/dataview-dashb
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
 
 @Component({
-    selector: 'sp-data-explorer-widget-data-settings',
-    templateUrl: './data-explorer-widget-data-settings.component.html',
-    styleUrls: ['./data-explorer-widget-data-settings.component.scss'],
+    selector: 'sp-chart-data-settings',
+    templateUrl: './chart-data-settings.component.html',
+    styleUrls: ['./chart-data-settings.component.scss'],
     standalone: false,
 })
-export class DataExplorerWidgetDataSettingsComponent implements OnInit {
+export class ChartDataSettingsComponent implements OnInit {
     @Input() dataConfig: DataExplorerDataConfig;
     @Input() dataLakeMeasure: DataLakeMeasure;
     @Input() newWidgetMode: boolean;

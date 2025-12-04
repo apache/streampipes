@@ -28,15 +28,15 @@ import {
     DataLakeMeasure,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
-import { DataExplorerWidgetDataSettingsComponent } from './data-settings/data-explorer-widget-data-settings.component';
+import { ChartDataSettingsComponent } from './data-settings/chart-data-settings.component';
 
 @Component({
-    selector: 'sp-data-explorer-designer-panel',
-    templateUrl: './data-explorer-designer-panel.component.html',
-    styleUrls: ['./data-explorer-designer-panel.component.scss'],
+    selector: 'sp-chart-designer-panel',
+    templateUrl: './chart-designer-panel.component.html',
+    styleUrls: ['./chart-designer-panel.component.scss'],
     standalone: false,
 })
-export class DataExplorerDesignerPanelComponent {
+export class ChartDesignerPanelComponent {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
     @Input() dataLakeMeasure: DataLakeMeasure;
     @Input() newWidgetMode = false;
@@ -49,7 +49,7 @@ export class DataExplorerDesignerPanelComponent {
 
     selectedIndex = 0;
 
-    dataSettingsPanel: DataExplorerWidgetDataSettingsComponent;
+    dataSettingsPanel: ChartDataSettingsComponent;
 
     selectOptionsPanel(index: number) {
         this.selectedIndex = index;
@@ -76,9 +76,7 @@ export class DataExplorerDesignerPanelComponent {
     }
 
     @ViewChild('dataSettingsPanel')
-    public set content(
-        dataSettingsPanel: DataExplorerWidgetDataSettingsComponent,
-    ) {
+    public set content(dataSettingsPanel: ChartDataSettingsComponent) {
         this.dataSettingsPanel = dataSettingsPanel;
     }
 }

@@ -23,7 +23,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
     templateUrl: './chart-selection-panel.component.html',
     styleUrls: [
         './chart-selection-panel.component.scss',
-        '../../../../chart/components/chart-view/designer-panel/data-explorer-designer-panel.component.scss',
+        '../../../../chart/components/chart-view/designer-panel/chart-designer-panel.component.scss',
     ],
     standalone: false,
 })

@@ -37,7 +37,7 @@ import { MatSort } from '@angular/material/sort';
 @Component({
     selector: 'sp-data-explorer-overview-table',
     templateUrl: './chart-overview-table.component.html',
-    styleUrls: ['../chart-overview-table.component.scss'],
+    styleUrls: ['../chart-overview.component.scss'],
     standalone: false,
 })
 export class ChartOverviewTableComponent implements OnInit {

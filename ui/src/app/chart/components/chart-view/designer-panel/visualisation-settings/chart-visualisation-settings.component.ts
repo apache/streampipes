@@ -30,14 +30,12 @@ import { IWidget } from '../../../../../chart-shared/models/dataview-dashboard.m
 import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
 
 @Component({
-    selector: 'sp-explorer-visualisation-settings',
-    templateUrl: './data-explorer-visualisation-settings.component.html',
-    styleUrls: ['./data-explorer-visualisation-settings.component.scss'],
+    selector: 'sp-chart-visualisation-settings',
+    templateUrl: './chart-visualisation-settings.component.html',
+    styleUrls: ['./chart-visualisation-settings.component.scss'],
     standalone: false,
 })
-export class DataExplorerVisualisationSettingsComponent
-    implements OnInit, OnChanges
-{
+export class ChartVisualisationSettingsComponent implements OnInit, OnChanges {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
     constructor(

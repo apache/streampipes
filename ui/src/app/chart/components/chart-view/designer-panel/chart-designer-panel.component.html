@@ -32,7 +32,7 @@
                         [label]="'Data' | translate"
                     >
                         <div class="scroll-tab-content">
-                            <sp-data-explorer-widget-data-settings
+                            <sp-chart-data-settings
                                 #dataSettingsPanel
                                 [(dataLakeMeasure)]="dataLakeMeasure"
                                 [dataConfig]="
@@ -45,7 +45,7 @@
                                 [widgetId]="currentlyConfiguredWidget.elementId"
                                 (createWidgetEmitter)="createNewWidget()"
                             >
-                            </sp-data-explorer-widget-data-settings>
+                            </sp-chart-data-settings>
                         </div>
                     </mat-tab>
                     <mat-tab
@@ -60,14 +60,14 @@
                     >
                         <div class="scroll-tab-content">
                             @if (currentlyConfiguredWidget.widgetType) {
-                                <sp-explorer-visualisation-settings
+                                <sp-chart-visualisation-settings
                                     fxFlex="100"
                                     fxLayout="column"
                                     [currentlyConfiguredWidget]="
                                         currentlyConfiguredWidget
                                     "
                                 >
-                                </sp-explorer-visualisation-settings>
+                                </sp-chart-visualisation-settings>
                             }
                         </div>
                     </mat-tab>
@@ -76,14 +76,14 @@
                         [label]="'Appearance' | translate"
                     >
                         <div class="scroll-tab-content">
-                            <sp-data-explorer-widget-appearance-settings
+                            <sp-chart-appearance-settings
                                 fxFlex="100"
                                 fxLayout="column"
                                 [currentlyConfiguredWidget]="
                                     currentlyConfiguredWidget
                                 "
                             >
-                            </sp-data-explorer-widget-appearance-settings>
+                            </sp-chart-appearance-settings>
                         </div>
                     </mat-tab>
                 </mat-tab-group>

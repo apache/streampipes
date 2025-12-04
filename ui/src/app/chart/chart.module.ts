@@ -34,13 +34,13 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { ChartOverviewComponent } from './components/chart-overview/chart-overview.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { DataExplorerDesignerPanelComponent } from './components/chart-view/designer-panel/data-explorer-designer-panel.component';
-import { DataExplorerWidgetAppearanceSettingsComponent } from './components/chart-view/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
-import { DataExplorerWidgetDataSettingsComponent } from './components/chart-view/designer-panel/data-settings/data-explorer-widget-data-settings.component';
+import { ChartDesignerPanelComponent } from './components/chart-view/designer-panel/chart-designer-panel.component';
+import { ChartAppearanceSettingsComponent } from './components/chart-view/designer-panel/appearance-settings/chart-appearance-settings.component';
+import { ChartDataSettingsComponent } from './components/chart-view/designer-panel/data-settings/chart-data-settings.component';
 import { FieldSelectionPanelComponent } from './components/chart-view/designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
 import { FieldSelectionComponent } from './components/chart-view/designer-panel/data-settings/field-selection/field-selection.component';
 import { FilterSelectionPanelComponent } from './components/chart-view/designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
-import { DataExplorerVisualisationSettingsComponent } from './components/chart-view/designer-panel/visualisation-settings/data-explorer-visualisation-settings.component';
+import { ChartVisualisationSettingsComponent } from './components/chart-view/designer-panel/visualisation-settings/chart-visualisation-settings.component';
 import { GroupSelectionPanelComponent } from './components/chart-view/designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
@@ -160,18 +160,18 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
     declarations: [
         AggregateConfigurationComponent,
         ChartOverviewComponent,
-        DataExplorerDesignerPanelComponent,
-        DataExplorerWidgetAppearanceSettingsComponent,
-        DataExplorerWidgetDataSettingsComponent,
+        ChartDesignerPanelComponent,
+        ChartAppearanceSettingsComponent,
+        ChartDataSettingsComponent,
         ChartViewComponent,
         ChartViewToolbarComponent,
         FieldSelectionPanelComponent,
         FieldSelectionComponent,
         FilterSelectionPanelComponent,
         FilterSelectionPanelRowComponent,
-        DataExplorerVisualisationSettingsComponent,
+        ChartVisualisationSettingsComponent,
         GroupSelectionPanelComponent,
-        DataExplorerVisualisationSettingsComponent,
+        ChartVisualisationSettingsComponent,
         OrderSelectionPanelComponent,
         ChartOverviewTableComponent,
         FilterSelectionPanelRowPropertySelectionComponent,
