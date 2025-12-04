@@ -16,9 +16,8 @@
  *
  */
 
-import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-
-export interface GridsterInfo {
-    gridsterItem: GridsterItem;
-    gridsterItemComponent: GridsterItemComponent;
+export interface ResizeInfo {
+    width: number;
+    height: number;
+    widgetId: string;
 }

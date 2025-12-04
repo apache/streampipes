@@ -18,13 +18,13 @@
 
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { GridsterInfo } from '../models/gridster-info.model';
+import { ResizeInfo } from '../models/gridster-info.model';
 
 @Injectable({ providedIn: 'root' })
 export class ResizeService {
-    public resizeSubject: Subject<GridsterInfo> = new Subject<GridsterInfo>();
+    public resizeSubject: Subject<ResizeInfo> = new Subject<ResizeInfo>();
 
-    public notify(info: GridsterInfo): void {
+    public notify(info: ResizeInfo): void {
         this.resizeSubject.next(info);
     }
 }

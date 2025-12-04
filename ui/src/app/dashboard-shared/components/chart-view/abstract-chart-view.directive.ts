@@ -19,18 +19,17 @@
 import { Directive, EventEmitter, inject, Input, Output } from '@angular/core';
 import {
     ChartService,
+    ClientDashboardItem,
     Dashboard,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { ResizeService } from '../../../data-explorer-shared/services/resize.service';
 import { DataExplorerChartRegistry } from '../../../data-explorer-shared/registry/data-explorer-chart-registry';
 import { ObservableGenerator } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 
 @Directive()
 export abstract class AbstractChartViewDirective {
-    protected resizeService = inject(ResizeService);
     protected dataViewDataExplorerService = inject(ChartService);
     protected widgetRegistryService = inject(DataExplorerChartRegistry);
 
@@ -42,9 +41,6 @@ export abstract class AbstractChartViewDirective {
 
     @Input()
     editMode: boolean;
-
-    @Input()
-    currentlyConfiguredWidgetId: string;
 
     @Input()
     observableGenerator: ObservableGenerator;
@@ -73,13 +69,14 @@ export abstract class AbstractChartViewDirective {
 
     startEditMode(value: DataExplorerWidgetModel) {
         this.startEditModeEmitter.emit(value);
-        this.currentlyConfiguredWidgetId = value.elementId;
     }
 
     loadWidgetConfigs() {
         this.dashboard.widgets.forEach(widgetConfig => {
+            widgetConfig.w ??= widgetConfig.cols;
+            widgetConfig.h ??= widgetConfig.rows;
             const availableWidget = this.widgets.find(
-                w => w.elementId === widgetConfig.id,
+                w => w.elementId === widgetConfig.dataViewElementId,
             );
             this.processWidget(availableWidget);
         });
@@ -87,23 +84,16 @@ export abstract class AbstractChartViewDirective {
         this.widgetsAvailable = true;
     }
 
-    loadWidgetConfig(widgetId: string, setCurrentlyConfigured?: boolean) {
+    loadWidgetConfig(dashboardItem: ClientDashboardItem) {
         if (!this.isGridView()) {
             this.widgetsAvailable = false;
         }
         this.dataViewDataExplorerService
-            .getChart(widgetId)
+            .getChart(dashboardItem.dataViewElementId)
             .subscribe(response => {
                 this.processWidget(response);
-                if (setCurrentlyConfigured) {
-                    this.propagateWidgetSelection(
-                        this.configuredWidgets.get(widgetId),
-                    );
-                    if (!this.isGridView()) {
-                        this.selectNewWidget(widgetId);
-                    }
-                }
                 if (!this.isGridView()) {
+                    this.selectNewWidget(dashboardItem.id);
                     this.widgetsVisible = true;
                 }
                 this.widgetsAvailable = true;
@@ -122,21 +112,6 @@ export abstract class AbstractChartViewDirective {
             );
         }
     }
-
-    propagateItemRemoval(widgetIndex: number) {
-        this.deleteCallback.emit(widgetIndex);
-    }
-
-    propagateWidgetSelection(configuredWidget: DataExplorerWidgetModel) {
-        if (configuredWidget) {
-            this.currentlyConfiguredWidgetId = configuredWidget.elementId;
-        } else {
-            this.currentlyConfiguredWidgetId = undefined;
-        }
-        this.onOptionsChanged();
-    }
-
-    abstract onOptionsChanged(): void;
 
     abstract onWidgetsAvailable(): void;
 

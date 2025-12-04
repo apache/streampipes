@@ -25,6 +25,7 @@ public class DashboardItem {
   private String id;
   private String name;
   private String component;
+  private String dataViewElementId;
 
   private List<String> settings;
 
@@ -33,6 +34,9 @@ public class DashboardItem {
   private Integer x;
   private Integer y;
   private Map<String, Object> timeSettings;
+  private String widgetId;
+  private Integer w;
+  private Integer h;
 
   public DashboardItem() {
 
@@ -108,5 +112,38 @@ public class DashboardItem {
 
   public void setTimeSettings(Map<String, Object> timeSettings) {
     this.timeSettings = timeSettings;
+  }
+
+  @Deprecated(since = "0.99.0", forRemoval = true)
+  public String getWidgetId() {
+    return widgetId;
+  }
+
+  public void setWidgetId(String widgetId) {
+    this.widgetId = widgetId;
+  }
+
+  public Integer getW() {
+    return w;
+  }
+
+  public void setW(Integer w) {
+    this.w = w;
+  }
+
+  public Integer getH() {
+    return h;
+  }
+
+  public void setH(Integer h) {
+    this.h = h;
+  }
+
+  public String getDataViewElementId() {
+    return dataViewElementId;
+  }
+
+  public void setDataViewElementId(String dataViewElementId) {
+    this.dataViewElementId = dataViewElementId;
   }
 }

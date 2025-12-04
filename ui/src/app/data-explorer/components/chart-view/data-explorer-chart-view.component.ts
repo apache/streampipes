@@ -26,7 +26,6 @@ import {
 } from '@angular/core';
 import {
     ChartService,
-    DashboardConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     EventPropertyUnion,
@@ -60,8 +59,8 @@ import { ResizeEchartsService } from '../../../data-explorer-shared/services/res
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';
-import { Tuple2 } from 'src/app/core-model/base/Tuple2';
-import { ChartFieldProviderService } from 'src/app/data-explorer-shared/services/chart-field-provider.service';
+import { ChartFieldProviderService } from '../../../data-explorer-shared/services/chart-field-provider.service';
+import { Tuple2 } from '../../../core-model/base/Tuple2';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -79,7 +78,6 @@ export class DataExplorerChartViewComponent
     dataView: DataExplorerWidgetModel;
     originalDataView: DataExplorerWidgetModel;
     dataLakeMeasure: DataLakeMeasure;
-    gridsterItemComponent: any;
     drawerWidth = 450;
     panelWidth = '100%';
 
@@ -216,7 +214,6 @@ export class DataExplorerChartViewComponent
         setTimeout(() => {
             const width = this.outerPanel.nativeElement.offsetWidth;
             const height = this.outerPanel.nativeElement.offsetHeight;
-            this.gridsterItemComponent = { width, height };
             this.timeSelectionService.notify(this.timeSettings);
             this.updateQueryParams(this.timeSettings);
         });
@@ -402,10 +399,7 @@ export class DataExplorerChartViewComponent
         }, 100);
     }
 
-    private async saveAssets(
-        linkageData: LinkageData[],
-        data: DashboardConfig,
-    ): Promise<void> {
+    private async saveAssets(linkageData: LinkageData[]): Promise<void> {
         await this.assetSaveService.saveSelectedAssets(
             this.selectedAssets,
             linkageData,
@@ -419,7 +413,7 @@ export class DataExplorerChartViewComponent
         try {
             linkageData = this.createLinkageData(data);
 
-            this.saveAssets(linkageData, data);
+            this.saveAssets(linkageData);
         } catch (err) {
             console.error('Error in addToAsset:', err);
         }

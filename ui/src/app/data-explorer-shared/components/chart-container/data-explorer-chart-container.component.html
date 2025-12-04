@@ -16,181 +16,165 @@
 ~
 -->
 
-<div class="h-100">
-    <div
-        class="box"
-        [ngStyle]="{
-            background: configuredWidget.baseAppearanceConfig.backgroundColor,
-            color: configuredWidget.baseAppearanceConfig.textColor,
-            height: gridsterItemComponent.height - 13 + 'px',
-            border:
-                '2px solid ' +
-                configuredWidget.baseAppearanceConfig.backgroundColor
-        }"
-        [attr.data-cy]="
-            'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle
-        "
-    >
-        @if (!previewMode) {
-            <div class="widget-header h-40 w-100">
-                <div fxFlex="100" fxLayout="row">
-                    <div
-                        fxFlex
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                        class="widget-header-text"
-                    >
-                        {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
-                    </div>
-                    @if (!kioskMode) {
-                        <div fxLayout="row" fxLayoutAlign="end center">
-                            @if (editMode) {
-                                @if (timerActive) {
-                                    <mat-spinner
-                                        [diameter]="20"
-                                        color="primary"
-                                        class="mr-10"
-                                    >
-                                    </mat-spinner>
-                                }
-                                <sp-label
-                                    size="small"
-                                    [labelBackground]="
-                                        configuredWidget.baseAppearanceConfig
-                                            .textColor
-                                    "
-                                    [labelText]="loadingTime + 's'"
+<div
+    class="box"
+    [ngStyle]="{
+        background: configuredWidget.baseAppearanceConfig.backgroundColor,
+        color: configuredWidget.baseAppearanceConfig.textColor,
+        height: '100%'
+    }"
+    [attr.data-cy]="
+        'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle
+    "
+>
+    @if (!previewMode) {
+        <div class="widget-header h-40 w-100">
+            <div fxFlex="100" fxLayout="row">
+                <div
+                    fxFlex
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    class="widget-header-text"
+                >
+                    {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
+                </div>
+                @if (!kioskMode) {
+                    <div fxLayout="row" fxLayoutAlign="end center">
+                        @if (editMode) {
+                            @if (timerActive) {
+                                <mat-spinner
+                                    [diameter]="20"
+                                    color="primary"
                                     class="mr-10"
-                                ></sp-label>
+                                >
+                                </mat-spinner>
                             }
-                            @if (!dataViewMode) {
+                            <sp-label
+                                size="small"
+                                [labelBackground]="
+                                    configuredWidget.baseAppearanceConfig
+                                        .textColor
+                                "
+                                [labelText]="loadingTime + 's'"
+                                class="mr-10"
+                            ></sp-label>
+                        }
+                        @if (!dataViewMode) {
+                            <button
+                                mat-icon-button
+                                [matMenuTriggerFor]="menu"
+                                [matTooltip]="'More options' | translate"
+                                [attr.data-cy]="
+                                    'more-options-' +
+                                    configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
+                                        ' ',
+                                        ''
+                                    )
+                                "
+                            >
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                        }
+                        <mat-menu #menu="matMenu">
+                            <button
+                                mat-menu-item
+                                (click)="downloadDataAsFile()"
+                            >
+                                <mat-icon>get_app</mat-icon>
+                                <span>{{ 'Download data' | translate }}</span>
+                            </button>
+                            @if (hasDataExplorerWritePrivileges) {
                                 <button
-                                    mat-icon-button
-                                    [matMenuTriggerFor]="menu"
-                                    [matTooltip]="'More options' | translate"
+                                    mat-menu-item
+                                    (click)="startEditMode()"
                                     [attr.data-cy]="
-                                        'more-options-' +
+                                        'start-edit-' +
                                         configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
                                             ' ',
                                             ''
                                         )
                                     "
                                 >
-                                    <mat-icon>more_vert</mat-icon>
+                                    <mat-icon>edit</mat-icon>
+                                    <span>{{ 'Edit Chart' | translate }}</span>
                                 </button>
                             }
-                            <mat-menu #menu="matMenu">
-                                <button
-                                    mat-menu-item
-                                    (click)="downloadDataAsFile()"
-                                >
-                                    <mat-icon>get_app</mat-icon>
-                                    <span>{{
-                                        'Download data' | translate
-                                    }}</span>
-                                </button>
-                                @if (hasDataExplorerWritePrivileges) {
-                                    <button
-                                        mat-menu-item
-                                        (click)="startEditMode()"
-                                        [attr.data-cy]="
-                                            'start-edit-' +
-                                            configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
-                                                ' ',
-                                                ''
-                                            )
-                                        "
-                                    >
-                                        <mat-icon>edit</mat-icon>
-                                        <span>{{
-                                            'Edit Chart' | translate
-                                        }}</span>
-                                    </button>
-                                }
-                            </mat-menu>
-                            @if (!globalTimeEnabled) {
-                                <button
-                                    mat-icon-button
-                                    [matMenuTriggerFor]="optMenu"
-                                    data-cy="options-data-explorer"
-                                    #menuTrigger="matMenuTrigger"
-                                    [matTooltip]="tooltipText"
-                                    matTooltipClass="no-wrap-tooltip"
-                                >
-                                    <mat-icon
-                                        [color]="
-                                            timeSettingsModified
-                                                ? 'primary'
-                                                : 'default'
-                                        "
-                                        >alarm_clock</mat-icon
-                                    >
-                                </button>
-                            }
-                            <mat-menu #optMenu="matMenu" class="large-menu">
-                                @if (quickSelections) {
-                                    <sp-time-selector-menu
-                                        #timeSelectorMenu
-                                        [timeSettings]="clonedTimeSettings"
-                                        [quickSelections]="quickSelections"
-                                        [enableTimePicker]="enableTimePicker"
-                                        [maxDayRange]="maxDayRange"
-                                        [labels]="labels"
-                                        (timeSettingsEmitter)="
-                                            modifyWidgetTimeSettings($event)
-                                        "
-                                        class="w-100"
-                                    >
-                                        <button
-                                            mat-flat-button
-                                            class="mat-basic"
-                                            (click)="resetWidgetTimeSettings()"
-                                        >
-                                            {{ 'Reset' | translate }}
-                                        </button>
-                                    </sp-time-selector-menu>
-                                }
-                            </mat-menu>
-                            @if (
-                                !dataViewMode &&
-                                editMode &&
-                                hasDashboardWritePrivileges
-                            ) {
-                                <button
-                                    mat-icon-button
-                                    (click)="removeWidget()"
-                                    [matTooltip]="'Delete Chart' | translate"
-                                    [attr.data-cy]="
-                                        'remove-' +
-                                        configuredWidget.baseAppearanceConfig
-                                            .widgetTitle
+                        </mat-menu>
+                        @if (!globalTimeEnabled) {
+                            <button
+                                mat-icon-button
+                                [matMenuTriggerFor]="optMenu"
+                                data-cy="options-data-explorer"
+                                #menuTrigger="matMenuTrigger"
+                                [matTooltip]="tooltipText"
+                                matTooltipClass="no-wrap-tooltip"
+                            >
+                                <mat-icon
+                                    [color]="
+                                        timeSettingsModified
+                                            ? 'primary'
+                                            : 'default'
                                     "
+                                    >alarm_clock</mat-icon
                                 >
-                                    <mat-icon>clear</mat-icon>
-                                </button>
+                            </button>
+                        }
+                        <mat-menu #optMenu="matMenu" class="large-menu">
+                            @if (quickSelections) {
+                                <sp-time-selector-menu
+                                    #timeSelectorMenu
+                                    [timeSettings]="clonedTimeSettings"
+                                    [quickSelections]="quickSelections"
+                                    [enableTimePicker]="enableTimePicker"
+                                    [maxDayRange]="maxDayRange"
+                                    [labels]="labels"
+                                    (timeSettingsEmitter)="
+                                        modifyWidgetTimeSettings($event)
+                                    "
+                                    class="w-100"
+                                >
+                                    <button
+                                        mat-flat-button
+                                        class="mat-basic"
+                                        (click)="resetWidgetTimeSettings()"
+                                    >
+                                        {{ 'Reset' | translate }}
+                                    </button>
+                                </sp-time-selector-menu>
                             }
-                        </div>
-                    }
-                </div>
+                        </mat-menu>
+                        @if (
+                            !dataViewMode &&
+                            editMode &&
+                            hasDashboardWritePrivileges
+                        ) {
+                            <button
+                                mat-icon-button
+                                (click)="removeWidget()"
+                                [matTooltip]="'Delete Chart' | translate"
+                                [attr.data-cy]="
+                                    'remove-' +
+                                    configuredWidget.baseAppearanceConfig
+                                        .widgetTitle
+                                "
+                            >
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    <div fxLayout="column" class="widget-content p-0 ml-0 mr-0 h-100 mw-100">
+        <ng-template spWidgetHost class="h-100 p-0"></ng-template>
+        @if (errorMessage) {
+            <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
+                <sp-exception-message
+                    [message]="errorMessage"
+                    [showDetails]="true"
+                ></sp-exception-message>
             </div>
         }
-        <div
-            fxLayout="column"
-            class="widget-content p-0 gridster-item-content ml-0 mr-0 h-100 mw-100"
-        >
-            <ng-template spWidgetHost class="h-100 p-0"></ng-template>
-            @if (errorMessage) {
-                <div
-                    fxFlex="100"
-                    fxLayout="column"
-                    fxLayoutAlign="center center"
-                >
-                    <sp-exception-message
-                        [message]="errorMessage"
-                        [showDetails]="true"
-                    ></sp-exception-message>
-                </div>
-            }
-        </div>
     </div>
 </div>
