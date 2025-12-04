@@ -38,6 +38,7 @@ import {
     LocationConfigService,
     SpQueryResult,
 } from '@streampipes/platform-services';
+import { MapLayerProviderService } from '../../../../core-ui/services/map-layer-provider.service';
 
 @Component({
     selector: 'sp-data-explorer-map-widget',
@@ -50,6 +51,7 @@ export class MapWidgetComponent
     implements OnInit
 {
     private locationConfigService = inject(LocationConfigService);
+    private mapLayerProviderService = inject(MapLayerProviderService);
 
     item: any;
     showMarkers = false;
@@ -73,12 +75,7 @@ export class MapWidgetComponent
         super.ngOnInit();
         this.locationConfigService.getLocationConfig().subscribe(config => {
             this.options = {
-                layers: [
-                    tileLayer(config.tileServerUrl, {
-                        maxZoom: 18,
-                        attribution: config.attributionText,
-                    }),
-                ],
+                layers: this.mapLayerProviderService.getMapLayers(config),
                 zoom: 1,
                 center: this.defaultCenter,
             };
