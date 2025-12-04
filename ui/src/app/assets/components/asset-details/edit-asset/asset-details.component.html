@@ -45,7 +45,7 @@
                             (click)="saveAsset()"
                         >
                             <i class="material-icons">save</i
-                            ><span>&nbsp;Save</span>
+                            ><span>&nbsp;{{ 'Save' | translate }}</span>
                         </button>
                     </div>
                     <div
@@ -59,7 +59,7 @@
                                 data-cy="basic-tab"
                                 [active]="activeTab === 'basic'"
                                 (click)="activeTab = 'basic'"
-                                >Basics</a
+                                >{{ 'Basics' | translate }}</a
                             >
                             <a
                                 mat-tab-link
