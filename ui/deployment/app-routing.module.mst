@@ -39,6 +39,7 @@ import { RestorePasswordAllowedCanActivateGuard } from './_guards/restore-passwo
 import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
 import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
 import { UserPrivilege } from './_enums/user-privilege.enum';
+import { UserRole } from './_enums/user-role.enum';
 import { TermsComponent } from './login/components/terms/terms.component';
 import { AuthCanActivateGuard } from './_guards/auth.can-activate.guard';
 import { TermsCanActivateChildrenGuard } from './_guards/terms.can-activate-children.guard';

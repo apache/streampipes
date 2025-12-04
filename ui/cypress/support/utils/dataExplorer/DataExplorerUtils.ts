@@ -583,7 +583,7 @@ export class DataExplorerUtils {
     }
 
     public static goToDatalakeConfiguration() {
-        cy.visit('#/configuration/datalake');
+        cy.visit('#/datasets');
     }
 
     public static checkResults(
