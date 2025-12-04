@@ -140,20 +140,6 @@
             </div>
         }
 
-        @if (isNested) {
-            <div fxLayoutAlign="end center">
-                <button
-                    [disabled]="!isEditable"
-                    color="accent"
-                    mat-button
-                    (click)="addNestedProperty(node.data)"
-                >
-                    <mat-icon [matTooltip]="'Add a Nested Property' | translate"
-                        >queue</mat-icon
-                    >
-                </button>
-            </div>
-        }
         @if (isNested || isPrimitive || isList) {
             <div fxLayoutAlign="end center" class="ml-5 mr-5">
                 <button
