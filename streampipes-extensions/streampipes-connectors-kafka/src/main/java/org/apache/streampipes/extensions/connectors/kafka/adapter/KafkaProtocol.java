@@ -37,7 +37,6 @@ import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConf
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -144,7 +143,6 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
 
         .requiredAlternatives(KafkaConfigProvider.getAccessModeLabel(),
             KafkaConfigProvider.getAlternativeUnauthenticatedPlain(),

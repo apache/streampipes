@@ -34,7 +34,6 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connecti
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
 import org.apache.streampipes.extensions.connectors.plc.adapter.s7.config.ConfigurationParser;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -114,7 +113,6 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
     return AdapterConfigurationBuilder.create(ID, 1, () -> new Plc4xS7Adapter(connectionManager))
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Manufacturing)
         .requiredTextParameter(Labels.withId(PLC_IP))
         .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
         .requiredAlternatives(

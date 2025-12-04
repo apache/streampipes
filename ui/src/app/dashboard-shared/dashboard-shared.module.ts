@@ -55,7 +55,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
+import { ChartSharedModule } from '../chart-shared/chart-shared.module';
 import { DashboardGridViewComponent } from './components/chart-view/grid-view/dashboard-grid-view.component';
 import { DashboardSlideViewComponent } from './components/chart-view/slide-view/dashboard-slide-view.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -101,7 +101,7 @@ import { GridstackModule } from 'gridstack/dist/angular';
         PlatformServicesModule,
         ServicesModule,
         SharedUiModule,
-        DataExplorerSharedModule,
+        ChartSharedModule,
         GridstackModule,
         TranslateModule.forChild(),
     ],

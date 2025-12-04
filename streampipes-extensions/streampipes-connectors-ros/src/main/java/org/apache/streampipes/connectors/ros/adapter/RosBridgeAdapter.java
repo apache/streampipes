@@ -30,7 +30,6 @@ import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtracto
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.Option;
@@ -95,7 +94,6 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
     return AdapterConfigurationBuilder.create(ID, 1, RosBridgeAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Manufacturing)
         .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
         .requiredIntegerParameter(Labels.withId(ROS_PORT_KEY))
         .requiredSingleValueSelectionFromContainer(

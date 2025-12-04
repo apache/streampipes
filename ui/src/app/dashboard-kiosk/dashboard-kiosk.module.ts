@@ -20,7 +20,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
-import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
+import { ChartSharedModule } from '../chart-shared/chart-shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { DashboardSharedModule } from '../dashboard-shared/dashboard-shared.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -36,7 +36,7 @@ import { DashboardKioskComponent } from './components/kiosk/dashboard-kiosk.comp
         CommonModule,
         MatToolbarModule,
         SharedUiModule,
-        DataExplorerSharedModule,
+        ChartSharedModule,
         DashboardSharedModule,
         TranslateModule.forChild(),
         RouterModule.forChild([

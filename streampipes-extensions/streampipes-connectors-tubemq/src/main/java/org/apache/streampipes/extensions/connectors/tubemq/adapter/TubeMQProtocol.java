@@ -29,7 +29,6 @@ import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtracto
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -106,7 +105,6 @@ public class TubeMQProtocol implements StreamPipesAdapter {
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic)
         .requiredTextParameter(
             Labels.withId(MASTER_HOST_AND_PORT_KEY))
         .requiredTextParameter(Labels.withId(TOPIC_KEY))

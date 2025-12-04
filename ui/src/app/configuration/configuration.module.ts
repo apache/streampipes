@@ -26,12 +26,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { MessagingConfigurationComponent } from './messaging-configuration/messaging-configuration.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
-import { DeleteDatalakeIndexComponent } from './dialog/delete-datalake-index/delete-datalake-index-dialog.component';
-import { ExportProviderConnectionTestComponent } from './dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SecurityConfigurationComponent } from './security-configuration/security-configuration.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -107,15 +103,7 @@ import { AlternateIdConfigurationComponent } from './security-configuration/alte
 import { UserAcknowledgmentComponent } from './general-configuration/user-acknowledgement/user-acknowledgment.component';
 import { QuillEditorComponent } from 'ngx-quill';
 import { MatStepperModule } from '@angular/material/stepper';
-import { DataRetentionDialogComponent } from './dialog/data-retention-dialog/data-retention-dialog.component';
-import { ExportProviderComponent } from './dialog/export-provider-dialog/export-provider-dialog.component';
-import { SelectDataComponent } from './dialog/data-retention-dialog/components/select-retention/select-data.component';
-import { SelectDataRetentionComponent } from './dialog/data-retention-dialog/components/select-retention/select-data-retention/select-data-retention.component';
-import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/components/select-retention/select-retention-action/select-retention-action.component';
-import { SelectDataExportComponent } from './dialog/data-retention-dialog/components/select-export/select-format.component';
-import { DeleteExportProviderComponent } from './dialog/delete-export-provider/delete-export-provider-dialog.component';
-import { DataRetentionNowDialogComponent } from './dialog/data-retention-now-dialog/data-retention-now-dialog.component';
-import { DataRetentionLogDialogComponent } from './dialog/data-retention-log-dialog/data-retention-log-dialog.component';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -153,11 +141,6 @@ import { DataRetentionLogDialogComponent } from './dialog/data-retention-log-dia
                     {
                         path: 'general',
                         component: GeneralConfigurationComponent,
-                        canActivate: [configurationRouteGuard],
-                    },
-                    {
-                        path: 'datalake',
-                        component: DatalakeConfigurationComponent,
                         canActivate: [configurationRouteGuard],
                     },
                     {
@@ -226,10 +209,6 @@ import { DataRetentionLogDialogComponent } from './dialog/data-retention-log-dia
         ServiceConfigsBooleanComponent,
         ServiceConfigsItemComponent,
         ServiceConfigsNumberComponent,
-        DeleteDatalakeIndexComponent,
-        DataRetentionNowDialogComponent,
-        DataRetentionLogDialogComponent,
-        ExportProviderConnectionTestComponent,
         EditAssetLocationComponent,
         EditAssetLocationAreaComponent,
         EditRoleDialogComponent,
@@ -255,7 +234,6 @@ import { DataRetentionLogDialogComponent } from './dialog/data-retention-log-dia
         SecurityServiceConfigComponent,
         SiteAreaConfigurationComponent,
         MessagingConfigurationComponent,
-        DatalakeConfigurationComponent,
         SpConfigurationLinkSettingsComponent,
         SpDataExportImportComponent,
         SpDataExportDialogComponent,
@@ -268,8 +246,6 @@ import { DataRetentionLogDialogComponent } from './dialog/data-retention-log-dia
         SpMessagingBrokerConfigComponent,
         SpRegisteredExtensionsServiceComponent,
         SpExtensionsServiceConfigurationComponent,
-        DataRetentionDialogComponent,
-        ExportProviderComponent,
         SpExtensionsInstallationComponent,
         SpExtensionsInstallationDialogComponent,
         EndpointItemComponent,
@@ -281,11 +257,6 @@ import { DataRetentionLogDialogComponent } from './dialog/data-retention-log-dia
         CertificateDetailsDialogComponent,
         AlternateIdConfigurationComponent,
         UserAcknowledgmentComponent,
-        SelectDataComponent,
-        SelectDataRetentionComponent,
-        SelectRetentionActionComponent,
-        SelectDataExportComponent,
-        DeleteExportProviderComponent,
     ],
     providers: [
         OrderByPipe,

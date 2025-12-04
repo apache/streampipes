@@ -29,7 +29,6 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -106,7 +105,6 @@ public class IssAdapter implements StreamPipesAdapter, IPullAdapter {
     return AdapterConfigurationBuilder.create(ID, 0, IssAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.OpenData)
         .buildConfiguration();
   }
 

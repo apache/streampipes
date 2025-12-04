@@ -32,7 +32,7 @@ export class DataExplorerUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
 
     public static goToDatalake() {
-        cy.visit('#/dataexplorer');
+        cy.visit('#/chart');
     }
 
     public static goToDashboard() {
@@ -583,7 +583,7 @@ export class DataExplorerUtils {
     }
 
     public static goToDatalakeConfiguration() {
-        cy.visit('#/configuration/datalake');
+        cy.visit('#/datasets');
     }
 
     public static checkResults(

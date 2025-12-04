@@ -17,7 +17,7 @@
  */
 
 .header-title {
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     font-weight: 700;
     display: inline-block;
     padding-left: 12px; /* space so text doesn't overlap border */
@@ -28,4 +28,11 @@
             var(--color-primary-dark)
         )
         1;
+}
+
+.header-description {
+    font-size: clamp(0.875rem, 1.2vw, 0.95rem);
+    line-height: 1.35;
+    color: var(--fg-muted);
+    font-weight: 300;
 }

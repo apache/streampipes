@@ -30,7 +30,6 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.HttpServerAdapterManagement;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -104,7 +103,6 @@ public class HttpServerProtocol implements StreamPipesAdapter {
         .withSupportedParsers(Parsers.defaultParsers())
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Generic)
         .requiredTextParameter(Labels.withId(ENDPOINT_NAME))
         .requiredAlternatives(Labels.withId(CONFIGURE),
             Alternatives.from(Labels.withId(MANUALLY),

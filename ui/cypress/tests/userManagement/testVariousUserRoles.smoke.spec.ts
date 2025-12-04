@@ -78,13 +78,11 @@ for (let i = 0; i < testedRoles.length; i++) {
                 testRole == UserRole.ROLE_DASHBOARD_USER
             ) {
                 NavigationUtils.validateActiveModules([
-                    NavigationUtils.DATA_EXPLORER,
+                    NavigationUtils.CHART,
                     NavigationUtils.DASHBOARD,
                 ]);
             } else if (testRole == UserRole.ROLE_DATA_EXPLORER_ADMIN) {
-                NavigationUtils.validateActiveModules([
-                    NavigationUtils.DATA_EXPLORER,
-                ]);
+                NavigationUtils.validateActiveModules([NavigationUtils.CHART]);
             } else if (testRole == UserRole.ROLE_CONNECT_ADMIN) {
                 NavigationUtils.validateActiveModules([
                     NavigationUtils.CONNECT,

@@ -57,9 +57,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
+import { ChartSharedModule } from '../chart-shared/chart-shared.module';
 import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
-import { ChartPanelCanDeactivateGuard } from '../data-explorer-shared/services/chart-panel-can-deactivate-guard.service';
+import { ChartPanelCanDeactivateGuard } from '../chart-shared/services/chart-panel-can-deactivate-guard.service';
 import { DashboardToolbarComponent } from './components/panel/dashboard-toolbar/dashboard-toolbar.component';
 import { ChartSelectionPanelComponent } from './components/panel/chart-selection-panel/chart-selection-panel.component';
 import { ChartPreviewComponent } from './components/panel/chart-selection-panel/chart-selection/chart-preview/chart-preview.component';
@@ -111,7 +111,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         PlatformServicesModule,
         ServicesModule,
         SharedUiModule,
-        DataExplorerSharedModule,
+        ChartSharedModule,
         DashboardSharedModule,
         TranslateModule.forChild(),
         MatProgressSpinnerModule,

@@ -21,8 +21,9 @@ login:
 modules:
     - spHome
     - spPipelines
-    - spConnect
     - spDashboard
-    - spDataExplorer
+    - spChart
     - spAssets
+    - spConnect
+    - spDatasets
     - spConfiguration
