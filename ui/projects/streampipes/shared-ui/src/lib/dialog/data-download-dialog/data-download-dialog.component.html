@@ -37,10 +37,16 @@
                     <sp-select-format
                         [formatExportConfig]="exportConfig.formatExportConfig"
                     ></sp-select-format>
+                    <ng-template matStepLabel>{{
+                        'Export Format' | translate
+                    }}</ng-template>
                 </mat-step>
 
                 <mat-step>
                     <sp-download></sp-download>
+                    <ng-template matStepLabel>{{
+                        'Download' | translate
+                    }}</ng-template>
                 </mat-step>
             </mat-horizontal-stepper>
         </div>

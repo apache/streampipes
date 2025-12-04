@@ -46,7 +46,11 @@ import { SplitSectionComponent } from './components/split-section/split-section.
 import { SpLabelComponent } from './components/sp-label/sp-label.component';
 import { SpTableComponent } from './components/sp-table/sp-table.component';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import {
+    MatPaginator,
+    MatPaginatorIntl,
+    MatPaginatorModule,
+} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SpExceptionDetailsComponent } from './components/sp-exception-message/exception-details/exception-details.component';
 import { SpWarningBoxComponent } from './components/warning-box/warning-box.component';
@@ -105,6 +109,7 @@ import { ObjectPermissionDialogComponent } from './dialog/object-permission-dial
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { PaginatorService } from './components/sp-table/sp-paginator/sp-paginator.component';
 
 @NgModule({
     declarations: [
@@ -196,11 +201,16 @@ import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
         ReactiveFormsModule,
         MatAutocompleteModule,
         CdkCopyToClipboard,
+        MatPaginatorModule,
     ],
     providers: [
         DefaultMatCalendarRangeStrategy,
         MatRangeDateSelectionModel,
         SortByRuntimeNamePipe,
+        {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService, // Use the custom paginator service
+        },
     ],
     exports: [
         AssetBrowserComponent,

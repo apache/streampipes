@@ -22,7 +22,7 @@
             [disabled]="!editMode"
             [(ngModel)]="asset.assetSite.hasExactLocation"
         >
-            Add exact location
+            {{ 'Add exact location' | translate }}
         </mat-checkbox>
         @if (asset.assetSite.hasExactLocation) {
             <div>

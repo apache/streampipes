@@ -53,8 +53,9 @@
                         <input
                             [placeholder]="
                                 allLabels.length === 0
-                                    ? 'No labels available - Click \'Manage Labels\''
-                                    : 'Click to add label'
+                                    ? ('No labels available - Click \'Manage Labels\''
+                                      | translate)
+                                    : ('Click to add label' | translate)
                             "
                             data-cy="asset-label-input"
                             #labelInput
@@ -89,7 +90,7 @@
                     color="accent"
                     [routerLink]="['/configuration/labels']"
                 >
-                    Manage Labels
+                    {{ 'Manage Labels' | translate }}
                 </button>
             </div>
         </div>
