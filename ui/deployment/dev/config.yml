@@ -23,6 +23,6 @@ modules:
     - spPipelines
     - spConnect
     - spDashboard
-    - spDataExplorer
+    - spChart
     - spAssets
     - spConfiguration

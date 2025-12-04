@@ -126,14 +126,14 @@ spDashboard:
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
     category: 'visualization'
-spDataExplorer:
+spChart:
     componentImport: False
-    moduleName: 'DataExplorerModule'
-    component: 'DataExplorerComponent'
-    componentPath: './data-explorer/data-explorer.component'
-    path: './data-explorer/data-explorer.module'
-    link: 'dataexplorer'
-    url: '/dataexplorer'
+    moduleName: 'ChartModule'
+    component: 'ChartComponent'
+    componentPath: './chart/chart.component'
+    path: './chart/chart.module'
+    link: 'chart'
+    url: '/chart'
     title: 'Charts'
     description: 'The chart view lets you visually inspect historical data from your connected sources.'
     icon: 'query_stats'
@@ -141,8 +141,8 @@ spDataExplorer:
     privileges: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
     showStatusBox: true
     statusBox:
-        link: "['dataexplorer']"
-        createLinks: "['dataexplorer']"
+        link: "['chart']"
+        createLinks: "['chart']"
         title: 'Charts'
         createTitle: 'New chart'
         dataFns: '[this.chartService.getAllCharts()]'

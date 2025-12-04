@@ -21,13 +21,13 @@ import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class ChartRoutingService {
-    private dataViewPath = ['dataexplorer'];
+    private chartPath = ['chart'];
     private dashboardPath = ['dashboard'];
 
     constructor(private router: Router) {}
 
     navigateToDataViewOverview(omitConfirm: boolean = false): void {
-        this.navigateToOverview(this.dataViewPath, omitConfirm);
+        this.navigateToOverview(this.chartPath, omitConfirm);
     }
 
     navigateToDashboardOverview(omitConfirm = false): void {
@@ -38,12 +38,21 @@ export class ChartRoutingService {
         this.router.navigate(path, { state: { omitConfirm } });
     }
 
-    navigateToDataView(
+    navigateToCreateChart(
         editMode: boolean,
         dataViewElementId?: string,
         newTab = false,
     ) {
-        const path = [...this.dataViewPath, 'chart'];
+        const path = [...this.chartPath, 'create'];
+        return this.navigate(editMode, path, dataViewElementId, newTab);
+    }
+
+    navigateToChart(
+        editMode: boolean,
+        dataViewElementId?: string,
+        newTab = false,
+    ) {
+        const path = [...this.chartPath];
         return this.navigate(editMode, path, dataViewElementId, newTab);
     }
 

@@ -47,7 +47,7 @@ import { MatSort } from '@angular/material/sort';
     selector: 'sp-dashboard-overview-table',
     templateUrl: './dashboard-overview-table.component.html',
     styleUrls: [
-        '../../../../data-explorer/components/overview/data-explorer-overview.component.scss',
+        '../../../../chart/components/overview/data-explorer-overview.component.scss',
     ],
     standalone: false,
 })

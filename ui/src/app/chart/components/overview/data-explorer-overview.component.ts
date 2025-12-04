@@ -22,7 +22,7 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
-import { SpDataExplorerRoutes } from '../../data-explorer.routes';
+import { SpChartRoutes } from '../../chart.routes';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 import { SpDataExplorerDataViewOverviewComponent } from './data-explorer-overview-table/data-explorer-overview-table.component';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
@@ -48,7 +48,7 @@ export class DataExplorerOverviewComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb(
-            this.breadcrumbService.getRootLink(SpDataExplorerRoutes.BASE),
+            this.breadcrumbService.getRootLink(SpChartRoutes.BASE),
         );
         this.auth$ = this.currentUserService.user$.subscribe(user => {
             this.hasDataExplorerWritePrivileges = this.authService.hasRole(
@@ -57,8 +57,8 @@ export class DataExplorerOverviewComponent implements OnInit, OnDestroy {
         });
     }
 
-    createNewDataView(): void {
-        this.routingService.navigateToDataView(true);
+    createNewChart(): void {
+        this.routingService.navigateToCreateChart(true);
     }
 
     ngOnDestroy() {

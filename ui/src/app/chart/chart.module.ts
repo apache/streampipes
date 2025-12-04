@@ -142,12 +142,12 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
                         component: DataExplorerOverviewComponent,
                     },
                     {
-                        path: 'chart',
+                        path: 'create',
                         component: DataExplorerChartViewComponent,
                         canDeactivate: [ChartPanelCanDeactivateGuard],
                     },
                     {
-                        path: 'chart/:id',
+                        path: ':id',
                         component: DataExplorerChartViewComponent,
                         canDeactivate: [ChartPanelCanDeactivateGuard],
                     },
@@ -182,6 +182,6 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
     ],
     exports: [],
 })
-export class DataExplorerModule {
+export class ChartModule {
     constructor() {}
 }

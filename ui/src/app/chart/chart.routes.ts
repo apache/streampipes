@@ -18,9 +18,9 @@
 
 import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
-export class SpDataExplorerRoutes {
+export class SpChartRoutes {
     static BASE: SpBreadcrumbItem = {
         label: 'Charts',
-        link: ['dataexplorer'],
+        link: ['chart'],
     };
 }

@@ -220,7 +220,7 @@ export class DataExplorerChartViewComponent
     }
 
     editDataView(): void {
-        this.routingService.navigateToDataView(true, this.dataView.elementId);
+        this.routingService.navigateToChart(true, this.dataView.elementId);
     }
 
     makeDefaultTimeSettings(): TimeSettings {

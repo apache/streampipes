@@ -47,7 +47,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { SpDashboardRoutes } from '../../dashboard.routes';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
-import { ChartDetectChangesService } from '../../../data-explorer/services/chart-detect-changes.service';
+import { ChartDetectChangesService } from '../../../chart/services/chart-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/dataview-dashboard.model';
 import { TranslateService } from '@ngx-translate/core';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
@@ -181,11 +181,7 @@ export class DashboardPanelComponent
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {
-        this.routingService.navigateToDataView(
-            true,
-            widgetModel.elementId,
-            true,
-        );
+        this.routingService.navigateToChart(true, widgetModel.elementId, true);
     }
 
     removeChartFromDashboard(widgetIndex: number) {
