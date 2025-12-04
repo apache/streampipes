@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-02 15:38:14.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-04 17:41:18.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -175,6 +176,23 @@ export class AdapterEventPreview {
         instance.rules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
+        return instance;
+    }
+}
+
+export class AdapterType {
+    code: string;
+    description: string;
+    label: string;
+
+    static fromData(data: AdapterType, target?: AdapterType): AdapterType {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new AdapterType();
+        instance.code = data.code;
+        instance.description = data.description;
+        instance.label = data.label;
         return instance;
     }
 }
@@ -1180,11 +1198,18 @@ export class DashboardEntity implements Storable, SpResource {
 export class DashboardItem {
     cols: number;
     component: string;
+    dataViewElementId: string;
+    h: number;
     id: string;
     name: string;
     rows: number;
     settings: string[];
     timeSettings: { [index: string]: any };
+    w: number;
+    /**
+     * @deprecated since 0.99.0, for removal
+     */
+    widgetId: string;
     x: number;
     y: number;
 
@@ -1198,6 +1223,8 @@ export class DashboardItem {
         const instance = target || new DashboardItem();
         instance.cols = data.cols;
         instance.component = data.component;
+        instance.dataViewElementId = data.dataViewElementId;
+        instance.h = data.h;
         instance.id = data.id;
         instance.name = data.name;
         instance.rows = data.rows;
@@ -1207,6 +1234,8 @@ export class DashboardItem {
         instance.timeSettings = __getCopyObjectFn(__identity<any>())(
             data.timeSettings,
         );
+        instance.w = data.w;
+        instance.widgetId = data.widgetId;
         instance.x = data.x;
         instance.y = data.y;
         return instance;
@@ -2419,6 +2448,7 @@ export class ListOutputStrategy extends OutputStrategy {
 export class LocationConfig {
     attributionText: string;
     locationEnabled: boolean;
+    mapLayerType: MapLayerType;
     tileServerUrl: string;
 
     static fromData(
@@ -2431,6 +2461,7 @@ export class LocationConfig {
         const instance = target || new LocationConfig();
         instance.attributionText = data.attributionText;
         instance.locationEnabled = data.locationEnabled;
+        instance.mapLayerType = data.mapLayerType;
         instance.tileServerUrl = data.tileServerUrl;
         return instance;
     }
@@ -4470,6 +4501,8 @@ export type Isa95Type =
     | 'WORK_CELL'
     | 'STORAGE_UNIT'
     | 'OTHER';
+
+export type MapLayerType = 'TILE' | 'VECTOR';
 
 export type MappingPropertyUnion = MappingPropertyNary | MappingPropertyUnary;
 

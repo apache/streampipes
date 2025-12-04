@@ -61,12 +61,17 @@ export class LocationFeaturesConfigurationComponent
             new UntypedFormControl(this.locationConfig.locationEnabled),
         );
         this.locationForm.addControl(
+            'mapLayerType',
+            new UntypedFormControl(this.locationConfig.mapLayerType),
+        );
+        this.locationForm.addControl(
             'tileServerUrl',
             new UntypedFormControl(
                 this.locationConfig.tileServerUrl,
                 this.showLocationDetails ? Validators.required : [],
             ),
         );
+
         this.locationForm.addControl(
             'attributionText',
             new UntypedFormControl(this.locationConfig.attributionText || ''),
@@ -89,6 +94,8 @@ export class LocationFeaturesConfigurationComponent
         this.locationConfig.locationEnabled = this.locationForm.get(
             'locationFeaturesEnabled',
         ).value;
+        this.locationConfig.mapLayerType =
+            this.locationForm.get('mapLayerType').value;
         if (this.locationConfig.locationEnabled) {
             this.locationConfig.tileServerUrl =
                 this.locationForm.get('tileServerUrl').value;

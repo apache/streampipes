@@ -33,8 +33,29 @@
                 @if (showLocationDetails) {
                     <div class="mt-10">
                         <div class="subsection-title">
+                            {{ 'Layer type' | translate }}
+                        </div>
+                        <mat-radio-group
+                            formControlName="mapLayerType"
+                            fxLayout="row"
+                        >
+                            <mat-radio-button
+                                value="TILE"
+                                data-cy="sites-location-config-layer-type-tile"
+                            >
+                                {{ 'Tile' | translate }}
+                            </mat-radio-button>
+                            <mat-radio-button
+                                value="VECTOR"
+                                class="ml-20"
+                                data-cy="sites-location-config-layer-type-vector"
+                            >
+                                {{ 'Vector' | translate }}
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <div class="subsection-title mt-10">
                             {{
-                                'Tile server URL(use placeholders for x, y and z coordinates)'
+                                'Style/Tile server URL (for tile server, use placeholders for x, y and z coordinates)'
                                     | translate
                             }}
                         </div>

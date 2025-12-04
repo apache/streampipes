@@ -65,7 +65,10 @@ export class ManageSiteDialogComponent implements OnInit {
             appDocType: AssetConstants.ASSET_SITES_APP_DOC_NAME,
             _id: undefined,
             label: '',
-            location: { coordinates: { latitude: 0, longitude: 0 }, zoom: 10 },
+            location: {
+                coordinates: { latitude: 49.00689, longitude: 8.40365 },
+                zoom: 10,
+            },
             areas: [],
         };
         this.createMode = true;

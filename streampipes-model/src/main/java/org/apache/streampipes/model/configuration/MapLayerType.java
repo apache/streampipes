@@ -18,16 +18,7 @@
 
 package org.apache.streampipes.model.configuration;
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
-
-@TsModel
-public record LocationConfig(boolean locationEnabled,
-                             MapLayerType mapLayerType,
-                             String tileServerUrl,
-                             String attributionText) {
-
-  @Override
-  public MapLayerType mapLayerType() {
-    return mapLayerType != null ? this.mapLayerType : MapLayerType.TILE;
-  }
+public enum MapLayerType {
+  TILE,
+  VECTOR
 }
