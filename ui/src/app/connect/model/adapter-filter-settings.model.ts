@@ -18,6 +18,4 @@
 
 export interface AdapterFilterSettingsModel {
     textFilter: string;
-    selectedType: string;
-    selectedCategory: string;
 }

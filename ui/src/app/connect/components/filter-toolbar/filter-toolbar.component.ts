@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 
 @Component({
@@ -32,8 +32,6 @@ export class SpConnectFilterToolbarComponent {
 
     currentFilter: AdapterFilterSettingsModel = {
         textFilter: '',
-        selectedCategory: 'All',
-        selectedType: 'All types',
     };
 
     updateFilterTerm(event: string) {
