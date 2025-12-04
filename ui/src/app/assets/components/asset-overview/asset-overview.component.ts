@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
     AssetManagementService,
@@ -38,6 +38,8 @@ import { IdGeneratorService } from '../../../core-services/id-generator/id-gener
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'sp-asset-overview',
@@ -49,7 +51,10 @@ export class SpAssetOverviewComponent implements OnInit {
     existingAssets: SpAssetModel[] = [];
     filteredAssets: SpAssetModel[] = [];
 
-    displayedColumns: string[] = ['name', 'actions'];
+    displayedColumns: string[] = ['assetName', 'actions'];
+
+    @ViewChild(MatSort)
+    sort: MatSort;
 
     dataSource: MatTableDataSource<SpAssetModel> =
         new MatTableDataSource<SpAssetModel>();
@@ -70,6 +75,7 @@ export class SpAssetOverviewComponent implements OnInit {
         private assetBrowserService: SpAssetBrowserService,
         private currentUserService: CurrentUserService,
         private dialog: MatDialog,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -101,12 +107,14 @@ export class SpAssetOverviewComponent implements OnInit {
 
                 this.applyAssetFilters(this.currentFilterIds);
             });
+
         this.loadAssets();
     }
 
     loadAssets(): void {
         this.assetService.getAllAssets().subscribe(result => {
             this.existingAssets = result as SpAssetModel[];
+            this.dataSource.sort = this.sort;
             this.dataSource.data = this.existingAssets;
         });
     }
@@ -121,6 +129,7 @@ export class SpAssetOverviewComponent implements OnInit {
                 elementIds.has(a.elementId),
             );
         }
+        this.dataSource.sort = this.sort;
         this.dataSource.data = this.filteredAssets;
     }
 
@@ -144,7 +153,7 @@ export class SpAssetOverviewComponent implements OnInit {
             SpCreateAssetDialogComponent,
             {
                 panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Create asset',
+                title: this.translateService.instant('Create asset'),
                 width: '50vw',
                 data: {
                     assetModel: assetModel,
@@ -168,10 +177,14 @@ export class SpAssetOverviewComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
-                title: 'Are you sure you want to delete this asset?',
-                subtitle: 'This action cannot be reversed!',
-                cancelTitle: 'Cancel',
-                okTitle: 'Delete Asset',
+                title: this.translateService.instant(
+                    'Are you sure you want to delete this asset?',
+                ),
+                subtitle: this.translateService.instant(
+                    'This action cannot be reversed!',
+                ),
+                cancelTitle: this.translateService.instant('Cancel'),
+                okTitle: this.translateService.instant('Delete Asset'),
                 confirmAndCancel: true,
             },
         });
@@ -190,12 +203,14 @@ export class SpAssetOverviewComponent implements OnInit {
             ObjectPermissionDialogComponent,
             {
                 panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Manage permissions',
+                title: this.translateService.instant('Manage permissions'),
                 width: '70vw',
                 data: {
                     objectInstanceId: asset.elementId,
                     headerTitle:
-                        'Manage permissions for asset ' + asset.assetName,
+                        this.translateService.instant(
+                            'Manage permissions for asset ',
+                        ) + asset.assetName,
                 },
             },
         );

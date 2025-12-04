@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
     ChartService,
@@ -32,6 +32,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartRoutingService } from '../../../../data-explorer-shared/services/chart-routing.service';
 import { Subscription } from 'rxjs';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'sp-data-explorer-overview-table',
@@ -42,6 +43,9 @@ import { Subscription } from 'rxjs';
 export class SpDataExplorerDataViewOverviewComponent implements OnInit {
     @Input()
     hasDataExplorerWritePrivileges: boolean;
+
+    @ViewChild(MatSort)
+    sort: MatSort;
 
     dataSource = new MatTableDataSource<DataExplorerWidgetModel>();
     displayedColumns: string[] = [
@@ -71,6 +75,17 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
                 this.currentFilterIds = filter?.activeElementIds;
                 this.applyChartFilters(this.currentFilterIds);
             });
+
+        this.dataSource.sortingDataAccessor = (chart, column) => {
+            if (column === 'name') {
+                return chart.baseAppearanceConfig.widgetTitle;
+            } else if (column === 'lastModified') {
+                return chart.metadata.lastModifiedEpochMs;
+            } else if (column === 'createdAt') {
+                return chart.metadata.createdAtEpochMs;
+            }
+            return chart[column];
+        };
         this.getDataViews();
     }
 
@@ -153,6 +168,7 @@ export class SpDataExplorerDataViewOverviewComponent implements OnInit {
                 elementIds.has(a.elementId),
             );
         }
+        this.dataSource.sort = this.sort;
         this.dataSource.data = this.filteredCharts;
     }
 

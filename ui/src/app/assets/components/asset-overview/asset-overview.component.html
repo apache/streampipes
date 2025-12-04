@@ -31,7 +31,8 @@
                 data-cy="create-new-asset-button"
                 (click)="createNewAsset()"
             >
-                <i class="material-icons">add</i>&nbsp;New asset
+                <i class="material-icons">add</i>&nbsp;
+                {{ 'New asset' | translate }}
             </button>
         }
         <div fxFlex fxLayout="row" fxLayoutAlign="end center">
@@ -62,7 +63,7 @@
                     (rowClicked)="goToDetailsView($event)"
                     matSort
                 >
-                    <ng-container matColumnDef="name">
+                    <ng-container matColumnDef="assetName">
                         <th mat-header-cell mat-sort-header *matHeaderCellDef>
                             Asset
                         </th>

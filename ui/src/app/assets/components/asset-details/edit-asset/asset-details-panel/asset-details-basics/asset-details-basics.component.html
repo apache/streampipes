@@ -18,15 +18,15 @@
 
 <div class="page-container-padding-inner">
     <sp-basic-header-title-component
-        title="{{ 'Basics: ' + asset.assetName }}"
+        [title]="('Basics' | translate) + ': ' + asset.assetName"
     ></sp-basic-header-title-component>
     <div class="p-10">
         <div fxLayout="column" fxFlex="100">
             <sp-basic-field-description
                 fxFlex="100"
                 descriptionPanelWidth="30"
-                label="Name"
-                description="A short name of the asset"
+                [label]="'Name' | translate"
+                [description]="'A short name of the asset' | translate"
             >
                 <mat-form-field
                     color="accent"
@@ -44,8 +44,8 @@
             <sp-basic-field-description
                 fxFlex="100"
                 descriptionPanelWidth="30"
-                label="Description"
-                description="A longer description of this asset"
+                [label]="'Description' | translate"
+                [description]="'A longer description of this asset' | translate"
             >
                 <mat-form-field
                     color="accent"
@@ -63,7 +63,9 @@
                 fxFlex="100"
                 descriptionPanelWidth="30"
                 label="Asset ID"
-                description="A unique id for this asset in one word"
+                [description]="
+                    'A unique id for this asset in one word' | translate
+                "
             >
                 <mat-form-field
                     color="accent"
@@ -80,15 +82,15 @@
             <sp-basic-field-description
                 fxFlex="100"
                 descriptionPanelWidth="30"
-                label="Asset Type"
-                description="The ISA95 type of this asset"
+                [label]="'Asset Type' | translate"
+                [description]="'The ISA95 type of this asset' | translate"
             >
                 <mat-form-field class="w-100">
                     <mat-select
                         data-cy="asset-type-select"
                         [disabled]="!editMode"
                         [(ngModel)]="asset.assetType.isa95AssetType"
-                        aria-label="Asset Type"
+                        [aria-label]="'Asset Type' | translate"
                     >
                         @for (isaType of isa95Types; track isaType) {
                             <mat-option
@@ -103,8 +105,11 @@
             <sp-basic-field-description
                 fxFlex="100"
                 descriptionPanelWidth="30"
-                label="Labels"
-                description="Assign additional labels to better discover your assets"
+                [label]="'Labels' | translate"
+                [description]="
+                    'Assign additional labels to better discover your assets'
+                        | translate
+                "
             >
                 <sp-asset-details-labels
                     [asset]="asset"
@@ -117,8 +122,11 @@
                 <sp-basic-field-description
                     fxFlex="100"
                     descriptionPanelWidth="30"
-                    label="Sites"
-                    description="Assign a location (site and area) to this asset"
+                    [label]="'Sites' | translate"
+                    [description]="
+                        'Assign a location (site and area) to this asset'
+                            | translate
+                    "
                 >
                     <sp-asset-details-site
                         class="w-100"
