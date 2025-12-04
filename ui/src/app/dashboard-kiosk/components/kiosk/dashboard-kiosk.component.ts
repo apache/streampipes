@@ -29,8 +29,8 @@ import { of, Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { TimeSelectionService } from '@streampipes/shared-ui';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
-import { ChartSharedService } from '../../../data-explorer-shared/services/chart-shared.service';
-import { ObservableGenerator } from '../../../data-explorer-shared/models/dataview-dashboard.model';
+import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
+import { ObservableGenerator } from '../../../chart-shared/models/dataview-dashboard.model';
 
 @Component({
     selector: 'sp-dashboard-kiosk',

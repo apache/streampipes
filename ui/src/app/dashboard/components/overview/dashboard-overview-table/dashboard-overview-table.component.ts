@@ -35,12 +35,12 @@ import {
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
-import { ChartSharedService } from '../../../../data-explorer-shared/services/chart-shared.service';
+import { ChartSharedService } from '../../../../chart-shared/services/chart-shared.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { CloneDashboardDialogComponent } from '../../../dialogs/clone-dashboard/clone-dashboard-dialog.component';
 import { Subscription } from 'rxjs';
-import { ChartRoutingService } from '../../../../data-explorer-shared/services/chart-routing.service';
+import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
 import { MatSort } from '@angular/material/sort';
 
 @Component({

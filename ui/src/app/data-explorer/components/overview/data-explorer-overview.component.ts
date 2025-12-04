@@ -23,7 +23,7 @@ import {
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
-import { ChartRoutingService } from '../../../data-explorer-shared/services/chart-routing.service';
+import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 import { SpDataExplorerDataViewOverviewComponent } from './data-explorer-overview-table/data-explorer-overview-table.component';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { Subscription } from 'rxjs';

@@ -25,8 +25,8 @@ import {
     DataLakeMeasure,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { DataExplorerChartRegistry } from '../../../data-explorer-shared/registry/data-explorer-chart-registry';
-import { ObservableGenerator } from '../../../data-explorer-shared/models/dataview-dashboard.model';
+import { DataExplorerChartRegistry } from '../../../chart-shared/registry/data-explorer-chart-registry';
+import { ObservableGenerator } from '../../../chart-shared/models/dataview-dashboard.model';
 
 @Directive()
 export abstract class AbstractChartViewDirective {

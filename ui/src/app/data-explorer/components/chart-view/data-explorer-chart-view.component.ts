@@ -47,19 +47,19 @@ import {
     PanelType,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
-import { ChartRoutingService } from '../../../data-explorer-shared/services/chart-routing.service';
-import { ChartSharedService } from '../../../data-explorer-shared/services/chart-shared.service';
+import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
+import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
 import { ChartDetectChangesService } from '../../services/chart-detect-changes.service';
-import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
+import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/dataview-dashboard.model';
 import { Observable, of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { ResizeEchartsService } from '../../../data-explorer-shared/services/resize-echarts.service';
+import { ResizeEchartsService } from '../../../chart-shared/services/resize-echarts.service';
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';
-import { ChartFieldProviderService } from '../../../data-explorer-shared/services/chart-field-provider.service';
+import { ChartFieldProviderService } from '../../../chart-shared/services/chart-field-provider.service';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 
 @Component({

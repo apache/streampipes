@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import { DataExplorerChartRegistry } from '../../../../../../data-explorer-shared/registry/data-explorer-chart-registry';
+import { DataExplorerChartRegistry } from '../../../../../../chart-shared/registry/data-explorer-chart-registry';
 
 @Component({
     selector: 'sp-chart-preview',

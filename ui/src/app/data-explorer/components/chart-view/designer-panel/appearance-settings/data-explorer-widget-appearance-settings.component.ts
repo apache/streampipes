@@ -17,10 +17,10 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ChartConfigurationService } from '../../../../../data-explorer-shared/services/chart-configuration.service';
+import { ChartConfigurationService } from '../../../../../chart-shared/services/chart-configuration.service';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import { ChartTypeService } from '../../../../../data-explorer-shared/services/chart-type.service';
-import { DataExplorerChartRegistry } from '../../../../../data-explorer-shared/registry/data-explorer-chart-registry';
+import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
+import { DataExplorerChartRegistry } from '../../../../../chart-shared/registry/data-explorer-chart-registry';
 import { Subscription } from 'rxjs';
 
 @Component({

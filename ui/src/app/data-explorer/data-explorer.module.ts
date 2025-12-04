@@ -44,7 +44,7 @@ import { DataExplorerVisualisationSettingsComponent } from './components/chart-v
 import { GroupSelectionPanelComponent } from './components/chart-view/designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
-import { ChartPanelCanDeactivateGuard } from '../data-explorer-shared/services/chart-panel-can-deactivate-guard.service';
+import { ChartPanelCanDeactivateGuard } from '../chart-shared/services/chart-panel-can-deactivate-guard.service';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -81,7 +81,7 @@ import { FilterSelectionPanelRowPropertySelectionComponent } from './components/
 import { FilterSelectionPanelRowOperationSelectionComponent } from './components/chart-view/designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-operation-selection/filter-selection-panel-row-operation-selection.component';
 import { FilterSelectionPanelRowValueInputComponent } from './components/chart-view/designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input/filter-selection-panel-row-value-input.component';
 import { FilterSelectionPanelRowValueAutocompleteComponent } from './components/chart-view/designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input-autocomplete/filter-selection-panel-row-value-autocomplete.component';
-import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
+import { ChartSharedModule } from '../chart-shared/chart-shared.module';
 import { AggregateConfigurationComponent } from './components/chart-view/designer-panel/data-settings/aggregate-configuration/aggregate-configuration.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AssetDialogComponent } from './dialog/asset-dialog.component';
@@ -154,7 +154,7 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
                 ],
             },
         ]),
-        DataExplorerSharedModule,
+        ChartSharedModule,
         ColorPickerDirective,
     ],
     declarations: [

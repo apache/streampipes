@@ -22,7 +22,7 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { ChartConfigurationService } from '../../../../../../data-explorer-shared/services/chart-configuration.service';
+import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 
 @Component({
     selector: 'sp-field-selection',

@@ -24,10 +24,10 @@ import {
     SimpleChanges,
 } from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import { ChartTypeService } from '../../../../../data-explorer-shared/services/chart-type.service';
+import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
 import { MatSelectChange } from '@angular/material/select';
-import { IWidget } from '../../../../../data-explorer-shared/models/dataview-dashboard.model';
-import { DataExplorerChartRegistry } from '../../../../../data-explorer-shared/registry/data-explorer-chart-registry';
+import { IWidget } from '../../../../../chart-shared/models/dataview-dashboard.model';
+import { DataExplorerChartRegistry } from '../../../../../chart-shared/registry/data-explorer-chart-registry';
 
 @Component({
     selector: 'sp-explorer-visualisation-settings',

@@ -188,6 +188,6 @@ import { ColorMappingOptionsConfigComponent } from './components/chart-config/co
     ],
     exports: [DataExplorerChartContainerComponent],
 })
-export class DataExplorerSharedModule {
+export class ChartSharedModule {
     constructor() {}
 }

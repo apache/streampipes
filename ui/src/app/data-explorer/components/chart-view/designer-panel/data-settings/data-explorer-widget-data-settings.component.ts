@@ -33,13 +33,13 @@ import {
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../../core-model/base/Tuple2';
 import { Router } from '@angular/router';
-import { ChartConfigurationService } from '../../../../../data-explorer-shared/services/chart-configuration.service';
+import { ChartConfigurationService } from '../../../../../chart-shared/services/chart-configuration.service';
 import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
 import { GroupSelectionPanelComponent } from './group-selection-panel/group-selection-panel.component';
-import { TableVisConfig } from '../../../../../data-explorer-shared/components/charts/table/model/table-widget.model';
-import { ChartFieldProviderService } from '../../../../../data-explorer-shared/services/chart-field-provider.service';
-import { FieldProvider } from '../../../../../data-explorer-shared/models/dataview-dashboard.model';
-import { ChartTypeService } from '../../../../../data-explorer-shared/services/chart-type.service';
+import { TableVisConfig } from '../../../../../chart-shared/components/charts/table/model/table-widget.model';
+import { ChartFieldProviderService } from '../../../../../chart-shared/services/chart-field-provider.service';
+import { FieldProvider } from '../../../../../chart-shared/models/dataview-dashboard.model';
+import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
 
 @Component({
     selector: 'sp-data-explorer-widget-data-settings',

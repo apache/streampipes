@@ -18,7 +18,7 @@
 
 import { Component, inject, Input } from '@angular/core';
 import { QueryConfig } from '@streampipes/platform-services';
-import { ChartConfigurationService } from '../../../../../../data-explorer-shared/services/chart-configuration.service';
+import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

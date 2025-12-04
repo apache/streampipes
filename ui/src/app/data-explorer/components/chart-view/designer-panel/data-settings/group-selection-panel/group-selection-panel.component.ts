@@ -17,8 +17,8 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { ChartFieldProviderService } from '../../../../../../data-explorer-shared/services/chart-field-provider.service';
-import { ChartConfigurationService } from '../../../../../../data-explorer-shared/services/chart-configuration.service';
+import { ChartFieldProviderService } from '../../../../../../chart-shared/services/chart-field-provider.service';
+import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import {
     EventPropertyUnion,
     FieldConfig,

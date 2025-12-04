@@ -27,10 +27,10 @@ import {
     DateFormatService,
     SpAssetBrowserService,
 } from '@streampipes/shared-ui';
-import { ChartSharedService } from '../../../../data-explorer-shared/services/chart-shared.service';
+import { ChartSharedService } from '../../../../chart-shared/services/chart-shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { ChartRoutingService } from '../../../../data-explorer-shared/services/chart-routing.service';
+import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
 import { Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 
