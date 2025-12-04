@@ -19,6 +19,10 @@
 @use './variables' as spThemeVars;
 @use '../custom-theme/custom-variables' as customThemeVars;
 
+html {
+    font-size: 90%;
+}
+
 .truncate {
     overflow: hidden;
     text-overflow: ellipsis;

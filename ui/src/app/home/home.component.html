@@ -21,7 +21,9 @@
         <div fxFlex="100">
             <div fxFlex="100" fxLayout="column">
                 <div class="p-10 header-margin" fxLayoutAlign="center center">
-                    <div class="welcome-text">Welcome!</div>
+                    <span class="text-3xl font-bold"
+                        >{{ 'Welcome' | translate }}!</span
+                    >
                 </div>
                 <div fxLayout="column" fxFlex="100" class="home-margin">
                     @if (showStatus) {
@@ -61,17 +63,14 @@
                                                 }}</mat-icon>
                                             </div>
                                             <span
+                                                class="text-md font-bold"
                                                 matListItemTitle
-                                                style="
-                                                    font-weight: bold;
-                                                    font-size: 14pt;
-                                                "
                                             >
                                                 {{ link.name }}
                                             </span>
                                             <span
                                                 matListItemLine
-                                                class="module-description"
+                                                class="text-sm font-medium"
                                             >
                                                 {{ link.description }}
                                             </span>

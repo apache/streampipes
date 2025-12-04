@@ -175,7 +175,9 @@
                             fxLayoutAlign="start start"
                             class="truncate"
                         >
-                            <b data-cy="adapter-name">{{ adapter.name }}</b>
+                            <span data-cy="adapter-name">{{
+                                adapter.name
+                            }}</span>
                             <small> {{ adapter.description }}</small>
                         </div>
                     </td>
@@ -204,9 +206,9 @@
                         {{ 'Created' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let adapter">
-                        <h5>
+                        <span>
                             {{ adapter.createdAt | date: 'dd.MM.yyyy HH:mm' }}
-                        </h5>
+                        </span>
                     </td>
                 </ng-container>
 
@@ -234,7 +236,7 @@
                         {{ 'Last message' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let adapter">
-                        <h5>
+                        <span>
                             {{
                                 adapterMetrics[adapter.elementId] &&
                                 adapterMetrics[adapter.elementId]
@@ -244,7 +246,7 @@
                                       | date: 'dd.MM.yyyy HH:mm')
                                     : 'n/a'
                             }}
-                        </h5>
+                        </span>
                     </td>
                 </ng-container>
 

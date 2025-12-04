@@ -24,14 +24,10 @@
     <div fxLayout="row" fxFlex="100">
         <div fxFlex fxLayout="column" fxLayoutAlign="start start">
             <div fxFlex fxLayout="column">
-                <div class="status-container-number">
+                <div class="status-container-number text-3xl">
                     <span>{{ resourceCount }}</span>
                 </div>
-                <div
-                    class="status-container-text"
-                    fxFlex
-                    fxLayoutAlign="end end"
-                >
+                <div class="text-xl" fxFlex fxLayoutAlign="end end">
                     <span>{{ statusBox.title }}</span>
                 </div>
             </div>
@@ -41,7 +37,7 @@
                         <a
                             (click)="navigate(statusBox.createLink)"
                             fxLayoutAlign="start center"
-                            class="status-container-create-link"
+                            class="status-container-create-link text-md"
                         >
                             <i class="material-icons">add_circle</i>
                             <span>&nbsp;{{ statusBox.createTitle }}</span>
@@ -52,6 +48,8 @@
         </div>
     </div>
     <div fxLayoutAlign="start start">
-        <i class="material-icons status-container-icon">{{ statusBox.icon }}</i>
+        <i class="material-icons status-container-icon text-5xl">{{
+            statusBox.icon
+        }}</i>
     </div>
 </div>
