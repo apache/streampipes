@@ -94,8 +94,8 @@ export class AssetDetailsLinksComponent implements OnInit {
             {
                 panelType: PanelType.SLIDE_IN_PANEL,
                 title: createMode
-                    ? this.translateService.instant('Create ')
-                    : this.translateService.instant('Update ') + 'asset model',
+                    ? this.translateService.instant('Create asset links')
+                    : this.translateService.instant('Update asset links'),
                 width: '50vw',
                 data: {
                     assetLink: assetLink,
