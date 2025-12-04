@@ -17,11 +17,6 @@
  */
 
 import {
-    GridsterConfig,
-    GridsterItem,
-    GridsterItemComponent,
-} from 'angular-gridster2';
-import {
     ClientDashboardItem,
     DataExplorerDataConfig,
     DataExplorerField,
@@ -37,24 +32,20 @@ import { FieldUpdateInfo } from './field-update.model';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export type IDataViewDashboardConfig = GridsterConfig;
-
 export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     removeWidgetCallback: EventEmitter<boolean>;
     timerCallback: EventEmitter<boolean>;
     errorCallback: EventEmitter<SpLogMessage>;
 
-    gridsterItem: GridsterItem;
-    gridsterItemComponent: GridsterItemComponent;
     editMode: boolean;
     kioskMode: boolean;
     observableGenerator: ObservableGenerator;
-
+    initialSize: WidgetSize;
     timeSettings: TimeSettings;
 
     dataViewDashboardItem: ClientDashboardItem;
     dataExplorerWidget: T;
+    dataViewMode: boolean;
     previewMode: boolean;
     gridMode: boolean;
     widgetIndex?: number;

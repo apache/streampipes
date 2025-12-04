@@ -40,7 +40,8 @@ public class DataExplorerResourceManager extends CrudResourceManager<DashboardMo
 
   public CompositeDashboardModel getCompositeDashboard(String dashboardId) {
     var dashboard = db.getElementById(dashboardId);
-    var widgets = dashboard.getWidgets().stream().map(w -> widgetStorage.getElementById(w.getId())).toList();
+    var widgets = dashboard.getWidgets().stream()
+        .map(w -> widgetStorage.getElementById(w.getDataViewElementId())).toList();
     var dataLakeMeasures = getMeasureNames(widgets).stream().map(dataLakeMeasureStorage::getByMeasureName).toList();
 
     return new CompositeDashboardModel(dashboard, widgets, dataLakeMeasures);

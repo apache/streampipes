@@ -66,28 +66,20 @@
             }
             @if (!adaptersLoading && !adapterLoadingError && currentFilter) {
                 <div class="container-fluid marketplace-container">
-                    <div
-                        fxLayout="row wrap"
-                        fxLayoutAlign="start stretch"
-                        class="adapter-description-container"
-                    >
+                    <div fxLayout="row wrap" fxLayoutAlign="start stretch">
                         @for (
                             adapterDescription of adapterDescriptions
                                 | adapterFilter: currentFilter;
                             track adapterDescription
                         ) {
-                            <sp-adapter-description
+                            <sp-adapter-catalog-item
                                 attr.id="{{
                                     adapterDescription.name.replaceAll(' ', '_')
                                 }}"
                                 class="adapter-description"
                                 fxFlex="33"
-                                (createEmitter)="selectAdapter($event)"
-                                (click)="
-                                    selectAdapter(adapterDescription.appId)
-                                "
                                 [adapter]="adapterDescription"
-                            ></sp-adapter-description>
+                            ></sp-adapter-catalog-item>
                         }
                     </div>
                 </div>

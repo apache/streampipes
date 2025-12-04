@@ -41,9 +41,6 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     implements OnInit
 {
     eChartsInstance: ECharts;
-    currentWidth: number;
-    currentHeight: number;
-
     option: EChartsOption;
 
     configReady = false;
@@ -63,8 +60,7 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
         this.renderer = this.getRenderer();
         this.resizeEcharts$ =
             this.resizeEchartsService.echartsResizeSubject.subscribe(width => {
-                this.currentWidth = width - this.widthOffset;
-                this.applySize(this.currentWidth, this.currentHeight);
+                this.currentWidth = width;
                 this.refreshView();
             });
         this.renderSubject$ = this.renderSubject
@@ -80,30 +76,20 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     beforeDataFetched() {}
 
     onDataReceived(spQueryResult: SpQueryResult[]) {
-        this.renderChartOptions(spQueryResult);
         this.latestData = spQueryResult;
+        this.renderChartOptions(spQueryResult);
         this.setShownComponents(false, true, false, false);
     }
 
     onResize(width: number, height: number) {
-        this.currentWidth = width;
-        this.currentHeight = height;
         this.configReady = true;
-        this.applySize(width, height);
         if (this.latestData) {
-            this.renderSubject.next();
+            this.refreshView();
         }
     }
 
     onChartInit(ec: ECharts) {
         this.eChartsInstance = ec;
-        this.applySize(this.currentWidth, this.currentHeight);
-    }
-
-    applySize(width: number, height: number) {
-        if (this.eChartsInstance) {
-            this.eChartsInstance.resize({ width, height });
-        }
     }
 
     renderChartOptions(spQueryResult: SpQueryResult[]): void {

@@ -19,7 +19,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
-import { GridsterModule } from 'angular-gridster2';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerComponent } from 'ngx-color-picker';
@@ -60,6 +59,7 @@ import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-
 import { DashboardGridViewComponent } from './components/chart-view/grid-view/dashboard-grid-view.component';
 import { DashboardSlideViewComponent } from './components/chart-view/slide-view/dashboard-slide-view.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { GridstackModule } from 'gridstack/dist/angular';
 
 @NgModule({
     imports: [
@@ -88,7 +88,6 @@ import { TranslateModule } from '@ngx-translate/core';
         CommonModule,
         CoreUiModule,
         MatTabsModule,
-        GridsterModule,
         FlexLayoutModule,
         FormsModule,
         ColorPickerComponent,
@@ -103,6 +102,7 @@ import { TranslateModule } from '@ngx-translate/core';
         ServicesModule,
         SharedUiModule,
         DataExplorerSharedModule,
+        GridstackModule,
         TranslateModule.forChild(),
     ],
     declarations: [DashboardGridViewComponent, DashboardSlideViewComponent],

@@ -1,20 +1,20 @@
 <!--
-  ~  Licensed to the Apache Software Foundation (ASF) under one or more
-  ~  contributor license agreements.  See the NOTICE file distributed with
-  ~  this work for additional information regarding copyright ownership.
-  ~  The ASF licenses this file to You under the Apache License, Version 2.0
-  ~  (the "License"); you may not use this file except in compliance with
-  ~  the License.  You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~  Unless required by applicable law or agreed to in writing, software
-  ~  distributed under the License is distributed on an "AS IS" BASIS,
-  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~  See the License for the specific language governing permissions and
-  ~  limitations under the License.
-  ~
-  -->
+~  Licensed to the Apache Software Foundation (ASF) under one or more
+~  contributor license agreements.  See the NOTICE file distributed with
+~  this work for additional information regarding copyright ownership.
+~  The ASF licenses this file to You under the Apache License, Version 2.0
+~  (the "License"); you may not use this file except in compliance with
+~  the License.  You may obtain a copy of the License at
+~
+~     http://www.apache.org/licenses/LICENSE-2.0
+~
+~  Unless required by applicable law or agreed to in writing, software
+~  distributed under the License is distributed on an "AS IS" BASIS,
+~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~  See the License for the specific language governing permissions and
+~  limitations under the License.
+~
+-->
 
 <ng-template matStepLabel>{{ 'Select Format' | translate }}</ng-template>
 <div>
@@ -47,94 +47,97 @@
         </mat-radio-group>
     </sp-configuration-box>
 </div>
-<div *ngIf="formatExportConfig.format === 'csv'" class="mt-10">
-    <sp-configuration-box [title]="'Delimiter' | translate">
-        <mat-radio-group
-            [(ngModel)]="formatExportConfig.delimiter"
-            class="sp-radio-group"
-        >
-            <mat-radio-button
-                value="comma"
-                class="sp-radio-button"
-                data-cy="download-configuration-delimiter-comma"
-                >&nbsp;,
-            </mat-radio-button>
-            <mat-radio-button
-                value="semicolon"
-                class="sp-radio-button"
-                data-cy="download-configuration-delimiter-semicolon"
-                >&nbsp;;
-            </mat-radio-button>
-        </mat-radio-group>
-    </sp-configuration-box>
-</div>
-<div
-    *ngIf="formatExportConfig.format === 'xlsx' && hasReadFilePrivilege"
-    fxLayout="column"
->
-    <sp-configuration-box [title]="'Excel template' | translate">
-        <div fxLayout="column">
-            <mat-checkbox
-                [(ngModel)]="formatExportConfig.useTemplate"
-                [disabled]="excelTemplates.length === 0"
+@if (formatExportConfig.format === 'csv') {
+    <div class="mt-10">
+        <sp-configuration-box [title]="'Delimiter' | translate">
+            <mat-radio-group
+                [(ngModel)]="formatExportConfig.delimiter"
+                class="sp-radio-group"
             >
-                {{ 'Use uploaded file template' | translate }}
-            </mat-checkbox>
-            @if (formatExportConfig.useTemplate && excelTemplates.length > 0) {
-                <mat-form-field class="mt-10" color="accent">
-                    <mat-select
-                        [(ngModel)]="formatExportConfig.templateId"
-                        [placeholder]="'Choose template' | translate"
-                    >
-                        <mat-option
-                            *ngFor="let template of excelTemplates"
-                            [value]="template.fileId"
+                <mat-radio-button
+                    value="comma"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-delimiter-comma"
+                    >&nbsp;,
+                </mat-radio-button>
+                <mat-radio-button
+                    value="semicolon"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-delimiter-semicolon"
+                    >&nbsp;;
+                </mat-radio-button>
+            </mat-radio-group>
+        </sp-configuration-box>
+    </div>
+}
+@if (formatExportConfig.format === 'xlsx' && hasReadFilePrivilege) {
+    <div fxLayout="column">
+        <sp-configuration-box [title]="'Excel template' | translate">
+            <div fxLayout="column">
+                <mat-checkbox
+                    [(ngModel)]="formatExportConfig.useTemplate"
+                    [disabled]="excelTemplates.length === 0"
+                >
+                    {{ 'Use uploaded file template' | translate }}
+                </mat-checkbox>
+                @if (
+                    formatExportConfig.useTemplate && excelTemplates.length > 0
+                ) {
+                    <mat-form-field class="mt-10" color="accent">
+                        <mat-select
+                            [(ngModel)]="formatExportConfig.templateId"
+                            [placeholder]="'Choose template' | translate"
                         >
-                            {{ template.filename }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field color="accent">
-                    <mat-label>{{
-                        'First row index to append data' | translate
-                    }}</mat-label>
-                    <input
-                        matInput
-                        [(ngModel)]="formatExportConfig.startRow"
-                        type="number"
-                    />
-                </mat-form-field>
-            }
-        </div>
-    </sp-configuration-box>
-</div>
-<div
-    *ngIf="
-        formatExportConfig.format === 'xlsx' ||
-        formatExportConfig.format === 'csv'
-    "
->
-    <sp-configuration-box [title]="'Header column name' | translate">
-        <mat-radio-group
-            [(ngModel)]="formatExportConfig.headerColumnName"
-            class="sp-radio-group"
-        >
-            <mat-radio-button
-                value="key"
-                class="sp-radio-button"
-                data-cy="download-configuration-column-name-key"
-                >{{
-                    'Use field key (runtime name) as header column' | translate
-                }}
-            </mat-radio-button>
-            <mat-radio-button
-                value="label"
-                class="sp-radio-button"
-                data-cy="download-configuration-column-name-label"
-                >{{
-                    'Use field label as header column if available' | translate
-                }}
-            </mat-radio-button>
-        </mat-radio-group>
-    </sp-configuration-box>
-</div>
+                            @for (template of excelTemplates; track template) {
+                                <mat-option [value]="template.fileId">
+                                    {{ template.filename }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field color="accent">
+                        <mat-label>{{
+                            'First row index to append data' | translate
+                        }}</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="formatExportConfig.startRow"
+                            type="number"
+                        />
+                    </mat-form-field>
+                }
+            </div>
+        </sp-configuration-box>
+    </div>
+}
+@if (
+    formatExportConfig.format === 'xlsx' || formatExportConfig.format === 'csv'
+) {
+    <div>
+        <sp-configuration-box [title]="'Header column name' | translate">
+            <mat-radio-group
+                [(ngModel)]="formatExportConfig.headerColumnName"
+                class="sp-radio-group"
+            >
+                <mat-radio-button
+                    value="key"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-column-name-key"
+                    >{{
+                        'Use field key (runtime name) as header column'
+                            | translate
+                    }}
+                </mat-radio-button>
+                <mat-radio-button
+                    value="label"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-column-name-label"
+                    >{{
+                        'Use field label as header column if available'
+                            | translate
+                    }}
+                </mat-radio-button>
+            </mat-radio-group>
+        </sp-configuration-box>
+    </div>
+}

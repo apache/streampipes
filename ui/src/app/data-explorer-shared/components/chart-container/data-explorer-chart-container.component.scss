@@ -39,8 +39,7 @@
 .box {
     display: flex;
     flex-flow: column;
-    height: 100%;
-    padding-top: 5px;
+    max-height: 100%;
 }
 
 .box .row.content {
@@ -85,4 +84,5 @@
     max-width: 100%;
     width: 100%;
     overflow-x: hidden;
+    overflow-y: hidden;
 }

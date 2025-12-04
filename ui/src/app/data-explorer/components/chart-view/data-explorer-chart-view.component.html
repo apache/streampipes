@@ -74,16 +74,13 @@
                         <div #panel fxFlex="100" fxLayout="column">
                             @if (
                                 dataView &&
-                                gridsterItemComponent &&
                                 dataView.dataConfig?.sourceConfigs?.length > 0
                             ) {
                                 <sp-data-explorer-chart-container
+                                    fxFlex
                                     [dataViewMode]="true"
                                     [editMode]="editMode"
                                     [configuredWidget]="dataView"
-                                    [gridsterItemComponent]="
-                                        gridsterItemComponent
-                                    "
                                     [timeSettings]="timeSettings"
                                     [observableGenerator]="observableGenerator"
                                     [dataLakeMeasure]="
