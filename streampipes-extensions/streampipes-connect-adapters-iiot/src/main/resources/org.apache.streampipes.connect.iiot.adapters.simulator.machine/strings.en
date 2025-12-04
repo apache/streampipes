@@ -24,3 +24,6 @@ wait-time-ms.description=The time to wait between two events in milliseconds
 
 selected-simulator-option.title=Select sensor
 selected-simulator-option.description=Select simulated sensor data to be published
+
+numberOfSensors.title=Number of sensors
+numberOfSensors.description=The number of sensors to simulate

@@ -30,49 +30,35 @@
         </sp-no-data-in-date-range>
     }
 
-    <div fxLayoutAlign="center center">
+    <div
+        class="traffic-light-wrapper"
+        fxFlex
+        fxLayout="column"
+        fxLayoutAlign="center center"
+    >
         <div
             class="tl-container"
             [ngClass]="selectedToShowValue ? 'no-border-container' : ''"
-            [ngStyle]="{
-                width: containerWidth + 'px',
-                height: containerHeight + 'px'
-            }"
         >
             <div
                 class="light"
                 [ngClass]="{ 'light-red': activeClass === 'red' }"
-                [ngStyle]="{
-                    width: lightWidth + 'px',
-                    height: lightHeight + 'px'
-                }"
             ></div>
             <div
                 class="light"
                 [ngClass]="{ 'light-yellow': activeClass === 'yellow' }"
-                [ngStyle]="{
-                    width: lightWidth + 'px',
-                    height: lightHeight + 'px'
-                }"
             ></div>
             <div
                 class="light"
                 [ngClass]="{ 'light-green': activeClass === 'green' }"
-                [ngStyle]="{
-                    width: lightWidth + 'px',
-                    height: lightHeight + 'px'
-                }"
             ></div>
         </div>
-    </div>
-    <div class="light-value-container">
-        @if (selectedToShowValue) {
-            <div
-                class="light-value"
-                [ngStyle]="{ width: containerWidth + 'px' }"
-            >
-                {{ displayed_value }}
-            </div>
-        }
+        <div class="light-value-container">
+            @if (selectedToShowValue) {
+                <div class="light-value">
+                    {{ displayed_value }}
+                </div>
+            }
+        </div>
     </div>
 </div>

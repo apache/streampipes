@@ -51,7 +51,7 @@
             [attr.data-cy]="dataExplorerWidget.widgetType"
             echarts
             [options]="option"
-            [ngStyle]="{ width: currentWidth, height: '100%' }"
+            [ngStyle]="{ width: currentWidth, height: 'calc(100% - 1px)' }"
             (chartInit)="onChartInit($event)"
         ></div>
     }

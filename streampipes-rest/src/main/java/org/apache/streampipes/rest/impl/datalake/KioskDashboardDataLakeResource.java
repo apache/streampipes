@@ -76,7 +76,7 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
                                    @PathVariable("widgetId") String widgetId,
                                    @RequestBody Map<String, String> queryParams) {
     var dashboard = dashboardStorage.getElementById(dashboardId);
-    if (dashboard.getWidgets().stream().noneMatch(w -> w.getId().equals(widgetId))) {
+    if (dashboard.getWidgets().stream().noneMatch(w -> w.getDataViewElementId().equals(widgetId))) {
       return badRequest(String.format("Widget with id %s not found in dashboard", widgetId));
     }
     var widget = dataExplorerWidgetStorage.getElementById(widgetId);

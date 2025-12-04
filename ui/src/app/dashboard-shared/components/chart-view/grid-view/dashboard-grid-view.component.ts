@@ -17,22 +17,17 @@
  */
 
 import {
+    AfterViewInit,
     Component,
     Input,
     OnChanges,
     OnInit,
-    QueryList,
     SimpleChanges,
-    ViewChildren,
+    ViewChild,
 } from '@angular/core';
-import {
-    DisplayGrid,
-    GridsterItemComponent,
-    GridType,
-} from 'angular-gridster2';
-import { GridsterInfo } from '../../../../data-explorer-shared/models/gridster-info.model';
-import { IDataViewDashboardConfig } from '../../../../data-explorer-shared/models/dataview-dashboard.model';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
+import { GridStack, GridStackOptions } from 'gridstack';
+import { GridstackComponent, nodesCB } from 'gridstack/dist/angular';
 
 @Component({
     selector: 'sp-dashboard-grid-view',
@@ -42,60 +37,60 @@ import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 })
 export class DashboardGridViewComponent
     extends AbstractChartViewDirective
-    implements OnInit, OnChanges
+    implements OnInit, AfterViewInit, OnChanges
 {
     @Input()
     kioskMode = false;
 
-    options: IDataViewDashboardConfig;
     loaded = false;
 
-    @ViewChildren(GridsterItemComponent)
-    gridsterItemComponents: QueryList<GridsterItemComponent>;
+    @ViewChild('grid', { static: true })
+    gridComp: GridstackComponent;
+
+    grid: GridStack;
+
+    gridOptions: GridStackOptions = {};
+
+    ngAfterViewInit() {
+        this.grid = this.gridComp.grid;
+    }
 
     ngOnInit(): void {
         this.loadWidgetConfigs();
-        this.options = {
-            disablePushOnDrag: true,
-            draggable: { enabled: this.editMode },
-            gridType: GridType.VerticalFixed,
-            minCols: this.dashboard.gridColumns,
-            maxCols: this.dashboard.gridColumns,
-            minRows: 4,
-            fixedRowHeight: 100,
-            fixedColWidth: 100,
-            margin: 3,
-            displayGrid: this.editMode
-                ? DisplayGrid.OnDragAndResize
-                : DisplayGrid.None,
-            resizable: { enabled: this.editMode },
-            itemResizeCallback: (item, itemComponent) => {
-                this.resizeService.notify({
-                    gridsterItem: item,
-                    gridsterItemComponent: itemComponent,
-                } as GridsterInfo);
-            },
-            itemInitCallback: (item, itemComponent) => {
-                this.resizeService.notify({
-                    gridsterItem: item,
-                    gridsterItemComponent: itemComponent,
-                } as GridsterInfo);
-                window.dispatchEvent(new Event('resize'));
+        this.gridOptions = {
+            minRow: 5,
+            column: this.dashboard.gridColumns,
+            margin: 2,
+            cellHeight: 'initial',
+            disableResize: !this.editMode,
+            disableDrag: !this.editMode,
+            float: true,
+            resizable: {
+                handles: 'w,e,se',
             },
         };
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['editMode'] && this.options) {
-            this.options.draggable.enabled = this.editMode;
-            this.options.resizable.enabled = this.editMode;
-            this.options.displayGrid = this.editMode ? 'always' : 'none';
-            this.options.api.optionsChanged();
+        if (changes['editMode'] && this.grid) {
+            this.gridOptions.disableResize = !this.editMode;
+            this.gridOptions.disableDrag = !this.editMode;
+            this.grid.updateOptions(this.gridOptions);
         }
     }
 
-    onOptionsChanged() {
-        this.options.api.optionsChanged();
+    onGridChange(data: nodesCB): void {
+        data.nodes.forEach(changed => {
+            const widget = this.dashboard.widgets.find(
+                w => w.id === (changed as any).id,
+            );
+            if (widget) {
+                widget.x = changed.x;
+                widget.y = changed.y;
+                widget.w = changed.w;
+                widget.h = changed.h;
+            }
+        });
     }
 
     onWidgetsAvailable(): void {}

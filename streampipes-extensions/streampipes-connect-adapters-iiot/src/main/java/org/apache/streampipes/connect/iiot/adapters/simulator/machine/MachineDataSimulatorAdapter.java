@@ -25,7 +25,6 @@ import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -35,41 +34,45 @@ import org.apache.streampipes.sdk.helpers.Options;
 
 public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
 
-  private static final String ID = "org.apache.streampipes.connect.iiot.adapters.simulator.machine";
+  public static final String ID = "org.apache.streampipes.connect.iiot.adapters.simulator.machine";
   private static final String WAIT_TIME_MS = "wait-time-ms";
   private static final String SELECTED_SIMULATOR_OPTION = "selected-simulator-option";
+  public static final String NUMBER_OF_SENSORS = "numberOfSensors";
 
   private MachineDataSimulator machineDataSimulator;
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 0, MachineDataSimulatorAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 1, MachineDataSimulatorAdapter::new)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
-        .withCategory(AdapterType.Debugging)
         .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS), 1000)
+        .requiredIntegerParameter(Labels.withId(NUMBER_OF_SENSORS), 1)
         .requiredSingleValueSelection(Labels.withId(SELECTED_SIMULATOR_OPTION), Options.from(
-            "flowrate", "pressure", "waterlevel"))
+            "flowrate", "pressure", "waterlevel", "diagnostics"))
         .buildConfiguration();
   }
 
   @Override
   public void onAdapterStarted(IAdapterParameterExtractor extractor,
                                IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext)
-      throws AdapterException {
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     var ex = extractor.getStaticPropertyExtractor();
 
     var waitTimeMs = ex.singleValueParameter(WAIT_TIME_MS, Integer.class);
+    var numberOfSensors = ex.singleValueParameter(NUMBER_OF_SENSORS, Integer.class);
     var selectedSimulatorOption = ex.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
-    this.machineDataSimulator = new MachineDataSimulator(collector, waitTimeMs, selectedSimulatorOption);
+    var simulator = MachineDataSimulatorUtils.getSimulator(selectedSimulatorOption);
+    this.machineDataSimulator = new MachineDataSimulator(
+        simulator, collector, waitTimeMs, numberOfSensors
+    );
     Thread thread = new Thread(this.machineDataSimulator);
     thread.start();
   }
 
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+                               IAdapterRuntimeContext adapterRuntimeContext) {
     this.machineDataSimulator.setRunning(false);
   }
 
@@ -79,6 +82,6 @@ public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     var ex = extractor.getStaticPropertyExtractor();
     var selectedSimulatorOption = ex.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
-    return MachineDataSimulatorUtils.getSchema(selectedSimulatorOption);
+    return MachineDataSimulatorUtils.getSimulator(selectedSimulatorOption).getSchema();
   }
 }

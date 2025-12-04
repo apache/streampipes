@@ -17,9 +17,11 @@
  */
 
 import {
+    AfterViewInit,
     Component,
     ComponentFactoryResolver,
     ComponentRef,
+    ElementRef,
     EventEmitter,
     Input,
     OnChanges,
@@ -29,7 +31,6 @@ import {
     SimpleChanges,
     ViewChild,
 } from '@angular/core';
-import { GridsterItemComponent } from 'angular-gridster2';
 import {
     ClientDashboardItem,
     DataExplorerWidgetModel,
@@ -53,12 +54,13 @@ import {
     TimeSelectionService,
     TimeSelectorLabel,
 } from '@streampipes/shared-ui';
+import { ChartSharedService } from '../../services/chart-shared.service';
 import {
     BaseWidgetData,
     ObservableGenerator,
 } from '../../models/dataview-dashboard.model';
-import { ChartSharedService } from '../../services/chart-shared.service';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { ResizeService } from '../../services/resize.service';
 
 @Component({
     selector: 'sp-data-explorer-chart-container',
@@ -67,7 +69,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
     standalone: false,
 })
 export class DataExplorerChartContainerComponent
-    implements OnInit, OnDestroy, OnChanges
+    implements OnInit, OnDestroy, OnChanges, AfterViewInit
 {
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
     @ViewChild('timeSelectorMenu')
@@ -86,9 +88,6 @@ export class DataExplorerChartContainerComponent
 
     @Input()
     dataViewMode = false;
-
-    @Input()
-    gridsterItemComponent: GridsterItemComponent;
 
     @Input()
     previewMode = false;
@@ -140,9 +139,9 @@ export class DataExplorerChartContainerComponent
     hasDataExplorerWritePrivileges = false;
     hasDashboardWritePrivileges = false;
 
-    authSubscription: Subscription;
-    widgetTypeChangedSubscription: Subscription;
-    intervalSubscription: Subscription;
+    auth$: Subscription;
+    widgetTypeChanged$: Subscription;
+    interval$: Subscription;
 
     errorMessage: SpLogMessage;
 
@@ -158,7 +157,32 @@ export class DataExplorerChartContainerComponent
         private authService: AuthService,
         private currentUserService: CurrentUserService,
         private timeSelectionService: TimeSelectionService,
+        private el: ElementRef<HTMLDivElement>,
+        private resizeService: ResizeService,
     ) {}
+
+    resizeObserver: ResizeObserver;
+    resizeTimeout: any;
+
+    ngAfterViewInit(): void {
+        const container = this.el.nativeElement.querySelector(
+            '.widget-content',
+        ) as HTMLDivElement;
+        const obs = new ResizeObserver(entries => {
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = setTimeout(() => {
+                const { width, height } =
+                    entries[entries.length - 1].contentRect;
+
+                this.resizeService.notify({
+                    width,
+                    height,
+                    widgetId: this.dashboardItem?.id || undefined,
+                });
+            }, 100);
+        });
+        obs.observe(container);
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.widgetIndex && this.componentRef?.instance) {
@@ -171,19 +195,17 @@ export class DataExplorerChartContainerComponent
         this.quickSelections ??=
             this.timeSelectionService.defaultQuickTimeSelections;
         this.labels ??= this.timeSelectionService.defaultLabels;
-        this.authSubscription = this.currentUserService.user$.subscribe(
-            user => {
-                this.hasDataExplorerWritePrivileges = this.authService.hasRole(
-                    UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
-                );
-                this.hasDashboardWritePrivileges = this.authService.hasRole(
-                    UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
-                );
-            },
-        );
+        this.auth$ = this.currentUserService.user$.subscribe(user => {
+            this.hasDataExplorerWritePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
+            );
+            this.hasDashboardWritePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
+            );
+        });
         this.widgetLoaded = true;
         this.title = this.dataLakeMeasure.measureName;
-        this.widgetTypeChangedSubscription =
+        this.widgetTypeChanged$ =
             this.widgetTypeService.chartTypeChangeSubject.subscribe(
                 typeChange => {
                     if (
@@ -230,9 +252,11 @@ export class DataExplorerChartContainerComponent
     }
 
     ngOnDestroy() {
+        this.resizeObserver?.disconnect();
         this.componentRef?.destroy();
-        this.authSubscription?.unsubscribe();
-        this.widgetTypeChangedSubscription?.unsubscribe();
+        this.auth$?.unsubscribe();
+        this.widgetTypeChanged$?.unsubscribe();
+        this.interval$?.unsubscribe();
     }
 
     chooseWidget(widgetTypeId: string) {
@@ -244,6 +268,13 @@ export class DataExplorerChartContainerComponent
     }
 
     loadComponent(widgetToDisplay) {
+        const container = this.el.nativeElement.querySelector(
+            '.widget-content',
+        ) as HTMLDivElement;
+        const initialSize = {
+            width: container.clientWidth,
+            height: container.clientHeight,
+        };
         const componentFactory =
             this.componentFactoryResolver.resolveComponentFactory<
                 BaseWidgetData<any>
@@ -257,15 +288,14 @@ export class DataExplorerChartContainerComponent
                 componentFactory,
             );
         this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
+        this.componentRef.instance.initialSize = initialSize;
         this.componentRef.instance.timeSettings = this.getTimeSettings();
         this.timeSelectionService.updateTimeSettings(
             this.quickSelections,
             this.getTimeSettings(),
             new Date(),
         );
-        this.componentRef.instance.gridsterItem = this.dashboardItem;
-        this.componentRef.instance.gridsterItemComponent =
-            this.gridsterItemComponent;
+        this.componentRef.instance.dataViewMode = this.dataViewMode;
         this.componentRef.instance.editMode = this.editMode;
         this.componentRef.instance.kioskMode = this.kioskMode;
         this.componentRef.instance.dataViewDashboardItem = this.dashboardItem;
@@ -275,22 +305,22 @@ export class DataExplorerChartContainerComponent
         this.componentRef.instance.widgetIndex = this.widgetIndex;
         this.componentRef.instance.observableGenerator =
             this.observableGenerator;
-        const removeSub =
+        const remove$ =
             this.componentRef.instance.removeWidgetCallback.subscribe(ev =>
                 this.removeWidget(),
             );
-        const timerSub = this.componentRef.instance.timerCallback.subscribe(
-            ev => this.handleTimer(ev),
+        const timer$ = this.componentRef.instance.timerCallback.subscribe(ev =>
+            this.handleTimer(ev),
         );
-        const errorSub = this.componentRef.instance.errorCallback.subscribe(
+        const error$ = this.componentRef.instance.errorCallback.subscribe(
             ev => (this.errorMessage = ev),
         );
 
         this.componentRef.onDestroy(destroy => {
             this.componentRef.instance.cleanupSubscriptions();
-            removeSub?.unsubscribe();
-            timerSub?.unsubscribe();
-            errorSub?.unsubscribe();
+            remove$?.unsubscribe();
+            timer$?.unsubscribe();
+            error$?.unsubscribe();
         });
     }
 
@@ -317,7 +347,7 @@ export class DataExplorerChartContainerComponent
 
     startLoadingTimer() {
         this.timerActive = true;
-        this.intervalSubscription = interval(100)
+        this.interval$ = interval(100)
             .pipe(takeWhile(() => this.timerActive))
             .subscribe(value => {
                 this.loadingTime = (value * 100) / 1000;
@@ -326,7 +356,7 @@ export class DataExplorerChartContainerComponent
 
     stopLoadingTimer() {
         this.timerActive = false;
-        this.intervalSubscription.unsubscribe();
+        this.interval$.unsubscribe();
     }
 
     handleTimer(start: boolean) {
