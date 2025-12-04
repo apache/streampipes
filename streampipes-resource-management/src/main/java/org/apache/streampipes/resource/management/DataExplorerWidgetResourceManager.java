@@ -39,7 +39,7 @@ public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataE
 
   private void deleteDataViewsFromDashboard(String widgetElementId) {
     dashboardManager.findAll().stream()
-        .filter(dashboard -> dashboard.getWidgets().removeIf(w -> w.getId().equals(widgetElementId)))
+        .filter(dashboard -> dashboard.getWidgets().removeIf(w -> w.getDataViewElementId().equals(widgetElementId)))
         .forEach(dashboardManager::update);
   }
 }
