@@ -93,7 +93,7 @@
         <jedis.version>5.1.4</jedis.version>
         <jetbrains.version> 16.0.3</jetbrains.version>
         <jetty-client.version>12.0.19</jetty-client.version>
-        <jersey.version>3.1.3</jersey.version>
+        <jersey.version>4.0.0</jersey.version>
         <jgrapht.version>1.5.1</jgrapht.version>
         <json-smart.version>2.4.10</json-smart.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
