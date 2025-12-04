@@ -25,7 +25,7 @@
             fxLayout="row"
             class="pl-10"
         >
-            <sp-data-explorer-data-view-toolbar
+            <sp-chart-view-toolbar
                 [timeSettings]="timeSettings"
                 [editMode]="editMode"
                 [configuredWidget]="dataView"
@@ -36,7 +36,7 @@
                 (addToAssetEmitter)="addAssetDialog()"
                 fxFlex="100"
             >
-            </sp-data-explorer-data-view-toolbar>
+            </sp-chart-view-toolbar>
         </div>
         <div fxFlex="100" fxLayout="column">
             @if (chartNotFound) {

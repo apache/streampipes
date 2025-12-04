@@ -73,8 +73,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SpDataExplorerDataViewOverviewComponent } from './components/overview/data-explorer-overview-table/data-explorer-overview-table.component';
-import { DataExplorerChartViewComponent } from './components/chart-view/data-explorer-chart-view.component';
-import { DataExplorerChartViewToolbarComponent } from './components/chart-view/toolbar/data-explorer-chart-view-toolbar.component';
+import { ChartViewComponent } from './components/chart-view/chart-view.component';
+import { ChartViewToolbarComponent } from './components/chart-view/toolbar/chart-view-toolbar.component';
 import { OrderSelectionPanelComponent } from './components/chart-view/designer-panel/data-settings/order-selection-panel/order-selection-panel.component';
 import { FilterSelectionPanelRowComponent } from './components/chart-view/designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/filter-selection-panel-row.component';
 import { FilterSelectionPanelRowPropertySelectionComponent } from './components/chart-view/designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-property-selection/filter-selection-panel-row-property-selection.component';
@@ -143,12 +143,12 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
                     },
                     {
                         path: 'create',
-                        component: DataExplorerChartViewComponent,
+                        component: ChartViewComponent,
                         canDeactivate: [ChartPanelCanDeactivateGuard],
                     },
                     {
                         path: ':id',
-                        component: DataExplorerChartViewComponent,
+                        component: ChartViewComponent,
                         canDeactivate: [ChartPanelCanDeactivateGuard],
                     },
                 ],
@@ -163,8 +163,8 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
         DataExplorerDesignerPanelComponent,
         DataExplorerWidgetAppearanceSettingsComponent,
         DataExplorerWidgetDataSettingsComponent,
-        DataExplorerChartViewComponent,
-        DataExplorerChartViewToolbarComponent,
+        ChartViewComponent,
+        ChartViewToolbarComponent,
         FieldSelectionPanelComponent,
         FieldSelectionComponent,
         FilterSelectionPanelComponent,

@@ -63,12 +63,12 @@ import { ChartFieldProviderService } from '../../../chart-shared/services/chart-
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 
 @Component({
-    selector: 'sp-data-explorer-data-view',
-    templateUrl: './data-explorer-chart-view.component.html',
-    styleUrls: ['./data-explorer-chart-view.component.scss'],
+    selector: 'sp-chart-data-view',
+    templateUrl: './chart-view.component.html',
+    styleUrls: ['./chart-view.component.scss'],
     standalone: false,
 })
-export class DataExplorerChartViewComponent
+export class ChartViewComponent
     implements OnInit, OnDestroy, SupportsUnsavedChangeDialog
 {
     dataViewLoaded = false;

@@ -33,12 +33,12 @@ import { CurrentUserService } from '@streampipes/shared-ui';
 import { UserRole } from '../../../../_enums/user-role.enum';
 
 @Component({
-    selector: 'sp-data-explorer-data-view-toolbar',
-    templateUrl: './data-explorer-chart-view-toolbar.component.html',
-    styleUrls: ['../data-explorer-chart-view.component.scss'],
+    selector: 'sp-chart-view-toolbar',
+    templateUrl: './chart-view-toolbar.component.html',
+    styleUrls: ['../chart-view.component.scss'],
     standalone: false,
 })
-export class DataExplorerChartViewToolbarComponent implements OnInit {
+export class ChartViewToolbarComponent implements OnInit {
     private readonly currentUserService = inject(CurrentUserService);
 
     @Input()
