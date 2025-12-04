@@ -57,7 +57,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { DataExplorerChartContainerComponent } from './components/chart-container/data-explorer-chart-container.component';
+import { ChartContainerComponent } from './components/chart-container/chart-container.component';
 import { CorrelationWidgetConfigComponent } from './components/charts/correlation-chart/config/correlation-chart-widget-config.component';
 import { GaugeWidgetConfigComponent } from './components/charts/gauge/config/gauge-widget-config.component';
 import { ImageWidgetComponent } from './components/charts/image/image-widget.component';
@@ -146,7 +146,7 @@ import { ColorMappingOptionsConfigComponent } from './components/chart-config/co
         NgxEchartsModule.forChild(),
     ],
     declarations: [
-        DataExplorerChartContainerComponent,
+        ChartContainerComponent,
         CorrelationWidgetConfigComponent,
         GaugeWidgetConfigComponent,
         ImageWidgetComponent,
@@ -186,7 +186,7 @@ import { ColorMappingOptionsConfigComponent } from './components/chart-config/co
         SpDataZoomConfigComponent,
         ColorMappingOptionsConfigComponent,
     ],
-    exports: [DataExplorerChartContainerComponent],
+    exports: [ChartContainerComponent],
 })
 export class ChartSharedModule {
     constructor() {}

@@ -62,7 +62,7 @@ import { StatusWidgetComponent } from '../components/charts/status/status-widget
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
-export class DataExplorerChartRegistry {
+export class ChartRegistry {
     chartTypes: IWidget<any>[] = [];
 
     constructor(

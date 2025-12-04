@@ -76,7 +76,7 @@
                                 dataView &&
                                 dataView.dataConfig?.sourceConfigs?.length > 0
                             ) {
-                                <sp-data-explorer-chart-container
+                                <sp-chart-container
                                     fxFlex
                                     [dataViewMode]="true"
                                     [editMode]="editMode"
@@ -89,7 +89,7 @@
                                     "
                                     (startEditModeEmitter)="editDataView()"
                                 >
-                                </sp-data-explorer-chart-container>
+                                </sp-chart-container>
                             }
                         </div>
                     </mat-drawer-content>

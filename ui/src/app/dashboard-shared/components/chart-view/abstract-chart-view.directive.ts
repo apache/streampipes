@@ -25,13 +25,13 @@ import {
     DataLakeMeasure,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { DataExplorerChartRegistry } from '../../../chart-shared/registry/data-explorer-chart-registry';
+import { ChartRegistry } from '../../../chart-shared/registry/chart-registry.service';
 import { ObservableGenerator } from '../../../chart-shared/models/dataview-dashboard.model';
 
 @Directive()
 export abstract class AbstractChartViewDirective {
     protected dataViewDataExplorerService = inject(ChartService);
-    protected widgetRegistryService = inject(DataExplorerChartRegistry);
+    protected widgetRegistryService = inject(ChartRegistry);
 
     @Input()
     dashboard: Dashboard;

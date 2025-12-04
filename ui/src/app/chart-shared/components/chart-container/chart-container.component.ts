@@ -43,7 +43,7 @@ import {
 } from '@streampipes/platform-services';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import { DataExplorerChartRegistry } from '../../registry/data-explorer-chart-registry';
+import { ChartRegistry } from '../../registry/chart-registry.service';
 import { ChartDirective } from './chart.directive';
 import { ChartTypeService } from '../../services/chart-type.service';
 import { AuthService } from '../../../services/auth.service';
@@ -63,12 +63,12 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { ResizeService } from '../../services/resize.service';
 
 @Component({
-    selector: 'sp-data-explorer-chart-container',
-    templateUrl: './data-explorer-chart-container.component.html',
-    styleUrls: ['./data-explorer-chart-container.component.scss'],
+    selector: 'sp-chart-container',
+    templateUrl: './chart-container.component.html',
+    styleUrls: ['./chart-container.component.scss'],
     standalone: false,
 })
-export class DataExplorerChartContainerComponent
+export class ChartContainerComponent
     implements OnInit, OnDestroy, OnChanges, AfterViewInit
 {
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
@@ -150,7 +150,7 @@ export class DataExplorerChartContainerComponent
     @ViewChild(ChartDirective, { static: true }) widgetHost!: ChartDirective;
 
     constructor(
-        private chartRegistryService: DataExplorerChartRegistry,
+        private chartRegistryService: ChartRegistry,
         private dashboardService: ChartSharedService,
         private componentFactoryResolver: ComponentFactoryResolver,
         private widgetTypeService: ChartTypeService,

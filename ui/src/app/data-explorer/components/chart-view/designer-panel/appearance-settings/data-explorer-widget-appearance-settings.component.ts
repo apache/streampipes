@@ -20,7 +20,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ChartConfigurationService } from '../../../../../chart-shared/services/chart-configuration.service';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
-import { DataExplorerChartRegistry } from '../../../../../chart-shared/registry/data-explorer-chart-registry';
+import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -55,7 +55,7 @@ export class DataExplorerWidgetAppearanceSettingsComponent
 
     constructor(
         private widgetTypeService: ChartTypeService,
-        private widgetRegistryService: DataExplorerChartRegistry,
+        private widgetRegistryService: ChartRegistry,
         private widgetConfigurationService: ChartConfigurationService,
     ) {}
 

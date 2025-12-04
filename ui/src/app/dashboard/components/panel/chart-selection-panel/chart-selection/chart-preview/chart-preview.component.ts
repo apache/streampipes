@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import { DataExplorerChartRegistry } from '../../../../../../chart-shared/registry/data-explorer-chart-registry';
+import { ChartRegistry } from '../../../../../../chart-shared/registry/chart-registry.service';
 
 @Component({
     selector: 'sp-chart-preview',
@@ -35,7 +35,7 @@ export class ChartPreviewComponent implements OnInit {
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter<string>();
 
-    constructor(private widgetRegistryService: DataExplorerChartRegistry) {}
+    constructor(private widgetRegistryService: ChartRegistry) {}
 
     ngOnInit() {
         this.widgetTypeLabel = this.widgetRegistryService.getChartTemplate(

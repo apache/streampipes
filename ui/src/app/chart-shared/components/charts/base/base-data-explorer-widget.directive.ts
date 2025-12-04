@@ -44,7 +44,7 @@ import {
 import { Observable, Subject, Subscription, zip } from 'rxjs';
 import { ChartFieldProviderService } from '../../../services/chart-field-provider.service';
 import { catchError, switchMap } from 'rxjs/operators';
-import { DataExplorerChartRegistry } from '../../../registry/data-explorer-chart-registry';
+import { ChartRegistry } from '../../../registry/chart-registry.service';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
 import { TimeSelectionService } from '@streampipes/shared-ui';
 import { WidgetSize } from '../../../models/dataset.model';
@@ -116,7 +116,7 @@ export abstract class BaseDataExplorerWidgetDirective<
     protected widgetConfigurationService = inject(ChartConfigurationService);
     protected resizeService = inject(ResizeService);
     protected timeSelectionService = inject(TimeSelectionService);
-    protected widgetRegistryService = inject(DataExplorerChartRegistry);
+    protected widgetRegistryService = inject(ChartRegistry);
     protected fieldUpdateService = inject(SpFieldUpdateService);
     public fieldService = inject(ChartFieldProviderService);
 

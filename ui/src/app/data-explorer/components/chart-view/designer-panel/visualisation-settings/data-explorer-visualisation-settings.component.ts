@@ -27,7 +27,7 @@ import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
 import { MatSelectChange } from '@angular/material/select';
 import { IWidget } from '../../../../../chart-shared/models/dataview-dashboard.model';
-import { DataExplorerChartRegistry } from '../../../../../chart-shared/registry/data-explorer-chart-registry';
+import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
 
 @Component({
     selector: 'sp-explorer-visualisation-settings',
@@ -42,7 +42,7 @@ export class DataExplorerVisualisationSettingsComponent
 
     constructor(
         private widgetTypeService: ChartTypeService,
-        private widgetRegistryService: DataExplorerChartRegistry,
+        private widgetRegistryService: ChartRegistry,
     ) {}
 
     availableWidgets: IWidget<any>[];
