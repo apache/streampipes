@@ -79,7 +79,6 @@ export class ChartViewComponent
     originalDataView: DataExplorerWidgetModel;
     dataLakeMeasure: DataLakeMeasure;
     drawerWidth = 450;
-    panelWidth = '100%';
 
     selectedAssets = [];
     deselectedAssets = [];

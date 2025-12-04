@@ -86,6 +86,10 @@ export class ChartDetectChangesService {
         currentItem: DataExplorerWidgetModel | Dashboard,
         clearTimestampFn: (model: DataExplorerWidgetModel | Dashboard) => void,
     ): boolean {
+        if (!originalItem) {
+            return false;
+        }
+
         const clonedOriginal = JSON.parse(JSON.stringify(originalItem));
         const clonedCurrent = JSON.parse(JSON.stringify(currentItem));
         clearTimestampFn(clonedOriginal);

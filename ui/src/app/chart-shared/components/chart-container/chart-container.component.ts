@@ -204,7 +204,7 @@ export class ChartContainerComponent
             );
         });
         this.widgetLoaded = true;
-        this.title = this.dataLakeMeasure.measureName;
+        this.title = this.dataLakeMeasure?.measureName;
         this.widgetTypeChanged$ =
             this.widgetTypeService.chartTypeChangeSubject.subscribe(
                 typeChange => {
