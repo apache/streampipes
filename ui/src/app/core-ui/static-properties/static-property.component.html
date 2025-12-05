@@ -19,12 +19,12 @@
 <div fxFlex="100" fxLayout="column" class="small-form-field-density">
     <div fxFlex="100" fxLayout="column" class="static-property-panel">
         @if (showLabel) {
-            <div fxFlex="100" fxLayout="column" style="margin-bottom: 10px">
-                <b>{{ staticProperty.label }}</b>
-                <mat-hint class="description">{{
-                    staticProperty.description
-                }}</mat-hint>
-            </div>
+            <sp-basic-header-title-component
+                [compact]="true"
+                [title]="staticProperty.label"
+                [description]="staticProperty.description"
+            >
+            </sp-basic-header-title-component>
         }
         <div fxFlex="100">
             @if (isCodeInputStaticProperty(staticProperty)) {

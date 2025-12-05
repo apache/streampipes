@@ -16,9 +16,21 @@
   ~
   -->
 
-<div class="header-title title-left-border" [ngStyle]="{ margin: margin }">
+<div
+    class="header-title title-left-border"
+    [class.text-2xl]="!compact"
+    [class.text-md]="compact"
+    [class.compact]="compact"
+    [ngStyle]="{ margin: margin }"
+>
     {{ title }}
     @if (description) {
-        <div class="header-description">{{ description }}</div>
+        <div
+            class="header-description"
+            [class.text-md]="!compact"
+            [class.text-sm]="compact"
+        >
+            {{ description }}
+        </div>
     }
 </div>

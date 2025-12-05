@@ -16,16 +16,6 @@
  *
  */
 
-.pipeline-name {
-    font-weight: bold;
-    font-size: 9pt;
-}
-
-.measure-name {
-    font-weight: normal;
-    font-size: 9pt;
-}
-
 .selection-radio-group {
     vertical-align: top;
     display: flex;
@@ -64,9 +54,9 @@
 }
 
 .description {
-    margin: 0 0 10px 44px;
+    margin: 0 0 10px 36px;
     color: #6c757d;
-    font-size: 0.75rem;
+    font-size: var(--font-size-xs);
     line-height: 1.2;
 }
 
@@ -82,12 +72,12 @@
     align-items: center;
     gap: 8px;
     box-sizing: border-box;
-    font-size: 10pt;
+    font-size: var(--font-size-sm);
 }
 
 .warning-icon {
     color: #dea843;
-    font-size: 18px;
+    font-size: var(--font-size-sm);
 }
 
 .mat-accordion .mat-expansion-panel-header.expansion-panel-header {

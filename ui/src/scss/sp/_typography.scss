@@ -18,6 +18,8 @@
 
 :root {
     --font-size-base: 1rem;
+    --font-default: Roboto-Regular, Arial, sans-serif;
+    --font-emphasized: Roboto, Arial, sans-serif;
 
     /* Fluid font sizes using clamp(min, fluid, max) */
     --font-size-2xs: clamp(0.65rem, 0.63rem + 0.08vw, 0.7rem); /* ~10–11px */
@@ -141,14 +143,12 @@ h5 {
     font-size: var(--font-size-md);
     line-height: var(--line-height-normal);
     font-weight: var(--font-weight-medium);
-    margin: 0 0 0.5em 0;
 }
 
 h6 {
     font-size: var(--font-size-sm);
     line-height: var(--line-height-normal);
     font-weight: var(--font-weight-medium);
-    margin: 0 0 0.5em 0;
 }
 
 p {
@@ -163,4 +163,9 @@ p {
 
 .font-medium {
     font-weight: var(--font-weight-medium);
+}
+
+.font-emphasized {
+    font-family: var(--font-emphasized) sans-serif;
+    font-weight: 700;
 }

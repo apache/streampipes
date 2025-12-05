@@ -26,10 +26,10 @@
         <i class="material-icons warning-icon">warning</i>
     </div>
     <div fxLayout="column" fxLayoutAlign="center center">
-        <div class="default-text">
+        <div class="default-text text-xl">
             {{ 'Found no data in selected time range' | translate }}
         </div>
-        <div class="default-text date-range-text">
+        <div class="default-text text-md">
             {{ viewDateRange.startTime | date: 'MM/dd/yyyy HH:mm' }} -
             {{ viewDateRange.endTime | date: 'MM/dd/yyyy HH:mm' }}
         </div>

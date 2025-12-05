@@ -23,30 +23,20 @@
     --divider: color-mix(in oklab, currentColor 18%, transparent);
 }
 
-.section {
-    position: relative;
-    padding: 0.75rem 0 1rem 0.875rem;
-}
-
-.section::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.75rem;
-    bottom: 1rem;
-    width: 2px;
-    background: var(--color-primary);
-    border-radius: 2px;
-    opacity: 0.35;
-}
-
 .section-header {
     display: grid;
     grid-template-columns: 1fr auto;
     grid-template-rows: auto auto;
     column-gap: 0.75rem;
-    row-gap: 0.25rem;
     align-items: start;
+    padding-left: 12px;
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(
+            to bottom,
+            var(--color-primary),
+            var(--color-primary-dark)
+        )
+        1;
 }
 
 .eyebrow {
@@ -60,9 +50,6 @@
 
 .title {
     margin: 0;
-    font-weight: 600;
-    line-height: 1.2;
-    font-size: clamp(1rem, 1.8vw, 1.25rem);
     letter-spacing: -0.01em;
 }
 
@@ -72,21 +59,21 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    align-self: center;
 }
 
 .description {
     grid-column: 1 / 2;
     grid-row: 2 / 3;
     margin: 0;
-    font-size: clamp(0.875rem, 1.2vw, 0.95rem);
-    line-height: 1.35;
     color: var(--fg-muted);
     font-weight: 300;
 }
 
 .section-body {
-    margin-top: 0.75rem;
-    margin-left: 20px;
+    margin-top: 1.5rem;
+    margin-bottom: 2.25em;
+    margin-left: 16px;
     display: block;
 }
 

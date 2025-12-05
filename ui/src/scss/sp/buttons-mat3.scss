@@ -83,22 +83,22 @@
     }
 
     .mdc-button.small-button {
-        padding: 0.25em 0.75em;
-        font-size: 0.8em;
+        padding: 0.25rem 0.75rem;
+        font-size: var(--font-size-sm);
         max-height: 20px;
         line-height: 10px;
     }
 
     .mdc-button.small-button-add {
-        padding: 0.25em 0.75em;
-        font-size: 0.8em;
+        padding: 0.25rem 0.75rem;
+        font-size: var(--font-size-sm);
         max-height: 75px;
         line-height: 25px;
     }
 
     .mdc-raised-button.small-button-add-inverted {
         padding: 0.25em 0.75em;
-        font-size: 0.8em;
+        font-size: var(--font-size-sm);
         max-height: 75px;
         line-height: 25px;
         background: white;

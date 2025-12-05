@@ -77,7 +77,7 @@
                             [ngStyle]="{ background: 'var(--color-bg-2)' }"
                         >
                             <div
-                                class="panel-title"
+                                class="panel-title text-md"
                                 fxLayoutAlign="start center"
                             >
                                 {{ availableType.title }}
@@ -193,9 +193,12 @@
                                         ) {
                                             <div fxLayout="column">
                                                 <div class="group-outer">
-                                                    <span class="group-title">{{
-                                                        category.label
-                                                    }}</span>
+                                                    <span
+                                                        class="group-title text-sm"
+                                                        >{{
+                                                            category.label
+                                                        }}</span
+                                                    >
                                                 </div>
                                                 @for (
                                                     element of allElements

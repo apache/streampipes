@@ -20,13 +20,13 @@
     @if (!runtimeData) {
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
             <mat-spinner [diameter]="20" color="accent"></mat-spinner>
-            <span class="preview-table mt-10"
+            <span class="preview-table text-sm mt-10"
                 >{{ 'Waiting for live data' | translate }}...</span
             >
         </div>
     }
     @if (runtimeData) {
-        <table class="row-border hover preview-table">
+        <table class="row-border hover preview-table text-sm">
             <tbody id="preview-data-rows-id">
                 @for (
                     item of runtimeData | keyvalue: keyValueCompareFn;

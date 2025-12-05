@@ -16,20 +16,20 @@
 ~
 -->
 
-<section class="section" [class.compact]="compact">
+<section [class.compact]="compact">
     <header class="section-header">
         @if (eyebrow) {
             <div class="eyebrow">{{ eyebrow }}</div>
         }
 
-        <h2 class="title">{{ title }}</h2>
+        <h2 class="title text-xl">{{ title }}</h2>
 
         <div class="header-actions">
             <ng-content select="[section-actions]"></ng-content>
         </div>
 
         @if (subtitle) {
-            <p class="description">
+            <p class="description text-md">
                 {{ subtitle }}
             </p>
         }

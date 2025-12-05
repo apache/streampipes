@@ -27,12 +27,8 @@
     color: inherit;
 }
 
-.title-panel {
-    font-size: 20px;
-}
-
 .column-header {
-    font-size: 12px;
+    font-size: var(--text-sm);
     font-weight: bold;
 }
 

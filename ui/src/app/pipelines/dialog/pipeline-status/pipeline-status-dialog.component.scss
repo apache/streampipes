@@ -16,20 +16,16 @@
  *
  */
 
-.success-text {
-    font-size: 14pt;
-}
-
 .success-message {
     text-align: center;
-    font-size: 14pt;
+    font-size: var(--font-size-lg);
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
 .message-small {
     text-align: center;
-    font-size: 11pt;
+    font-size: var(--font-size-md);
     margin-top: 10px;
     margin-bottom: 10px;
 }

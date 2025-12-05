@@ -33,7 +33,7 @@
                         <span
                             fxFlex
                             fxLayoutAlign="start center"
-                            class="measure-name"
+                            class="text-sm"
                         >
                             {{
                                 sourceConfig?.measureName ||
@@ -90,22 +90,19 @@
                                     fxFlex
                                     fxLayout="row"
                                     fxLayoutAlign="end end"
+                                    fxLayoutGap="0.5rem"
                                     class="mt-10"
                                 >
                                     <button
-                                        mat-button
                                         mat-flat-button
-                                        color="accent"
-                                        class="small-button"
+                                        class="mat-basic small-button"
                                         (click)="navigateToConnect()"
                                     >
                                         {{ 'Connect Adapter' | translate }}
                                     </button>
                                     <button
-                                        mat-button
                                         mat-flat-button
-                                        color="accent"
-                                        class="small-button"
+                                        class="mat-basic small-button"
                                         (click)="navigateToPipelines()"
                                     >
                                         {{ 'Start Pipeline' | translate }}
@@ -137,7 +134,7 @@
                                         <mat-option
                                             [value]="measurement.measureName"
                                         >
-                                            <span class="pipeline-name">{{
+                                            <span class="font-medium text-sm">{{
                                                 measurement.measureName
                                             }}</span>
                                         </mat-option>

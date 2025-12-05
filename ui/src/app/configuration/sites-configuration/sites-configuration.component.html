@@ -17,16 +17,18 @@
 -->
 
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'sites'">
-    @if (locationConfig) {
-        <div fxLayout="column">
-            @if (isAdminUser) {
-                <sp-location-features-configuration
-                    [locationConfig]="locationConfig"
-                >
-                </sp-location-features-configuration>
-            }
-            <sp-site-area-configuration [locationConfig]="locationConfig">
-            </sp-site-area-configuration>
-        </div>
-    }
+    <div class="page-container-padding-inner">
+        @if (locationConfig) {
+            <div fxLayout="column">
+                @if (isAdminUser) {
+                    <sp-location-features-configuration
+                        [locationConfig]="locationConfig"
+                    >
+                    </sp-location-features-configuration>
+                }
+                <sp-site-area-configuration [locationConfig]="locationConfig">
+                </sp-site-area-configuration>
+            </div>
+        }
+    </div>
 </sp-basic-nav-tabs>

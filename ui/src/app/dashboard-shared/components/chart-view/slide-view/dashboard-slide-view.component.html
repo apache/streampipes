@@ -23,12 +23,12 @@
                 @for (item of dashboard.widgets; track item; let i = $index) {
                     <div
                         [ngClass]="
-                            item.id === currentWidget.elementId
+                            item.dataViewElementId === currentWidget.elementId
                                 ? 'viz-preview viz-preview-selected'
                                 : 'viz-preview'
                         "
                         fxLayoutAlign="center center"
-                        (click)="selectWidget(i, item.id)"
+                        (click)="selectWidget(i, item.dataViewElementId)"
                     >
                         <div
                             fxFlex="100"
@@ -36,9 +36,10 @@
                             fxLayoutAlign="center center"
                         >
                             @if (widgetsVisible) {
-                                <span class="slide-view-title">{{
-                                    configuredWidgets.get(item.id)
-                                        .baseAppearanceConfig.widgetTitle
+                                <span class="slide-view-title text-sm">{{
+                                    configuredWidgets.get(
+                                        item.dataViewElementId
+                                    ).baseAppearanceConfig.widgetTitle
                                 }}</span>
                             }
                         </div>

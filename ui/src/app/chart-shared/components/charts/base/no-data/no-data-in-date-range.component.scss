@@ -18,15 +18,10 @@
 
 .default-text {
     padding: 10px;
-    font-size: 16pt;
     text-align: center;
 }
 
 .warning-icon {
     color: var(--color-warn);
-    font-size: 24pt;
-}
-
-.date-range-text {
-    font-size: 12pt;
+    font-size: var(--font-size-3xl);
 }

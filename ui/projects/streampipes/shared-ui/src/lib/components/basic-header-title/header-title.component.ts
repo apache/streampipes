@@ -32,7 +32,16 @@ export class SpBasicHeaderTitleComponent implements OnInit {
     description: string;
 
     @Input()
-    margin = '20px 0px';
+    compact = false;
 
-    ngOnInit(): void {}
+    @Input()
+    margin: string = undefined;
+
+    ngOnInit(): void {
+        if (!this.margin && !this.compact) {
+            this.margin = '20px 0px';
+        } else if (!this.margin && this.compact) {
+            this.margin = '10px 0px';
+        }
+    }
 }
