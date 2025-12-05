@@ -30,21 +30,26 @@
                         [subtitle]="'Basic settings' | translate"
                     >
                         @if (!generalConfig.configured) {
-                            <div class="warning mb-10">
-                                {{
+                            <sp-alert-banner
+                                type="info"
+                                [title]="'Default values' | translate"
+                                [description]="
                                     'These are default values - to use features such as email you need to store these values once.'
                                         | translate
-                                }}
-                            </div>
+                                "
+                            >
+                            </sp-alert-banner>
                         }
-                        <div
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                            fxLayoutGap="10px"
-                        >
-                            <div class="subsection-title">
-                                {{ 'App Name' | translate }}
-                            </div>
+                        <div fxLayout="column">
+                            <sp-basic-header-title-component
+                                [compact]="true"
+                                [title]="'App Name' | translate"
+                                [description]="
+                                    'The app name as shown on the login screen and in emails'
+                                        | translate
+                                "
+                            >
+                            </sp-basic-header-title-component>
                             <mat-form-field appearance="outline" fxFlex>
                                 <input
                                     formControlName="appName"
@@ -55,14 +60,16 @@
                                 />
                             </mat-form-field>
                         </div>
-                        <div
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                            fxLayoutGap="10px"
-                        >
-                            <div class="subsection-title">
-                                {{ 'Host and Port' | translate }}
-                            </div>
+                        <div fxLayout="column">
+                            <sp-basic-header-title-component
+                                [compact]="true"
+                                [title]="'Host and Port' | translate"
+                                [description]="
+                                    'The URL where the application can be accessed, e.g., for links in emails.'
+                                        | translate
+                                "
+                            >
+                            </sp-basic-header-title-component>
                             <div fxLayout="column" fxFlex="100">
                                 <div fxLayout="row">
                                     <div
@@ -129,12 +136,15 @@
                             !generalConfig.configured ||
                             !mailConfig.emailConfigured
                         ) {
-                            <div class="warning mb-10">
-                                {{
-                                    'Self - registration requires valid mail server and basic host settings.'
+                            <sp-alert-banner
+                                type="info"
+                                [title]="'Configuration required' | translate"
+                                [description]="
+                                    'Self-registration requires valid mail server and configured basic host/port settings.'
                                         | translate
-                                }}
-                            </div>
+                                "
+                            >
+                            </sp-alert-banner>
                         }
                         @if (
                             generalConfig.configured &&
@@ -199,8 +209,8 @@
                             [disabled]="parentForm.invalid"
                             data-cy="sp-element-general-config-save"
                         >
-                            <i class="material-icons">save</i
-                            ><span>&nbsp;{{ 'Save' | translate }}</span>
+                            <mat-icon>save</mat-icon>
+                            <span>{{ 'Save' | translate }}</span>
                         </button>
                     </div>
                 </form>

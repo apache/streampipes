@@ -16,6 +16,15 @@
   ~
   -->
 
-<div fxLayout="row" fxFlex="100" class="warning">
-    <ng-content></ng-content>
+<div [ngClass]="['alert', alertClasses]" class="transition duration-300">
+    <div [ngClass]="iconContainerClasses" class="alert-icon">
+        <mat-icon>{{ displayIcon }}</mat-icon>
+    </div>
+
+    <div class="alert-content">
+        <div class="alert-title">{{ title }}</div>
+        <div class="alert-description">
+            {{ description }}
+        </div>
+    </div>
 </div>

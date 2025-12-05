@@ -17,111 +17,113 @@
 -->
 
 <div fxLayout="row" fxFlex="100">
-    <div
-        class="data-explorer-options-item"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        fxLayoutGap="10px"
-        fxFlex="100"
-    >
-        <div
-            fxFlex="25"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            class="widget-header-text mr-15"
-        >
-            @if (editMode) {
-                <div
-                    fxFlex="100"
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    class="form-field-small widget-title-container"
-                >
-                    <span class="widget-title-text">{{
-                        'Chart Name' | translate
-                    }}</span>
-                    <mat-form-field
-                        appearance="outline"
-                        color="accent"
-                        fxFlex="100"
-                        subscriptSizing="dynamic"
-                    >
-                        <input
-                            data-cy="appearance-config-widget-title"
-                            matInput
-                            [(ngModel)]="
-                                configuredWidget.baseAppearanceConfig
-                                    .widgetTitle
-                            "
-                        />
-                    </mat-form-field>
-                </div>
-            }
-        </div>
-
-        @if (editMode) {
-            <button
-                mat-flat-button
-                [matTooltip]="'Save' | translate"
-                class="edit-menu-btn"
-                (click)="saveDataViewEmitter.emit()"
-                data-cy="save-data-view-btn"
-            >
-                <mat-icon>save</mat-icon>
-                {{ 'Save' | translate }}
-            </button>
-        }
-        @if (isAssetAdmin) {
-            <button
-                mat-flat-button
-                [matTooltip]="'Add to Asset' | translate"
-                class="mat-basic"
-                (click)="addToAssetEmitter.emit()"
-                data-cy="add-to-Asset-data-view-btn"
-            >
-                <mat-icon>precision_manufacturing</mat-icon>
-                {{ 'Add To Asset' | translate }}
-            </button>
-        }
-        @if (editMode) {
-            <button
-                mat-flat-button
-                [matTooltip]="'Discard' | translate"
-                class="mat-basic mr-10 edit-menu-btn"
-                (click)="discardDataViewEmitter.emit()"
-                data-cy="discard-data-explorer-widget-btn"
-            >
-                <i class="material-icons">undo</i>
-                <span>&nbsp;{{ 'Discard' | translate }}</span>
-            </button>
-        }
-        @if (editMode) {
-            <button
-                mat-icon-button
-                color="accent"
-                [matTooltip]="'Download data' | translate"
-                (click)="downloadFileEmitter.emit()"
-                data-cy="data-view-data-download-btn"
-            >
-                <mat-icon>get_app</mat-icon>
-            </button>
-        }
-
-        <span fxFlex></span>
+    @if (configuredWidget) {
         <div
             class="data-explorer-options-item"
-            style="margin-right: 0"
-            fxLayoutAlign="end center"
-            fxFlex
+            fxLayoutAlign="start center"
             fxLayout="row"
+            fxLayoutGap="10px"
+            fxFlex="100"
         >
-            @if (editMode || timeRangeVisible) {
-                <sp-time-range-selector
-                    (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
-                    [timeSettings]="timeSettings"
+            <div
+                fxFlex="25"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                class="widget-header-text mr-15"
+            >
+                @if (editMode) {
+                    <div
+                        fxFlex="100"
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        class="form-field-small widget-title-container"
+                    >
+                        <span class="widget-title-text">{{
+                            'Chart Name' | translate
+                        }}</span>
+                        <mat-form-field
+                            appearance="outline"
+                            color="accent"
+                            fxFlex="100"
+                            subscriptSizing="dynamic"
+                        >
+                            <input
+                                data-cy="appearance-config-widget-title"
+                                matInput
+                                [(ngModel)]="
+                                    configuredWidget.baseAppearanceConfig
+                                        .widgetTitle
+                                "
+                            />
+                        </mat-form-field>
+                    </div>
+                }
+            </div>
+
+            @if (editMode) {
+                <button
+                    mat-flat-button
+                    [matTooltip]="'Save' | translate"
+                    class="edit-menu-btn"
+                    (click)="saveDataViewEmitter.emit()"
+                    data-cy="save-data-view-btn"
                 >
-                </sp-time-range-selector>
+                    <mat-icon>save</mat-icon>
+                    {{ 'Save' | translate }}
+                </button>
             }
+            @if (isAssetAdmin) {
+                <button
+                    mat-flat-button
+                    [matTooltip]="'Add to Asset' | translate"
+                    class="mat-basic"
+                    (click)="addToAssetEmitter.emit()"
+                    data-cy="add-to-Asset-data-view-btn"
+                >
+                    <mat-icon>precision_manufacturing</mat-icon>
+                    {{ 'Add To Asset' | translate }}
+                </button>
+            }
+            @if (editMode) {
+                <button
+                    mat-flat-button
+                    [matTooltip]="'Discard' | translate"
+                    class="mat-basic mr-10 edit-menu-btn"
+                    (click)="discardDataViewEmitter.emit()"
+                    data-cy="discard-data-explorer-widget-btn"
+                >
+                    <i class="material-icons">undo</i>
+                    <span>&nbsp;{{ 'Discard' | translate }}</span>
+                </button>
+            }
+            @if (editMode) {
+                <button
+                    mat-icon-button
+                    color="accent"
+                    [matTooltip]="'Download data' | translate"
+                    (click)="downloadFileEmitter.emit()"
+                    data-cy="data-view-data-download-btn"
+                >
+                    <mat-icon>get_app</mat-icon>
+                </button>
+            }
+
+            <span fxFlex></span>
+            <div
+                class="data-explorer-options-item"
+                style="margin-right: 0"
+                fxLayoutAlign="end center"
+                fxFlex
+                fxLayout="row"
+            >
+                @if (editMode || timeRangeVisible) {
+                    <sp-time-range-selector
+                        (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
+                        [timeSettings]="timeSettings"
+                    >
+                    </sp-time-range-selector>
+                }
+            </div>
         </div>
-    </div>
+    }
 </div>

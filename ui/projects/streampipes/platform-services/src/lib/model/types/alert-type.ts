@@ -16,10 +16,4 @@
  *
  */
 
-.error-panel {
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid var(--color-warn);
-    background: var(--color-bg-1);
-    border-radius: 5px;
-}
+export type AlertType = 'info' | 'warning' | 'error';

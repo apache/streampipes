@@ -32,9 +32,15 @@
                 </mat-checkbox>
                 @if (showLocationDetails) {
                     <div class="mt-10">
-                        <div class="subsection-title">
-                            {{ 'Layer type' | translate }}
-                        </div>
+                        <sp-basic-header-title-component
+                            [compact]="true"
+                            [title]="'Layer type' | translate"
+                            [description]="
+                                'Both tile servers and vector styles are supported.'
+                                    | translate
+                            "
+                        >
+                        </sp-basic-header-title-component>
                         <mat-radio-group
                             formControlName="mapLayerType"
                             fxLayout="row"
@@ -53,12 +59,16 @@
                                 {{ 'Vector' | translate }}
                             </mat-radio-button>
                         </mat-radio-group>
-                        <div class="subsection-title mt-10">
-                            {{
-                                'Style/Tile server URL (for tile server, use placeholders for x, y and z coordinates)'
+                        <sp-basic-header-title-component
+                            class="mt-10"
+                            [compact]="true"
+                            [title]="'Style/Tile server URL' | translate"
+                            [description]="
+                                'For tile server, use placeholders for x, y and z coordinates'
                                     | translate
-                            }}
-                        </div>
+                            "
+                        >
+                        </sp-basic-header-title-component>
                         <mat-form-field
                             color="accent"
                             class="w-100"
@@ -71,12 +81,16 @@
                                 data-cy="sites-location-config-tile-server"
                             />
                         </mat-form-field>
-                        <div class="subsection-title mt-10">
-                            {{
-                                'Copyright notice if required by the tile server'
+                        <sp-basic-header-title-component
+                            class="mt-10"
+                            [compact]="true"
+                            [title]="'Copyright notice' | translate"
+                            [description]="
+                                'Will be shown on the map if required by the tile server'
                                     | translate
-                            }}
-                        </div>
+                            "
+                        >
+                        </sp-basic-header-title-component>
                         <mat-form-field
                             color="accent"
                             class="w-100"

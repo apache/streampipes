@@ -22,7 +22,7 @@
     [showBackLink]="true"
     [backLinkTarget]="['connect']"
 >
-    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+    <div nav fxLayout="row" fxLayoutAlign="end center">
         <button
             mat-icon-button
             color="accent"
@@ -34,11 +34,9 @@
         </button>
     </div>
     @if (adapterNotFound) {
-        <sp-warning-box>
-            {{
-                'The desired adapter was not found!' | translate
-            }}</sp-warning-box
-        >
+        <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
+            {{ 'The desired adapter was not found!' | translate }}
+        </div>
     } @else {
         @if (adapter && adapterMetrics) {
             <div fxFlex="100" fxLayout="column">

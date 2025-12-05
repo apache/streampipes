@@ -188,23 +188,25 @@ export class ChartViewComponent
                 if (!res) {
                     this.dataViewLoaded = true;
                     return;
-                }
-                this.dataView = res;
-                this.originalDataView = JSON.parse(
-                    JSON.stringify(this.dataView),
-                );
-                if (!this.dataView.timeSettings?.startTime) {
-                    this.timeSettings = this.makeDefaultTimeSettings();
                 } else {
-                    this.timeSelectionService.updateTimeSettings(
-                        this.timeSelectionService.defaultQuickTimeSelections,
-                        this.dataView.timeSettings as TimeSettings,
-                        new Date(),
+                    this.dataView = res;
+                    this.originalDataView = JSON.parse(
+                        JSON.stringify(this.dataView),
                     );
-                    this.timeSettings = this.dataView
-                        .timeSettings as TimeSettings;
+                    if (!this.dataView.timeSettings?.startTime) {
+                        this.timeSettings = this.makeDefaultTimeSettings();
+                    } else {
+                        this.timeSelectionService.updateTimeSettings(
+                            this.timeSelectionService
+                                .defaultQuickTimeSelections,
+                            this.dataView.timeSettings as TimeSettings,
+                            new Date(),
+                        );
+                        this.timeSettings = this.dataView
+                            .timeSettings as TimeSettings;
+                    }
+                    this.afterDataViewLoaded();
                 }
-                this.afterDataViewLoaded();
             });
     }
 
@@ -228,6 +230,9 @@ export class ChartViewComponent
 
     setShouldShowConfirm(): boolean {
         let originalTimeSettings: TimeSettings;
+        if (!this.dataView) {
+            return false;
+        }
         if (this.originalDataView?.timeSettings) {
             originalTimeSettings = this.originalDataView
                 .timeSettings as TimeSettings;

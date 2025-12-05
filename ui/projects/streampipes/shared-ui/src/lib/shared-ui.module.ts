@@ -53,7 +53,6 @@ import {
 } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SpExceptionDetailsComponent } from './components/sp-exception-message/exception-details/exception-details.component';
-import { SpWarningBoxComponent } from './components/warning-box/warning-box.component';
 import { SpBasicFieldDescriptionComponent } from './components/basic-field-description/basic-field-description.component';
 import { AssetBrowserToolbarComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-toolbar.component';
 import { AssetBrowserFilterComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter.component';
@@ -110,6 +109,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { PaginatorService } from './components/sp-table/sp-paginator/sp-paginator.component';
+import { SpAlertBannerComponent } from './components/alert-banner/alert-banner.component';
 
 @NgModule({
     declarations: [
@@ -140,7 +140,7 @@ import { PaginatorService } from './components/sp-table/sp-paginator/sp-paginato
         SpLabelComponent,
         SpTableComponent,
         SplitSectionComponent,
-        SpWarningBoxComponent,
+        SpAlertBannerComponent,
         TimeRangeSelectorComponent,
         TimeRangeSelectorMenuComponent,
         DataExplorerRefreshIntervalSettingsComponent,
@@ -233,7 +233,7 @@ import { PaginatorService } from './components/sp-table/sp-paginator/sp-paginato
         SpLabelComponent,
         SpTableComponent,
         SplitSectionComponent,
-        SpWarningBoxComponent,
+        SpAlertBannerComponent,
         CustomTimeRangeSelectionComponent,
         TimeRangeSelectorComponent,
         TimeRangeSelectorMenuComponent,

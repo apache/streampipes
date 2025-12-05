@@ -31,7 +31,9 @@
                             (change)="
                                 handleSelectionChange($event, asset.elementId)
                             "
-                            ><h4>{{ asset.assetName }}</h4></mat-checkbox
+                            ><span class="text-md">{{
+                                asset.assetName
+                            }}</span></mat-checkbox
                         >
                     </div>
                 }

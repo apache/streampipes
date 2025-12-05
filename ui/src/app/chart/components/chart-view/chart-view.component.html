@@ -40,9 +40,9 @@
         </div>
         <div fxFlex="100" fxLayout="column">
             @if (chartNotFound) {
-                <sp-warning-box>
+                <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
                     {{ 'The desired chart was not found!' | translate }}
-                </sp-warning-box>
+                </div>
             } @else {
                 <mat-drawer-container
                     class="designer-panel-container h-100 dashboard-grid"

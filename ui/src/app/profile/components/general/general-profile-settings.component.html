@@ -26,12 +26,14 @@
                 "
             >
                 @if (isExternalUser) {
-                    <sp-warning-box>
-                        {{
+                    <sp-alert-banner
+                        type="info"
+                        [title]="
                             'Settings for externally-managed users cannot be changed'
                                 | translate
-                        }}
-                    </sp-warning-box>
+                        "
+                    >
+                    </sp-alert-banner>
                 }
                 <div fxLayout="row" fxLayoutAlign="start center">
                     <span>{{ userData.username }}</span>

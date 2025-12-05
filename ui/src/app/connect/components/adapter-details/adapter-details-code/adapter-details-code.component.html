@@ -22,11 +22,11 @@
     [showBackLink]="true"
     [backLinkTarget]="['connect']"
 >
-    <div fxLayout="column">
+    <div fxLayout="column" fxFlex="100">
         @if (adapterNotFound) {
-            <sp-warning-box>
+            <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
                 {{ 'The desired adapter was not found!' | translate }}
-            </sp-warning-box>
+            </div>
         } @else {
             @if (adapter) {
                 <div fxLayout="column">

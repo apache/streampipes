@@ -21,12 +21,15 @@
         <div class="sp-dialog-content">
             <div fxFlex="100" fxLayout="column" class="p-15">
                 @if (isUserAccount && isExternalProvider) {
-                    <sp-warning-box>
-                        {{
+                    <sp-alert-banner
+                        class="w-100"
+                        type="info"
+                        [title]="
                             'Settings of externally-managed users cannot be changed.'
                                 | translate
-                        }}
-                    </sp-warning-box>
+                        "
+                    >
+                    </sp-alert-banner>
                 }
                 <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                     <div class="general-options-panel" fxLayout="column">

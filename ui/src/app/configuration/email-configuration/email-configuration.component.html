@@ -31,9 +31,11 @@
                         fxFlex="100"
                         fxLayout="column"
                     >
-                        <div class="subsection-title">
-                            {{ 'Mail Server' | translate }}
-                        </div>
+                        <sp-basic-header-title-component
+                            [compact]="true"
+                            [title]="'Mail Server' | translate"
+                        >
+                        </sp-basic-header-title-component>
                         <mat-form-field color="accent">
                             <mat-label>SMTP Host</mat-label>
                             <input
@@ -53,9 +55,11 @@
                                 required
                             />
                         </mat-form-field>
-                        <div class="subsection-title">
-                            {{ 'Transport' | translate }}
-                        </div>
+                        <sp-basic-header-title-component
+                            [compact]="true"
+                            [title]="'Transport' | translate"
+                        >
+                        </sp-basic-header-title-component>
                         <mat-radio-group
                             fxLayout="column"
                             formControlName="transport"
@@ -70,9 +74,11 @@
                                 >TLS</mat-radio-button
                             >
                         </mat-radio-group>
-                        <div class="subsection-title mt-20">
-                            {{ 'Authentication' | translate }}
-                        </div>
+                        <sp-basic-header-title-component
+                            [compact]="true"
+                            [title]="'Authentication' | translate"
+                        >
+                        </sp-basic-header-title-component>
                         <mat-checkbox formControlName="usesAuthentication"
                             >{{
                                 'SMTP server requires authentication'
@@ -104,9 +110,11 @@
                                 />
                             </mat-form-field>
                         }
-                        <div class="subsection-title mt-20">
-                            {{ 'Proxy' | translate }}
-                        </div>
+                        <sp-basic-header-title-component
+                            [compact]="true"
+                            [title]="'Proxy' | translate"
+                        >
+                        </sp-basic-header-title-component>
                         <mat-checkbox formControlName="usesProxy">{{
                             'Uses proxy' | translate
                         }}</mat-checkbox>
@@ -172,9 +180,11 @@
                                 />
                             </mat-form-field>
                         }
-                        <div class="subsection-title mt-20">
-                            {{ 'Sender' | translate }}
-                        </div>
+                        <sp-basic-header-title-component
+                            [compact]="true"
+                            [title]="'Sender' | translate"
+                        >
+                        </sp-basic-header-title-component>
                         <mat-form-field color="accent">
                             <mat-label>{{
                                 'Sender Email Address' | translate
@@ -254,31 +264,31 @@
                                         !sendingTestMailInProgress &&
                                         sendingTestMailSuccess
                                     ) {
-                                        <h5>
-                                            {{
-                                                'Success - please check your mail inbox.'
-                                                    | translate
-                                            }}
-                                        </h5>
+                                        <sp-alert-banner
+                                            type="info"
+                                            [title]="
+                                                'Success - please check your mail inbox. | translate'
+                                            "
+                                        >
+                                        </sp-alert-banner>
                                     }
                                     @if (
                                         !sendingTestMailInProgress &&
                                         !sendingTestMailSuccess
                                     ) {
-                                        <div fxLayout="column">
-                                            <div class="error-panel">
-                                                <h4>
-                                                    {{
-                                                        'Could not send email'
-                                                            | translate
-                                                    }}
-                                                </h4>
-                                                <h5>
-                                                    {{
-                                                        sendingEmailErrorMessage
-                                                    }}
-                                                </h5>
-                                            </div>
+                                        <div fxLayout="row" fxFlex="100">
+                                            <sp-alert-banner
+                                                class="w-100"
+                                                type="error"
+                                                [title]="
+                                                    'Could not send email'
+                                                        | translate
+                                                "
+                                                [description]="
+                                                    sendingEmailErrorMessage
+                                                "
+                                            >
+                                            </sp-alert-banner>
                                         </div>
                                     }
                                 </div>
