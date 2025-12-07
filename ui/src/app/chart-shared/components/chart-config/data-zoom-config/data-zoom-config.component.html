@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-configuration-box [title]="'Data Zoom' | translate">
+<sp-split-section [level]="3" [title]="'Data Zoom' | translate">
     <div fxLayout="column">
         <mat-checkbox
             [(ngModel)]="appearanceConfig.dataZoom.show"
@@ -47,4 +47,4 @@
             </div>
         </div>
     </div>
-</sp-configuration-box>
+</sp-split-section>

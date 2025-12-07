@@ -21,150 +21,105 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box [title]="'Settings' | translate">
-        <div fxLayout="column" fxLayoutGap="10px">
-            <div
-                fxLayout="row"
-                fxLayoutGap="10px"
-                fxLayoutAlign="start center"
-                fxFlex="100"
+    <sp-split-section [level]="3" [title]="'Settings' | translate">
+        <sp-form-field [level]="3" [label]="'Select Value Type' | translate">
+            <mat-radio-group
+                [(ngModel)]="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .selectedDataType
+                "
+                (change)="selectDataType($event.source.value)"
             >
-                <small fxFlex="30">{{ 'Select Value Type' | translate }}</small>
+                <mat-radio-button [value]="'number'">{{
+                    'Numeric Value' | translate
+                }}</mat-radio-button>
+                <mat-radio-button [value]="'boolean'">{{
+                    'Boolean Value' | translate
+                }}</mat-radio-button>
+            </mat-radio-group>
+        </sp-form-field>
+
+        @if (
+            currentlyConfiguredWidget.visualizationConfig.selectedDataType ===
+            'number'
+        ) {
+            <sp-form-field
+                [level]="3"
+                [label]="'Interval [sec]' | translate"
+                [tooltip]="
+                    'Interval in seconds in which an event must arrive'
+                        | translate
+                "
+            >
+                <mat-form-field color="accent">
+                    <input
+                        type="number"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .selectedInterval
+                        "
+                        matInput
+                        (input)="selectInterval($event.target.value)"
+                        min="0"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+
+            <mat-checkbox
+                color="accent"
+                [(ngModel)]="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .selectedLastSeen
+                "
+                (ngModelChange)="showLastSeen($event)"
+            >
+                {{ 'Show Last Seen Timestamp' | translate }}
+            </mat-checkbox>
+        }
+
+        @if (
+            currentlyConfiguredWidget.visualizationConfig.selectedDataType ===
+            'boolean'
+        ) {
+            <sp-form-field [level]="3" [label]="'Field' | translate">
+                <sp-select-single-property-config
+                    [availableProperties]="fieldProvider.booleanFields"
+                    [selectedProperty]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .selectedBooleanFieldToObserve
+                    "
+                    (changeSelectedProperty)="
+                        selectBooleanFieldToObserve($event)
+                    "
+                    fxFlex
+                ></sp-select-single-property-config>
+            </sp-form-field>
+            <sp-form-field [level]="3" [label]="'Select Mapping' | translate">
                 <mat-radio-group
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig
-                            .selectedDataType
+                            .selectedMappingGreenTrue
                     "
-                    (change)="selectDataType($event.source.value)"
+                    (change)="selectMappingGreenTrue($event.source.value)"
                 >
-                    <mat-radio-button [value]="'number'">{{
-                        'Numeric Value' | translate
-                    }}</mat-radio-button>
-                    <mat-radio-button [value]="'boolean'">{{
-                        'Boolean Value' | translate
-                    }}</mat-radio-button>
+                    <div fxLayout="column">
+                        <mat-radio-button [value]="true">
+                            <span class="color-box green-box"></span>
+                            {{ 'True' | translate }}
+                            <span class="spacing"></span>
+                            <span class="color-box red-box"></span>
+                            {{ 'False' | translate }}
+                        </mat-radio-button>
+                        <mat-radio-button [value]="false">
+                            <span class="color-box red-box"></span>
+                            {{ 'True' | translate }}
+                            <span class="spacing"></span>
+                            <span class="color-box green-box"></span>
+                            {{ 'False' | translate }}
+                        </mat-radio-button>
+                    </div>
                 </mat-radio-group>
-            </div>
-
-            @if (
-                currentlyConfiguredWidget.visualizationConfig
-                    .selectedDataType === 'number'
-            ) {
-                <div fxLayout="column" fxLayoutGap="10px">
-                    <div
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        fxLayoutAlign="start center"
-                        fxFlex="100"
-                    >
-                        <small
-                            fxFlex="30"
-                            [matTooltip]="
-                                'Interval in seconds in which an event must arrive'
-                                    | translate
-                            "
-                            matTooltipPosition="above"
-                            >{{ 'Interval [sec]' | translate }}</small
-                        >
-                        <mat-form-field
-                            color="accent"
-                            appearance="outline"
-                            fxFlex
-                        >
-                            <input
-                                type="number"
-                                [(ngModel)]="
-                                    currentlyConfiguredWidget
-                                        .visualizationConfig.selectedInterval
-                                "
-                                matInput
-                                (input)="selectInterval($event.target.value)"
-                                min="0"
-                            />
-                        </mat-form-field>
-                    </div>
-                    <div
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        fxLayoutAlign="start center"
-                        fxFlex="100"
-                    >
-                        <small>{{
-                            'Show Last Seen Timestamp' | translate
-                        }}</small>
-                        <mat-checkbox
-                            color="accent"
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .selectedLastSeen
-                            "
-                            (ngModelChange)="showLastSeen($event)"
-                        >
-                        </mat-checkbox>
-                    </div>
-                </div>
-            }
-
-            @if (
-                currentlyConfiguredWidget.visualizationConfig
-                    .selectedDataType === 'boolean'
-            ) {
-                <div fxLayout="column" fxLayoutGap="10px">
-                    <div
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        fxLayoutAlign="start center"
-                        fxFlex="100"
-                    >
-                        <small fxFlex="30">{{ 'Field' | translate }}</small>
-                        <sp-select-single-property-config
-                            [availableProperties]="fieldProvider.booleanFields"
-                            [selectedProperty]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .selectedBooleanFieldToObserve
-                            "
-                            (changeSelectedProperty)="
-                                selectBooleanFieldToObserve($event)
-                            "
-                            fxFlex
-                        ></sp-select-single-property-config>
-                    </div>
-                    <div
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        fxLayoutAlign="start center"
-                        fxFlex="100"
-                    >
-                        <small fxFlex="30">{{
-                            'Select Mapping' | translate
-                        }}</small>
-                        <mat-radio-group
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .selectedMappingGreenTrue
-                            "
-                            (change)="
-                                selectMappingGreenTrue($event.source.value)
-                            "
-                        >
-                            <mat-radio-button [value]="true">
-                                <span class="color-box green-box"></span>
-                                {{ 'True' | translate }}
-                                <span class="spacing"></span>
-                                <span class="color-box red-box"></span>
-                                {{ 'False' | translate }}
-                            </mat-radio-button>
-                            <mat-radio-button [value]="false">
-                                <span class="color-box red-box"></span>
-                                {{ 'True' | translate }}
-                                <span class="spacing"></span>
-                                <span class="color-box green-box"></span>
-                                {{ 'False' | translate }}
-                            </mat-radio-button>
-                        </mat-radio-group>
-                    </div>
-                </div>
-            }
-        </div>
-    </sp-configuration-box>
+            </sp-form-field>
+        }
+    </sp-split-section>
 </sp-visualization-config-outer>

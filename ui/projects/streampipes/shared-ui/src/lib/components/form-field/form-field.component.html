@@ -23,7 +23,12 @@
     [class.mb-lg]="level === 2"
     [class.mb-sm]="level === 3"
 >
-    <sp-form-label [level]="level" [label]="label" [description]="description">
+    <sp-form-label
+        [level]="level"
+        [label]="label"
+        [description]="description"
+        [tooltip]="tooltip"
+    >
     </sp-form-label>
     <ng-content></ng-content>
 </div>

@@ -31,7 +31,11 @@
         "
     >
     </sp-select-properties-config>
-    <sp-configuration-box [title]="'Search' | translate" marginTop="5px">
+    <sp-split-section
+        [level]="3"
+        [title]="'Search' | translate"
+        marginTop="5px"
+    >
         <mat-form-field appearance="outline" fxFlex="100" color="accent">
             <mat-label>{{ 'Filter' | translate }}</mat-label>
             <input
@@ -42,5 +46,5 @@
                 (input)="onFilterChange($event.target.value)"
             />
         </mat-form-field>
-    </sp-configuration-box>
+    </sp-split-section>
 </sp-visualization-config-outer>

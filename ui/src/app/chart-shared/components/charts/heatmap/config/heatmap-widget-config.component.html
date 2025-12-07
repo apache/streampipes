@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box [title]="'Field' | translate">
+    <sp-split-section [level]="3" [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.numericFields"
             [selectedProperty]="
@@ -31,51 +31,42 @@
             (changeSelectedProperty)="setSelectedHeatProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-configuration-box>
+    </sp-split-section>
 
-    <sp-configuration-box [title]="'Settings' | translate">
-        <div fxLayout="column" class="ml-10 mb-10">
-            <div class="mb-10">
-                <mat-checkbox
+    <sp-split-section [level]="3" [title]="'Settings' | translate">
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.showLabelsProperty
+            "
+            (change)="setShowLabelsProperty($event)"
+        >
+            {{ 'Show values as labels' | translate }}
+        </mat-checkbox>
+        <sp-form-field [level]="3" [label]="'Visual Map Min' | translate">
+            <mat-form-field>
+                <input
+                    matInput
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig
-                            .showLabelsProperty
+                            .visualMapMin
                     "
-                    (change)="setShowLabelsProperty($event)"
-                >
-                    {{ 'Show values as labels' | translate }}
-                </mat-checkbox>
-            </div>
-            <div class="ml-10 mb-10" fxFlex fxLayoutAlign="start center">
-                <small>{{ 'Visual Map Min' | translate }}</small>
-                <span fxFlex></span>
-                <mat-form-field appearance="outline" color="accent" fxFlex="30">
-                    <input
-                        matInput
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .visualMapMin
-                        "
-                        (ngModelChange)="updateVisualMapMin($event)"
-                        type="number"
-                    />
-                </mat-form-field>
-            </div>
-            <div class="ml-10 mb-10" fxFlex fxLayoutAlign="start center">
-                <small>{{ 'Visual Map Max' | translate }}</small>
-                <span fxFlex></span>
-                <mat-form-field appearance="outline" color="accent" fxFlex="30">
-                    <input
-                        matInput
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .visualMapMax
-                        "
-                        (ngModelChange)="updateVisualMapMax($event)"
-                        type="number"
-                    />
-                </mat-form-field>
-            </div>
-        </div>
-    </sp-configuration-box>
+                    (ngModelChange)="updateVisualMapMin($event)"
+                    type="number"
+                />
+            </mat-form-field>
+        </sp-form-field>
+        <sp-form-field [level]="3" [label]="'Visual Map Max' | translate">
+            <mat-form-field>
+                <input
+                    matInput
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .visualMapMax
+                    "
+                    (ngModelChange)="updateVisualMapMax($event)"
+                    type="number"
+                />
+            </mat-form-field>
+        </sp-form-field>
+    </sp-split-section>
 </sp-visualization-config-outer>

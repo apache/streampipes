@@ -34,6 +34,9 @@ export class FormLabelComponent implements OnInit {
     @Input()
     description: string;
 
+    @Input()
+    tooltip: string;
+
     margin = '';
 
     ngOnInit(): void {

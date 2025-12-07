@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box [title]="'Field' | translate">
+    <sp-split-section [level]="3" [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.allFields"
             [selectedProperty]="
@@ -30,83 +30,65 @@
             (changeSelectedProperty)="setSelectedProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-configuration-box>
+    </sp-split-section>
 
-    <sp-configuration-box [title]="'Settings' | translate">
-        <div fxLayout="column" fxLayoutGap="10px">
-            @if (
-                currentlyConfiguredWidget.visualizationConfig.selectedProperty
-                    ?.fieldCharacteristics.numeric
-            ) {
-                <div
-                    fxFlex="100"
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    fxLayoutGap="10px"
+    <sp-split-section [level]="3" [title]="'Settings' | translate">
+        @if (
+            currentlyConfiguredWidget.visualizationConfig.selectedProperty
+                ?.fieldCharacteristics.numeric
+        ) {
+            <sp-form-field [level]="3" [label]="'Rounding' | translate">
+                <mat-form-field
+                    appearance="outline"
+                    class="marginColorField"
+                    color="accent"
                 >
-                    <small>{{ 'Rounding' | translate }}</small>
-                    <mat-form-field
-                        appearance="outline"
-                        class="marginColorField"
-                        color="accent"
-                        fxFlex
-                    >
-                        <mat-select
-                            [(value)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .roundingValue
-                            "
-                            (selectionChange)="
-                                updateRoundingValue($event.value)
-                            "
-                        >
-                            <mat-option [value]="100">100</mat-option>
-                            <mat-option [value]="10">10</mat-option>
-                            <mat-option [value]="1">1</mat-option>
-                            <mat-option [value]="0.1">0.1</mat-option>
-                            <mat-option [value]="0.01">0.01</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            }
-
-            <div
-                fxFlex="100"
-                fxLayout="row"
-                fxLayoutAlign="start center"
-                fxLayoutGap="10px"
-            >
-                <small>{{ 'Inner Radius' | translate }}</small>
-                <mat-slider min="0" max="80" step="1" fxFlex="65">
-                    <input
-                        matSliderThumb
-                        [ngModel]="
+                    <mat-select
+                        [(value)]="
                             currentlyConfiguredWidget.visualizationConfig
-                                .selectedRadius
+                                .roundingValue
                         "
-                        (ngModelChange)="updateInnerRadius($event)"
-                        #slider
-                    />
-                </mat-slider>
-                <small>{{ slider.value }}% </small>
-            </div>
+                        (selectionChange)="updateRoundingValue($event.value)"
+                    >
+                        <mat-option [value]="100">100</mat-option>
+                        <mat-option [value]="10">10</mat-option>
+                        <mat-option [value]="1">1</mat-option>
+                        <mat-option [value]="0.1">0.1</mat-option>
+                        <mat-option [value]="0.01">0.01</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </sp-form-field>
+        }
 
-            <sp-color-mapping-options-config
-                [(colorMapping)]="
-                    currentlyConfiguredWidget.visualizationConfig
-                        .colorMappingsPieChart
-                "
-                [selectedProperty]="
-                    currentlyConfiguredWidget.visualizationConfig
-                        .selectedProperty
-                "
-                [(showCustomColorMapping)]="
-                    currentlyConfiguredWidget.visualizationConfig
-                        .showCustomColorMappingPieChart
-                "
-                (viewRefreshEmitter)="triggerViewUpdate()"
-            >
-            </sp-color-mapping-options-config>
-        </div>
-    </sp-configuration-box>
+        <sp-form-field [level]="3" [label]="'Inner Radius' | translate">
+            <mat-slider min="0" max="80" step="1">
+                <input
+                    matSliderThumb
+                    [ngModel]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .selectedRadius
+                    "
+                    (ngModelChange)="updateInnerRadius($event)"
+                    #slider
+                />
+            </mat-slider>
+            <small>{{ slider.value }}% </small>
+        </sp-form-field>
+
+        <sp-color-mapping-options-config
+            [(colorMapping)]="
+                currentlyConfiguredWidget.visualizationConfig
+                    .colorMappingsPieChart
+            "
+            [selectedProperty]="
+                currentlyConfiguredWidget.visualizationConfig.selectedProperty
+            "
+            [(showCustomColorMapping)]="
+                currentlyConfiguredWidget.visualizationConfig
+                    .showCustomColorMappingPieChart
+            "
+            (viewRefreshEmitter)="triggerViewUpdate()"
+        >
+        </sp-color-mapping-options-config>
+    </sp-split-section>
 </sp-visualization-config-outer>

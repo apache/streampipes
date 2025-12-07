@@ -16,7 +16,7 @@
 ~
 -->
 
-<sp-configuration-box [title]="'Data Range' | translate">
+<sp-split-section [level]="3" [title]="'Data Range' | translate">
     <mat-radio-group
         class="sp-radio-group"
         [(ngModel)]="dataExportConfig.dataRangeConfiguration"
@@ -64,4 +64,4 @@
             </div>
         }
     </mat-radio-group>
-</sp-configuration-box>
+</sp-split-section>

@@ -32,7 +32,7 @@
     >
     </sp-select-color-properties-config>
 
-    <sp-configuration-box [title]="'Axes' | translate" marginTop="5px">
+    <sp-split-section [level]="3" [title]="'Axes' | translate" marginTop="5px">
         <sp-select-axis-options-config
             (viewRefreshEmitter)="triggerViewRefresh()"
             [title]="'left axis' | translate"
@@ -50,9 +50,9 @@
             "
         >
         </sp-select-axis-options-config>
-    </sp-configuration-box>
+    </sp-split-section>
 
-    <sp-configuration-box [title]="'Axis Pointer' | translate">
+    <sp-split-section [level]="3" [title]="'Axis Pointer' | translate">
         <mat-checkbox
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.showSpike
@@ -60,5 +60,5 @@
             (change)="setShowSpikeProperty($event)"
             >{{ 'Enable' | translate }}
         </mat-checkbox>
-    </sp-configuration-box>
+    </sp-split-section>
 </sp-visualization-config-outer>

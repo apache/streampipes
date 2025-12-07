@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box [title]="'Field' | translate">
+    <sp-split-section [level]="3" [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.allFields"
             [selectedProperty]="
@@ -30,28 +30,17 @@
             (changeSelectedProperty)="setSelectedProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-configuration-box>
-    <sp-configuration-box [title]="'Settings' | translate">
-        <div fxLayoutGap="10px" fxLayout="column">
-            <mat-checkbox
-                [(ngModel)]="
-                    currentlyConfiguredWidget.visualizationConfig.autoBin
-                "
-                (change)="triggerViewRefresh()"
-            >
-                {{ 'Auto-compute number of bins' | translate }}
-            </mat-checkbox>
-            @if (!currentlyConfiguredWidget.visualizationConfig.autoBin) {
-                <mat-form-field
-                    fxFlex="100"
-                    color="accent"
-                    appearance="outline"
-                >
-                    <mat-label
-                        ><span>{{
-                            'Number of bins' | translate
-                        }}</span></mat-label
-                    >
+    </sp-split-section>
+    <sp-split-section [level]="3" [title]="'Settings' | translate">
+        <mat-checkbox
+            [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.autoBin"
+            (change)="triggerViewRefresh()"
+        >
+            {{ 'Auto-compute number of bins' | translate }}
+        </mat-checkbox>
+        @if (!currentlyConfiguredWidget.visualizationConfig.autoBin) {
+            <sp-form-field [level]="3" [label]="'Number of bins' | translate">
+                <mat-form-field color="accent">
                     <input
                         [(ngModel)]="
                             currentlyConfiguredWidget.visualizationConfig
@@ -61,26 +50,19 @@
                         (input)="onNumBinChange($event.target.value)"
                     />
                 </mat-form-field>
-            }
-            <mat-checkbox
-                [(ngModel)]="
-                    currentlyConfiguredWidget.visualizationConfig.autoDomain
-                "
-                (change)="triggerViewRefresh()"
-            >
-                {{ 'All values' | translate }}
-            </mat-checkbox>
-            @if (!currentlyConfiguredWidget.visualizationConfig.autoDomain) {
-                <mat-form-field
-                    fxFlex="100"
-                    color="accent"
-                    appearance="outline"
-                >
-                    <mat-label
-                        ><span>{{
-                            'Minimum value' | translate
-                        }}</span></mat-label
-                    >
+            </sp-form-field>
+        }
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.autoDomain
+            "
+            (change)="triggerViewRefresh()"
+        >
+            {{ 'All values' | translate }}
+        </mat-checkbox>
+        @if (!currentlyConfiguredWidget.visualizationConfig.autoDomain) {
+            <sp-form-field [level]="3" [label]="'Minimum value' | translate">
+                <mat-form-field color="accent">
                     <input
                         [(ngModel)]="
                             currentlyConfiguredWidget.visualizationConfig
@@ -90,18 +72,11 @@
                         (input)="onDomainMinChange($event.target.value)"
                     />
                 </mat-form-field>
-            }
-            @if (!currentlyConfiguredWidget.visualizationConfig.autoDomain) {
-                <mat-form-field
-                    fxFlex="100"
-                    color="accent"
-                    appearance="outline"
-                >
-                    <mat-label
-                        ><span>{{
-                            'Maximum value' | translate
-                        }}</span></mat-label
-                    >
+            </sp-form-field>
+        }
+        @if (!currentlyConfiguredWidget.visualizationConfig.autoDomain) {
+            <sp-form-field [level]="3" [label]="'Maximum value' | translate">
+                <mat-form-field color="accent">
                     <input
                         [(ngModel)]="
                             currentlyConfiguredWidget.visualizationConfig
@@ -111,7 +86,7 @@
                         (input)="onDomainMaxChange($event.target.value)"
                     />
                 </mat-form-field>
-            }
-        </div>
-    </sp-configuration-box>
+            </sp-form-field>
+        }
+    </sp-split-section>
 </sp-visualization-config-outer>

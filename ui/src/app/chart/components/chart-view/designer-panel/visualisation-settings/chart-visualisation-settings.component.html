@@ -16,40 +16,34 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <sp-configuration-box
-        [title]="'Chart Type' | translate"
-        marginTop="5px"
-        background="var(--color-bg-2)"
-    >
-        <div class="mt-10">
-            <mat-form-field appearance="outline" color="accent" fxFlex="100">
-                <mat-select
-                    [(value)]="currentlyConfiguredWidget.widgetType"
-                    (selectionChange)="triggerWidgetTypeChange($event)"
-                    data-cy="data-explorer-select-visualization-type"
-                >
-                    <mat-select-trigger>{{
-                        activeWidgetType.label
-                    }}</mat-select-trigger>
-                    @for (widget of availableWidgets; track widget) {
-                        <mat-option
-                            [value]="widget.id"
-                            [attr.data-cy]="'select-widget-' + widget.id"
-                        >
-                            <mat-icon>{{ widget.icon }}</mat-icon>
-                            <span class="font-emphasized text-md">{{
-                                widget.label
-                            }}</span>
-                            <span class="widget-description">{{
-                                widget.description
-                            }}</span>
-                        </mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </sp-configuration-box>
+<div fxFlex="100" fxLayout="column" class="form-field-small mt-10 p-sm">
+    <sp-split-section [level]="3" [title]="'Chart Type' | translate">
+        <mat-form-field appearance="outline" color="accent" fxFlex="100">
+            <mat-select
+                [(value)]="currentlyConfiguredWidget.widgetType"
+                (selectionChange)="triggerWidgetTypeChange($event)"
+                data-cy="data-explorer-select-visualization-type"
+            >
+                <mat-select-trigger>{{
+                    activeWidgetType.label
+                }}</mat-select-trigger>
+                @for (widget of availableWidgets; track widget) {
+                    <mat-option
+                        [value]="widget.id"
+                        [attr.data-cy]="'select-widget-' + widget.id"
+                    >
+                        <mat-icon>{{ widget.icon }}</mat-icon>
+                        <span class="font-emphasized text-md">{{
+                            widget.label
+                        }}</span>
+                        <span class="widget-description">{{
+                            widget.description
+                        }}</span>
+                    </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </sp-split-section>
 
     @if (activeWidgetType) {
         <div>

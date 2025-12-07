@@ -35,5 +35,8 @@ export class FormFieldComponent {
     description: string;
 
     @Input()
+    tooltip: string;
+
+    @Input()
     margin = '0 10px';
 }

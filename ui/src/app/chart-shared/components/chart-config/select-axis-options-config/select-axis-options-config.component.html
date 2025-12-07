@@ -23,10 +23,8 @@
         >{{ 'Auto-scale {{title}}' | translate:{ title: title } }}
     </mat-checkbox>
     @if (!axisConfig.autoScaleActive) {
-        <div fxFlex fxLayoutAlign="start center" class="ml-10 mb-10">
-            <small>{{ 'Min' | translate }}</small>
-            <span fxFlex></span>
-            <mat-form-field appearance="outline" color="accent" fxFlex="30">
+        <sp-form-field [level]="3" [label]="'Min' | translate">
+            <mat-form-field>
                 <input
                     matInput
                     type="number"
@@ -34,13 +32,11 @@
                     (ngModelChange)="viewRefreshEmitter.emit()"
                 />
             </mat-form-field>
-        </div>
+        </sp-form-field>
     }
     @if (!axisConfig.autoScaleActive) {
-        <div fxFlex fxLayoutAlign="start center" class="ml-10 mb-10">
-            <small>{{ 'Max' | translate }}</small>
-            <span fxFlex></span>
-            <mat-form-field appearance="outline" color="accent" fxFlex="30">
+        <sp-form-field [level]="3" [label]="'Max' | translate">
+            <mat-form-field>
                 <input
                     matInput
                     type="number"
@@ -48,6 +44,6 @@
                     (ngModelChange)="viewRefreshEmitter.emit()"
                 />
             </mat-form-field>
-        </div>
+        </sp-form-field>
     }
 </div>

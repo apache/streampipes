@@ -35,8 +35,12 @@
     @if (!isSelectedPropertyBoolean && showCustomColorMapping) {
         <div>
             <div style="margin-bottom: 20px">
-                <button mat-flat-button color="accent" (click)="addMapping()">
-                    <i class="material-icons">add</i>
+                <button
+                    mat-flat-button
+                    class="small-button"
+                    (click)="addMapping()"
+                >
+                    <mat-icon>add</mat-icon>
                     <span>&nbsp;{{ 'Add Mapping' | translate }}</span>
                 </button>
             </div>
@@ -46,38 +50,39 @@
                         fxLayout="row"
                         fxLayoutGap="10px"
                         fxLayoutAlign="start center"
-                        fxFlex="1"
-                        style="margin-top: 10px; align-items: center"
+                        fxFlex="100"
                     >
-                        <div fxFlex="150px">
-                            <mat-form-field
-                                class="w-100"
-                                color="accent"
-                                appearance="outline"
-                            >
-                                <mat-label>{{ 'Value' | translate }}</mat-label>
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Value' | translate"
+                            fxFlex="35"
+                        >
+                            <mat-form-field color="accent" appearance="outline">
                                 <input
                                     matInput
                                     [(ngModel)]="mapping.value"
                                     (ngModelChange)="updateMapping()"
                                 />
                             </mat-form-field>
-                        </div>
-                        <div fxFlex="150px">
-                            <mat-form-field
-                                class="w-100"
-                                color="accent"
-                                appearance="outline"
-                            >
-                                <mat-label>{{ 'Label' | translate }}</mat-label>
+                        </sp-form-field>
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Label' | translate"
+                            fxFlex="35"
+                        >
+                            <mat-form-field color="accent">
                                 <input
                                     matInput
                                     [(ngModel)]="mapping.label"
                                     (ngModelChange)="updateMapping()"
                                 />
                             </mat-form-field>
-                        </div>
-                        <div fxFlex="40px">
+                        </sp-form-field>
+                        <div
+                            fxFlex="15"
+                            fxLayoutAlign="center center"
+                            class="mt-10"
+                        >
                             <input
                                 [(colorPicker)]="mapping.color"
                                 [style.background]="mapping.color"
@@ -91,7 +96,11 @@
                                 (colorPickerChange)="updateColor(i, $event)"
                             />
                         </div>
-                        <div fxLayoutAlign="end center">
+                        <div
+                            fxLayoutAlign="end center"
+                            fxFlex="15"
+                            class="mt-10"
+                        >
                             <button
                                 mat-icon-button
                                 [matTooltip]="'Remove Mapping' | translate"

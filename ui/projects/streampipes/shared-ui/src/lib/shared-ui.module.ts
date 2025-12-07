@@ -82,7 +82,6 @@ import { DownloadComponent } from './dialog/data-download-dialog/components/down
 import { SelectDataRangeComponent } from './dialog/data-download-dialog/components/select-data/select-data-range/select-data-range.component';
 import { SelectDataMissingValuesComponent } from './dialog/data-download-dialog/components/select-data/select-data-missing-values/select-data-missing-values.component';
 import { MatRadioModule } from '@angular/material/radio';
-import { SpConfigurationBoxComponent } from './components/configuration-box/configuration-box.component';
 import { DateInputComponent } from './components/date-input/date-input.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
@@ -149,7 +148,6 @@ import { FormLabelComponent } from './components/form-label/form-label.component
         SelectDataComponent,
         SelectFormatComponent,
         DownloadComponent,
-        SpConfigurationBoxComponent,
         SelectDataRangeComponent,
         SelectDataMissingValuesComponent,
         SidebarResizeComponent,
@@ -230,7 +228,6 @@ import { FormLabelComponent } from './components/form-label/form-label.component
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
         SpBasicNavTabsComponent,
-        SpConfigurationBoxComponent,
         SpExceptionDetailsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,

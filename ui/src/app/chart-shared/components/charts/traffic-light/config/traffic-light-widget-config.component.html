@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box [title]="'Field' | translate">
+    <sp-split-section [level]="3" [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.numericFields"
             [selectedProperty]="
@@ -31,101 +31,69 @@
             (changeSelectedProperty)="selectFieldToObserve($event)"
         >
         </sp-select-single-property-config>
-    </sp-configuration-box>
+    </sp-split-section>
 
-    <sp-configuration-box [title]="'Settings' | translate">
-        <div fxLayout="column" fxLayoutGap="10px">
-            <div
-                fxLayout="row"
-                fxLayoutGap="10px"
-                fxLayoutAlign="start center"
-                fxFlex="100"
-            >
-                <small fxFlex="30">{{ 'Threshold' | translate }}</small>
-                <mat-form-field color="accent" appearance="outline" fxFlex>
-                    <input
-                        type="text"
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .selectedThreshold
-                        "
-                        matInput
-                        (input)="selectThreshold($event.target.value)"
-                        [pattern]="'[0-9.,]*'"
-                        (keydown)="restrictInput($event)"
-                    />
-                </mat-form-field>
-            </div>
-
-            <div
-                fxLayout="row"
-                fxLayoutGap="10px"
-                fxLayoutAlign="start center"
-                fxFlex="100"
-            >
-                <small fxFlex="30">{{
-                    'With Threshold being' | translate
-                }}</small>
-                <mat-radio-group
+    <sp-split-section [level]="3" [title]="'Settings' | translate">
+        <sp-form-field [level]="3" [label]="'Threshold' | translate">
+            <mat-form-field>
+                <input
+                    type="text"
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig
-                            .selectedUpperLimit
+                            .selectedThreshold
                     "
-                    (change)="selectUpperLimit($event.source.value)"
-                >
-                    <mat-radio-button [value]="true">{{
-                        'Upper Limit' | translate
-                    }}</mat-radio-button>
-                    <mat-radio-button [value]="false">{{
-                        'Lower Limit' | translate
-                    }}</mat-radio-button>
-                </mat-radio-group>
-            </div>
-
-            <div
-                fxLayout="row"
-                fxLayoutGap="10px"
-                fxLayoutAlign="start center"
-                fxFlex="100"
+                    matInput
+                    (input)="selectThreshold($event.target.value)"
+                    [pattern]="'[0-9.,]*'"
+                    (keydown)="restrictInput($event)"
+                />
+            </mat-form-field>
+        </sp-form-field>
+        <sp-form-field [level]="3" [label]="'With Threshold being' | translate">
+            <mat-radio-group
+                [(ngModel)]="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .selectedUpperLimit
+                "
+                (change)="selectUpperLimit($event.source.value)"
             >
-                <small fxFlex="30">{{ 'Warning Range (%)' | translate }}</small>
-                <mat-form-field color="accent" appearance="outline" fxFlex>
-                    <input
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .selectedWarningRange
-                        "
-                        matInput
-                        type="text"
-                        (input)="selectWarningRange($event.target.value)"
-                        [pattern]="'[0-9.,]*'"
-                        (keydown)="restrictInput($event)"
-                    />
-                    @if (warningRangeInterval) {
-                        <div class="warning-range-info text-sm">
-                            <small>{{ warningRangeInterval }}</small>
-                        </div>
-                    }
-                </mat-form-field>
-            </div>
-            <div
-                fxLayout="row"
-                fxLayoutGap="10px"
-                fxLayoutAlign="start center"
-                fxFlex="100"
-                class="checkbox-container"
-            >
-                <small>{{ 'Show Value in Traffic Light' | translate }}</small>
-                <mat-checkbox
-                    color="accent"
+                <mat-radio-button [value]="true">{{
+                    'Upper Limit' | translate
+                }}</mat-radio-button>
+                <mat-radio-button [value]="false">{{
+                    'Lower Limit' | translate
+                }}</mat-radio-button>
+            </mat-radio-group>
+        </sp-form-field>
+        <sp-form-field [level]="3" [label]="'Warning Range (%)' | translate">
+            <mat-form-field>
+                <input
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig
-                            .selectedToShowValue
+                            .selectedWarningRange
                     "
-                    (ngModelChange)="selectToShowValue($event)"
-                >
-                </mat-checkbox>
-            </div>
-        </div>
-    </sp-configuration-box>
+                    matInput
+                    type="text"
+                    (input)="selectWarningRange($event.target.value)"
+                    [pattern]="'[0-9.,]*'"
+                    (keydown)="restrictInput($event)"
+                />
+                @if (warningRangeInterval) {
+                    <div class="warning-range-info text-sm">
+                        <small>{{ warningRangeInterval }}</small>
+                    </div>
+                }
+            </mat-form-field>
+        </sp-form-field>
+        <mat-checkbox
+            color="accent"
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig
+                    .selectedToShowValue
+            "
+            (ngModelChange)="selectToShowValue($event)"
+        >
+            {{ 'Show Value in Traffic Light' | translate }}
+        </mat-checkbox>
+    </sp-split-section>
 </sp-visualization-config-outer>

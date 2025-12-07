@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box [title]="'Field' | translate">
+    <sp-split-section [level]="3" [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.numericFields"
             [selectedProperty]="
@@ -30,71 +30,49 @@
             (changeSelectedProperty)="setSelectedProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-configuration-box>
+    </sp-split-section>
     @if (
         currentlyConfiguredWidget.visualizationConfig.selectedProperty
             ?.fieldCharacteristics.numeric
     ) {
-        <sp-configuration-box [title]="'Settings' | translate">
-            <div fxLayout="column">
-                <div fxFlex fxLayoutAlign="start center" class="ml-10 mb-10">
-                    <small>{{ 'Min' | translate }}</small>
-                    <span fxFlex></span>
-                    <mat-form-field
-                        appearance="outline"
-                        color="accent"
-                        fxFlex="30"
-                    >
-                        <input
-                            matInput
-                            type="number"
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .min
-                            "
-                            (ngModelChange)="triggerViewRefresh()"
-                        />
-                    </mat-form-field>
-                </div>
-                <div fxFlex fxLayoutAlign="start center" class="ml-10 mb-10">
-                    <small>{{ 'Max' | translate }}</small>
-                    <span fxFlex></span>
-                    <mat-form-field
-                        appearance="outline"
-                        color="accent"
-                        fxFlex="30"
-                    >
-                        <input
-                            matInput
-                            type="number"
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .max
-                            "
-                            (ngModelChange)="triggerViewRefresh()"
-                        />
-                    </mat-form-field>
-                </div>
-                <div fxFlex fxLayoutAlign="start center" class="ml-10 mb-10">
-                    <small>{{ 'Display Name' | translate }}</small>
-                    <span fxFlex></span>
-                    <mat-form-field
-                        appearance="outline"
-                        color="accent"
-                        fxFlex="60"
-                    >
-                        <input
-                            matInput
-                            type="text"
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .displayName
-                            "
-                            (ngModelChange)="triggerViewRefresh()"
-                        />
-                    </mat-form-field>
-                </div>
-            </div>
-        </sp-configuration-box>
+        <sp-split-section [level]="3" [title]="'Settings' | translate">
+            <sp-form-field [level]="3" [label]="'Min' | translate">
+                <mat-form-field appearance="outline" color="accent" fxFlex="30">
+                    <input
+                        matInput
+                        type="number"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig.min
+                        "
+                        (ngModelChange)="triggerViewRefresh()"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+            <sp-form-field [level]="3" [label]="'Max' | translate">
+                <mat-form-field appearance="outline" color="accent" fxFlex="30">
+                    <input
+                        matInput
+                        type="number"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig.max
+                        "
+                        (ngModelChange)="triggerViewRefresh()"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+            <sp-form-field [level]="3" [label]="'Display Name' | translate">
+                <mat-form-field appearance="outline" color="accent" fxFlex="60">
+                    <input
+                        matInput
+                        type="text"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .displayName
+                        "
+                        (ngModelChange)="triggerViewRefresh()"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+        </sp-split-section>
     }
 </sp-visualization-config-outer>

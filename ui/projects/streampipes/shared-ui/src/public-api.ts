@@ -36,7 +36,6 @@ export * from './lib/components/basic-inner-panel/basic-inner-panel.component';
 export * from './lib/components/basic-field-description/basic-field-description.component';
 export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
-export * from './lib/components/configuration-box/configuration-box.component';
 export * from './lib/components/date-input/date-input.component';
 export * from './lib/components/form-field/form-field.component';
 export * from './lib/components/form-label/form-label.component';

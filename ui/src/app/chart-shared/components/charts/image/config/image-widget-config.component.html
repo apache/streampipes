@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box [title]="'Field' | translate">
+    <sp-split-section [level]="3" [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="imageFields"
             [selectedProperty]="
@@ -30,5 +30,5 @@
             (changeSelectedProperty)="setSelectedImageProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-configuration-box>
+    </sp-split-section>
 </sp-visualization-config-outer>

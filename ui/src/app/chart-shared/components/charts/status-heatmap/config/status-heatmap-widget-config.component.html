@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box [title]="'Field' | translate">
+    <sp-split-section [level]="3" [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.allFields"
             [selectedProperty]="
@@ -30,9 +30,9 @@
             (changeSelectedProperty)="setSelectedProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-configuration-box>
+    </sp-split-section>
 
-    <sp-configuration-box [title]="'Settings' | translate">
+    <sp-split-section [level]="3" [title]="'Settings' | translate">
         <sp-color-mapping-options-config
             [(colorMapping)]="
                 currentlyConfiguredWidget.visualizationConfig
@@ -48,5 +48,5 @@
             (viewRefreshEmitter)="triggerViewUpdate()"
         >
         </sp-color-mapping-options-config>
-    </sp-configuration-box>
+    </sp-split-section>
 </sp-visualization-config-outer>
