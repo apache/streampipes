@@ -1,3 +1,21 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
 # UI Styleguide for B2B Angular Application
 
 Welcome to the UI Styleguide for Apache StreamPipes.  
@@ -5,150 +23,120 @@ This guide defines the visual language, interaction patterns, components, and co
 
 ---
 
-## 📘 Table of Contents
+### Design Tokens
 
-### 1. Introduction
-
-- Purpose of the Styleguide
-- Scope & Audience
-- Guiding Principles (Consistency, Clarity, Efficiency)
-- How to Use This Document
-
-### 2. Brand & Visual Identity
-
-#### Logo Usage
-
-- Logo Usage
-- Color Palette
-  - Primary Colors
-  - Secondary Colors
-  - Semantic Colors
-  - Contrast Rules
-- Typography
-  - Font Families
-  - Headings & Body Text
-  - Line Height & Spacing
-- Iconography
-- Spacing & Layout System
-  - Grid System
-  - Spacing Tokens
-  - Responsive Breakpoints
-
-### 3. Design Tokens
-
-- Overview
-- Color Tokens
-- Typography Tokens
-- Spacing Tokens
-- Border & Radius Tokens
-- Shadow & Elevation Tokens
-- Angular Implementation (SCSS Variables, CSS Custom Properties)
+- Color tokens: \_theme-colors.scss (can be overridden by users for individual theming)
+- Custom variables: \_custom-variables.scss (can be overriden by users for individual theming)
+- General variables: \_variables.scss
+- Typography: \_typography.scss
+- Spacing: \_spacing.scss
 
 ### 4. UI Components
 
-- Component Principles
-- Buttons
-- Inputs & Forms
-  - Form Fields
-  - Validation & Error Messaging
-  - Reactive Forms Guidelines
-- Data Display
-  - Tables
-  - Cards
-  - Tags/Chips
-- Navigation
-  - Top Navigation / App Bar
-  - Side Navigation
-  - Breadcrumbs
-- Feedback & Status
-  - Toasts/Notifications
-  - Empty States
-  - Loading Indicators
-  - Dialogs & Modals
-- Charts & Data Visualization
-- Angular Component Architecture
-  - @Input/@Output Patterns
-  - Smart vs. Dumb Components
-  - Component Theming
+#### Basic Layouts
 
-### 5. Interaction & UX Guidelines
+Each page either starts with one of the following components:
 
-- General Interaction Principles
-- Animation & Motion
-  - Timing & Easing Rules
-  - Angular Animations Best Practices
-- User Flows & Task Efficiency
-- Error Handling & Messaging
+```html
+<sp-basic-view></sp-basic-view> <sp-basic-nav-tabs></sp-basic-nav-tabs>
+```
 
-### 6. Accessibility (A11y)
+The basic view renders a full-height panel. It also has a navbar.
 
-- WCAG Compliance
-- Keyboard Navigation
-- Screen Reader Support
-- Color Contrast Requirements
-- Accessible Angular Components (ARIA, CDK A11y)
+#### Headers and Titles
 
-### 7. Angular Implementation Standards
+There is a predefined component for showing page titles:
 
-- Project Structure & Naming Conventions
-- SCSS Structure (BEM, ITCSS, Tokens)
-- Theming Approach
-- State Management (NgRx, Signals, Component Store)
-- API Interaction Guidelines
-- Error Handling Architecture
-- Testing
-  - Unit Testing
-  - Integration / E2E
+```html
+<sp-basic-header-title-component [title]="A" [description]="B" [level]="1">
+</sp-basic-header-title-component>
+```
 
-### 8. Patterns & Templates
+Level can be either 1, 2 or 3. Use level 1 for page titles, level 2 for pages with multiple headers such as the configuration page.
 
-- Common Page Layouts
-- Dashboards
-- Forms & Wizards
-- Master–Detail Views
-- Search & Filter Patterns
-- Multi-step Processes
+#### Sections
 
-### 9. Localization & Internationalization (i18n)
+In some views it might make sense to organize the layout based on panels.
 
-- Language Strategy
-- Text Expansion Guidelines
-- Angular i18n / Transloco Usage
-- Date, Number & Currency Formatting
+```html
+<sp-split-section [title]="A" [subtitle]="B" [level]="2"> </sp-split-section>
+```
 
-### 10. Governance & Maintenance
+Use level to control the size of the section header and margins.
+In views with enough space, we use level=2. In dialogs and in dense layouts, we use level=3.
 
-- Contribution Guidelines
-- Review & Approval Process
-- Versioning
-- Changelog Management
-- Deprecation Policy
+#### Buttons
 
-### 11. Appendices
+Buttons are defined as follows:
 
-- Glossary
-- Component Code Examples
-- Accessibility Checklist
-- UI Audit Template
+```html
+<button mat-flat-button>
+  optional icon: use <mat-icon></mat-icon> wrap the text in a span blog:
+  <span>Text</span>
+</button>
+```
 
----
+Always use `mat-flat-button` style.
 
-Basic View
-Basic Nav View
+There are different forms of buttons that we can use:
 
-### Forms
+- Primary buttons are rendered when no other CSS classes are applied. Primary buttons serve to identify an action.
+- Secondary buttons are applied with the `btn-secondary` css class (for legacy reasons, also `mat-basic` is possible)
+- Warning/Error buttons are applied with the `btn-warn` css class.
 
-Never use labels
+Smaller buttons can be applied with the `small-button` css class. Use small buttons only in dense layouts.
 
-sp-split-section
-sp-configuration-box
-sp-basic-inner-panel
+#### Forms
 
-sp-form-field-wrapper
-sp-basic-header-title
+Never use the Angular Material `mat-label` and floating labels.
 
-<sp-basic-header-title> Level 1, 2, 3
+To show form inputs, we can wrap a form element into a `sp-form-field` block:
 
-<sp-configuration-section> title, description,
+```html
+<sp-form-field [level]="2" [label]="Label" [description]="Description">
+  form content
+</sp-form-field>
+```
 
-<sp-form-field-wrapper>
+To render smaller inputs in a dense layout, assign the CSS class `form-field-small`.
+
+You can also define an optional tooltip which is shown above the label.
+
+#### Label
+
+Use form labels to ensure a consistent layout of forms and labels.
+In cases where the `sp-form-field` wrapper is not used, the label component can also be accessed directly:
+
+```html
+<sp-form-label [level]="2" [label]="Label" [description]="Description">
+</sp-form-label>
+```
+
+#### Alert Banners
+
+Alert banners are used to show error/info/warning/success messages.
+Use it as follows:
+
+```html
+<sp-alert-banner type="info" [title]="Hello" [description]="World">
+  Additional content
+</sp-alert-banner>
+```
+
+Allowed types are `info`, `warning`, `error` and `success`.
+You can also add additional content to the banner.
+
+#### Tables
+
+For rendering tables, always use the `sp-table` component which comes with pre-defined features for paging, sorting and layout.
+In most cases, table actions should be shown in a popup menu to ensure a clean UI.
+Check the examples to see how to add table actions.
+
+### Localization & Internationalization (i18n)
+
+Always prepare strings for translation:
+
+```html
+{{ 'XYZ' | translate }}
+<my-component [label]="'ABC' | translate"></my-component>
+```
