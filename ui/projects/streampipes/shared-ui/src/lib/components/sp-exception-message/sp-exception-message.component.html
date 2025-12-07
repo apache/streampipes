@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div
     fxLayout="column"
@@ -32,9 +32,11 @@
             >
                 <div fxLayoutAlign="start center">
                     <i class="material-icons color-warn mr-15">warning</i>
-                    <h5 *ngIf="messageTimestamp" class="mr-15">
-                        {{ messageTimestamp | date: 'short' }}
-                    </h5>
+                    @if (messageTimestamp) {
+                        <h5 class="mr-15">
+                            {{ messageTimestamp | date: 'short' }}
+                        </h5>
+                    }
                     <h5 data-cy="exception-message-title" kfxFlex>
                         {{
                             message.title
@@ -44,17 +46,19 @@
                     </h5>
                 </div>
                 <span fxFlex></span>
-                <div fxLayoutAlign="end center" *ngIf="showDetails">
-                    <button
-                        mat-button
-                        color="accent"
-                        (click)="openDetailsDialog()"
-                    >
-                        <i class="material-icons">visibility</i>&nbsp;{{
-                            'Details' | translate
-                        }}
-                    </button>
-                </div>
+                @if (showDetails) {
+                    <div fxLayoutAlign="end center">
+                        <button
+                            mat-button
+                            color="accent"
+                            (click)="openDetailsDialog()"
+                        >
+                            <i class="material-icons">visibility</i>&nbsp;{{
+                                'Details' | translate
+                            }}
+                        </button>
+                    </div>
+                }
             </div>
         </div>
     </div>

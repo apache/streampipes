@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { TreeNode } from '@ali-hm/angular-tree-component';
 import {
     DataType,
@@ -34,7 +41,6 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
-import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -43,6 +49,11 @@ import { IdGeneratorService } from '../../../../../core-services/id-generator/id
     standalone: false,
 })
 export class EventPropertyRowComponent implements OnInit {
+    private staticValueService = inject(StaticValueTransformService);
+    private dialogService = inject(DialogService);
+    private epUtils = inject(EventPropertyUtilsService);
+    private shepherdService = inject(ShepherdService);
+
     @Input() node: TreeNode;
     @Input() isEditable = true;
     @Input() eventSchema: EventSchema = new EventSchema();
@@ -70,14 +81,6 @@ export class EventPropertyRowComponent implements OnInit {
     originalRuntimeType: string;
     originalRuntimeName: string;
     originalProperty: EventPropertyUnion;
-
-    constructor(
-        private staticValueService: StaticValueTransformService,
-        private dialogService: DialogService,
-        private epUtils: EventPropertyUtilsService,
-        private shepherdService: ShepherdService,
-        private idGeneratorService: IdGeneratorService,
-    ) {}
 
     ngOnInit() {
         this.label = this.getLabel(this.node.data);
@@ -245,17 +248,6 @@ export class EventPropertyRowComponent implements OnInit {
             }
         }
         this.countSelectedChange.emit(this.countSelected);
-        this.refreshTreeEmitter.emit(false);
-    }
-
-    public addNestedProperty(eventProperty: EventPropertyNested): void {
-        const uuid: string = this.idGeneratorService.generate(25);
-        if (!eventProperty.eventProperties) {
-            eventProperty.eventProperties = new Array<EventPropertyUnion>();
-        }
-        const property: EventPropertyNested = new EventPropertyNested();
-        property.elementId = uuid;
-        eventProperty.eventProperties.push(property);
         this.refreshTreeEmitter.emit(false);
     }
 }

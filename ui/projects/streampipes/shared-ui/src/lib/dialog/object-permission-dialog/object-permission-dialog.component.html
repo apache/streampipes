@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     @if (loading) {
@@ -35,12 +35,21 @@
                         }}</span>
                         <mat-form-field color="accent">
                             <mat-label>{{ 'Owner' | translate }}</mat-label>
-                            <mat-select formControlName="owner" fxFlex required>
-                                <mat-option
-                                    *ngFor="let user of allUsers"
-                                    [value]="user.principalId"
-                                    >{{ user.email }}
-                                </mat-option>
+                            <mat-select
+                                data-cy="owner-select"
+                                formControlName="owner"
+                                fxFlex
+                                required
+                            >
+                                @for (user of allUsers; track user) {
+                                    <mat-option
+                                        [value]="user.principalId"
+                                        [attr.data-cy]="
+                                            'owner-option-' + user.email
+                                        "
+                                        >{{ user.email }}
+                                    </mat-option>
+                                }
                             </mat-select>
                         </mat-form-field>
                         <mat-checkbox
@@ -67,19 +76,21 @@
                                         'User selection' | translate
                                     "
                                 >
-                                    <mat-chip-row
-                                        *ngFor="
-                                            let user of grantedUserAuthorities
-                                        "
-                                        selectable="true"
-                                        removable="true"
-                                        (removed)="removeUser(user)"
-                                    >
-                                        {{ user.email }}
-                                        <button matChipRemove>
-                                            <mat-icon>cancel</mat-icon>
-                                        </button>
-                                    </mat-chip-row>
+                                    @for (
+                                        user of grantedUserAuthorities;
+                                        track user
+                                    ) {
+                                        <mat-chip-row
+                                            selectable="true"
+                                            removable="true"
+                                            (removed)="removeUser(user)"
+                                        >
+                                            {{ user.email }}
+                                            <button matChipRemove>
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>
+                                        </mat-chip-row>
+                                    }
                                     <input
                                         matInput
                                         [placeholder]="'Add' | translate"
@@ -98,17 +109,19 @@
                                     #userAuto="matAutocomplete"
                                     (optionSelected)="userSelected($event)"
                                 >
-                                    <mat-option
-                                        *ngFor="
-                                            let user of filteredUsers$ | async
-                                        "
-                                        [value]="user"
-                                        [attr.data-cy]="
-                                            'user-option-' + user.email
-                                        "
-                                    >
-                                        {{ user.email }}
-                                    </mat-option>
+                                    @for (
+                                        user of filteredUsers$ | async;
+                                        track user
+                                    ) {
+                                        <mat-option
+                                            [value]="user"
+                                            [attr.data-cy]="
+                                                'user-option-' + user.email
+                                            "
+                                        >
+                                            {{ user.email }}
+                                        </mat-option>
+                                    }
                                 </mat-autocomplete>
                             </mat-form-field>
                         </div>
@@ -128,22 +141,25 @@
                                         'Group selection' | translate
                                     "
                                 >
-                                    <mat-chip-row
-                                        *ngFor="
-                                            let group of grantedGroupAuthorities
-                                        "
-                                        selectable="true"
-                                        removable="true"
-                                        (removed)="removeGroup(group)"
-                                    >
-                                        {{ group.groupName }}
-                                        <button matChipRemove>
-                                            <mat-icon>cancel</mat-icon>
-                                        </button>
-                                    </mat-chip-row>
+                                    @for (
+                                        group of grantedGroupAuthorities;
+                                        track group
+                                    ) {
+                                        <mat-chip-row
+                                            selectable="true"
+                                            removable="true"
+                                            (removed)="removeGroup(group)"
+                                        >
+                                            {{ group.groupName }}
+                                            <button matChipRemove>
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>
+                                        </mat-chip-row>
+                                    }
                                     <input
                                         matInput
                                         [placeholder]="'Add' | translate"
+                                        data-cy="authorized-group"
                                         #groupInput
                                         [formControl]="groupCtrl"
                                         [matAutocomplete]="groupAuto"
@@ -160,14 +176,20 @@
                                     #groupAuto="matAutocomplete"
                                     (optionSelected)="groupSelected($event)"
                                 >
-                                    <mat-option
-                                        *ngFor="
-                                            let group of filteredGroups$ | async
-                                        "
-                                        [value]="group"
-                                    >
-                                        {{ group.groupName }}
-                                    </mat-option>
+                                    @for (
+                                        group of filteredGroups$ | async;
+                                        track group
+                                    ) {
+                                        <mat-option
+                                            [attr.data-cy]="
+                                                'group-option-' +
+                                                group.groupName
+                                            "
+                                            [value]="group"
+                                        >
+                                            {{ group.groupName }}
+                                        </mat-option>
+                                    }
                                 </mat-autocomplete>
                             </mat-form-field>
                         </div>
@@ -219,7 +241,10 @@
             </div>
         </div>
     } @else {
-        <div class="sp-dialog-content">
+        <div
+            class="sp-dialog-content"
+            data-cy="warning-permissions-managed-by-owner"
+        >
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <mat-icon>block</mat-icon>
                 <h5>
@@ -252,6 +277,7 @@
                 mat-button
                 mat-flat-button
                 class="mat-basic"
+                data-cy="sp-manage-permissions-cancel"
                 (click)="close(false)"
             >
                 {{ 'Cancel' | translate }}

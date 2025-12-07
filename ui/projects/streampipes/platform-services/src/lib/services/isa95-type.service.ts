@@ -17,7 +17,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Isa95Type, Isa95TypeDesc } from '../model/assets/asset.model';
+import { Isa95TypeDesc } from '../model/assets/asset.model';
+import { Isa95Type } from '../model/gen/streampipes-model';
 
 @Injectable({ providedIn: 'root' })
 export class Isa95TypeService {

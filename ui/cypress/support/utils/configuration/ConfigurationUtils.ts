@@ -33,10 +33,12 @@ export class ConfigurationUtils {
         cy.visit('#/configuration/labels');
     }
 
-    public static addNewLabel(name: string, description: string) {
+    public static addNewLabel(name: string, description: string = '') {
         cy.dataCy('new-label-button').click();
-        cy.dataCy('label-name').type(name);
-        cy.dataCy('label-description').type(description);
+        cy.dataCy('label-name').clear().type(name);
+        if (description !== '') {
+            cy.dataCy('label-description').type(description);
+        }
         cy.dataCy('save-label-button').click();
     }
 

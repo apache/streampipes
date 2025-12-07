@@ -16,13 +16,27 @@
  *
  */
 
-import { ActivatedRouteSnapshot } from '@angular/router';
+import {
+    ActivatedRouteSnapshot,
+    CanActivate,
+    CanActivateChild,
+    GuardResult,
+    MaybeAsync,
+    RouterStateSnapshot,
+} from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class PageAuthGuard {
+export class PageAuthGuard implements CanActivate, CanActivateChild {
     constructor(private authService: AuthService) {}
+
+    canActivate(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot,
+    ): MaybeAsync<GuardResult> {
+        return this.canActivateChild(route);
+    }
 
     canActivateChild(activatedRouteSnapshot: ActivatedRouteSnapshot): boolean {
         const privileges: string[] = activatedRouteSnapshot.data.privileges;

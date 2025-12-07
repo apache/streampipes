@@ -20,8 +20,9 @@ package org.apache.streampipes.sinks.internal.jvm.notification;
 
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.Notification;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
@@ -29,10 +30,10 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.pe.shared.PlaceholderExtractor;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
 import java.util.Date;
@@ -52,9 +53,8 @@ public class InternalStreamPipesNotificationSink extends StreamPipesNotification
 
 
   @Override
-  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext context) throws
-                                                                                   SpRuntimeException {
-    super.onInvocation(parameters, context);
+  public void onPipelineStarted(IDataSinkParameters parameters, EventSinkRuntimeContext context) {
+    super.onPipelineStarted(parameters, context);
     this.title = parameters.extractor()
                            .singleValueParameter(TITLE_KEY, String.class);
     this.content = parameters.extractor()
@@ -88,8 +88,19 @@ public class InternalStreamPipesNotificationSink extends StreamPipesNotification
 
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
 
+  }
+
+  @Override
+  public IDataSinkConfiguration declareConfig() {
+    var builder = declareModelWithoutSilentPeriod();
+    addSilentPeriodParameter(builder);
+
+    return DataSinkConfiguration.create(
+        InternalStreamPipesNotificationSink::new,
+        builder.build()
+    );
   }
 
   @Override

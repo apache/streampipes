@@ -19,17 +19,19 @@
 package org.apache.streampipes.sinks.notifications.jvm.slack;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -56,6 +58,17 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
   private String originalMessage;
 
   @Override
+  public IDataSinkConfiguration declareConfig() {
+    var builder = declareModelWithoutSilentPeriod();
+    addSilentPeriodParameter(builder);
+
+    return DataSinkConfiguration.create(
+        SlackNotificationSink::new,
+        builder.build()
+    );
+  }
+
+  @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
     return DataSinkBuilder
         .create(SLACK_NOTIFICATION_SINK_ID, 1)
@@ -74,9 +87,9 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    super.onInvocation(parameters, runtimeContext);
+  public void onPipelineStarted(IDataSinkParameters parameters,
+                                EventSinkRuntimeContext runtimeContext) {
+    super.onPipelineStarted(parameters, runtimeContext);
     var extractor = parameters.extractor();
 
     userChannel = extractor.singleValueParameter(RECEIVER, String.class);
@@ -124,7 +137,7 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     try {
       this.session.disconnect();
     } catch (IOException e) {

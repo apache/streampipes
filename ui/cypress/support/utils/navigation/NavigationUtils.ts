@@ -20,7 +20,7 @@ export class NavigationUtils {
     public static readonly PIPELINES = 'pipelines';
     public static readonly CONNECT = 'connect';
     public static readonly DASHBOARD = 'dashboard';
-    public static readonly DATA_EXPLORER = 'dataexplorer';
+    public static readonly CHART = 'chart';
     public static readonly ASSET_MANAGEMENT = 'assets';
     public static readonly CONFIGURATION = 'configuration';
 
@@ -28,7 +28,7 @@ export class NavigationUtils {
         NavigationUtils.PIPELINES,
         NavigationUtils.CONNECT,
         NavigationUtils.DASHBOARD,
-        NavigationUtils.DATA_EXPLORER,
+        NavigationUtils.CHART,
         NavigationUtils.ASSET_MANAGEMENT,
         NavigationUtils.CONFIGURATION,
     ];

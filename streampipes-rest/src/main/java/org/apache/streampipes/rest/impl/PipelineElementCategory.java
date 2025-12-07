@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.SpDataStream;
@@ -49,11 +48,6 @@ public class PipelineElementCategory extends AbstractAuthGuardedRestResource {
   @GetMapping(path = "/epa", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<DataProcessorType[]> getEpaCategories() {
     return ok(DataProcessorType.values());
-  }
-
-  @GetMapping(path = "/adapter", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<AdapterType[]> getAdapterCategories() {
-    return ok(AdapterType.values());
   }
 
   @GetMapping(path = "/ec", produces = MediaType.APPLICATION_JSON_VALUE)

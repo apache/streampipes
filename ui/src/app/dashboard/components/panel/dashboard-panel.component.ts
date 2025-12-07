@@ -46,12 +46,12 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { SpDashboardRoutes } from '../../dashboard.routes';
-import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
-import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
-import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
+import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
+import { ChartDetectChangesService } from '../../../chart/services/chart-detect-changes.service';
+import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/dataview-dashboard.model';
 import { TranslateService } from '@ngx-translate/core';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
-import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
+import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -80,26 +80,26 @@ export class DashboardPanelComponent
     _dashboardGrid: DashboardGridViewComponent;
     _dashboardSlide: DashboardSlideViewComponent;
 
-    hasDataExplorerWritePrivileges = false;
+    hasDashboardWritePrivileges = false;
 
     public items: Dashboard[];
 
     dataLakeMeasure: DataLakeMeasure;
-    authSubscription: Subscription;
-    refreshSubscription: Subscription;
+    auth$: Subscription;
+    refresh$: Subscription;
 
-    private detectChangesService = inject(DataExplorerDetectChangesService);
+    private detectChangesService = inject(ChartDetectChangesService);
     private dialog = inject(MatDialog);
     private timeSelectionService = inject(TimeSelectionService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private dashboardService = inject(DashboardService);
     private route = inject(ActivatedRoute);
-    private routingService = inject(DataExplorerRoutingService);
+    private routingService = inject(ChartRoutingService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private translateService = inject(TranslateService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
-    private dataExplorerSharedService = inject(DataExplorerSharedService);
+    private dataExplorerSharedService = inject(ChartSharedService);
 
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
@@ -113,37 +113,39 @@ export class DashboardPanelComponent
 
         this.getDashboard(params.id, startTime, endTime);
 
-        this.authSubscription = this.currentUserService.user$.subscribe(_ => {
-            this.hasDataExplorerWritePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
+        this.auth$ = this.currentUserService.user$.subscribe(_ => {
+            this.hasDashboardWritePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
-            if (queryParams.editMode && this.hasDataExplorerWritePrivileges) {
+            if (queryParams.editMode && this.hasDashboardWritePrivileges) {
                 this.editMode = true;
             }
         });
     }
 
     ngOnDestroy() {
-        this.authSubscription?.unsubscribe();
-        this.refreshSubscription?.unsubscribe();
+        this.auth$?.unsubscribe();
+        this.refresh$?.unsubscribe();
     }
 
     addChartToDashboard(dataViewElementId: string) {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const dashboardItem = {} as ClientDashboardItem;
-        dashboardItem.id = dataViewElementId;
+        dashboardItem.id =
+            this.dataExplorerDashboardService.makeUniqueWidgetId();
         dashboardItem.cols = 3;
         dashboardItem.rows = 4;
+        dashboardItem.w = 3;
+        dashboardItem.h = 4;
         dashboardItem.x = 0;
         dashboardItem.y = 0;
-        dashboardItem.widgetId =
-            this.dataExplorerDashboardService.makeUniqueWidgetId();
+        dashboardItem.dataViewElementId = dataViewElementId;
         this.dashboard.widgets.push(dashboardItem);
         setTimeout(() => {
             if (this.viewMode === 'grid') {
-                this.dashboardGrid.loadWidgetConfig(dataViewElementId, true);
+                this.dashboardGrid.loadWidgetConfig(dashboardItem);
             } else {
-                this.dashboardSlide.loadWidgetConfig(dataViewElementId, true);
+                this.dashboardSlide.loadWidgetConfig(dashboardItem);
             }
         });
     }
@@ -179,11 +181,7 @@ export class DashboardPanelComponent
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {
-        this.routingService.navigateToDataView(
-            true,
-            widgetModel.elementId,
-            true,
-        );
+        this.routingService.navigateToChart(true, widgetModel.elementId, true);
     }
 
     removeChartFromDashboard(widgetIndex: number) {
@@ -231,7 +229,7 @@ export class DashboardPanelComponent
                 if (resp.ok) {
                     const compositeDashboard = resp.body;
                     compositeDashboard.dashboard.widgets.forEach(w => {
-                        w.widgetId ??=
+                        w.id ??=
                             this.dataExplorerDashboardService.makeUniqueWidgetId();
                     });
                     this.dashboard = compositeDashboard.dashboard;
@@ -329,14 +327,14 @@ export class DashboardPanelComponent
 
     modifyRefreshInterval(liveSettings: DashboardLiveSettings): void {
         this.dashboard.dashboardLiveSettings = liveSettings;
-        this.refreshSubscription?.unsubscribe();
+        this.refresh$?.unsubscribe();
         if (this.dashboard.dashboardLiveSettings.refreshModeActive) {
             this.createQuerySubscription();
         }
     }
 
     createQuerySubscription() {
-        this.refreshSubscription = timer(
+        this.refresh$ = timer(
             0,
             this.dashboard.dashboardLiveSettings.refreshIntervalInSeconds *
                 1000,

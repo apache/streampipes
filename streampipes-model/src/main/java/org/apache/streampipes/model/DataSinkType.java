@@ -48,8 +48,8 @@ public enum DataSinkType {
   }
 
   @JsonCreator
-  public static AdapterType fromString(JsonNode json) {
-    return AdapterType.valueOf(json.get("code").asText());
+  public static DataSinkType fromString(JsonNode json) {
+    return DataSinkType.valueOf(json.get("code").asText());
   }
 
   public String getCode() {

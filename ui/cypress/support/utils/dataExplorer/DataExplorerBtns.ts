@@ -24,10 +24,18 @@ export class DataExplorerBtns {
     public static saveDataViewButton() {
         return cy.dataCy('save-data-view-btn', { timeout: 10000 });
     }
+    public static confirmSave() {
+        return cy.dataCy('confirm-delete', { timeout: 10000 });
+    }
 
-    public static saveDashboard() {
+    public static saveDataViewBtn() {
         return cy.dataCy('save-data-view');
     }
+
+    public static saveDashboardBtn() {
+        return cy.dataCy('save-dashboard-btn');
+    }
+
     public static saveChartsToAssetBtn() {
         return cy
             .dataCy('add-to-Asset-data-view-btn', { timeout: 10000 })
@@ -63,8 +71,16 @@ export class DataExplorerBtns {
         return cy.dataCy('remove-' + dataViewName);
     }
 
+    public static createChartBtn() {
+        return cy.dataCy('create-chart-button');
+    }
+
     public static editDashboardBtn(dashboardName) {
         return cy.dataCy('edit-dashboard-' + dashboardName);
+    }
+
+    public static viewDashboardBtn(dashboardName) {
+        return cy.dataCy('view-dashboard-' + dashboardName);
     }
 
     public static editDashboardSettingsBtn(dashboardName) {

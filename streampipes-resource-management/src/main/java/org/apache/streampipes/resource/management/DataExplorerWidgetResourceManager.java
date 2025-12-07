@@ -21,7 +21,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.storage.api.CRUDStorage;
 
-public class DataExplorerWidgetResourceManager extends AbstractCRUDResourceManager<DataExplorerWidgetModel> {
+public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataExplorerWidgetModel> {
 
   private final DataExplorerResourceManager dashboardManager;
 
@@ -39,7 +39,7 @@ public class DataExplorerWidgetResourceManager extends AbstractCRUDResourceManag
 
   private void deleteDataViewsFromDashboard(String widgetElementId) {
     dashboardManager.findAll().stream()
-        .filter(dashboard -> dashboard.getWidgets().removeIf(w -> w.getId().equals(widgetElementId)))
+        .filter(dashboard -> dashboard.getWidgets().removeIf(w -> w.getDataViewElementId().equals(widgetElementId)))
         .forEach(dashboardManager::update);
   }
 }

@@ -19,7 +19,6 @@
 package org.apache.streampipes.extensions.connectors.plc.adapter.migration.config;
 
 import org.apache.streampipes.extensions.connectors.plc.adapter.modbus.Plc4xModbusAdapter;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -43,7 +42,6 @@ public class Plc4xModbusAdapterVersionedConfig {
     return AdapterConfigurationBuilder.create(ID, 0, () -> new Plc4xModbusAdapter(null))
                                       .withLocales(Locales.EN)
                                       .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-                                      .withCategory(AdapterType.Manufacturing)
                                       .requiredTextParameter(Labels.withId(PLC_IP))
                                       .requiredTextParameter(Labels.withId(PLC_PORT))
                                       .requiredTextParameter(Labels.withId(PLC_NODE_ID))

@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
@@ -24,32 +24,34 @@
                 fxLayout="row"
                 class="sp-tab-bg"
             >
-                <div
-                    fxLayoutAlign="start center"
-                    class="form-field-small"
-                    *ngIf="availableTemplates && availableTemplates.length > 0"
-                >
-                    <mat-form-field
-                        class="form-field"
-                        color="accent"
-                        appearance="outline"
-                    >
-                        <mat-label>{{ 'Use template' | translate }}</mat-label>
-                        <mat-select
-                            (selectionChange)="loadTemplate($event)"
-                            [(value)]="selectedTemplate"
-                            data-cy="use-template"
+                @if (availableTemplates && availableTemplates.length > 0) {
+                    <div fxLayoutAlign="start center" class="form-field-small">
+                        <mat-form-field
+                            class="form-field"
+                            color="accent"
+                            appearance="outline"
                         >
-                            <mat-option>--</mat-option>
-                            <mat-option
-                                [value]="template"
-                                *ngFor="let template of availableTemplates"
+                            <mat-label>{{
+                                'Use template' | translate
+                            }}</mat-label>
+                            <mat-select
+                                (selectionChange)="loadTemplate($event)"
+                                [(value)]="selectedTemplate"
+                                data-cy="use-template"
                             >
-                                {{ template.templateName }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
+                                <mat-option>--</mat-option>
+                                @for (
+                                    template of availableTemplates;
+                                    track template
+                                ) {
+                                    <mat-option [value]="template">
+                                        {{ template.templateName }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                }
                 <div fxFlex fxLayout="row" fxLayoutAlign="end center">
                     <mat-slide-toggle
                         [(ngModel)]="showDocumentation"
@@ -69,142 +71,165 @@
             </div>
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex="{{ _showDocumentation ? 50 : 100 }}">
-                    <div fxLayout="column" *ngIf="!templateMode">
-                        <div
-                            fxFlex="100"
-                            fxLayout="column"
-                            class="customize-section p-15"
-                        >
-                            <sp-input-schema-panel
-                                [inputStreams]="
-                                    cachedPipelineElement.inputStreams
-                                "
+                    @if (!templateMode) {
+                        <div fxLayout="column">
+                            <div
+                                fxFlex="100"
+                                fxLayout="column"
+                                class="customize-section p-15"
                             >
-                            </sp-input-schema-panel>
-                            <form [formGroup]="parentForm" fxFlex="100">
-                                <sp-app-static-property
-                                    *ngFor="
-                                        let config of cachedPipelineElement.staticProperties
-                                    "
-                                    [staticProperty]="config"
-                                    [pipelineElement]="cachedPipelineElement"
-                                    [displayRecommended]="displayRecommended"
-                                    [staticProperties]="
-                                        cachedPipelineElement.staticProperties
-                                    "
-                                    [eventSchemas]="eventSchemas"
-                                    [parentForm]="parentForm"
-                                    [fieldName]="config.internalName"
-                                    [completedConfigurations]="
-                                        completedConfigurations
-                                    "
-                                    (completedConfigurationsEmitter)="
-                                        updateCompletedConfiguration($event)
+                                <sp-input-schema-panel
+                                    [inputStreams]="
+                                        cachedPipelineElement.inputStreams
                                     "
                                 >
-                                </sp-app-static-property>
-                                <div *ngIf="isDataProcessor">
-                                    <sp-output-strategy
-                                        *ngFor="
-                                            let outputStrategy of cachedPipelineElement.outputStrategies
-                                        "
-                                        [parentForm]="parentForm"
-                                        [outputStrategy]="outputStrategy"
-                                        [selectedElement]="
-                                            cachedPipelineElement
-                                        "
-                                    >
-                                    </sp-output-strategy>
-                                </div>
-                            </form>
+                                </sp-input-schema-panel>
+                                <form [formGroup]="parentForm" fxFlex="100">
+                                    @for (
+                                        config of cachedPipelineElement.staticProperties;
+                                        track config
+                                    ) {
+                                        <sp-app-static-property
+                                            [staticProperty]="config"
+                                            [pipelineElement]="
+                                                cachedPipelineElement
+                                            "
+                                            [displayRecommended]="
+                                                displayRecommended
+                                            "
+                                            [staticProperties]="
+                                                cachedPipelineElement.staticProperties
+                                            "
+                                            [eventSchemas]="eventSchemas"
+                                            [parentForm]="parentForm"
+                                            [fieldName]="config.internalName"
+                                            [completedConfigurations]="
+                                                completedConfigurations
+                                            "
+                                            (completedConfigurationsEmitter)="
+                                                updateCompletedConfiguration(
+                                                    $event
+                                                )
+                                            "
+                                        >
+                                        </sp-app-static-property>
+                                    }
+                                    @if (isDataProcessor) {
+                                        <div>
+                                            @for (
+                                                outputStrategy of cachedPipelineElement.outputStrategies;
+                                                track outputStrategy
+                                            ) {
+                                                <sp-output-strategy
+                                                    [parentForm]="parentForm"
+                                                    [outputStrategy]="
+                                                        outputStrategy
+                                                    "
+                                                    [selectedElement]="
+                                                        cachedPipelineElement
+                                                    "
+                                                >
+                                                </sp-output-strategy>
+                                            }
+                                        </div>
+                                    }
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                    <div fxLayout="column" *ngIf="templateMode">
-                        <sp-pipeline-element-template-config
-                            [staticProperties]="
-                                cachedPipelineElement.staticProperties
-                            "
-                            [template]="template"
-                            [templateConfigs]="templateConfigs"
-                            [appId]="cachedPipelineElement.appId"
-                        >
-                        </sp-pipeline-element-template-config>
-                    </div>
+                    }
+                    @if (templateMode) {
+                        <div fxLayout="column">
+                            <sp-pipeline-element-template-config
+                                [staticProperties]="
+                                    cachedPipelineElement.staticProperties
+                                "
+                                [template]="template"
+                                [templateConfigs]="templateConfigs"
+                                [appId]="cachedPipelineElement.appId"
+                            >
+                            </sp-pipeline-element-template-config>
+                        </div>
+                    }
                 </div>
-                <div
-                    fxFlex="50"
-                    *ngIf="showDocumentation"
-                    style="
-                        padding-left: 10px;
-                        border-left: 2px solid rgb(204, 204, 204);
-                    "
-                >
-                    <sp-pipeline-element-documentation
-                        [useStyling]="false"
-                        [appId]="pipelineElement.payload.appId"
-                    ></sp-pipeline-element-documentation>
-                </div>
+                @if (showDocumentation) {
+                    <div
+                        fxFlex="50"
+                        style="
+                            padding-left: 10px;
+                            border-left: 2px solid rgb(204, 204, 204);
+                        "
+                    >
+                        <sp-pipeline-element-documentation
+                            [useStyling]="false"
+                            [appId]="pipelineElement.payload.appId"
+                        ></sp-pipeline-element-documentation>
+                    </div>
+                }
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <div fxLayout="row" *ngIf="!templateMode">
-            <button
-                mat-button
-                mat-flat-button
-                color="accent"
-                (click)="save()"
-                style="margin-right: 10px"
-                [disabled]="!formValid"
-                data-cy="sp-element-configuration-save"
-            >
-                <i class="material-icons">save</i
-                ><span>&nbsp;{{ 'Save' | translate }}</span>
-            </button>
-            <button
-                mat-button
-                mat-flat-button
-                class="mat-basic"
-                (click)="close()"
-                data-cy="cancel-customize"
-            >
-                {{ 'Cancel' | translate }}
-            </button>
-            <div fxFlex></div>
-            <button
-                mat-button
-                mat-flat-button
-                color="accent"
-                [disabled]="!formValid"
-                data-cy="create-template"
-                (click)="triggerTemplateMode()"
-            >
-                <i class="material-icons">add_circle_outline</i
-                ><span>&nbsp;{{ 'Create template' | translate }}</span>
-            </button>
-        </div>
-        <div fxLayout="row" *ngIf="templateMode">
-            <button
-                mat-button
-                mat-flat-button
-                color="accent"
-                (click)="saveTemplate()"
-                style="margin-right: 10px"
-                [disabled]="!formValid"
-                data-cy="save-template"
-            >
-                <i class="material-icons">save</i
-                ><span>&nbsp;{{ 'Save template' | translate }}</span>
-            </button>
-            <button
-                mat-button
-                mat-flat-button
-                class="mat-basic"
-                (click)="cancelTemplateMode()"
-            >
-                {{ 'Cancel' | translate }}
-            </button>
-        </div>
+        @if (!templateMode) {
+            <div fxLayout="row">
+                <button
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    (click)="save()"
+                    style="margin-right: 10px"
+                    [disabled]="!formValid"
+                    data-cy="sp-element-configuration-save"
+                >
+                    <i class="material-icons">save</i
+                    ><span>&nbsp;{{ 'Save' | translate }}</span>
+                </button>
+                <button
+                    mat-button
+                    mat-flat-button
+                    class="mat-basic"
+                    (click)="close()"
+                    data-cy="cancel-customize"
+                >
+                    {{ 'Cancel' | translate }}
+                </button>
+                <div fxFlex></div>
+                <button
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    [disabled]="!formValid"
+                    data-cy="create-template"
+                    (click)="triggerTemplateMode()"
+                >
+                    <i class="material-icons">add_circle_outline</i
+                    ><span>&nbsp;{{ 'Create template' | translate }}</span>
+                </button>
+            </div>
+        }
+        @if (templateMode) {
+            <div fxLayout="row">
+                <button
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    (click)="saveTemplate()"
+                    style="margin-right: 10px"
+                    [disabled]="!formValid"
+                    data-cy="save-template"
+                >
+                    <i class="material-icons">save</i
+                    ><span>&nbsp;{{ 'Save template' | translate }}</span>
+                </button>
+                <button
+                    mat-button
+                    mat-flat-button
+                    class="mat-basic"
+                    (click)="cancelTemplateMode()"
+                >
+                    {{ 'Cancel' | translate }}
+                </button>
+            </div>
+        }
     </div>
 </div>

@@ -30,7 +30,10 @@ describe('Test Table View in Data Explorer', () => {
         /**
          * Prepare tests
          */
-        DataExplorerUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
+        DataExplorerUtils.addDataViewAndTableWidget(
+            'NewWidget',
+            DataExplorerUtils.ADAPTER_NAME,
+        );
 
         // Validate that X lines are available
         DataExplorerWidgetTableUtils.checkAmountOfRows(10);

@@ -165,6 +165,16 @@ export class ConnectBtns {
             .click();
     }
 
+    public static connectSchemaCorrectionValueInput() {
+        return cy.dataCy('connect-schema-correction-value', { timeout: 10000 });
+    }
+
+    public static connectSchemaCorrectionOperatorInput() {
+        return cy.dataCy('connect-schema-correction-operator', {
+            timeout: 10000,
+        });
+    }
+
     public static timestampStringRegex() {
         return cy.dataCy('connect-timestamp-string-regex', { timeout: 10000 });
     }
@@ -183,6 +193,12 @@ export class ConnectBtns {
 
     public static schemaNextBtn() {
         return cy.dataCy('sp-event-schema-next-button');
+    }
+
+    public static semanticTypeInput() {
+        return cy.dataCy('semantic-type', {
+            timeout: 10000,
+        });
     }
 
     // ========================================================================

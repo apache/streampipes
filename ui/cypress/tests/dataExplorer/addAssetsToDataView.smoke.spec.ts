@@ -18,6 +18,7 @@
 
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
 describe('Creates a new adapter with a linked asset', () => {
     const assetName1 = 'TestAsset1';
@@ -27,14 +28,17 @@ describe('Creates a new adapter with a linked asset', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         AssetUtils.goToAssets();
-        AssetUtils.addAndSaveAsset(assetName3);
-        AssetUtils.addAndSaveAsset(assetName2);
-        AssetUtils.addAndSaveAsset(assetName1);
+
+        const asset1 = AssetBuilder.create(assetName1).build();
+        const asset2 = AssetBuilder.create(assetName2).build();
+        const asset3 = AssetBuilder.create(assetName3).build();
+        AssetUtils.addAndSaveAsset(asset3);
+        AssetUtils.addAndSaveAsset(asset2);
+        AssetUtils.addAndSaveAsset(asset1);
     });
 
     it('Add Assets during Chart generation', () => {
         DataExplorerUtils.createDataViewWithAssets([assetName1, assetName2]);
-        AssetUtils.goToAssets();
         AssetUtils.checkAmountOfAssets(3);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
@@ -43,7 +47,6 @@ describe('Creates a new adapter with a linked asset', () => {
 
     it('Edit Assets during Chart generation', () => {
         DataExplorerUtils.createDataViewWithAssets([assetName1, assetName2]);
-        AssetUtils.goToAssets();
         AssetUtils.checkAmountOfAssets(3);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
@@ -58,7 +61,6 @@ describe('Creates a new adapter with a linked asset', () => {
         //Neceassary for Background Task to finish
         cy.wait(500);
 
-        AssetUtils.goToAssets();
         AssetUtils.checkAmountOfAssets(3);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);

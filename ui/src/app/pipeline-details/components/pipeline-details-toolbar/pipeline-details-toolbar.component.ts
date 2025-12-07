@@ -28,6 +28,9 @@ export class PipelineDetailsToolbarComponent {
     autoRefresh: boolean;
 
     @Input()
+    hasPipelineWritePrivileges: boolean;
+
+    @Input()
     previewModeActive: boolean;
 
     @Output()

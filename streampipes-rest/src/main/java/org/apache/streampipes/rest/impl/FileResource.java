@@ -63,7 +63,7 @@ public class FileResource extends AbstractAuthGuardedRestResource {
   @PostMapping(
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_FILE_PRIVILEGE)
   public ResponseEntity<?> storeFile(@RequestPart("file_upload") MultipartFile fileDetail) {
     try {
       FileMetadata metadata =
@@ -86,7 +86,7 @@ public class FileResource extends AbstractAuthGuardedRestResource {
   }
 
   @DeleteMapping(path = "{fileId}")
-  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_FILE_PRIVILEGE)
   public ResponseEntity<Void> deleteFile(@PathVariable("fileId") String fileId) {
     fileManager.deleteFile(fileId);
     return ok();
@@ -114,6 +114,7 @@ public class FileResource extends AbstractAuthGuardedRestResource {
               description = "No file with the given file name could be found")
       }
   )
+  @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
   public ResponseEntity<byte[]> getFile(
       @Parameter(
           in = ParameterIn.PATH,

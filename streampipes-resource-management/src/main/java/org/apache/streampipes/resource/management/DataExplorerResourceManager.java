@@ -27,7 +27,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import java.util.List;
 import java.util.Map;
 
-public class DataExplorerResourceManager extends AbstractCRUDResourceManager<DashboardModel> {
+public class DataExplorerResourceManager extends CrudResourceManager<DashboardModel> {
 
   private final CRUDStorage<DataExplorerWidgetModel> widgetStorage;
   private final IDataLakeMeasureStorage dataLakeMeasureStorage;
@@ -40,7 +40,8 @@ public class DataExplorerResourceManager extends AbstractCRUDResourceManager<Das
 
   public CompositeDashboardModel getCompositeDashboard(String dashboardId) {
     var dashboard = db.getElementById(dashboardId);
-    var widgets = dashboard.getWidgets().stream().map(w -> widgetStorage.getElementById(w.getId())).toList();
+    var widgets = dashboard.getWidgets().stream()
+        .map(w -> widgetStorage.getElementById(w.getDataViewElementId())).toList();
     var dataLakeMeasures = getMeasureNames(widgets).stream().map(dataLakeMeasureStorage::getByMeasureName).toList();
 
     return new CompositeDashboardModel(dashboard, widgets, dataLakeMeasures);

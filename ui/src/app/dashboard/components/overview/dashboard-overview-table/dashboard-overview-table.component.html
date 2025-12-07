@@ -28,9 +28,10 @@
             [rowsClickable]="true"
             [dataSource]="dataSource"
             (rowClicked)="onRowClicked($event)"
+            matSort
         >
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
                     {{ 'Dashboards' | translate }}
                 </th>
                 <td
@@ -48,7 +49,7 @@
             </ng-container>
 
             <ng-container matColumnDef="lastModified">
-                <th mat-header-cell *matHeaderCellDef>
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
                     {{ 'Last modified' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let element">
@@ -68,7 +69,7 @@
             </ng-container>
 
             <ng-container matColumnDef="createdAt">
-                <th mat-header-cell *matHeaderCellDef>
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
                     {{ 'Created' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let element">
@@ -91,6 +92,7 @@
                 <button
                     mat-menu-item
                     (click)="showDashboard(element); $event.stopPropagation()"
+                    [attr.data-cy]="'view-dashboard-' + element.name"
                 >
                     <mat-icon>visibility</mat-icon>
                     <span>{{ 'Show' | translate }}</span>
@@ -135,9 +137,7 @@
                 }
                 <button
                     mat-menu-item
-                    [attr.data-cy]="
-                        'manage-dashboard-permissions-' + element.name
-                    "
+                    data-cy="open-manage-permissions"
                     (click)="showPermissionsDialog(element)"
                 >
                     <mat-icon>share</mat-icon>

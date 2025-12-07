@@ -22,7 +22,6 @@ export class GeneralUtils {
     }
 
     public static openMenuForRow(rowText: string) {
-        cy.log('ROW TEXT', rowText);
         cy.contains('[role="row"], tr, mat-row', rowText) // be flexible on row element
             .scrollIntoView()
             .within(() => {

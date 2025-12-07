@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-11-12 10:22:54.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-04 17:41:18.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -99,7 +99,6 @@ export class VersionedNamedStreamPipesEntity extends NamedStreamPipesEntity {
 
 export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     '@class': 'org.apache.streampipes.model.connect.adapter.AdapterDescription';
-    'category': string[];
     'config': StaticPropertyUnion[];
     'correspondingDataStreamElementId': string;
     /**
@@ -128,9 +127,6 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         }
         const instance = target || new AdapterDescription();
         super.fromData(data, instance);
-        instance.category = __getCopyArrayFn(__identity<string>())(
-            data.category,
-        );
         instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
             data.config,
         );
@@ -652,6 +648,87 @@ export class AssetExportConfiguration {
     }
 }
 
+export class AssetLink {
+    editingDisabled: boolean;
+    linkLabel: string;
+    linkType: string;
+    navigationActive: boolean;
+    queryHint: string;
+    resourceId: string;
+
+    static fromData(data: AssetLink, target?: AssetLink): AssetLink {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new AssetLink();
+        instance.editingDisabled = data.editingDisabled;
+        instance.linkLabel = data.linkLabel;
+        instance.linkType = data.linkType;
+        instance.navigationActive = data.navigationActive;
+        instance.queryHint = data.queryHint;
+        instance.resourceId = data.resourceId;
+        return instance;
+    }
+}
+
+export class AssetLocation {
+    coordinates: LatLng;
+    zoom: number;
+
+    static fromData(
+        data: AssetLocation,
+        target?: AssetLocation,
+    ): AssetLocation {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new AssetLocation();
+        instance.coordinates = LatLng.fromData(data.coordinates);
+        instance.zoom = data.zoom;
+        return instance;
+    }
+}
+
+export class AssetSite {
+    area: string;
+    hasExactLocation: boolean;
+    location: AssetLocation;
+    siteId: string;
+
+    static fromData(data: AssetSite, target?: AssetSite): AssetSite {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new AssetSite();
+        instance.area = data.area;
+        instance.hasExactLocation = data.hasExactLocation;
+        instance.location = AssetLocation.fromData(data.location);
+        instance.siteId = data.siteId;
+        return instance;
+    }
+}
+
+export class AssetType {
+    assetIcon: string;
+    assetIconColor: string;
+    assetTypeCategory: string;
+    assetTypeLabel: string;
+    isa95AssetType: Isa95Type;
+
+    static fromData(data: AssetType, target?: AssetType): AssetType {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new AssetType();
+        instance.assetIcon = data.assetIcon;
+        instance.assetIconColor = data.assetIconColor;
+        instance.assetTypeCategory = data.assetTypeCategory;
+        instance.assetTypeLabel = data.assetTypeLabel;
+        instance.isa95AssetType = data.isa95AssetType;
+        return instance;
+    }
+}
+
 export class CanvasPosition {
     x: number;
     y: number;
@@ -1121,11 +1198,18 @@ export class DashboardEntity implements Storable, SpResource {
 export class DashboardItem {
     cols: number;
     component: string;
+    dataViewElementId: string;
+    h: number;
     id: string;
     name: string;
     rows: number;
     settings: string[];
     timeSettings: { [index: string]: any };
+    w: number;
+    /**
+     * @deprecated since 0.99.0, for removal
+     */
+    widgetId: string;
     x: number;
     y: number;
 
@@ -1139,6 +1223,8 @@ export class DashboardItem {
         const instance = target || new DashboardItem();
         instance.cols = data.cols;
         instance.component = data.component;
+        instance.dataViewElementId = data.dataViewElementId;
+        instance.h = data.h;
         instance.id = data.id;
         instance.name = data.name;
         instance.rows = data.rows;
@@ -1148,6 +1234,8 @@ export class DashboardItem {
         instance.timeSettings = __getCopyObjectFn(__identity<any>())(
             data.timeSettings,
         );
+        instance.w = data.w;
+        instance.widgetId = data.widgetId;
         instance.x = data.x;
         instance.y = data.y;
         return instance;
@@ -2298,6 +2386,21 @@ export class KeepOutputStrategy extends OutputStrategy {
     }
 }
 
+export class LatLng {
+    latitude: number;
+    longitude: number;
+
+    static fromData(data: LatLng, target?: LatLng): LatLng {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new LatLng();
+        instance.latitude = data.latitude;
+        instance.longitude = data.longitude;
+        return instance;
+    }
+}
+
 export class LinkSettings {
     documentationUrl: string;
     showApiDocumentationLinkOnStartScreen: boolean;
@@ -2345,6 +2448,7 @@ export class ListOutputStrategy extends OutputStrategy {
 export class LocationConfig {
     attributionText: string;
     locationEnabled: boolean;
+    mapLayerType: MapLayerType;
     tileServerUrl: string;
 
     static fromData(
@@ -2357,6 +2461,7 @@ export class LocationConfig {
         const instance = target || new LocationConfig();
         instance.attributionText = data.attributionText;
         instance.locationEnabled = data.locationEnabled;
+        instance.mapLayerType = data.mapLayerType;
         instance.tileServerUrl = data.tileServerUrl;
         return instance;
     }
@@ -3379,6 +3484,8 @@ export class ResourceMetadata {
 export class RetentionExportConfig {
     exportConfig: ExportConfig;
     exportProviderId: string;
+    lastExport: string;
+    retentionLog: RetentionLog[];
 
     static fromData(
         data: RetentionExportConfig,
@@ -3390,6 +3497,29 @@ export class RetentionExportConfig {
         const instance = target || new RetentionExportConfig();
         instance.exportConfig = ExportConfig.fromData(data.exportConfig);
         instance.exportProviderId = data.exportProviderId;
+        instance.lastExport = data.lastExport;
+        instance.retentionLog = __getCopyArrayFn(RetentionLog.fromData)(
+            data.retentionLog,
+        );
+        return instance;
+    }
+}
+
+export class RetentionLog {
+    date: string;
+    error: string;
+    name: string;
+    status: boolean;
+
+    static fromData(data: RetentionLog, target?: RetentionLog): RetentionLog {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RetentionLog();
+        instance.date = data.date;
+        instance.error = data.error;
+        instance.name = data.name;
+        instance.status = data.status;
         return instance;
     }
 }
@@ -3702,6 +3832,61 @@ export class SlideToggleStaticProperty extends StaticProperty {
         super.fromData(data, instance);
         instance.defaultValue = data.defaultValue;
         instance.selected = data.selected;
+        return instance;
+    }
+}
+
+export class SpAsset {
+    additionalData: { [index: string]: any };
+    assetDescription: string;
+    assetId: string;
+    assetLinks: AssetLink[];
+    assetName: string;
+    assetSite: AssetSite;
+    assetType: AssetType;
+    assets: SpAsset[];
+    labelIds: string[];
+
+    static fromData(data: SpAsset, target?: SpAsset): SpAsset {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SpAsset();
+        instance.additionalData = __getCopyObjectFn(__identity<any>())(
+            data.additionalData,
+        );
+        instance.assetDescription = data.assetDescription;
+        instance.assetId = data.assetId;
+        instance.assetLinks = __getCopyArrayFn(AssetLink.fromData)(
+            data.assetLinks,
+        );
+        instance.assetName = data.assetName;
+        instance.assetSite = AssetSite.fromData(data.assetSite);
+        instance.assetType = AssetType.fromData(data.assetType);
+        instance.assets = __getCopyArrayFn(SpAsset.fromData)(data.assets);
+        instance.labelIds = __getCopyArrayFn(__identity<string>())(
+            data.labelIds,
+        );
+        return instance;
+    }
+}
+
+export class SpAssetModel extends SpAsset implements Storable {
+    appDocType: string;
+    elementId: string;
+    removable: boolean;
+    rev: string;
+
+    static fromData(data: SpAssetModel, target?: SpAssetModel): SpAssetModel {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SpAssetModel();
+        super.fromData(data, instance);
+        instance.appDocType = data.appDocType;
+        instance.elementId = data.elementId;
+        instance.removable = data.removable;
+        instance.rev = data.rev;
         return instance;
     }
 }
@@ -4306,6 +4491,18 @@ export type EventPropertyUnion =
     | EventPropertyPrimitive;
 
 export type FieldStatus = 'GOOD' | 'BAD' | 'ATTENTION';
+
+export type Isa95Type =
+    | 'PROCESS_CELL'
+    | 'PRODUCTION_UNIT'
+    | 'PRODUCTION_LINE'
+    | 'STORAGE_ZONE'
+    | 'UNIT'
+    | 'WORK_CELL'
+    | 'STORAGE_UNIT'
+    | 'OTHER';
+
+export type MapLayerType = 'TILE' | 'VECTOR';
 
 export type MappingPropertyUnion = MappingPropertyNary | MappingPropertyUnary;
 

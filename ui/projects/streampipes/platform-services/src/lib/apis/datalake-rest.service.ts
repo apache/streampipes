@@ -175,6 +175,13 @@ export class DatalakeRestService {
         return this.http.delete(url);
     }
 
+    runCleanupNow(index: string) {
+        const url = `${this.dataLakeUrl}/${index}/runSyncNow`;
+        const request = new HttpRequest('POST', url, {});
+
+        return this.http.request(request);
+    }
+
     buildDownloadRequest(index: string, queryParams: any) {
         const url = this.dataLakeUrl + '/measurements/' + index + '/download';
         const request = new HttpRequest('GET', url, {

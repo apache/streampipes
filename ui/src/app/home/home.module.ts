@@ -31,6 +31,7 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
 import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -43,6 +44,7 @@ import { RouterModule } from '@angular/router';
         MatListModule,
         PlatformServicesModule,
         SharedUiModule,
+        TranslateModule.forChild(),
         RouterModule.forChild([
             {
                 path: '',

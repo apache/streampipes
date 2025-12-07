@@ -64,14 +64,15 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
     @Input()
     adapterDescription: AdapterDescription;
 
+    @Input()
+    isEditMode: boolean;
+
     isEditable = true;
 
     originalSchema: EventSchema;
     targetSchema: EventSchema = new EventSchema();
     timestampPresent = false;
 
-    @Input()
-    isEditMode;
     refreshedEventSchema = false;
 
     @Output()

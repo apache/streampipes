@@ -30,6 +30,7 @@ import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -74,6 +75,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
       // Document not found, do nothing
     }
     storage.getGenericStorage().create(document);
+    permissionsToStore.add(new PermissionInfo(assetId, SpAssetModel.class));
   }
 
   @Override

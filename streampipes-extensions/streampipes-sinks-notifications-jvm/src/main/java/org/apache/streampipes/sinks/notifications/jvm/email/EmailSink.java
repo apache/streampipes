@@ -20,7 +20,9 @@ package org.apache.streampipes.sinks.notifications.jvm.email;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.mail.SpEmail;
@@ -28,10 +30,10 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.pe.shared.PlaceholderExtractor;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
 import java.util.Collections;
@@ -46,6 +48,17 @@ public class EmailSink extends StreamPipesNotificationSink {
   private String originalContent;
 
   private IStreamPipesClient client;
+
+  @Override
+  public IDataSinkConfiguration declareConfig() {
+    var builder = declareModelWithoutSilentPeriod();
+    addSilentPeriodParameter(builder);
+
+    return DataSinkConfiguration.create(
+        EmailSink::new,
+        builder.build()
+    );
+  }
 
   @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
@@ -64,11 +77,11 @@ public class EmailSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onInvocation(
-      SinkParams parameters,
+  public void onPipelineStarted(
+      IDataSinkParameters parameters,
       EventSinkRuntimeContext runtimeContext
-  ) throws SpRuntimeException {
-    super.onInvocation(parameters, runtimeContext);
+  ) {
+    super.onPipelineStarted(parameters, runtimeContext);
 
     var extractor = parameters.extractor();
     String toEmail = extractor.singleValueParameter(TO_EMAIL_ADRESS, String.class);
@@ -90,7 +103,7 @@ public class EmailSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
 
   }
 }

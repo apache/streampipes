@@ -26,7 +26,6 @@ import {
 @Component({
     selector: 'sp-property-selection',
     templateUrl: './property-selection.component.html',
-    styleUrls: ['./property-selection.component.scss'],
     standalone: false,
 })
 export class PropertySelectionComponent implements OnInit {

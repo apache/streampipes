@@ -45,7 +45,7 @@ public class SpCoreConfiguration {
   private List<ExportProviderSettings> exportProviderSettings;
 
   public SpCoreConfiguration() {
-    this.locationConfig = new LocationConfig(false, "", "");
+    this.locationConfig = new LocationConfig(false, MapLayerType.TILE, "", "");
   }
 
   public String getRev() {

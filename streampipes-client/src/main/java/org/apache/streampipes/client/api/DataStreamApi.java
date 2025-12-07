@@ -79,7 +79,7 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
 
   @Override
   public void update(SpDataStream element) {
-
+    put(getBaseResourcePath().addToPath(URLEncoder.encode(element.getElementId(), StandardCharsets.UTF_8)), element);
   }
 
   @Override

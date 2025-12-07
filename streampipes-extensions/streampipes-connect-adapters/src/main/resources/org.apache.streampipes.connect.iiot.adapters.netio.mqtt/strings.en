@@ -38,7 +38,7 @@ password.title=Password
 password.description=
 
 broker_url.title=Broker URL
-broker_url.description=Example: tcp://test-server.com:1883 (Protocol required. Port required)"
+broker_url.description=Example: tcp://test-server.com:1883 (Protocol required. Port required), , with TLS ssl://test-server.com:8883 (Protocol required. Port required)"
 
 topic.title=Topic
 topic.description=Example: test/topic

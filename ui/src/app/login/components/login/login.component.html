@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 @if (configReady) {
     <sp-auth-box [linkSettings]="loginSettings.linkSettings">
@@ -55,75 +55,86 @@
                         (click)="doLogin()"
                         [disabled]="!parentForm.valid || loading"
                     >
-                        <span *ngIf="loading"
-                            >{{ 'Logging in' | translate }}...</span
-                        >
-                        <span *ngIf="!loading">{{ 'Login' | translate }}</span>
+                        @if (loading) {
+                            <span>{{ 'Logging in' | translate }}...</span>
+                        }
+                        @if (!loading) {
+                            <span>{{ 'Login' | translate }}</span>
+                        }
                     </button>
-                    <mat-spinner
-                        [mode]="'indeterminate'"
-                        [diameter]="20"
-                        *ngIf="loading"
-                        style="margin-top: 10px"
-                    ></mat-spinner>
-                    <div class="md-warn" *ngIf="authenticationFailed">
-                        <h5 class="login-error">
-                            {{
-                                'User not found or incorrect password provided.'
-                                    | translate
-                            }}<br />
-                            {{ 'Please try again' | translate }}
-                        </h5>
-                    </div>
+                    @if (loading) {
+                        <mat-spinner
+                            [mode]="'indeterminate'"
+                            [diameter]="20"
+                            style="margin-top: 10px"
+                        ></mat-spinner>
+                    }
+                    @if (authenticationFailed) {
+                        <div class="md-warn">
+                            <h5 class="login-error">
+                                {{
+                                    'User not found or incorrect password provided.'
+                                        | translate
+                                }}<br />
+                                {{ 'Please try again' | translate }}
+                            </h5>
+                        </div>
+                    }
                     <div fxLayout="row" class="mt-10">
-                        <div *ngIf="loginSettings.allowPasswordRecovery">
-                            <a [routerLink]="['/restore-password']">{{
-                                'Forgot password?' | translate
-                            }}</a>
-                        </div>
-                        <span
-                            style="margin-left: 5px; margin-right: 5px"
-                            *ngIf="
-                                loginSettings.allowSelfRegistration &&
-                                loginSettings.allowPasswordRecovery
-                            "
-                        >
-                            |
-                        </span>
-                        <div *ngIf="loginSettings.allowSelfRegistration">
-                            <a [routerLink]="['/register']">{{
-                                'Create new account' | translate
-                            }}</a>
-                        </div>
+                        @if (loginSettings.allowPasswordRecovery) {
+                            <div>
+                                <a [routerLink]="['/restore-password']">{{
+                                    'Forgot password?' | translate
+                                }}</a>
+                            </div>
+                        }
+                        @if (
+                            loginSettings.allowSelfRegistration &&
+                            loginSettings.allowPasswordRecovery
+                        ) {
+                            <span style="margin-left: 5px; margin-right: 5px">
+                                |
+                            </span>
+                        }
+                        @if (loginSettings.allowSelfRegistration) {
+                            <div>
+                                <a [routerLink]="['/register']">{{
+                                    'Create new account' | translate
+                                }}</a>
+                            </div>
+                        }
                     </div>
-                    <div
-                        fxLayout="column"
-                        class="mt-10"
-                        *ngIf="loginSettings.oAuthSettings?.enabled"
-                    >
-                        <div class="separator">
-                            <span>{{ 'or' | translate }}</span>
+                    @if (loginSettings.oAuthSettings?.enabled) {
+                        <div fxLayout="column" class="mt-10">
+                            <div class="separator">
+                                <span>{{ 'or' | translate }}</span>
+                            </div>
+                            @for (
+                                provider of loginSettings.oAuthSettings
+                                    .supportedProviders;
+                                track provider
+                            ) {
+                                <div fxLayout="column" class="mt-10">
+                                    <button
+                                        mat-flat-button
+                                        data-cy="login-button"
+                                        (click)="
+                                            doOAuthLogin(
+                                                provider.registrationId
+                                            )
+                                        "
+                                    >
+                                        @if (!loading) {
+                                            <span
+                                                >{{ 'Login with' | translate }}
+                                                {{ provider.name }}</span
+                                            >
+                                        }
+                                    </button>
+                                </div>
+                            }
                         </div>
-                        <div
-                            fxLayout="column"
-                            *ngFor="
-                                let provider of loginSettings.oAuthSettings
-                                    .supportedProviders
-                            "
-                            class="mt-10"
-                        >
-                            <button
-                                mat-flat-button
-                                data-cy="login-button"
-                                (click)="doOAuthLogin(provider.registrationId)"
-                            >
-                                <span *ngIf="!loading"
-                                    >{{ 'Login with' | translate }}
-                                    {{ provider.name }}</span
-                                >
-                            </button>
-                        </div>
-                    </div>
+                    }
                 </div>
             </form>
         </div>

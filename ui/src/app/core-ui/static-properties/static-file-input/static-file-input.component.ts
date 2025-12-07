@@ -68,7 +68,7 @@ export class StaticFileInputComponent
     }
 
     ngOnInit() {
-        this.fetchFileMetadata();
+        this.fetchFileMetadata(this.staticProperty.locationPath);
         this.addValidator(
             this.staticProperty.locationPath,
             this.collectValidators(),

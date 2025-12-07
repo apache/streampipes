@@ -19,7 +19,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
-import { GridsterModule } from 'angular-gridster2';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerComponent } from 'ngx-color-picker';
@@ -58,9 +57,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
+import { ChartSharedModule } from '../chart-shared/chart-shared.module';
 import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
-import { DataExplorerPanelCanDeactivateGuard } from '../data-explorer-shared/services/data-explorer-panel.can-deactivate.guard';
+import { ChartPanelCanDeactivateGuard } from '../chart-shared/services/chart-panel-can-deactivate-guard.service';
 import { DashboardToolbarComponent } from './components/panel/dashboard-toolbar/dashboard-toolbar.component';
 import { ChartSelectionPanelComponent } from './components/panel/chart-selection-panel/chart-selection-panel.component';
 import { ChartPreviewComponent } from './components/panel/chart-selection-panel/chart-selection/chart-preview/chart-preview.component';
@@ -99,7 +98,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         CommonModule,
         CoreUiModule,
         MatTabsModule,
-        GridsterModule,
         FlexLayoutModule,
         FormsModule,
         ColorPickerComponent,
@@ -113,7 +111,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         PlatformServicesModule,
         ServicesModule,
         SharedUiModule,
-        DataExplorerSharedModule,
+        ChartSharedModule,
         DashboardSharedModule,
         TranslateModule.forChild(),
         MatProgressSpinnerModule,
@@ -128,12 +126,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
                     {
                         path: ':id',
                         component: DashboardPanelComponent,
-                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
+                        canDeactivate: [ChartPanelCanDeactivateGuard],
                     },
                     {
                         path: ':id/:startTime/:endTime',
                         component: DashboardPanelComponent,
-                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
+                        canDeactivate: [ChartPanelCanDeactivateGuard],
                     },
                 ],
             },

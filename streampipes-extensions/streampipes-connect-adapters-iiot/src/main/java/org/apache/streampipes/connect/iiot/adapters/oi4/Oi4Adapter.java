@@ -35,7 +35,6 @@ import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConsumer;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.messaging.InternalEventProcessor;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -99,13 +98,12 @@ public class Oi4Adapter implements StreamPipesAdapter {
   public IAdapterConfiguration declareConfig() {
 
     return AdapterConfigurationBuilder
-        .create(ID, 0, Oi4Adapter::new)
+        .create(ID, 1, Oi4Adapter::new)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
-            MqttConnectUtils.getAlternativesTwo()
+        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAnonymousAccess(),
+            MqttConnectUtils.getUsernameAccess(), MqttConnectUtils.getClientCertAccess()
         )
         .requiredAlternatives(
             Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_DESCRIPTION),
