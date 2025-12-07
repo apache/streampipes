@@ -27,7 +27,6 @@
 }
 
 .status-container-number {
-    font-size: 36pt;
     font-weight: bold;
 }
 
@@ -36,12 +35,7 @@
     opacity: 0.8;
 }
 
-.status-container-text {
-    font-size: 15pt;
-}
-
 .status-container-create-link {
-    font-size: 12pt;
     color: var(--color-primary);
 }
 
@@ -50,6 +44,5 @@
 }
 
 .status-container-icon {
-    font-size: 50pt;
     color: var(--mat-sys-outline-variant);
 }

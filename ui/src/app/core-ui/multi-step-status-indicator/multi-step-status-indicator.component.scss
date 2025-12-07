@@ -17,10 +17,6 @@
  */
 
 .status-icon {
-    font-size: 22pt;
+    font-size: var(--font-size-3xl);
     color: var(--color-primay);
-}
-
-.message-text {
-    font-size: 12pt;
 }

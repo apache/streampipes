@@ -27,6 +27,7 @@ import {
 import { SpManageAssetLinksDialogComponent } from '../../../../../dialog/manage-asset-links/manage-asset-links-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-details-links',
@@ -49,6 +50,7 @@ export class AssetDetailsLinksComponent implements OnInit {
     constructor(
         private genericStorageService: GenericStorageService,
         private dialogService: DialogService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -67,7 +69,7 @@ export class AssetDetailsLinksComponent implements OnInit {
             SpManageAssetLinksDialogComponent,
             {
                 panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Manage asset links',
+                title: this.translateService.instant('Manage asset links'),
                 width: '50vw',
                 data: {
                     assetLinks: this.asset.assetLinks,
@@ -91,7 +93,9 @@ export class AssetDetailsLinksComponent implements OnInit {
             EditAssetLinkDialogComponent,
             {
                 panelType: PanelType.SLIDE_IN_PANEL,
-                title: createMode ? 'Create ' : 'Update ' + 'asset model',
+                title: createMode
+                    ? this.translateService.instant('Create asset links')
+                    : this.translateService.instant('Update asset links'),
                 width: '50vw',
                 data: {
                     assetLink: assetLink,

@@ -32,7 +32,6 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -110,7 +109,6 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic)
         .requiredTextParameter(Labels.withId(URL_PROPERTY))
         .requiredIntegerParameter(Labels.withId(INTERVAL_PROPERTY))
         .buildConfiguration();

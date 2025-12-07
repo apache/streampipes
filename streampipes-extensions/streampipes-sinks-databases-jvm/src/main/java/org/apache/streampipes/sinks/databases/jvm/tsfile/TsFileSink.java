@@ -19,10 +19,12 @@
 package org.apache.streampipes.sinks.databases.jvm.tsfile;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.AbstractField;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -31,13 +33,12 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.vocabulary.XSD;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import org.apache.tsfile.enums.TSDataType;
 import org.apache.tsfile.exception.write.WriteProcessException;
@@ -55,7 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class TsFileSink extends StreamPipesDataSink {
+public class TsFileSink implements IStreamPipesDataSink {
 
   private static final Logger log = LoggerFactory.getLogger(TsFileSink.class);
   public static final String DEVICE_ID_KEY = "device_id";
@@ -104,29 +105,32 @@ public class TsFileSink extends StreamPipesDataSink {
   private boolean aligned = false;
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.databases.jvm.tsfile", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).
-        category(DataSinkType.DATABASE)
-        .requiredTextParameter(Labels.withId(TSFILE_NAME_KEY))
-        .requiredTextParameter(Labels.withId(DEVICE_ID_KEY))
-        .requiredTextParameter(Labels.withId(TSFILE_GENERATION_DIRECTORY_KRY))
-        .requiredLongParameter(Labels.withId(MAX_TSFILE_SIZE_KEY), 1024L * 1024 * 10)
-        .requiredLongParameter(Labels.withId(MAX_FLUSH_DISK_SIZE_KEY), Long.MAX_VALUE)
-        .requiredSingleValueSelection(Labels.withId(ALIGNED), Options.from("False", "True"))
-        .requiredStream(
-                StreamRequirementsBuilder.create()
-                        .requiredPropertyWithUnaryMapping
-                                (EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_MAPPING_KEY),
-                                PropertyScope.NONE).build()
-        )
-        .build();
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        TsFileSink::new,
+        DataSinkBuilder
+            .create("org.apache.streampipes.sinks.databases.jvm.tsfile", 0)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).
+            category(DataSinkType.DATABASE)
+            .requiredTextParameter(Labels.withId(TSFILE_NAME_KEY))
+            .requiredTextParameter(Labels.withId(DEVICE_ID_KEY))
+            .requiredTextParameter(Labels.withId(TSFILE_GENERATION_DIRECTORY_KRY))
+            .requiredLongParameter(Labels.withId(MAX_TSFILE_SIZE_KEY), 1024L * 1024 * 10)
+            .requiredLongParameter(Labels.withId(MAX_FLUSH_DISK_SIZE_KEY), Long.MAX_VALUE)
+            .requiredSingleValueSelection(Labels.withId(ALIGNED), Options.from("False", "True"))
+            .requiredStream(
+                    StreamRequirementsBuilder.create()
+                            .requiredPropertyWithUnaryMapping
+                                    (EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_MAPPING_KEY),
+                                    PropertyScope.NONE).build()
+            )
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataSinkParameters parameters, EventSinkRuntimeContext runtimeContext) {
     this.tsFileName = parameters.extractor().singleValueParameter(TSFILE_NAME_KEY, String.class);
     this.deviceId = parameters.extractor().singleValueParameter(DEVICE_ID_KEY, String.class);
     this.dirAbsolutePath = parameters.extractor().singleValueParameter(TSFILE_GENERATION_DIRECTORY_KRY, String.class);
@@ -148,7 +152,7 @@ public class TsFileSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onDetach() {
+  public void onPipelineStopped() {
     try {
       if (tsFileWriter != null){
         tsFileWriter.close();

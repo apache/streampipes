@@ -19,5 +19,5 @@
 import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
 export class SpConfigurationRoutes {
-    static BASE: SpBreadcrumbItem = { label: 'Configuration' };
+    static BASE: SpBreadcrumbItem = { label: 'Settings' };
 }

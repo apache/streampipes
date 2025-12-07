@@ -20,7 +20,6 @@ package org.apache.streampipes.sdk.builder.adapter;
 
 
 import org.apache.streampipes.extensions.api.connect.IParser;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import org.junit.jupiter.api.Assertions;
@@ -86,20 +85,6 @@ public class AdapterConfigurationBuilderTest {
         .buildConfiguration();
 
     Assertions.assertEquals(List.of(parser1, parser2), adapterConfiguration.getSupportedParsers());
-  }
-
-  @Test
-  public void withCategory() {
-    var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, 0, null)
-        .withCategory(AdapterType.Manufacturing)
-        .buildConfiguration();
-
-    var actual = adapterConfiguration.getAdapterDescription()
-                                     .getCategory();
-
-    Assertions.assertEquals(1, actual.size());
-    Assertions.assertEquals(AdapterType.Manufacturing.getCode(), actual.get(0));
   }
 
 

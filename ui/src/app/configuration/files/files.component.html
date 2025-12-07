@@ -17,36 +17,38 @@
   -->
 
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'files'">
-    <sp-split-section
-        [title]="'Files' | translate"
-        [subtitle]="
-            'Upload and manage files that are used by adapters or pipeline elements.'
-                | translate
-        "
-    >
-        <div
-            fxLayout="row"
-            fxLayoutAlign="start start"
-            fxLayoutGap="10px"
-            section-actions
+    <div class="page-container-padding-inner">
+        <sp-split-section
+            [title]="'Files' | translate"
+            [subtitle]="
+                'Upload and manage files that are used by adapters or pipeline elements.'
+                    | translate
+            "
         >
-            <button
-                mat-flat-button
-                color="accent"
-                (click)="openFileUploadDialog()"
-                data-cy="sp-open-file-upload-dialog"
-                class="mr-10"
+            <div
+                fxLayout="row"
+                fxLayoutAlign="start start"
+                fxLayoutGap="10px"
+                section-actions
             >
-                <i class="material-icons">cloud_upload</i>
-                &nbsp;{{ 'Upload new file' | translate }}
-            </button>
-        </div>
+                <button
+                    mat-flat-button
+                    color="accent"
+                    (click)="openFileUploadDialog()"
+                    data-cy="sp-open-file-upload-dialog"
+                    class="mr-10"
+                >
+                    <i class="material-icons">cloud_upload</i>
+                    &nbsp;{{ 'Upload new file' | translate }}
+                </button>
+            </div>
 
-        <div fxFlex="100" fxLayout="column">
-            <sp-file-overview
-                fxFlex="100"
-                #fileOverviewComponent
-            ></sp-file-overview>
-        </div>
-    </sp-split-section>
+            <div fxFlex="100" fxLayout="column">
+                <sp-file-overview
+                    fxFlex="100"
+                    #fileOverviewComponent
+                ></sp-file-overview>
+            </div>
+        </sp-split-section>
+    </div>
 </sp-basic-nav-tabs>

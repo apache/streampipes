@@ -19,29 +19,72 @@
 import { AssetBtns } from './AssetBtns';
 import { ConnectUtils } from '../connect/ConnectUtils';
 import { GeneralUtils } from '../GeneralUtils';
+import { Asset } from '../../model/Asset';
+import { Isa95Type } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { AssetBuilder } from '../../builder/AssetBuilder';
 
 export class AssetUtils {
     public static goToAssets() {
         cy.visit('#/assets/overview');
-        cy.dataCy('create-new-asset-button').should('be.visible');
+        cy.dataCy('asset-title').should('be.visible');
     }
 
     public static goBackToOverview() {
         AssetBtns.goBackToOverviewBtn().click();
     }
 
-    public static addNewAsset(assetName: string) {
-        AssetBtns.createAssetBtn().click();
-        AssetBtns.assetNameInput().clear();
-        AssetBtns.assetNameInput().type(assetName);
-        AssetBtns.createAssetPanelBtn().click();
-    }
-
-    public static addAndSaveAsset(assetName: string) {
-        AssetUtils.addNewAsset(assetName);
+    public static addAndSaveAsset(asset: Asset) {
+        AssetUtils.addNewAsset(asset);
 
         AssetBtns.saveAssetBtn().click();
         AssetBtns.createAssetBtn().should('be.visible');
+    }
+
+    public static addNewAsset(asset: Asset) {
+        AssetBtns.createAssetBtn().click();
+        AssetBtns.assetNameInput().clear().type(asset.name);
+        AssetBtns.createAssetPanelBtn().click();
+
+        this.selectAssetType(asset.assetType);
+        if (asset.site) {
+            this.selectSite(asset.site);
+        }
+        if (asset.labels.length > 0) {
+            this.addLabels(asset.labels);
+        }
+
+        for (const subAsset of asset.subAssets) {
+            this.clickAddSubAssetBtn(asset.name);
+            this.selectSubAsset('New\\ Asset');
+            AssetBtns.assetNameInput().clear().type(subAsset.name);
+            this.selectAssetType(subAsset.assetType);
+            this.addLabels(subAsset.labels);
+        }
+    }
+
+    public static clickAddSubAssetBtn(assetName: string) {
+        cy.dataCy(`add-asset-${assetName}`).click();
+    }
+
+    public static selectSubAsset(assetName: string) {
+        cy.dataCy(`select-asset-${assetName}`).click();
+    }
+
+    public static addLabels(labels: string[]) {
+        AssetBtns.labelSelect().click();
+        for (const label of labels) {
+            AssetBtns.labelSelectOption(label).click();
+        }
+    }
+
+    public static selectSite(site: string) {
+        AssetBtns.siteSelect().click();
+        AssetBtns.siteSelectOption(site).click();
+    }
+
+    public static selectAssetType(type: Isa95Type) {
+        AssetBtns.assetTypeSelect().click();
+        AssetBtns.assetTypeSelectOption(type).click();
     }
 
     public static openManageAssetLinks() {
@@ -58,13 +101,32 @@ export class AssetUtils {
     }
 
     public static checkAmountOfAssets(amount: number) {
-        cy.dataCy('assets-table').should('have.length', amount);
+        AssetUtils.goToAssets();
+
+        if (amount === 0) {
+            // The wait is needed because the default value is the no-table-entries element.
+            // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
+            cy.wait(1000);
+            cy.dataCy('no-table-entries').should('be.visible');
+        } else {
+            cy.dataCy('assets-table').should('have.length', amount);
+        }
     }
 
     public static checkAmountOfLinkedResources(amount: number) {
         cy.dataCy('linked-resources-list')
             .children()
             .should('have.length', amount);
+    }
+
+    public static checkAssetCanBeEdited(assetName: string) {
+        GeneralUtils.openMenuForRow(assetName);
+        AssetBtns.editAssetBtn(assetName).should('exist');
+    }
+
+    public static checkAssetCanNotBeEdited(assetName: string) {
+        GeneralUtils.openMenuForRow(assetName);
+        AssetBtns.editAssetBtn(assetName).should('not.exist');
     }
 
     public static checkAmountOfAssetsGreaterThan(amount: number) {
@@ -111,7 +173,7 @@ export class AssetUtils {
         // Create new asset from adapters
         AssetUtils.goToAssets();
 
-        AssetUtils.addNewAsset(assetName);
+        AssetUtils.addNewAsset(AssetBuilder.create(assetName).build());
 
         AssetBtns.assetLinksTab().click();
         AssetUtils.openManageAssetLinks();

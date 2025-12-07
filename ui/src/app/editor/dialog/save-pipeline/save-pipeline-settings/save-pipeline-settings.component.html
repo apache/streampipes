@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxLayout="column">
     <form [formGroup]="submitPipelineForm">
@@ -28,49 +28,45 @@
                     name="pipelineName"
                     (blur)="triggerTutorial()"
                 />
-                <mat-error
-                    *ngIf="
-                        submitPipelineForm
-                            .get('pipelineName')
-                            .hasError('required') ||
-                        submitPipelineForm
-                            .get('pipelineName')
-                            .hasError('whiteSpaceOnly')
-                    "
-                >
-                    Pipeline name is required.
-                </mat-error>
-                <mat-error
-                    *ngIf="
-                        submitPipelineForm
-                            .get('pipelineName')
-                            .hasError('leadingOrTrailingWhitespace')
-                    "
-                >
-                    Pipeline name cannot start or end with a space.
-                </mat-error>
-                <mat-error
-                    *ngIf="
-                        submitPipelineForm
-                            .get('pipelineName')
-                            .hasError('minlength') ||
-                        submitPipelineForm
-                            .get('pipelineName')
-                            .hasError('maxlength')
-                    "
-                >
-                    Pipeline name must have between 3 and 50 characters.
-                </mat-error>
-                <mat-error
-                    *ngIf="
-                        submitPipelineForm
-                            .get('pipelineName')
-                            .hasError('invalidName')
-                    "
-                >
-                    Pipeline name can only contain letters, numbers, dashes (-),
-                    and underscores (_).
-                </mat-error>
+                @if (
+                    submitPipelineForm
+                        .get('pipelineName')
+                        .hasError('required') ||
+                    submitPipelineForm
+                        .get('pipelineName')
+                        .hasError('whiteSpaceOnly')
+                ) {
+                    <mat-error> Pipeline name is required. </mat-error>
+                }
+                @if (
+                    submitPipelineForm
+                        .get('pipelineName')
+                        .hasError('leadingOrTrailingWhitespace')
+                ) {
+                    <mat-error>
+                        Pipeline name cannot start or end with a space.
+                    </mat-error>
+                }
+                @if (
+                    submitPipelineForm
+                        .get('pipelineName')
+                        .hasError('minlength') ||
+                    submitPipelineForm.get('pipelineName').hasError('maxlength')
+                ) {
+                    <mat-error>
+                        Pipeline name must have between 3 and 50 characters.
+                    </mat-error>
+                }
+                @if (
+                    submitPipelineForm
+                        .get('pipelineName')
+                        .hasError('invalidName')
+                ) {
+                    <mat-error>
+                        Pipeline name can only contain letters, numbers, dashes
+                        (-), and underscores (_).
+                    </mat-error>
+                }
             </mat-form-field>
             <mat-form-field fxFlex color="accent">
                 <mat-label>Description</mat-label>
@@ -81,33 +77,31 @@
             </mat-form-field>
         </div>
     </form>
-    <div
-        id="overwriteCheckbox"
-        class="checkbox"
-        *ngIf="storageOptions.updateModeActive"
-    >
-        <mat-radio-group
-            [(ngModel)]="storageOptions.updateMode"
-            fxLayout="column"
-            color="accent"
-            class="pipeline-radio-group"
-        >
-            <mat-radio-button
-                [value]="'update'"
-                style="padding-left: 0"
-                data-cy="pipeline-update-mode-update"
+    @if (storageOptions.updateModeActive) {
+        <div id="overwriteCheckbox" class="checkbox">
+            <mat-radio-group
+                [(ngModel)]="storageOptions.updateMode"
+                fxLayout="column"
+                color="accent"
+                class="pipeline-radio-group"
             >
-                Update pipeline
-            </mat-radio-button>
-            <mat-radio-button
-                [value]="'clone'"
-                class="mb-10"
-                data-cy="pipeline-update-mode-clone"
-            >
-                Create new pipeline
-            </mat-radio-button>
-        </mat-radio-group>
-    </div>
+                <mat-radio-button
+                    [value]="'update'"
+                    style="padding-left: 0"
+                    data-cy="pipeline-update-mode-update"
+                >
+                    Update pipeline
+                </mat-radio-button>
+                <mat-radio-button
+                    [value]="'clone'"
+                    class="mb-10"
+                    data-cy="pipeline-update-mode-clone"
+                >
+                    Create new pipeline
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+    }
     <mat-checkbox
         [(ngModel)]="storageOptions.startPipelineAfterStorage"
         color="accent"
@@ -148,12 +142,13 @@
             <mat-expansion-panel-header
                 >Show pipeline configuration as code</mat-expansion-panel-header
             >
-            <sp-configuration-code-panel
-                *ngIf="compactPipeline"
-                [configuration]="compactPipeline"
-                maxHeight="none"
-            >
-            </sp-configuration-code-panel>
+            @if (compactPipeline) {
+                <sp-configuration-code-panel
+                    [configuration]="compactPipeline"
+                    maxHeight="none"
+                >
+                </sp-configuration-code-panel>
+            }
         </mat-expansion-panel>
     </div>
 </div>

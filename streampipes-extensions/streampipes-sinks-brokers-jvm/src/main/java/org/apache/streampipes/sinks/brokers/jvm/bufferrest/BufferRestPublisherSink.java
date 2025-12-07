@@ -21,20 +21,21 @@ package org.apache.streampipes.sinks.brokers.jvm.bufferrest;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.buffer.BufferListener;
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.buffer.MessageBuffer;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import org.apache.commons.io.Charsets;
 import org.apache.http.client.fluent.Request;
@@ -46,7 +47,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class BufferRestPublisherSink extends StreamPipesDataSink implements BufferListener {
+public class BufferRestPublisherSink implements IStreamPipesDataSink, BufferListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(BufferRestPublisherSink.class);
 
@@ -61,26 +62,29 @@ public class BufferRestPublisherSink extends StreamPipesDataSink implements Buff
   private MessageBuffer buffer;
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.brokers.jvm.bufferrest", 0)
-        .category(DataSinkType.NOTIFICATION)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId(
-                KEY + FIELDS), PropertyScope.NONE)
-            .build())
-        .requiredTextParameter(Labels.from(KEY + URI, "REST Endpoint URI", "REST Endpoint URI"))
-        .requiredIntegerParameter(Labels.from(KEY + COUNT, "Buffered Event Count",
-                "Number (1 <= x <= 1000000) of incoming events before sending data on to the given REST endpoint"),
-            1, 1000000, 1)
-        .build();
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        BufferRestPublisherSink::new,
+        DataSinkBuilder
+            .create("org.apache.streampipes.sinks.brokers.jvm.bufferrest", 0)
+            .category(DataSinkType.NOTIFICATION)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId(
+                    KEY + FIELDS), PropertyScope.NONE)
+                .build())
+            .requiredTextParameter(Labels.from(KEY + URI, "REST Endpoint URI", "REST Endpoint URI"))
+            .requiredIntegerParameter(Labels.from(KEY + COUNT, "Buffered Event Count",
+                    "Number (1 <= x <= 1000000) of incoming events before sending data on to the given REST endpoint"),
+                1, 1000000, 1)
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataSinkParameters parameters,
+                                EventSinkRuntimeContext runtimeContext) {
 
     var extractor = parameters.extractor();
     fieldsToSend = extractor.mappingPropertyValues(KEY + FIELDS);
@@ -104,7 +108,7 @@ public class BufferRestPublisherSink extends StreamPipesDataSink implements Buff
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     buffer.removeListener(this);
   }
 

@@ -47,7 +47,7 @@ export class SiteUtils {
         cy.dataCy('sites-location-features-button').click();
     }
 
-    public static createNewSite(name: string, areas: string[]): void {
+    public static createNewSite(name: string, areas: string[] = []): void {
         cy.dataCy(SiteUtils.BUTTON_MANAGE_SITES).click();
         cy.dataCy(SiteUtils.INPUT_SITE_DIALOG_SITE_INPUT, { timeout: 2000 })
             .clear()

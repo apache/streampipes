@@ -19,31 +19,37 @@ package org.apache.streampipes.messaging.mqtt;
 
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
-import org.fusesource.mqtt.client.BlockingConnection;
-import org.fusesource.mqtt.client.MQTT;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3Client;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3ClientBuilder;
 
 public class AbstractMqttConnector {
 
-  protected MQTT mqtt;
-  protected BlockingConnection connection;
-  protected boolean connected = false;
+    protected Mqtt3AsyncClient client;
+    protected boolean connected = false;
 
-  protected final MqttTransportProtocol protocol;
+    protected final MqttTransportProtocol protocol;
 
-  public AbstractMqttConnector(MqttTransportProtocol protocol) {
-    this.protocol = protocol;
-  }
+    public AbstractMqttConnector(MqttTransportProtocol protocol) {
+        this.protocol = protocol;
+    }
 
-  protected void createBrokerConnection(MqttTransportProtocol protocolSettings) throws Exception {
-    this.mqtt = new MQTT();
-    this.mqtt.setHost(makeBrokerUrl(protocolSettings));
-    this.connection = mqtt.blockingConnection();
-    this.connection.connect();
-    this.connected = true;
-  }
+    protected void createBrokerConnection(MqttTransportProtocol protocolSettings) {
+        try {
 
-  private String makeBrokerUrl(MqttTransportProtocol protocolSettings) {
-    return "tcp://" + protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
-  }
+            Mqtt3ClientBuilder builder = Mqtt3Client.builder()
+                    .identifier("mqtt-client-" + System.currentTimeMillis())
+                    .serverHost(protocolSettings.getBrokerHostname())
+                    .serverPort(protocolSettings.getPort());
+
+
+            client = builder.buildAsync();
+            client.connectWith().send().get();
+            connected = true;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Could not connect to MQTT broker: " + e.getMessage(), e);
+        }
+    }
 
 }

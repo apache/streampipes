@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class StreamPipesApiPathTest {
   Map<String, String> queryParameters = new HashMap();
@@ -62,7 +63,12 @@ public class StreamPipesApiPathTest {
         .withQueryParameters(queryParameters)
         .toString();
 
-    Assertions.assertEquals(baseRoute + "?two=v2&one=v1", result);
+    String queryString = result.substring(result.indexOf("?") + 1);
+    Set<String> actual = Set.of(queryString.split("&"));
+
+    Set<String> expected = Set.of("one=v1", "two=v2");
+
+    Assertions.assertEquals(expected, actual);
   }
 
   @Test

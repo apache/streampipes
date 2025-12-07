@@ -36,7 +36,7 @@
 }
 
 .data-format-box {
-    padding: 20px 10px;
+    padding: 1rem 0.5rem;
     border-bottom: solid 1px var(--color-bg-3);
     color: var(--color-default-text);
     display: flex;
@@ -46,7 +46,6 @@
     box-sizing: border-box;
     cursor: move;
     background: var(--color-bg-dialog);
-    font-size: 14px;
 }
 
 .cdk-drag-preview {

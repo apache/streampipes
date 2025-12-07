@@ -1,86 +1,95 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div fxLayout="column">
     <div fxFlex="100" fxLayout="column">
-        <sp-table
-            *ngIf="dataSource"
-            data-cy="security-service-config"
-            [dataSource]="dataSource"
-            [columns]="displayedColumns"
-            matSort
-        >
-            <ng-container matColumnDef="groupName">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    {{ 'Group name' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let group">
-                    <b>{{ group.groupName }}</b>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="groupId">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    {{ 'Group ID' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let group">
-                    {{ group.elementId }}
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="edit">
-                <th mat-header-cell *matHeaderCellDef class="text-right"></th>
-                <td mat-cell *matCellDef="let group">
-                    <div fxLayout="row">
-                        <span
-                            fxFlex
-                            fxFlexOrder="3"
-                            fxLayout="row"
-                            fxLayoutAlign="end center"
-                        >
-                            <div class="mr-15">
-                                <button
-                                    mat-flat-button
-                                    class="mat-basic"
-                                    [matTooltip]="'Edit user' | translate"
-                                    matTooltipPosition="above"
-                                    data-cy="service-edit-btn"
-                                    (click)="editGroup(group)"
-                                >
-                                    <i class="material-icons">edit</i>
-                                    <span>&nbsp;{{ 'Edit' | translate }}</span>
-                                </button>
-                            </div>
-                            <button
-                                class="btn-warn"
-                                mat-flat-button
-                                [matTooltip]="'Delete service' | translate"
-                                matTooltipPosition="above"
-                                data-cy="service-delete-btn"
-                                (click)="deleteGroup(group)"
+        @if (dataSource) {
+            <sp-table
+                data-cy="security-service-config"
+                [dataSource]="dataSource"
+                [columns]="displayedColumns"
+                matSort
+            >
+                <ng-container matColumnDef="groupName">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ 'Group name' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let group">
+                        <b>{{ group.groupName }}</b>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="groupId">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ 'Group ID' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let group">
+                        {{ group.elementId }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="edit">
+                    <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="text-right"
+                    ></th>
+                    <td mat-cell *matCellDef="let group">
+                        <div fxLayout="row">
+                            <span
+                                fxFlex
+                                fxFlexOrder="3"
+                                fxLayout="row"
+                                fxLayoutAlign="end center"
                             >
-                                <i class="material-icons">delete</i>
-                                <span>&nbsp;{{ 'Delete' | translate }}</span>
-                            </button>
-                        </span>
-                    </div>
-                </td>
-            </ng-container>
-        </sp-table>
+                                <div class="mr-15">
+                                    <button
+                                        mat-flat-button
+                                        class="mat-basic"
+                                        [matTooltip]="'Edit user' | translate"
+                                        matTooltipPosition="above"
+                                        data-cy="service-edit-btn"
+                                        (click)="editGroup(group)"
+                                    >
+                                        <i class="material-icons">edit</i>
+                                        <span
+                                            >&nbsp;{{
+                                                'Edit' | translate
+                                            }}</span
+                                        >
+                                    </button>
+                                </div>
+                                <button
+                                    class="btn-warn"
+                                    mat-flat-button
+                                    [matTooltip]="'Delete service' | translate"
+                                    matTooltipPosition="above"
+                                    data-cy="service-delete-btn"
+                                    (click)="deleteGroup(group)"
+                                >
+                                    <i class="material-icons">delete</i>
+                                    <span
+                                        >&nbsp;{{ 'Delete' | translate }}</span
+                                    >
+                                </button>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+            </sp-table>
+        }
     </div>
 </div>

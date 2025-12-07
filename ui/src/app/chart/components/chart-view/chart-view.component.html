@@ -1,0 +1,100 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+@if (dataViewLoaded) {
+    <sp-basic-view [backLinkTarget]="['chart']" [showBackLink]="true">
+        <div
+            nav
+            fxFlex="100"
+            fxLayoutAlign="start center"
+            fxLayout="row"
+            class="pl-10"
+        >
+            <sp-chart-view-toolbar
+                [timeSettings]="timeSettings"
+                [editMode]="editMode"
+                [configuredWidget]="dataView"
+                (downloadFileEmitter)="downloadDataAsFile()"
+                (updateDateRangeEmitter)="updateDateRange($event)"
+                (saveDataViewEmitter)="saveDataView()"
+                (discardDataViewEmitter)="discardChanges()"
+                (addToAssetEmitter)="addAssetDialog()"
+                fxFlex="100"
+            >
+            </sp-chart-view-toolbar>
+        </div>
+        <div fxFlex="100" fxLayout="column">
+            @if (chartNotFound) {
+                <sp-warning-box>
+                    {{ 'The desired chart was not found!' | translate }}
+                </sp-warning-box>
+            } @else {
+                <mat-drawer-container
+                    class="designer-panel-container h-100 dashboard-grid"
+                >
+                    <mat-drawer
+                        [opened]="editMode"
+                        [style.width.px]="drawerWidth"
+                        mode="side"
+                        position="end"
+                        class="designer-panel"
+                    >
+                        <sp-sidebar-resize
+                            [minWidth]="450"
+                            [maxWidth]="1000"
+                            (widthChanged)="onWidthChanged($event)"
+                        >
+                            <div fxLayout="column" fxFlex="100">
+                                <sp-chart-designer-panel
+                                    [currentlyConfiguredWidget]="dataView"
+                                    [dataLakeMeasure]="dataLakeMeasure"
+                                    (addWidgetEmitter)="onAddWidget($event)"
+                                    fxFlex="100"
+                                >
+                                </sp-chart-designer-panel>
+                            </div>
+                        </sp-sidebar-resize>
+                    </mat-drawer>
+                    <mat-drawer-content class="h-100 dashboard-grid">
+                        <div #panel fxFlex="100" fxLayout="column">
+                            @if (
+                                dataView &&
+                                dataView.dataConfig?.sourceConfigs?.length > 0
+                            ) {
+                                <sp-chart-container
+                                    fxFlex
+                                    [dataViewMode]="true"
+                                    [editMode]="editMode"
+                                    [configuredWidget]="dataView"
+                                    [timeSettings]="timeSettings"
+                                    [observableGenerator]="observableGenerator"
+                                    [dataLakeMeasure]="
+                                        dataView.dataConfig.sourceConfigs[0]
+                                            .measure
+                                    "
+                                    (startEditModeEmitter)="editDataView()"
+                                >
+                                </sp-chart-container>
+                            }
+                        </div>
+                    </mat-drawer-content>
+                </mat-drawer-container>
+            }
+        </div>
+    </sp-basic-view>
+}

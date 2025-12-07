@@ -124,6 +124,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.assetBrowserService.resetFilters();
         this.assetBrowserDataSub?.unsubscribe();
         this.expandedSub?.unsubscribe();
     }

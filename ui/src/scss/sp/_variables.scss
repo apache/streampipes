@@ -26,7 +26,19 @@ $sp-color-sink: #3f51b5;
 $sp-color-error: #b71c1c;
 
 :root {
-    --mat-sys-body-medium-size: 10pt;
+    --mat-sys-body-large-size: var(--font-size-md);
+    --mat-sys-body-medium-size: var(--font-size-sm);
+    --mat-sys-body-small-size: var(--font-size-xs);
+
+    --mat-sys-label-large-size: var(--font-size-sm);
+    --mat-sys-label-medium-size: var(--font-size-xs);
+    --mat-sys-label-small-size: var(--font-size-2xs);
+
+    --mat-sys-title-large-size: var(--font-size-2xl);
+    --mat-sys-title-medium-size: var(--font-size-md);
+    --mat-sys-title-small-size: var(--font-size-sm);
+
+    --fg-muted: color-mix(in oklab, currentColor 60%, transparent);
 
     --color-data-view: rgb(122, 206, 227);
     --color-dashboard: rgb(76, 115, 164);

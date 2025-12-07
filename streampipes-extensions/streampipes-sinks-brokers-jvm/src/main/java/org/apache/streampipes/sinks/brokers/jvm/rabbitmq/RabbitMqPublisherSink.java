@@ -20,24 +20,25 @@ package org.apache.streampipes.sinks.brokers.jvm.rabbitmq;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.pe.shared.PlaceholderExtractor;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RabbitMqPublisherSink extends StreamPipesDataSink {
+public class RabbitMqPublisherSink implements IStreamPipesDataSink {
 
   private static final Logger LOG = LoggerFactory.getLogger(RabbitMqPublisherSink.class);
   private static final String TOPIC_KEY = "topic";
@@ -54,27 +55,31 @@ public class RabbitMqPublisherSink extends StreamPipesDataSink {
 
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rabbitmq", 0)
-        .category(DataSinkType.MESSAGING)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
-        .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
-        .requiredIntegerParameter(Labels.withId(PORT_KEY), 5672)
-        .requiredTextParameter(Labels.withId(USER_KEY), false, false)
-        .requiredTextParameter(Labels.withId(EXCHANGE_NAME_KEY), false, false)
-        .requiredSecret(Labels.withId(PASSWORD_KEY))
-        .build();
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        RabbitMqPublisherSink::new,
+        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rabbitmq", 0)
+            .category(DataSinkType.MESSAGING)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredProperty(EpRequirements.anyProperty())
+                .build())
+            .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
+            .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
+            .requiredIntegerParameter(Labels.withId(PORT_KEY), 5672)
+            .requiredTextParameter(Labels.withId(USER_KEY), false, false)
+            .requiredTextParameter(Labels.withId(EXCHANGE_NAME_KEY), false, false)
+            .requiredSecret(Labels.withId(PASSWORD_KEY))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(
+      IDataSinkParameters parameters,
+      EventSinkRuntimeContext runtimeContext) {
 
     var extractor = parameters.extractor();
     this.dataFormatDefinition = new JsonDataFormatDefinition();
@@ -109,7 +114,7 @@ public class RabbitMqPublisherSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     publisher.cleanup();
   }
 }

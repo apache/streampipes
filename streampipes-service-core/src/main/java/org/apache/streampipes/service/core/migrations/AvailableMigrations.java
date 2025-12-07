@@ -20,7 +20,6 @@
 package org.apache.streampipes.service.core.migrations;
 
 import org.apache.streampipes.service.core.migrations.v070.CreateAssetLinkTypeMigration;
-import org.apache.streampipes.service.core.migrations.v070.CreateDefaultAssetMigration;
 import org.apache.streampipes.service.core.migrations.v070.CreateFileAssetTypeMigration;
 import org.apache.streampipes.service.core.migrations.v090.UpdateUsernameViewMigration;
 import org.apache.streampipes.service.core.migrations.v093.AdapterMigration;
@@ -34,6 +33,8 @@ import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinksMigr
 import org.apache.streampipes.service.core.migrations.v099.AddAssetManagementViewMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
+import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
+import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddDataLakePipelineTemplateMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddLinkSettingsMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddRolesToUserDbMigration;
@@ -49,7 +50,6 @@ public class AvailableMigrations {
   public List<Migration> getAvailableMigrations() {
     return Arrays.asList(
         new CreateAssetLinkTypeMigration(),
-        new CreateDefaultAssetMigration(),
         new CreateFileAssetTypeMigration(),
         new UpdateUsernameViewMigration(),
         new AdapterMigration(),
@@ -68,7 +68,9 @@ public class AvailableMigrations {
         new FixImportedPermissionsMigration(),
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
-        new CreateAssetPermissionMigration()
+        new CreateAssetPermissionMigration(),
+        new RemoveObsoletePrivilegesMigration(),
+        new UniqueDashboardIdMigration()
     );
   }
 }

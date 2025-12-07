@@ -1,0 +1,171 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:root {
+    --font-size-base: 1rem;
+    --font-default: Roboto-Regular, Arial, sans-serif;
+    --font-emphasized: Roboto, Arial, sans-serif;
+
+    /* Fluid font sizes using clamp(min, fluid, max) */
+    --font-size-2xs: clamp(0.65rem, 0.63rem + 0.08vw, 0.7rem); /* ~10–11px */
+    --font-size-xs: clamp(
+        0.72rem,
+        0.69rem + 0.08vw,
+        0.78rem
+    ); /* ~11.5–12.5px */
+    --font-size-sm: clamp(0.83rem, 0.79rem + 0.12vw, 0.9rem); /* ~13–14.5px */
+    --font-size-md: clamp(0.96rem, 0.92rem + 0.16vw, 1.05rem); /* ~15–17px */
+    --font-size-lg: clamp(1.08rem, 1.02rem + 0.22vw, 1.2rem); /* ~17–19px */
+    --font-size-xl: clamp(1.22rem, 1.14rem + 0.3vw, 1.4rem); /* ~19–22px */
+    --font-size-2xl: clamp(1.35rem, 1.28rem + 0.38vw, 1.7rem); /* ~22–27px */
+    --font-size-3xl: clamp(1.7rem, 1.55rem + 0.55vw, 2.1rem); /* ~27–34px */
+    --font-size-4xl: clamp(2.05rem, 1.85rem + 0.75vw, 2.7rem); /* ~33–43px */
+    --font-size-5xl: clamp(2.5rem, 2.25rem + 0.95vw, 3.25rem); /* ~40–52px */
+
+    /**
+  Default Angular Material typography scale mapping:
+  (for reference only; not used directly)
+
+  mat-sys-body-large-size: 1rem; md
+  mat-sys-body-medium-size: 0.875rem; sm
+  mat-sys-body-small-size: 0.75rem; xs
+
+  mat-sys-label-large-size: 0.875rem;  sm
+  mat-sys-label-medium-size: 0.75rem; xs
+  mat-sys-label-small-size: 0.688rem; <xs
+
+
+  mat-sys-title-large-size: 1.375rem; 2xl
+  mat-sys-title-medium-size: 1rem; md
+  mat-sys-title-small-size: 0.875rem; sm
+
+   */
+
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.4;
+    --line-height-relaxed: 1.6;
+
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+}
+
+.text-xs {
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-normal);
+}
+
+.text-sm {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+}
+
+.text-md {
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-normal);
+}
+
+.text-lg {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-normal);
+}
+
+.text-xl {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-tight);
+}
+
+.text-2xl {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-tight);
+}
+
+.text-3xl {
+    font-size: var(--font-size-3xl);
+    line-height: var(--line-height-tight);
+}
+
+.text-4xl {
+    font-size: var(--font-size-4xl);
+    line-height: var(--line-height-tight);
+}
+
+.text-5xl {
+    font-size: var(--font-size-5xl);
+    line-height: var(--line-height-tight);
+}
+
+h1 {
+    font-size: var(--font-size-3xl);
+    line-height: var(--line-height-tight);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 0.5em 0;
+}
+
+h2 {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-tight);
+    font-weight: var(--font-weight-semibold);
+    margin: 0 0 0.5em 0;
+}
+
+h3 {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-tight);
+    font-weight: var(--font-weight-semibold);
+    margin: 0 0 0.5em 0;
+}
+
+h4 {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-normal);
+    font-weight: var(--font-weight-medium);
+    margin: 0 0 0.5em 0;
+}
+
+h5 {
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-normal);
+    font-weight: var(--font-weight-medium);
+}
+
+h6 {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+    font-weight: var(--font-weight-medium);
+}
+
+p {
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-relaxed);
+    margin: 0 0 1em 0;
+}
+
+.font-bold {
+    font-weight: var(--font-weight-bold);
+}
+
+.font-medium {
+    font-weight: var(--font-weight-medium);
+}
+
+.font-emphasized {
+    font-family: var(--font-emphasized) sans-serif;
+    font-weight: 700;
+}

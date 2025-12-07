@@ -40,6 +40,23 @@
       "valueSpecification": null
     },
     {
+      "@class": "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty",
+      "description": "The number of sensors to simulate",
+      "internalName": "numberOfSensors",
+      "label": "Number of sensors",
+      "optional": false,
+      "staticPropertyType": "FreeTextStaticProperty",
+      "htmlAllowed": false,
+      "htmlFontFormat": false,
+      "mapsTo": null,
+      "multiLine": false,
+      "placeholdersSupported": false,
+      "requiredDatatype": "http://www.w3.org/2001/XMLSchema#integer",
+      "requiredDomainProperty": null,
+      "value": "1",
+      "valueSpecification": null
+    },
+    {
       "@class": "org.apache.streampipes.model.staticproperty.OneOfStaticProperty",
       "description": "Select simulated sensor data to be published",
       "internalName": "selected-simulator-option",
@@ -64,6 +81,12 @@
           "elementId": "sp:option:KYnhkL",
           "internalName": null,
           "name": "waterlevel",
+          "selected": false
+        },
+        {
+          "elementId": "sp:option:VWXqSG",
+          "internalName": null,
+          "name": "diagnostics",
           "selected": false
         }
       ]

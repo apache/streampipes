@@ -22,6 +22,7 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { AssetBtns } from '../../support/utils/asset/AssetBtns';
+import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
 describe('Test Saving Pipeline with Asset Link', () => {
     const assetName1 = 'Test1';
@@ -30,9 +31,12 @@ describe('Test Saving Pipeline with Asset Link', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         AssetUtils.goToAssets();
-        AssetUtils.addAndSaveAsset(assetName3);
-        AssetUtils.addAndSaveAsset(assetName2);
-        AssetUtils.addAndSaveAsset(assetName1);
+        const asset1 = AssetBuilder.create(assetName1).build();
+        const asset2 = AssetBuilder.create(assetName2).build();
+        const asset3 = AssetBuilder.create(assetName3).build();
+        AssetUtils.addAndSaveAsset(asset3);
+        AssetUtils.addAndSaveAsset(asset2);
+        AssetUtils.addAndSaveAsset(asset1);
 
         // Generate A Pipeline
         const adapterName = 'simulator';

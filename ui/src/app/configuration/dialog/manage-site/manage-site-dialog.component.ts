@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AssetConstants,
@@ -45,10 +45,8 @@ export class ManageSiteDialogComponent implements OnInit {
     clonedSite: AssetSiteDesc;
     createMode = false;
 
-    constructor(
-        private dialogRef: DialogRef<ManageSiteDialogComponent>,
-        private genericStorageService: GenericStorageService,
-    ) {}
+    private dialogRef = inject(DialogRef<ManageSiteDialogComponent>);
+    private genericStorageService = inject(GenericStorageService);
 
     ngOnInit(): void {
         if (this.site !== undefined) {
@@ -67,7 +65,10 @@ export class ManageSiteDialogComponent implements OnInit {
             appDocType: AssetConstants.ASSET_SITES_APP_DOC_NAME,
             _id: undefined,
             label: '',
-            location: { coordinates: { latitude: 0, longitude: 0 }, zoom: 10 },
+            location: {
+                coordinates: { latitude: 49.00689, longitude: 8.40365 },
+                zoom: 10,
+            },
             areas: [],
         };
         this.createMode = true;

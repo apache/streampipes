@@ -1,0 +1,421 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div fxFlex="100" fxLayout="column" class="form-field-small">
+    <mat-accordion fxFlex="100" class="data-source-selection-panel">
+        @for (
+            sourceConfig of dataConfig.sourceConfigs;
+            track sourceConfig;
+            let i = $index
+        ) {
+            <mat-expansion-panel
+                [expanded]="step === 0"
+                hideToggle
+                class="expansion-panel"
+            >
+                <mat-expansion-panel-header class="expansion-panel-header">
+                    <div fxFlex="100" fxLayout="row">
+                        <span
+                            fxFlex
+                            fxLayoutAlign="start center"
+                            class="text-sm"
+                        >
+                            {{
+                                sourceConfig?.measureName ||
+                                    ('New Data Source' | translate)
+                            }}
+                        </span>
+                        <div fxLayoutAlign="end center">
+                            <button
+                                mat-icon-button
+                                color="accent"
+                                [matTooltip]="'Clone Data Source' | translate"
+                            >
+                                <i
+                                    class="material-icons plus-icon align-btn"
+                                    (click)="cloneSourceConfig(i)"
+                                    >flip_to_front</i
+                                >
+                            </button>
+                            <button
+                                mat-icon-button
+                                color="accent"
+                                [matTooltip]="'Delete Data Source' | translate"
+                                (click)="removeSourceConfig(i)"
+                            >
+                                <i class="material-icons align-btn">delete</i>
+                            </button>
+                        </div>
+                    </div>
+                </mat-expansion-panel-header>
+                <div fxFlex="100" fxLayout="column" class="mt-10">
+                    <sp-configuration-box [title]="'Dataset' | translate">
+                        @if (availableMeasurements.length === 0) {
+                            <div
+                                class="warning-container"
+                                fxLayout="column"
+                                fxLayoutAlign="start stretch"
+                            >
+                                <div
+                                    class="warning"
+                                    fxLayout="row"
+                                    fxLayoutAlign="start center"
+                                >
+                                    <i class="material-icons warning-icon"
+                                        >warning</i
+                                    >
+                                    <b>
+                                        {{
+                                            'No data available! Please connect an adapter or verify your pipeline is running'
+                                                | translate
+                                        }}
+                                    </b>
+                                </div>
+                                <div
+                                    fxFlex
+                                    fxLayout="row"
+                                    fxLayoutAlign="end end"
+                                    fxLayoutGap="0.5rem"
+                                    class="mt-10"
+                                >
+                                    <button
+                                        mat-flat-button
+                                        class="mat-basic small-button"
+                                        (click)="navigateToConnect()"
+                                    >
+                                        {{ 'Connect Adapter' | translate }}
+                                    </button>
+                                    <button
+                                        mat-flat-button
+                                        class="mat-basic small-button"
+                                        (click)="navigateToPipelines()"
+                                    >
+                                        {{ 'Start Pipeline' | translate }}
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        @if (availableMeasurements.length !== 0) {
+                            <mat-form-field
+                                color="accent"
+                                fxFlex="100"
+                                appearance="outline"
+                                subscriptSizing="dynamic"
+                            >
+                                <mat-select
+                                    data-cy="data-explorer-select-data-set"
+                                    [(value)]="sourceConfig.measureName"
+                                    (selectionChange)="
+                                        updateMeasure(
+                                            sourceConfig,
+                                            $event.value
+                                        )
+                                    "
+                                >
+                                    @for (
+                                        measurement of availableMeasurements;
+                                        track measurement
+                                    ) {
+                                        <mat-option
+                                            [value]="measurement.measureName"
+                                        >
+                                            <span class="font-medium text-sm">{{
+                                                measurement.measureName
+                                            }}</span>
+                                        </mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        }
+                    </sp-configuration-box>
+                    @if (sourceConfig.measureName) {
+                        <sp-configuration-box [title]="'Query' | translate">
+                            <div header fxFlex class="header-container">
+                                <span fxFlex></span>
+                                <button
+                                    mat-icon-button
+                                    class="pull-btn-right"
+                                    [matTooltip]="
+                                        expandFieldsDataSource
+                                            ? ('Expand Less' | translate)
+                                            : ('Expand More' | translate)
+                                    "
+                                    (click)="toggleExpandFieldsQuery()"
+                                >
+                                    <mat-icon>{{
+                                        expandFieldsQuery
+                                            ? 'expand_less'
+                                            : 'expand_more'
+                                    }}</mat-icon>
+                                </button>
+                            </div>
+                            <div>
+                                <mat-radio-group
+                                    class="selection-radio-group"
+                                    [(ngModel)]="sourceConfig.queryType"
+                                    (change)="changeDataAggregation()"
+                                >
+                                    @if (
+                                        expandFieldsQuery ||
+                                        sourceConfig.queryType === 'raw'
+                                    ) {
+                                        <div
+                                            class="radio-option-box"
+                                            fxLayout="column"
+                                            [ngClass]="{
+                                                'radio-option-box-accent':
+                                                    sourceConfig.queryType ===
+                                                    'raw'
+                                            }"
+                                        >
+                                            <mat-radio-button
+                                                class="selection-radio-button"
+                                                [value]="'raw'"
+                                            >
+                                                {{ 'Raw' | translate }}
+                                            </mat-radio-button>
+                                            <p class="description">
+                                                {{
+                                                    'Show raw data from your data source.'
+                                                        | translate
+                                                }}
+                                            </p>
+                                            @if (
+                                                sourceConfig.queryType === 'raw'
+                                            ) {
+                                                <div
+                                                    fxLayout="column"
+                                                    class="selection-form-field"
+                                                    fxFlex="100"
+                                                >
+                                                    <div
+                                                        class="form-field-small mt-10"
+                                                    >
+                                                        <mat-form-field
+                                                            fxFlex="100"
+                                                            color="accent"
+                                                            appearance="outline"
+                                                        >
+                                                            <mat-label>
+                                                                <span
+                                                                    >&nbsp;{{
+                                                                        'Limit'
+                                                                            | translate
+                                                                    }}</span
+                                                                >
+                                                            </mat-label>
+                                                            <input
+                                                                [(ngModel)]="
+                                                                    sourceConfig
+                                                                        .queryConfig
+                                                                        .limit
+                                                                "
+                                                                matInput
+                                                                (change)="
+                                                                    triggerDataRefresh()
+                                                                "
+                                                            />
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div
+                                                        class="form-field-small mt-20 mb-20"
+                                                    >
+                                                        <mat-form-field
+                                                            fxFlex="100"
+                                                            color="accent"
+                                                            appearance="outline"
+                                                        >
+                                                            <mat-label>
+                                                                <span
+                                                                    >&nbsp;{{
+                                                                        'Page'
+                                                                            | translate
+                                                                    }}</span
+                                                                >
+                                                            </mat-label>
+                                                            <input
+                                                                [(ngModel)]="
+                                                                    sourceConfig
+                                                                        .queryConfig
+                                                                        .page
+                                                                "
+                                                                matInput
+                                                                (change)="
+                                                                    triggerDataRefresh()
+                                                                "
+                                                            />
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    @if (
+                                        expandFieldsQuery ||
+                                        sourceConfig.queryType === 'aggregated'
+                                    ) {
+                                        <div
+                                            class="radio-option-box"
+                                            fxLayout="column"
+                                            [ngClass]="{
+                                                'radio-option-box-accent':
+                                                    sourceConfig.queryType ===
+                                                    'aggregated'
+                                            }"
+                                        >
+                                            <mat-radio-button
+                                                class="selection-radio-button"
+                                                [value]="'aggregated'"
+                                            >
+                                                {{ 'Aggregated' | translate }}
+                                            </mat-radio-button>
+                                            <p class="description">
+                                                {{
+                                                    'Aggregate raw data by time unit or value.'
+                                                        | translate
+                                                }}
+                                            </p>
+                                            @if (
+                                                sourceConfig.queryType ===
+                                                'aggregated'
+                                            ) {
+                                                <div
+                                                    fxLayout="column"
+                                                    class="selection-form-field"
+                                                    fxFlex="100"
+                                                >
+                                                    <div>
+                                                        <mat-checkbox
+                                                            color="accent"
+                                                            [(ngModel)]="
+                                                                sourceConfig
+                                                                    .queryConfig
+                                                                    .autoAggregate
+                                                            "
+                                                            (change)="
+                                                                triggerDataRefresh()
+                                                            "
+                                                        >
+                                                            {{
+                                                                'Auto-Aggregate'
+                                                                    | translate
+                                                            }}
+                                                        </mat-checkbox>
+                                                    </div>
+                                                    @if (
+                                                        !sourceConfig
+                                                            .queryConfig
+                                                            .autoAggregate
+                                                    ) {
+                                                        <sp-aggregate-configuration
+                                                            class="aggregate-config"
+                                                            [queryConfig]="
+                                                                sourceConfig.queryConfig
+                                                            "
+                                                            [widgetId]="
+                                                                widgetId
+                                                            "
+                                                        >
+                                                        </sp-aggregate-configuration>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    @if (
+                                        expandFieldsQuery ||
+                                        sourceConfig.queryType === 'single'
+                                    ) {
+                                        <div
+                                            class="radio-option-box"
+                                            fxLayout="column"
+                                            [ngClass]="{
+                                                'radio-option-box-accent':
+                                                    sourceConfig.queryType ===
+                                                    'single'
+                                            }"
+                                        >
+                                            <mat-radio-button
+                                                class="selection-radio-button"
+                                                [value]="'single'"
+                                            >
+                                                {{ 'Single' | translate }}
+                                            </mat-radio-button>
+                                            <p class="description">
+                                                {{
+                                                    'Show single data entry.'
+                                                        | translate
+                                                }}
+                                            </p>
+                                        </div>
+                                    }
+                                </mat-radio-group>
+                            </div>
+                        </sp-configuration-box>
+                    }
+                    @if (sourceConfig.queryType && sourceConfig.measure) {
+                        <div fxLayout="column">
+                            <sp-field-selection-panel
+                                #fieldSelectionPanel
+                                [sourceConfig]="sourceConfig"
+                                (initialFieldSelectionEvent)="
+                                    createDefaultWidget()
+                                "
+                            ></sp-field-selection-panel>
+                            <sp-filter-selection-panel
+                                [sourceConfig]="sourceConfig"
+                            ></sp-filter-selection-panel>
+                            <sp-group-selection-panel
+                                #groupSelectionPanel
+                                [sourceConfig]="sourceConfig"
+                            ></sp-group-selection-panel>
+                            <sp-order-selection-panel
+                                [sourceConfig]="sourceConfig"
+                            >
+                            </sp-order-selection-panel>
+                        </div>
+                    }
+                </div>
+            </mat-expansion-panel>
+        }
+    </mat-accordion>
+    <div class="p-10">
+        <button
+            mat-button
+            mat-flat-button
+            color="accent"
+            class="small-button"
+            (click)="addDataSource()"
+            style="margin-right: 10px; margin-bottom: 15px"
+        >
+            {{ 'Add Data Source' | translate }}
+        </button>
+    </div>
+    <div class="p-10">
+        <mat-checkbox [(ngModel)]="dataConfig.ignoreTooMuchDataWarning">
+            {{ 'Deactivate browser overload warning' | translate }}
+        </mat-checkbox>
+        <mat-checkbox
+            [(ngModel)]="dataConfig.ignoreMissingValues"
+            (change)="triggerDataRefresh()"
+            data-cy="data-explorer-ignore-missing-values-checkbox"
+        >
+            {{ 'Ignore Events with missing values' | translate }}
+        </mat-checkbox>
+    </div>
+</div>

@@ -16,14 +16,12 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { Component, inject, OnInit } from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
-import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { SpConnectRoutes } from '../../connect.routes';
 
@@ -34,6 +32,9 @@ import { SpConnectRoutes } from '../../connect.routes';
     standalone: false,
 })
 export class AdapterCatalogComponent implements OnInit {
+    private dataMarketplaceService = inject(AdapterService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+
     adapterDescriptions: AdapterDescription[];
 
     adaptersLoading = true;
@@ -41,18 +42,8 @@ export class AdapterCatalogComponent implements OnInit {
 
     currentFilter: AdapterFilterSettingsModel;
 
-    constructor(
-        private dataMarketplaceService: AdapterService,
-        private shepherdService: ShepherdService,
-        private router: Router,
-        private breadcrumbService: SpBreadcrumbService,
-    ) {}
-
     ngOnInit() {
-        this.breadcrumbService.updateBreadcrumb([
-            SpConnectRoutes.BASE,
-            this.breadcrumbService.removeLink(SpConnectRoutes.CREATE),
-        ]);
+        this.updateBreadcrumb();
         this.getAdapterDescriptions();
     }
 
@@ -75,13 +66,14 @@ export class AdapterCatalogComponent implements OnInit {
         });
     }
 
-    selectAdapter(appId: string) {
-        this.router.navigate(['connect', 'create', appId]).then(() => {
-            this.shepherdService.trigger('new-adapter-selected');
-        });
-    }
-
     applyFilter(filter: AdapterFilterSettingsModel) {
         this.currentFilter = { ...filter };
+    }
+
+    private updateBreadcrumb() {
+        this.breadcrumbService.updateBreadcrumb([
+            SpConnectRoutes.BASE,
+            this.breadcrumbService.removeLink(SpConnectRoutes.CREATE),
+        ]);
     }
 }

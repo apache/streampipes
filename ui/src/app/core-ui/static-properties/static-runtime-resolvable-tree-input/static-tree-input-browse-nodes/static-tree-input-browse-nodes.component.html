@@ -27,8 +27,12 @@
                 color="accent"
                 (click)="largeView = !largeView"
             >
-                <mat-icon *ngIf="!largeView">open_in_full</mat-icon>
-                <mat-icon *ngIf="largeView">close_fullscreen </mat-icon>
+                @if (!largeView) {
+                    <mat-icon>open_in_full</mat-icon>
+                }
+                @if (largeView) {
+                    <mat-icon>close_fullscreen </mat-icon>
+                }
             </button>
         </div>
     </div>
@@ -47,37 +51,41 @@
             [attr.data-cy]="'tree-node-' + node.nodeName"
         >
             <i class="material-icons color-primary pr-5">wifi</i>
-            <i
-                class="material-icons pr-5 icon-button"
-                *ngIf="node.dataNode && !isNodeSelected(node)"
-                (click)="addNode(node)"
-                [attr.data-cy]="'select-' + node.nodeName"
-                [matTooltip]="'Add node' | translate"
-                >add_circle</i
-            >
-            <i
-                class="material-icons pr-5 icon-button"
-                *ngIf="node.dataNode && isNodeSelected(node)"
-                (click)="removeNode(node)"
-                [matTooltip]="'Remove node' | translate"
-                >remove_circle</i
-            >
-            <i
-                class="material-icons pr-5 icon-button"
-                *ngIf="selectedNodeId !== node.internalNodeName"
-                [attr.data-cy]="'show-node-details-' + node.nodeName"
-                (click)="showNodeDetails(node)"
-                [matTooltip]="'Show details' | translate"
-                >visibility</i
-            >
-            <i
-                class="material-icons pr-5 icon-button"
-                *ngIf="selectedNodeId === node.internalNodeName"
-                [attr.data-cy]="'hide-node-details-' + node.nodeName"
-                (click)="hideNodeDetails()"
-                [matTooltip]="'Show details' | translate"
-                >visibility_off</i
-            >
+            @if (node.dataNode && !isNodeSelected(node)) {
+                <i
+                    class="material-icons pr-5 icon-button"
+                    (click)="addNode(node)"
+                    [attr.data-cy]="'select-' + node.nodeName"
+                    [matTooltip]="'Add node' | translate"
+                    >add_circle</i
+                >
+            }
+            @if (node.dataNode && isNodeSelected(node)) {
+                <i
+                    class="material-icons pr-5 icon-button"
+                    (click)="removeNode(node)"
+                    [matTooltip]="'Remove node' | translate"
+                    >remove_circle</i
+                >
+            }
+            @if (selectedNodeId !== node.internalNodeName) {
+                <i
+                    class="material-icons pr-5 icon-button"
+                    [attr.data-cy]="'show-node-details-' + node.nodeName"
+                    (click)="showNodeDetails(node)"
+                    [matTooltip]="'Show details' | translate"
+                    >visibility</i
+                >
+            }
+            @if (selectedNodeId === node.internalNodeName) {
+                <i
+                    class="material-icons pr-5 icon-button"
+                    [attr.data-cy]="'hide-node-details-' + node.nodeName"
+                    (click)="hideNodeDetails()"
+                    [matTooltip]="'Show details' | translate"
+                    >visibility_off</i
+                >
+            }
             <span class="pr-5">{{ node.nodeName }}</span>
         </div>
     </mat-tree-node>
@@ -97,44 +105,45 @@
                 </mat-icon>
             </button>
             <div fxLayoutAlign="start center">
-                <i
-                    class="material-icons color-primary pr-5"
-                    *ngIf="!tree.isExpanded(node)"
-                    >folder</i
-                >
-                <i
-                    class="material-icons color-primary pr-5"
-                    *ngIf="tree.isExpanded(node)"
-                    >folder_open</i
-                >
-                <i
-                    class="material-icons pr-5 icon-button"
-                    *ngIf="tree.isExpanded(node) && hasDataChildren(node)"
-                    [matTooltip]="'Add all direct children' | translate"
-                    (click)="addAllDirectChildren(node)"
-                    >add_circle</i
-                >
-                <i
-                    class="material-icons pr-5 icon-button"
-                    *ngIf="selectedNodeId !== node.internalNodeName"
-                    [attr.data-cy]="'show-node-details-' + node.nodeName"
-                    (click)="showNodeDetails(node)"
-                    [matTooltip]="'Show details' | translate"
-                    >visibility</i
-                >
-                <i
-                    class="material-icons pr-5 icon-button"
-                    *ngIf="selectedNodeId === node.internalNodeName"
-                    [attr.data-cy]="'hide-node-details-' + node.nodeName"
-                    (click)="hideNodeDetails()"
-                    [matTooltip]="'Show details' | translate"
-                    >visibility_off</i
-                >
+                @if (!tree.isExpanded(node)) {
+                    <i class="material-icons color-primary pr-5">folder</i>
+                }
+                @if (tree.isExpanded(node)) {
+                    <i class="material-icons color-primary pr-5">folder_open</i>
+                }
+                @if (tree.isExpanded(node) && hasDataChildren(node)) {
+                    <i
+                        class="material-icons pr-5 icon-button"
+                        [matTooltip]="'Add all direct children' | translate"
+                        (click)="addAllDirectChildren(node)"
+                        >add_circle</i
+                    >
+                }
+                @if (selectedNodeId !== node.internalNodeName) {
+                    <i
+                        class="material-icons pr-5 icon-button"
+                        [attr.data-cy]="'show-node-details-' + node.nodeName"
+                        (click)="showNodeDetails(node)"
+                        [matTooltip]="'Show details' | translate"
+                        >visibility</i
+                    >
+                }
+                @if (selectedNodeId === node.internalNodeName) {
+                    <i
+                        class="material-icons pr-5 icon-button"
+                        [attr.data-cy]="'hide-node-details-' + node.nodeName"
+                        (click)="hideNodeDetails()"
+                        [matTooltip]="'Show details' | translate"
+                        >visibility_off</i
+                    >
+                }
                 <span class="node-name pr-5">&nbsp;{{ node.nodeName }}</span>
             </div>
         </div>
-        <div *ngIf="tree.isExpanded(node)" role="group">
-            <ng-container matTreeNodeOutlet></ng-container>
-        </div>
+        @if (tree.isExpanded(node)) {
+            <div role="group">
+                <ng-container matTreeNodeOutlet></ng-container>
+            </div>
+        }
     </mat-nested-tree-node>
 </mat-tree>

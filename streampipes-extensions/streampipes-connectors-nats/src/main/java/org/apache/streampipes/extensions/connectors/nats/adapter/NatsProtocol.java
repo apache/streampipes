@@ -33,7 +33,6 @@ import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventP
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.nats.NatsConsumer;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.nats.NatsConfig;
@@ -110,7 +109,6 @@ public class NatsProtocol implements StreamPipesAdapter {
     return AdapterConfigurationBuilder
         .create(ID, 0, NatsProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
-        .withCategory(AdapterType.Generic)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredTextParameter(Labels.withId(URLS_KEY), false, false)

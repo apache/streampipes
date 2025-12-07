@@ -29,8 +29,8 @@ import { of, Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { TimeSelectionService } from '@streampipes/shared-ui';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
-import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
-import { ObservableGenerator } from '../../../data-explorer-shared/models/dataview-dashboard.model';
+import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
+import { ObservableGenerator } from '../../../chart-shared/models/dataview-dashboard.model';
 
 @Component({
     selector: 'sp-dashboard-kiosk',
@@ -43,7 +43,7 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
     private dashboardService = inject(DashboardService);
     private timeSelectionService = inject(TimeSelectionService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
-    private dataExplorerSharedService = inject(DataExplorerSharedService);
+    private dataExplorerSharedService = inject(ChartSharedService);
 
     observableGenerator: ObservableGenerator;
     dashboard: Dashboard;
@@ -63,7 +63,7 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
                 if (res.ok) {
                     const cd = res.body;
                     cd.dashboard.widgets.forEach(w => {
-                        w.widgetId ??=
+                        w.id ??=
                             this.dataExplorerDashboardService.makeUniqueWidgetId();
                     });
                     const eTag = res.headers.get('ETag');

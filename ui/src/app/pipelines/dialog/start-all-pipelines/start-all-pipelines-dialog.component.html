@@ -1,84 +1,104 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div>
-            <div
-                fxFlex="100"
-                class="md-dialog-content"
-                style="padding: 20px"
-                *ngIf="page === 'preview'"
-            >
-                <h4 *ngIf="action">
-                    {{
-                        'You are about to start the following pipelines:'
-                            | translate
-                    }}
-                </h4>
-                <h4 *ngIf="!action">
-                    {{
-                        'You are about to stop the following pipelines:'
-                            | translate
-                    }}
-                </h4>
-                <div *ngFor="let pipeline of pipelinesToModify">
-                    <h5>{{ pipeline.name }}</h5>
+            @if (page === 'preview') {
+                <div
+                    fxFlex="100"
+                    class="md-dialog-content"
+                    style="padding: 20px"
+                >
+                    @if (action) {
+                        <h4>
+                            {{
+                                'You are about to start the following pipelines:'
+                                    | translate
+                            }}
+                        </h4>
+                    }
+                    @if (!action) {
+                        <h4>
+                            {{
+                                'You are about to stop the following pipelines:'
+                                    | translate
+                            }}
+                        </h4>
+                    }
+                    @for (pipeline of pipelinesToModify; track pipeline) {
+                        <div>
+                            <h5>{{ pipeline.name }}</h5>
+                        </div>
+                    }
+                    <h5>
+                        <b>{{
+                            'Press Next to start the process.' | translate
+                        }}</b>
+                    </h5>
                 </div>
-                <h5>
-                    <b>{{ 'Press Next to start the process.' | translate }}</b>
-                </h5>
-            </div>
-            <div
-                fxFlex="100"
-                class="md-dialog-content"
-                style="padding: 20px"
-                *ngIf="page === 'installation'"
-            >
-                <div *ngFor="let status of installationStatus">
-                    <h4>
-                        @if (action) {
-                            {{ 'Starting pipeline ' | translate }}
-                        } @else {
-                            {{ 'Stopping pipeline' | translate }}
-                        }
-                        {{ status.id + 1 }} {{ 'of' | translate }}
-                        {{ pipelinesToModify.length }} ({{ status.name }})...{{
-                            status.status
-                        }}
-                    </h4>
+            }
+            @if (page === 'installation') {
+                <div
+                    fxFlex="100"
+                    class="md-dialog-content"
+                    style="padding: 20px"
+                >
+                    @for (status of installationStatus; track status) {
+                        <div>
+                            <h4>
+                                @if (action) {
+                                    {{ 'Starting pipeline ' | translate }}
+                                } @else {
+                                    {{ 'Stopping pipeline' | translate }}
+                                }
+                                {{ status.id + 1 }} {{ 'of' | translate }}
+                                {{ pipelinesToModify.length }} ({{
+                                    status.name
+                                }})...{{ status.status }}
+                            </h4>
+                        </div>
+                    }
+                    @if (pipelinesToModify.length === 0) {
+                        <div>
+                            @if (action) {
+                                <h4></h4>
+                            }
+                            @if (!action) {
+                                <h4>
+                                    {{
+                                        'Sorry, there are no pipelines that are currently idle.'
+                                            | translate
+                                    }}
+                                </h4>
+                            }
+                            @if (action) {
+                                <h4>
+                                    {{
+                                        'Sorry, there are no pipelines that are currently running.'
+                                            | translate
+                                    }}
+                                </h4>
+                            }
+                        </div>
+                    }
                 </div>
-                <div *ngIf="pipelinesToModify.length === 0">
-                    <h4 *ngIf="action"></h4>
-                    <h4 *ngIf="!action">
-                        {{
-                            'Sorry, there are no pipelines that are currently idle.'
-                                | translate
-                        }}
-                    </h4>
-                    <h4 *ngIf="action">
-                        {{
-                            'Sorry, there are no pipelines that are currently running.'
-                                | translate
-                        }}
-                    </h4>
-                </div>
-            </div>
+            }
         </div>
     </div>
     <mat-divider></mat-divider>

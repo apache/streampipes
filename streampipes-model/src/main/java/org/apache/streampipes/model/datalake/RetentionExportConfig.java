@@ -17,14 +17,26 @@
  */
 
 package org.apache.streampipes.model.datalake;
-public class RetentionExportConfig {
-    
-    private ExportConfig exportConfig; 
-    private String exportProviderId;
 
-    public RetentionExportConfig(ExportConfig exportConfig, String exportProviderId) {
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class RetentionExportConfig {
+
+    private ExportConfig exportConfig;
+    private String exportProviderId;
+    private String lastExport;
+    private List<RetentionLog> retentionLog = new ArrayList<>();
+
+    public RetentionExportConfig(ExportConfig exportConfig, String exportProviderId, String lastExport,
+            List<RetentionLog> retentionLog) {
         this.exportConfig = exportConfig;
         this.exportProviderId = exportProviderId;
+        this.lastExport = lastExport;
+        this.retentionLog = retentionLog;
     }
 
     public ExportConfig getExportConfig() {
@@ -34,6 +46,7 @@ public class RetentionExportConfig {
     public void setExportConfig(ExportConfig exportConfig) {
         this.exportConfig = exportConfig;
     }
+
     public String getExportProviderId() {
         return exportProviderId;
     }
@@ -41,4 +54,42 @@ public class RetentionExportConfig {
     public void setExportProviderId(String exportProviderId) {
         this.exportProviderId = exportProviderId;
     }
+
+    public void setLastExport(String lastExport) {
+        this.lastExport = lastExport;
+    }
+
+    public String getLastExport() {
+        return lastExport;
+
+    }
+
+    public List<RetentionLog> getRetentionLog() {
+        return retentionLog;
+    }
+
+    public void setRetentionLog(List<RetentionLog> retentionLog) {
+        this.retentionLog = retentionLog;
+    }
+
+    public void addRetentionLog(RetentionLog log) {
+
+        Environment env = Environments.getEnvironment();
+
+        int maxSize = env.getDatalakeRetentionLogLength().getValueOrDefault();
+
+        if (this.retentionLog != null) {
+
+            if (this.retentionLog.size() >= maxSize) {
+                this.retentionLog.remove(0);
+            }
+
+            this.retentionLog.add(log);
+        } else {
+
+            this.retentionLog = new ArrayList<>();
+            this.retentionLog.add(log);
+        }
+    }
+
 }

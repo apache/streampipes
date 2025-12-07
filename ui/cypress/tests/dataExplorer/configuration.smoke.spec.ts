@@ -19,6 +19,8 @@
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
+import { GeneralUtils } from '../../support/utils/GeneralUtils';
+import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 
 describe('Test Truncate data in datalake', () => {
     beforeEach('Setup Test', () => {
@@ -35,6 +37,7 @@ describe('Test Truncate data in datalake', () => {
             .contains('10');
 
         // Truncate data
+        GeneralUtils.openMenuForRow(PrepareTestDataUtils.dataName);
         DataExplorerBtns.dataLakeTruncateBtn().should('be.visible').click();
         DataExplorerBtns.confirmDataLakeTruncateBtn()
             .should('be.visible')
@@ -66,6 +69,7 @@ describe('Delete data in datalake', () => {
             .contains('10');
 
         // Delete data
+        GeneralUtils.openMenuForRow(PrepareTestDataUtils.dataName);
         DataExplorerBtns.dataLakeDeleteBtn().should('be.visible').click();
         DataExplorerBtns.confirmDataLakeDeleteBtn()
             .should('be.visible')

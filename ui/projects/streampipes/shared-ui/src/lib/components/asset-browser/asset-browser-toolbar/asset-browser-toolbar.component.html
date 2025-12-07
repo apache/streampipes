@@ -22,6 +22,7 @@
             mat-flat-button
             class="btn-secondary-outline btn-filter"
             color="secondary"
+            data-cy="filter-button"
             [matMenuTriggerFor]="menu"
             #menuTrigger="matMenuTrigger"
             [matTooltip]="'Filter assets' | translate"
@@ -32,7 +33,7 @@
                 >filter_alt</mat-icon
             >
             @if (filterActive) {
-                <span>{{
+                <span class="text-md">{{
                     selectedAssetCount + ' of ' + allAssetCount + ' ' + 'assets'
                 }}</span>
             } @else {
