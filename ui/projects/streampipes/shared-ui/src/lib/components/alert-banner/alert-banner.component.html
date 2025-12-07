@@ -21,10 +21,32 @@
         <mat-icon>{{ displayIcon }}</mat-icon>
     </div>
 
-    <div class="alert-content">
-        <div class="alert-title">{{ title }}</div>
-        <div class="alert-description">
-            {{ description }}
+    <div class="alert-content" fxLayout="row" fxFlex="100">
+        <div fxFlex fxLayout="column">
+            <div class="alert-title">{{ title }}</div>
+            @if (description) {
+                <div
+                    class="alert-description"
+                    data-cy="exception-message-title"
+                >
+                    {{ description }}
+                </div>
+            }
+            <ng-content></ng-content>
         </div>
+        @if (showDetailsButton) {
+            <div fxLayoutAlign="end center">
+                <button
+                    mat-flat-button
+                    [class.btn-warn]="type === 'error'"
+                    [class.mat-basic]="type !== 'error'"
+                    (click)="detailsButtonClicked.emit()"
+                >
+                    <i class="material-icons">visibility</i>&nbsp;{{
+                        'Details' | translate
+                    }}
+                </button>
+            </div>
+        }
     </div>
 </div>

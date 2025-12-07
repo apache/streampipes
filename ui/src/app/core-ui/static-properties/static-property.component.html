@@ -19,12 +19,12 @@
 <div fxFlex="100" fxLayout="column" class="small-form-field-density">
     <div fxFlex="100" fxLayout="column" class="static-property-panel">
         @if (showLabel) {
-            <sp-basic-header-title-component
-                [compact]="true"
-                [title]="staticProperty.label"
+            <sp-form-label
+                [level]="2"
+                [label]="staticProperty.label"
                 [description]="staticProperty.description"
             >
-            </sp-basic-header-title-component>
+            </sp-form-label>
         }
         <div fxFlex="100">
             @if (isCodeInputStaticProperty(staticProperty)) {
@@ -301,5 +301,7 @@
             }
         </div>
     </div>
-    <mat-divider></mat-divider>
+    @if (showBorder) {
+        <mat-divider></mat-divider>
+    }
 </div>

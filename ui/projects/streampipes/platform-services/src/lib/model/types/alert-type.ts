@@ -16,4 +16,4 @@
  *
  */
 
-export type AlertType = 'info' | 'warning' | 'error';
+export type AlertType = 'info' | 'success' | 'warning' | 'error';

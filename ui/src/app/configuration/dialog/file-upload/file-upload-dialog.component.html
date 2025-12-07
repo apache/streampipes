@@ -21,7 +21,7 @@
         @if (uploadError) {
             <sp-alert-banner
                 type="error"
-                title="'Could not upload file' | translate "
+                [title]="'Could not upload file' | translate"
                 [description]="uploadErrorMessage"
             >
             </sp-alert-banner>
@@ -86,7 +86,7 @@
                     <button
                         mat-button
                         mat-flat-button
-                        class="mat-basic"
+                        class="mat-basic mt-10"
                         (click)="removeFilesFromUpload()"
                     >
                         {{ 'Clear' | translate }}

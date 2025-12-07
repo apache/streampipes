@@ -16,21 +16,23 @@
   ~
   -->
 
-<div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
-        <div fxFlex="100" fxLayout="column">
-            <sp-template-selection
-                [pipelineTemplates]="pipelineTemplates"
-                (selectTemplateEmitter)="selectTemplate($event)"
-            >
-            </sp-template-selection>
+<div
+    class="label-title"
+    [class.text-lg]="level === 1"
+    [class.text-md]="level === 2"
+    [class.text-sm]="level === 3"
+    [class.label-title-3]="level === 3"
+    [ngStyle]="{ margin: margin }"
+>
+    {{ label }}
+    @if (description) {
+        <div
+            class="label-description"
+            [class.text-md]="level === 1"
+            [class.text-sm]="level === 2"
+            [class.text-xs]="level === 3"
+        >
+            {{ description }}
         </div>
-    </div>
-    <mat-divider></mat-divider>
-    <div class="sp-dialog-actions" fxLayoutGap="10px">
-        <button mat-flat-button color="accent">{{ 'Next' | translate }}</button>
-        <button mat-button mat-flat-button class="mat-basic" (click)="close()">
-            {{ 'Cancel' | translate }}
-        </button>
-    </div>
+    }
 </div>

@@ -38,6 +38,8 @@ export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 export * from './lib/components/configuration-box/configuration-box.component';
 export * from './lib/components/date-input/date-input.component';
+export * from './lib/components/form-field/form-field.component';
+export * from './lib/components/form-label/form-label.component';
 export * from './lib/components/split-section/split-section.component';
 export * from './lib/components/sp-exception-message/sp-exception-message.component';
 export * from './lib/components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';

@@ -16,8 +16,8 @@
   ~
   -->
 
-<sp-configuration-box [title]="'Filter' | translate" marginTop="5px">
-    <div header fxLayoutAlign="start center" fxFlex="100">
+<sp-split-section [level]="3" [title]="'Filter' | translate">
+    <div section-actions fxLayoutAlign="start center" fxFlex="100">
         <button
             mat-button
             mat-flat-button
@@ -46,4 +46,4 @@
             </sp-filter-selection-panel-row>
         }
     </div>
-</sp-configuration-box>
+</sp-split-section>

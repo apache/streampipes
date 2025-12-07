@@ -16,10 +16,9 @@
   ~
   -->
 
-<sp-configuration-box [title]="'Data Retention Intervals' | translate">
-    <div class="mt-10 p-10">
+<sp-split-section [level]="3" [title]="'Data Retention Intervals' | translate">
+    <sp-form-field [level]="3" [label]="'Everything older than' | translate">
         <mat-form-field class="w-100">
-            <mat-label>{{ 'Everything older than' | translate }} </mat-label>
             <input
                 matInput
                 type="number"
@@ -31,5 +30,5 @@
             />
             <span matSuffix class="pr-10">{{ 'days' | translate }}</span>
         </mat-form-field>
-    </div>
-</sp-configuration-box>
+    </sp-form-field>
+</sp-split-section>

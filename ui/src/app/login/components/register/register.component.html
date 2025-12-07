@@ -23,18 +23,19 @@
         </div>
         <div fxLayout="column" fxFlex="100">
             <form [formGroup]="parentForm">
-                <div fxLayout="column">
+                <sp-form-field [level]="3" [label]="'Email' | translate">
                     <mat-form-field color="accent">
-                        <mat-label>{{ 'Email' | translate }}</mat-label>
                         <input formControlName="username" fxFlex matInput />
                         @if (parentForm.controls.username.errors) {
                             <mat-error>Must be an email address.</mat-error>
                         }
                     </mat-form-field>
+                </sp-form-field>
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Initial password' | translate"
+                >
                     <mat-form-field color="accent">
-                        <mat-label>{{
-                            'Initial password' | translate
-                        }}</mat-label>
                         <input
                             formControlName="password"
                             fxFlex
@@ -43,10 +44,12 @@
                             required
                         />
                     </mat-form-field>
+                </sp-form-field>
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Repeat password' | translate"
+                >
                     <mat-form-field color="accent">
-                        <mat-label>{{
-                            'Repeat password' | translate
-                        }}</mat-label>
                         <input
                             formControlName="repeatPassword"
                             fxFlex
@@ -55,50 +58,55 @@
                             required
                         />
                     </mat-form-field>
-                    @if (parentForm.hasError('notMatching')) {
-                        <mat-error>{{
-                            'Passwords do not match.' | translate
-                        }}</mat-error>
+                </sp-form-field>
+                @if (parentForm.hasError('notMatching')) {
+                    <mat-error>{{
+                        'Passwords do not match.' | translate
+                    }}</mat-error>
+                }
+                <div class="form-actions" style="margin-top: 20px">
+                    @if (!registrationSuccess) {
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            (click)="registerUser()"
+                            [disabled]="!parentForm.valid"
+                        >
+                            <span>{{ 'Register' | translate }}</span>
+                        </button>
                     }
-                    <div class="form-actions" style="margin-top: 20px">
-                        @if (!registrationSuccess) {
-                            <button
-                                mat-button
-                                mat-flat-button
-                                color="accent"
-                                (click)="registerUser()"
-                                [disabled]="!parentForm.valid"
-                            >
-                                <span>{{ 'Register' | translate }}</span>
-                            </button>
-                        }
-                        @if (registrationInProcess) {
-                            <mat-spinner
-                                [mode]="'indeterminate'"
-                                color="accent"
-                                [diameter]="20"
-                                style="margin-top: 10px"
-                            ></mat-spinner>
-                        }
-                        @if (registrationError) {
-                            <div class="md-warn">
-                                <h5 class="info-box register-error">
-                                    {{ registrationError }}
-                                </h5>
-                            </div>
-                        }
-                        @if (registrationSuccess) {
-                            <div class="md-success">
-                                <h5 class="info-box register-success">
-                                    {{ 'We've sent out a confirmation mail to this address.' | translate }}
-                                </h5>
-                            </div>
-                        }
-                        <div class="mt-10">
-                            <a [routerLink]="['/login']">{{
-                                'Go to login page' | translate
-                            }}</a>
-                        </div>
+                    @if (registrationInProcess) {
+                        <mat-spinner
+                            [mode]="'indeterminate'"
+                            color="accent"
+                            [diameter]="20"
+                            style="margin-top: 10px"
+                        ></mat-spinner>
+                    }
+                    @if (registrationError) {
+                        <sp-alert-banner
+                            type="error"
+                            [title]="'Error' | translate"
+                            [description]="registrationError"
+                        >
+                        </sp-alert-banner>
+                    }
+                    @if (registrationSuccess) {
+                        <sp-alert-banner
+                            type="success"
+                            [title]="'Success' | translate"
+                            [description]="
+                                'We\'ve sent out a confirmation mail to this address.'
+                                    | translate
+                            "
+                        >
+                        </sp-alert-banner>
+                    }
+                    <div class="mt-10">
+                        <a [routerLink]="['/login']">{{
+                            'Go to login page' | translate
+                        }}</a>
                     </div>
                 </div>
             </form>

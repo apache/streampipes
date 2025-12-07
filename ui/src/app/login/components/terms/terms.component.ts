@@ -93,7 +93,8 @@ export class TermsComponent extends BaseLoginPageDirective {
     }
 
     proceedWithLogin(): void {
-        this.router.navigateByUrl(this.returnUrl);
+        console.log(this.returnUrl);
+        this.router.navigateByUrl(this.returnUrl || '');
     }
 
     private normalizeNbsp(html: string): string {

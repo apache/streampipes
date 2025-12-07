@@ -32,40 +32,47 @@
                     </sp-alert-banner>
                 }
                 <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                    <div class="general-options-panel" fxLayout="column">
-                        <span class="general-options-header">{{
-                            'Basics' | translate
-                        }}</span>
+                    <sp-split-section
+                        [level]="3"
+                        [title]="'Basics' | translate"
+                    >
                         @if (registrationError) {
                             <mat-error>{{ registrationError }}</mat-error>
                         }
                         @if (!isUserAccount) {
-                            <mat-form-field color="accent">
-                                <mat-label>{{
-                                    'Username' | translate
-                                }}</mat-label>
-                                <input
-                                    formControlName="username"
-                                    fxFlex
-                                    matInput
-                                    required
-                                />
-                            </mat-form-field>
+                            <sp-form-field
+                                [level]="3"
+                                [label]="'Username' | translate"
+                            >
+                                <mat-form-field color="accent">
+                                    <input
+                                        formControlName="username"
+                                        fxFlex
+                                        matInput
+                                        required
+                                    />
+                                </mat-form-field>
+                            </sp-form-field>
                         }
                         @if (isUserAccount) {
-                            <mat-form-field color="accent">
-                                <mat-label>{{ 'Email' | translate }}</mat-label>
-                                <input
-                                    formControlName="username"
-                                    fxFlex
-                                    type="email"
-                                    matInput
-                                    data-cy="new-user-email"
-                                />
-                                <mat-error>{{
-                                    'Must be a valid email address.' | translate
-                                }}</mat-error>
-                            </mat-form-field>
+                            <sp-form-field
+                                [level]="3"
+                                [label]="'Email' | translate"
+                            >
+                                <mat-form-field color="accent">
+                                    <input
+                                        formControlName="username"
+                                        fxFlex
+                                        type="email"
+                                        matInput
+                                        data-cy="new-user-email"
+                                    />
+                                    <mat-error>{{
+                                        'Must be a valid email address.'
+                                            | translate
+                                    }}</mat-error>
+                                </mat-form-field>
+                            </sp-form-field>
                         }
                         @if (emailChanged) {
                             <div class="email-changed text-sm">
@@ -76,24 +83,26 @@
                             </div>
                         }
                         @if (isUserAccount) {
-                            <mat-form-field color="accent">
-                                <mat-label>{{
-                                    'Full Name' | translate
-                                }}</mat-label>
-                                <input
-                                    formControlName="fullName"
-                                    fxFlex
-                                    matInput
-                                    data-cy="new-user-full-name"
-                                />
-                            </mat-form-field>
+                            <sp-form-field
+                                [level]="3"
+                                [label]="'Full Name' | translate"
+                            >
+                                <mat-form-field color="accent">
+                                    <input
+                                        formControlName="fullName"
+                                        fxFlex
+                                        matInput
+                                        data-cy="new-user-full-name"
+                                    />
+                                </mat-form-field>
+                            </sp-form-field>
                         }
-                    </div>
+                    </sp-split-section>
                     @if (!editMode && isUserAccount) {
-                        <div fxLayout="column" class="general-options-panel">
-                            <span class="general-options-header">{{
-                                'Password' | translate
-                            }}</span>
+                        <sp-split-section
+                            [level]="3"
+                            [title]="'Password' | translate"
+                        >
                             @if (emailConfigured) {
                                 <mat-checkbox
                                     formControlName="sendPasswordToUser"
@@ -103,67 +112,84 @@
                                     }}</mat-checkbox
                                 >
                             }
-                            <mat-form-field color="accent">
-                                <mat-label>{{
-                                    'Initial password' | translate
-                                }}</mat-label>
-                                <input
-                                    formControlName="password"
-                                    fxFlex
-                                    type="password"
-                                    matInput
-                                    required
-                                    data-cy="new-user-password"
-                                />
-                            </mat-form-field>
-                            <mat-form-field color="accent">
-                                <mat-label>{{
-                                    'Repeat password' | translate
-                                }}</mat-label>
-                                <input
-                                    formControlName="repeatPassword"
-                                    fxFlex
-                                    type="password"
-                                    matInput
-                                    required
-                                    data-cy="new-user-password-repeat"
-                                />
-                            </mat-form-field>
+                            <sp-form-field
+                                [level]="3"
+                                [label]="'Initial password' | translate"
+                            >
+                                <mat-form-field color="accent">
+                                    <input
+                                        formControlName="password"
+                                        fxFlex
+                                        type="password"
+                                        matInput
+                                        required
+                                        data-cy="new-user-password"
+                                    />
+                                </mat-form-field>
+                            </sp-form-field>
+                            <sp-form-field
+                                [level]="3"
+                                [label]="'Repeat password' | translate"
+                            >
+                                <mat-form-field color="accent">
+                                    <input
+                                        formControlName="repeatPassword"
+                                        fxFlex
+                                        type="password"
+                                        matInput
+                                        required
+                                        data-cy="new-user-password-repeat"
+                                    />
+                                </mat-form-field>
+                            </sp-form-field>
                             @if (parentForm.hasError('notMatching')) {
                                 <mat-error>{{
                                     'Passwords do not match.' | translate
                                 }}</mat-error>
                             }
-                        </div>
+                        </sp-split-section>
                     }
                     @if (!isUserAccount) {
-                        <div fxLayout="column" class="general-options-panel">
-                            <span class="general-options-header">{{
-                                'Authentication' | translate
-                            }}</span>
-                            <mat-form-field color="accent">
-                                <mat-label>{{
-                                    'Client Secret' | translate
-                                }}</mat-label>
-                                <input
-                                    formControlName="clientSecret"
-                                    fxFlex
-                                    type="password"
-                                    matInput
-                                    required
-                                />
-                            </mat-form-field>
+                        <sp-split-section
+                            [level]="3"
+                            [title]="'Authentication' | translate"
+                        >
+                            <sp-form-field
+                                [level]="3"
+                                [label]="'Client Secret' | translate"
+                            >
+                                <mat-form-field color="accent">
+                                    <input
+                                        formControlName="clientSecret"
+                                        fxFlex
+                                        type="password"
+                                        matInput
+                                        required
+                                    />
+                                </mat-form-field>
+                            </sp-form-field>
                             @if (parentForm.controls.clientSecret.errors) {
                                 <mat-error>{{
                                     'Minimum length 35 characters.' | translate
                                 }}</mat-error>
                             }
-                        </div>
+                        </sp-split-section>
                     }
-                    <div fxLayout="column" class="general-options-panel">
-                        <span class="general-options-header">{{
-                            'Groups' | translate
-                        }}</span>
+                    <sp-split-section
+                        [level]="3"
+                        [title]="'Groups' | translate"
+                    >
+                        @if (availableGroups.length === 0) {
+                            <sp-alert-banner
+                                type="info"
+                                [title]="'No groups configured' | translate"
+                                [description]="
+                                    'Create a new group in the Groups section of the security page.'
+                                        | translate
+                                "
+                            >
+                            </sp-alert-banner>
+                        }
                         @for (group of availableGroups; track group) {
                             <mat-checkbox
                                 [disabled]="
@@ -180,11 +206,8 @@
                                 {{ group.groupName }}
                             </mat-checkbox>
                         }
-                    </div>
-                    <div fxLayout="column" class="general-options-panel">
-                        <span class="general-options-header">{{
-                            'Roles' | translate
-                        }}</span>
+                    </sp-split-section>
+                    <sp-split-section [level]="3" [title]="'Roles' | translate">
                         @for (role of availableRoles$ | async; track role) {
                             <mat-checkbox
                                 [value]="role.elementId"
@@ -201,12 +224,12 @@
                                 {{ role.label }}
                             </mat-checkbox>
                         }
-                    </div>
+                    </sp-split-section>
                     @if (!isExternalProvider) {
-                        <div fxLayout="column" class="general-options-panel">
-                            <span class="general-options-header">{{
-                                'Account' | translate
-                            }}</span>
+                        <sp-split-section
+                            [level]="3"
+                            [title]="'Account' | translate"
+                        >
                             <mat-checkbox
                                 formControlName="accountEnabled"
                                 data-cy="new-user-enabled"
@@ -219,7 +242,7 @@
                             >
                                 {{ 'Locked' | translate }}
                             </mat-checkbox>
-                        </div>
+                        </sp-split-section>
                     }
                 </form>
             </div>

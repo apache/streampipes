@@ -24,7 +24,7 @@
 }
 
 .selection-form-field {
-    margin: 0 0 10px 44px;
+    margin: 0 0 10px 36px;
 }
 
 .radio-option-box {
@@ -55,7 +55,7 @@
 
 .description {
     margin: 0 0 10px 36px;
-    color: #6c757d;
+    color: var(--fg-muted);
     font-size: var(--font-size-xs);
     line-height: 1.2;
 }

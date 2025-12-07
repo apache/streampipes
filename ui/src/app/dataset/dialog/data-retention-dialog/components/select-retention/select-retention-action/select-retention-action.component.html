@@ -16,33 +16,25 @@
   ~
   -->
 
-<sp-configuration-box [title]="'Data Retention Action' | translate">
-    <div class="p-10">
-        <mat-radio-group
-            [(ngModel)]="dataRetentionConfig.dataRetentionConfig.action"
-            data-cy="retention-action-select"
-            fxLayout="column"
+<sp-split-section [level]="3" [title]="'Data Retention Action' | translate">
+    <mat-radio-group
+        [(ngModel)]="dataRetentionConfig.dataRetentionConfig.action"
+        data-cy="retention-action-select"
+        fxLayout="column"
+    >
+        <mat-radio-button value="DELETE" data-cy="action-configuration-delete">
+            {{ 'delete' | translate }}
+        </mat-radio-button>
+
+        <mat-radio-button value="SAVE" data-cy="retention-configuration-save">
+            {{ 'save' | translate }}
+        </mat-radio-button>
+
+        <mat-radio-button
+            value="SAVEDELETE"
+            data-cy="retention-configuration-save-delete"
         >
-            <mat-radio-button
-                value="DELETE"
-                data-cy="action-configuration-delete"
-            >
-                {{ 'delete' | translate }}
-            </mat-radio-button>
-
-            <mat-radio-button
-                value="SAVE"
-                data-cy="retention-configuration-save"
-            >
-                {{ 'save' | translate }}
-            </mat-radio-button>
-
-            <mat-radio-button
-                value="SAVEDELETE"
-                data-cy="retention-configuration-save-delete"
-            >
-                {{ 'save and delete' | translate }}
-            </mat-radio-button>
-        </mat-radio-group>
-    </div>
-</sp-configuration-box>
+            {{ 'save and delete' | translate }}
+        </mat-radio-button>
+    </mat-radio-group>
+</sp-split-section>

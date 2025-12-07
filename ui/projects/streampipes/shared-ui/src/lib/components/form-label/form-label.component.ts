@@ -16,19 +16,33 @@
  *
  */
 
-.title-section {
-    width: 300px;
-}
+import { Component, Input, OnInit } from '@angular/core';
 
-.appearance-radio-group {
-    display: flex;
-    flex-direction: column;
-}
+@Component({
+    selector: 'sp-form-label',
+    templateUrl: './form-label.component.html',
+    styleUrls: ['./form-label.component.scss'],
+    standalone: false,
+})
+export class FormLabelComponent implements OnInit {
+    @Input()
+    level: 1 | 2 | 3 = 2;
 
-.appearance-radio-button {
-    margin: 5px;
-}
+    @Input()
+    label: string;
 
-.ml-15 {
-    margin-left: 15px;
+    @Input()
+    description: string;
+
+    margin = '';
+
+    ngOnInit(): void {
+        if (!this.margin && this.level === 1) {
+            this.margin = '10px 0px';
+        } else if (!this.margin && this.level === 2) {
+            this.margin = '5px 0px';
+        } else {
+            this.margin = '2px 0px';
+        }
+    }
 }

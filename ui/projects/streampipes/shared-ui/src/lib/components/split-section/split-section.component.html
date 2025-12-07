@@ -16,26 +16,32 @@
 ~
 -->
 
-<section [class.compact]="compact">
+<section
+    [class.compact]="compact"
+    [class.section-outline]="outline"
+    [class.section-outline-compact]="level === 3"
+    [class.section-outer-compact]="level === 3"
+    class="section-outer"
+>
     <header class="section-header">
-        @if (eyebrow) {
-            <div class="eyebrow">{{ eyebrow }}</div>
-        }
-
-        <h2 class="title text-xl">{{ title }}</h2>
+        <sp-basic-header-title-component
+            [level]="level"
+            [title]="title"
+            [description]="subtitle"
+        >
+        </sp-basic-header-title-component>
 
         <div class="header-actions">
             <ng-content select="[section-actions]"></ng-content>
         </div>
-
-        @if (subtitle) {
-            <p class="description text-md">
-                {{ subtitle }}
-            </p>
-        }
     </header>
 
-    <div class="section-body" role="group" fxLayout="column">
+    <div
+        class="section-body"
+        [class.section-body-compact]="level === 3"
+        role="group"
+        fxLayout="column"
+    >
         <ng-content></ng-content>
     </div>
 </section>

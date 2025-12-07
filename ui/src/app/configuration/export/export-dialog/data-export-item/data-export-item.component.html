@@ -16,8 +16,7 @@
 ~
 -->
 
-<div fxLayout="column" fxFlex="100">
-    <h5>{{ sectionTitle }}</h5>
+<sp-split-section [level]="3" [title]="sectionTitle">
     @for (exportItem of exportItems; track exportItem; let i = $index) {
         <mat-checkbox
             [checked]="exportItem.selected"
@@ -26,4 +25,14 @@
             {{ exportItem.label }}
         </mat-checkbox>
     }
-</div>
+    @if (exportItems.length === 0) {
+        <sp-alert-banner
+            type="info"
+            [title]="'No linked resources' | translate"
+            [description]="
+                'Only linked resources are part of the application package.'
+                    | translate
+            "
+        ></sp-alert-banner>
+    }
+</sp-split-section>

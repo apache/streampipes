@@ -110,6 +110,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { PaginatorService } from './components/sp-table/sp-paginator/sp-paginator.component';
 import { SpAlertBannerComponent } from './components/alert-banner/alert-banner.component';
+import { FormFieldComponent } from './components/form-field/form-field.component';
+import { FormLabelComponent } from './components/form-label/form-label.component';
 
 @NgModule({
     declarations: [
@@ -165,6 +167,8 @@ import { SpAlertBannerComponent } from './components/alert-banner/alert-banner.c
         AssetLinkConfigurationComponent,
         AssetBrowserFilterAssetModelComponent,
         ObjectPermissionDialogComponent,
+        FormFieldComponent,
+        FormLabelComponent,
     ],
     imports: [
         CommonModule,
@@ -246,6 +250,8 @@ import { SpAlertBannerComponent } from './components/alert-banner/alert-banner.c
         SidebarResizeComponent,
         SpTableActionsDirective,
         ObjectPermissionDialogComponent,
+        FormFieldComponent,
+        FormLabelComponent,
     ],
 })
 export class SharedUiModule {}

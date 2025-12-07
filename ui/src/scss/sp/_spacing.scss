@@ -1,0 +1,193 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+/*--------------------------------------------------------------
+  SPACING SCALE
+  Works alongside _typography.scss
+  Uses a fluid spacing system tied to your base font size.
+--------------------------------------------------------------*/
+
+:root {
+    /* Base step size — tied to font-size-base for proportional rhythm */
+    --space-base: var(--font-size-base);
+
+    /* Fluid spacing scale: clamp(min, fluid, max)
+     Naming follows your typography scale (2xs → 5xl)
+  */
+    --space-2xs: clamp(0.15rem, 0.12rem + 0.15vw, 0.25rem); /* 2–4px  */
+    --space-xs: clamp(0.25rem, 0.22rem + 0.2vw, 0.4rem); /* 4–6px  */
+    --space-sm: clamp(0.4rem, 0.35rem + 0.25vw, 0.6rem); /* 6–10px */
+    --space-md: clamp(0.6rem, 0.5rem + 0.35vw, 0.9rem); /* 10–14px */
+    --space-lg: clamp(0.9rem, 0.75rem + 0.4vw, 1.2rem); /* 14–19px */
+    --space-xl: clamp(1.2rem, 1rem + 0.55vw, 1.6rem); /* 19–25px */
+    --space-2xl: clamp(1.6rem, 1.3rem + 0.7vw, 2.2rem); /* 25–35px */
+    --space-3xl: clamp(2rem, 1.6rem + 1vw, 2.8rem); /* 32–45px */
+    --space-4xl: clamp(2.6rem, 2rem + 1.3vw, 3.6rem); /* 42–58px */
+    --space-5xl: clamp(3.2rem, 2.4rem + 1.5vw, 4.5rem); /* 52–72px */
+}
+
+/*--------------------------------------------------------------
+  UTILITY CLASSES
+  Margin (m-), Margin-X (mx-), Margin-Y (my-), Padding (p-)
+--------------------------------------------------------------*/
+
+/* --- Margin --- */
+.m-2xs {
+    margin: var(--space-2xs);
+}
+.m-xs {
+    margin: var(--space-xs);
+}
+.m-sm {
+    margin: var(--space-sm);
+}
+.m-md {
+    margin: var(--space-md);
+}
+.m-lg {
+    margin: var(--space-lg);
+}
+.m-xl {
+    margin: var(--space-xl);
+}
+.m-2xl {
+    margin: var(--space-2xl);
+}
+.m-3xl {
+    margin: var(--space-3xl);
+}
+.m-4xl {
+    margin: var(--space-4xl);
+}
+.m-5xl {
+    margin: var(--space-5xl);
+}
+
+/* --- Margin Top --- */
+.mt-2xs {
+    margin-top: var(--space-2xs);
+}
+.mt-xs {
+    margin-top: var(--space-xs);
+}
+.mt-sm {
+    margin-top: var(--space-sm);
+}
+.mt-md {
+    margin-top: var(--space-md);
+}
+.mt-lg {
+    margin-top: var(--space-lg);
+}
+.mt-xl {
+    margin-top: var(--space-xl);
+}
+.mt-2xl {
+    margin-top: var(--space-2xl);
+}
+.mt-3xl {
+    margin-top: var(--space-3xl);
+}
+.mt-4xl {
+    margin-top: var(--space-4xl);
+}
+.mt-5xl {
+    margin-top: var(--space-5xl);
+}
+
+/* --- Margin Bottom --- */
+.mb-2xs {
+    margin-bottom: var(--space-2xs);
+}
+.mb-xs {
+    margin-bottom: var(--space-xs);
+}
+.mb-sm {
+    margin-bottom: var(--space-sm);
+}
+.mb-md {
+    margin-bottom: var(--space-md);
+}
+.mb-lg {
+    margin-bottom: var(--space-lg);
+}
+.mb-xl {
+    margin-bottom: var(--space-xl);
+}
+.mb-2xl {
+    margin-bottom: var(--space-2xl);
+}
+.mb-3xl {
+    margin-bottom: var(--space-3xl);
+}
+.mb-4xl {
+    margin-bottom: var(--space-4xl);
+}
+.mb-5xl {
+    margin-bottom: var(--space-5xl);
+}
+
+/* --- Margin Left/Right & Axes --- */
+.ml-2xs {
+    margin-left: var(--space-2xs);
+}
+.ml-xs {
+    margin-left: var(--space-xs);
+}
+.ml-sm {
+    margin-left: var(--space-sm);
+}
+.ml-md {
+    margin-left: var(--space-md);
+}
+
+/* (repeat pattern as needed) */
+
+.mx-2xs {
+    margin-left: var(--space-2xs);
+    margin-right: var(--space-2xs);
+}
+.mx-xs {
+    margin-left: var(--space-xs);
+    margin-right: var(--space-xs);
+}
+
+/* --- Padding utilities (same pattern) --- */
+.p-2xs {
+    padding: var(--space-2xs);
+}
+.p-xs {
+    padding: var(--space-xs);
+}
+.p-sm {
+    padding: var(--space-sm);
+}
+.p-md {
+    padding: var(--space-md);
+}
+.p-lg {
+    padding: var(--space-lg);
+}
+.p-xl {
+    padding: var(--space-xl);
+}
+.p-2xl {
+    padding: var(--space-2xl);
+}
+
+/* More padding directions available on request */

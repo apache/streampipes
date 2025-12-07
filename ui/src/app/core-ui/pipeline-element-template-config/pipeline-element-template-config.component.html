@@ -19,85 +19,98 @@
 @if (templateConfigs) {
     <div class="p-15">
         <div fxFlex="100" fxLayout="column">
-            <h4>{{ 'Basics' | translate }}</h4>
-            <mat-form-field fxFlex color="accent">
-                <mat-label>{{ 'Template name' | translate }}</mat-label>
-                <input
-                    [(ngModel)]="template.templateName"
-                    matInput
-                    name="templateName"
-                    class="sp"
-                    required
-                    data-cy="template-name"
-                />
-            </mat-form-field>
-            <mat-form-field fxFlex color="accent">
-                <mat-label>{{ 'Template description' | translate }}</mat-label>
-                <input
-                    [(ngModel)]="template.templateDescription"
-                    matInput
-                    name="templateDescription"
-                    class="sp"
-                    required
-                    data-cy="template-description"
-                />
-            </mat-form-field>
-            <mat-divider class="divider"></mat-divider>
-            <h4>{{ 'Configuration' | translate }}</h4>
-            <mat-hint style="margin-bottom: 10px">{{
-                '(dynamic options cannot be saved and are hidden)' | translate
-            }}</mat-hint>
-            @for (
-                config of staticProperties | pipelineElementTemplatePipe;
-                track config
-            ) {
-                <div
-                    fxLayout="column"
-                    class="static-property-panel static-property-panel-border"
+            <sp-split-section [level]="3" [title]="'Basics' | translate">
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Template name' | translate"
                 >
-                    <div fxLayout="row">
-                        <div fxFlex="50">
-                            {{ config.label }}
-                        </div>
-                        <div fxFlex="50">
-                            <sp-pipeline-element-template-config-item
-                                [sp]="config"
-                                [templateConfigs]="templateConfigs"
-                            >
-                            </sp-pipeline-element-template-config-item>
-                        </div>
-                    </div>
-                </div>
-            }
-            <mat-divider class="divider"></mat-divider>
-            <h4>{{ 'Existing templates' | translate }}</h4>
-            @for (template of existingTemplates; track template) {
-                <div
-                    fxLayout="column"
-                    class="static-property-panel static-property-panel-border"
+                    <mat-form-field fxFlex color="accent">
+                        <input
+                            [(ngModel)]="template.templateName"
+                            matInput
+                            name="templateName"
+                            class="sp"
+                            required
+                            data-cy="template-name"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Template description' | translate"
                 >
-                    <div fxFlex="100" fxLayout="row">
-                        <div fxFlex fxLayoutAlign="start center">
-                            {{ template.templateName }}
-                        </div>
-                        <div fxLayoutAlign="end center">
-                            <button
-                                mat-icon-button
-                                color="accent"
-                                (click)="deleteTemplate(template.elementId)"
-                                data-cy="delete-pipeline-element-template"
-                            >
-                                <mat-icon>delete</mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            }
-            @if (existingTemplates.length === 0) {
+                    <mat-form-field fxFlex color="accent">
+                        <input
+                            [(ngModel)]="template.templateDescription"
+                            matInput
+                            name="templateDescription"
+                            class="sp"
+                            required
+                            data-cy="template-description"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+            </sp-split-section>
+            <sp-split-section [level]="3" [title]="'Configuration' | translate">
                 <mat-hint style="margin-bottom: 10px">{{
-                    '(no templates available)' | translate
+                    '(dynamic options cannot be saved and are hidden)'
+                        | translate
                 }}</mat-hint>
-            }
+                @for (
+                    config of staticProperties | pipelineElementTemplatePipe;
+                    track config
+                ) {
+                    <div
+                        fxLayout="column"
+                        class="static-property-panel static-property-panel-border"
+                    >
+                        <div fxLayout="row">
+                            <div fxFlex="50">
+                                {{ config.label }}
+                            </div>
+                            <div fxFlex="50">
+                                <sp-pipeline-element-template-config-item
+                                    [sp]="config"
+                                    [templateConfigs]="templateConfigs"
+                                >
+                                </sp-pipeline-element-template-config-item>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </sp-split-section>
+            <sp-split-section
+                [level]="3"
+                [title]="'Existing templates' | translate"
+            >
+                @for (template of existingTemplates; track template) {
+                    <div
+                        fxLayout="column"
+                        class="static-property-panel static-property-panel-border"
+                    >
+                        <div fxFlex="100" fxLayout="row">
+                            <div fxFlex fxLayoutAlign="start center">
+                                {{ template.templateName }}
+                            </div>
+                            <div fxLayoutAlign="end center">
+                                <button
+                                    mat-icon-button
+                                    color="accent"
+                                    (click)="deleteTemplate(template.elementId)"
+                                    data-cy="delete-pipeline-element-template"
+                                >
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (existingTemplates.length === 0) {
+                    <mat-hint style="margin-bottom: 10px">{{
+                        '(no templates available)' | translate
+                    }}</mat-hint>
+                }
+            </sp-split-section>
         </div>
     </div>
 }

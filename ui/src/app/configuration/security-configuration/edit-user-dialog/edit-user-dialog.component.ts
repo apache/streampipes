@@ -269,7 +269,8 @@ export class EditUserDialogComponent implements OnInit {
 
     private handleFormChanges(): void {
         this.parentForm.valueChanges.subscribe(v => {
-            this.emailChanged = v.username !== this.clonedUser.username;
+            this.emailChanged =
+                this.editMode && v.username !== this.clonedUser.username;
             if (this.clonedUser instanceof UserAccount && !this.editMode) {
                 if (this.sendPasswordToUser !== v.sendPasswordToUser) {
                     this.sendPasswordToUser = v.sendPasswordToUser;

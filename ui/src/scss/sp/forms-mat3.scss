@@ -21,6 +21,8 @@
 :root {
     @include mat.form-field-overrides(
         (
+            container-height: 2.5rem,
+            container-vertical-padding: 0.5rem,
             outlined-container-shape: 2px,
             outlined-outline-color: var(--mat-sys-surface-container-highest),
             outlined-hover-outline-color:

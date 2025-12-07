@@ -18,17 +18,19 @@
 
 <div
     class="header-title title-left-border"
-    [class.text-2xl]="!compact"
-    [class.text-md]="compact"
-    [class.compact]="compact"
+    [class.text-2xl]="level === 1"
+    [class.text-xl]="level === 2"
+    [class.text-md]="level === 3"
+    [class.compact]="level == 3"
     [ngStyle]="{ margin: margin }"
 >
     {{ title }}
     @if (description) {
         <div
             class="header-description"
-            [class.text-md]="!compact"
-            [class.text-sm]="compact"
+            [class.text-lg]="level === 1"
+            [class.text-md]="level == 2"
+            [class.text-sm]="level === 3"
         >
             {{ description }}
         </div>

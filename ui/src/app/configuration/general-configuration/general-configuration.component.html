@@ -26,6 +26,8 @@
                     class="w-100"
                 >
                     <sp-split-section
+                        [outline]="true"
+                        [compact]="true"
                         [title]="'Basic' | translate"
                         [subtitle]="'Basic settings' | translate"
                     >
@@ -41,94 +43,95 @@
                             </sp-alert-banner>
                         }
                         <div fxLayout="column">
-                            <sp-basic-header-title-component
-                                [compact]="true"
-                                [title]="'App Name' | translate"
+                            <sp-form-field
+                                [level]="2"
+                                [label]="'App Name' | translate"
                                 [description]="
                                     'The app name as shown on the login screen and in emails'
                                         | translate
                                 "
                             >
-                            </sp-basic-header-title-component>
-                            <mat-form-field appearance="outline" fxFlex>
-                                <input
-                                    formControlName="appName"
-                                    fxFlex
-                                    matInput
-                                    required
-                                    data-cy="general-config-app-name"
-                                />
-                            </mat-form-field>
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <input
+                                        formControlName="appName"
+                                        fxFlex
+                                        matInput
+                                        required
+                                        data-cy="general-config-app-name"
+                                    />
+                                </mat-form-field>
+                            </sp-form-field>
                         </div>
                         <div fxLayout="column">
-                            <sp-basic-header-title-component
-                                [compact]="true"
-                                [title]="'Host and Port' | translate"
+                            <sp-form-field
+                                [level]="2"
+                                [label]="'Host and Port' | translate"
                                 [description]="
                                     'The URL where the application can be accessed, e.g., for links in emails.'
                                         | translate
                                 "
                             >
-                            </sp-basic-header-title-component>
-                            <div fxLayout="column" fxFlex="100">
-                                <div fxLayout="row">
+                                <div fxLayout="column" fxFlex="100">
                                     <div
                                         fxLayout="row"
                                         fxLayoutAlign="start center"
+                                        fxLayoutGap="10px"
                                     >
-                                        <mat-button-toggle-group
-                                            name="protocol"
-                                            [attr.aria-label]="
-                                                'Protocol' | translate
-                                            "
-                                            formControlName="protocol"
+                                        <sp-form-field
+                                            [level]="3"
+                                            [label]="'Protocol' | translate"
                                         >
-                                            <mat-button-toggle value="http"
-                                                >http
-                                            </mat-button-toggle>
-                                            <mat-button-toggle value="https"
-                                                >https
-                                            </mat-button-toggle>
-                                        </mat-button-toggle-group>
+                                            <mat-button-toggle-group
+                                                name="protocol"
+                                                [attr.aria-label]="
+                                                    'Protocol' | translate
+                                                "
+                                                formControlName="protocol"
+                                            >
+                                                <mat-button-toggle value="http"
+                                                    >http
+                                                </mat-button-toggle>
+                                                <mat-button-toggle value="https"
+                                                    >https
+                                                </mat-button-toggle>
+                                            </mat-button-toggle-group>
+                                        </sp-form-field>
+                                        <sp-form-field
+                                            [level]="3"
+                                            [label]="'Host' | translate"
+                                        >
+                                            <mat-form-field color="accent">
+                                                <input
+                                                    formControlName="hostname"
+                                                    fxFlex
+                                                    matInput
+                                                    required
+                                                    data-cy="general-config-hostname"
+                                                />
+                                            </mat-form-field>
+                                        </sp-form-field>
+                                        <sp-form-field
+                                            [level]="3"
+                                            [label]="'Port' | translate"
+                                        >
+                                            <mat-form-field color="accent">
+                                                <input
+                                                    formControlName="port"
+                                                    fxFlex
+                                                    matInput
+                                                    type="number"
+                                                    required
+                                                    data-cy="general-config-port"
+                                                />
+                                            </mat-form-field>
+                                        </sp-form-field>
                                     </div>
-                                    <mat-form-field
-                                        color="accent"
-                                        class="ml-10"
-                                        subscriptSizing="dynamic"
-                                    >
-                                        <mat-label>{{
-                                            'Host' | translate
-                                        }}</mat-label>
-                                        <input
-                                            formControlName="hostname"
-                                            fxFlex
-                                            matInput
-                                            required
-                                            data-cy="general-config-hostname"
-                                        />
-                                    </mat-form-field>
-                                    <mat-form-field
-                                        color="accent"
-                                        class="ml-10"
-                                        subscriptSizing="dynamic"
-                                    >
-                                        <mat-label>{{
-                                            'Port' | translate
-                                        }}</mat-label>
-                                        <input
-                                            formControlName="port"
-                                            fxFlex
-                                            matInput
-                                            type="number"
-                                            required
-                                            data-cy="general-config-port"
-                                        />
-                                    </mat-form-field>
                                 </div>
-                            </div>
+                            </sp-form-field>
                         </div>
                     </sp-split-section>
                     <sp-split-section
+                        [outline]="true"
                         [title]="'Registration' | translate"
                         [subtitle]="'Registration process' | translate"
                     >
@@ -158,13 +161,13 @@
                                     }}
                                 </mat-checkbox>
                                 @if (generalConfig.allowSelfRegistration) {
-                                    <div class="mt-10 mb-10">
-                                        <h5>
-                                            {{
-                                                'Default roles for new users'
-                                                    | translate
-                                            }}
-                                        </h5>
+                                    <sp-form-field
+                                        [level]="2"
+                                        [label]="
+                                            'Default roles for new users'
+                                                | translate
+                                        "
+                                    >
                                         <mat-form-field
                                             color="accent"
                                             appearance="outline"
@@ -185,7 +188,7 @@
                                                 }
                                             </mat-select>
                                         </mat-form-field>
-                                    </div>
+                                    </sp-form-field>
                                 }
                                 <mat-checkbox
                                     formControlName="allowPasswordRecovery"

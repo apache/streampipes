@@ -35,35 +35,30 @@
                 </button>
             </div>
             <div fxLayout="row" fxLayoutAlign="start center">
-                <div class="placeholder-explanation">
-                    <div fxLayout="column">
-                        <div>
-                            {{
-                                'You can set various placeholder variables that will be replaced with the actual values when sending an email:'
-                                    | translate
-                            }}
-                        </div>
-                        <div
-                            fxLayout="row wrap"
-                            class="mt-10"
-                            fxLayoutGap="5px"
-                        >
-                            @for (
-                                placeholder of allowedPlaceholders;
-                                track placeholder
-                            ) {
-                                <div class="placeholder-item">
-                                    <span class="placeholder-variable">{{
-                                        placeholder.placeholder
-                                    }}</span>
-                                    <span class="placeholder-description">{{
-                                        placeholder.description
-                                    }}</span>
-                                </div>
-                            }
-                        </div>
+                <sp-alert-banner
+                    type="info"
+                    [title]="'Use placeholders' | translate"
+                    [description]="
+                        'You can set various placeholder variables that will be replaced with the actual values when sending an email:'
+                            | translate
+                    "
+                >
+                    <div fxLayout="row wrap" class="mt-10" fxLayoutGap="5px">
+                        @for (
+                            placeholder of allowedPlaceholders;
+                            track placeholder
+                        ) {
+                            <div class="placeholder-item">
+                                <span class="placeholder-variable">{{
+                                    placeholder.placeholder
+                                }}</span>
+                                <span class="placeholder-description">{{
+                                    placeholder.description
+                                }}</span>
+                            </div>
+                        }
                     </div>
-                </div>
+                </sp-alert-banner>
             </div>
             <div fxFlex="100" fxLayout="row">
                 <ngx-codemirror

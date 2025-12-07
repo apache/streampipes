@@ -20,37 +20,39 @@
     <div class="sp-dialog-content">
         <div fxFlex="100" fxLayout="column" class="p-15">
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                <div class="general-options-panel" fxLayout="column">
-                    <span class="general-options-header">{{
-                        'Basics' | translate
-                    }}</span>
-                    <mat-form-field color="accent">
-                        <mat-label>{{ 'Role ID' | translate }}</mat-label>
-                        <input
-                            formControlName="elementId"
-                            fxFlex
-                            matInput
-                            required
-                        />
-                        <mat-error>{{
-                            'Role ID must start with ROLE_ and must only include capital letters or underscore'
-                                | translate
-                        }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field color="accent">
-                        <mat-label>{{ 'Role Name' | translate }}</mat-label>
-                        <input
-                            formControlName="label"
-                            fxFlex
-                            matInput
-                            required
-                        />
-                    </mat-form-field>
-                </div>
-                <div fxLayout="column" class="general-options-panel">
-                    <span class="general-options-header">{{
-                        'Privileges' | translate
-                    }}</span>
+                <sp-split-section [level]="3" [title]="'Basics' | translate">
+                    <sp-form-field [level]="3" [label]="'Role ID' | translate">
+                        <mat-form-field color="accent">
+                            <input
+                                formControlName="elementId"
+                                fxFlex
+                                matInput
+                                required
+                            />
+                            <mat-error>{{
+                                'Role ID must start with ROLE_ and must only include capital letters or underscore'
+                                    | translate
+                            }}</mat-error>
+                        </mat-form-field>
+                    </sp-form-field>
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Role Name' | translate"
+                    >
+                        <mat-form-field color="accent">
+                            <input
+                                formControlName="label"
+                                fxFlex
+                                matInput
+                                required
+                            />
+                        </mat-form-field>
+                    </sp-form-field>
+                </sp-split-section>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Privileges' | translate"
+                >
                     <div
                         fxLayout="row"
                         fxLayoutGap="10px"
@@ -103,17 +105,21 @@
                             }
                         </div>
                     </div>
-                </div>
+                </sp-split-section>
 
-                <div fxLayout="column" class="general-options-panel">
-                    <span class="general-options-header">{{
-                        'Alternate IDs' | translate
-                    }}</span>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Alternate IDs' | translate"
+                    [subtitle]="
+                        'User alternate IDs to map externally defined roles to this group'
+                            | translate
+                    "
+                >
                     <sp-alternate-id-configuration
                         [alternateIds]="clonedRole.alternateIds"
                     >
                     </sp-alternate-id-configuration>
-                </div>
+                </sp-split-section>
             </form>
         </div>
     </div>

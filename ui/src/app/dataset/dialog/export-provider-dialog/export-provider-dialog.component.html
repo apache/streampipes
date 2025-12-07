@@ -18,83 +18,108 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <form [formGroup]="exportForm">
-            <mat-form-field class="sp-select-field w-100">
-                <mat-label>{{ 'Select Provider' | translate }}</mat-label>
-                <mat-select
-                    formControlName="providerType"
-                    data-cy="exportProvider-select"
+            <sp-split-section [level]="3" [title]="'Provider Type' | translate">
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Select Provider' | translate"
                 >
-                    <mat-option value="S3" data-cy="exportProvider-s3">
-                        {{ 'S3' | translate }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+                    <mat-form-field class="sp-select-field w-100">
+                        <mat-select
+                            formControlName="providerType"
+                            data-cy="exportProvider-select"
+                        >
+                            <mat-option value="S3" data-cy="exportProvider-s3">
+                                {{ 'S3' | translate }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </sp-form-field>
+            </sp-split-section>
             @if (exportForm.get('providerType')?.value === 'S3') {
-                <div class="s3-config-container">
-                    <mat-form-field class="w-100">
-                        <mat-label>{{ 'Access Key' | translate }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="accessKey"
-                            placeholder="{{ 'Enter Access Key' | translate }}"
-                            data-cy="exportProvider-s3-accessKey"
-                        />
-                    </mat-form-field>
-
-                    <mat-form-field class="w-100">
-                        <mat-label>{{ 'Secret Key' | translate }}</mat-label>
-                        <input
-                            matInput
-                            type="password"
-                            formControlName="secretKey"
-                            placeholder="{{ 'Enter Secret Key' | translate }}"
-                            data-cy="exportProvider-s3-secretKey"
-                        />
-                    </mat-form-field>
-
-                    <mat-form-field class="w-100 mb-10">
-                        <mat-label>{{ 'Endpoint' | translate }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="endPoint"
-                            placeholder="{{ 'Enter Endpoint' | translate }}"
-                            data-cy="exportProvider-s3-endpoint"
-                        />
-                        @if (
-                            exportForm.get('endPoint')?.hasError('invalidUri')
-                        ) {
-                            <mat-error
-                                >{{ 'Invalid URI format.' | translate }}
-                            </mat-error>
-                        }
-                    </mat-form-field>
-
-                    <mat-form-field class="w-100">
-                        <mat-label>{{ 'Bucket' | translate }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="bucketName"
-                            placeholder="{{ 'Enter Bucket Name' | translate }}"
-                            data-cy="exportProvider-s3-bucket"
-                        />
-                    </mat-form-field>
-
-                    <mat-form-field class="w-100">
-                        <mat-label>{{ 'Region' | translate }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="awsRegion"
-                            placeholder="{{ 'Enter Region Name' | translate }}"
-                            data-cy="exportProvider-s3-region"
-                        />
-                    </mat-form-field>
-                </div>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Provider Settings' | translate"
+                >
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Access Key' | translate"
+                    >
+                        <mat-form-field class="w-100">
+                            <input
+                                matInput
+                                formControlName="accessKey"
+                                placeholder="{{
+                                    'Enter Access Key' | translate
+                                }}"
+                                data-cy="exportProvider-s3-accessKey"
+                            />
+                        </mat-form-field>
+                    </sp-form-field>
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Secret Key' | translate"
+                    >
+                        <mat-form-field class="w-100">
+                            <input
+                                matInput
+                                type="password"
+                                formControlName="secretKey"
+                                placeholder="{{
+                                    'Enter Secret Key' | translate
+                                }}"
+                                data-cy="exportProvider-s3-secretKey"
+                            />
+                        </mat-form-field>
+                    </sp-form-field>
+                    <sp-form-field [level]="3" [label]="'Endpoint' | translate">
+                        <mat-form-field class="w-100 mb-10">
+                            <input
+                                matInput
+                                formControlName="endPoint"
+                                placeholder="{{ 'Enter Endpoint' | translate }}"
+                                data-cy="exportProvider-s3-endpoint"
+                            />
+                            @if (
+                                exportForm
+                                    .get('endPoint')
+                                    ?.hasError('invalidUri')
+                            ) {
+                                <mat-error
+                                    >{{ 'Invalid URI format.' | translate }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </sp-form-field>
+                    <sp-form-field [level]="3" [label]="'Bucket' | translate">
+                        <mat-form-field class="w-100">
+                            <input
+                                matInput
+                                formControlName="bucketName"
+                                placeholder="{{
+                                    'Enter Bucket Name' | translate
+                                }}"
+                                data-cy="exportProvider-s3-bucket"
+                            />
+                        </mat-form-field>
+                    </sp-form-field>
+                    <sp-form-field [level]="3" [label]="'Region' | translate">
+                        <mat-form-field class="w-100">
+                            <input
+                                matInput
+                                formControlName="awsRegion"
+                                placeholder="{{
+                                    'Enter Region Name' | translate
+                                }}"
+                                data-cy="exportProvider-s3-region"
+                            />
+                        </mat-form-field>
+                    </sp-form-field>
+                </sp-split-section>
             }
-
-            <mat-divider></mat-divider>
         </form>
     </div>
-    <div class="sp-dialog-actions actions-align-right" fxLayoutGap="10px">
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions" fxLayoutGap="10px">
         <button
             mat-flat-button
             type="button"

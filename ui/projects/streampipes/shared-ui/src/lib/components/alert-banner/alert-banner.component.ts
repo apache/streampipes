@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AlertType } from '@streampipes/platform-services';
 
 @Component({
@@ -32,6 +32,9 @@ export class SpAlertBannerComponent {
 
     @Input() icon?: string;
     @Input() color = '';
+    @Input() showDetailsButton = false;
+
+    @Output() detailsButtonClicked = new EventEmitter<void>();
 
     get alertClasses(): string {
         if (this.color) {

@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-configuration-box [title]="'Order' | translate" marginTop="5px">
+<sp-split-section [level]="3" [title]="'Order' | translate">
     <mat-radio-group
         class="selection-radio-group"
         (change)="triggerConfigurationUpdate()"
@@ -35,4 +35,4 @@
             >{{ 'Oldest (ascending)' | translate }}
         </mat-radio-button>
     </mat-radio-group>
-</sp-configuration-box>
+</sp-split-section>

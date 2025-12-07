@@ -169,9 +169,9 @@ export class DatalakeConfigurationComponent implements OnInit {
     createExportProvider(provider: ExportProviderSettings | null) {
         const dialogRef: DialogRef<ExportProviderComponent> =
             this.dialogService.open(ExportProviderComponent, {
-                panelType: PanelType.STANDARD_PANEL,
+                panelType: PanelType.SLIDE_IN_PANEL,
                 title: this.translateService.instant('New Export Provider'),
-                width: '70vw',
+                width: '50vw',
                 data: {
                     provider: provider,
                 },

@@ -26,12 +26,10 @@
             [attr.data-cy]="template.name.toLowerCase().replaceAll(' ', '_')"
         >
             <div fxLayout="column" fxLayoutAlign="center start">
-                <div class="element-name">
-                    <b>{{ template.name }}</b>
-                </div>
-                <div class="element-description">
-                    <small>{{ template.description }}</small>
-                </div>
+                <sp-form-label
+                    [label]="template.name"
+                    [description]="template.description"
+                ></sp-form-label>
             </div>
         </div>
         <mat-divider></mat-divider>

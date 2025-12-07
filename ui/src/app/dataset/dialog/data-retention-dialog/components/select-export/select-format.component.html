@@ -16,9 +16,9 @@
   ~
   -->
 
-<sp-configuration-box [title]="'Export Settings' | translate">
+<sp-split-section [level]="3" [title]="'Export Settings' | translate">
     <div>
-        <sp-configuration-box [title]="'Download Format' | translate">
+        <sp-form-field [level]="3" [label]="'Download Format' | translate">
             <mat-radio-group
                 class="sp-radio-group"
                 [(ngModel)]="
@@ -48,13 +48,13 @@
                     EXCEL (XLSX)
                 </mat-radio-button>
             </mat-radio-group>
-        </sp-configuration-box>
+        </sp-form-field>
     </div>
 
     @if (
         dataRetentionConfig.retentionExportConfig.exportConfig.format === 'csv'
     ) {
-        <sp-configuration-box [title]="'Delimiter' | translate">
+        <sp-form-field [level]="3" [label]="'Delimiter' | translate">
             <mat-radio-group
                 [(ngModel)]="
                     dataRetentionConfig.retentionExportConfig.exportConfig
@@ -75,73 +75,70 @@
                     >&nbsp;;
                 </mat-radio-button>
             </mat-radio-group>
-        </sp-configuration-box>
+        </sp-form-field>
     }
-    <sp-configuration-box [title]="'Export Provider' | translate">
-        <div class="mt-10 p-10">
+    <sp-form-field [level]="3" [label]="'Export Provider' | translate">
+        <mat-form-field class="w-100">
+            <mat-select
+                [(ngModel)]="selectedProviderType"
+                data-cy="exportProvider-select"
+                (selectionChange)="onProviderTypeChange($event.value)"
+            >
+                @for (type of providerType; track type) {
+                    <mat-option
+                        [value]="type.toUpperCase()"
+                        [attr.data-cy]="'exportProvider-' + type.toLowerCase()"
+                    >
+                        {{ type | translate }}
+                    </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </sp-form-field>
+    @if (selectedProviderType === 'S3') {
+        <sp-form-field [level]="3" [label]="'Select Provider' | translate">
             <mat-form-field class="w-100">
-                <mat-label>{{ 'Select Provider Type' | translate }}</mat-label>
                 <mat-select
-                    [(ngModel)]="selectedProviderType"
-                    data-cy="exportProvider-select"
-                    (selectionChange)="onProviderTypeChange($event.value)"
+                    [(ngModel)]="
+                        dataRetentionConfig.retentionExportConfig
+                            .exportProviderId
+                    "
+                    data-cy="exportProviderId-select"
                 >
-                    @for (type of providerType; track type) {
+                    @for (
+                        provider of availableS3ExportProvider;
+                        track provider
+                    ) {
                         <mat-option
-                            [value]="type.toUpperCase()"
+                            [value]="provider.providerId"
                             [attr.data-cy]="
-                                'exportProvider-' + type.toLowerCase()
+                                'exportProviderId-' + provider.providerId
                             "
+                            style="font-size: 12px"
                         >
-                            {{ type | translate }}
+                            {{
+                                'Endpoint: ' +
+                                    provider.endPoint +
+                                    ' Bucket: ' +
+                                    provider.bucketName
+                            }}
                         </mat-option>
                     }
                 </mat-select>
             </mat-form-field>
-            @if (selectedProviderType === 'S3') {
-                <mat-form-field class="w-100">
-                    <mat-label>{{ 'Select Provider' | translate }}</mat-label>
-                    <mat-select
-                        [(ngModel)]="
-                            dataRetentionConfig.retentionExportConfig
-                                .exportProviderId
-                        "
-                        data-cy="exportProviderId-select"
-                    >
-                        @for (
-                            provider of availableS3ExportProvider;
-                            track provider
-                        ) {
-                            <mat-option
-                                [value]="provider.providerId"
-                                [attr.data-cy]="
-                                    'exportProviderId-' + provider.providerId
-                                "
-                                style="font-size: 12px"
-                            >
-                                {{
-                                    'Endpoint: ' +
-                                        provider.endPoint +
-                                        ' Bucket: ' +
-                                        provider.bucketName
-                                }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-            }
-        </div>
-        @if (
-            selectedProviderType === 'S3' &&
-            availableS3ExportProvider?.length === 0
-        ) {
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <mat-icon color="primary" class="mr-5 info-icon">info</mat-icon>
-                {{
-                    'No export providers found. Please create one first.'
-                        | translate
-                }}
-            </div>
-        }
-    </sp-configuration-box>
-</sp-configuration-box>
+        </sp-form-field>
+    }
+    @if (
+        selectedProviderType === 'S3' && availableS3ExportProvider?.length === 0
+    ) {
+        <sp-alert-banner
+            type="warning"
+            [title]="'No export providers found' | translate"
+            [description]="
+                'Create a new S3 export provider in the dataset settings.'
+                    | translate
+            "
+        >
+        </sp-alert-banner>
+    }
+</sp-split-section>

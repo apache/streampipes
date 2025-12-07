@@ -15,19 +15,9 @@
  *  limitations under the License.
  *
  */
+
 .invalid-uri {
     border: var(--color-warn);
-}
-
-.s3-config-container {
-    margin-top: 5px;
-    padding: 15px;
-    background-color: var(--color-bg-2);
-    border-radius: 8px;
-}
-
-.s3-config-container mat-form-field {
-    margin-bottom: 5px;
 }
 
 mat-hint {

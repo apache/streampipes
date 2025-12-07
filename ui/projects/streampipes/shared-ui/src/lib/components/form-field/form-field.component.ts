@@ -16,19 +16,24 @@
  *
  */
 
-.title-section {
-    width: 300px;
-}
+import { Component, Input } from '@angular/core';
 
-.appearance-radio-group {
-    display: flex;
-    flex-direction: column;
-}
+@Component({
+    selector: 'sp-form-field',
+    templateUrl: './form-field.component.html',
+    styleUrls: ['./form-field.component.scss'],
+    standalone: false,
+})
+export class FormFieldComponent {
+    @Input()
+    level: 1 | 2 | 3 = 2;
 
-.appearance-radio-button {
-    margin: 5px;
-}
+    @Input()
+    label: string;
 
-.ml-15 {
-    margin-left: 15px;
+    @Input()
+    description: string;
+
+    @Input()
+    margin = '0 10px';
 }

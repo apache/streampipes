@@ -28,47 +28,60 @@
                 @if (loadingCompleted) {
                     <form
                         (ngSubmit)="updateMessagingSettings()"
-                        class="form-width"
+                        class="w-100"
                         fxFlex="100"
                         fxLayout="column"
                     >
-                        <mat-form-field class="form-field" fxFlex="100">
-                            <input
-                                matInput
-                                [(ngModel)]="messagingSettings.batchSize"
-                                [placeholder]="'Batch Size' | translate"
-                                type="text"
-                                [ngModelOptions]="{ standalone: true }"
-                            />
-                        </mat-form-field>
-                        <mat-form-field class="form-field" fxFlex="100">
-                            <input
-                                matInput
-                                [(ngModel)]="messagingSettings.messageMaxBytes"
-                                [placeholder]="'Message Max Bytes' | translate"
-                                type="text"
-                                [ngModelOptions]="{ standalone: true }"
-                            />
-                        </mat-form-field>
-                        <mat-form-field class="form-field" fxFlex="100">
-                            <input
-                                matInput
-                                [(ngModel)]="messagingSettings.acks"
-                                [placeholder]="'Acks' | translate"
-                                type="text"
-                                [ngModelOptions]="{ standalone: true }"
-                            />
-                        </mat-form-field>
-                        <mat-form-field class="form-field" fxFlex="100">
-                            <input
-                                matInput
-                                [(ngModel)]="messagingSettings.lingerMs"
-                                [placeholder]="'Linger MS' | translate"
-                                type="text"
-                                [ngModelOptions]="{ standalone: true }"
-                            />
-                        </mat-form-field>
-                        <div fxLayoutAlign="start center" class="mt-10">
+                        <sp-form-field [level]="2" [label]="'Batch Size'">
+                            <mat-form-field class="form-field" fxFlex="100">
+                                <input
+                                    matInput
+                                    [(ngModel)]="messagingSettings.batchSize"
+                                    [placeholder]="'Batch Size'"
+                                    type="text"
+                                    [ngModelOptions]="{ standalone: true }"
+                                />
+                            </mat-form-field>
+                        </sp-form-field>
+                        <sp-form-field
+                            [level]="2"
+                            [label]="'Message Max Bytes'"
+                        >
+                            <mat-form-field class="form-field" fxFlex="100">
+                                <input
+                                    matInput
+                                    [(ngModel)]="
+                                        messagingSettings.messageMaxBytes
+                                    "
+                                    [placeholder]="'Message Max Bytes'"
+                                    type="text"
+                                    [ngModelOptions]="{ standalone: true }"
+                                />
+                            </mat-form-field>
+                        </sp-form-field>
+                        <sp-form-field [level]="2" [label]="'Acks'">
+                            <mat-form-field fxFlex="100">
+                                <input
+                                    matInput
+                                    [(ngModel)]="messagingSettings.acks"
+                                    [placeholder]="'Acks'"
+                                    type="text"
+                                    [ngModelOptions]="{ standalone: true }"
+                                />
+                            </mat-form-field>
+                        </sp-form-field>
+                        <sp-form-field [level]="2" [label]="'Linger MS'">
+                            <mat-form-field fxFlex="100">
+                                <input
+                                    matInput
+                                    [(ngModel)]="messagingSettings.lingerMs"
+                                    [placeholder]="'Linger MS'"
+                                    type="text"
+                                    [ngModelOptions]="{ standalone: true }"
+                                />
+                            </mat-form-field>
+                        </sp-form-field>
+                        <div fxLayoutAlign="start center">
                             <button
                                 mat-flat-button
                                 color="accent"
@@ -88,11 +101,20 @@
             [title]="'Protocols' | translate"
             [subtitle]="'Manage the priority of protocols used' | translate"
         >
+            <sp-alert-banner
+                type="info"
+                [title]="'Restart required' | translate"
+                [description]="
+                    'Changing the broker priority does not take effect immediately and requires a restart. Use this feature with caution.'
+                        | translate
+                "
+            >
+            </sp-alert-banner>
             <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
                 @if (loadingCompleted) {
                     <div
                         cdkDropList
-                        class="data-format-list text-sm"
+                        class="data-format-list text-sm w-100"
                         (cdkDropListDropped)="dropProtocol($event)"
                     >
                         @for (
@@ -105,7 +127,7 @@
                         }
                     </div>
                 }
-                <div fxLayoutAlign="start center" class="mt-10">
+                <div fxLayoutAlign="start center" class="mt-md">
                     <button
                         mat-flat-button
                         color="accent"
@@ -160,7 +182,7 @@
                         />
                     </mat-form-field>
                 </div>
-                <div fxLayoutAlign="start center" class="mt-10">
+                <div fxLayoutAlign="start center" class="mt-lg">
                     <button
                         mat-flat-button
                         color="accent"
