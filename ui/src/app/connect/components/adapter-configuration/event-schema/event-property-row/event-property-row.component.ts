@@ -38,7 +38,6 @@ import {
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 
@@ -49,7 +48,6 @@ import { ShepherdService } from '../../../../../services/tour/shepherd.service';
     standalone: false,
 })
 export class EventPropertyRowComponent implements OnInit {
-    private staticValueService = inject(StaticValueTransformService);
     private dialogService = inject(DialogService);
     private epUtils = inject(EventPropertyUtilsService);
     private shepherdService = inject(ShepherdService);
@@ -58,21 +56,17 @@ export class EventPropertyRowComponent implements OnInit {
     @Input() isEditable = true;
     @Input() eventSchema: EventSchema = new EventSchema();
     @Input() originalEventSchema: EventSchema;
-    @Input() countSelected: number;
     @Input() fieldStatusInfo: Record<string, FieldStatusInfo>;
 
     @Output() isEditableChange = new EventEmitter<boolean>();
     @Output() eventSchemaChange = new EventEmitter<EventSchema>();
-    @Output() originalEventSchemaChange = new EventEmitter<EventSchema>();
     @Output() refreshTreeEmitter = new EventEmitter<boolean>();
-    @Output() countSelectedChange = new EventEmitter<number>();
 
     label: string;
 
     isPrimitive = false;
     isNested = false;
     isList = false;
-    isStaticValue = false;
 
     timestampProperty = false;
     showFieldStatus = false;
@@ -87,9 +81,6 @@ export class EventPropertyRowComponent implements OnInit {
         this.isPrimitive = this.isEventPropertyPrimitive(this.node.data);
         this.isList = this.isEventPropertyList(this.node.data);
         this.isNested = this.isEventPropertyNested(this.node.data);
-        this.isStaticValue = this.staticValueService.isStaticValueProperty(
-            this.node.data.elementId,
-        );
         this.timestampProperty = this.isTimestampProperty(this.node.data);
 
         if (this.node.data instanceof EventProperty) {
@@ -190,64 +181,5 @@ export class EventPropertyRowComponent implements OnInit {
             this.checkAndDisplayProperties();
             this.refreshTreeEmitter.emit(true);
         });
-    }
-
-    public selectProperty(id: string, eventProperties: any): void {
-        if (!this.isEditable) {
-            return;
-        }
-        eventProperties = eventProperties || this.eventSchema.eventProperties;
-        for (const eventProperty of eventProperties) {
-            if (
-                eventProperty.eventProperties &&
-                eventProperty.eventProperties.length > 0
-            ) {
-                if (eventProperty.id === id) {
-                    if (eventProperty.selected) {
-                        eventProperty.selected = undefined;
-                        this.countSelected--;
-                        this.selectProperty(
-                            'none',
-                            eventProperty.eventProperties,
-                        );
-                    } else {
-                        eventProperty.selected = true;
-                        this.countSelected++;
-                        this.selectProperty(
-                            'all',
-                            eventProperty.eventProperties,
-                        );
-                    }
-                } else if (id === 'all') {
-                    eventProperty.selected = true;
-                    this.countSelected++;
-                    this.selectProperty('all', eventProperty.eventProperties);
-                } else if (id === 'none') {
-                    eventProperty.selected = undefined;
-                    this.countSelected--;
-                    this.selectProperty('none', eventProperty.eventProperties);
-                } else {
-                    this.selectProperty(id, eventProperty.eventProperties);
-                }
-            } else {
-                if (eventProperty.id === id) {
-                    if (eventProperty.selected) {
-                        eventProperty.selected = undefined;
-                        this.countSelected--;
-                    } else {
-                        eventProperty.selected = true;
-                        this.countSelected++;
-                    }
-                } else if (id === 'all') {
-                    eventProperty.selected = true;
-                    this.countSelected++;
-                } else if (id === 'none') {
-                    eventProperty.selected = undefined;
-                    this.countSelected--;
-                }
-            }
-        }
-        this.countSelectedChange.emit(this.countSelected);
-        this.refreshTreeEmitter.emit(false);
     }
 }

@@ -34,13 +34,9 @@
                 <div header fxFlex="100">
                     <sp-schema-editor-header
                         fxFlex="100"
-                        [countSelected]="countSelected"
                         [timestampPresent]="timestampPresent"
                         (addTimestampPropertyEmitter)="addTimestampProperty()"
                         (guessSchemaEmitter)="guessSchema()"
-                        (removeSelectedPropertiesEmitter)="
-                            removeSelectedProperties()
-                        "
                     >
                     </sp-schema-editor-header>
                 </div>
@@ -104,7 +100,6 @@
                                     [(originalEventSchema)]="originalSchema"
                                     [fieldStatusInfo]="fieldStatusInfo"
                                     (refreshTreeEmitter)="refreshTree($event)"
-                                    [(countSelected)]="countSelected"
                                 ></sp-event-property-row>
                             </ng-template>
                         </tree-root>

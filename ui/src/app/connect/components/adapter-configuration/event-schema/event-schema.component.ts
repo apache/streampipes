@@ -44,7 +44,6 @@ import { SemanticType } from '@streampipes/platform-services';
 import { interval, Subscription } from 'rxjs';
 import { RestService } from '../../../services/rest.service';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
-import { StaticValueTransformService } from '../../../services/static-value-transform.service';
 import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
 import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 
@@ -57,7 +56,6 @@ import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 export class EventSchemaComponent implements OnChanges, OnDestroy {
     private restService = inject(RestService);
     private transformationRuleService = inject(TransformationRuleService);
-    private staticValueTransformService = inject(StaticValueTransformService);
     private idGeneratorService = inject(IdGeneratorService);
 
     @Input()
@@ -95,7 +93,6 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
     _tree: TreeComponent;
 
     schemaGuess: GuessSchema = new GuessSchema();
-    countSelected = 0;
     isLoading = false;
     isError = false;
     isPreviewEnabled = false;
@@ -215,22 +212,6 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
                 }
             });
         }
-    }
-
-    public removeSelectedProperties(eventProperties?: any): void {
-        eventProperties = eventProperties || this.targetSchema.eventProperties;
-        for (let i = eventProperties.length - 1; i >= 0; --i) {
-            if (eventProperties[i].eventProperties) {
-                this.removeSelectedProperties(
-                    eventProperties[i].eventProperties,
-                );
-            }
-            if (eventProperties[i].selected) {
-                eventProperties.splice(i, 1);
-            }
-        }
-        this.countSelected = 0;
-        this.refreshTree();
     }
 
     public addTimestampProperty(): void {

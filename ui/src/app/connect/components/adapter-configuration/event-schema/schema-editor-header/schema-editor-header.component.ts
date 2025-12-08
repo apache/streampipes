@@ -25,12 +25,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     standalone: false,
 })
 export class SchemaEditorHeaderComponent {
-    @Input() countSelected: number;
     @Input() timestampPresent = false;
 
     @Output() addTimestampPropertyEmitter = new EventEmitter();
     @Output() guessSchemaEmitter = new EventEmitter();
-    @Output() removeSelectedPropertiesEmitter = new EventEmitter();
 
     public addTimestampProperty() {
         this.addTimestampPropertyEmitter.emit();
@@ -38,9 +36,5 @@ export class SchemaEditorHeaderComponent {
 
     public guessSchema() {
         this.guessSchemaEmitter.emit();
-    }
-
-    public removeSelectedProperties() {
-        this.removeSelectedPropertiesEmitter.emit();
     }
 }

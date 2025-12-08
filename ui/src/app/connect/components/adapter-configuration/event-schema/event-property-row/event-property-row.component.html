@@ -67,13 +67,6 @@
                 <span style="margin-left: -5px">marked as timestamp</span>
             </div>
         }
-        <div fxLayoutAlign="end center" class="static-value-info-outer">
-            @if (isStaticValue) {
-                <span class="static-value-info" matTooltip="Static Value">
-                    S
-                </span>
-            }
-        </div>
         <div fxLayoutAlign="end center" class="runtime-type-info-outer">
             @if (runtimeType) {
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
@@ -155,17 +148,5 @@
                 </button>
             </div>
         }
-        <div fxLayoutAlign="end center">
-            @if (isNested || isPrimitive || isList) {
-                <mat-checkbox
-                    (click)="selectProperty(node.data.id, undefined)"
-                    [disabled]="!isEditable"
-                    [class.checkbox-selected]="node.data.selected"
-                    [checked]="node.data.selected"
-                    [attr.data-cy]="'delete-property-' + label.toLowerCase()"
-                >
-                </mat-checkbox>
-            }
-        </div>
     </div>
 </div>
