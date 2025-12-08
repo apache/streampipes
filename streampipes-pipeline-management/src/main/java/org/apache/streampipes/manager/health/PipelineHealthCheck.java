@@ -126,7 +126,6 @@ public class PipelineHealthCheck implements Runnable {
           currentPipeline.setPipelineNotifications(pipelineNotifications);
           StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI()
               .updateElement(currentPipeline);
-          LOG.info("SET Pipeline Health");
           pipelinesStats.updatePipelineHealthState(currentPipeline.getElementId(), currentPipeline.getName(), currentPipeline.getHealthStatus().toString());
             }
         

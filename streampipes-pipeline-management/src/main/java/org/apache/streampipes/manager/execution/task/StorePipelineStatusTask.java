@@ -66,6 +66,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
     pipeline.setStartedAt(new Date().getTime());
     pipelinesStats.updatePipelineRunningState(pipeline.getElementId(),pipeline.getName()
                                                                   ,  true);
+    pipelinesStats.updatePipelineHealthState(pipeline.getElementId(),pipeline.getName(), pipeline.getHealthStatus().toString());
     try {
       getPipelineStorageApi().updateElement(pipeline);
     } catch (DocumentConflictException dce) {
@@ -77,6 +78,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
     pipeline.setRunning(false);
     pipelinesStats.updatePipelineRunningState(pipeline.getElementId(),pipeline.getName()
                                                                   , false);
+    pipelinesStats.updatePipelineHealthState(pipeline.getElementId(),pipeline.getName(), pipeline.getHealthStatus().toString());
     getPipelineStorageApi().updateElement(pipeline);
   }
 

@@ -18,11 +18,16 @@
 package org.apache.streampipes.commons.prometheus.pipelines;
 
 import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.prometheus.client.Gauge;
 
 
 public class PipelinesMetrics {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PipelinesMetrics.class);
+
   @Deprecated
   public static final Gauge ALL_PIPELINES_GAUGE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
                                                    "all_pipelines",
@@ -79,6 +84,8 @@ public class PipelinesMetrics {
   }
 
   public static void updatePipelineHealthState(String pipelineId, String pipelineName, String state) {
+
+    LOG.info ("state" + state + "pipelineID" + pipelineId);
 
     String[] statusElements = {"OK", "FAILURE", "REQUIRES_ATTENTION"};
 
