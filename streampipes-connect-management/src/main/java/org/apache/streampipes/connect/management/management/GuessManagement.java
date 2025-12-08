@@ -29,7 +29,7 @@ import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpoi
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Set;
 
 public class GuessManagement {
 
@@ -57,13 +56,11 @@ public class GuessManagement {
     this.objectMapper = JacksonSerializer.getObjectMapper();
   }
 
+  @Deprecated
   public GuessSchema guessSchema(AdapterDescription adapterDescription)
       throws ParseException, WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
     SecretProvider.getDecryptionService().apply(adapterDescription);
-    var workerUrl = getWorkerUrl(
-        adapterDescription.getAppId(),
-        adapterDescription.getDeploymentConfiguration().getDesiredServiceTags()
-    );
+    var workerUrl = getWorkerUrl(adapterDescription, WorkerPaths.getGuessSchemaPath());
     var description = objectMapper.writeValueAsString(adapterDescription);
 
     LOG.debug("Calling guess schema at: {}", workerUrl);
@@ -82,13 +79,47 @@ public class GuessManagement {
     }
   }
 
-  private String getWorkerUrl(String appId,
-                              Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException {
-    var baseUrl = endpointGenerator.getEndpointBaseUrl(appId, SpServiceUrlProvider.ADAPTER, customServiceTags);
-    return baseUrl + WorkerPaths.getGuessSchemaPath();
-  }
 
+
+  @Deprecated
   public String performAdapterEventPreview(AdapterEventPreview previewRequest) throws JsonProcessingException {
     return new AdapterEventPreviewPipeline(previewRequest).makePreview();
   }
+
+  public SampleData getSampleData(AdapterDescription adapterDescription)
+      throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
+
+    SecretProvider.getDecryptionService().apply(adapterDescription);
+
+    var workerUrl = getWorkerUrl(adapterDescription, WorkerPaths.getSamplePath());
+
+    var adapterDescriptionString = objectMapper.writeValueAsString(adapterDescription);
+
+    LOG.debug("Calling get get sample data at: {}", workerUrl);
+
+    var httpResponse = ExtensionServiceExecutions
+        .extServicePostRequest(workerUrl, adapterDescriptionString)
+        .execute()
+        .returnResponse();
+
+    var responseString = EntityUtils.toString(httpResponse.getEntity());
+
+    if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+      return objectMapper.readValue(responseString, SampleData.class);
+    } else {
+      var exception = objectMapper.readValue(responseString, SpLogMessage.class);
+      throw new WorkerAdapterException(exception);
+    }
+  }
+
+  private String getWorkerUrl(AdapterDescription adapterDescription,
+                              String suffix) throws NoServiceEndpointsAvailableException {
+    var baseUrl = endpointGenerator.getEndpointBaseUrl(
+        adapterDescription.getAppId(),
+        SpServiceUrlProvider.ADAPTER,
+        adapterDescription.getDeploymentConfiguration().getDesiredServiceTags());
+
+    return baseUrl + suffix;
+  }
+
 }

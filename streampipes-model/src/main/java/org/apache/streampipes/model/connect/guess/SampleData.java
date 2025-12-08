@@ -15,37 +15,26 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.management.util;
 
-public class WorkerPaths {
+package org.apache.streampipes.model.connect.guess;
 
-  private static final String WorkerMainPath = "/api/v1/worker";
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
-  public static String getStreamInvokePath() {
-    return WorkerMainPath + "/stream/invoke";
+import java.util.List;
+import java.util.Map;
+
+@TsModel
+public class SampleData {
+  // TODO add this  public Map<String, FieldStatusInfo> fieldStatusInfo
+
+  // A SampleEvent contains at least one sample
+  private List<Map<String, Object>> samples;
+
+  public List<Map<String, Object>> getSamples() {
+    return samples;
   }
 
-  public static String getStreamStopPath() {
-    return WorkerMainPath + "/stream/stop";
+  public void setSamples(List<Map<String, Object>> samples) {
+    this.samples = samples;
   }
-
-  public static String getRunningAdaptersPath() {
-    return WorkerMainPath + "/running";
-  }
-
-  public static String getRuntimeResolvablePath(String elementId) {
-    return WorkerMainPath + "/resolvable/" + elementId + "/configurations";
-  }
-
-  public static String getGuessSchemaPath() {
-    return WorkerMainPath + "/guess/schema";
-  }
-
-  // TODO naming
-  public static String getSamplePath() {
-    return WorkerMainPath + "/guess/sample";
-  }
-
-
-
 }

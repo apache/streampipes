@@ -131,7 +131,7 @@
 </div>
 
 <div fxLayoutAlign="end" class="mt-10">
-    <button class="mat-basic" mat-flat-button (click)="removeSelection()">
+    <button class="mat-basic" mat-flat-button (click)="cancel()">
         {{ 'Cancel' | translate }}
     </button>
     <button class="mat-basic stepper-button" mat-flat-button (click)="goBack()">
@@ -143,7 +143,7 @@
         data-cy="sp-event-schema-next-button"
         color="accent"
         mat-flat-button
-        (click)="clickNext()"
+        (click)="next()"
         [disabled]="!validEventSchema"
     >
         {{ 'Next' | translate }}

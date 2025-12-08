@@ -68,8 +68,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     /**
      * Cancels the adapter configuration process
      */
-    @Output() removeSelectionEmitter: EventEmitter<boolean> =
-        new EventEmitter();
+    @Output() cancelEmitter: EventEmitter<boolean> = new EventEmitter();
 
     /**
      * Is called when the adapter was created
@@ -268,8 +267,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
         }
     }
 
-    public removeSelection() {
-        this.removeSelectionEmitter.emit();
+    public cancel() {
+        this.cancelEmitter.emit();
     }
 
     public goBack() {

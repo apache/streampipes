@@ -20,10 +20,11 @@ package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.GuessManagement;
+import org.apache.streampipes.extensions.management.connect.AdapterWorkerGuessManagement;
 import org.apache.streampipes.extensions.management.context.AdapterContextGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
@@ -40,17 +41,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/worker/guess")
-public class GuessResource extends AbstractSharedRestInterface {
+public class AdapterWorkerGuessResource extends AbstractSharedRestInterface {
 
-  private static final Logger logger = LoggerFactory.getLogger(GuessResource.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerGuessResource.class);
 
-  private final GuessManagement guessManagement;
+  private final AdapterWorkerGuessManagement guessManagement;
 
-  public GuessResource() {
-    this.guessManagement = new GuessManagement(new AdapterContextGenerator().makeGuessSchemaContext());
+  public AdapterWorkerGuessResource() {
+    this.guessManagement = new AdapterWorkerGuessManagement(new AdapterContextGenerator().makeGuessSchemaContext());
   }
 
-  public GuessResource(GuessManagement guessManagement) {
+  public AdapterWorkerGuessResource(AdapterWorkerGuessManagement guessManagement) {
     this.guessManagement = guessManagement;
   }
 
@@ -65,14 +66,30 @@ public class GuessResource extends AbstractSharedRestInterface {
 
       return ok(result);
     } catch (ParseException e) {
-      logger.error("Error while parsing events: ", e);
+      LOG.error("Error while parsing events: ", e);
       throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
     } catch (AdapterException e) {
-      logger.error("Error while guessing schema for AdapterDescription: {}, {}", adapterDescription.getElementId(),
-          e.getMessage());
+      LOG.error(
+          "Error while guessing schema for AdapterDescription: {}, {}", adapterDescription.getElementId(),
+          e.getMessage()
+      );
       throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
     }
 
   }
+
+  @PostMapping(
+      path = "/sample",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SampleData> getSampleData(@RequestBody AdapterDescription adapterDescription)
+      throws AdapterException {
+
+    var sampleData = guessManagement.getSampleData(adapterDescription);
+
+    return ok(sampleData);
+  }
+
+
 }
 

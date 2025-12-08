@@ -82,7 +82,7 @@
             class="mat-basic"
             mat-flat-button
             style="margin-right: 10px"
-            (click)="removeSelection()"
+            (click)="cancel()"
             data-cy="connect-new-adapter-cancel"
         >
             {{ 'Cancel' | translate }}
@@ -101,7 +101,7 @@
                 class="stepper-button"
                 [disabled]="!specificAdapterSettingsFormValid"
                 data-cy="adapter-settings-next-button"
-                (click)="clickNext()"
+                (click)="next()"
                 color="accent"
                 mat-flat-button
             >

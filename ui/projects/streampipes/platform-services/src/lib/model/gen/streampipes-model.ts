@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-02 15:38:14.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-08 09:56:32.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1180,11 +1180,18 @@ export class DashboardEntity implements Storable, SpResource {
 export class DashboardItem {
     cols: number;
     component: string;
+    dataViewElementId: string;
+    h: number;
     id: string;
     name: string;
     rows: number;
     settings: string[];
     timeSettings: { [index: string]: any };
+    w: number;
+    /**
+     * @deprecated since 0.99.0, for removal
+     */
+    widgetId: string;
     x: number;
     y: number;
 
@@ -1198,6 +1205,8 @@ export class DashboardItem {
         const instance = target || new DashboardItem();
         instance.cols = data.cols;
         instance.component = data.component;
+        instance.dataViewElementId = data.dataViewElementId;
+        instance.h = data.h;
         instance.id = data.id;
         instance.name = data.name;
         instance.rows = data.rows;
@@ -1207,6 +1216,8 @@ export class DashboardItem {
         instance.timeSettings = __getCopyObjectFn(__identity<any>())(
             data.timeSettings,
         );
+        instance.w = data.w;
+        instance.widgetId = data.widgetId;
         instance.x = data.x;
         instance.y = data.y;
         return instance;
@@ -3691,6 +3702,21 @@ export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
         instance.selectedNodesInternalNames = __getCopyArrayFn(
             __identity<string>(),
         )(data.selectedNodesInternalNames);
+        return instance;
+    }
+}
+
+export class SampleData {
+    samples: { [index: string]: any }[];
+
+    static fromData(data: SampleData, target?: SampleData): SampleData {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SampleData();
+        instance.samples = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.samples);
         return instance;
     }
 }

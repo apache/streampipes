@@ -28,6 +28,7 @@ import {
     AdapterEventPreview,
     GuessSchema,
     PlatformServicesCommons,
+    SampleData,
     SpDataStream,
 } from '@streampipes/platform-services';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
@@ -51,6 +52,19 @@ export class RestService {
             .pipe(
                 map(response => {
                     return GuessSchema.fromData(response as GuessSchema);
+                }),
+            );
+    }
+
+    // TODO refactor
+    getSampleEvents(adapter: AdapterDescription): Observable<SampleData> {
+        return this.http
+            .post(`${this.connectPath}/master/guess/sample`, adapter, {
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            })
+            .pipe(
+                map(response => {
+                    return SampleData.fromData(response as SampleData);
                 }),
             );
     }

@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 
 public interface StreamPipesAdapter {
   IAdapterConfiguration declareConfig();
@@ -51,4 +52,10 @@ public interface StreamPipesAdapter {
 
   GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                 IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException;
+
+  default SampleData onSampleDataRequested(
+      IAdapterParameterExtractor extractor,
+      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    throw new UnsupportedOperationException("Event preview is not supported by this adapter.");
+  }
 }

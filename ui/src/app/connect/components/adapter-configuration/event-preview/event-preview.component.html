@@ -1,0 +1,136 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+<div fxFlex="100" fxLayout="column">
+    <div fxFlex="100" fxLayout="column">
+        <sp-basic-inner-panel
+            [panelTitle]="'Basic Settings' | translate"
+            outerMargin="20px 0px"
+        >
+            <div header fxLayoutAlign="end center" fxFlex="100">
+                <button
+                    color="accent"
+                    mat-button
+                    matTooltip="Select existing format"
+                    [matMenuTriggerFor]="sampleMenu"
+                    data-cy="select-existing-format-button"
+                >
+                    <mat-icon>format_list_bulleted</mat-icon>
+                    <span>Select existing format</span>
+                </button>
+
+                <mat-menu #sampleMenu="matMenu" data-cy="sample-script-menu">
+                    <button
+                        mat-menu-item
+                        *ngFor="let s of sampleScripts"
+                        (click)="selectSample(s.key)"
+                        data-cy="sample-script-{{ s.key }}"
+                    >
+                        {{ s.title }}
+                    </button>
+                </mat-menu>
+                <button
+                    color="accent"
+                    mat-button
+                    matTooltip="Run script"
+                    (click)="runScript()"
+                >
+                    <mat-icon>play_circle_filled</mat-icon>
+                    <span>Run script</span>
+                </button>
+                <button
+                    color="accent"
+                    mat-button
+                    matTooltip="Get Sample Event"
+                    (click)="getSampleEvent()"
+                >
+                    <mat-icon>refresh</mat-icon>
+                    <span>Get Sample Event</span>
+                </button>
+            </div>
+            <label
+                >Script (provide function body that receives `event` and returns
+                transformed event)</label
+            >
+
+            <ngx-codemirror
+                style="width: 100%; height: 220px"
+                [(ngModel)]="script"
+                [options]="editorOptions"
+                data-cy="event-preview-script-editor"
+            ></ngx-codemirror>
+
+            @if (runError) {
+                <div style="color: #b00020; margin-top: 8px">
+                    <strong>Error:</strong> {{ runError }}
+                </div>
+            }
+        </sp-basic-inner-panel>
+    </div>
+
+    <div fxFlex="100" fxLayout="row" fxLayoutGap="15px">
+        <div fxFlex="50" fxLayout="column">
+            <sp-basic-inner-panel
+                [showTitle]="true"
+                [panelTitle]="'Original (Parsed)' | translate"
+            >
+                <pre
+                    [innerHTML]="input | jsonpretty"
+                    class="preview-text"
+                    data-cy="schema-preview-original-event"
+                ></pre>
+            </sp-basic-inner-panel>
+        </div>
+
+        <div fxFlex="50" fxLayout="column">
+            <sp-basic-inner-panel
+                [showTitle]="true"
+                [panelTitle]="'Result' | translate"
+                fxFlex="100"
+                data-cy="connect-schema-update-preview"
+            >
+                <pre
+                    [innerHTML]="output | jsonpretty"
+                    class="preview-text"
+                    data-cy="schema-preview-result-event"
+                ></pre>
+            </sp-basic-inner-panel>
+        </div>
+    </div>
+
+    <div fxLayoutAlign="end" class="mt-10">
+        <button class="mat-basic" mat-flat-button (click)="cancel()">
+            {{ 'Cancel' | translate }}
+        </button>
+        <button
+            class="mat-basic stepper-button"
+            mat-flat-button
+            (click)="goBack()"
+        >
+            {{ 'Back' | translate }}
+        </button>
+        <button
+            class="stepper-button"
+            data-cy="sp-event-schema-next-button"
+            color="accent"
+            mat-flat-button
+            (click)="next()"
+        >
+            {{ 'Next' | translate }}
+        </button>
+    </div>
+</div>
