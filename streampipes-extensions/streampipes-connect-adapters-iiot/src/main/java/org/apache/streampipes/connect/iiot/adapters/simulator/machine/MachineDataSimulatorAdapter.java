@@ -33,13 +33,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.simulator.machine";
@@ -99,19 +92,6 @@ public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
     var ex = extractor.getStaticPropertyExtractor();
     var selectedSimulatorOption = ex.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
 
-    var guessSchema = MachineDataSimulatorUtils.getSimulator(selectedSimulatorOption).getSchema();
-
-    ObjectMapper objectMapper = new ObjectMapper();
-    Map<String, Object> event = null;
-    try {
-      event = objectMapper.readValue(guessSchema.getEventPreview().get(0), HashMap.class);
-    } catch (JsonProcessingException e) {
-      event = Map.of();
-    }
-
-    var eventPreview = new SampleData();
-    eventPreview.setSamples(List.of(event));
-
-    return eventPreview;
+    return MachineDataSimulatorUtils.getSimulator(selectedSimulatorOption).getSampleData();
   }
 }

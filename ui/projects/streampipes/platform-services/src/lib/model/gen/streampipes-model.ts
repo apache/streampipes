@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-08 09:56:32.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-08 13:13:14.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -2431,6 +2430,7 @@ export class ListOutputStrategy extends OutputStrategy {
 export class LocationConfig {
     attributionText: string;
     locationEnabled: boolean;
+    mapLayerType: MapLayerType;
     tileServerUrl: string;
 
     static fromData(
@@ -2443,6 +2443,7 @@ export class LocationConfig {
         const instance = target || new LocationConfig();
         instance.attributionText = data.attributionText;
         instance.locationEnabled = data.locationEnabled;
+        instance.mapLayerType = data.mapLayerType;
         instance.tileServerUrl = data.tileServerUrl;
         return instance;
     }
@@ -4497,6 +4498,8 @@ export type Isa95Type =
     | 'WORK_CELL'
     | 'STORAGE_UNIT'
     | 'OTHER';
+
+export type MapLayerType = 'TILE' | 'VECTOR';
 
 export type MappingPropertyUnion = MappingPropertyNary | MappingPropertyUnary;
 
