@@ -136,7 +136,6 @@
         @if (isNested || isPrimitive || isList) {
             <div fxLayoutAlign="end center" class="ml-5 mr-5">
                 <button
-                    [disabled]="!isEditable"
                     color="accent"
                     mat-button
                     (click)="openEditDialog(node.data)"

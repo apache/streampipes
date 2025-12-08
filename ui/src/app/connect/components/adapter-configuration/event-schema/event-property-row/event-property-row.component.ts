@@ -53,12 +53,10 @@ export class EventPropertyRowComponent implements OnInit {
     private shepherdService = inject(ShepherdService);
 
     @Input() node: TreeNode;
-    @Input() isEditable = true;
     @Input() eventSchema: EventSchema = new EventSchema();
     @Input() originalEventSchema: EventSchema;
     @Input() fieldStatusInfo: Record<string, FieldStatusInfo>;
 
-    @Output() isEditableChange = new EventEmitter<boolean>();
     @Output() eventSchemaChange = new EventEmitter<EventSchema>();
     @Output() refreshTreeEmitter = new EventEmitter<boolean>();
 
@@ -170,7 +168,6 @@ export class EventPropertyRowComponent implements OnInit {
             data: {
                 property: data,
                 originalProperty: this.originalProperty,
-                isEditable: this.isEditable,
             },
         });
         this.shepherdService.trigger('adapter-edit-field-clicked');

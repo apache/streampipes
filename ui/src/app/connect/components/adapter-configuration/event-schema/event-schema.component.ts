@@ -31,7 +31,6 @@ import { ITreeOptions, TreeComponent } from '@ali-hm/angular-tree-component';
 import {
     AdapterDescription,
     DataType,
-    EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
     EventSchema,
@@ -63,8 +62,6 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
 
     @Input()
     isEditMode: boolean;
-
-    isEditable = true;
 
     originalSchema: EventSchema;
     targetSchema: EventSchema = new EventSchema();
@@ -110,21 +107,8 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
 
     options: ITreeOptions = {
         childrenField: 'eventProperties',
-        allowDrag: () => {
-            return this.isEditable;
-        },
-        allowDrop: (node, { parent }) => {
-            return (
-                parent.data instanceof EventPropertyNested ||
-                parent.data.virtual
-            );
-        },
         displayField: 'runTimeName',
     };
-
-    public onUpdateData(treeComponent: TreeComponent): void {
-        treeComponent.treeModel.expandAll();
-    }
 
     public setEventSchemaEditWarning() {
         this.schemaErrorHints.push(
@@ -170,7 +154,6 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
                 this.originalSchema = guessSchema.eventSchema;
                 this.validEventSchema = this.checkIfValid(this.targetSchema);
 
-                this.isEditable = true;
                 this.isEditableChange.emit(true);
                 this.stopProgress();
                 this.refreshedEventSchema = true;
@@ -323,11 +306,6 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
     getTargetSchema(): EventSchema {
         this.targetSchema.eventProperties = this.nodes;
         return this.targetSchema;
-    }
-
-    onNodeMove(event: any) {
-        this.targetSchema.eventProperties = this.nodes;
-        this.updatePreview();
     }
 
     @ViewChild('tree')

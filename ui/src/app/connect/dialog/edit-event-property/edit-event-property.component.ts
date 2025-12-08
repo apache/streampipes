@@ -52,7 +52,6 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 export class EditEventPropertyComponent implements OnInit {
     @Input() property: EventPropertyUnion;
     @Input() originalProperty: EventPropertyUnion;
-    @Input() isEditable: boolean;
 
     @Output() propertyChange = new EventEmitter<EventPropertyUnion>();
 
