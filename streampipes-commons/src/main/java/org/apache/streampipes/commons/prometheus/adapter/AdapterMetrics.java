@@ -47,25 +47,30 @@ public class AdapterMetrics {
 
   private static final String ELEMENT_NOT_FOUND_TEMPLATE = "No entry for adapter '%s' found. Please register it first.";
 
-  private final Gauge totalAdapterEventsPublishedMetric;
-  private final Gauge totalAdapterEventsPublishedMetricLegacy;
+/**
+ * @deprecated Use {@link #totalAdapterEventsPublishedMetric} instead.
+ */
+@Deprecated
+public final Gauge totalAdapterEventsPublishedMetricLegacy;
 
-  public AdapterMetrics() {
-    @Deprecated
-    Gauge legacyGauge = StreamPipesCollectorRegistry.registerGauge(
+public final Gauge totalAdapterEventsPublishedMetric;
+
+public AdapterMetrics() {
+
+    this.totalAdapterEventsPublishedMetricLegacy = StreamPipesCollectorRegistry.registerGauge(
         "adapter_events_published_total",
         "Total amount of events published per adapter",
         "adapterId", "adapterName"
     );
-    this.totalAdapterEventsPublishedMetricLegacy = legacyGauge;
 
     this.totalAdapterEventsPublishedMetric = StreamPipesCollectorRegistry.registerGauge(
         "sp_core_adapter_instance_events_published_total",
         "Total amount of events published per adapter",
         "adapterId", "adapterName"
     );
+
     this.registeredAdapters = new HashMap<>();
-  }
+}
 
 
  

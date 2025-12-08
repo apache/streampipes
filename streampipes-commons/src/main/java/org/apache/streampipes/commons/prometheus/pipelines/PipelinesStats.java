@@ -166,7 +166,7 @@ public class PipelinesStats {
     PipelinesMetrics.ALL_PIPELINES_GAUGE.set(this.allPipelines);
 
     //TODO HERE WE NEED THE CORRECT IMPLEMENTATION
-    PipelinesMetrics.ELEMENT_COUNT_GAUGE.set(this.elementCount);
+    //PipelinesMetrics.ELEMENT_COUNT_GAUGE.set(this.elementCount);
 
   }
 
