@@ -28,6 +28,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.json.
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
@@ -123,6 +124,11 @@ public class JsonParsers implements IParser {
   @Override
   public GuessSchema getGuessSchema(InputStream inputStream) {
     return selectedParser.getGuessSchema(inputStream);
+  }
+
+  @Override
+  public SampleData getSampleData(InputStream inputStream) {
+    return selectedParser.getSampleData(inputStream);
   }
 
   @Override

@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,7 +39,10 @@ public abstract class JsonParser {
     this.parserUtils = new ParserUtils();
   }
 
+  @Deprecated
   public abstract GuessSchema getGuessSchema(InputStream inputStream);
+
+  public abstract SampleData getSampleData(InputStream inputStream) throws ParseException;
 
   public abstract void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException;
 

@@ -34,6 +34,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonP
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
@@ -399,6 +400,15 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     var inputStream = getFileAsInputStreamFromEndpoint(extractor);
     return extractor.selectedParser()
                     .getGuessSchema(inputStream);
+  }
+
+  @Override
+  public SampleData onSampleDataRequested(
+      IAdapterParameterExtractor extractor,
+      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    var inputStream = getFileAsInputStreamFromEndpoint(extractor);
+    return extractor.selectedParser()
+                    .getSampleData(inputStream);
   }
 
   private InputStream getFileAsInputStreamFromEndpoint(IAdapterParameterExtractor extractor) throws AdapterException {

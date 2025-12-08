@@ -18,14 +18,17 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.parser.xml;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 
@@ -84,6 +87,17 @@ public class XmlParser implements IParser {
     var event = getEvents(inputStream).get(0);
     var converter = new XmlMapConverter(event);
     return parserUtils.getGuessSchema(converter.convert());
+  }
+
+  @Override
+  public SampleData getSampleData(InputStream inputStream) throws AdapterException {
+    var events = getEvents(inputStream);
+    var converter = new XmlMapConverter(events.get(0));
+    var event = converter.convert();
+
+    return SampleDataBuilder.create()
+        .sample(event)
+        .build();
   }
 
   @Override

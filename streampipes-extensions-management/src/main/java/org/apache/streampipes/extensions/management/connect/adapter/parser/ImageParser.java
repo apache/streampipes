@@ -18,14 +18,17 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 
 import org.apache.commons.io.IOUtils;
@@ -35,6 +38,7 @@ import java.io.InputStream;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ImageParser implements IParser {
 
@@ -62,6 +66,18 @@ public class ImageParser implements IParser {
         .property(EpProperties.imageProperty("image"))
         .sample("image", image)
         .build();
+  }
+
+  @Override
+  public SampleData getSampleData(InputStream inputStream) throws AdapterException {
+    var image = parseImage(inputStream);
+
+    Map<String, Object> sample = new HashMap<>();
+    sample.put("image", image);
+
+    return SampleDataBuilder.create()
+                            .sample(sample)
+                            .build();
   }
 
   @Override

@@ -85,9 +85,15 @@ public class AdapterWorkerGuessResource extends AbstractSharedRestInterface {
   public ResponseEntity<SampleData> getSampleData(@RequestBody AdapterDescription adapterDescription)
       throws AdapterException {
 
-    var sampleData = guessManagement.getSampleData(adapterDescription);
+    // TODO CHANGE: handle ParseExceptions or change to AdapterException
+    try {
+      var sampleData = guessManagement.getSampleData(adapterDescription);
+      return ok(sampleData);
+    } catch (ParseException e) {
+      LOG.error("Error while parsing events: ", e);
+      throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
+    }
 
-    return ok(sampleData);
   }
 
 
