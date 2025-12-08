@@ -28,7 +28,5 @@ import { SpLogMessage } from '@streampipes/platform-services';
 export class ErrorMessageComponent {
     @Input() errorMessage: SpLogMessage;
 
-    showErrorMessage = false;
-
     constructor() {}
 }

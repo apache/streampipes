@@ -25,7 +25,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AdapterConfigurationComponent } from './components/adapter-configuration/adapter-configuration.component';
-import { EventSchemaComponent } from './components/adapter-configuration/schema-editor/event-schema/event-schema.component';
 
 import { MatInputModule } from '@angular/material/input';
 import { AdapterStartedDialog } from './dialog/adapter-started/adapter-started-dialog.component';
@@ -41,15 +40,10 @@ import { EditDataTypeComponent } from './dialog/edit-event-property/components/e
 import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
 import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
-import { EventPropertyRowComponent } from './components/adapter-configuration/schema-editor/event-property-row/event-property-row.component';
-import { EventSchemaPreviewComponent } from './components/adapter-configuration/schema-editor/event-schema-preview/event-schema-preview.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 
 import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
-import { ErrorMessageComponent } from './components/adapter-configuration/schema-editor/error-message/error-message.component';
-import { LoadingMessageComponent } from './components/adapter-configuration/schema-editor/loading-message/loading-message.component';
-import { SchemaEditorHeaderComponent } from './components/adapter-configuration/schema-editor/schema-editor-header/schema-editor-header.component';
 import { StartAdapterConfigurationComponent } from './components/adapter-configuration/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
@@ -64,7 +58,6 @@ import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adap
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CreateAdapterComponent } from './components/create-adapter/create-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
-import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/schema-editor/event-schema-error-hints/event-schema-error-hints.component';
 import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
 import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
 import { CanNotEditAdapterDialog } from './dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
@@ -110,6 +103,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ConfigurationGroupComponent } from './components/adapter-configuration/adapter-settings/configuration-group/configuration-group.component';
 import { EventPreviewComponent } from './components/adapter-configuration/event-preview/event-preview.component';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { EventSchemaComponent } from './components/adapter-configuration/event-schema/event-schema.component';
+import { EventPropertyRowComponent } from './components/adapter-configuration/event-schema/event-property-row/event-property-row.component';
+import { EventSchemaPreviewComponent } from './components/adapter-configuration/event-schema/event-schema-preview/event-schema-preview.component';
+import { ErrorMessageComponent } from './components/adapter-configuration/event-schema/error-message/error-message.component';
+import { LoadingMessageComponent } from './components/adapter-configuration/event-schema/loading-message/loading-message.component';
+import { SchemaEditorHeaderComponent } from './components/adapter-configuration/event-schema/schema-editor-header/schema-editor-header.component';
+import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/event-schema/event-schema-error-hints/event-schema-error-hints.component';
 
 @NgModule({
     imports: [

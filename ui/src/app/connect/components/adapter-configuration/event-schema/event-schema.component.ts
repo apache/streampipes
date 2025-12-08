@@ -19,6 +19,7 @@
 import {
     Component,
     EventEmitter,
+    inject,
     Input,
     OnChanges,
     OnDestroy,
@@ -26,7 +27,6 @@ import {
     SimpleChanges,
     ViewChild,
 } from '@angular/core';
-import { RestService } from '../../../../services/rest.service';
 import { ITreeOptions, TreeComponent } from '@ali-hm/angular-tree-component';
 import {
     AdapterDescription,
@@ -40,12 +40,13 @@ import {
     SpLogMessage,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
-import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
-import { TransformationRuleService } from '../../../../services/transformation-rule.service';
-import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
-import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
 import { SemanticType } from '@streampipes/platform-services';
 import { interval, Subscription } from 'rxjs';
+import { RestService } from '../../../services/rest.service';
+import { TransformationRuleService } from '../../../services/transformation-rule.service';
+import { StaticValueTransformService } from '../../../services/static-value-transform.service';
+import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
+import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 
 @Component({
     selector: 'sp-event-schema',
@@ -54,12 +55,10 @@ import { interval, Subscription } from 'rxjs';
     standalone: false,
 })
 export class EventSchemaComponent implements OnChanges, OnDestroy {
-    constructor(
-        private restService: RestService,
-        private transformationRuleService: TransformationRuleService,
-        private staticValueTransformService: StaticValueTransformService,
-        private idGeneratorService: IdGeneratorService,
-    ) {}
+    private restService = inject(RestService);
+    private transformationRuleService = inject(TransformationRuleService);
+    private staticValueTransformService = inject(StaticValueTransformService);
+    private idGeneratorService = inject(IdGeneratorService);
 
     @Input()
     adapterDescription: AdapterDescription;
