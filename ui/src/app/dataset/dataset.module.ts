@@ -47,12 +47,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import {
+    MatPaginatorIntl,
+    MatPaginatorModule,
+} from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { DataRetentionNowDialogComponent } from './dialog/data-retention-now-dialog/data-retention-now-dialog.component';
 import { DataRetentionLogDialogComponent } from './dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 import { ExportProviderConnectionTestComponent } from './dialog/export-provider-connection-test/export-provider-connection-test.component';
+import { PaginatorService } from 'projects/streampipes/shared-ui/src/lib/components/sp-table/sp-paginator/sp-paginator.component';
 
 @NgModule({
     imports: [
@@ -103,6 +107,10 @@ import { ExportProviderConnectionTestComponent } from './dialog/export-provider-
         SelectDataExportComponent,
         DeleteExportProviderComponent,
     ],
+    providers: [
+        { provide: MatPaginatorIntl, useClass: PaginatorService }, // Use custom paginator service
+    ],
+
     exports: [],
 })
 export class DatasetModule {
