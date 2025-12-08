@@ -37,11 +37,15 @@ scrape_configs:
   - job_name: "backend"
     metrics_path: "/streampipes-backend/actuator/prometheus"
     static_configs:
-      - targets: [ "backend:8030" ]
+      - targets: [ "141.21.14.31:8030" ]
+    basic_auth:
+      username: "admin@streampipes.apache.org"
+      password: "admin"
     #bearer_token: ""
     #bearer_token_file: ""
 
   - job_name: "extensions-all-iiot"
     metrics_path: "/actuator/prometheus"
     static_configs:
-      - targets: [ "extensions-all-jvm:8090" ]
+      - targets: [ "141.21.14.31:8090" ]
+    bearer_token : "UYDuIK9bnEX1n7kbZ,tZ6w5,"

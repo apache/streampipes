@@ -155,12 +155,26 @@ public class PipelinesStats {
 
 
   public void metrics() {
+    PipelinesMetrics.ALL_PIPELINES_GAUGE_LEGACY.set(this.allPipelines);
+    PipelinesMetrics.RUNNING_PIPELINES_GAUGE_LEGACY.set(this.runningPipelines);
+    PipelinesMetrics.STOPPED_PIPELINES_GAUGE_LEGACY.set(this.stoppedPipelines);
+    PipelinesMetrics.HEALTHY_PIPELINES_GAUGE_LEGACY.set(this.healthyPipelines);
+    PipelinesMetrics.FAILED_PIPELINES_GAUGE_LEGACY.set(this.failedPipelines);
+    PipelinesMetrics.ATTENTION_REQUIRED_PIPELINES_GAUGE_LEGACY.set(this.attentionRequiredPipelines);
+    PipelinesMetrics.ELEMENT_COUNT_GAUGE_LEGACY.set(this.elementCount);
+
     PipelinesMetrics.ALL_PIPELINES_GAUGE.set(this.allPipelines);
-    PipelinesMetrics.RUNNING_PIPELINES_GAUGE.set(this.runningPipelines);
-    PipelinesMetrics.STOPPED_PIPELINES_GAUGE.set(this.stoppedPipelines);
-    PipelinesMetrics.HEALTHY_PIPELINES_GAUGE.set(this.healthyPipelines);
-    PipelinesMetrics.FAILED_PIPELINES_GAUGE.set(this.failedPipelines);
-    PipelinesMetrics.ATTENTION_REQUIRED_PIPELINES_GAUGE.set(this.attentionRequiredPipelines);
+
+    //TODO HERE WE NEED THE CORRECT IMPLEMENTATION
     PipelinesMetrics.ELEMENT_COUNT_GAUGE.set(this.elementCount);
+
+  }
+
+  public void updatePipelineRunningState(String pipelineId, String pipelineName, boolean state){
+    PipelinesMetrics.updatePipelineRunningState(pipelineId, pipelineName, state);
+  }
+
+    public void updatePipelineHealthState(String pipelineId, String pipelineName, String healthState){
+    PipelinesMetrics.updatePipelineHealthState(pipelineId, pipelineName, healthState);
   }
 }
