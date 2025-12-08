@@ -16,16 +16,21 @@
   ~
   -->
 
-<div fxLayout="column" class="box" [ngStyle]="boxStyle">
-    <div fxLayout="column" fxFlex class="box-content" fxLayoutGap="10px">
-        <i class="material-icons icon-size" [ngStyle]="linkStyle">{{
-            linkType.linkIcon
-        }}</i>
-        <span class="link-label">{{ assetLink.linkLabel }}</span>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="end end">
-        <button mat-icon-button color="accent" (click)="navigate()">
-            <mat-icon>visibility</mat-icon>
-        </button>
+<div fxLayout="column" class="asset-selection-outer">
+    <div fxLayout="column" class="m-md">
+        @for (option of flatAssets; track option.asset.assetId) {
+            <div
+                class="option-content p-md"
+                [style.padding-left.px]="option.depth * 12"
+                (click)="selectAsset(option.asset)"
+            >
+                <mat-icon class="option-icon">
+                    {{ option.depth === 0 ? 'home' : 'account_tree' }}
+                </mat-icon>
+                <span class="option-label">
+                    {{ option.label }}
+                </span>
+            </div>
+        }
     </div>
 </div>

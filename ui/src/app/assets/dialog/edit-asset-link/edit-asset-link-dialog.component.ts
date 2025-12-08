@@ -37,7 +37,6 @@ import { BaseAssetLinksDirective } from '../base-asset-links.directive';
 @Component({
     selector: 'sp-edit-asset-link-dialog-component',
     templateUrl: './edit-asset-link-dialog.component.html',
-    styleUrls: ['./edit-asset-link-dialog.component.scss'],
     standalone: false,
 })
 export class EditAssetLinkDialogComponent

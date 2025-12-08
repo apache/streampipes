@@ -19,53 +19,60 @@
 <div fxLayout="column">
     <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
         <div fxFlex fxLayoutAlign="start center">
-            <mat-form-field
-                color="accent"
-                class="w-100"
-                subscriptSizing="dynamic"
+            <sp-form-field
+                [level]="2"
+                fxFlex="100"
+                [label]="'Site' | translate"
+                [description]="
+                    'Assign a location (site and area) to this asset'
+                        | translate
+                "
             >
-                <mat-select
-                    data-cy="asset-site-select"
-                    [disabled]="!editMode"
-                    [(ngModel)]="asset.assetSite.siteId"
-                    (selectionChange)="handleLocationChange($event)"
-                >
-                    @for (site of sites; track site) {
-                        <mat-option
-                            [attr.data-cy]="'option-' + site.label"
-                            [value]="site._id"
-                        >
-                            {{ site.label }}
-                        </mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div fxLayoutAlign="start center">
-            <button
-                mat-flat-button
-                color="accent"
-                [routerLink]="['/configuration/sites']"
-            >
-                {{ 'Manage Sites' | translate }}
-            </button>
+                <div form-field-actions>
+                    <button
+                        mat-flat-button
+                        class="mat-basic"
+                        [routerLink]="['/configuration/sites']"
+                    >
+                        {{ 'Manage Sites' | translate }}
+                    </button>
+                </div>
+                <mat-form-field>
+                    <mat-select
+                        data-cy="asset-site-select"
+                        [disabled]="!editMode"
+                        [(ngModel)]="asset.assetSite.siteId"
+                        (selectionChange)="handleLocationChange($event)"
+                    >
+                        @for (site of sites; track site) {
+                            <mat-option
+                                [attr.data-cy]="'option-' + site.label"
+                                [value]="site._id"
+                            >
+                                {{ site.label }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </sp-form-field>
         </div>
     </div>
 
     @if (currentSite) {
-        <mat-form-field color="accent" class="mt-10 w-100">
-            <mat-label>Area</mat-label>
-            <mat-select
-                [disabled]="!editMode"
-                [(ngModel)]="asset.assetSite.area"
-            >
-                @for (area of currentSite.areas; track area) {
-                    <mat-option [value]="area">
-                        {{ area }}
-                    </mat-option>
-                }
-            </mat-select>
-        </mat-form-field>
+        <sp-form-field [level]="2" [label]="'Area' | translate">
+            <mat-form-field>
+                <mat-select
+                    [disabled]="!editMode"
+                    [(ngModel)]="asset.assetSite.area"
+                >
+                    @for (area of currentSite.areas; track area) {
+                        <mat-option [value]="area">
+                            {{ area }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </sp-form-field>
     }
     @if (asset.assetSite?.siteId) {
         <sp-asset-location [asset]="asset" [editMode]="editMode">

@@ -17,41 +17,38 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
-import { Router } from '@angular/router';
+import { SpAsset } from '@streampipes/platform-services';
+
+export interface CustomField {
+    key: string;
+    value: string;
+}
 
 @Component({
-    selector: 'sp-asset-link-card',
-    templateUrl: './asset-link-card.component.html',
-    styleUrls: ['./asset-link-card.component.scss'],
+    selector: 'sp-asset-details-custom-fields',
+    templateUrl: './asset-details-custom-fields.component.html',
     standalone: false,
 })
-export class AssetLinkCardComponent implements OnInit {
+export class AssetDetailsCustomFieldsComponent implements OnInit {
     @Input()
-    assetLink: AssetLink;
+    asset: SpAsset;
 
     @Input()
-    assetLinkTypes: AssetLinkType[] = [];
-
-    linkType: AssetLinkType;
-
-    boxStyle: any;
-    linkStyle: any;
-
-    constructor(private router: Router) {}
+    editMode = false;
 
     ngOnInit() {
-        this.linkType = this.assetLinkTypes.find(
-            l => l.linkType === this.assetLink.linkType,
-        );
-        this.boxStyle = { border: `1px solid ${this.linkType.linkColor}` };
-        this.linkStyle = { color: this.linkType.linkColor };
+        this.asset.additionalData.customFields ??= [];
     }
 
-    navigate() {
-        this.router.navigate([
-            ...this.linkType.navPaths,
-            this.assetLink.resourceId,
-        ]);
+    get customFields(): CustomField[] {
+        return this.asset.additionalData!.customFields!;
+    }
+
+    addCustomField(): void {
+        this.customFields.push({ key: '', value: '' });
+    }
+
+    removeCustomField(index: number): void {
+        this.customFields.splice(index, 1);
     }
 }

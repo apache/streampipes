@@ -48,50 +48,19 @@
                             ><span>&nbsp;{{ 'Save' | translate }}</span>
                         </button>
                     </div>
-                    <div
-                        fxLayout="row"
-                        class="navbar-margin"
-                        fxLayoutAlign="end center"
-                    >
-                        <nav mat-tab-nav-bar color="accent">
-                            <a
-                                mat-tab-link
-                                data-cy="basic-tab"
-                                [active]="activeTab === 'basic'"
-                                (click)="activeTab = 'basic'"
-                                >{{ 'Basics' | translate }}</a
-                            >
-                            <a
-                                mat-tab-link
-                                data-cy="asset-links-tab"
-                                [active]="activeTab === 'asset-links'"
-                                (click)="activeTab = 'asset-links'"
-                                >Asset Links</a
-                            >
-                        </nav>
-                    </div>
                 </div>
                 <div fxFlex fxLayout="row" fxLayoutAlign="end center"></div>
             </div>
             @if (asset) {
-                <div fxFlex="100" fxLayout="column">
-                    @if (activeTab === 'basic') {
-                        <sp-asset-details-basics
-                            [asset]="selectedAsset"
-                            [sites]="sites"
-                            [rootNode]="rootNode"
-                            [editMode]="true"
-                        >
-                        </sp-asset-details-basics>
-                    }
-                    @if (activeTab === 'asset-links') {
-                        <sp-asset-details-links
-                            [asset]="selectedAsset"
-                            [editMode]="true"
-                            (updateAssetEmitter)="updateSelected()"
-                        >
-                        </sp-asset-details-links>
-                    }
+                <div fxFlex="100" fxLayout="column" class="p-10">
+                    <sp-asset-details-basics
+                        [asset]="selectedAsset"
+                        [assetModel]="asset"
+                        [sites]="sites"
+                        [rootNode]="rootNode"
+                        [editMode]="true"
+                    >
+                    </sp-asset-details-basics>
                 </div>
             }
         </sp-basic-view>

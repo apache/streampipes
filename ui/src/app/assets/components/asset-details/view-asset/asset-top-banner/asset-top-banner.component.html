@@ -1,0 +1,68 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="asset-root-banner" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="row" fxLayoutAlign="start stretch" fxFlex="100">
+        <div fxLayout="column" fxFlex="60">
+            <sp-basic-header-title-component
+                [level]="1"
+                [title]="assetModel.assetName"
+                [description]="assetModel.assetDescription"
+            >
+            </sp-basic-header-title-component>
+            <div class="banner-meta" fxLayout="row" fxLayoutGap="10px">
+                <sp-label
+                    [labelText]="assetType"
+                    icon="precision_manufacturing"
+                    size="small"
+                >
+                </sp-label>
+                @if (assetModel.assetSite?.siteId) {
+                    <sp-label
+                        [labelText]="assetModel.assetSite?.area"
+                        icon="location_on"
+                        size="small"
+                    >
+                    </sp-label>
+                }
+                @if (assetModel.labelIds?.length > 0) {
+                    <sp-view-asset-labels
+                        [asset]="assetModel"
+                        size="small"
+                    ></sp-view-asset-labels>
+                }
+            </div>
+        </div>
+        <span fxFlex></span>
+        <div class="map-wrapper" fxFlex="40">
+            @if (locationConfig && assetModel.assetSite?.location) {
+                <sp-single-marker-map
+                    class="h-100"
+                    [mapHeight]="'100%'"
+                    [locationConfig]="locationConfig"
+                    [readonly]="true"
+                    [assetLocation]="assetModel.assetSite.location"
+                ></sp-single-marker-map>
+            } @else {
+                <div class="map-empty text-md">
+                    {{ 'No location defined for this asset yet.' | translate }}
+                </div>
+            }
+        </div>
+    </div>
+</div>

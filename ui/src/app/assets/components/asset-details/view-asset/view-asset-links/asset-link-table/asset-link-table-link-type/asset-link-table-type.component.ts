@@ -16,48 +16,36 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
-import { Router } from '@angular/router';
 
 @Component({
-    selector: 'sp-asset-link-item',
-    templateUrl: './asset-link-item.component.html',
-    styleUrls: ['./asset-link-item.component.scss'],
+    selector: 'sp-asset-link-table-type',
+    templateUrl: './asset-link-table-type.component.html',
+    styleUrls: ['./asset-link-table-type.component.scss'],
     standalone: false,
 })
-export class SpAssetLinkItemComponent {
+export class AssetLinkTableTypeComponent implements OnChanges {
     @Input()
     assetLink: AssetLink;
 
     @Input()
-    assetLinkType: AssetLinkType;
+    assetLinkTypes: AssetLinkType[];
 
-    @Input()
-    editMode: boolean;
+    linkType: AssetLinkType;
 
-    @Output()
-    openEditAssetLinkEmitter: EventEmitter<AssetLink> =
-        new EventEmitter<AssetLink>();
+    boxStyle: any;
+    linkStyle: any;
+    accentColor = 'var(--color-primary)';
+    backgroundColor = 'color-mix(in srgb, var(--color-primary) 20%, white);';
 
-    @Output()
-    deleteAssetLinkEmitter: EventEmitter<AssetLink> =
-        new EventEmitter<AssetLink>();
-
-    constructor(private router: Router) {}
-
-    openLink(): void {
-        this.router.navigate([
-            ...this.assetLinkType.navPaths,
-            this.assetLink.resourceId,
-        ]);
-    }
-
-    editLink(): void {
-        this.openEditAssetLinkEmitter.emit(this.assetLink);
-    }
-
-    deleteLink(): void {
-        this.deleteAssetLinkEmitter.emit(this.assetLink);
+    ngOnChanges() {
+        this.linkType = this.assetLinkTypes.find(
+            l => l.linkType === this.assetLink.linkType,
+        );
+        this.accentColor = this.linkType?.linkColor || this.accentColor;
+        this.backgroundColor = `color-mix(in srgb, ${this.accentColor} 20%, white);`;
+        this.boxStyle = { border: `1px solid ${this.accentColor}` };
+        this.linkStyle = { color: this.accentColor };
     }
 }

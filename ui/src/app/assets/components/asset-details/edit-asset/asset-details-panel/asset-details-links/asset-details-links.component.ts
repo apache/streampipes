@@ -16,18 +16,27 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+} from '@angular/core';
 import {
     AssetConstants,
     AssetLink,
     AssetLinkType,
     GenericStorageService,
     SpAsset,
+    SpAssetModel,
 } from '@streampipes/platform-services';
 import { SpManageAssetLinksDialogComponent } from '../../../../../dialog/manage-asset-links/manage-asset-links-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { AssetLinkTableComponent } from '../../../view-asset/view-asset-links/asset-link-table/asset-link-table.component';
 
 @Component({
     selector: 'sp-asset-details-links',
@@ -39,6 +48,9 @@ export class AssetDetailsLinksComponent implements OnInit {
     asset: SpAsset;
 
     @Input()
+    assetModel: SpAssetModel;
+
+    @Input()
     editMode: boolean;
 
     @Output()
@@ -46,6 +58,9 @@ export class AssetDetailsLinksComponent implements OnInit {
 
     assetLinkTypes: AssetLinkType[] = [];
     assetLinksLoaded = false;
+
+    @ViewChild('assetLinkTable', { static: false })
+    assetLinkTable: AssetLinkTableComponent;
 
     constructor(
         private genericStorageService: GenericStorageService,
@@ -81,38 +96,7 @@ export class AssetDetailsLinksComponent implements OnInit {
         dialogRef.afterClosed().subscribe(assetLinks => {
             if (assetLinks) {
                 this.asset.assetLinks = assetLinks;
-            }
-        });
-    }
-
-    openEditAssetLinkDialog(assetLink: AssetLink, createMode: boolean): void {
-        const index = !createMode
-            ? this.asset.assetLinks.indexOf(assetLink)
-            : -1;
-        const dialogRef = this.dialogService.open(
-            EditAssetLinkDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: createMode
-                    ? this.translateService.instant('Create asset links')
-                    : this.translateService.instant('Update asset links'),
-                width: '50vw',
-                data: {
-                    assetLink: assetLink,
-                    assetLinkTypes: this.assetLinkTypes,
-                    createMode: createMode,
-                },
-            },
-        );
-
-        dialogRef.afterClosed().subscribe(storedLink => {
-            if (storedLink) {
-                if (index > -1) {
-                    this.asset.assetLinks[index] = storedLink;
-                } else {
-                    this.asset.assetLinks.push(storedLink);
-                }
-                this.asset.assetLinks = [...this.asset.assetLinks];
+                this.assetLinkTable?.refreshData();
             }
         });
     }
@@ -126,6 +110,26 @@ export class AssetDetailsLinksComponent implements OnInit {
             navigationActive: true,
             queryHint: 'chart',
         };
-        this.openEditAssetLinkDialog(assetLink, true);
+        const dialogRef = this.dialogService.open(
+            EditAssetLinkDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Create asset links'),
+                width: '50vw',
+                data: {
+                    assetLink: assetLink,
+                    assetLinkTypes: this.assetLinkTypes,
+                    createMode: true,
+                },
+            },
+        );
+
+        dialogRef.afterClosed().subscribe(storedLink => {
+            if (storedLink) {
+                this.asset.assetLinks.push(storedLink);
+                this.asset.assetLinks = [...this.asset.assetLinks];
+                this.assetLinkTable?.refreshData();
+            }
+        });
     }
 }

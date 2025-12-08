@@ -16,24 +16,9 @@
   ~
   -->
 
-<div
-    class="form-field-outer"
-    fxLayout="column"
-    [class.mb-xl]="level === 1"
-    [class.mb-lg]="level === 2"
-    [class.mb-sm]="level === 3"
->
-    <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
-        <sp-form-label
-            [level]="level"
-            [label]="label"
-            [description]="description"
-            [tooltip]="tooltip"
-        >
-        </sp-form-label>
-        <span fxFlex></span>
-        <ng-content select="[form-field-actions]"></ng-content>
-    </div>
-
-    <ng-content></ng-content>
+<div class="chip" [ngStyle]="{ color: accentColor }">
+    <mat-icon class="link-type-icon">{{
+        linkType?.linkIcon || 'link'
+    }}</mat-icon>
+    <span class="text-sm">{{ linkType?.linkLabel || 'Resource' }}</span>
 </div>

@@ -136,7 +136,6 @@ export class DatalakeConfigurationComponent implements OnInit {
                             if (measurement?.retentionTime != null) {
                                 entry.retention = measurement.retentionTime;
                             }
-                            console.log(entry.retention);
                             inUseMeasurements.forEach(inUseMeasurement => {
                                 if (
                                     inUseMeasurement.measureName ===

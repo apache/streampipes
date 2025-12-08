@@ -37,28 +37,22 @@ import {
 })
 export class ViewAssetBasicsComponent implements OnInit, OnChanges {
     @Input()
-    rootAsset: SpAsset;
-
-    @Input()
     selectedAsset: SpAsset;
 
     @Input()
     sites: AssetSiteDesc[] = [];
 
-    assetType: string;
     selectedAssetType: string;
-    assetSite: AssetSiteDesc;
 
     constructor(private isa95TypeService: Isa95TypeService) {}
 
     ngOnInit() {
-        this.assetType =
-            this.isa95TypeService.toLabel(
-                this.rootAsset.assetType.isa95AssetType,
-            ) || '';
-        this.assetSite = this.sites.find(
-            site => this.rootAsset.assetSite.siteId === site._id,
-        );
+        // this.assetType =
+        //     this.isa95TypeService.toLabel(
+        //         this.rootAsset.assetType.isa95AssetType,
+        //     ) || '';
+        //this.assetSite = this.getSite(this.rootAsset);
+        //this.selectedSite = this.getSite(this.selectedAsset);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -66,5 +60,16 @@ export class ViewAssetBasicsComponent implements OnInit, OnChanges {
             this.isa95TypeService.toLabel(
                 this.selectedAsset.assetType.isa95AssetType,
             ) || '';
+    }
+
+    getDescription(asset: SpAsset): string {
+        return asset?.assetDescription || 'No description available.';
+    }
+
+    private getSite(asset: SpAsset): AssetSiteDesc | undefined {
+        if (!asset?.assetSite?.siteId) {
+            return undefined;
+        }
+        return this.sites.find(site => asset.assetSite.siteId === site._id);
     }
 }

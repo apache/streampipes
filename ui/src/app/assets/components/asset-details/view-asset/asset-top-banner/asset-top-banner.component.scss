@@ -16,12 +16,34 @@
  *
  */
 
-.mat-button-toggle-group {
-    flex-wrap: wrap;
-    border: none;
+.asset-root-banner {
+    display: flex;
+    align-items: stretch !important;
+    gap: 10px;
+    padding: 10px 12px;
+    margin: 4px 8px 0;
 }
 
-.mat-button-toggle {
-    border: 1px solid var(--mat-standard-button-toggle-divider-color);
-    margin-bottom: 5px;
+.banner-text {
+    min-width: 0;
+}
+
+.banner-meta {
+    margin-top: 4px;
+}
+
+.map-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    border: 1px solid var(--color-bg-3);
+    border-radius: 12px;
+    background: var(--color-bg-1);
+    overflow: hidden;
+}
+
+.map-empty {
+    padding: 24px;
+    color: var(--fg-muted, #666);
 }

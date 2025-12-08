@@ -21,12 +21,12 @@ import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
 import {
     LocationConfig,
     LocationConfigService,
+    SpAsset,
 } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-view-asset',
     templateUrl: './view-asset.component.html',
-    styleUrls: ['./view-asset.component.scss'],
     standalone: false,
 })
 export class SpViewAssetComponent extends BaseAssetDetailsDirective {
@@ -38,5 +38,15 @@ export class SpViewAssetComponent extends BaseAssetDetailsDirective {
         this.locationConfigService
             .getLocationConfig()
             .subscribe(config => (this.locationConfig = config));
+    }
+
+    getSubassetCount(asset: SpAsset): number {
+        if (!asset?.assets || asset.assets.length === 0) {
+            return 0;
+        }
+        return asset.assets.reduce(
+            (sum, child) => sum + 1 + this.getSubassetCount(child),
+            0,
+        );
     }
 }

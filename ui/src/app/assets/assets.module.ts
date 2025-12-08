@@ -37,7 +37,6 @@ import { SpAssetOverviewComponent } from './components/asset-overview/asset-over
 import { SpAssetDetailsComponent } from './components/asset-details/edit-asset/asset-details.component';
 import { SpAssetSelectionPanelComponent } from './components/asset-details/edit-asset/asset-selection-panel/asset-selection-panel.component';
 import { MatTreeModule } from '@angular/material/tree';
-import { SpAssetLinkItemComponent } from './components/asset-details/edit-asset/asset-details-panel/asset-details-links/asset-link-section/asset-link-item/asset-link-item.component';
 import { EditAssetLinkDialogComponent } from './dialog/edit-asset-link/edit-asset-link-dialog.component';
 import { SpCreateAssetDialogComponent } from './dialog/create-asset/create-asset-dialog.component';
 import { SpManageAssetLinksDialogComponent } from './dialog/manage-asset-links/manage-asset-links-dialog.component';
@@ -49,7 +48,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { AssetDetailsLinksComponent } from './components/asset-details/edit-asset/asset-details-panel/asset-details-links/asset-details-links.component';
 import { AssetDetailsBasicsComponent } from './components/asset-details/edit-asset/asset-details-panel/asset-details-basics/asset-details-basics.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { AssetLinkSectionComponent } from './components/asset-details/edit-asset/asset-details-panel/asset-details-links/asset-link-section/asset-link-section.component';
 import { AssetTypeFilterPipe } from './pipes/asset-type-filter.pipe';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AssetDetailsLabelsComponent } from './components/asset-details/edit-asset/asset-details-panel/asset-details-basics/asset-details-labels/asset-details-labels.component';
@@ -61,11 +59,15 @@ import { SpViewAssetComponent } from './components/asset-details/view-asset/view
 import { ViewAssetLabelsComponent } from './components/asset-details/view-asset/view-asset-labels/view-asset-labels.component';
 import { ViewAssetBasicsComponent } from './components/asset-details/view-asset/view-asset-basics/view-assset-basics.component';
 import { ViewAssetLinksComponent } from './components/asset-details/view-asset/view-asset-links/view-asset-links.component';
-import { AssetLinkCardComponent } from './components/asset-details/view-asset/view-asset-links/asset-link-card/asset-link-card.component';
-import { MatMenuItem } from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { TranslatePipe } from '@ngx-translate/core';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { PageAuthGuard } from '../_guards/page-auth.can-active.guard';
+import { SpAssetTopBannerComponent } from './components/asset-details/view-asset/asset-top-banner/asset-top-banner.component';
+import { SpAssetSelectionMenuComponent } from './components/asset-details/edit-asset/asset-selection-menu/asset-selection-menu.component';
+import { AssetLinkTableComponent } from './components/asset-details/view-asset/view-asset-links/asset-link-table/asset-link-table.component';
+import { AssetLinkTableTypeComponent } from './components/asset-details/view-asset/view-asset-links/asset-link-table/asset-link-table-link-type/asset-link-table-type.component';
+import { AssetDetailsCustomFieldsComponent } from './components/asset-details/edit-asset/asset-details-panel/asset-details-basics/asset-details-custom-fields/asset-details-custom-fields.component';
 
 @NgModule({
     imports: [
@@ -124,19 +126,17 @@ import { PageAuthGuard } from '../_guards/page-auth.can-active.guard';
         SharedUiModule,
         MatTreeModule,
         MatSortModule,
-        MatMenuItem,
         TranslatePipe,
+        MatMenuModule,
     ],
     declarations: [
         AssetDetailsBasicsComponent,
         AssetDetailsLabelsComponent,
         AssetDetailsLinksComponent,
         AssetDetailsSiteComponent,
-        AssetLinkSectionComponent,
         AssetLocationComponent,
         EditAssetLinkDialogComponent,
         SpAssetDetailsComponent,
-        SpAssetLinkItemComponent,
         SpAssetOverviewComponent,
         SpAssetSelectionPanelComponent,
         SpCreateAssetDialogComponent,
@@ -146,7 +146,11 @@ import { PageAuthGuard } from '../_guards/page-auth.can-active.guard';
         ViewAssetLabelsComponent,
         ViewAssetBasicsComponent,
         ViewAssetLinksComponent,
-        AssetLinkCardComponent,
+        SpAssetTopBannerComponent,
+        SpAssetSelectionMenuComponent,
+        AssetLinkTableComponent,
+        AssetLinkTableTypeComponent,
+        AssetDetailsCustomFieldsComponent,
     ],
     providers: [],
 })
