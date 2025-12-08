@@ -964,11 +964,11 @@
   "List": "Liste",
   "Nested": "Verschachtelt",
   "Preview": "Vorschau",
-  "Items per page": "Artikel pro Seite",
+  "Items per page": "Einträge pro Seite",
   "Next page": "Nächste Seite",
   "Previous page": "Vorherige Seite",
   " of ": " von ",
-  " items ": " Artikel",
+  " items ": " Einträge",
   "Error Details": "Fehler-Details",
   "All {{allResourcesAlias}}": "Alle {{allResourcesAlias}}",
   "{{ widgetTitle }} Clone": "{{ widgetTitle }} Kopie"
