@@ -80,13 +80,15 @@ public class PipelinesMetrics {
 
   public static void updatePipelineHealthState(String pipelineId, String pipelineName, String state) {
 
-    //TODO
+    String[] statusElements = {"OK", "FAILURE", "REQUIRES_ATTENTION"};
 
-    //STATUS_PIPELINES_GAUGE.labels("" + state, pipelineId,  pipelineName)
-                                       //.set(1);
-    //STATUS_PIPELINES_GAUGE.labels("" + !state, pipelineId,  pipelineName)
-                                       //.set(0);
-
+    for (String s : statusElements) {
+        if (s.equals(state)) {
+            HEALTH_PIPELINES_GAUGE.labels(pipelineId, pipelineName, s).set(1);
+        } else {
+            HEALTH_PIPELINES_GAUGE.labels(pipelineId, pipelineName, s).set(0);
+        }
+    }
   }
 
 }
