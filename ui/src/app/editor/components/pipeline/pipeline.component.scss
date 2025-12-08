@@ -38,6 +38,8 @@
 }
 
 .topics-icon-size {
-    font-size: 16px;
+    font-size: var(--font-size-md);
+    width: var(--font-size-md);
+    height: var(--font-size-md);
     color: white;
 }

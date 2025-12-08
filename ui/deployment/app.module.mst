@@ -111,7 +111,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         AuthService,
         AvailableRolesService,
         NotificationCountService,
-        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' }},
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline', subscriptSizing: 'dynamic' }},
         { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorProvider, multi: true },
         { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
     ],

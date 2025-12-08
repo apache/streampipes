@@ -24,7 +24,12 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right" fxLayoutGap="10px">
         @if (additionalButton) {
-            <button mat-flat-button color="accent" (click)="close(true)">
+            <button
+                mat-flat-button
+                class="mat-basic"
+                color="accent"
+                (click)="close(true)"
+            >
                 {{ additionalButtonText }}
             </button>
         }

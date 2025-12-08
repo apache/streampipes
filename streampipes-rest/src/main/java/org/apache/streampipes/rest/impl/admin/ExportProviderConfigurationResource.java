@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.dataexplorer.export.ObjectStorge.TestExportProviderConnection;
+import org.apache.streampipes.dataexplorer.export.objectstorage.TestExportProviderConnection;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;

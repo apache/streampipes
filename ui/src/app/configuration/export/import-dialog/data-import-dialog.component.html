@@ -17,15 +17,13 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content">
+    <div class="sp-dialog-content p-15">
         @if (currentImportStep === 0) {
-            <div fxFlex="100" fxLayout="column" class="p-15">
-                <h4>{{ 'Upload application package file' | translate }}</h4>
-                <mat-form-field
-                    style="width: 95%"
-                    (click)="fileInput.click()"
-                    color="accent"
-                >
+            <sp-split-section
+                [level]="3"
+                [title]="'Upload application package file' | translate"
+            >
+                <mat-form-field (click)="fileInput.click()" color="accent">
                     <input
                         matInput
                         [placeholder]="'File' | translate"
@@ -71,16 +69,33 @@
                         </mat-error>
                     }
                 </mat-form-field>
-            </div>
+                @if (uploadError) {
+                    <sp-alert-banner
+                        type="error"
+                        [title]="
+                            'Error while uploading application package'
+                                | translate
+                        "
+                        [description]="
+                            'Check that the uploaded zip file is a valid export'
+                                | translate
+                        "
+                    >
+                    </sp-alert-banner>
+                }
+            </sp-split-section>
         }
         @if (currentImportStep === 1) {
-            <div fxFlex="100" fxLayout="column" class="p-15">
-                <div fxLayout="row" fxLayoutAlign="start center">
-                    <h4>{{ 'Select resources to import' | translate }}</h4>
+            <sp-split-section
+                [level]="3"
+                [outline]="false"
+                [title]="'Select resources to import' | translate"
+            >
+                <div section-actions fxLayoutGap="10px">
                     <button
                         mat-flat-button
                         color="accent"
-                        class="small-button ml-5"
+                        class="small-button"
                         (click)="toggleSelect(true)"
                     >
                         {{ 'Select all' | translate }}
@@ -131,8 +146,10 @@
                 >
                 </sp-generic-storage-items>
                 @if (currentImportStep === 1) {
-                    <div fxFlex="100" fxLayout="column" class="mt-10">
-                        <h4>{{ 'Import options' | translate }}</h4>
+                    <sp-split-section
+                        [level]="3"
+                        [title]="'Import options' | translate"
+                    >
                         @if (importConfiguration) {
                             <div fxLayout="column">
                                 <mat-checkbox
@@ -157,9 +174,9 @@
                                 </div>
                             </div>
                         }
-                    </div>
+                    </sp-split-section>
                 }
-            </div>
+            </sp-split-section>
         }
         @if (currentImportStep === 2) {
             <div

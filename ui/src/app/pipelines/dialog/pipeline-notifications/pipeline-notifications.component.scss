@@ -18,17 +18,15 @@
 
 .log-message {
     background-color: black;
-    font:
-        11pt Inconsolata,
-        monospace;
-    text-shadow: 0 0 5px #c8c8c8;
+    font-family: Inconsolata, monospace;
     color: white;
     padding: 10px;
     max-width: 100%;
+    margin-top: 10px;
 }
 
 .info-message {
-    font-size: 12pt;
+    font-size: var(--font-size-md);
     margin-top: 10px;
     margin-bottom: 5px;
 }

@@ -60,7 +60,7 @@
                     >
                         <mat-icon class="item-icon">{{ item.icon }}</mat-icon>
                         <span
-                            class="item-title text-ellipsis"
+                            class="item-title text-ellipsis text-md"
                             [class.hidden]="collapsed()"
                             >{{ item.title }}</span
                         >
@@ -72,12 +72,12 @@
         <!-- Grouped sections -->
         <div class="groups">
             @for (group of menuGroups; track group.title) {
-                <section class="menu-group">
+                <section class="menu-group text-md">
                     <!-- Group header -->
                     <button
                         type="button"
                         [class.hidden]="collapsed()"
-                        class="menu-group-title"
+                        class="menu-group-title text-sm"
                         (click)="toggleGroup(group)"
                         [attr.aria-expanded]="!group.collapsed"
                         [title]="collapsed() ? group.title : null"
@@ -126,7 +126,7 @@
                                         item.icon
                                     }}</mat-icon>
                                     <span
-                                        class="item-title text-ellipsis"
+                                        class="item-title text-md text-ellipsis"
                                         [class.hidden]="collapsed()"
                                         >{{ item.title }}</span
                                     >

@@ -26,17 +26,23 @@
     </mat-checkbox>
 
     @if (parentForm.get('requireTermsAcknowledgment').getRawValue()) {
-        <mat-form-field color="accent" class="mt-10">
-            <mat-label>{{ 'Dialog Title' | translate }}</mat-label>
-            <input formControlName="termsAcknowledgmentTitle" fxFlex matInput />
-        </mat-form-field>
+        <sp-form-field [level]="3" [label]="'Dialog Title' | translate">
+            <mat-form-field color="accent">
+                <input
+                    formControlName="termsAcknowledgmentTitle"
+                    fxFlex
+                    matInput
+                />
+            </mat-form-field>
+        </sp-form-field>
 
-        <h5>{{ 'Terms' | translate }}</h5>
-        <quill-editor
-            fxFlex="100"
-            #textEditor
-            formControlName="termsAcknowledgmentText"
-            [modules]="quillConfig"
-        ></quill-editor>
+        <sp-form-field [level]="3" [label]="'Terms' | translate">
+            <quill-editor
+                fxFlex="100"
+                #textEditor
+                formControlName="termsAcknowledgmentText"
+                [modules]="quillConfig"
+            ></quill-editor>
+        </sp-form-field>
     }
 </sp-split-section>

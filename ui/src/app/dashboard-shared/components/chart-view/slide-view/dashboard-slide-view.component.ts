@@ -47,19 +47,19 @@ export class DashboardSlideViewComponent
         this.loadWidgetConfigs();
     }
 
-    selectWidget(index: number, widgetId: string): void {
+    selectWidget(index: number, dataViewElementId: string): void {
         this.displayWidget = false;
         setTimeout(() => {
             this.selectedWidgetIndex = index;
-            this.currentWidget = this.configuredWidgets.get(widgetId);
-            this.currentMeasure = this.dataLakeMeasures.get(widgetId);
+            this.currentWidget = this.configuredWidgets.get(dataViewElementId);
+            this.currentMeasure = this.dataLakeMeasures.get(dataViewElementId);
             this.currentDashboardItem = this.dashboard.widgets[index];
             this.displayWidget = true;
         });
     }
 
     onWidgetsAvailable(): void {
-        this.selectWidget(0, this.dashboard.widgets[0].id);
+        this.selectWidget(0, this.dashboard.widgets[0].dataViewElementId);
     }
 
     isGridView(): boolean {

@@ -52,12 +52,10 @@
                             ></sp-pipeline-element>
                         </div>
                         <div fxLayout="column" fxLayoutAlign="center start">
-                            <div class="element-name">
-                                {{ possibleElement.name }}
-                            </div>
-                            <div class="element-description">
-                                {{ possibleElement.description }}
-                            </div>
+                            <sp-form-label
+                                [label]="possibleElement.name"
+                                [description]="possibleElement.description"
+                            ></sp-form-label>
                         </div>
                     </div>
                     <mat-divider></mat-divider>

@@ -34,7 +34,7 @@
                 widgetsAvailable &&
                 configuredWidgets.has(item.dataViewElementId)
             ) {
-                <sp-data-explorer-chart-container
+                <sp-chart-container
                     [timeSettings]="timeSettings"
                     [globalTimeEnabled]="
                         dashboard.dashboardGeneralSettings.globalTimeEnabled
@@ -53,7 +53,7 @@
                     [kioskMode]="kioskMode"
                     [gridMode]="true"
                     [widgetIndex]="i"
-                ></sp-data-explorer-chart-container>
+                ></sp-chart-container>
             }
         </gridstack-item>
     }

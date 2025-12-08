@@ -22,16 +22,13 @@ import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class AdapterConfigurationBuilder extends
     AbstractConfigurablePipelineElementBuilder<AdapterConfigurationBuilder, AdapterDescription> {
@@ -95,19 +92,6 @@ public class AdapterConfigurationBuilder extends
   public AdapterConfigurationBuilder withSupportedParsers(List<IParser> parsers) {
     this.supportedParsers.addAll(parsers);
     return this;
-  }
-
-  /**
-   * @deprecated Categories are no longer needed for adapters as of version 0.98.0
-   */
-  @Deprecated(forRemoval = true, since = "0.98.0")
-  public AdapterConfigurationBuilder withCategory(AdapterType... categories) {
-    this.elementDescription
-        .setCategory(Arrays
-            .stream(categories)
-            .map(Enum::name)
-            .collect(Collectors.toList()));
-    return me();
   }
 
   public AdapterConfigurationBuilder withVersion(int version) {

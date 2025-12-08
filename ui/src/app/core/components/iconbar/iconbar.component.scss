@@ -166,7 +166,6 @@
     border: 0;
     background: var(--color-menubar-bg-menu-group);
     color: var(--color-menubar-text-menu-group);
-    font-size: 0.75rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     padding: 8px 10px;
@@ -183,13 +182,6 @@
 .menu-group-title:hover {
     background: var(--color-menubar-bg-menu-group-hover);
     outline-color: var(--mb-outline-strong);
-}
-
-.group-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    opacity: 0.9;
 }
 
 .chevron {
@@ -257,16 +249,15 @@
 }
 
 .item-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    font-size: var(--font-size-xl);
+    width: var(--font-size-xl);
+    height: var(--font-size-xl);
     opacity: 0.96;
     margin-left: auto;
     margin-right: auto;
 }
 
 .item-title {
-    font-size: 0.86rem;
     flex: 1 1 auto;
 }
 

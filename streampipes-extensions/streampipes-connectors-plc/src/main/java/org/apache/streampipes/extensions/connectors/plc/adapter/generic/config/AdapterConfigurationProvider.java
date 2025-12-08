@@ -21,7 +21,6 @@ package org.apache.streampipes.extensions.connectors.plc.adapter.generic.config;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.GenericPlc4xAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.assets.PlcAdapterAssetResolver;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -59,7 +58,6 @@ public class AdapterConfigurationProvider {
         .withAssetResolver(
             new PlcAdapterAssetResolver("org.apache.streampipes.connect.iiot.adapters.plc4x.generic", appId, driver)
         )
-        .withCategory(AdapterType.Manufacturing)
         .requiredTextParameter(Labels.withId(PLC_IP))
         .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
         .requiredSingleValueSelection(

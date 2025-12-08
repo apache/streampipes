@@ -32,7 +32,6 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
     selector: 'sp-email-configuration',
     templateUrl: './email-configuration.component.html',
-    styleUrls: ['./email-configuration.component.scss'],
     standalone: false,
 })
 export class EmailConfigurationComponent implements OnInit {

@@ -21,26 +21,40 @@
     [subtitle]="'Configure application links' | translate"
     [formGroup]="parentForm"
 >
-    <mat-form-field color="accent" class="mt-10">
-        <mat-label>{{ 'Documentation Link' | translate }}</mat-label>
-        <input formControlName="documentationUrl" fxFlex matInput />
-    </mat-form-field>
-    <mat-checkbox formControlName="showDocumentationLinkOnStartScreen"
-        >{{ 'Show documentation link on login page' | translate }}
-    </mat-checkbox>
-    <mat-checkbox formControlName="showDocumentationLinkInProfileMenu"
-        >{{ 'Show documentation link in user menu' | translate }}
-    </mat-checkbox>
+    <sp-form-field
+        [level]="2"
+        [label]="'Documentation Link' | translate"
+        [description]="
+            'Define individual link targets to the documentation' | translate
+        "
+    >
+        <mat-form-field color="accent">
+            <input formControlName="documentationUrl" fxFlex matInput />
+        </mat-form-field>
+        <mat-checkbox formControlName="showDocumentationLinkOnStartScreen"
+            >{{ 'Show documentation link on login page' | translate }}
+        </mat-checkbox>
+        <mat-checkbox formControlName="showDocumentationLinkInProfileMenu"
+            >{{ 'Show documentation link in user menu' | translate }}
+        </mat-checkbox>
 
-    <mat-checkbox formControlName="showApiDocumentationLinkOnStartScreen"
-        >{{ 'Show API documentation link on login page' | translate }}
-    </mat-checkbox>
+        <mat-checkbox formControlName="showApiDocumentationLinkOnStartScreen"
+            >{{ 'Show API documentation link on login page' | translate }}
+        </mat-checkbox>
+    </sp-form-field>
 
-    <mat-form-field color="accent" class="mt-10">
-        <mat-label>{{ 'Support Link' | translate }}</mat-label>
-        <input formControlName="supportUrl" fxFlex matInput />
-    </mat-form-field>
-    <mat-checkbox formControlName="showSupportUrlOnStartScreen"
-        >{{ 'Show support link on login page' | translate }}
-    </mat-checkbox>
+    <sp-form-field
+        [level]="2"
+        [label]="'Support Link' | translate"
+        [description]="
+            'Add an additional link that links to your support page' | translate
+        "
+    >
+        <mat-form-field color="accent">
+            <input formControlName="supportUrl" fxFlex matInput />
+        </mat-form-field>
+        <mat-checkbox formControlName="showSupportUrlOnStartScreen"
+            >{{ 'Show support link on login page' | translate }}
+        </mat-checkbox>
+    </sp-form-field>
 </sp-split-section>

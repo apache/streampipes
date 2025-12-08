@@ -20,18 +20,21 @@
     @if (profileLoaded) {
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section
+                [level]="2"
                 [title]="'Profile' | translate"
                 [subtitle]="
                     'Manage your basic profile settings here' | translate
                 "
             >
                 @if (isExternalUser) {
-                    <sp-warning-box>
-                        {{
+                    <sp-alert-banner
+                        type="info"
+                        [title]="
                             'Settings for externally-managed users cannot be changed'
                                 | translate
-                        }}
-                    </sp-warning-box>
+                        "
+                    >
+                    </sp-alert-banner>
                 }
                 <div fxLayout="row" fxLayoutAlign="start center">
                     <span>{{ userData.username }}</span>
@@ -46,24 +49,26 @@
                         {{ 'Change email' | translate }}
                     </button>
                 </div>
-                <mat-form-field fxFlex color="accent" class="mt-10 mb-10">
-                    <mat-label>{{ 'Full name' | translate }}</mat-label>
-                    <input
-                        [disabled]="isExternalUser"
-                        [(ngModel)]="userData.fullName"
-                        matInput
-                    />
-                </mat-form-field>
-                <mat-form-field fxFlex color="accent" class="mt-10 mb-10">
-                    <mat-label>{{ 'Language' | translate }}</mat-label>
-                    <mat-select [(ngModel)]="selectedLanguage">
-                        @for (lang of availableLanguages; track lang) {
-                            <mat-option [value]="lang.id">
-                                {{ lang.label }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
+                <sp-form-field [level]="2" [label]="'Full name' | translate">
+                    <mat-form-field fxFlex color="accent">
+                        <input
+                            [disabled]="isExternalUser"
+                            [(ngModel)]="userData.fullName"
+                            matInput
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+                <sp-form-field [level]="2" [label]="'Language' | translate">
+                    <mat-form-field fxFlex color="accent">
+                        <mat-select [(ngModel)]="selectedLanguage">
+                            @for (lang of availableLanguages; track lang) {
+                                <mat-option [value]="lang.id">
+                                    {{ lang.label }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </sp-form-field>
                 <div fxLayout="row" fxLayoutAlign="start center">
                     <button
                         mat-button
@@ -85,16 +90,14 @@
                     </button>
                 </div>
             </sp-split-section>
-            <mat-divider></mat-divider>
-            <div fxLayout="row" fxFlex="100" class="mt-30">
-                <sp-split-section
-                    [title]="'Appearance' | translate"
-                    [subtitle]="
-                        'Change the look and feel of your installation'
-                            | translate
-                    "
-                >
-                    <label id="radio-group-label">Color Scheme</label>
+            <sp-split-section
+                [level]="2"
+                [title]="'Appearance' | translate"
+                [subtitle]="
+                    'Change the look and feel of your installation' | translate
+                "
+            >
+                <sp-form-field [level]="2" [label]="'Color scheme' | translate">
                     <mat-radio-group
                         [(ngModel)]="darkMode"
                         aria-labelledby="radio-group-label"
@@ -112,18 +115,18 @@
                             >{{ 'Dark mode' | translate }}</mat-radio-button
                         >
                     </mat-radio-group>
-                    <div>
-                        <button
-                            mat-button
-                            mat-flat-button
-                            color="accent"
-                            (click)="updateAppearanceMode()"
-                        >
-                            {{ 'Save color schema' | translate }}
-                        </button>
-                    </div>
-                </sp-split-section>
-            </div>
+                </sp-form-field>
+                <div>
+                    <button
+                        mat-button
+                        mat-flat-button
+                        color="accent"
+                        (click)="updateAppearanceMode()"
+                    >
+                        {{ 'Save color schema' | translate }}
+                    </button>
+                </div>
+            </sp-split-section>
         </div>
     }
 </div>

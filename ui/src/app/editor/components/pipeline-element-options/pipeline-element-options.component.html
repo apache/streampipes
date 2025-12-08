@@ -38,7 +38,7 @@
                         (click)="customizeElement(pipelineElement)"
                         data-cy="settings-pipeline-element-button"
                     >
-                        <i class="material-icons options-icon-size">settings</i>
+                        <mat-icon class="options-icon-size">settings</mat-icon>
                     </button>
                 </span>
             }
@@ -54,7 +54,7 @@
                         [matTooltipPosition]="'above'"
                         (click)="openCustomizeStreamDialog()"
                     >
-                        <i class="material-icons options-icon-size">settings</i>
+                        <mat-icon class="options-icon-size">settings</mat-icon>
                     </button>
                 </span>
             }
@@ -66,7 +66,7 @@
                     [matTooltipPosition]="'above'"
                     (click)="removeElement(pipelineElement)"
                 >
-                    <i class="material-icons options-icon-size">clear</i>
+                    <mat-icon class="options-icon-size">clear</mat-icon>
                 </button>
             </span>
             @if (pipelineElement.type !== 'action') {
@@ -91,8 +91,8 @@
                         "
                         _
                     >
-                        <i class="material-icons options-icon-size"
-                            >account_tree</i
+                        <mat-icon class="options-icon-size"
+                            >account_tree</mat-icon
                         >
                     </button>
                 </span>
@@ -105,7 +105,7 @@
                     mat-icon-button
                     (click)="openHelpDialog()"
                 >
-                    <i class="material-icons options-icon-size">help</i>
+                    <mat-icon class="options-icon-size">help</mat-icon>
                 </button>
             </span>
         </div>

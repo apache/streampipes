@@ -142,10 +142,6 @@ export class AdapterService {
         );
     }
 
-    getAdapterCategories(): Observable<any> {
-        return this.http.get(`${this.baseUrl}/api/v2/categories/adapter`);
-    }
-
     private deleteRequest(
         adapter: AdapterDescription,
         deleteAssociatedPipelines: boolean,

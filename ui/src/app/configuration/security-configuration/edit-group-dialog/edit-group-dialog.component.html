@@ -20,25 +20,23 @@
     <div class="sp-dialog-content">
         <div fxFlex="100" fxLayout="column" class="p-15">
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                <div class="general-options-panel" fxLayout="column">
-                    <span class="general-options-header">{{
-                        'Basics' | translate
-                    }}</span>
-                    <mat-form-field color="accent">
-                        <mat-label>{{ 'Group Name' | translate }}</mat-label>
-                        <input
-                            formControlName="groupName"
-                            fxFlex
-                            matInput
-                            required
-                            data-cy="group-name-input"
-                        />
-                    </mat-form-field>
-                </div>
-                <div fxLayout="column" class="general-options-panel">
-                    <span class="general-options-header">{{
-                        'Roles' | translate
-                    }}</span>
+                <sp-split-section [level]="3" [title]="'Basics' | translate">
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Group Name' | translate"
+                    >
+                        <mat-form-field color="accent">
+                            <input
+                                formControlName="groupName"
+                                fxFlex
+                                matInput
+                                required
+                                data-cy="group-name-input"
+                            />
+                        </mat-form-field>
+                    </sp-form-field>
+                </sp-split-section>
+                <sp-split-section [level]="3" [title]="'Roles' | translate">
                     @for (role of availableRoles$ | async; track role) {
                         <mat-checkbox
                             [value]="role.elementId"
@@ -48,16 +46,20 @@
                             {{ role.label }}
                         </mat-checkbox>
                     }
-                </div>
-                <div fxLayout="column" class="general-options-panel">
-                    <span class="general-options-header">{{
-                        'Alternate IDs' | translate
-                    }}</span>
+                </sp-split-section>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Alternate IDs' | translate"
+                    [subtitle]="
+                        'User alternate IDs to map externally defined groups to this group'
+                            | translate
+                    "
+                >
                     <sp-alternate-id-configuration
                         [alternateIds]="clonedGroup.alternateIds"
                     >
                     </sp-alternate-id-configuration>
-                </div>
+                </sp-split-section>
             </form>
         </div>
     </div>

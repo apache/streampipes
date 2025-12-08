@@ -45,27 +45,10 @@ export class AdapterFilterPipe implements PipeTransform {
         adapterDescription: AdapterDescription,
         activeFilters: AdapterFilterSettingsModel,
     ): boolean {
-        return (
-            this.meetsFilterCategoryCondition(
-                adapterDescription,
-                activeFilters.selectedCategory,
-            ) &&
-            this.meetsFilterTextCondition(
-                adapterDescription,
-                activeFilters.textFilter,
-            )
+        return this.meetsFilterTextCondition(
+            adapterDescription,
+            activeFilters.textFilter,
         );
-    }
-
-    private meetsFilterCategoryCondition(
-        adapterDescription: AdapterDescription,
-        selectedCategory: string,
-    ): boolean {
-        if (selectedCategory === 'All') {
-            return true;
-        } else {
-            return adapterDescription.category.indexOf(selectedCategory) !== -1;
-        }
     }
 
     private meetsFilterTextCondition(

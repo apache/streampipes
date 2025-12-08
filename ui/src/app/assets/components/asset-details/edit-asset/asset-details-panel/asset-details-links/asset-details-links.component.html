@@ -37,7 +37,7 @@
                     data-cy="assets-manage-links-button"
                 >
                     <i class="material-icons">add</i
-                    ><span>&nbsp;Manage links</span>
+                    ><span>&nbsp;{{ 'Manage links' | translate }}</span>
                 </button>
             }
             @if (editMode) {
@@ -47,7 +47,8 @@
                     color="accent"
                     (click)="openCreateAssetLinkDialog()"
                 >
-                    <i class="material-icons">add</i><span>&nbsp;Add link</span>
+                    <i class="material-icons">add</i
+                    ><span>&nbsp;{{ 'Add link' | translate }}</span>
                 </button>
             }
         </div>

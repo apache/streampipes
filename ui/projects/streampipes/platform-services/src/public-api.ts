@@ -82,6 +82,7 @@ export * from './lib/model/assets/asset.constants';
 
 export * from './lib/model/types/data-type';
 export * from './lib/model/types/semantic-type';
+export * from './lib/model/types/alert-type';
 
 export * from './lib/services/isa95-type.service';
 export * from './lib/services/live-preview.service';

@@ -32,12 +32,6 @@ export class SpConfigurationTabsService {
             roles: ['ROLE_ADMIN'],
         },
         {
-            itemId: 'datalake',
-            itemTitle: this.translateService.instant('Data Lake'),
-            itemLink: ['configuration', 'datalake'],
-            roles: ['ROLE_ADMIN'],
-        },
-        {
             itemId: 'export',
             itemTitle: this.translateService.instant('Export/Import'),
             itemLink: ['configuration', 'export'],

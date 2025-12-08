@@ -32,42 +32,75 @@
                 </mat-checkbox>
                 @if (showLocationDetails) {
                     <div class="mt-10">
-                        <div class="subsection-title">
-                            {{
-                                'Tile server URL(use placeholders for x, y and z coordinates)'
+                        <sp-form-field
+                            [level]="2"
+                            [label]="'Layer type' | translate"
+                            [description]="
+                                'Both tile servers and vector styles are supported.'
                                     | translate
-                            }}
-                        </div>
-                        <mat-form-field
-                            color="accent"
-                            class="w-100"
-                            subscriptSizing="dynamic"
+                            "
                         >
-                            <input
-                                formControlName="tileServerUrl"
-                                fxFlex
-                                matInput
-                                data-cy="sites-location-config-tile-server"
-                            />
-                        </mat-form-field>
-                        <div class="subsection-title mt-10">
-                            {{
-                                'Copyright notice if required by the tile server'
+                            <mat-radio-group
+                                formControlName="mapLayerType"
+                                fxLayout="row"
+                            >
+                                <mat-radio-button
+                                    value="TILE"
+                                    data-cy="sites-location-config-layer-type-tile"
+                                >
+                                    {{ 'Tile' | translate }}
+                                </mat-radio-button>
+                                <mat-radio-button
+                                    value="VECTOR"
+                                    class="ml-20"
+                                    data-cy="sites-location-config-layer-type-vector"
+                                >
+                                    {{ 'Vector' | translate }}
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </sp-form-field>
+                        <sp-form-field
+                            [level]="2"
+                            [label]="'Style/Tile server URL' | translate"
+                            [description]="
+                                'For tile server, use placeholders for x, y and z coordinates'
                                     | translate
-                            }}
-                        </div>
-                        <mat-form-field
-                            color="accent"
-                            class="w-100"
-                            subscriptSizing="dynamic"
+                            "
                         >
-                            <input
-                                formControlName="attributionText"
-                                fxFlex
-                                matInput
-                                data-cy="sites-location-config-attribution-text"
-                            />
-                        </mat-form-field>
+                            <mat-form-field
+                                color="accent"
+                                class="w-100"
+                                subscriptSizing="dynamic"
+                            >
+                                <input
+                                    formControlName="tileServerUrl"
+                                    fxFlex
+                                    matInput
+                                    data-cy="sites-location-config-tile-server"
+                                />
+                            </mat-form-field>
+                        </sp-form-field>
+                        <sp-form-field
+                            [level]="2"
+                            [label]="'Copyright notice' | translate"
+                            [description]="
+                                'Will be shown on the map if required by the tile server'
+                                    | translate
+                            "
+                        >
+                            <mat-form-field
+                                color="accent"
+                                class="w-100"
+                                subscriptSizing="dynamic"
+                            >
+                                <input
+                                    formControlName="attributionText"
+                                    fxFlex
+                                    matInput
+                                    data-cy="sites-location-config-attribution-text"
+                                />
+                            </mat-form-field>
+                        </sp-form-field>
                     </div>
                 }
             </form>

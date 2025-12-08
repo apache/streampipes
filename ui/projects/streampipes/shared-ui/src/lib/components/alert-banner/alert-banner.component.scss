@@ -1,0 +1,87 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.alert {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.alert-icon {
+    flex-shrink: 0;
+    font-weight: bold;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alert-title {
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+}
+
+.alert-description {
+    margin-top: 0.25rem;
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+    opacity: 0.9;
+}
+
+.alert-info {
+    background-color: #f0f7ff;
+    border-color: #3b82f6;
+    color: #1c529f;
+}
+
+.alert-icon-info {
+    color: #3b82f6;
+}
+
+.alert-warning {
+    background-color: #fff8e8;
+    border-color: #f97316;
+    color: #9a3412;
+}
+.alert-icon-warning {
+    color: #f97316;
+}
+
+.alert-error {
+    background-color: #fff5f5;
+    border-color: #ef4444;
+    color: #991b1b;
+}
+.alert-icon-error {
+    color: #ef4444;
+}
+
+.alert-success {
+    background-color: #f0fdf4;
+    border-color: #22c55e;
+    color: #166534;
+}
+
+.alert-icon-success {
+    color: #22c55e;
+}

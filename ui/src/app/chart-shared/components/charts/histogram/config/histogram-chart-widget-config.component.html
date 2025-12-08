@@ -1,0 +1,92 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <sp-split-section [level]="3" [title]="'Field' | translate">
+        <sp-select-single-property-config
+            [availableProperties]="fieldProvider.allFields"
+            [selectedProperty]="
+                currentlyConfiguredWidget.visualizationConfig.selectedProperty
+            "
+            (changeSelectedProperty)="setSelectedProperty($event)"
+        >
+        </sp-select-single-property-config>
+    </sp-split-section>
+    <sp-split-section [level]="3" [title]="'Settings' | translate">
+        <mat-checkbox
+            [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.autoBin"
+            (change)="triggerViewRefresh()"
+        >
+            {{ 'Auto-compute number of bins' | translate }}
+        </mat-checkbox>
+        @if (!currentlyConfiguredWidget.visualizationConfig.autoBin) {
+            <sp-form-field [level]="3" [label]="'Number of bins' | translate">
+                <mat-form-field color="accent">
+                    <input
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .numberOfBins
+                        "
+                        matInput
+                        (input)="onNumBinChange($event.target.value)"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+        }
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.autoDomain
+            "
+            (change)="triggerViewRefresh()"
+        >
+            {{ 'All values' | translate }}
+        </mat-checkbox>
+        @if (!currentlyConfiguredWidget.visualizationConfig.autoDomain) {
+            <sp-form-field [level]="3" [label]="'Minimum value' | translate">
+                <mat-form-field color="accent">
+                    <input
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .domainMin
+                        "
+                        matInput
+                        (input)="onDomainMinChange($event.target.value)"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+        }
+        @if (!currentlyConfiguredWidget.visualizationConfig.autoDomain) {
+            <sp-form-field [level]="3" [label]="'Maximum value' | translate">
+                <mat-form-field color="accent">
+                    <input
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .domainMax
+                        "
+                        matInput
+                        (input)="onDomainMaxChange($event.target.value)"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+        }
+    </sp-split-section>
+</sp-visualization-config-outer>

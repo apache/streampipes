@@ -36,10 +36,8 @@
     </div>
     <div fxFlex="100" fxLayout="column">
         @if (pipelineNotFound) {
-            <div>
-                <sp-warning-box color="primary">{{
-                    'The desired pipeline was not found!' | translate
-                }}</sp-warning-box>
+            <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
+                {{ 'The desired pipeline was not found!' | translate }}
             </div>
         }
 

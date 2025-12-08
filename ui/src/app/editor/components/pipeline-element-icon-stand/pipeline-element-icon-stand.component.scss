@@ -56,7 +56,6 @@
 }
 
 .panel-title {
-    font-weight: 400;
     padding-left: 5px;
 }
 
@@ -104,9 +103,8 @@
     padding-left: 5px;
     padding-right: 5px;
     border-radius: 3px;
-    font-size: small;
     background: var(--color-secondary);
-    color: var(--color-primary);
+    color: var(--color-bg-0);
 }
 
 .sort-option {

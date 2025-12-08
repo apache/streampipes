@@ -31,4 +31,5 @@ export enum PageName {
     PROFILE,
     SETTINGS,
     ASSETS,
+    DATASETS,
 }

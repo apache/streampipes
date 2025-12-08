@@ -16,11 +16,11 @@
 ~
 -->
 <div fxLayout="column" [formGroup]="siteAreaControl">
-    <sp-basic-field-description
+    <sp-split-section
+        [level]="3"
         fxFlex="100"
-        descriptionPanelWidth="30"
-        [label]="'Site' | translate"
-        [description]="'Choose a name for your site' | translate"
+        [title]="'Site' | translate"
+        [subtitle]="'Choose a name for your site' | translate"
     >
         <mat-form-field color="accent" class="w-100" subscriptSizing="dynamic">
             <input
@@ -35,27 +35,23 @@
                 </mat-error>
             }
         </mat-form-field>
-    </sp-basic-field-description>
-    <sp-basic-field-description
-        fxFlex="100"
-        descriptionPanelWidth="30"
-        class="mt-10"
-        [label]="'Areas' | translate"
-        [description]="
+    </sp-split-section>
+    <sp-split-section
+        [level]="3"
+        [title]="'Areas' | translate"
+        [subtitle]="
             'Available areas within the site (e.g. plants or facilities)'
                 | translate
         "
     >
         <sp-edit-asset-location-area-component [site]="site" fxFlex="100">
         </sp-edit-asset-location-area-component>
-    </sp-basic-field-description>
+    </sp-split-section>
     @if (locationConfig.locationEnabled) {
-        <sp-basic-field-description
-            fxFlex="100"
-            descriptionPanelWidth="30"
-            class="mt-10"
-            [label]="'Location' | translate"
-            [description]="'Exact location of the site' | translate"
+        <sp-split-section
+            [level]="3"
+            [title]="'Location' | translate"
+            [subtitle]="'Exact location of the site' | translate"
         >
             <sp-single-marker-map
                 fxFlex="100"
@@ -64,6 +60,6 @@
                 formControlName="location"
             >
             </sp-single-marker-map>
-        </sp-basic-field-description>
+        </sp-split-section>
     }
 </div>

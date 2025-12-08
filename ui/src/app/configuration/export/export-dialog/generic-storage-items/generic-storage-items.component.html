@@ -16,9 +16,10 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100">
-    <h5>{{ 'Additional documents from generic storage' | translate }}</h5>
-
+<sp-split-section
+    [level]="3"
+    [title]="'Additional documents from generic storage' | translate"
+>
     @for (exportItem of exportItems; track exportItem.resourceId) {
         <sp-generic-storage-item
             [exportItem]="exportItem"
@@ -51,4 +52,4 @@
             </div>
         </div>
     }
-</div>
+</sp-split-section>

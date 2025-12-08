@@ -18,7 +18,7 @@
 
 <ng-template matStepLabel>{{ 'Select Format' | translate }}</ng-template>
 <div>
-    <sp-configuration-box [title]="'Download Format' | translate">
+    <sp-split-section [level]="3" [title]="'Download Format' | translate">
         <mat-radio-group
             class="sp-radio-group"
             [(ngModel)]="formatExportConfig.format"
@@ -45,76 +45,73 @@
                 EXCEL (XLSX)
             </mat-radio-button>
         </mat-radio-group>
-    </sp-configuration-box>
+    </sp-split-section>
 </div>
 @if (formatExportConfig.format === 'csv') {
-    <div class="mt-10">
-        <sp-configuration-box [title]="'Delimiter' | translate">
-            <mat-radio-group
-                [(ngModel)]="formatExportConfig.delimiter"
-                class="sp-radio-group"
-            >
-                <mat-radio-button
-                    value="comma"
-                    class="sp-radio-button"
-                    data-cy="download-configuration-delimiter-comma"
-                    >&nbsp;,
-                </mat-radio-button>
-                <mat-radio-button
-                    value="semicolon"
-                    class="sp-radio-button"
-                    data-cy="download-configuration-delimiter-semicolon"
-                    >&nbsp;;
-                </mat-radio-button>
-            </mat-radio-group>
-        </sp-configuration-box>
-    </div>
+    <sp-split-section [level]="3" [title]="'Delimiter' | translate">
+        <mat-radio-group
+            [(ngModel)]="formatExportConfig.delimiter"
+            class="sp-radio-group"
+        >
+            <mat-radio-button
+                value="comma"
+                class="sp-radio-button"
+                data-cy="download-configuration-delimiter-comma"
+                >&nbsp;,
+            </mat-radio-button>
+            <mat-radio-button
+                value="semicolon"
+                class="sp-radio-button"
+                data-cy="download-configuration-delimiter-semicolon"
+                >&nbsp;;
+            </mat-radio-button>
+        </mat-radio-group>
+    </sp-split-section>
 }
 @if (formatExportConfig.format === 'xlsx' && hasReadFilePrivilege) {
     <div fxLayout="column">
-        <sp-configuration-box [title]="'Excel template' | translate">
-            <div fxLayout="column">
-                <mat-checkbox
-                    [(ngModel)]="formatExportConfig.useTemplate"
-                    [disabled]="excelTemplates.length === 0"
-                >
-                    {{ 'Use uploaded file template' | translate }}
-                </mat-checkbox>
-                @if (
-                    formatExportConfig.useTemplate && excelTemplates.length > 0
-                ) {
-                    <mat-form-field class="mt-10" color="accent">
-                        <mat-select
-                            [(ngModel)]="formatExportConfig.templateId"
-                            [placeholder]="'Choose template' | translate"
-                        >
-                            @for (template of excelTemplates; track template) {
-                                <mat-option [value]="template.fileId">
-                                    {{ template.filename }}
-                                </mat-option>
-                            }
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field color="accent">
-                        <mat-label>{{
-                            'First row index to append data' | translate
-                        }}</mat-label>
-                        <input
-                            matInput
-                            [(ngModel)]="formatExportConfig.startRow"
-                            type="number"
-                        />
-                    </mat-form-field>
-                }
-            </div>
-        </sp-configuration-box>
+        <sp-split-section [level]="3" [title]="'Excel template' | translate">
+            <mat-checkbox
+                [(ngModel)]="formatExportConfig.useTemplate"
+                [disabled]="excelTemplates.length === 0"
+            >
+                {{ 'Use uploaded file template' | translate }}
+            </mat-checkbox>
+            @if (formatExportConfig.useTemplate && excelTemplates.length > 0) {
+                <mat-form-field class="mt-10" color="accent">
+                    <mat-select
+                        [(ngModel)]="formatExportConfig.templateId"
+                        [placeholder]="'Choose template' | translate"
+                    >
+                        @for (template of excelTemplates; track template) {
+                            <mat-option [value]="template.fileId">
+                                {{ template.filename }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field color="accent">
+                    <mat-label>{{
+                        'First row index to append data' | translate
+                    }}</mat-label>
+                    <input
+                        matInput
+                        [(ngModel)]="formatExportConfig.startRow"
+                        type="number"
+                    />
+                </mat-form-field>
+            }
+        </sp-split-section>
     </div>
 }
 @if (
     formatExportConfig.format === 'xlsx' || formatExportConfig.format === 'csv'
 ) {
     <div>
-        <sp-configuration-box [title]="'Header column name' | translate">
+        <sp-split-section
+            [level]="3"
+            [title]="'Header column name' | translate"
+        >
             <mat-radio-group
                 [(ngModel)]="formatExportConfig.headerColumnName"
                 class="sp-radio-group"
@@ -138,6 +135,6 @@
                     }}
                 </mat-radio-button>
             </mat-radio-group>
-        </sp-configuration-box>
+        </sp-split-section>
     </div>
 }

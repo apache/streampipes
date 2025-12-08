@@ -31,6 +31,11 @@ export class SplitSectionComponent {
     @Input()
     subtitle: string;
 
-    @Input() eyebrow = '';
+    @Input()
+    outline = true;
+
+    @Input()
+    level: 1 | 2 | 3 = 2;
+
     @Input() compact = false;
 }

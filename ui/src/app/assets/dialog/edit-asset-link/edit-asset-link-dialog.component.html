@@ -257,7 +257,7 @@
             style="margin-right: 10px"
             [disabled]="!clonedAssetLink.resourceId"
         >
-            {{ createMode ? 'Create ' : 'Update' }} link
+            {{ (createMode ? 'Create link' : 'Update link') | translate }}
         </button>
         <button
             mat-button
@@ -266,7 +266,7 @@
             (click)="cancel()"
             style="margin-right: 10px"
         >
-            Cancel
+            {{ 'Cancel' | translate }}
         </button>
     </div>
 </div>

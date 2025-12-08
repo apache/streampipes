@@ -42,6 +42,7 @@ import { ActivateAccountComponent } from './components/activate-account/activate
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { TermsComponent } from './components/terms/terms.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
     imports: [
@@ -62,6 +63,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatProgressBarModule,
         PlatformServicesModule,
         TranslatePipe,
+        SharedUiModule,
     ],
     declarations: [
         ActivateAccountComponent,

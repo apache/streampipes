@@ -34,9 +34,9 @@
         </button>
     </div>
     @if (adapterNotFound) {
-        <sp-warning-box>
+        <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
             {{ 'The desired adapter was not found!' | translate }}
-        </sp-warning-box>
+        </div>
     } @else {
         @if (adapter) {
             <div fxFlex="100" fxLayout="column">

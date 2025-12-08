@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-11-20 09:13:04.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-02 15:38:17.
 
 import { Storable } from './platform-services';
 
@@ -311,12 +311,8 @@ export type DefaultPrivilege =
     | 'PRIVILEGE_WRITE_PIPELINE_ELEMENT'
     | 'PRIVILEGE_READ_DASHBOARD'
     | 'PRIVILEGE_WRITE_DASHBOARD'
-    | 'PRIVILEGE_READ_DASHBOARD_WIDGET'
-    | 'PRIVILEGE_WRITE_DASHBOARD_WIDGET'
     | 'PRIVILEGE_READ_DATA_EXPLORER_VIEW'
     | 'PRIVILEGE_WRITE_DATA_EXPLORER_VIEW'
-    | 'PRIVILEGE_READ_DATA_EXPLORER_WIDGET'
-    | 'PRIVILEGE_WRITE_DATA_EXPLORER_WIDGET'
     | 'PRIVILEGE_READ_APPS'
     | 'PRIVILEGE_WRITE_APPS'
     | 'PRIVILEGE_READ_NOTIFICATIONS'

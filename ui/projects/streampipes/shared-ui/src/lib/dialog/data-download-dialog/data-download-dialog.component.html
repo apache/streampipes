@@ -17,7 +17,7 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
+    <div class="sp-dialog-content">
         <div fxFlex="100">
             <mat-horizontal-stepper #downloadDialogStepper>
                 <mat-step>
@@ -37,10 +37,16 @@
                     <sp-select-format
                         [formatExportConfig]="exportConfig.formatExportConfig"
                     ></sp-select-format>
+                    <ng-template matStepLabel>{{
+                        'Export Format' | translate
+                    }}</ng-template>
                 </mat-step>
 
                 <mat-step>
                     <sp-download></sp-download>
+                    <ng-template matStepLabel>{{
+                        'Download' | translate
+                    }}</ng-template>
                 </mat-step>
             </mat-horizontal-stepper>
         </div>

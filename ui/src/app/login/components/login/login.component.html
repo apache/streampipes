@@ -23,9 +23,8 @@
         </div>
         <div fxFlex="100" fxLayout="column" class="mt-10">
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                <div fxFlex="100" fxLayout="column">
+                <sp-form-field [level]="3" [label]="'Email ' | translate">
                     <mat-form-field fxFlex color="accent">
-                        <mat-label>{{ 'Email ' | translate }}</mat-label>
                         <input
                             formControlName="username"
                             matInput
@@ -35,8 +34,9 @@
                             data-cy="login-email"
                         />
                     </mat-form-field>
+                </sp-form-field>
+                <sp-form-field [level]="3" [label]="'Password ' | translate">
                     <mat-form-field fxFlex color="accent">
-                        <mat-label>{{ 'Password' | translate }}</mat-label>
                         <input
                             formControlName="password"
                             matInput
@@ -47,8 +47,8 @@
                             data-cy="login-password"
                         />
                     </mat-form-field>
-                </div>
-                <div class="form-actions">
+                </sp-form-field>
+                <div class="form-actions mt-20">
                     <button
                         mat-flat-button
                         data-cy="login-button"
@@ -70,15 +70,15 @@
                         ></mat-spinner>
                     }
                     @if (authenticationFailed) {
-                        <div class="md-warn">
-                            <h5 class="login-error">
-                                {{
-                                    'User not found or incorrect password provided.'
-                                        | translate
-                                }}<br />
-                                {{ 'Please try again' | translate }}
-                            </h5>
-                        </div>
+                        <sp-alert-banner
+                            type="error"
+                            [title]="'Please try again' | translate"
+                            [description]="
+                                'User not found or incorrect password provided.'
+                                    | translate
+                            "
+                        >
+                        </sp-alert-banner>
                     }
                     <div fxLayout="row" class="mt-10">
                         @if (loginSettings.allowPasswordRecovery) {

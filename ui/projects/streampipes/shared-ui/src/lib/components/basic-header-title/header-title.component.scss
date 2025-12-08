@@ -17,15 +17,26 @@
  */
 
 .header-title {
-    font-size: 1.7rem;
+    font-family: var(--font-emphasized), sans-serif;
     font-weight: 700;
     display: inline-block;
-    padding-left: 12px; /* space so text doesn't overlap border */
-    border-left: 4px solid transparent; /* thickness of the border */
+    padding-left: 12px;
+    border-left: 4px solid transparent;
     border-image: linear-gradient(
             to bottom,
             var(--color-primary),
             var(--color-primary-dark)
         )
         1;
+}
+
+.compact {
+    padding-left: 6px;
+    border-left: 3px solid transparent;
+}
+
+.header-description {
+    font-family: var(--font-emphasized), sans-serif;
+    color: var(--fg-muted);
+    font-weight: 300;
 }

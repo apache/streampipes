@@ -20,42 +20,40 @@
     @if (profileLoaded) {
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section
+                [level]="2"
                 [title]="'API Keys' | translate"
                 [subtitle]="
                     'Manage your API keys for third-party application access.'
                         | translate
                 "
             >
-                <div fxLayout="column" class="subsection">
-                    <div class="subsection-title">
-                        {{ 'New API key' | translate }}
-                    </div>
-                    <mat-form-field fxFlex color="accent">
-                        <mat-label>{{ 'Name' | translate }}</mat-label>
-                        <input
-                            [(ngModel)]="newTokenName"
-                            matInput
-                            [formControl]="tokenNameFormControl"
-                        />
-                        @if (tokenNameFormControl.hasError('required')) {
-                            <mat-error> Token name is required. </mat-error>
-                        }
-                        @if (
-                            tokenNameFormControl.hasError('minlength') ||
-                            tokenNameFormControl.hasError('pattern')
-                        ) {
-                            <mat-error>
-                                {{
-                                    'Token name must be at least 3 characters long and contain only alphanumeric ' +
-                                        'characters, hyphens, or underscores.'
-                                        | translate
-                                }}
-                            </mat-error>
-                        }
-                    </mat-form-field>
+                <sp-form-field [level]="2" [label]="'New API key' | translate">
+                    <sp-form-field [level]="3" [label]="'Name' | translate">
+                        <mat-form-field fxFlex color="accent">
+                            <input
+                                [(ngModel)]="newTokenName"
+                                matInput
+                                [formControl]="tokenNameFormControl"
+                            />
+                            @if (tokenNameFormControl.hasError('required')) {
+                                <mat-error> Token name is required. </mat-error>
+                            }
+                            @if (
+                                tokenNameFormControl.hasError('minlength') ||
+                                tokenNameFormControl.hasError('pattern')
+                            ) {
+                                <mat-error>
+                                    {{
+                                        'Token name must be at least 3 characters long and contain only alphanumeric ' +
+                                            'characters, hyphens, or underscores.'
+                                            | translate
+                                    }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </sp-form-field>
                     <div>
                         <button
-                            class="mt-5"
                             mat-button
                             mat-flat-button
                             color="accent"
@@ -65,18 +63,16 @@
                             {{ 'Create new API key' | translate }}
                         </button>
                     </div>
-                </div>
+                </sp-form-field>
                 @if (newTokenCreated) {
-                    <div fxLayout="column" class="subsection mt-10">
-                        <div class="subsection-title">
-                            {{ 'Key created' | translate }}
-                        </div>
-                        <div class="subsection-small">
-                            {{
-                                "Your new API key has been created. Please copy the key now - you won't be able to see the key again."
-                                    | translate
-                            }}
-                        </div>
+                    <sp-alert-banner
+                        type="success"
+                        [title]="'Key created' | translate"
+                        [description]="
+                            'Your new API key has been created. Please copy the key now - you won\'t be able to see the key again.'
+                                | translate
+                        "
+                    >
                         <div
                             fxFlex="100"
                             fxLayout="row"
@@ -100,13 +96,13 @@
                                 Copy
                             </button>
                         </div>
-                    </div>
+                    </sp-alert-banner>
                 }
-                <mat-divider class="divider"></mat-divider>
-                <div fxLayout="column" class="subsection mt-10">
-                    <div class="subsection-title">
-                        {{ 'Existing API keys' | translate }}
-                    </div>
+                <sp-form-field
+                    [level]="2"
+                    [label]="'Existing API keys' | translate"
+                    class="mt-10"
+                >
                     @if (userData.userApiTokens.length === 0) {
                         <div>({{ 'no keys available' | translate }})</div>
                     }
@@ -150,7 +146,7 @@
                             ></tr>
                         </table>
                     }
-                </div>
+                </sp-form-field>
             </sp-split-section>
             <mat-divider></mat-divider>
             <sp-split-section

@@ -24,26 +24,37 @@
                 fxLayout="column"
                 style="margin: 5px; width: 100%"
             >
-                <mat-form-field class="w-100" floatLabel="auto" color="accent">
-                    <mat-label>{{ 'Dashboard title' | translate }}</mat-label>
-                    <input
-                        id="dvname"
-                        #dvname="ngModel"
-                        required
-                        matInput
-                        data-cy="data-view-name"
-                        [(ngModel)]="dashboard.name"
-                    />
-                    <mat-error>{{
-                        'Title must not be empty' | translate
-                    }}</mat-error>
-                </mat-form-field>
-                <mat-form-field class="w-100" color="accent">
-                    <mat-label>{{ 'Description' | translate }}</mat-label>
-                    <input matInput [(ngModel)]="dashboard.description" />
-                </mat-form-field>
-                <div class="mt-10" fxLayout="column">
-                    <label>{{ 'Default view mode' | translate }}</label>
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Dashboard title' | translate"
+                >
+                    <mat-form-field
+                        class="w-100"
+                        floatLabel="auto"
+                        color="accent"
+                    >
+                        <input
+                            id="dvname"
+                            #dvname="ngModel"
+                            required
+                            matInput
+                            data-cy="data-view-name"
+                            [(ngModel)]="dashboard.name"
+                        />
+                        <mat-error>{{
+                            'Title must not be empty' | translate
+                        }}</mat-error>
+                    </mat-form-field>
+                </sp-form-field>
+                <sp-form-field [level]="3" [label]="'Description' | translate">
+                    <mat-form-field class="w-100" color="accent">
+                        <input matInput [(ngModel)]="dashboard.description" />
+                    </mat-form-field>
+                </sp-form-field>
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Default view mode' | translate"
+                >
                     <mat-radio-group
                         [(ngModel)]="
                             dashboard.dashboardGeneralSettings.defaultViewMode
@@ -62,15 +73,10 @@
                             {{ 'Slide view' | translate }}
                         </mat-radio-button>
                     </mat-radio-group>
-                </div>
-                <div class="mt-10" fxLayout="column">
-                    <label>{{ 'Grid' | translate }}</label>
-                    <mat-form-field
-                        class="w-100 mt-10"
-                        floatLabel="auto"
-                        color="accent"
-                    >
-                        <mat-label>{{ 'Grid columns' | translate }}</mat-label>
+                </sp-form-field>
+
+                <sp-form-field [level]="3" [label]="'Grid columns' | translate">
+                    <mat-form-field floatLabel="auto" color="accent">
                         <input
                             id="dvname"
                             #dvname="ngModel"
@@ -84,9 +90,8 @@
                             'Title must not be empty' | translate
                         }}</mat-error>
                     </mat-form-field>
-                </div>
+                </sp-form-field>
                 <div class="mt-10" fxLayout="column">
-                    <label>{{ 'Time settings' | translate }}</label>
                     <mat-checkbox
                         [(ngModel)]="
                             dashboard.dashboardGeneralSettings.globalTimeEnabled
@@ -100,10 +105,6 @@
 
                 @if (isAssetAdmin) {
                     <div class="mt-10" fxLayout="column">
-                        <label>{{
-                            'Add Dashboard to Assets' | translate
-                        }}</label>
-
                         <mat-checkbox
                             [(ngModel)]="addToAssets"
                             color="accent"

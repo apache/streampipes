@@ -45,6 +45,7 @@
     </div>
     <div fxFlex fxLayoutAlign="start start" fxLayout="column">
         <div
+            class="font-bold"
             [ngClass]="{
                 'element-name-hover': currentMouseOver,
                 'element-name': !currentMouseOver
@@ -54,7 +55,7 @@
         </div>
         @if (currentMouseOver) {
             <div class="element-description" fxLayoutAlign="start start">
-                <small>{{ element.description }}</small>
+                <span class="text-xs">{{ element.description }}</span>
             </div>
         }
     </div>

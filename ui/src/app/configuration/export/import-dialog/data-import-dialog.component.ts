@@ -46,6 +46,7 @@ export class SpDataImportDialogComponent {
     errorMessage = this.translateService.instant('Please enter a value');
 
     uploadStatus = 0;
+    uploadError = false;
 
     constructor(
         private dialogRef: DialogRef<SpDataImportDialogComponent>,
@@ -54,6 +55,7 @@ export class SpDataImportDialogComponent {
 
     handleFileInput(files: any) {
         this.hasInput = true;
+        this.uploadError = false;
         this.selectedUploadFile = files[0];
         this.fileName = this.selectedUploadFile.name;
         this.uploadStatus = 0;
@@ -78,7 +80,9 @@ export class SpDataImportDialogComponent {
                             this.currentImportStep++;
                         }
                     },
-                    error => {},
+                    error => {
+                        this.uploadError = true;
+                    },
                 );
         }
     }

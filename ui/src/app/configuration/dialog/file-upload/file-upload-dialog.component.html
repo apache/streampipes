@@ -19,9 +19,12 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15" fxLayout="column">
         @if (uploadError) {
-            <sp-warning-box style="font-size: smaller">
-                {{ uploadErrorMessage }}
-            </sp-warning-box>
+            <sp-alert-banner
+                type="error"
+                [title]="'Could not upload file' | translate"
+                [description]="uploadErrorMessage"
+            >
+            </sp-alert-banner>
         }
         @if (this.duplicateFileNames.length === 0) {
             <div fxFlex="100">
@@ -83,7 +86,7 @@
                     <button
                         mat-button
                         mat-flat-button
-                        class="mat-basic"
+                        class="mat-basic mt-10"
                         (click)="removeFilesFromUpload()"
                     >
                         {{ 'Clear' | translate }}

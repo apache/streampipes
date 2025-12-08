@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import {
@@ -28,18 +35,19 @@ import {
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
-import { ChartSharedService } from '../../../../data-explorer-shared/services/chart-shared.service';
+import { ChartSharedService } from '../../../../chart-shared/services/chart-shared.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { CloneDashboardDialogComponent } from '../../../dialogs/clone-dashboard/clone-dashboard-dialog.component';
 import { Subscription } from 'rxjs';
-import { ChartRoutingService } from '../../../../data-explorer-shared/services/chart-routing.service';
+import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
     templateUrl: './dashboard-overview-table.component.html',
     styleUrls: [
-        '../../../../data-explorer/components/overview/data-explorer-overview.component.scss',
+        '../../../../chart/components/chart-overview/chart-overview.component.scss',
     ],
     standalone: false,
 })
@@ -48,6 +56,10 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     hasDashboardWritePrivileges: boolean;
 
     dataSource = new MatTableDataSource<Dashboard>();
+
+    @ViewChild(MatSort)
+    sort: MatSort;
+
     displayedColumns: string[] = [
         'name',
         'lastModified',
@@ -78,6 +90,16 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
                 this.currentFilterIds = filter?.activeElementIds;
                 this.applyDashboardFilters(this.currentFilterIds);
             });
+
+        this.dataSource.sortingDataAccessor = (dashboard, column) => {
+            if (column === 'lastModified') {
+                return dashboard.metadata.lastModifiedEpochMs;
+            } else if (column === 'createdAt') {
+                return dashboard.metadata.createdAtEpochMs;
+            }
+            return dashboard[column];
+        };
+
         this.getDashboards();
     }
 
@@ -164,6 +186,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
                 elementIds.has(a.elementId),
             );
         }
+        this.dataSource.sort = this.sort;
         this.dataSource.data = this.filteredDashboards;
     }
 

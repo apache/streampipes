@@ -30,7 +30,6 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -98,7 +97,6 @@ public class PulsarProtocol implements StreamPipesAdapter, SupportsRuntimeConfig
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic)
         .requiredTextParameter(Labels.withId(PULSAR_BROKER_HOST))
         .requiredIntegerParameter(Labels.withId(PULSAR_BROKER_PORT), 6650)
         .requiredTextParameter(Labels.withId(PULSAR_TOPIC))

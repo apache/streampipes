@@ -38,7 +38,6 @@ import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
@@ -240,7 +239,6 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     var builder = AdapterConfigurationBuilder.create(ID, 6, () -> new OpcUaAdapter(clientProvider))
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredAlternatives(Labels.withId(ADAPTER_TYPE),
             Alternatives.from(Labels.withId(PULL_MODE),
                 SharedUserConfiguration.getPullModeGroup()

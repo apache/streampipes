@@ -29,9 +29,11 @@
         <div>
             @if (eventProperty.label) {
                 <div>
-                    <b>{{ eventProperty.label }}</b
+                    <span class="text-sm font-emphasized">{{
+                        eventProperty.label
+                    }}</span
                     ><br />
-                    <mat-hint class="description"
+                    <mat-hint class="text-xs"
                         >{{ eventProperty.description }}, field name:
                         {{ eventProperty.runtimeName }}</mat-hint
                     >

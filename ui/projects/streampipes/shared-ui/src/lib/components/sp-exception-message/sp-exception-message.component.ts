@@ -26,7 +26,6 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
     selector: 'sp-exception-message',
     templateUrl: './sp-exception-message.component.html',
-    styleUrls: ['./sp-exception-message.component.scss'],
     standalone: false,
 })
 export class SpExceptionMessageComponent {

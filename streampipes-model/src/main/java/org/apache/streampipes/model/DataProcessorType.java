@@ -55,8 +55,8 @@ public enum DataProcessorType {
   }
 
   @JsonCreator
-  public static AdapterType fromString(JsonNode json) {
-    return AdapterType.valueOf(json.get("code").asText());
+  public static DataProcessorType fromString(JsonNode json) {
+    return DataProcessorType.valueOf(json.get("code").asText());
   }
 
   public String getCode() {

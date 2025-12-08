@@ -49,8 +49,6 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   private List<TransformationRuleDescription> rules;
 
-  private List<String> category;
-
   private long createdAt;
 
   //  Is used to store where the adapter is running to stop it
@@ -73,7 +71,6 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.rules = new ArrayList<>();
     this.eventGrounding = new EventGrounding();
     this.config = new ArrayList<>();
-    this.category = new ArrayList<>();
     this.dataStream = new SpDataStream();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
   }
@@ -83,7 +80,6 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.rules = new ArrayList<>();
     this.eventGrounding = new EventGrounding();
     this.config = new ArrayList<>();
-    this.category = new ArrayList<>();
     this.dataStream = new SpDataStream();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
     this.setVersion(version);
@@ -94,7 +90,6 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.config = new Cloner().staticProperties(other.getConfig());
     this.rules = other.getRules();
     this.icon = other.getIcon();
-    this.category = new Cloner().epaTypes(other.getCategory());
     this.createdAt = other.getCreatedAt();
     this.selectedEndpointUrl = other.getSelectedEndpointUrl();
     this.correspondingServiceGroup = other.getCorrespondingServiceGroup();
@@ -181,15 +176,6 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   public void setIcon(String icon) {
     this.icon = icon;
-  }
-
-  public List<String> getCategory() {
-    return category;
-  }
-
-  @Deprecated(forRemoval = true, since = "0.98.0")
-  public void setCategory(List<String> category) {
-    this.category = category;
   }
 
   @Override

@@ -19,7 +19,6 @@
 package org.apache.streampipes.connectors.ros.migrations.config;
 
 import org.apache.streampipes.connectors.ros.adapter.RosBridgeAdapter;
-import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -39,7 +38,6 @@ public class RosBridgeAdapterVersionedConfig {
     return AdapterConfigurationBuilder.create(RosBridgeAdapter.ID, 0, RosBridgeAdapter::new)
       .withLocales(Locales.EN)
       .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-      .withCategory(AdapterType.Manufacturing)
       .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
       .requiredTextParameter(Labels.withId(ROS_PORT_KEY))
       .requiredSingleValueSelectionFromContainer(
@@ -51,7 +49,6 @@ public class RosBridgeAdapterVersionedConfig {
     return AdapterConfigurationBuilder.create(RosBridgeAdapter.ID, 1, RosBridgeAdapter::new)
       .withLocales(Locales.EN)
       .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-      .withCategory(AdapterType.Manufacturing)
       .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
       .requiredIntegerParameter(Labels.withId(ROS_PORT_KEY))
       .requiredSingleValueSelectionFromContainer(

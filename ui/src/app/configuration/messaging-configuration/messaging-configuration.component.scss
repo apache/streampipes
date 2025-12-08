@@ -16,16 +16,11 @@
  *
  */
 
-.page-container-padding-inner {
-    padding: 10px;
-}
-
 .form-width {
     width: 80%;
 }
 
 .data-format-list {
-    width: 500px;
     max-width: 100%;
     border: solid 1px var(--color-bg-3);
     min-height: 60px;
@@ -36,7 +31,7 @@
 }
 
 .data-format-box {
-    padding: 20px 10px;
+    padding: 1rem 0.5rem;
     border-bottom: solid 1px var(--color-bg-3);
     color: var(--color-default-text);
     display: flex;
@@ -46,7 +41,6 @@
     box-sizing: border-box;
     cursor: move;
     background: var(--color-bg-dialog);
-    font-size: 14px;
 }
 
 .cdk-drag-preview {

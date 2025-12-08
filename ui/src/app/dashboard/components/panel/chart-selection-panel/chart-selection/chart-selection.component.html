@@ -36,12 +36,12 @@
 
             @if (hasChartWritePrivileges) {
                 <button
-                    mat-button
-                    color="accent"
-                    class="mt-10"
+                    mat-flat-button
+                    class="mt-10 mat-basic"
                     data-cy="create-chart-button"
                     (click)="navigateToDataViewCreation()"
                 >
+                    <mat-icon>add</mat-icon>
                     {{ 'Create chart' | translate }}
                 </button>
             }

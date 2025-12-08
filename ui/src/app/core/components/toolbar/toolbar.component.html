@@ -110,9 +110,7 @@
                     </div>
                     <mat-menu #menu="matMenu" id="account" class="toolbar-menu">
                         <div class="current-user">
-                            <span class="user-email">{{
-                                userEmail | shorten: 30
-                            }}</span>
+                            <span>{{ userEmail | shorten: 30 }}</span>
                         </div>
                         <mat-divider></mat-divider>
                         <button
