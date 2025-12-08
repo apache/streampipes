@@ -35,7 +35,7 @@ import {
     styleUrls: ['./view-asset-basics.component.scss'],
     standalone: false,
 })
-export class ViewAssetBasicsComponent implements OnInit, OnChanges {
+export class ViewAssetBasicsComponent implements OnChanges {
     @Input()
     selectedAsset: SpAsset;
 
@@ -46,15 +46,6 @@ export class ViewAssetBasicsComponent implements OnInit, OnChanges {
 
     constructor(private isa95TypeService: Isa95TypeService) {}
 
-    ngOnInit() {
-        // this.assetType =
-        //     this.isa95TypeService.toLabel(
-        //         this.rootAsset.assetType.isa95AssetType,
-        //     ) || '';
-        //this.assetSite = this.getSite(this.rootAsset);
-        //this.selectedSite = this.getSite(this.selectedAsset);
-    }
-
     ngOnChanges(changes: SimpleChanges) {
         this.selectedAssetType =
             this.isa95TypeService.toLabel(
@@ -64,12 +55,5 @@ export class ViewAssetBasicsComponent implements OnInit, OnChanges {
 
     getDescription(asset: SpAsset): string {
         return asset?.assetDescription || 'No description available.';
-    }
-
-    private getSite(asset: SpAsset): AssetSiteDesc | undefined {
-        if (!asset?.assetSite?.siteId) {
-            return undefined;
-        }
-        return this.sites.find(site => asset.assetSite.siteId === site._id);
     }
 }

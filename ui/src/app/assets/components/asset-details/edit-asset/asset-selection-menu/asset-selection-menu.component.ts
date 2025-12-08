@@ -72,33 +72,10 @@ export class SpAssetSelectionMenuComponent implements OnInit {
         return [...current, ...children];
     }
 
-    selectNodeById(assetId: string) {
-        const target = this.findAssetById(this.assetModel, assetId);
-        if (target) {
-            const isRoot = target.assetId === this.assetModel.assetId;
-            //this.selectNode(target, isRoot);
-            //this.expandToAsset(assetId);
-        }
-    }
-
     selectAsset(asset: SpAsset) {
         this.assetSelected.emit({
             asset,
             rootNode: asset.assetId === this.assetModel.assetId,
         });
-    }
-
-    private findAssetById(
-        asset: SpAsset,
-        assetId: string,
-    ): SpAsset | undefined {
-        if (asset.assetId === assetId) {
-            return asset;
-        }
-        for (const child of asset.assets || []) {
-            const found = this.findAssetById(child, assetId);
-            if (found) return found;
-        }
-        return undefined;
     }
 }
