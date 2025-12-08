@@ -53,7 +53,7 @@ class DataLakeMeasure(Resource):
 
         return {
             **self.dict(exclude={"element_id", "event_schema", "schema_version"}),
-            "num_event_properties": len(self.event_schema.event_properties),
+            "num_event_properties": len(self.event_schema.event_properties) if self.event_schema else 0,
         }
 
     element_id: Optional[StrictStr]
