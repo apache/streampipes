@@ -36,12 +36,8 @@
                         fxFlex="100"
                         [countSelected]="countSelected"
                         [timestampPresent]="timestampPresent"
-                        (addStaticValuePropertyEmitter)="
-                            addStaticValueProperty($event)
-                        "
                         (addTimestampPropertyEmitter)="addTimestampProperty()"
                         (guessSchemaEmitter)="guessSchema()"
-                        (updatePreviewEmitter)="updatePreview()"
                         (removeSelectedPropertiesEmitter)="
                             removeSelectedProperties()
                         "

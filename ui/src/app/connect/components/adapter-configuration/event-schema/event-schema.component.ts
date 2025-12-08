@@ -233,23 +233,6 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
         this.refreshTree();
     }
 
-    public addStaticValueProperty(runtimeName: string): void {
-        const eventProperty = new EventPropertyPrimitive();
-        eventProperty['@class'] =
-            'org.apache.streampipes.model.schema.EventPropertyPrimitive';
-        eventProperty.elementId =
-            this.staticValueTransformService.makeDefaultElementId();
-
-        eventProperty.runtimeName = runtimeName;
-        eventProperty.runtimeType = DataType.STRING;
-        eventProperty.semanticType = undefined;
-        eventProperty.propertyScope = 'DIMENSION_PROPERTY';
-        eventProperty.additionalMetadata = {};
-
-        this.targetSchema.eventProperties.push(eventProperty);
-        this.refreshTree();
-    }
-
     public addTimestampProperty(): void {
         const eventProperty = new EventPropertyPrimitive();
         eventProperty['@class'] =
