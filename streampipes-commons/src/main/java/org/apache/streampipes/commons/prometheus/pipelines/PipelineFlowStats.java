@@ -16,7 +16,7 @@
  *
  */
 package org.apache.streampipes.commons.prometheus.pipelines;
-
+@Deprecated
 public class PipelineFlowStats {
 
   private long receivedTotalData;
