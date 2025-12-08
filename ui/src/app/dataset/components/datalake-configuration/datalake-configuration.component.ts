@@ -159,7 +159,7 @@ export class DatalakeConfigurationComponent implements OnInit {
                         this.receiveMeasurementSizes(this.pageIndex);
                         this.dataSource.data = this.availableMeasurements;
                         setTimeout(() => {
-                            this.dataSource.paginator = this.paginator;
+                            //this.dataSource.paginator = this.paginator;
                             this.dataSource.sort = this.sort;
                         });
                     });
