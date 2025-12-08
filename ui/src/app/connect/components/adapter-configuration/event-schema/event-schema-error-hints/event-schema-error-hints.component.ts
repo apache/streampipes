@@ -31,6 +31,4 @@ export class EventSchemaErrorHintsComponent {
     @Input() isLoading: boolean;
 
     @Input() isError: boolean;
-
-    constructor() {}
 }

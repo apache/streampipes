@@ -27,6 +27,4 @@ import { Component, Input } from '@angular/core';
 export class LoadingMessageComponent {
     @Input()
     currentProgress = 10;
-
-    constructor() {}
 }

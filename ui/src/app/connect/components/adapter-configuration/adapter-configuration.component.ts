@@ -38,7 +38,7 @@ export class AdapterConfigurationComponent implements OnInit {
     private dialogService = inject(DialogService);
     private transformationRuleService = inject(TransformationRuleService);
     private shepherdService = inject(ShepherdService);
-    private _formBuilder = inject(UntypedFormBuilder);
+    private formBuilder = inject(UntypedFormBuilder);
     private router = inject(Router);
     private translate = inject(TranslateService);
 
@@ -56,7 +56,7 @@ export class AdapterConfigurationComponent implements OnInit {
     private eventSchemaComponent: EventSchemaComponent;
 
     ngOnInit() {
-        this.parentForm = this._formBuilder.group({});
+        this.parentForm = this.formBuilder.group({});
         this.pageTitle = this.isEditMode
             ? this.translate.instant('Edit adapter: ') + this.displayName
             : this.translate.instant('New adapter: ') + this.displayName;

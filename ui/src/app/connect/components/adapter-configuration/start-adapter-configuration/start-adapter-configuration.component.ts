@@ -15,7 +15,14 @@
  * limitations under the License.
  *
  */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import {
     AdapterDescription,
     EventRateTransformationRuleDescription,
@@ -55,6 +62,14 @@ export class StartAdapterConfigurationComponent implements OnInit {
         'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription' as const;
     static RemoveDuplicatesTransformationRuleId =
         'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription' as const;
+
+    private dialogService = inject(DialogService);
+    private shepherdService = inject(ShepherdService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private timestampPipe = inject(TimestampPipe);
+    private transformationRuleService = inject(TransformationRuleService);
+    private translateService = inject(TranslateService);
+    private currentUserService = inject(CurrentUserService);
 
     /**
      * Adapter description the selected format is added to
@@ -113,16 +128,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     isAssetAdmin = false;
     isPipelineAdmin = false;
 
-    constructor(
-        private dialogService: DialogService,
-        private shepherdService: ShepherdService,
-        private _formBuilder: UntypedFormBuilder,
-        private timestampPipe: TimestampPipe,
-        private transformationRuleService: TransformationRuleService,
-        private translateService: TranslateService,
-        private currentUserService: CurrentUserService,
-    ) {}
-
     ngOnInit(): void {
         this.showAsset = this.isEditMode;
         this.currentUser = this.currentUserService.getCurrentUser();
@@ -132,7 +137,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
         this.isPipelineAdmin = this.currentUserService.hasRole(
             UserRole.ROLE_PIPELINE_ADMIN,
         );
-        this.startAdapterForm = this._formBuilder.group({});
+        this.startAdapterForm = this.formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
             new UntypedFormControl(this.adapterDescription.name, [

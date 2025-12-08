@@ -44,8 +44,6 @@ export class SchemaEditorHeaderComponent {
     @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
     staticValueKey = '';
 
-    constructor() {}
-
     public addStaticValueProperty() {
         this.addStaticValuePropertyEmitter.emit(this.staticValueKey);
         this.staticValueKey = '';
