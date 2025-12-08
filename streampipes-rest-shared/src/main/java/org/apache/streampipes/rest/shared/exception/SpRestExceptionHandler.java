@@ -18,6 +18,10 @@
 
 package org.apache.streampipes.rest.shared.exception;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,10 +29,16 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class RestResponseLogMessageExceptionHandler extends ResponseEntityExceptionHandler {
+public class SpRestExceptionHandler extends ResponseEntityExceptionHandler {
+
+  @ExceptionHandler(value = {AdapterException.class})
+  private ResponseEntity<Object> handleAdapterException(RuntimeException ex, WebRequest request) {
+    var spLogMessageException =  new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
+    return handleSpLogMessageException(spLogMessageException, request);
+  }
 
   @ExceptionHandler(value = {SpLogMessageException.class})
-  protected ResponseEntity<Object> handleException(
+  protected ResponseEntity<Object> handleSpLogMessageException(
       RuntimeException ex, WebRequest request) {
     var exception = (SpLogMessageException) ex;
     return ResponseEntity

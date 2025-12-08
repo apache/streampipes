@@ -64,8 +64,12 @@ export class AdapterConfigurationComponent implements OnInit {
             : this.translate.instant('New adapter: ') + this.displayName;
     }
 
-    removeSelection() {
+    navigateToAdapterCatalog() {
         this.router.navigate(['connect']).then();
+    }
+
+    clickEventPreviewNextButton() {
+        this.goForward();
     }
 
     clickSpecificSettingsNextButton() {

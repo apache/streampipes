@@ -59,13 +59,12 @@ export class AdapterSettingsComponent implements OnInit {
     /**
      * Cancels the adapter configuration process
      */
-    @Output() removeSelectionEmitter: EventEmitter<boolean> =
-        new EventEmitter();
+    @Output() cancelEmitter: EventEmitter<boolean> = new EventEmitter();
 
     /**
      * Go to next configuration step when this is complete
      */
-    @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+    @Output() nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
     cachedAdapterDescription: AdapterDescription;
     availableTemplates: PipelineElementTemplate[];
@@ -111,12 +110,12 @@ export class AdapterSettingsComponent implements OnInit {
             });
     }
 
-    public removeSelection() {
-        this.removeSelectionEmitter.emit();
+    public cancel() {
+        this.cancelEmitter.emit();
     }
 
-    public clickNext() {
-        this.clickNextEmitter.emit();
+    public next() {
+        this.nextEmitter.emit();
     }
 
     loadTemplate(event: any) {

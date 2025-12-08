@@ -32,12 +32,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
-public class GuessManagementTest {
+public class AdapterWorkerGuessManagementTest {
 
   @Test
   public void getAdapterGuessInfoAdapterNotFound() {
     var mockDeclarersSingleton = Mockito.mock(IDeclarersSingleton.class);
-    var guessManagement = Mockito.spy(GuessManagement.class);
+    var guessManagement = Mockito.spy(AdapterWorkerGuessManagement.class);
 
     doReturn(mockDeclarersSingleton)
         .when(guessManagement)

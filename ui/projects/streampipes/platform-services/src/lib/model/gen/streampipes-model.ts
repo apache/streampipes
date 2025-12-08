@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-04 17:41:18.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-08 09:56:32.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -176,23 +176,6 @@ export class AdapterEventPreview {
         instance.rules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
-        return instance;
-    }
-}
-
-export class AdapterType {
-    code: string;
-    description: string;
-    label: string;
-
-    static fromData(data: AdapterType, target?: AdapterType): AdapterType {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new AdapterType();
-        instance.code = data.code;
-        instance.description = data.description;
-        instance.label = data.label;
         return instance;
     }
 }
@@ -2448,7 +2431,6 @@ export class ListOutputStrategy extends OutputStrategy {
 export class LocationConfig {
     attributionText: string;
     locationEnabled: boolean;
-    mapLayerType: MapLayerType;
     tileServerUrl: string;
 
     static fromData(
@@ -2461,7 +2443,6 @@ export class LocationConfig {
         const instance = target || new LocationConfig();
         instance.attributionText = data.attributionText;
         instance.locationEnabled = data.locationEnabled;
-        instance.mapLayerType = data.mapLayerType;
         instance.tileServerUrl = data.tileServerUrl;
         return instance;
     }
@@ -3726,6 +3707,21 @@ export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
     }
 }
 
+export class SampleData {
+    samples: { [index: string]: any }[];
+
+    static fromData(data: SampleData, target?: SampleData): SampleData {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SampleData();
+        instance.samples = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.samples);
+        return instance;
+    }
+}
+
 export class SecretStaticProperty extends StaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.SecretStaticProperty';
     'encrypted': boolean;
@@ -4501,8 +4497,6 @@ export type Isa95Type =
     | 'WORK_CELL'
     | 'STORAGE_UNIT'
     | 'OTHER';
-
-export type MapLayerType = 'TILE' | 'VECTOR';
 
 export type MappingPropertyUnion = MappingPropertyNary | MappingPropertyUnary;
 

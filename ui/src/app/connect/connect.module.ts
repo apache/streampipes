@@ -108,6 +108,8 @@ import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ConfigurationGroupComponent } from './components/adapter-configuration/adapter-settings/configuration-group/configuration-group.component';
+import { EventPreviewComponent } from './components/adapter-configuration/event-preview/event-preview.component';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 
 @NgModule({
     imports: [
@@ -131,6 +133,7 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
         MatProgressBarModule,
         MatButtonToggleModule,
         CoreUiModule,
+        CodemirrorModule,
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
@@ -252,6 +255,7 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
         EventSchemaErrorHintsComponent,
         CanNotEditAdapterDialog,
         AllAdapterActionsComponent,
+        EventPreviewComponent,
     ],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

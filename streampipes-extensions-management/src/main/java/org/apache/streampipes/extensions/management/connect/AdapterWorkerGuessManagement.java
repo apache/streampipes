@@ -20,11 +20,13 @@ package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
 import org.slf4j.Logger;
@@ -33,16 +35,16 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class GuessManagement {
+public class AdapterWorkerGuessManagement {
 
-  private static final Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerGuessManagement.class);
 
   private IAdapterGuessSchemaContext guessSchemaContext;
 
-  public GuessManagement() {
+  public AdapterWorkerGuessManagement() {
   }
 
-  public GuessManagement(IAdapterGuessSchemaContext guessSchemaContext) {
+  public AdapterWorkerGuessManagement(IAdapterGuessSchemaContext guessSchemaContext) {
     this.guessSchemaContext = guessSchemaContext;
   }
 
@@ -56,7 +58,8 @@ public class GuessManagement {
       LOG.debug("Start guessing schema for: {}", adapterDescription.getAppId());
 
       // get registered parser of adapter
-      var registeredParsers = adapterInstance.declareConfig().getSupportedParsers();
+      var registeredParsers = adapterInstance.declareConfig()
+                                             .getSupportedParsers();
 
       var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
 
@@ -66,7 +69,9 @@ public class GuessManagement {
         var guessedSchemaObj = adapterInstance
             .onSchemaRequested(extractor, guessSchemaContext);
 
-        if (!adapterDescription.getEventSchema().getEventProperties().isEmpty()) {
+        if (!adapterDescription.getEventSchema()
+                               .getEventProperties()
+                               .isEmpty()) {
           new SchemaUpdateManagement().computeSchemaChanges(adapterDescription, guessedSchemaObj);
         } else {
           guessedSchemaObj.setTargetSchema(guessedSchemaObj.getEventSchema());
@@ -77,9 +82,12 @@ public class GuessManagement {
         LOG.error(e.toString());
 
         String errorClass = "";
-        Optional<StackTraceElement> stackTraceElement = Arrays.stream(e.getStackTrace()).findFirst();
+        Optional<StackTraceElement> stackTraceElement = Arrays.stream(e.getStackTrace())
+                                                              .findFirst();
         if (stackTraceElement.isPresent()) {
-          String[] errorClassLong = stackTraceElement.get().getClassName().split("\\.");
+          String[] errorClassLong = stackTraceElement.get()
+                                                     .getClassName()
+                                                     .split("\\.");
           errorClass = errorClassLong[errorClassLong.length - 1] + ": ";
         }
         throw new ParseException(errorClass + e.getMessage());
@@ -91,6 +99,38 @@ public class GuessManagement {
       throw new AdapterException("Adapter with app id %s was not be found".formatted(adapterDescription.getAppId()));
     }
 
+  }
+
+  /**
+   * Collects sample data from an adapter instance
+   */
+  public SampleData getSampleData(AdapterDescription adapterDescription) throws AdapterException {
+    LOG.debug("Start receiving sample data for adapter: {}", adapterDescription.getAppId());
+
+    var adapter = getAdapterInstanceOrThrowException(adapterDescription.getAppId());
+
+    // get registered parser of adapter
+    var registeredParsers = adapter
+        .declareConfig()
+        .getSupportedParsers();
+
+    var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
+
+    LOG.debug("Requesting the sample events for: {}", adapterDescription.getAppId());
+
+    return adapter.onSampleDataRequested(extractor, guessSchemaContext);
+
+  }
+
+  private StreamPipesAdapter getAdapterInstanceOrThrowException(String appId) throws AdapterException {
+    var adapter = getDeclarerSingleton()
+        .getAdapter(appId);
+
+    if (adapter.isPresent()) {
+      return adapter.get();
+    } else {
+      throw new AdapterException("Adapter with app id %s was not be found".formatted(appId));
+    }
   }
 
   public IDeclarersSingleton getDeclarerSingleton() {

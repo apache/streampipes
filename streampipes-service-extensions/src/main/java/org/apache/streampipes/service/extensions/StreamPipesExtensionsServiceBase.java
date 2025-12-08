@@ -33,7 +33,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.rest.extensions.WelcomePage;
-import org.apache.streampipes.rest.shared.exception.RestResponseLogMessageExceptionHandler;
+import org.apache.streampipes.rest.shared.exception.SpRestExceptionHandler;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
@@ -63,7 +63,7 @@ import java.util.stream.Collectors;
     WebSecurityConfig.class,
     WelcomePage.class,
     ServiceHealthResource.class,
-    RestResponseLogMessageExceptionHandler.class,
+    SpRestExceptionHandler.class,
     StreamPipesPrometheusConfig.class
 })
 @ComponentScan({"org.apache.streampipes.rest.extensions.*", "org.apache.streampipes.service.base.rest.*"})

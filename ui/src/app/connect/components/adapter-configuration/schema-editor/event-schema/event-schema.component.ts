@@ -85,13 +85,13 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
      * Cancels the adapter configuration process
      */
     @Output()
-    removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
+    cancelEmitter: EventEmitter<boolean> = new EventEmitter();
 
     /**
      * Go to next configuration step when this is complete
      */
     @Output()
-    clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+    nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
     _tree: TreeComponent;
 
@@ -297,12 +297,12 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
         }, 200);
     }
 
-    public removeSelection() {
-        this.removeSelectionEmitter.emit();
+    public cancel() {
+        this.cancelEmitter.emit();
     }
 
-    public clickNext() {
-        this.clickNextEmitter.emit();
+    public next() {
+        this.nextEmitter.emit();
     }
 
     public goBack() {

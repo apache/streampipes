@@ -86,6 +86,24 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     }
   }
 
+  @PostMapping(
+      path = "/sample",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
+  public ResponseEntity<?> getSampleData(@RequestBody AdapterDescription adapterDescription) {
+    try {
+      return ok(managementService.getSampleData(adapterDescription));
+    } catch (WorkerAdapterException e) {
+      LOG.error(e.getMessage());
+      return serverError(e.getExceptionMessage());
+    } catch (NoServiceEndpointsAvailableException | IOException e) {
+      LOG.error(e.getMessage());
+      return serverError(SpLogMessage.from(e));
+    }
+  }
+
+
   /**
    * required by Spring expression
    */
