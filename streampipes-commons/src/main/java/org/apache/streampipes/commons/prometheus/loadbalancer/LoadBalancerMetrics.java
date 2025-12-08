@@ -26,25 +26,39 @@ import io.prometheus.client.Gauge;
  */
 public class LoadBalancerMetrics {
 
-  public static final Gauge SERVICE_ADAPTER_COUNT = StreamPipesCollectorRegistry
+  @Deprecated
+  public static final Gauge SERVICE_ADAPTER_COUNT_LEGACY = StreamPipesCollectorRegistry
       .registerGauge("lb_service_adapter_count", "Number of adapters in each extension service",
                      "serviceId");
-
-  public static final Gauge SERVICE_PIPELINE_COUNT = StreamPipesCollectorRegistry
+  @Deprecated
+  public static final Gauge SERVICE_PIPELINE_COUNT_LEGACY = StreamPipesCollectorRegistry
       .registerGauge("lb_service_pipeline_count", "Number of pipelines in each extension service",
                      "serviceId");
-
-  public static final Gauge MIGRATION_TIME_SECONDS = StreamPipesCollectorRegistry
+  @Deprecated
+  public static final Gauge MIGRATION_TIME_SECONDS_LEGACY = StreamPipesCollectorRegistry
       .registerGauge("lb_migration_time_seconds", "Time taken for pipeline migration in seconds");
+  
+  public static final Gauge SERVICE_ADAPTER_COUNT = StreamPipesCollectorRegistry
+      .registerGauge("sp_extension_adapter_count_total", "Number of adapters in each extension service",
+                     "serviceId");
+  public static final Gauge SERVICE_PIPELINE_COUNT = StreamPipesCollectorRegistry
+      .registerGauge("sp_extension_pipeline_count_total", "Number of pipelines in each extension service",
+                     "serviceId");
+  public static final Gauge MIGRATION_TIME_SECONDS = StreamPipesCollectorRegistry
+      .registerGauge("sp_core_migration_time_seconds", "Time taken for pipeline migration in seconds");
 
   public LoadBalancerMetrics() {}
 
   public void reportMetrics(String serviceId, int serviceAdapterCount, int servicePipelineCount) {
     SERVICE_ADAPTER_COUNT.labels(serviceId).set(serviceAdapterCount);
     SERVICE_PIPELINE_COUNT.labels(serviceId).set(servicePipelineCount);
+
+    SERVICE_ADAPTER_COUNT_LEGACY.labels(serviceId).set(serviceAdapterCount);
+    SERVICE_PIPELINE_COUNT_LEGACY.labels(serviceId).set(servicePipelineCount);
   }
 
   public void reportMigrationTime(double seconds) {
     MIGRATION_TIME_SECONDS.set(seconds);
+    MIGRATION_TIME_SECONDS_LEGACY.set(seconds);
   }
 }
