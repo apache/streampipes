@@ -44,4 +44,8 @@ public class PipelineFlowMetrics {
       "Total amount of data sent by elements"
   );
 
+  public static final Gauge ELEMENT_FLOW_GAUGE = StreamPipesCollectorRegistry.registerGauge(
+                                                    "sp_core_pipeline_element_data_total",
+                                                     "Total amount of data received/sent by a pipeline element (e.g., filter)","pipelineId", "elemenetId", "operation");
+
 }

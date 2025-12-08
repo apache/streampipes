@@ -79,6 +79,17 @@ public class ExtensionsServiceLogExecutor implements Runnable {
     pipelineFlowStats.clear();
     ExtensionsLogProvider.INSTANCE.getAllMetricsInfos().forEach((k, v) -> {
       String className = InstanceIdExtractor.getSimpleName(k);
+      LOG.info("className " + className);
+      LOG.info("XX " +  v.toString());
+      // Calc all received 
+      long dataCount = v.getMessagesIn()
+                  .values()
+                  .stream()
+                  .mapToLong(m -> m.getCounter())
+                  .sum();
+
+      pipelineFlowStats.updateElementFlow(className, k, dataCount,v.getMessagesOut().getCounter());
+
       if (AdapterDescription.class.getSimpleName().toLowerCase().equals(className)) {
         pipelineFlowStats.increaseReceivedTotalData(v.getMessagesOut().getCounter());
       } else if (DataProcessorInvocation.class.getSimpleName().toLowerCase().equals(className)) {

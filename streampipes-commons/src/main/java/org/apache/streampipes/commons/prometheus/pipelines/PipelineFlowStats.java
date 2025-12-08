@@ -16,7 +16,7 @@
  *
  */
 package org.apache.streampipes.commons.prometheus.pipelines;
-@Deprecated
+
 public class PipelineFlowStats {
 
   private long receivedTotalData;
@@ -107,6 +107,11 @@ public class PipelineFlowStats {
     PipelineFlowMetrics.ELEMENT_INPUT_TOTAL_DATA_GAUGE.set(elementInputTotalData);
     PipelineFlowMetrics.ELEMENT_OUTPUT_TOTAL_DATA_GAUGE.set(elementOutputTotalData);
 
+  }
+
+  public void updateElementFlow(String pipelineId, String elementId,  long valuesReceived, long valuesSend){
+    PipelineFlowMetrics.ELEMENT_FLOW_GAUGE.labels(pipelineId, elementId,"received").set(valuesReceived);
+     PipelineFlowMetrics.ELEMENT_FLOW_GAUGE.labels(pipelineId, elementId,"send").set(valuesSend);
   }
 
 }
