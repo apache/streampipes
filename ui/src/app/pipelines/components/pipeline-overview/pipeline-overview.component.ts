@@ -55,7 +55,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         'actions',
     ];
 
-    dataSource: MatTableDataSource<Pipeline>;
+    dataSource: MatTableDataSource<Pipeline> = new MatTableDataSource();
     @ViewChild(MatSort) sort: MatSort;
 
     starting: any;
@@ -108,7 +108,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     }
 
     addPipelinesToTable() {
-        this.dataSource = new MatTableDataSource<Pipeline>(this._pipelines);
+        this.dataSource.data = this._pipelines;
         this.dataSource.sortingDataAccessor = (pipeline, column) => {
             if (column === 'status') {
                 return pipeline.running;
