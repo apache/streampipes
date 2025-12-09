@@ -28,8 +28,8 @@ import java.util.Optional;
 public class DataLakeResourceApi extends AbstractTypedClientApi<DataLakeMeasure>
     implements IDataLakeMeasureApi {
 
-  public DataLakeMeasureApi(StreamPipesClientConfig clientConfig) {
-    super(clientConfig, DataLakeMeasure.class);
+  public DataLakeResourceApi(StreamPipesClientConfig clientConfig) {
+    super(clientConfig, DataLakeResourceApi.class);
   }
 
   @Override
