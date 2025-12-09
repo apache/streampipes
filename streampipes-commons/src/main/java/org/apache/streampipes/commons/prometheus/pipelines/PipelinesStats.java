@@ -163,10 +163,21 @@ public class PipelinesStats {
   }
 
   public void updatePipelineRunningState(String pipelineId, String pipelineName, boolean state) {
-    PipelinesMetrics.updatePipelineRunningState(pipelineId, pipelineName, state);
+    PipelinesMetrics.STATUS_PIPELINES_GAUGE.labels(pipelineId, pipelineName, state ? "running" : "stopped")
+        .set(1);
+    PipelinesMetrics.STATUS_PIPELINES_GAUGE.labels(pipelineId, pipelineName, !state ? "running" : "stopped")
+        .set(0);
   }
 
-  public void updatePipelineHealthState(String pipelineId, String pipelineName, String healthState) {
-    PipelinesMetrics.updatePipelineHealthState(pipelineId, pipelineName, healthState);
+  public void updatePipelineHealthState(String pipelineId, String pipelineName, String state) {
+   String[] statusElements = { "OK", "FAILURE", "REQUIRES_ATTENTION" };
+
+    for (String s : statusElements) {
+      if (s.equals(state)) {
+         PipelinesMetrics.HEALTH_PIPELINES_GAUGE.labels(pipelineId, pipelineName, s).set(1);
+      } else {
+         PipelinesMetrics.HEALTH_PIPELINES_GAUGE.labels(pipelineId, pipelineName, s).set(0);
+      }
+    }
   }
 }
