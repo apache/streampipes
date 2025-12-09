@@ -54,6 +54,7 @@ describe('Creates a new adapter with a linked asset', () => {
 
         // Go To Chart and Edit
         DataExplorerUtils.goToDatalake();
+        cy.wait(1000);
         DataExplorerUtils.editDataView('NewWidget');
         DataExplorerUtils.renameWidget('Rename');
         DataExplorerUtils.addChartsToAsset([assetName1, assetName3]);
