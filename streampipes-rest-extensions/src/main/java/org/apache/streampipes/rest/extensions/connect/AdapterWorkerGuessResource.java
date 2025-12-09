@@ -59,6 +59,7 @@ public class AdapterWorkerGuessResource extends AbstractSharedRestInterface {
       path = "/schema",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @Deprecated
   public ResponseEntity<GuessSchema> guessSchema(@RequestBody AdapterDescription adapterDescription) {
 
     try {

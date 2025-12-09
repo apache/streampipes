@@ -60,7 +60,7 @@ public class AdapterSchemaGeneratorTest {
     ep.setRuntimeName("a");
     guessedSchema.setEventSchema(schema);
 
-    when(guessMgmt.guessSchema(adapterDescription)).thenReturn(guessedSchema);
+    when(guessMgmt.guessSchemaOld(adapterDescription)).thenReturn(guessedSchema);
     when(compactAdapter.schema()).thenReturn(Map.of("a", epDef));
 
     new AdapterSchemaGenerator(new SchemaMetadataEnricher(), guessMgmt).apply(adapterDescription, compactAdapter);

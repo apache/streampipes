@@ -24,6 +24,7 @@ import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 
 import java.util.Map;
 
+@Deprecated
 public class ParserUtils {
 
   public GuessSchema getGuessSchema(Map<String, Object> event) {

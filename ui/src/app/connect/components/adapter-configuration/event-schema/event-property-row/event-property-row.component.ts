@@ -79,6 +79,13 @@ export class EventPropertyRowComponent implements OnInit {
         this.isNested = this.isEventPropertyNested(this.eventProperty);
         this.timestampProperty = this.isTimestampProperty(this.eventProperty);
 
+        this.originalRuntimeType = this.parseType(
+            (this.eventProperty as EventPropertyPrimitive).runtimeType,
+        );
+        this.runtimeType = this.parseType(
+            (this.eventProperty as EventPropertyPrimitive).runtimeType,
+        );
+
         if (!this.eventProperty.propertyScope) {
             this.eventProperty.propertyScope = 'MEASUREMENT_PROPERTY';
         }
@@ -171,8 +178,6 @@ export class EventPropertyRowComponent implements OnInit {
             this.refreshTreeEmitter.emit(true);
         });
     }
-
-    protected readonly EventPropertyNested = EventPropertyNested;
 
     asNestedProperty(property: EventProperty): EventPropertyNested {
         return property as EventPropertyNested;

@@ -16,13 +16,15 @@
  *
  */
 
-package org.apache.streampipes.extensions.management.connect.adapter.parser.util;
+package org.apache.streampipes.connect.management.util;
 
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.slf4j.Logger;
@@ -34,10 +36,29 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@Deprecated
-public class JsonEventProperty {
+public class EventSchemaUtils {
 
-  private static final Logger LOG = LoggerFactory.getLogger(JsonEventProperty.class);
+  private static final Logger LOG = LoggerFactory.getLogger(EventSchemaUtils.class);
+
+  public static GuessSchema getGuessSchema(Map<String, Object> event) {
+    var schemaBuilder = GuessSchemaBuilder.create();
+
+    event
+        .forEach((key, value) -> {
+          schemaBuilder.sample(
+              key,
+              value);
+          schemaBuilder
+              .property(
+                  getEventProperty(
+                      key,
+                      value
+                  ));
+        });
+
+    return schemaBuilder.build();
+  }
+
 
   public static EventProperty getEventProperty(String key, Object o) {
     EventProperty resultProperty = null;
@@ -49,8 +70,8 @@ public class JsonEventProperty {
     } else if (o.getClass().equals(String.class)) {
       resultProperty = makePrimitiveProperty(key, XSD.STRING.toString());
     } else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)
-               || o.getClass().equals(Float.class) || o.getClass().equals(Long.class)
-               || o.getClass().equals(BigDecimal.class)) {
+        || o.getClass().equals(Float.class) || o.getClass().equals(Long.class)
+        || o.getClass().equals(BigDecimal.class)) {
       resultProperty = makePrimitiveProperty(key, XSD.FLOAT.toString());
     } else if (o.getClass().equals(LinkedHashMap.class)) {
       resultProperty = new EventPropertyNested();
@@ -70,7 +91,7 @@ public class JsonEventProperty {
       if (content.size() == 0) {
         arrayContent.setRuntimeType(XSD.STRING.toString());
       } else if (content.get(0) instanceof Integer || content.get(0) instanceof Double
-                 || content.get(0) instanceof Long) {
+          || content.get(0) instanceof Long) {
         arrayContent.setRuntimeType(XSD.FLOAT.toString());
       } else if (content.get(0) instanceof Boolean) {
         arrayContent.setRuntimeType(XSD.BOOLEAN.toString());
@@ -85,7 +106,7 @@ public class JsonEventProperty {
 
     if (resultProperty == null) {
       LOG.error("Property Type was not detected in JsonParser for the schema detection. "
-                + "This should never happen!");
+                    + "This should never happen!");
     }
 
     resultProperty.setDescription("");
@@ -101,4 +122,5 @@ public class JsonEventProperty {
 
     return property;
   }
+
 }

@@ -71,16 +71,17 @@
                 @if (
                     !isError &&
                     !isLoading &&
-                    targetSchema &&
+                    eventSchema &&
                     originalSchema &&
                     nodes
                 ) {
                     @for (
-                        property of targetSchema.eventProperties;
+                        property of eventSchema.eventProperties;
                         track property.elementId
                     ) {
                         <sp-event-property-row
                             [eventProperty]="property"
+                            (refreshTreeEmitter)="refreshTree()"
                         ></sp-event-property-row>
                     }
                 }
@@ -91,7 +92,7 @@
         <div fxFlex="100">
             <sp-event-schema-preview
                 [originalEventSchema]="originalSchema"
-                [desiredEventSchema]="targetSchema"
+                [desiredEventSchema]="eventSchema"
                 [originalPreview]="eventPreview[0]"
                 [desiredPreview]="desiredPreview"
                 (updatePreviewEmitter)="updatePreview()"

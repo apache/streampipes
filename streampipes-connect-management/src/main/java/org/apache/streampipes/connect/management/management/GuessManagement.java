@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.management.AdapterEventPreviewPipeline;
+import org.apache.streampipes.connect.management.util.EventSchemaUtils;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
@@ -59,7 +60,7 @@ public class GuessManagement {
   }
 
   @Deprecated
-  public GuessSchema guessSchema(AdapterDescription adapterDescription)
+  public GuessSchema guessSchemaOld(AdapterDescription adapterDescription)
       throws ParseException, WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
     SecretProvider.getDecryptionService().apply(adapterDescription);
     var workerUrl = getWorkerUrl(adapterDescription, WorkerPaths.getGuessSchemaPath());
@@ -79,6 +80,11 @@ public class GuessManagement {
       var exception = objectMapper.readValue(responseString, SpLogMessage.class);
       throw new WorkerAdapterException(exception);
     }
+  }
+
+  public GuessSchema guessSchema(AdapterDescription adapterDescription) {
+    var event = adapterDescription.getSampleData().getSamples().get(0);
+    return EventSchemaUtils.getGuessSchema(event);
   }
 
   @Deprecated

@@ -53,7 +53,7 @@ export class AdapterConfigurationComponent implements OnInit {
     parentForm: UntypedFormGroup;
     pageTitle = '';
 
-    private eventSchemaComponent: EventSchemaComponent;
+    // private eventSchemaComponent: EventSchemaComponent;
 
     ngOnInit() {
         this.parentForm = this.formBuilder.group({});
@@ -72,27 +72,26 @@ export class AdapterConfigurationComponent implements OnInit {
 
     clickSpecificSettingsNextButton() {
         this.shepherdService.trigger('specific-settings-next-button');
-        this.eventSchemaComponent.guessSchema();
+        // this.eventSchemaComponent.guessSchema();
         this.goForward();
     }
 
     clickEventSchemaNextButtonButton() {
-        this.applySchema();
+        // this.applySchema();
 
         this.shepherdService.trigger('event-schema-next-button');
         this.goForward();
     }
 
     public applySchema() {
-        const originalSchema = this.eventSchemaComponent.getOriginalSchema();
-        const targetSchema = this.eventSchemaComponent.getTargetSchema();
-        this.adapter.dataStream.eventSchema = targetSchema;
-
-        this.adapter.rules =
-            this.transformationRuleService.makeTransformationRuleDescriptions(
-                originalSchema,
-                targetSchema,
-            );
+        // const originalSchema = this.eventSchemaComponent.getOriginalSchema();
+        // const targetSchema = this.eventSchemaComponent.getTargetSchema();
+        // this.adapter.dataStream.eventSchema = targetSchema;
+        // this.adapter.rules =
+        //     this.transformationRuleService.makeTransformationRuleDescriptions(
+        //         originalSchema,
+        //         targetSchema,
+        //     );
     }
 
     goBack() {
@@ -107,11 +106,11 @@ export class AdapterConfigurationComponent implements OnInit {
         this.router.navigate(['connect']);
     }
 
-    @ViewChild(EventSchemaComponent) set schemaComponent(
-        eventSchemaComponent: EventSchemaComponent,
-    ) {
-        this.eventSchemaComponent = eventSchemaComponent;
-    }
+    // @ViewChild(EventSchemaComponent) set schemaComponent(
+    //     eventSchemaComponent: EventSchemaComponent,
+    // ) {
+    //  this.eventSchemaComponent = eventSchemaComponent;
+    // }
 
     @ViewChild('stepper') set stepperComponent(stepperComponent: MatStepper) {
         this.myStepper = stepperComponent;

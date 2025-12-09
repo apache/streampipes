@@ -20,6 +20,7 @@ package org.apache.streampipes.model.connect.adapter;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
@@ -66,12 +67,15 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
    */
   private String correspondingDataStreamElementId;
 
+  private SampleData sampleData;
+
   public AdapterDescription() {
     super();
     this.rules = new ArrayList<>();
     this.eventGrounding = new EventGrounding();
     this.config = new ArrayList<>();
     this.dataStream = new SpDataStream();
+    this.sampleData = new SampleData();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
   }
 
@@ -81,6 +85,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.eventGrounding = new EventGrounding();
     this.config = new ArrayList<>();
     this.dataStream = new SpDataStream();
+    this.sampleData = new SampleData();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
     this.setVersion(version);
   }
@@ -102,6 +107,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     }
     this.running = other.isRunning();
     this.deploymentConfiguration = other.getDeploymentConfiguration();
+    this.sampleData = other.getSampleData();
   }
 
   public String getRev() {
@@ -251,5 +257,13 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   public void setDeploymentConfiguration(ExtensionDeploymentConfiguration deploymentConfiguration) {
     this.deploymentConfiguration = deploymentConfiguration;
+  }
+
+  public SampleData getSampleData() {
+    return sampleData;
+  }
+
+  public void setSampleData(SampleData sampleData) {
+    this.sampleData = sampleData;
   }
 }

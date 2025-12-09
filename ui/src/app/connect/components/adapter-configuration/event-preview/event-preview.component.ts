@@ -137,6 +137,9 @@ return event;`,
                 const fn = new Function('event', this.script);
                 const result = fn(inputClone);
                 this.output = result === undefined ? null : result;
+                this.adapterDescription.sampleData = {
+                    samples: [this.output],
+                };
                 return;
             } catch (e) {
                 // fallback: try to parse the editor contents as a function expression, e.g. `(event) => {...}` or `function(event){...}`

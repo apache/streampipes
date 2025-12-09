@@ -44,7 +44,7 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
                     CompactAdapter compactAdapter)
       throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
 
-    GuessSchema result = guessManagement.guessSchema(adapterDescription);
+    GuessSchema result = guessManagement.guessSchemaOld(adapterDescription);
     adapterDescription.getDataStream().setEventSchema(result.getEventSchema());
 
     var schemaDef = compactAdapter.schema();

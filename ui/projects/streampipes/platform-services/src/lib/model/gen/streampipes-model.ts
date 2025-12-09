@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-08 13:13:14.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-09 11:34:01.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -112,6 +112,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'icon': string;
     'rules': TransformationRuleDescriptionUnion[];
     'running': boolean;
+    'sampleData': SampleData;
     'schemaRules': TransformationRuleDescriptionUnion[];
     'selectedEndpointUrl': string;
     'streamRules': TransformationRuleDescriptionUnion[];
@@ -145,6 +146,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
         instance.running = data.running;
+        instance.sampleData = SampleData.fromData(data.sampleData);
         instance.schemaRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.schemaRules);

@@ -62,7 +62,7 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
     isEditMode: boolean;
 
     originalSchema: EventSchema;
-    targetSchema: EventSchema = new EventSchema();
+    eventSchema: EventSchema = new EventSchema();
     timestampPresent = false;
 
     refreshedEventSchema = false;
@@ -136,14 +136,14 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
                 this.progress = 100;
                 this.eventPreview = guessSchema.eventPreview;
                 this.fieldStatusInfo = guessSchema.fieldStatusInfo;
-                this.targetSchema = guessSchema.targetSchema;
-                this.targetSchema.eventProperties.sort((a, b) => {
+                this.eventSchema = guessSchema.eventSchema;
+                this.eventSchema.eventProperties.sort((a, b) => {
                     return a.runtimeName < b.runtimeName ? -1 : 1;
                 });
                 this.schemaGuess = guessSchema;
 
                 this.originalSchema = guessSchema.eventSchema;
-                this.validEventSchema = this.checkIfValid(this.targetSchema);
+                this.validEventSchema = this.checkIfValid(this.eventSchema);
 
                 this.isEditableChange.emit(true);
                 this.stopProgress();
@@ -160,7 +160,7 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
                 this.errorMessage = errorMessage.error;
                 this.isError = true;
                 this.stopProgress();
-                this.targetSchema = new EventSchema();
+                this.eventSchema = new EventSchema();
             },
         );
     }
@@ -173,18 +173,13 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
     }
 
     public refreshTree(refreshPreview = true): void {
-        if (this.targetSchema && this.targetSchema.eventProperties) {
+        if (this.eventSchema && this.eventSchema.eventProperties) {
             this.nodes = new Array<EventPropertyUnion>();
-            this.nodes.push(...this.targetSchema.eventProperties);
-            this.validEventSchema = this.checkIfValid(this.targetSchema);
+            this.nodes.push(...this.eventSchema.eventProperties);
+            this.validEventSchema = this.checkIfValid(this.eventSchema);
             if (refreshPreview) {
                 this.updatePreview();
             }
-            setTimeout(() => {
-                // if (this._tree) {
-                //     this._tree.treeModel.expandAll();
-                // }
-            });
         }
     }
 
@@ -204,7 +199,7 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
         eventProperty.runtimeType = DataType.LONG;
         eventProperty.additionalMetadata = {};
 
-        this.targetSchema.eventProperties.push(eventProperty);
+        this.eventSchema.eventProperties.push(eventProperty);
         this.refreshTree();
     }
 
@@ -213,7 +208,7 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
         const ruleDescriptions =
             this.transformationRuleService.makeTransformationRuleDescriptions(
                 this.originalSchema,
-                this.targetSchema,
+                this.eventSchema,
             );
         if (this.eventPreview && this.eventPreview.length > 0) {
             this.restService
@@ -295,8 +290,8 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
     }
 
     getTargetSchema(): EventSchema {
-        this.targetSchema.eventProperties = this.nodes;
-        return this.targetSchema;
+        this.eventSchema.eventProperties = this.nodes;
+        return this.eventSchema;
     }
 
     ngOnDestroy() {
