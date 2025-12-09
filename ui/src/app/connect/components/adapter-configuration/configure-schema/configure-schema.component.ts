@@ -16,14 +16,7 @@
  *
  */
 
-import {
-    Component,
-    EventEmitter,
-    inject,
-    Input,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { RestService } from '../../../services/rest.service';
 import { AdapterDescription } from '@streampipes/platform-services';

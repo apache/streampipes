@@ -20,12 +20,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EventSchema } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-event-schema-preview',
-    templateUrl: './event-schema-preview.component.html',
-    styleUrls: ['./event-schema-preview.component.scss'],
+    selector: 'sp-configure-fields-preview',
+    templateUrl: './configure-fields-preview.component.html',
+    styleUrls: ['./configure-fields-preview.component.scss'],
     standalone: false,
 })
-export class EventSchemaPreviewComponent implements OnInit {
+export class ConfigureFieldsPreviewComponent implements OnInit {
     @Input() originalEventSchema: EventSchema;
     @Input() desiredEventSchema: EventSchema;
 

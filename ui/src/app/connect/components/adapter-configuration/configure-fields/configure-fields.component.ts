@@ -45,12 +45,12 @@ import { IdGeneratorService } from '../../../../core-services/id-generator/id-ge
 import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 
 @Component({
-    selector: 'sp-event-schema',
-    templateUrl: './event-schema.component.html',
-    styleUrls: ['./event-schema.component.scss'],
+    selector: 'sp-configure-fields',
+    templateUrl: './configure-fields.component.html',
+    styleUrls: ['./configure-fields.component.scss'],
     standalone: false,
 })
-export class EventSchemaComponent implements OnChanges, OnDestroy {
+export class ConfigureFieldsComponent implements OnChanges, OnDestroy {
     private restService = inject(RestService);
     private transformationRuleService = inject(TransformationRuleService);
     private idGeneratorService = inject(IdGeneratorService);

@@ -19,12 +19,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-    selector: 'sp-schema-editor-header',
-    templateUrl: './schema-editor-header.component.html',
-    styleUrls: ['./schema-editor-header.component.scss'],
+    selector: 'sp-configure-fields-header',
+    templateUrl: './configure-fields-header.component.html',
+    styleUrls: ['./configure-fields-header.component.scss'],
     standalone: false,
 })
-export class SchemaEditorHeaderComponent {
+export class ConfigureFieldsHeaderComponent {
     @Input() timestampPresent = false;
 
     @Output() addTimestampPropertyEmitter = new EventEmitter();

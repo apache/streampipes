@@ -19,12 +19,12 @@
 <div fxLayout="column" fxLayoutAlign="center" class="mt-20">
     <div fxFlex="90" fxLayout="column">
         @if (!isError && !isLoading) {
-            <sp-event-schema-error-hints
+            <sp-configure-fields-error-hints
                 [schemaErrorHints]="schemaErrorHints"
                 [isError]="isError"
                 [isLoading]="isLoading"
             >
-            </sp-event-schema-error-hints>
+            </sp-configure-fields-error-hints>
         }
         <sp-basic-inner-panel
             [showTitle]="false"
@@ -32,13 +32,13 @@
         >
             @if (!isLoading && !isError) {
                 <div header fxFlex="100">
-                    <sp-schema-editor-header
+                    <sp-configure-fields-header
                         fxFlex="100"
                         [timestampPresent]="timestampPresent"
                         (addTimestampPropertyEmitter)="addTimestampProperty()"
                         (guessSchemaEmitter)="guessSchema()"
                     >
-                    </sp-schema-editor-header>
+                    </sp-configure-fields-header>
                 </div>
             }
             @if (!isLoading && isError) {
@@ -90,13 +90,13 @@
     </div>
     @if (desiredPreview && isPreviewEnabled && !isLoading && !isError) {
         <div fxFlex="100">
-            <sp-event-schema-preview
+            <sp-configure-fields-preview
                 [originalEventSchema]="originalSchema"
                 [desiredEventSchema]="eventSchema"
                 [originalPreview]="eventPreview[0]"
                 [desiredPreview]="desiredPreview"
                 (updatePreviewEmitter)="updatePreview()"
-            ></sp-event-schema-preview>
+            ></sp-configure-fields-preview>
         </div>
     }
 </div>

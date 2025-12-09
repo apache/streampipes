@@ -17,16 +17,13 @@
  */
 
 import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { Router } from '@angular/router';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
-import { EventSchemaComponent } from './event-schema/event-schema.component';
 
 @Component({
     selector: 'sp-adapter-configuration',

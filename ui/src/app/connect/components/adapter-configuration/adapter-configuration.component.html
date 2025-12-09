@@ -76,7 +76,7 @@
                     <ng-template matStepLabel>{{
                         'Configure fields' | translate
                     }}</ng-template>
-                    <sp-event-schema
+                    <sp-configure-fields
                         fxLayout="column"
                         fxFlex="100"
                         [adapterDescription]="adapter"
@@ -85,7 +85,7 @@
                         (goBackEmitter)="goBack()"
                         (cancelEmitter)="navigateToAdapterCatalog()"
                     >
-                    </sp-event-schema>
+                    </sp-configure-fields>
                 </mat-step>
                 <mat-step>
                     <ng-template matStepLabel>{{

@@ -102,13 +102,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ConfigurationGroupComponent } from './components/adapter-configuration/adapter-settings/configuration-group/configuration-group.component';
 import { ConfigureSchemaComponent } from './components/adapter-configuration/configure-schema/configure-schema.component';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
-import { EventSchemaComponent } from './components/adapter-configuration/event-schema/event-schema.component';
-import { EventSchemaPreviewComponent } from './components/adapter-configuration/event-schema/event-schema-preview/event-schema-preview.component';
-import { ErrorMessageComponent } from './components/adapter-configuration/event-schema/error-message/error-message.component';
-import { LoadingMessageComponent } from './components/adapter-configuration/event-schema/loading-message/loading-message.component';
-import { SchemaEditorHeaderComponent } from './components/adapter-configuration/event-schema/schema-editor-header/schema-editor-header.component';
-import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/event-schema/event-schema-error-hints/event-schema-error-hints.component';
-import { EventPropertyRowComponent } from './components/adapter-configuration/event-schema/event-property-row/event-property-row.component';
+import { ConfigureFieldsComponent } from './components/adapter-configuration/configure-fields/configure-fields.component';
+import { ConfigureFieldsPreviewComponent } from './components/adapter-configuration/configure-fields/configure-fields-preview/configure-fields-preview.component';
+import { ErrorMessageComponent } from './components/adapter-configuration/configure-fields/error-message/error-message.component';
+import { LoadingMessageComponent } from './components/adapter-configuration/configure-fields/loading-message/loading-message.component';
+import { ConfigureFieldsHeaderComponent } from './components/adapter-configuration/configure-fields/configure-fields-header/configure-fields-header.component';
+import { ConfigureFieldsErrorHintsComponent } from './components/adapter-configuration/configure-fields/configure-fields-error-hints/configure-fields-error-hints.component';
+import { EventPropertyRowComponent } from './components/adapter-configuration/configure-fields/event-property-row/event-property-row.component';
 
 @NgModule({
     imports: [
@@ -215,7 +215,7 @@ import { EventPropertyRowComponent } from './components/adapter-configuration/ev
         AdapterSettingsComponent,
         AdapterCatalogComponent,
         DeleteAdapterDialogComponent,
-        EventSchemaComponent,
+        ConfigureFieldsComponent,
         EditEventPropertyComponent,
         EditRegexTransformationComponent,
         EditUnitTransformationComponent,
@@ -223,7 +223,7 @@ import { EventPropertyRowComponent } from './components/adapter-configuration/ev
         EditValueTransformationComponent,
         EditTimestampPropertyComponent,
         EditDataTypeComponent,
-        EventSchemaPreviewComponent,
+        ConfigureFieldsPreviewComponent,
         ExistingAdaptersComponent,
         AdapterFilterPipe,
         AdapterConfigurationComponent,
@@ -233,7 +233,7 @@ import { EventPropertyRowComponent } from './components/adapter-configuration/ev
         ConfigurationGroupComponent,
         ErrorMessageComponent,
         LoadingMessageComponent,
-        SchemaEditorHeaderComponent,
+        ConfigureFieldsHeaderComponent,
         SpEpSettingsSectionComponent,
         StartAdapterConfigurationComponent,
         SpAdapterDeploymentSettingsComponent,
@@ -249,7 +249,7 @@ import { EventPropertyRowComponent } from './components/adapter-configuration/ev
         SpConnectFilterToolbarComponent,
         CreateAdapterComponent,
         EditAdapterComponent,
-        EventSchemaErrorHintsComponent,
+        ConfigureFieldsErrorHintsComponent,
         CanNotEditAdapterDialog,
         AllAdapterActionsComponent,
         ConfigureSchemaComponent,

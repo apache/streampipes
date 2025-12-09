@@ -20,12 +20,12 @@ import { Component, Input } from '@angular/core';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
 
 @Component({
-    selector: 'sp-event-schema-error-hints',
-    templateUrl: './event-schema-error-hints.component.html',
-    styleUrls: ['./event-schema-error-hints.component.scss'],
+    selector: 'sp-configure-fields-error-hints',
+    templateUrl: './configure-fields-error-hints.component.html',
+    styleUrls: ['./configure-fields-error-hints.component.scss'],
     standalone: false,
 })
-export class EventSchemaErrorHintsComponent {
+export class ConfigureFieldsErrorHintsComponent {
     @Input() schemaErrorHints: UserErrorMessage[];
 
     @Input() isLoading: boolean;

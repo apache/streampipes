@@ -16,7 +16,7 @@
  *
  */
 
-import { EventSchemaErrorHintsComponent } from './event-schema-error-hints.component';
+import { ConfigureFieldsErrorHintsComponent } from './configure-fields-error-hints.component';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
 
 describe('EventSchemaErrorHints', () => {
@@ -98,7 +98,7 @@ describe('EventSchemaErrorHints', () => {
 
     const mount = (template: string, cp?) => {
         cy.mount(template, {
-            declarations: [EventSchemaErrorHintsComponent],
+            declarations: [ConfigureFieldsErrorHintsComponent],
             componentProperties: cp,
         });
     };
