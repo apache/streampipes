@@ -124,7 +124,7 @@ public enum   ExtensionsLogProvider {
   return Stream.concat(
         Stream.concat(
             pipeline.getStreams().stream()
-               .map(s -> s.getCorrespondingAdapterId()),   // flatten List<String>
+               .map(s -> s.getCorrespondingAdapterId()),
             pipeline.getSepas().stream()
                 .map(NamedStreamPipesEntity::getElementId)
         ),
