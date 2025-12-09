@@ -23,6 +23,8 @@ import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +38,9 @@ public enum   ExtensionsLogProvider {
 
   INSTANCE;
 
+  private static final Logger LOG =
+      LoggerFactory.getLogger(ExtensionsLogProvider.class.getCanonicalName());
+
   private static final int MAX_ITEMS = 50;
 
   private final Map<String, List<SpLogEntry>> allLogInfos = new HashMap<>();
@@ -43,7 +48,7 @@ public enum   ExtensionsLogProvider {
 
   public void addMonitoringInfos(SpEndpointMonitoringInfo monitoringInfo) {
     allMetricsInfos.putAll(monitoringInfo.getMetricsInfos());
-    monitoringInfo.getLogInfos().forEach((key, value) -> {
+    monitoringInfo.getLogInfos().forEach((key, value) -> {    
       if (!allLogInfos.containsKey(key)) {
         allLogInfos.put(key, new ArrayList<>());
       }
@@ -118,15 +123,54 @@ public enum   ExtensionsLogProvider {
   public Map<String, SpMetricsEntry> getAllMetricsInfos() {
     return this.allMetricsInfos;
   }
-
+/**
   private List<String> collectPipelineElementIds(Pipeline pipeline) {
     if (pipeline != null){
-    return Stream.concat(
-        pipeline.getSepas().stream().map(NamedStreamPipesEntity::getElementId),
-        pipeline.getActions().stream().map(NamedStreamPipesEntity::getElementId)
-    ).collect(Collectors.toList());
+  return Stream.concat(
+            pipeline.getSepas().stream()
+                .map(NamedStreamPipesEntity::getElementId),
+
+        pipeline.getActions().stream()
+            .map(NamedStreamPipesEntity::getElementId)
+    )
+    .collect(Collectors.toList());
   }
   return List.of();
   }
+
+*/
+  private List<String> collectPipelineElementIds(Pipeline pipeline) {
+    if (pipeline != null){
+  return Stream.concat(
+        Stream.concat(
+            pipeline.getStreams().stream()
+               .map(s -> s.getCorrespondingAdapterId()),   // flatten List<String>
+            pipeline.getSepas().stream()
+                .map(NamedStreamPipesEntity::getElementId)
+        ),
+        pipeline.getActions().stream()
+            .map(NamedStreamPipesEntity::getElementId)
+    )
+    .collect(Collectors.toList());
+  }
+  return List.of();
+  }
+
+
+  public Map<String, Map<String, SpMetricsEntry>> getMetricsGroupedByPipeline() {
+
+    var allPipelines = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getPipelineStorageAPI().findAll();
+
+    Map<String, Map<String, SpMetricsEntry>> result = new HashMap<>();
+
+    for (Pipeline pipeline : allPipelines) {
+        var metrics = ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipeline.getPipelineId());
+        result.put(pipeline.getPipelineId(), metrics);
+    }
+
+    return result;
+}
 
 }
