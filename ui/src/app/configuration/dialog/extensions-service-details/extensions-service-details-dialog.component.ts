@@ -37,4 +37,10 @@ export class SpExtensionsServiceDetailsDialogComponent {
     close() {
         this.dialogRef.close();
     }
+
+    get sortedTags() {
+        return [...this.serviceReg.tags].sort((a, b) =>
+            a.prefix.localeCompare(b.prefix),
+        );
+    }
 }

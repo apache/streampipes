@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,17 +16,24 @@
  *
  */
 
-.service-tag {
-    border-radius: 20px;
-    margin-right: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border: 1px solid var(--color-bg-3);
-    background: var(--color-bg-3);
-    display: inline-block;
-    padding: 5px 10px;
-}
+import { Component, Input, OnInit } from '@angular/core';
+import { Certificate } from '@streampipes/platform-services';
 
-.service-tag-prefix {
-    font-weight: bold;
+@Component({
+    selector: 'sp-certificate-label',
+    standalone: false,
+    templateUrl: './certificate-label.component.html',
+})
+export class CertificateLabelComponent implements OnInit {
+    @Input()
+    certificate: Certificate;
+
+    dnsNames: string[] = [];
+
+    ngOnInit(): void {
+        this.dnsNames = this.certificate.subjectAlternativeNames.filter(san =>
+            san.startsWith('DNS'),
+        );
+        console.log(this.dnsNames);
+    }
 }

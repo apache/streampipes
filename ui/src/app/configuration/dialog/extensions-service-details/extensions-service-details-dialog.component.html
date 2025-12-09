@@ -39,14 +39,14 @@
                 <div fxFlex="20">{{ 'Tags' | translate }}</div>
                 <div fxFlex="80">
                     <div>
-                        @for (tag of serviceReg.tags; track tag) {
+                        @for (tag of sortedTags; track tag) {
                             <div class="service-tag text-sm">
                                 <span class="service-tag-prefix">{{
                                     tag.prefix.toLowerCase()
                                 }}</span>
-                                <span class="service-tag-value">{{
-                                    tag.value
-                                }}</span>
+                                <span class="service-tag-value"
+                                    >&nbsp;{{ tag.value }}</span
+                                >
                             </div>
                         }
                     </div>

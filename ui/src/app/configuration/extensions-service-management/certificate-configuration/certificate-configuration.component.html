@@ -40,7 +40,10 @@
                 *matCellDef="let certificate"
                 data-cy="user-accounts-table-row"
             >
-                <b>{{ certificate.issuerDn }}</b>
+                <sp-certificate-label
+                    style="display: block"
+                    [certificate]="certificate"
+                ></sp-certificate-label>
             </td>
         </ng-container>
         <ng-container matColumnDef="expires">
@@ -60,7 +63,7 @@
                 *matCellDef="let certificate"
                 data-cy="user-accounts-table-row"
             >
-                <b>{{ certificate.notAfter }}</b>
+                <span class="text-sm">{{ certificate.notAfter }}</span>
             </td>
         </ng-container>
         <ng-container matColumnDef="actions">

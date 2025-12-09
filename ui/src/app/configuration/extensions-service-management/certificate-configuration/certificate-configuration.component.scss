@@ -16,17 +16,6 @@
  *
  */
 
-.service-tag {
-    border-radius: 20px;
-    margin-right: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border: 1px solid var(--color-bg-3);
-    background: var(--color-bg-3);
-    display: inline-block;
-    padding: 5px 10px;
-}
-
-.service-tag-prefix {
-    font-weight: bold;
+:host {
+    --mat-table-row-item-container-height: 100%;
 }

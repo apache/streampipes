@@ -103,6 +103,7 @@ import { AlternateIdConfigurationComponent } from './security-configuration/alte
 import { UserAcknowledgmentComponent } from './general-configuration/user-acknowledgement/user-acknowledgment.component';
 import { QuillEditorComponent } from 'ngx-quill';
 import { MatStepperModule } from '@angular/material/stepper';
+import { CertificateLabelComponent } from './extensions-service-management/certificate-configuration/certificate-label/certificate-label.component';
 
 @NgModule({
     imports: [
@@ -257,6 +258,7 @@ import { MatStepperModule } from '@angular/material/stepper';
         CertificateDetailsDialogComponent,
         AlternateIdConfigurationComponent,
         UserAcknowledgmentComponent,
+        CertificateLabelComponent,
     ],
     providers: [
         OrderByPipe,

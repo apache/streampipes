@@ -31,6 +31,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-certificate-configuration',
     standalone: false,
     templateUrl: './certificate-configuration.component.html',
+    styleUrls: ['./certificate-configuration.component.scss'],
 })
 export class CertificateConfigurationComponent implements OnInit {
     private certificateService = inject(CertificateService);
