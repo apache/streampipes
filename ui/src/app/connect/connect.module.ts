@@ -100,7 +100,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ConfigurationGroupComponent } from './components/adapter-configuration/adapter-settings/configuration-group/configuration-group.component';
-import { EventPreviewComponent } from './components/adapter-configuration/event-preview/event-preview.component';
+import { ConfigureSchemaComponent } from './components/adapter-configuration/configure-schema/configure-schema.component';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { EventSchemaComponent } from './components/adapter-configuration/event-schema/event-schema.component';
 import { EventSchemaPreviewComponent } from './components/adapter-configuration/event-schema/event-schema-preview/event-schema-preview.component';
@@ -252,7 +252,7 @@ import { EventPropertyRowComponent } from './components/adapter-configuration/ev
         EventSchemaErrorHintsComponent,
         CanNotEditAdapterDialog,
         AllAdapterActionsComponent,
-        EventPreviewComponent,
+        ConfigureSchemaComponent,
         EventPropertyRowComponent,
     ],
     providers: [TimestampPipe],

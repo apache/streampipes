@@ -61,15 +61,15 @@
 
                 <mat-step>
                     <ng-template matStepLabel>{{
-                        'Event Preview' | translate
+                        'Configure schema' | translate
                     }}</ng-template>
-                    <sp-event-preview
+                    <sp-configure-schema
                         [adapterDescription]="adapter"
                         (nextEmitter)="clickEventPreviewNextButton()"
                         (goBackEmitter)="goBack()"
                         (cancelEmitter)="navigateToAdapterCatalog()"
                     >
-                    </sp-event-preview>
+                    </sp-configure-schema>
                 </mat-step>
 
                 <mat-step>

@@ -36,9 +36,7 @@ import { EventSchemaComponent } from './event-schema/event-schema.component';
 })
 export class AdapterConfigurationComponent implements OnInit {
     private dialogService = inject(DialogService);
-    private transformationRuleService = inject(TransformationRuleService);
     private shepherdService = inject(ShepherdService);
-    private formBuilder = inject(UntypedFormBuilder);
     private router = inject(Router);
     private translate = inject(TranslateService);
 
@@ -50,13 +48,9 @@ export class AdapterConfigurationComponent implements OnInit {
     @Input() isEditMode: boolean;
 
     myStepper: MatStepper;
-    parentForm: UntypedFormGroup;
     pageTitle = '';
 
-    // private eventSchemaComponent: EventSchemaComponent;
-
     ngOnInit() {
-        this.parentForm = this.formBuilder.group({});
         this.pageTitle = this.isEditMode
             ? this.translate.instant('Edit adapter: ') + this.displayName
             : this.translate.instant('New adapter: ') + this.displayName;
@@ -83,17 +77,6 @@ export class AdapterConfigurationComponent implements OnInit {
         this.goForward();
     }
 
-    public applySchema() {
-        // const originalSchema = this.eventSchemaComponent.getOriginalSchema();
-        // const targetSchema = this.eventSchemaComponent.getTargetSchema();
-        // this.adapter.dataStream.eventSchema = targetSchema;
-        // this.adapter.rules =
-        //     this.transformationRuleService.makeTransformationRuleDescriptions(
-        //         originalSchema,
-        //         targetSchema,
-        //     );
-    }
-
     goBack() {
         this.myStepper.selectedIndex = this.myStepper.selectedIndex - 1;
     }
@@ -105,12 +88,6 @@ export class AdapterConfigurationComponent implements OnInit {
     public adapterWasStarted() {
         this.router.navigate(['connect']);
     }
-
-    // @ViewChild(EventSchemaComponent) set schemaComponent(
-    //     eventSchemaComponent: EventSchemaComponent,
-    // ) {
-    //  this.eventSchemaComponent = eventSchemaComponent;
-    // }
 
     @ViewChild('stepper') set stepperComponent(stepperComponent: MatStepper) {
         this.myStepper = stepperComponent;

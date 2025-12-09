@@ -29,12 +29,12 @@ import { RestService } from '../../../services/rest.service';
 import { AdapterDescription } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-event-preview',
+    selector: 'sp-configure-schema',
     standalone: false,
-    templateUrl: './event-preview.component.html',
-    styleUrl: './event-preview.component.scss',
+    templateUrl: './configure-schema.component.html',
+    styleUrl: './configure-schema.component.scss',
 })
-export class EventPreviewComponent {
+export class ConfigureSchemaComponent {
     restService = inject(RestService);
 
     @Input()
