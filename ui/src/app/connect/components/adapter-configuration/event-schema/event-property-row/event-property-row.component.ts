@@ -24,7 +24,6 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
-import { TreeNode } from '@ali-hm/angular-tree-component';
 import {
     DataType,
     EventProperty,
@@ -38,7 +37,6 @@ import {
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 
 @Component({
@@ -49,10 +47,10 @@ import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 })
 export class EventPropertyRowComponent implements OnInit {
     private dialogService = inject(DialogService);
-    private epUtils = inject(EventPropertyUtilsService);
     private shepherdService = inject(ShepherdService);
 
-    @Input() node: TreeNode;
+    @Input() eventProperty: EventProperty;
+
     @Input() eventSchema: EventSchema = new EventSchema();
     @Input() originalEventSchema: EventSchema;
     @Input() fieldStatusInfo: Record<string, FieldStatusInfo>;
@@ -75,22 +73,14 @@ export class EventPropertyRowComponent implements OnInit {
     originalProperty: EventPropertyUnion;
 
     ngOnInit() {
-        this.label = this.getLabel(this.node.data);
-        this.isPrimitive = this.isEventPropertyPrimitive(this.node.data);
-        this.isList = this.isEventPropertyList(this.node.data);
-        this.isNested = this.isEventPropertyNested(this.node.data);
-        this.timestampProperty = this.isTimestampProperty(this.node.data);
+        this.label = this.getLabel(this.eventProperty);
+        this.isPrimitive = this.isEventPropertyPrimitive(this.eventProperty);
+        this.isList = this.isEventPropertyList(this.eventProperty);
+        this.isNested = this.isEventPropertyNested(this.eventProperty);
+        this.timestampProperty = this.isTimestampProperty(this.eventProperty);
 
-        if (this.node.data instanceof EventProperty) {
-            this.originalProperty = this.epUtils.findPropertyByElementId(
-                this.originalEventSchema.eventProperties,
-                this.node.data.elementId,
-            );
-            this.checkAndDisplayProperties();
-        }
-
-        if (!this.node.data.propertyScope) {
-            this.node.data.propertyScope = 'MEASUREMENT_PROPERTY';
+        if (!this.eventProperty.propertyScope) {
+            this.eventProperty.propertyScope = 'MEASUREMENT_PROPERTY';
         }
     }
 
@@ -98,7 +88,7 @@ export class EventPropertyRowComponent implements OnInit {
         if (this.originalProperty) {
             this.applyDisplayedProperties(this.originalProperty);
         } else {
-            this.applyDisplayedProperties(this.node.data);
+            this.applyDisplayedProperties(this.eventProperty);
         }
     }
 
@@ -112,7 +102,7 @@ export class EventPropertyRowComponent implements OnInit {
                 (ep as EventPropertyPrimitive).runtimeType,
             );
             this.runtimeType = this.parseType(
-                (this.node.data as EventPropertyPrimitive).runtimeType,
+                (this.eventProperty as EventPropertyPrimitive).runtimeType,
             );
         }
     }
@@ -173,10 +163,18 @@ export class EventPropertyRowComponent implements OnInit {
         this.shepherdService.trigger('adapter-edit-field-clicked');
 
         dialogRef.afterClosed().subscribe(refresh => {
-            this.timestampProperty = this.isTimestampProperty(this.node.data);
-            this.label = this.getLabel(this.node.data);
+            this.timestampProperty = this.isTimestampProperty(
+                this.eventProperty,
+            );
+            this.label = this.getLabel(this.eventProperty);
             this.checkAndDisplayProperties();
             this.refreshTreeEmitter.emit(true);
         });
+    }
+
+    protected readonly EventPropertyNested = EventPropertyNested;
+
+    asNestedProperty(property: EventProperty): EventPropertyNested {
+        return property as EventPropertyNested;
     }
 }

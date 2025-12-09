@@ -25,9 +25,7 @@ import {
     OnDestroy,
     Output,
     SimpleChanges,
-    ViewChild,
 } from '@angular/core';
-import { ITreeOptions, TreeComponent } from '@ali-hm/angular-tree-component';
 import {
     AdapterDescription,
     DataType,
@@ -87,8 +85,6 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    _tree: TreeComponent;
-
     schemaGuess: GuessSchema = new GuessSchema();
     isLoading = false;
     isError = false;
@@ -104,11 +100,6 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
 
     progress = 0;
     progressSub: Subscription;
-
-    options: ITreeOptions = {
-        childrenField: 'eventProperties',
-        displayField: 'runTimeName',
-    };
 
     public setEventSchemaEditWarning() {
         this.schemaErrorHints.push(
@@ -190,9 +181,9 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
                 this.updatePreview();
             }
             setTimeout(() => {
-                if (this._tree) {
-                    this._tree.treeModel.expandAll();
-                }
+                // if (this._tree) {
+                //     this._tree.treeModel.expandAll();
+                // }
             });
         }
     }
@@ -306,15 +297,6 @@ export class EventSchemaComponent implements OnChanges, OnDestroy {
     getTargetSchema(): EventSchema {
         this.targetSchema.eventProperties = this.nodes;
         return this.targetSchema;
-    }
-
-    @ViewChild('tree')
-    set tree(treeComponent: TreeComponent) {
-        this._tree = treeComponent;
-    }
-
-    get tree(): TreeComponent {
-        return this._tree;
     }
 
     ngOnDestroy() {

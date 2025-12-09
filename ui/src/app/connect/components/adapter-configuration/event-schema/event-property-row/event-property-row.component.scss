@@ -16,22 +16,6 @@
  *
  */
 
-::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
-.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
-    background-color: var(--color-primary) !important;
-}
-
-::ng-deep
-    .mat-checkbox:not(.mat-checkbox-disabled).mat-accent
-    .mat-checkbox-ripple
-    .mat-ripple-element {
-    background-color: var(--color-primary) !important;
-}
-
-.checkbox-selected {
-    opacity: 1 !important;
-}
-
 .timestamp-property {
     margin-left: 15px;
     border-radius: 10px;
@@ -43,29 +27,6 @@
 
 .timestamp-icon {
     font-size: 12px;
-}
-
-.status-good {
-    background: #75c575;
-    color: white;
-}
-
-.status-bad {
-    background: #d2a169;
-    color: white;
-}
-
-.status {
-    width: 70px;
-    min-width: 70px;
-    text-align: center;
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.status-outer {
-    width: 70px;
-    min-width: 70px;
 }
 
 .runtime-info {
@@ -100,4 +61,16 @@
     color: var(--color-bg-0);
     padding: 3px;
     border-radius: 5px;
+}
+
+.nested-properties {
+    margin-top: 8px;
+    padding-left: 24px;
+    border-left: 2px solid rgba(0, 0, 0, 0.04);
+
+    > sp-event-property-row {
+        display: block;
+        width: 100%;
+        padding: 6px 0;
+    }
 }

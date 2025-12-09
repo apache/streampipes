@@ -35,7 +35,6 @@ import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
 import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { TreeModule } from '@ali-hm/angular-tree-component';
 import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
 import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
 import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
@@ -104,12 +103,12 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
 import { EventPreviewComponent } from './components/adapter-configuration/event-preview/event-preview.component';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { EventSchemaComponent } from './components/adapter-configuration/event-schema/event-schema.component';
-import { EventPropertyRowComponent } from './components/adapter-configuration/event-schema/event-property-row/event-property-row.component';
 import { EventSchemaPreviewComponent } from './components/adapter-configuration/event-schema/event-schema-preview/event-schema-preview.component';
 import { ErrorMessageComponent } from './components/adapter-configuration/event-schema/error-message/error-message.component';
 import { LoadingMessageComponent } from './components/adapter-configuration/event-schema/loading-message/loading-message.component';
 import { SchemaEditorHeaderComponent } from './components/adapter-configuration/event-schema/schema-editor-header/schema-editor-header.component';
 import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/event-schema/event-schema-error-hints/event-schema-error-hints.component';
+import { EventPropertyRowComponent } from './components/adapter-configuration/event-schema/event-property-row/event-property-row.component';
 
 @NgModule({
     imports: [
@@ -151,7 +150,6 @@ import { EventSchemaErrorHintsComponent } from './components/adapter-configurati
         MatSliderModule,
         MatSnackBarModule,
         PlatformServicesModule,
-        TreeModule,
         TranslateModule.forChild(),
         RouterModule.forChild([
             {
@@ -220,7 +218,6 @@ import { EventSchemaErrorHintsComponent } from './components/adapter-configurati
         EventSchemaComponent,
         EditEventPropertyComponent,
         EditRegexTransformationComponent,
-        EventPropertyRowComponent,
         EditUnitTransformationComponent,
         EditSchemaTransformationComponent,
         EditValueTransformationComponent,
@@ -256,6 +253,7 @@ import { EventSchemaErrorHintsComponent } from './components/adapter-configurati
         CanNotEditAdapterDialog,
         AllAdapterActionsComponent,
         EventPreviewComponent,
+        EventPropertyRowComponent,
     ],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

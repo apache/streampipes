@@ -75,27 +75,14 @@
                     originalSchema &&
                     nodes
                 ) {
-                    <div
-                        fxLayout="column"
-                        fxLayoutAlign="space-evenly stretched"
-                        data-cy="sp-connect-schema-editor"
-                    >
-                        <tree-root #tree [nodes]="nodes" [options]="options">
-                            <ng-template
-                                #treeNodeTemplate
-                                let-node
-                                let-index="index"
-                            >
-                                <sp-event-property-row
-                                    [node]="node"
-                                    [(eventSchema)]="targetSchema"
-                                    [(originalEventSchema)]="originalSchema"
-                                    [fieldStatusInfo]="fieldStatusInfo"
-                                    (refreshTreeEmitter)="refreshTree($event)"
-                                ></sp-event-property-row>
-                            </ng-template>
-                        </tree-root>
-                    </div>
+                    @for (
+                        property of targetSchema.eventProperties;
+                        track property.elementId
+                    ) {
+                        <sp-event-property-row
+                            [eventProperty]="property"
+                        ></sp-event-property-row>
+                    }
                 }
             </div>
         </sp-basic-inner-panel>

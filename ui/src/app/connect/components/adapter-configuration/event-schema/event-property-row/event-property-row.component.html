@@ -16,136 +16,154 @@
 ~
 -->
 
-<div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
-    <div fxLayout="row" fxLayoutAlign="start center">
-        <div>
-            <b style="white-space: nowrap">
-                {{ label }}
-            </b>
-        </div>
-        @if (originalRuntimeName) {
-            <div fxLayoutAlign="start center" class="ml-5">
-                <span class="runtime-info">{{ originalRuntimeName }}</span>
-                @if (originalRuntimeName !== node.data.runtimeName) {
-                    <span fxLayoutAlign="center center">
-                        <i class="material-icons">arrow_right</i>
-                    </span>
-                }
-                @if (originalRuntimeName !== node.data.runtimeName) {
-                    <span class="runtime-info"
-                        >{{ node.data.runtimeName }}
-                    </span>
-                }
+<div fxLayout="column" fxFlex="100">
+    <div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <div>
+                <b style="white-space: nowrap">
+                    {{ label }}
+                </b>
             </div>
-        }
-        @if (isList) {
-            <p style="margin: 0px 10px 10px">[List]</p>
-        }
-    </div>
-
-    <div
-        fxLayout="row"
-        fxLayoutAlign="end center"
-        fxFlex="100"
-        fxLayoutGap="20px"
-    >
-        @if (timestampProperty) {
-            <div
-                class="timestamp-property"
-                fxLayoutAlign="end center"
-                fxLayout="row"
-            >
-                @if (timestampProperty) {
-                    <mat-icon
-                        class="timestamp-icon"
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                    >
-                        access_time
-                    </mat-icon>
-                }
-                <span style="margin-left: -5px">marked as timestamp</span>
-            </div>
-        }
-        <div fxLayoutAlign="end center" class="runtime-type-info-outer">
-            @if (runtimeType) {
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
-                    <span class="runtime-info runtime-type-info">{{
-                        originalRuntimeType
-                    }}</span>
-                    @if (originalRuntimeType !== runtimeType) {
-                        <span fxLayoutAlign="center center"
-                            ><i class="material-icons">arrow_right</i></span
-                        >
+            @if (originalRuntimeName) {
+                <div fxLayoutAlign="start center" class="ml-5">
+                    <span class="runtime-info">{{ originalRuntimeName }}</span>
+                    @if (originalRuntimeName !== eventProperty.runtimeName) {
+                        <span fxLayoutAlign="center center">
+                            <i class="material-icons">arrow_right</i>
+                        </span>
                     }
-                    @if (originalRuntimeType !== runtimeType) {
-                        <span class="runtime-info runtime-type-info">{{
-                            runtimeType
-                        }}</span>
+                    @if (originalRuntimeName !== eventProperty.runtimeName) {
+                        <span class="runtime-info"
+                            >{{ eventProperty.runtimeName }}
+                        </span>
                     }
                 </div>
             }
-        </div>
-        <div fxLayoutAlign="end center" class="status-outer">
-            @if (showFieldStatus) {
-                <span
-                    [ngClass]="
-                        'status status-' +
-                        fieldStatusInfo[
-                            originalRuntimeName
-                        ].fieldStatus.toLowerCase()
-                    "
-                    [matTooltip]="
-                        fieldStatusInfo[originalRuntimeName].additionalInfo
-                    "
-                    >{{
-                        fieldStatusInfo[originalRuntimeName].fieldStatus
-                    }}</span
-                >
+            @if (isList) {
+                <p style="margin: 0px 10px 10px">[List]</p>
             }
         </div>
-        @if (isPrimitive) {
-            <div fxLayoutAlign="center center">
-                <mat-form-field
-                    class="form-field-small no-subscrip-wrapper"
-                    appearance="outline"
-                    color="accent"
-                >
-                    <mat-select
-                        [(ngModel)]="node.data.propertyScope"
-                        panelClass="small-select"
-                        class="small-select"
-                        [attr.data-cy]="'property-scope-' + label"
-                    >
-                        <mat-option value="MEASUREMENT_PROPERTY">{{
-                            'Measurement' | translate
-                        }}</mat-option>
-                        @if (runtimeType !== 'FLOAT') {
-                            <mat-option value="DIMENSION_PROPERTY">{{
-                                'Dimension' | translate
-                            }}</mat-option>
-                        }
-                        <mat-option value="HEADER_PROPERTY">{{
-                            'Header' | translate
-                        }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        }
 
-        @if (isNested || isPrimitive || isList) {
-            <div fxLayoutAlign="end center" class="ml-5 mr-5">
-                <button
-                    color="accent"
-                    mat-button
-                    (click)="openEditDialog(node.data)"
-                    [attr.data-cy]="'edit-' + label.toLowerCase()"
+        <div
+            fxLayout="row"
+            fxLayoutAlign="end center"
+            fxFlex="100"
+            fxLayoutGap="20px"
+        >
+            @if (timestampProperty) {
+                <div
+                    class="timestamp-property"
+                    fxLayoutAlign="end center"
+                    fxLayout="row"
                 >
-                    <mat-icon>edit</mat-icon>&nbsp;{{
-                        'Edit field' | translate
-                    }}
-                </button>
+                    @if (timestampProperty) {
+                        <mat-icon
+                            class="timestamp-icon"
+                            fxLayout="row"
+                            fxLayoutAlign="start center"
+                        >
+                            access_time
+                        </mat-icon>
+                    }
+                    <span style="margin-left: -5px">marked as timestamp</span>
+                </div>
+            }
+            <div fxLayoutAlign="end center" class="runtime-type-info-outer">
+                @if (runtimeType) {
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxFlex="100"
+                    >
+                        <span class="runtime-info runtime-type-info">{{
+                            originalRuntimeType
+                        }}</span>
+                        @if (originalRuntimeType !== runtimeType) {
+                            <span fxLayoutAlign="center center"
+                                ><i class="material-icons">arrow_right</i></span
+                            >
+                        }
+                        @if (originalRuntimeType !== runtimeType) {
+                            <span class="runtime-info runtime-type-info">{{
+                                runtimeType
+                            }}</span>
+                        }
+                    </div>
+                }
             </div>
-        }
+            <div fxLayoutAlign="end center" class="status-outer">
+                @if (showFieldStatus) {
+                    <span
+                        [ngClass]="
+                            'status status-' +
+                            fieldStatusInfo[
+                                originalRuntimeName
+                            ].fieldStatus.toLowerCase()
+                        "
+                        [matTooltip]="
+                            fieldStatusInfo[originalRuntimeName].additionalInfo
+                        "
+                        >{{
+                            fieldStatusInfo[originalRuntimeName].fieldStatus
+                        }}</span
+                    >
+                }
+            </div>
+            @if (isPrimitive) {
+                <div fxLayoutAlign="center center">
+                    <mat-form-field
+                        class="form-field-small no-subscrip-wrapper"
+                        appearance="outline"
+                        color="accent"
+                    >
+                        <mat-select
+                            [(ngModel)]="eventProperty.propertyScope"
+                            panelClass="small-select"
+                            class="small-select"
+                            [attr.data-cy]="'property-scope-' + label"
+                        >
+                            <mat-option value="MEASUREMENT_PROPERTY"
+                                >{{ 'Measurement' | translate }}
+                            </mat-option>
+                            @if (runtimeType !== 'FLOAT') {
+                                <mat-option value="DIMENSION_PROPERTY"
+                                    >{{ 'Dimension' | translate }}
+                                </mat-option>
+                            }
+                            <mat-option value="HEADER_PROPERTY"
+                                >{{ 'Header' | translate }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            }
+
+            @if (isNested || isPrimitive || isList) {
+                <div fxLayoutAlign="end center" class="ml-5 mr-5">
+                    <button
+                        color="accent"
+                        mat-button
+                        (click)="openEditDialog(eventProperty)"
+                        [attr.data-cy]="'edit-' + label.toLowerCase()"
+                    >
+                        <mat-icon>edit</mat-icon>&nbsp;{{
+                            'Edit field' | translate
+                        }}
+                    </button>
+                </div>
+            }
+        </div>
     </div>
+    @if (isNested) {
+        <div fxLayout="column" fxFlex="100" class="nested-properties">
+            @for (
+                property of asNestedProperty(eventProperty).eventProperties;
+                track property.elementId
+            ) {
+                <sp-event-property-row
+                    [eventProperty]="property"
+                ></sp-event-property-row>
+            }
+        </div>
+    }
 </div>
