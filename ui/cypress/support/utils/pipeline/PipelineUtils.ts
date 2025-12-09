@@ -198,8 +198,8 @@ export class PipelineUtils {
     }
 
     public static clonePipeline(newPipelineName: string) {
-        PipelineBtns.pipelineCloneModeBtn().children().click();
         cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
+        PipelineBtns.pipelineCloneModeBtn().children().click();
     }
 
     public static updatePipeline(newPipelineName: string) {
