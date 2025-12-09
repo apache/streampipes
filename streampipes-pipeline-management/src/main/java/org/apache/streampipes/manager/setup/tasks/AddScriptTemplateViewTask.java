@@ -16,27 +16,27 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v099;
+package org.apache.streampipes.manager.setup.tasks;
 
-import org.apache.streampipes.manager.setup.tasks.AddAssetManagementViewTask;
-import org.apache.streampipes.service.core.migrations.templates.AddGenericStorageViewMigration;
+import org.apache.streampipes.commons.constants.GenericDocTypes;
 
-import java.io.IOException;
+public class AddScriptTemplateViewTask extends AbstractAddGenericStorageViewTask {
 
-public class AddAssetManagementViewMigration extends AddGenericStorageViewMigration {
-
-  @Override
-  public void executeMigration() throws IOException {
-    new AddAssetManagementViewTask().execute();
-  }
+  public static final String DESIGN_DOCUMENT = "_design/transformation-scripts";
+  public static final String VIEW_NAME = "all-transformations";
 
   @Override
-  public String getDesignDocumentName() {
-    return AddAssetManagementViewTask.DESIGN_DOCUMENT;
+  public String getDesignDocument() {
+    return DESIGN_DOCUMENT;
   }
 
   @Override
   public String getViewName() {
-    return AddAssetManagementViewTask.VIEW_NAME;
+    return VIEW_NAME;
+  }
+
+  @Override
+  public String getMapFunction() {
+    return String.format("function(doc) { if(doc.appDocType === '%s') { emit(doc._id, doc); } }", GenericDocTypes.DOC_TRANSFORMATION_SCRIPT_TEMPLATE);
   }
 }

@@ -77,8 +77,8 @@ public class CouchDbInstallationStep extends InstallationStep {
     addUserView();
     addNotificationView();
     addPipelineView();
-    addDataLakeMeasureView();
-    addAssetManagementView();
+    new AddDataLakeMeasureViewTask().execute();
+    new AddAssetManagementViewTask().execute();
   }
 
   private void addNotificationView() {
@@ -169,13 +169,5 @@ public class CouchDbInstallationStep extends InstallationStep {
     } catch (Exception e) {
       logFailure(PREPARING_USERS_TEXT, e);
     }
-  }
-
-  private void addDataLakeMeasureView() {
-    new AddDataLakeMeasureViewTask().execute();
-  }
-
-  private void addAssetManagementView() {
-    new AddAssetManagementViewTask().execute();
   }
 }
