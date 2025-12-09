@@ -23,8 +23,6 @@ import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,9 +35,6 @@ import java.util.stream.Stream;
 public enum   ExtensionsLogProvider {
 
   INSTANCE;
-
-  private static final Logger LOG =
-      LoggerFactory.getLogger(ExtensionsLogProvider.class.getCanonicalName());
 
   private static final int MAX_ITEMS = 50;
 
@@ -123,22 +118,7 @@ public enum   ExtensionsLogProvider {
   public Map<String, SpMetricsEntry> getAllMetricsInfos() {
     return this.allMetricsInfos;
   }
-/**
-  private List<String> collectPipelineElementIds(Pipeline pipeline) {
-    if (pipeline != null){
-  return Stream.concat(
-            pipeline.getSepas().stream()
-                .map(NamedStreamPipesEntity::getElementId),
-
-        pipeline.getActions().stream()
-            .map(NamedStreamPipesEntity::getElementId)
-    )
-    .collect(Collectors.toList());
-  }
-  return List.of();
-  }
-
-*/
+  
   private List<String> collectPipelineElementIds(Pipeline pipeline) {
     if (pipeline != null){
   return Stream.concat(
@@ -167,7 +147,7 @@ public enum   ExtensionsLogProvider {
 
     for (Pipeline pipeline : allPipelines) {
         var metrics = ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipeline.getPipelineId());
-        result.put(pipeline.getPipelineId(), metrics);
+        result.put(pipeline.getElementId(), metrics);
     }
 
     return result;
