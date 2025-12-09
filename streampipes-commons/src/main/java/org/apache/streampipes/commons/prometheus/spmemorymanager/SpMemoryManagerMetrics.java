@@ -30,12 +30,12 @@ public class SpMemoryManagerMetrics {
   @Deprecated
   public static final Gauge MEMORY_USED_BYTES_LEGACY = StreamPipesCollectorRegistry.registerGauge(
         "sp_memory_used_bytes",
-        "Amount of memory used in bytes"
+        "DEPRECATED: Use sp_memory_used_bytes instead. Amount of memory used in bytes"
   );
   @Deprecated
   public static final Gauge MEMORY_ALLOCATION_RATE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
         "sp_memory_allocation_rate_bytes_per_second",
-        "Memory allocation rate in bytes per second"
+        "DEPRECATED: Use sp_memory_allocation_rate_bytes_per_second instead. Memory allocation rate in bytes per second"
   );
 
 

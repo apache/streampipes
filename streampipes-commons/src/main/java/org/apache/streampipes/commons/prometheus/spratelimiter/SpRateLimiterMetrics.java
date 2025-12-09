@@ -29,12 +29,12 @@ public class SpRateLimiterMetrics {
   @Deprecated
   public static final Gauge RATE_LIMITER_QUEUE_SIZE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
         "sp_rate_limiter_queue_size",
-        "Current size of the waiting queue"
+        "DEPRECATED: Use sp_extension_rate_limiter_queue_total instead. Current size of the waiting queue"
   );
   @Deprecated
   public static final Gauge RATE_LIMITER_AVERAGE_WAIT_TIME_LEGACY = StreamPipesCollectorRegistry.registerGauge(
         "sp_rate_limiter_average_wait_time_seconds",
-        "Average wait time for permit acquisition in seconds"
+        "DEPRECATED: Use sp_extension_rate_limiter_average_wait_time_seconds instead. Average wait time for permit acquisition in seconds"
   );
 
   public static final Gauge RATE_LIMITER_QUEUE_SIZE = StreamPipesCollectorRegistry.registerGauge(

@@ -59,7 +59,7 @@ public AdapterMetrics() {
 
     this.totalAdapterEventsPublishedMetricLegacy = StreamPipesCollectorRegistry.registerGauge(
         "adapter_events_published_total",
-        "Total amount of events published per adapter",
+        "DEPRECATED: Use sp_core_adapter_instance_events_published_total instead. Total amount of events published per adapter",
         "adapterId", "adapterName"
     );
 

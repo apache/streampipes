@@ -29,19 +29,19 @@ import io.prometheus.client.Gauge;
 public class ElementServiceMetrics {
   @Deprecated
   public static final Gauge CPU_USAGE_LEGACY = StreamPipesCollectorRegistry
-      .registerGauge("cpu_usage", "Element CPU usage percentage", "serviceId");
+      .registerGauge("cpu_usage", "DEPRECATED: Use sp_extension_cpu_usage_percentage instead. Element CPU usage percentage", "serviceId");
   @Deprecated
   public static final Gauge MEMORY_USAGE_LEGACY = StreamPipesCollectorRegistry
-      .registerGauge("memory_usage", "Element memory usage in bytes", "serviceId");
+      .registerGauge("memory_usage", "DEPRECATED: Use sp_extension_memory_usage_bytes instead. Element memory usage in bytes", "serviceId");
   @Deprecated
   public static final Gauge WEIGHT_LEGACY = StreamPipesCollectorRegistry
-      .registerGauge("weight", "Weight of remaining available resources for element", "serviceId");
+      .registerGauge("weight", "DEPRECATED: Use sp_extension_weight_count_total instead. Weight of remaining available resources for element", "serviceId");
   @Deprecated
   public static final Gauge SYSTEM_LOAD_LEGACY = StreamPipesCollectorRegistry
-      .registerGauge("system_load", "System load average over the last minute", "serviceId");
+      .registerGauge("system_load", "DEPRECATED: Use sp_extension_system_load_last_minute instead. System load average over the last minute", "serviceId");
   @Deprecated
   public static final Gauge HISTORICAL_SYSTEM_LOAD_LEGACY = StreamPipesCollectorRegistry
-      .registerGauge("historical_system_load", "Historical system load average", "serviceId");
+      .registerGauge("historical_system_load", "DEPRECATED: Use sp_extension_system_load_historic_average instead. Historical system load average", "serviceId");
 
   public static final Gauge CPU_USAGE = StreamPipesCollectorRegistry
       .registerGauge("sp_extension_cpu_usage_percentage", "Element CPU usage percentage", "serviceId");
