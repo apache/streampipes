@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v2/connect/master/guess")
@@ -97,6 +98,15 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     }
   }
 
+  // TODO this transforms the event according to the function
+  @PostMapping(
+      path = "/sample/transform",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
+  public ResponseEntity<Map<String, Object>> transformEvent(@RequestBody AdapterDescription adapterDescription) {
+    return ok(Map.of("one", 1));
+  }
 
   /**
    * required by Spring expression
