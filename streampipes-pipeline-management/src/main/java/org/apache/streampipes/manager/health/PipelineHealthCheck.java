@@ -69,6 +69,20 @@ public class PipelineHealthCheck implements Runnable {
     pipelinesStats.setStoppedPipelines(pipelinesStats.getAllPipelines()
         - pipelinesStats.getRunningPipelines());
 
+    for (Pipeline p : allPipelines) {
+    pipelinesStats.updatePipelineHealthState(
+        p.getElementId(),
+        p.getName(),
+        p.getHealthStatus().toString()
+    );
+
+    pipelinesStats.updatePipelineRunningState(
+        p.getElementId(),
+        p.getName(),
+        p.isRunning()
+    );
+}
+
     if (!runningPipelines.isEmpty()) {
       Map<String, List<InvocableStreamPipesEntity>> endpointMap = generateEndpointMap();
       List<String> allRunningInstances = findRunningInstances(endpointMap.keySet());
