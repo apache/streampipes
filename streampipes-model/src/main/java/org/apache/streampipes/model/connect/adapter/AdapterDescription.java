@@ -20,6 +20,7 @@ package org.apache.streampipes.model.connect.adapter;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.SchemaTransformationScriptConfig;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
@@ -68,6 +69,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
   private String correspondingDataStreamElementId;
 
   private SampleData sampleData;
+  private SchemaTransformationScriptConfig schemaTransformationScriptConfig;
 
   public AdapterDescription() {
     super();
@@ -108,6 +110,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.running = other.isRunning();
     this.deploymentConfiguration = other.getDeploymentConfiguration();
     this.sampleData = other.getSampleData();
+    this.schemaTransformationScriptConfig = other.getSchemaTransformationScriptConfig();
   }
 
   public String getRev() {
@@ -265,5 +268,13 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   public void setSampleData(SampleData sampleData) {
     this.sampleData = sampleData;
+  }
+
+  public SchemaTransformationScriptConfig getSchemaTransformationScriptConfig() {
+    return schemaTransformationScriptConfig;
+  }
+
+  public void setSchemaTransformationScriptConfig(SchemaTransformationScriptConfig schemaTransformationScriptConfig) {
+    this.schemaTransformationScriptConfig = schemaTransformationScriptConfig;
   }
 }

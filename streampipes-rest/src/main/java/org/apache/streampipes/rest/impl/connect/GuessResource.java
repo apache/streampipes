@@ -21,6 +21,9 @@ package org.apache.streampipes.rest.impl.connect;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.GuessManagement;
+import org.apache.streampipes.connect.transformer.api.TransformationEngines;
+import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
+import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -104,8 +107,24 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<Map<String, Object>> transformEvent(@RequestBody AdapterDescription adapterDescription) {
-    return ok(Map.of("one", 1));
+  public ResponseEntity<Map<String, Object>> transformEvent(@RequestBody AdapterDescription adapterDescription) throws AdapterException {
+
+    try {
+      var transformationScript = adapterDescription.getSchemaTransformationScriptConfig();
+      var engine = TransformationEngines.INSTANCE.getTransformationEngine(transformationScript.language());
+      var compiledScript = engine.compile(transformationScript.script());
+
+      var samples = adapterDescription.getSampleData().getSamples();
+      if (!samples.isEmpty()) {
+        var result = compiledScript.transform(samples.get(0));
+        return ok(result);
+      } else {
+        throw new AdapterException("No samples available to transform");
+      }
+
+    } catch (ScriptCompilationException | ScriptExecutionException e) {
+      throw new AdapterException(String.format("Could not execute script: %s", e.getMessage()));
+    }
   }
 
   /**

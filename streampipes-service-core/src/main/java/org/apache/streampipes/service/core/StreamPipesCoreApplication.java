@@ -21,6 +21,10 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.transformer.api.TransformationEngine;
+import org.apache.streampipes.connect.transformer.api.TransformationEngines;
+import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
+import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
@@ -54,6 +58,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -67,6 +72,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 @Configuration
 @EnableAutoConfiguration
@@ -90,18 +96,29 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
     application.initialize(() -> List.of(new SpNatsProtocolFactory(), new SpKafkaProtocolFactory(),
                                          new SpMqttProtocolFactory(), new SpJmsProtocolFactory(),
-                                         new SpPulsarProtocolFactory()));
+                                         new SpPulsarProtocolFactory()),
+        List.of(
+            GroovyScriptEngine::new,
+            GraalJsScriptEngine::new
+        )
+    );
   }
 
-  public void initialize(SupportedProtocols supportedProtocols) {
+  public void initialize(SupportedProtocols supportedProtocols,
+                         List<Supplier<TransformationEngine>> transformationEngines) {
     try {
       registerProtocols(supportedProtocols);
+      registerTransformationEngines(transformationEngines);
       BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(8030);
       startStreamPipesService(StreamPipesCoreApplication.class, networkingConfig);
     } catch (UnknownHostException e) {
       LOG.error("Could not auto-resolve host address - please manually provide the hostname"
           + " using the `SP_HOST` environment variable");
     }
+  }
+
+  protected void registerTransformationEngines(List<Supplier<TransformationEngine>> transformationEngines) {
+    transformationEngines.forEach(TransformationEngines.INSTANCE::registerEngine);
   }
 
   protected void registerProtocols(SupportedProtocols protocols) {

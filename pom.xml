@@ -1125,6 +1125,9 @@
         <module>streampipes-wrapper-kafka-streams</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
+        <module>streampipes-connect-transformer-api</module>
+        <module>streampipes-connect-transformer-groovy</module>
+        <module>streampipes-connect-transformer-js</module>
     </modules>
 
     <profiles>
