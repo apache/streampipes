@@ -45,4 +45,3 @@ scrape_configs:
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: [ "extensions-all-jvm:8090" ]
-
