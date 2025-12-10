@@ -29,7 +29,8 @@ public interface ClientConnectionConfigResolver extends ClientConnectionUrlResol
 
   default String getBaseUrl() {
     StringJoiner joiner = new StringJoiner("");
-    String protocol = isHttpsDisabled() ? "http://" : "https://";
+    //TODO Eliminate this
+    String protocol = isHttpsDisabled() ? "http://" : "http://";
     joiner.add(protocol + getStreamPipesHost()
         + ":"
         + getStreamPipesPort());

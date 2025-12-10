@@ -20,49 +20,53 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
-public class DataLakeResourceApi extends AbstractTypedClientApi<DataLakeMeasure>
-    implements IDataLakeMeasureApi {
+public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeResourceApi {
 
   public DataLakeResourceApi(StreamPipesClientConfig clientConfig) {
-    super(clientConfig, DataLakeResourceApi.class);
+    super(clientConfig);
   }
 
-  @Override
-  public Optional<DataLakeMeasure> get(String id) {
-    return getSingle(getBaseResourcePath().addToPath(id));
-  }
-
-  @Override
-  public List<DataLakeMeasure> all() {
-    throw new IllegalArgumentException("Not yet implemented");
-  }
-
-  @Override
-  public void create(DataLakeMeasure element) {
-    post(getBaseResourcePath(), element);
-  }
-
-  @Override
-  public void delete(String elementId) {
-    throw new IllegalArgumentException("Not yet implemented");
-  }
-
-  @Override
-  public void update(DataLakeMeasure measure) {
-    put(getBaseResourcePath().addToPath(measure.getElementId()), measure);
-  }
-
-  @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromStreamPipesBasePath()
         .addToPath("api")
         .addToPath("v4")
         .addToPath("datalake")
-        .addToPath("measure");
+        .addToPath("measurements");
+  }
+
+  @Override
+  public void delete(String measurementID, Long startDate, Long endDate) {
+
+        Map<String, String> queryParams = new HashMap<>();
+    if (startDate != null) {
+        queryParams.put("startDate", startDate.toString());
+    }
+    if (endDate != null) {
+        queryParams.put("endDate", endDate.toString());
+    }
+    delete(getBaseResourcePath().addToPath(measurementID),queryParams, Void.class);
+
+  }
+
+  @Override
+  public void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch) {
+    Map<String, String> queryParams = new HashMap<>();
+    queryParams.put("ignoreSchemaMismatch", String.valueOf(ignoreSchemaMismatch));
+    post(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams), queryResult);
+  }
+
+
+  @Override
+  public SpQueryResult get(String measurementID) {
+     /**Map<String, String> queryParams = new HashMap<>();
+     queryParams.put("queryParams", {
+});*/
+  return getSingle(getBaseResourcePath().addToPath(measurementID), SpQueryResult.class);
+
   }
 }
