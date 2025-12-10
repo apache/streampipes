@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-09 11:34:01.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-10 09:50:01.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -114,6 +114,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'running': boolean;
     'sampleData': SampleData;
     'schemaRules': TransformationRuleDescriptionUnion[];
+    'schemaTransformationScriptConfig': SchemaTransformationScriptConfig;
     'selectedEndpointUrl': string;
     'streamRules': TransformationRuleDescriptionUnion[];
     'valueRules': TransformationRuleDescriptionUnion[];
@@ -150,6 +151,10 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         instance.schemaRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.schemaRules);
+        instance.schemaTransformationScriptConfig =
+            SchemaTransformationScriptConfig.fromData(
+                data.schemaTransformationScriptConfig,
+            );
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
         instance.streamRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
@@ -3721,6 +3726,24 @@ export class SampleData {
         instance.samples = __getCopyArrayFn(
             __getCopyObjectFn(__identity<any>()),
         )(data.samples);
+        return instance;
+    }
+}
+
+export class SchemaTransformationScriptConfig {
+    language: string;
+    script: string;
+
+    static fromData(
+        data: SchemaTransformationScriptConfig,
+        target?: SchemaTransformationScriptConfig,
+    ): SchemaTransformationScriptConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SchemaTransformationScriptConfig();
+        instance.language = data.language;
+        instance.script = data.script;
         return instance;
     }
 }
