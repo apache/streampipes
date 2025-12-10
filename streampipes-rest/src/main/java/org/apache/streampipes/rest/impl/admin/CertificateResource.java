@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.opcua.CertificateState;
+import org.apache.streampipes.model.opcua.CertificateUsage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.CRUDStorage;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
@@ -87,7 +89,19 @@ public class CertificateResource extends AbstractAuthGuardedRestResource {
     } else {
       LOG.info("Certificate with IssuerDN {} already exists, skipping creation", certificate.getIssuerDn());
     }
+  }
 
+  @PostMapping(value = "usage", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public void updateUsage(@RequestBody CertificateUsage certificateUsage) {
+    var certificates = certificateStorage.findAll();
+    certificates
+        .stream()
+        .filter(c -> Objects.nonNull(c.getThumbprint()) && c.getThumbprint().equals(certificateUsage.thumbprint()))
+        .findFirst()
+        .ifPresent(c -> {
+          c.getAssociatedResourceIds().add(certificateUsage.associatedResourceId());
+          certificateStorage.updateElement(c);
+        });
   }
 
   @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)

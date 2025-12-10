@@ -24,7 +24,7 @@ import {
 } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { CertificateDetailsDialogComponent } from '../../dialog/certificate-details/certificate-details-dialog.component';
+import { CertificateDetailsDialogComponent } from '../../../core-ui/certificate-details/certificate-details-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

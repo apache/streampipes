@@ -107,6 +107,7 @@ import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
 import { TopicsComponent } from './topics/topics.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { CertificateDetailsDialogComponent } from './certificate-details/certificate-details-dialog.component';
 
 @NgModule({
     imports: [
@@ -203,6 +204,7 @@ import { TextFieldModule } from '@angular/cdk/text-field';
         PipelineOperationStatusComponent,
         JsonPrettyPrintPipe,
         YamlPrettyPrintPipe,
+        CertificateDetailsDialogComponent,
     ],
     providers: [MatDatepickerModule, DisplayRecommendedPipe],
     exports: [
@@ -237,6 +239,7 @@ import { TextFieldModule } from '@angular/cdk/text-field';
         SingleMarkerMapComponent,
         JsonPrettyPrintPipe,
         YamlPrettyPrintPipe,
+        CertificateDetailsDialogComponent,
     ],
 })
 export class CoreUiModule {}

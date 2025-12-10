@@ -68,6 +68,7 @@ import { SpAssetSelectionMenuComponent } from './components/asset-details/edit-a
 import { AssetLinkTableComponent } from './components/asset-details/view-asset/view-asset-links/asset-link-table/asset-link-table.component';
 import { AssetLinkTableTypeComponent } from './components/asset-details/view-asset/view-asset-links/asset-link-table/asset-link-table-link-type/asset-link-table-type.component';
 import { AssetDetailsCustomFieldsComponent } from './components/asset-details/edit-asset/asset-details-panel/asset-details-basics/asset-details-custom-fields/asset-details-custom-fields.component';
+import { AssetLinkTableAdditionalDataComponent } from './components/asset-details/view-asset/view-asset-links/asset-link-table/asset-link-table-additional-data/asset-link-table-additional-data.component';
 
 @NgModule({
     imports: [
@@ -151,6 +152,7 @@ import { AssetDetailsCustomFieldsComponent } from './components/asset-details/ed
         AssetLinkTableComponent,
         AssetLinkTableTypeComponent,
         AssetDetailsCustomFieldsComponent,
+        AssetLinkTableAdditionalDataComponent,
     ],
     providers: [],
 })

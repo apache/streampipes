@@ -22,6 +22,7 @@ import {
     inject,
     Input,
     OnChanges,
+    OnDestroy,
     OnInit,
     SimpleChanges,
     ViewChild,
@@ -29,15 +30,24 @@ import {
 import {
     AssetLink,
     AssetLinkType,
+    Certificate,
+    CertificateService,
     SpAsset,
     SpAssetModel,
 } from '@streampipes/platform-services';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    DialogService,
+    PanelType,
+} from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../../../services/auth.service';
+import { UserRole } from '../../../../../../_enums/user-role.enum';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-asset-link-table',
@@ -45,7 +55,7 @@ import { Router } from '@angular/router';
     standalone: false,
 })
 export class AssetLinkTableComponent
-    implements OnInit, AfterViewInit, OnChanges
+    implements OnInit, AfterViewInit, OnChanges, OnDestroy
 {
     @Input()
     assetModel: SpAssetModel;
@@ -70,12 +80,29 @@ export class AssetLinkTableComponent
     ];
 
     dataSource: MatTableDataSource<AssetLink> = new MatTableDataSource();
+    isAdminUser = false;
+    certificates: Certificate[] = [];
+
+    user$: Subscription;
 
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
     private router = inject(Router);
+    private currentUserService = inject(CurrentUserService);
+    private authService = inject(AuthService);
+    private certificateService = inject(CertificateService);
 
     ngOnInit() {
+        this.user$ = this.currentUserService.user$.subscribe(user => {
+            this.isAdminUser = this.authService.hasRole(UserRole.ROLE_ADMIN);
+            if (this.isAdminUser) {
+                this.certificateService
+                    .getAllCertificates()
+                    .subscribe(certificates => {
+                        this.certificates = certificates;
+                    });
+            }
+        });
         this.dataSource.sortingDataAccessor = (link, column) => {
             if (column === 'type') {
                 return link.linkType;
@@ -140,5 +167,9 @@ export class AssetLinkTableComponent
         this.asset.assetLinks.splice(index, 1);
         this.asset.assetLinks = [...this.asset.assetLinks];
         this.refreshData();
+    }
+
+    ngOnDestroy() {
+        this.user$?.unsubscribe();
     }
 }
