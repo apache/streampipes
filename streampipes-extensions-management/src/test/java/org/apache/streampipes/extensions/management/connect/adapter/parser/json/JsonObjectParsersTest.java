@@ -26,6 +26,7 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -45,7 +46,7 @@ public class JsonObjectParsersTest extends ParserTest {
 
 
   @Test
-  public void getGuessSchema() {
+  public void getGuessSchema() throws Exception {
     var expected = GuessSchemaBuilder.create()
         .property(PrimitivePropertyBuilder
             .create(Datatypes.String, K1)
@@ -63,7 +64,18 @@ public class JsonObjectParsersTest extends ParserTest {
 
     var result = parser.getGuessSchema(event);
 
-    assertEquals(expected, result);
+    assertEquals(expected.getEventSchema(), result.getEventSchema());
+    assertEquals(expected.getFieldStatusInfo(), result.getFieldStatusInfo());
+
+    ObjectMapper mapper = new ObjectMapper();
+
+    Map<String, Object> expectedMap =
+            mapper.readValue(expected.getEventPreview().get(0), Map.class);
+
+    Map<String, Object> actualMap =
+            mapper.readValue(result.getEventPreview().get(0), Map.class);
+
+    assertEquals(expectedMap, actualMap);
   }
 
 

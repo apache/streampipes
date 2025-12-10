@@ -56,7 +56,7 @@ public class GeoJsonParserTest {
   );
 
   @Test
-  public void getGuessSchema() {
+  public void getGuessSchema() throws Exception {
     var expected = GuessSchemaBuilder.create()
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Float, "longitude")
@@ -82,7 +82,18 @@ public class GeoJsonParserTest {
 
     var result = parser.getGuessSchema(toEvent(event));
 
-    Assertions.assertEquals(expected, result);
+    Assertions.assertEquals(expected.getEventSchema(), result.getEventSchema());
+    Assertions.assertEquals(expected.getFieldStatusInfo(), result.getFieldStatusInfo());
+
+    ObjectMapper mapper = new ObjectMapper();
+
+    Map<String, Object> expectedMap =
+            mapper.readValue(expected.getEventPreview().get(0), Map.class);
+
+    Map<String, Object> actualMap =
+            mapper.readValue(result.getEventPreview().get(0), Map.class);
+
+    Assertions.assertEquals(expectedMap, actualMap);
   }
 
   @Test
