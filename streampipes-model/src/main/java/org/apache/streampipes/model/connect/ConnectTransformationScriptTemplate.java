@@ -16,42 +16,29 @@
  *
  */
 
-package org.apache.streampipes.model.assets;
+package org.apache.streampipes.model.connect;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
-@TsModel
-public class SpAssetModel extends SpAsset implements Storable {
+public class ConnectTransformationScriptTemplate implements Storable {
 
-  public static final String APP_DOC_TYPE = GenericDocTypes.DOC_ASSET_MANAGEMENT;
+  public static final String APP_DOC_TYPE = GenericDocTypes.DOC_TRANSFORMATION_SCRIPT_TEMPLATE;
 
   private final String appDocType = APP_DOC_TYPE;
 
-  @JsonAlias("_id")
-  private @SerializedName("_id") String elementId;
+  protected @SerializedName("_id") String elementId;
 
   @JsonAlias("_rev")
-  @SerializedName("_rev")
-  private String rev;
+  protected @SerializedName("_rev") String rev;
 
-  private boolean removable;
-
-  public SpAssetModel() {
-    super();
-  }
-
-  public boolean isRemovable() {
-    return removable;
-  }
-
-  public void setRemovable(boolean removable) {
-    this.removable = removable;
-  }
+  private String name;
+  private String description;
+  private String language;
+  private String code;
 
   @Override
   public String getRev() {
@@ -65,12 +52,44 @@ public class SpAssetModel extends SpAsset implements Storable {
 
   @Override
   public String getElementId() {
-    return elementId;
+    return this.elementId;
   }
 
   @Override
   public void setElementId(String elementId) {
     this.elementId = elementId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
+  }
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
   }
 
   public String getAppDocType() {

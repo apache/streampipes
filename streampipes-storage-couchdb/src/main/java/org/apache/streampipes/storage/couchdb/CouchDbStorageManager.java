@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserActivationToken;
+import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -255,6 +256,15 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   public CRUDStorage<SpAssetModel> getAssetStorage() {
     return new AssetStorageImpl(
         () -> Utils.getCouchDbGsonClient("genericstorage")
+    );
+  }
+
+  @Override
+  public CRUDStorage<ConnectTransformationScriptTemplate> getTransformationScriptTemplateStorage() {
+    return new DefaultViewCrudStorage<>(
+        () -> Utils.getCouchDbGsonClient("genericstorage"),
+        ConnectTransformationScriptTemplate.class,
+        "transformation-scripts/all-transformations"
     );
   }
 

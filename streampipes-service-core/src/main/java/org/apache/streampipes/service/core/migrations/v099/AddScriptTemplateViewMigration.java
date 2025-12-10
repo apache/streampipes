@@ -18,25 +18,25 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
-import org.apache.streampipes.manager.setup.tasks.AddAssetManagementViewTask;
+import org.apache.streampipes.manager.setup.tasks.AddScriptTemplateViewTask;
 import org.apache.streampipes.service.core.migrations.templates.AddGenericStorageViewMigration;
 
 import java.io.IOException;
 
-public class AddAssetManagementViewMigration extends AddGenericStorageViewMigration {
-
-  @Override
-  public void executeMigration() throws IOException {
-    new AddAssetManagementViewTask().execute();
-  }
+public class AddScriptTemplateViewMigration extends AddGenericStorageViewMigration {
 
   @Override
   public String getDesignDocumentName() {
-    return AddAssetManagementViewTask.DESIGN_DOCUMENT;
+    return AddScriptTemplateViewTask.DESIGN_DOCUMENT;
   }
 
   @Override
   public String getViewName() {
-    return AddAssetManagementViewTask.VIEW_NAME;
+    return AddScriptTemplateViewTask.VIEW_NAME;
+  }
+
+  @Override
+  public void executeMigration() throws IOException {
+    new AddScriptTemplateViewTask().execute();
   }
 }
