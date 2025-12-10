@@ -54,6 +54,13 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
     writeToTimeSeriesStorage(event);
   }
 
+  @Override
+  public void onEventUpsert(Event event) throws SpRuntimeException {
+    validateInputEventAndLogMissingFields(event);
+    sanitizeRuntimeNamesInEvent(event);
+    upsertTimeSeriesStorage(event);
+  }
+
   private void validateInputEventAndLogMissingFields(Event event) {
     checkEventIsNotNull(event);
 
@@ -142,4 +149,6 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
   protected abstract void sanitizeRuntimeNamesInEvent(Event event);
 
   protected abstract void writeToTimeSeriesStorage(Event event) throws SpRuntimeException;
+
+   protected abstract void upsertTimeSeriesStorage(Event event) throws SpRuntimeException;
 }

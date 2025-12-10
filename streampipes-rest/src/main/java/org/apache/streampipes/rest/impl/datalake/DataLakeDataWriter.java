@@ -62,7 +62,7 @@ public class DataLakeDataWriter {
       renameTimestampField(event, measure.getTimestampField());
       checkRuntimeNames(runtimeNames, event);
       try {
-        timeSeriesStore.onEvent(event);
+        timeSeriesStore.onEventUpsert(event);
       } catch (IllegalArgumentException e) {
         throw new SpRuntimeException("Fields don't match for event: " + event.getRaw());
       }

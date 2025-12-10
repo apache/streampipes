@@ -25,5 +25,7 @@ public interface ITimeSeriesStorage {
 
   void onEvent(Event event) throws SpRuntimeException;
 
+  void onEventUpsert(Event event) throws SpRuntimeException;
+
   void close() throws SpRuntimeException;
 }

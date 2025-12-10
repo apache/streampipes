@@ -61,6 +61,13 @@ public class TimeSeriesStore {
     return true;
   }
 
+  public boolean onEventUpsert(Event event) throws SpRuntimeException {
+    // Store event in time series database
+    this.timeSeriesStorage.onEventUpsert(event);
+
+    return true;
+  }
+
   public void close() throws SpRuntimeException {
     if (imageStore != null) {
       try {
