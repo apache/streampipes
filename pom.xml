@@ -65,7 +65,8 @@
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <geojson-jackson.version>1.14</geojson-jackson.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
-        <graalvm.js.version>23.0.0</graalvm.js.version>
+        <graalvm.js.version>25.0.0</graalvm.js.version>
+        <groovy.version>5.0.3</groovy.version>
         <gson.version>2.12.1</gson.version>
         <guava.version>33.4.0-jre</guava.version>
         <grpc.version>1.76.0</grpc.version>
@@ -939,13 +940,18 @@
                 <version>${jersey.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.graalvm.js</groupId>
+                <groupId>org.apache.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.polyglot</groupId>
                 <artifactId>js</artifactId>
                 <version>${graalvm.js.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.graalvm.js</groupId>
-                <artifactId>js-scriptengine</artifactId>
+                <groupId>org.graalvm.polyglot</groupId>
+                <artifactId>polyglot</artifactId>
                 <version>${graalvm.js.version}</version>
             </dependency>
             <dependency>

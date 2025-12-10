@@ -57,19 +57,17 @@ export class AdapterConfigurationComponent implements OnInit {
         this.router.navigate(['connect']).then();
     }
 
-    clickEventPreviewNextButton() {
-        this.goForward();
-    }
-
-    clickSpecificSettingsNextButton() {
+    nextAdapterSettings() {
         this.shepherdService.trigger('specific-settings-next-button');
         // this.eventSchemaComponent.guessSchema();
         this.goForward();
     }
 
-    clickEventSchemaNextButtonButton() {
-        // this.applySchema();
+    nextConfigureSchema() {
+        this.goForward();
+    }
 
+    nextConfigureFields() {
         this.shepherdService.trigger('event-schema-next-button');
         this.goForward();
     }

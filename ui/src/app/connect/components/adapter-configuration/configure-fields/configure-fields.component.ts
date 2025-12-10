@@ -23,6 +23,7 @@ import {
     Input,
     OnChanges,
     OnDestroy,
+    OnInit,
     Output,
     SimpleChanges,
 } from '@angular/core';
@@ -50,7 +51,7 @@ import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
     styleUrls: ['./configure-fields.component.scss'],
     standalone: false,
 })
-export class ConfigureFieldsComponent implements OnChanges, OnDestroy {
+export class ConfigureFieldsComponent implements OnInit, OnChanges, OnDestroy {
     private restService = inject(RestService);
     private transformationRuleService = inject(TransformationRuleService);
     private idGeneratorService = inject(IdGeneratorService);
@@ -100,6 +101,10 @@ export class ConfigureFieldsComponent implements OnChanges, OnDestroy {
 
     progress = 0;
     progressSub: Subscription;
+
+    ngOnInit() {
+        this.guessSchema();
+    }
 
     public setEventSchemaEditWarning() {
         this.schemaErrorHints.push(

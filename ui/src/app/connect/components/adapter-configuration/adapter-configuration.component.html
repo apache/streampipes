@@ -53,7 +53,7 @@
                     <sp-adapter-settings
                         [adapterDescription]="adapter"
                         (updateAdapterDescriptionEmitter)="adapter = $event"
-                        (nextEmitter)="clickSpecificSettingsNextButton()"
+                        (nextEmitter)="nextAdapterSettings()"
                         (cancelEmitter)="navigateToAdapterCatalog()"
                     >
                     </sp-adapter-settings>
@@ -65,7 +65,7 @@
                     }}</ng-template>
                     <sp-configure-schema
                         [adapterDescription]="adapter"
-                        (nextEmitter)="clickEventPreviewNextButton()"
+                        (nextEmitter)="nextConfigureSchema()"
                         (goBackEmitter)="goBack()"
                         (cancelEmitter)="navigateToAdapterCatalog()"
                     >
@@ -76,12 +76,13 @@
                     <ng-template matStepLabel>{{
                         'Configure fields' | translate
                     }}</ng-template>
+
                     <sp-configure-fields
                         fxLayout="column"
                         fxFlex="100"
                         [adapterDescription]="adapter"
                         [isEditMode]="isEditMode"
-                        (nextEmitter)="clickEventSchemaNextButtonButton()"
+                        (nextEmitter)="nextConfigureFields()"
                         (goBackEmitter)="goBack()"
                         (cancelEmitter)="navigateToAdapterCatalog()"
                     >
