@@ -25,7 +25,6 @@ import {
     EventEmitter,
     inject,
     Input,
-    OnInit,
     Output,
     QueryList,
     Signal,
