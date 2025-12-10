@@ -73,12 +73,6 @@
                 [options]="editorOptions"
                 data-cy="event-preview-script-editor"
             ></ngx-codemirror>
-
-            @if (runError) {
-                <div style="color: #b00020; margin-top: 8px">
-                    <strong>Error:</strong> {{ runError }}
-                </div>
-            }
         </sp-basic-inner-panel>
     </div>
 
@@ -88,11 +82,31 @@
                 [showTitle]="true"
                 [panelTitle]="'Original (Parsed)' | translate"
             >
-                <pre
-                    [innerHTML]="input | jsonpretty"
-                    class="preview-text"
-                    data-cy="schema-preview-original-event"
-                ></pre>
+                @if (sampleEventLoading) {
+                    <div class="sp-dialog-content">
+                        <div
+                            fxFlex="100"
+                            fxLayoutAlign="center center"
+                            fxLayout="column"
+                        >
+                            <mat-spinner [diameter]="25"></mat-spinner>
+                            <h5>{{ 'Loading' | translate }}</h5>
+                        </div>
+                    </div>
+                } @else {
+                    @if (sampleEventExecutionErrorMessage) {
+                        <sp-exception-message
+                            [message]="sampleEventExecutionErrorMessage"
+                            [showDetails]="true"
+                        ></sp-exception-message>
+                    } @else {
+                        <pre
+                            [innerHTML]="input | jsonpretty"
+                            class="preview-text"
+                            data-cy="schema-preview-original-event"
+                        ></pre>
+                    }
+                }
             </sp-basic-inner-panel>
         </div>
 
@@ -103,11 +117,31 @@
                 fxFlex="100"
                 data-cy="connect-schema-update-preview"
             >
-                <pre
-                    [innerHTML]="output | jsonpretty"
-                    class="preview-text"
-                    data-cy="schema-preview-result-event"
-                ></pre>
+                @if (scriptExecutionLoading) {
+                    <div class="sp-dialog-content">
+                        <div
+                            fxFlex="100"
+                            fxLayoutAlign="center center"
+                            fxLayout="column"
+                        >
+                            <mat-spinner [diameter]="25"></mat-spinner>
+                            <h5>{{ 'Loading' | translate }}</h5>
+                        </div>
+                    </div>
+                } @else {
+                    @if (scriptExecutionErrorMessage) {
+                        <sp-exception-message
+                            [message]="scriptExecutionErrorMessage"
+                            [showDetails]="true"
+                        ></sp-exception-message>
+                    } @else {
+                        <pre
+                            [innerHTML]="output | jsonpretty"
+                            class="preview-text"
+                            data-cy="schema-preview-result-event"
+                        ></pre>
+                    }
+                }
             </sp-basic-inner-panel>
         </div>
     </div>

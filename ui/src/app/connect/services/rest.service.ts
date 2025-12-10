@@ -56,7 +56,6 @@ export class RestService {
             );
     }
 
-    // TODO refactor
     getSampleEvents(adapter: AdapterDescription): Observable<SampleData> {
         return this.http
             .post(`${this.connectPath}/master/guess/sample`, adapter, {

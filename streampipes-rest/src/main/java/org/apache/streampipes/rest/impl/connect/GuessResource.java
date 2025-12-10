@@ -90,7 +90,7 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
       return ok(managementService.getSampleData(adapterDescription));
     } catch (WorkerAdapterException e) {
       LOG.error(e.getMessage());
-      return serverError(e.getExceptionMessage());
+      return serverError(SpLogMessage.from(e));
     } catch (NoServiceEndpointsAvailableException | IOException e) {
       LOG.error(e.getMessage());
       return serverError(SpLogMessage.from(e));

@@ -19,7 +19,11 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { RestService } from '../../../services/rest.service';
-import { AdapterDescription } from '@streampipes/platform-services';
+import {
+    AdapterDescription,
+    SpLogMessage,
+} from '@streampipes/platform-services';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'sp-configure-schema',
@@ -42,7 +46,11 @@ export class ConfigureSchemaComponent {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    runError: string | null = null;
+    scriptExecutionErrorMessage: SpLogMessage = null;
+    scriptExecutionLoading: boolean = false;
+
+    sampleEventExecutionErrorMessage: SpLogMessage = null;
+    sampleEventLoading: boolean = false;
 
     sampleScripts: any[] = [
         {
@@ -89,7 +97,6 @@ function transform(event) {
         const s = this.sampleScripts.find(x => x.key === key);
         if (s) {
             this.script = s.value;
-            this.runError = null;
             // optional: reset output when selecting a new sample
             this.output = null;
         }
@@ -112,14 +119,24 @@ function transform(event) {
     input = {};
     output = {};
 
-    script = `return event;`;
+    script = `// returns the same event
+function transform(event) {
+  return event;
+}`;
 
     getSampleEvent(): void {
-        this.restService
-            .getSampleEvents(this.adapterDescription)
-            .subscribe(sampleData => {
+        this.sampleEventExecutionErrorMessage = null;
+        this.sampleEventLoading = true;
+        this.restService.getSampleEvents(this.adapterDescription).subscribe({
+            next: sampleData => {
                 this.input = sampleData.samples[0];
-            });
+                this.sampleEventLoading = false;
+            },
+            error: (error: HttpErrorResponse) => {
+                this.sampleEventExecutionErrorMessage = error.error;
+                this.sampleEventLoading = false;
+            },
+        });
     }
 
     runScript(): void {
@@ -130,14 +147,21 @@ function transform(event) {
             outputs: [],
         };
 
-        this.restService
-            .sampleTransform(this.adapterDescription)
-            .subscribe(result => {
+        this.scriptExecutionErrorMessage = null;
+        this.scriptExecutionLoading = true;
+        this.restService.sampleTransform(this.adapterDescription).subscribe({
+            next: adapterDescriptionResponse => {
                 this.adapterDescription.schemaTransformationConfig.outputs =
-                    result.schemaTransformationConfig.outputs;
+                    adapterDescriptionResponse.schemaTransformationConfig.outputs;
                 this.output =
                     this.adapterDescription.schemaTransformationConfig.outputs[0];
-            });
+                this.scriptExecutionLoading = false;
+            },
+            error: (error: HttpErrorResponse) => {
+                this.scriptExecutionErrorMessage = error.error;
+                this.scriptExecutionLoading = false;
+            },
+        });
     }
 
     public cancel() {
