@@ -75,7 +75,7 @@ mypy = "1.17.0"
 ruff = "0.14.8"
 pre-commit = "4.3.0"
 pytest = "9.0.1"
-pytest-cov = "6.2.1"
+pytest-cov = "7.0.0"
 pyupgrade = "3.21.1"
 
 [tool.poetry.group.docs]
