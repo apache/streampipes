@@ -19,10 +19,14 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.management.AdapterEventPreviewPipeline;
 import org.apache.streampipes.connect.management.util.EventSchemaUtils;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
+import org.apache.streampipes.connect.transformer.api.TransformationEngines;
+import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
+import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
@@ -45,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class GuessManagement {
 
@@ -83,7 +88,7 @@ public class GuessManagement {
   }
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription) {
-    var event = adapterDescription.getSampleData().getSamples().get(0);
+    var event = adapterDescription.getSchemaTransformationConfig().getOutputs().get(0);
     return EventSchemaUtils.getGuessSchema(event);
   }
 
@@ -115,6 +120,27 @@ public class GuessManagement {
     } else {
       var exception = objectMapper.readValue(responseString, SpLogMessage.class);
       throw new WorkerAdapterException(exception);
+    }
+  }
+
+  public AdapterDescription transformSampleData(AdapterDescription adapterDescription) throws AdapterException {
+    try {
+      var transformationScript = adapterDescription.getSchemaTransformationConfig();
+      var engine = TransformationEngines.INSTANCE.getTransformationEngine(transformationScript.getLanguage());
+      var compiledScript = engine.compile(transformationScript.getScript());
+
+      var samples = adapterDescription.getSchemaTransformationConfig().getInputs();
+      if (!samples.isEmpty()) {
+        var result = compiledScript.transform(samples.get(0));
+
+        adapterDescription.getSchemaTransformationConfig().setOutputs(List.of(result));
+        return adapterDescription;
+      } else {
+        throw new AdapterException("No samples available to transform");
+      }
+
+    } catch (ScriptCompilationException | ScriptExecutionException e) {
+      throw new AdapterException(String.format("Could not execute script: %s", e.getMessage()));
     }
   }
 

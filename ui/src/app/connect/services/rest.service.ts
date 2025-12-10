@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpContext, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -65,6 +65,29 @@ export class RestService {
             .pipe(
                 map(response => {
                     return SampleData.fromData(response as SampleData);
+                }),
+            );
+    }
+
+    sampleTransform(
+        adapter: AdapterDescription,
+    ): Observable<AdapterDescription> {
+        return this.http
+            .post(
+                `${this.connectPath}/master/guess/sample/transform`,
+                adapter,
+                {
+                    context: new HttpContext().set(
+                        NGX_LOADING_BAR_IGNORED,
+                        true,
+                    ),
+                },
+            )
+            .pipe(
+                map(response => {
+                    return AdapterDescription.fromData(
+                        response as AdapterDescription,
+                    );
                 }),
             );
     }

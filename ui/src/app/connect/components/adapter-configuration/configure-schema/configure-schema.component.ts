@@ -49,7 +49,9 @@ export class ConfigureSchemaComponent {
             key: 'identity',
             title: 'Identity (return event)',
             value: `// returns the same event
-return event;`,
+function transform(event) {
+  return event;
+}`,
         },
         {
             key: 'complex',
@@ -82,6 +84,7 @@ return event;`,
     return flattened;`,
         },
     ];
+
     selectSample(key: string) {
         const s = this.sampleScripts.find(x => x.key === key);
         if (s) {
@@ -120,35 +123,21 @@ return event;`,
     }
 
     runScript(): void {
-        this.runError = null;
-        const inputClone = this.input
-            ? JSON.parse(JSON.stringify(this.input))
-            : {};
-        try {
-            // First try: treat the editor content as a function body that returns the transformed event
-            try {
-                const fn = new Function('event', this.script);
-                const result = fn(inputClone);
-                this.output = result === undefined ? null : result;
-                this.adapterDescription.sampleData = {
-                    samples: [this.output],
-                };
-                return;
-            } catch (e) {
-                // fallback: try to parse the editor contents as a function expression, e.g. `(event) => {...}` or `function(event){...}`
-                const maybeFn = eval(`(${this.script})`);
-                if (typeof maybeFn === 'function') {
-                    const result = maybeFn(inputClone);
-                    this.output = result === undefined ? null : result;
-                    return;
-                }
-                // If not a function, throw original error
-                throw e;
-            }
-        } catch (err: any) {
-            this.runError = err && err.message ? err.message : String(err);
-            this.output = null;
-        }
+        this.adapterDescription.schemaTransformationConfig = {
+            language: 'javascript',
+            script: this.script,
+            inputs: [this.input],
+            outputs: [],
+        };
+
+        this.restService
+            .sampleTransform(this.adapterDescription)
+            .subscribe(result => {
+                this.adapterDescription.schemaTransformationConfig.outputs =
+                    result.schemaTransformationConfig.outputs;
+                this.output =
+                    this.adapterDescription.schemaTransformationConfig.outputs[0];
+            });
     }
 
     public cancel() {

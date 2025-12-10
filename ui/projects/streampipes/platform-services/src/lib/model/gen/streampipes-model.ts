@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-10 09:50:01.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-10 13:31:13.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -112,9 +112,8 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'icon': string;
     'rules': TransformationRuleDescriptionUnion[];
     'running': boolean;
-    'sampleData': SampleData;
     'schemaRules': TransformationRuleDescriptionUnion[];
-    'schemaTransformationScriptConfig': SchemaTransformationScriptConfig;
+    'schemaTransformationConfig': SchemaTransformationConfig;
     'selectedEndpointUrl': string;
     'streamRules': TransformationRuleDescriptionUnion[];
     'valueRules': TransformationRuleDescriptionUnion[];
@@ -147,13 +146,12 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
         instance.running = data.running;
-        instance.sampleData = SampleData.fromData(data.sampleData);
         instance.schemaRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.schemaRules);
-        instance.schemaTransformationScriptConfig =
-            SchemaTransformationScriptConfig.fromData(
-                data.schemaTransformationScriptConfig,
+        instance.schemaTransformationConfig =
+            SchemaTransformationConfig.fromData(
+                data.schemaTransformationConfig,
             );
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
         instance.streamRules = __getCopyArrayFn(
@@ -3730,19 +3728,27 @@ export class SampleData {
     }
 }
 
-export class SchemaTransformationScriptConfig {
+export class SchemaTransformationConfig {
+    inputs: { [index: string]: any }[];
     language: string;
+    outputs: { [index: string]: any }[];
     script: string;
 
     static fromData(
-        data: SchemaTransformationScriptConfig,
-        target?: SchemaTransformationScriptConfig,
-    ): SchemaTransformationScriptConfig {
+        data: SchemaTransformationConfig,
+        target?: SchemaTransformationConfig,
+    ): SchemaTransformationConfig {
         if (!data) {
             return data;
         }
-        const instance = target || new SchemaTransformationScriptConfig();
+        const instance = target || new SchemaTransformationConfig();
+        instance.inputs = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.inputs);
         instance.language = data.language;
+        instance.outputs = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.outputs);
         instance.script = data.script;
         return instance;
     }
