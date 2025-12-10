@@ -29,18 +29,12 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Point;
-import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
-import org.influxdb.impl.InfluxDBMapper;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class TimeSeriesStorageInflux extends TimeSeriesStorage {
 
   private final InfluxDB influxDb;
-
-  private final InfluxDBMapper influxDBMapper;
 
   private final PropertyHandler propertyHandler;
 
@@ -61,7 +55,6 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
     super(measure);
     this.influxDb = influxClientProvider.getSetUpInfluxDBClient(environment);
     propertyHandler = new PropertyHandler(new PropertyDuplicateFilter(ignoreDuplicates));
-    this.influxDBMapper = new InfluxDBMapper(influxDb);
   }
 
   protected void writeToTimeSeriesStorage(Event event) throws SpRuntimeException {
@@ -71,59 +64,6 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   
   }
 
-protected void upsertTimeSeriesStorage(Event event) throws SpRuntimeException {
-
-    // Prepare the Point object
-    var point = initializePointWithTimestamp(event);
-    iterateOverallEventProperties(event, point);
-
-    // Extract the timestamp from the event
-      var timestamp = event.getFieldByRuntimeName(this.measure.getTimestampFieldName()).getAsPrimitive().getAsLong();
-    
-
-    try {
-        // Query InfluxDB to check if the point with the same timestamp exists
-        boolean exists = checkIfPointExists(timestamp);
-
-        // If the point exists, we update it (this is effectively an upsert)
-        if (exists) {
-            influxDBMapper.save(point.build()); // Use InfluxDBMapper to update
-        } else {
-            // Otherwise, perform an insert
-            influxDb.write(point.build());
-        }
-    } catch (Exception e) {
-        throw new SpRuntimeException("Failed to upsert data to InfluxDB", e);
-    }
-}
-
-/**
- * Queries InfluxDB to check if a point with the given timestamp already exists
- */
-private boolean checkIfPointExists(long timestamp) {
-    // Construct the query string
-    String queryString = String.format("SELECT * FROM \"%s\" WHERE time = %d LIMIT 1", measure.getMeasureName(), timestamp);
-    // Create a Query object
-    Query query = new Query(queryString, this.measure.getMeasureName());  // Replace with your actual database name
-
-    try {
-        // Execute the query
-        QueryResult queryResult = influxDb.query(query);
-
-        // Check if the query returned any results
-        if (queryResult.getResults().isEmpty()) {
-            return false;
-        }
-
-        // Iterate through the results to check if any series contains data
-        List<QueryResult.Series> seriesList = queryResult.getResults().get(0).getSeries();
-        return seriesList != null && !seriesList.isEmpty();
-    } catch (Exception e) {
-        // Handle the exception (logging, rethrowing, etc.)
-        System.err.println("Error querying InfluxDB: " + e.getMessage());
-        return false;  // Return false if there's an error (could be handled differently based on your needs)
-    }
-}
   private void iterateOverallEventProperties(
       Event event,
       Point.Builder point

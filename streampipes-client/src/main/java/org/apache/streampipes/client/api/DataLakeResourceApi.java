@@ -63,10 +63,8 @@ public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeR
 
   @Override
   public SpQueryResult get(String measurementID) {
-     /**Map<String, String> queryParams = new HashMap<>();
-     queryParams.put("queryParams", {
-});*/
   return getSingle(getBaseResourcePath().addToPath(measurementID), SpQueryResult.class);
 
   }
+
 }

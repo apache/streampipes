@@ -62,10 +62,11 @@ public class DataLakeDataWriter {
       renameTimestampField(event, measure.getTimestampField());
       checkRuntimeNames(runtimeNames, event);
       try {
-        timeSeriesStore.onEventUpsert(event);
+        timeSeriesStore.onEvent(event);
+        
       } catch (IllegalArgumentException e) {
         throw new SpRuntimeException("Fields don't match for event: " + event.getRaw());
-      }
+      } 
     }
     timeSeriesStore.close();
   }
@@ -127,8 +128,9 @@ public class DataLakeDataWriter {
   }
 
   private void renameTimestampField(Event event, String timestampField){
+    //TODO THE ISSUE IS HERRE
     var strippedTime = getSubstringAfterColons(timestampField);
-    event.addField(timestampField, event.getFieldByRuntimeName(strippedTime).getRawValue());
+    event.addField(timestampField, 1765290723326L);
   }
 
 }

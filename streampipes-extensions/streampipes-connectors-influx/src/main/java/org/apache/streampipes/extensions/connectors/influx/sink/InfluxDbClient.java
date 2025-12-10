@@ -25,6 +25,8 @@ import org.apache.streampipes.extensions.connectors.influx.shared.SharedInfluxCl
 import org.apache.streampipes.model.runtime.Event;
 
 import org.influxdb.dto.Point;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -73,6 +75,7 @@ public class InfluxDbClient extends SharedInfluxClient {
    * @throws SpRuntimeException If the column name (key-value of the event map) is not allowed
    */
   void save(Event event) throws SpRuntimeException {
+ 
     if (event == null) {
       throw new SpRuntimeException("event is null");
     }
