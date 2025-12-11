@@ -41,7 +41,7 @@
         data-cy="all-sites-table"
     >
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>
                 <b>{{ 'Site' | translate }}</b>
             </th>
             <td mat-cell *matCellDef="let site" data-cy="site-table-row-label">
@@ -49,7 +49,7 @@
             </td>
         </ng-container>
         <ng-container matColumnDef="areas">
-            <th mat-header-cell *matHeaderCellDef>
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>
                 <b>{{ 'Areas' | translate }}</b>
             </th>
             <td mat-cell *matCellDef="let site" data-cy="site-table-row-areas">
