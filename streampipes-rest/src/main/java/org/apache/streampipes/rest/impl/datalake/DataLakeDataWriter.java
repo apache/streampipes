@@ -56,7 +56,7 @@ public class DataLakeDataWriter {
   }
 
   private void getTimeSeriesStoreAndPersistQueryResult(DataSeries dataSeries,
-                                                       DataLakeMeasure measure){
+      DataLakeMeasure measure) {
     var timeSeriesStore = getTimeSeriesStore(measure);
     var runtimeNames = getRuntimeNames(measure);
     for (var row : dataSeries.getRows()) {
@@ -65,22 +65,21 @@ public class DataLakeDataWriter {
       checkRuntimeNames(runtimeNames, event);
       try {
         timeSeriesStore.onEvent(event);
-        
+
       } catch (IllegalArgumentException e) {
         throw new SpRuntimeException("Fields don't match for event: " + event.getRaw());
-      } 
+      }
     }
     timeSeriesStore.close();
   }
 
-  private TimeSeriesStore getTimeSeriesStore(DataLakeMeasure measure){
+  private TimeSeriesStore getTimeSeriesStore(DataLakeMeasure measure) {
     return new TimeSeriesStore(
         new DataExplorerDispatcher().getDataExplorerManager()
             .getTimeseriesStorage(measure, false),
         measure,
         Environments.getEnvironment(),
-        true
-    );
+        true);
   }
 
   private DataSeries getDataSeries(SpQueryResult queryResult) {
@@ -98,7 +97,7 @@ public class DataLakeDataWriter {
           .collect(Collectors.toSet());
       var runtimeNameSet = new HashSet<>(runtimeNames);
 
-      if (!runtimeNameSet.equals(strippedEventKeys)){
+      if (!runtimeNameSet.equals(strippedEventKeys)) {
         throw new SpRuntimeException("The fields of the event do not match. Use \"ignoreSchemaMismatch\" to "
             + "ignore this error. Fields of the event: " + strippedEventKeys);
       }
@@ -108,7 +107,7 @@ public class DataLakeDataWriter {
   private List<String> getRuntimeNames(DataLakeMeasure measure) {
     var runtimeNames = new ArrayList<String>();
     runtimeNames.add(measure.getTimestampFieldName());
-    for (var eventProperties: measure.getEventSchema().getEventProperties()) {
+    for (var eventProperties : measure.getEventSchema().getEventProperties()) {
       runtimeNames.add(eventProperties.getRuntimeName());
     }
     return runtimeNames;
@@ -122,30 +121,28 @@ public class DataLakeDataWriter {
     return input;
   }
 
-  private Event rowToEvent(List<Object> row, List<String> headers){
+  private Event rowToEvent(List<Object> row, List<String> headers) {
     Map<String, Object> eventMap = IntStream.range(0, headers.size())
         .boxed()
         .collect(Collectors.toMap(headers::get, row::get));
     return EventFactory.fromMap(eventMap);
   }
 
-  private void renameTimestampField(Event event, String timestampField){
+  private void renameTimestampField(Event event, String timestampField) {
     var strippedTime = getSubstringAfterColons(timestampField);
     var field = event.getFieldBySelector("o::" + strippedTime);
-    if (field instanceof ListField){
-       var temp = (PrimitiveField) (event.getFieldBySelector("o::" + strippedTime).getAsList().getRawValue().toArray()[1]);
-        event.addField(timestampField,temp.getAsLong());
-    }
-    else{
+    if (field instanceof ListField) {
+      var temp = (PrimitiveField) (event.getFieldBySelector("o::" + strippedTime).getAsList().getRawValue()
+          .toArray()[1]);
+      event.addField(timestampField, temp.getAsLong());
+    } else {
       var temp2 = event.getFieldByRuntimeName(strippedTime)
-        .getAsPrimitive()
-        .getAsLong();
+          .getAsPrimitive()
+          .getAsLong();
 
-      event.addField(timestampField,temp2);
+      event.addField(timestampField, temp2);
 
     }
   }
 
 }
-
-
