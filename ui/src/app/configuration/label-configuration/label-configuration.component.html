@@ -110,9 +110,18 @@
                                 mat-icon-button
                                 class="btn-warn"
                                 color="accent"
-                                [matTooltip]="'Delete label' | translate"
+                                [matTooltip]="
+                                    labelsinUse.includes(label._id)
+                                        ? ('To delete a label, please remove the label from all assets'
+                                          | translate)
+                                        : ('Delete label' | translate)
+                                "
+                                [matTooltipDisabled]="
+                                    labelsinUse.includes(label._id)
+                                "
                                 (click)="deleteLabel(label)"
                                 data-cy="delete-label-button"
+                                [disabled]="labelsinUse.includes(label._id)"
                             >
                                 <mat-icon>delete</mat-icon>
                             </button>

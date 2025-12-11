@@ -76,6 +76,14 @@
                         (click)="deleteSite(site)"
                         mat-icon-button
                         color="accent"
+                        [disabled]="allUsedSiteIds.includes(site._id)"
+                        [matTooltip]="
+                            allUsedSiteIds.includes(site._id)
+                                ? ('To delete a site, please remove the site from all assets'
+                                  | translate)
+                                : ('Delete label' | translate)
+                        "
+                        [matTooltipDisabled]="allUsedSiteIds.includes(site._id)"
                     >
                         <mat-icon>delete</mat-icon>
                     </button>

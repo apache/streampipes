@@ -42,6 +42,7 @@ export class SpLabelConfigurationComponent implements OnInit {
     sort: MatSort;
 
     displayedColumns = ['name', 'description', 'actions'];
+    labelsinUse = [];
 
     editedLabels: string[] = [];
 
@@ -67,6 +68,9 @@ export class SpLabelConfigurationComponent implements OnInit {
             setTimeout(() => {
                 this.dataSource.sort = this.sort;
             });
+        });
+        this.labelsService.getLabelsInUse().subscribe(labelsInUse => {
+            this.labelsinUse = labelsInUse;
         });
     }
 

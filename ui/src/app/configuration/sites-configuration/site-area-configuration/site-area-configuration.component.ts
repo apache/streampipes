@@ -42,6 +42,8 @@ export class SiteAreaConfigurationComponent implements OnInit {
     dataSource: MatTableDataSource<AssetSiteDesc> =
         new MatTableDataSource<AssetSiteDesc>();
 
+    allUsedSiteIds = [];
+
     @ViewChild(MatSort)
     sort: MatSort;
     displayedColumns = ['name', 'areas', 'actions'];
@@ -74,6 +76,23 @@ export class SiteAreaConfigurationComponent implements OnInit {
                     this.dataSource.sort = this.sort;
                 });
             });
+        this.listSitesInUse();
+    }
+
+    listSitesInUse(): void {
+        this.genericStorageService
+            .getAllDocuments(AssetConstants.ASSET_APP_DOC_NAME)
+            .subscribe(res => {
+                this.allUsedSiteIds = this.extractSiteIds(res);
+            });
+    }
+
+    extractSiteIds(assets) {
+        const allSiteIds = new Set<string>();
+
+        assets.forEach(asset => allSiteIds.add(asset.assetSite.siteId));
+
+        return Array.from(allSiteIds);
     }
 
     deleteSite(site: AssetSiteDesc): void {
