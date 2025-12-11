@@ -23,6 +23,7 @@ import org.apache.streampipes.model.datalake.SpQueryResult;
 import java.util.Map;
 
 public interface IDataLakeResourceApi {
+  
   void delete(String measurementID, Long startDate, Long endDate);
 
   void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch);
