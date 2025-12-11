@@ -16,11 +16,13 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { LabelsService, SpLabel } from '@streampipes/platform-services';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'sp-label-configuration',
@@ -34,8 +36,14 @@ export class SpLabelConfigurationComponent implements OnInit {
     allLabels: SpLabel[] = [];
     createLabelMode = false;
 
+    dataSource: MatTableDataSource<SpLabel> = new MatTableDataSource<SpLabel>();
+
+    @ViewChild(MatSort)
+    sort: MatSort;
+
+    displayedColumns = ['name', 'description', 'actions'];
+
     editedLabels: string[] = [];
-    sortDirection: 'asc' | 'desc' = 'asc';
 
     constructor(
         private breadcrumbService: SpBreadcrumbService,
@@ -55,7 +63,10 @@ export class SpLabelConfigurationComponent implements OnInit {
     reloadLabels(): void {
         this.labelsService.getAllLabels().subscribe(res => {
             this.allLabels = res;
-            this.sortLabels();
+            this.dataSource.data = this.allLabels;
+            setTimeout(() => {
+                this.dataSource.sort = this.sort;
+            });
         });
     }
 
@@ -82,19 +93,5 @@ export class SpLabelConfigurationComponent implements OnInit {
 
     isEditMode(labelId: string): boolean {
         return this.editedLabels.find(l => l === labelId) !== undefined;
-    }
-    toggleSort(): void {
-        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-        this.sortLabels();
-    }
-
-    sortLabels(): void {
-        this.allLabels = [...this.allLabels].sort((a, b) => {
-            const labelA = a.label.toLowerCase();
-            const labelB = b.label.toLowerCase();
-            if (labelA < labelB) return this.sortDirection === 'asc' ? -1 : 1;
-            if (labelA > labelB) return this.sortDirection === 'asc' ? 1 : -1;
-            return 0;
-        });
     }
 }
