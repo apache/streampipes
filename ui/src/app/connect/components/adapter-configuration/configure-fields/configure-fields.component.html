@@ -34,9 +34,7 @@
                 <div header fxFlex="100">
                     <sp-configure-fields-header
                         fxFlex="100"
-                        [timestampPresent]="timestampPresent"
-                        (addTimestampPropertyEmitter)="addTimestampProperty()"
-                        (guessSchemaEmitter)="guessSchema()"
+                        (guessSchemaEmitter)="resetEventSchema()"
                     >
                     </sp-configure-fields-header>
                 </div>
@@ -48,7 +46,7 @@
                             color="accent"
                             mat-icon-button
                             matTooltip="Refresh Schema"
-                            (click)="guessSchema()"
+                            (click)="resetEventSchema()"
                         >
                             <mat-icon>refresh</mat-icon>
                         </button>
@@ -58,14 +56,14 @@
 
             <div fxFlex="100">
                 @if (isLoading) {
-                    <sp-loading-message
-                        [currentProgress]="progress"
-                    ></sp-loading-message>
+                    <sp-configure-fields-loading-message></sp-configure-fields-loading-message>
                 }
 
                 @if (isError && !isLoading) {
-                    <sp-error-message [errorMessage]="errorMessage">
-                    </sp-error-message>
+                    <sp-configure-fields-error-message
+                        [errorMessage]="errorMessage"
+                    >
+                    </sp-configure-fields-error-message>
                 }
 
                 @if (
@@ -88,6 +86,7 @@
             </div>
         </sp-basic-inner-panel>
     </div>
+
     @if (desiredPreview && isPreviewEnabled && !isLoading && !isError) {
         <div fxFlex="100">
             <sp-configure-fields-preview

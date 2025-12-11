@@ -22,15 +22,12 @@ import {
     inject,
     Input,
     OnChanges,
-    OnDestroy,
     OnInit,
     Output,
     SimpleChanges,
 } from '@angular/core';
 import {
     AdapterDescription,
-    DataType,
-    EventPropertyPrimitive,
     EventPropertyUnion,
     EventSchema,
     FieldStatusInfo,
@@ -39,10 +36,8 @@ import {
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { SemanticType } from '@streampipes/platform-services';
-import { interval, Subscription } from 'rxjs';
 import { RestService } from '../../../services/rest.service';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
-import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
 import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 
 @Component({
@@ -51,10 +46,9 @@ import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
     styleUrls: ['./configure-fields.component.scss'],
     standalone: false,
 })
-export class ConfigureFieldsComponent implements OnInit, OnChanges, OnDestroy {
+export class ConfigureFieldsComponent implements OnInit, OnChanges {
     private restService = inject(RestService);
     private transformationRuleService = inject(TransformationRuleService);
-    private idGeneratorService = inject(IdGeneratorService);
 
     @Input()
     adapterDescription: AdapterDescription;
@@ -99,11 +93,8 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges, OnDestroy {
     desiredPreview: Record<string, any>;
     fieldStatusInfo: Record<string, FieldStatusInfo>;
 
-    progress = 0;
-    progressSub: Subscription;
-
     ngOnInit() {
-        this.guessSchema();
+        this.resetEventSchema();
     }
 
     public setEventSchemaEditWarning() {
@@ -116,29 +107,12 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges, OnDestroy {
         );
     }
 
-    public guessSchema(): void {
+    public resetEventSchema(): void {
         this.isLoading = true;
         this.isError = false;
 
-        this.progress = 0;
-
-        const duration = 18000;
-        const tickRate = 150;
-        const totalTicks = duration / tickRate;
-        let tick = 0;
-
-        this.progressSub = interval(tickRate).subscribe(() => {
-            tick++;
-            this.progress = (tick / totalTicks) * 100;
-
-            if (tick >= totalTicks) {
-                this.stopProgress();
-            }
-        });
-
         this.restService.getGuessSchema(this.adapterDescription).subscribe(
             guessSchema => {
-                this.progress = 100;
                 this.eventPreview = guessSchema.eventPreview;
                 this.fieldStatusInfo = guessSchema.fieldStatusInfo;
                 this.eventSchema = guessSchema.eventSchema;
@@ -151,7 +125,7 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges, OnDestroy {
                 this.validEventSchema = this.checkIfValid(this.eventSchema);
 
                 this.isEditableChange.emit(true);
-                this.stopProgress();
+                this.isLoading = false;
                 this.refreshedEventSchema = true;
                 this.refreshTree();
                 if (
@@ -164,17 +138,10 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges, OnDestroy {
             errorMessage => {
                 this.errorMessage = errorMessage.error;
                 this.isError = true;
-                this.stopProgress();
+                this.isLoading = false;
                 this.eventSchema = new EventSchema();
             },
         );
-    }
-
-    private stopProgress() {
-        this.progress = 100;
-        this.isLoading = false;
-        this.progressSub?.unsubscribe();
-        this.progress = 0;
     }
 
     public refreshTree(refreshPreview = true): void {
@@ -186,26 +153,6 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges, OnDestroy {
                 this.updatePreview();
             }
         }
-    }
-
-    public addTimestampProperty(): void {
-        const eventProperty = new EventPropertyPrimitive();
-        eventProperty['@class'] =
-            'org.apache.streampipes.model.schema.EventPropertyPrimitive';
-        eventProperty.elementId =
-            'http://eventProperty.de/timestamp/' +
-            this.idGeneratorService.generate(25);
-
-        eventProperty.runtimeName = 'timestamp';
-        eventProperty.label = 'Timestamp';
-        eventProperty.description = 'The current timestamp value';
-        eventProperty.semanticType = SemanticType.TIMESTAMP;
-        eventProperty.propertyScope = 'HEADER_PROPERTY';
-        eventProperty.runtimeType = DataType.LONG;
-        eventProperty.additionalMetadata = {};
-
-        this.eventSchema.eventProperties.push(eventProperty);
-        this.refreshTree();
     }
 
     public updatePreview(): void {
@@ -288,18 +235,5 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         return this.timestampPresent;
-    }
-
-    getOriginalSchema(): EventSchema {
-        return this.originalSchema;
-    }
-
-    getTargetSchema(): EventSchema {
-        this.eventSchema.eventProperties = this.nodes;
-        return this.eventSchema;
-    }
-
-    ngOnDestroy() {
-        this.progressSub?.unsubscribe();
     }
 }

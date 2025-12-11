@@ -16,29 +16,14 @@
   ~
   -->
 
-<div fxLayout="row" fxFlex="100">
-    <div fxFlex fxLayoutAlign="start center" fxLayout="row">
-        <button
-            color="accent"
-            mat-button
-            data-cy="connect-schema-add-timestamp-btn"
-            matTooltip="Add timestamp to event schema"
-            [disabled]="timestampPresent"
-            (click)="addTimestampProperty()"
-        >
-            <mat-icon>access_time</mat-icon>
-            <span>&nbsp;{{ 'Add timestamp' | translate }}</span>
-        </button>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="end center">
-        <button
-            color="accent"
-            mat-icon-button
-            matTooltip="Refresh Schema"
-            data-cy="refresh-schema"
-            (click)="guessSchema()"
-        >
-            <mat-icon>refresh</mat-icon>
-        </button>
-    </div>
+<div fxLayout="row" fxFlex="100" fxLayoutAlign="end center">
+    <button
+        color="accent"
+        mat-icon-button
+        matTooltip="Refresh Schema"
+        data-cy="refresh-schema"
+        (click)="guessSchema()"
+    >
+        <mat-icon>refresh</mat-icon>
+    </button>
 </div>

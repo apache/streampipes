@@ -21,18 +21,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
     selector: 'sp-configure-fields-header',
     templateUrl: './configure-fields-header.component.html',
-    styleUrls: ['./configure-fields-header.component.scss'],
     standalone: false,
 })
 export class ConfigureFieldsHeaderComponent {
-    @Input() timestampPresent = false;
-
-    @Output() addTimestampPropertyEmitter = new EventEmitter();
     @Output() guessSchemaEmitter = new EventEmitter();
-
-    public addTimestampProperty() {
-        this.addTimestampPropertyEmitter.emit();
-    }
 
     public guessSchema() {
         this.guessSchemaEmitter.emit();

@@ -15,3 +15,12 @@
  * limitations under the License.
  *
  */
+
+import { Component, Input } from '@angular/core';
+
+@Component({
+    selector: 'sp-configure-fields-loading-message',
+    templateUrl: './configure-fields-loading-message.component.html',
+    standalone: false,
+})
+export class ConfigureFieldsLoadingMessageComponent {}

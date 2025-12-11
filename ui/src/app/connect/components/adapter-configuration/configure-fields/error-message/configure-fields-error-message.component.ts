@@ -15,3 +15,16 @@
  * limitations under the License.
  *
  */
+
+import { Component, Input } from '@angular/core';
+import { SpLogMessage } from '@streampipes/platform-services';
+
+@Component({
+    selector: 'sp-configure-fields-error-message',
+    templateUrl: './configure-fields-error-message.component.html',
+    styleUrls: ['./configure-fields-error-message.component.scss'],
+    standalone: false,
+})
+export class ConfigureFieldsErrorMessageComponent {
+    @Input() errorMessage: SpLogMessage;
+}

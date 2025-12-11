@@ -16,17 +16,7 @@
   ~
   -->
 
-<div fxLayout="column">
-    <div fxLayoutAlign="center">
-        <mat-progress-bar
-            fxLayoutAlign="center"
-            style="margin: 10px 0 5px 0"
-            color="accent"
-            [value]="currentProgress"
-            >Loading</mat-progress-bar
-        >
-    </div>
-    <div fxLayoutAlign="center">
-        <h4>Looking at your data to understand the schema...</h4>
-    </div>
+<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+    <mat-spinner [diameter]="25"></mat-spinner>
+    <h5>{{ 'Loading' | translate }}</h5>
 </div>

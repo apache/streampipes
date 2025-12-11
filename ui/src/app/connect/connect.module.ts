@@ -104,8 +104,8 @@ import { ConfigureSchemaComponent } from './components/adapter-configuration/con
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { ConfigureFieldsComponent } from './components/adapter-configuration/configure-fields/configure-fields.component';
 import { ConfigureFieldsPreviewComponent } from './components/adapter-configuration/configure-fields/configure-fields-preview/configure-fields-preview.component';
-import { ErrorMessageComponent } from './components/adapter-configuration/configure-fields/error-message/error-message.component';
-import { LoadingMessageComponent } from './components/adapter-configuration/configure-fields/loading-message/loading-message.component';
+import { ConfigureFieldsErrorMessageComponent } from './components/adapter-configuration/configure-fields/error-message/configure-fields-error-message.component';
+import { ConfigureFieldsLoadingMessageComponent } from './components/adapter-configuration/configure-fields/configure-fields-loading-message/configure-fields-loading-message.component';
 import { ConfigureFieldsHeaderComponent } from './components/adapter-configuration/configure-fields/configure-fields-header/configure-fields-header.component';
 import { ConfigureFieldsErrorHintsComponent } from './components/adapter-configuration/configure-fields/configure-fields-error-hints/configure-fields-error-hints.component';
 import { EventPropertyRowComponent } from './components/adapter-configuration/configure-fields/event-property-row/event-property-row.component';
@@ -203,7 +203,7 @@ import { EventPropertyRowComponent } from './components/adapter-configuration/co
         SharedUiModule,
         TranslatePipe,
     ],
-    exports: [ErrorMessageComponent],
+    exports: [ConfigureFieldsErrorMessageComponent],
     declarations: [
         AdapterCodePanelComponent,
         AdapterConfigurationComponent,
@@ -231,8 +231,8 @@ import { EventPropertyRowComponent } from './components/adapter-configuration/co
         EditCorrectionValueComponent,
         AdapterConfigurationComponent,
         ConfigurationGroupComponent,
-        ErrorMessageComponent,
-        LoadingMessageComponent,
+        ConfigureFieldsErrorMessageComponent,
+        ConfigureFieldsLoadingMessageComponent,
         ConfigureFieldsHeaderComponent,
         SpEpSettingsSectionComponent,
         StartAdapterConfigurationComponent,
