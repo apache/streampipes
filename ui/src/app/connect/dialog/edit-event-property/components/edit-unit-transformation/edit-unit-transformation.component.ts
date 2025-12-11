@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -30,7 +30,9 @@ import { EventPropertyPrimitive } from '@streampipes/platform-services';
     styleUrls: ['./edit-unit-transformation.component.scss'],
     standalone: false,
 })
-export class EditUnitTransformationComponent {
+export class EditUnitTransformationComponent implements OnInit {
+    private restService = inject(RestService);
+
     @Input() cachedProperty: EventPropertyPrimitive;
     @Input() originalProperty: EventPropertyPrimitive;
 
@@ -50,7 +52,7 @@ export class EditUnitTransformationComponent {
     newUnitStateCtrl = new UntypedFormControl();
     filteredUnits: Observable<UnitDescription[]>;
 
-    constructor(private restService: RestService) {
+    ngOnInit() {
         this.restService
             .getAllUnitDescriptions()
             .subscribe((unitDescriptions: UnitDescription[]) => {
