@@ -117,6 +117,9 @@ export class EditEventPropertyComponent implements OnInit {
                     ep.additionalMetadata.replaceWith || undefined;
                 result.additionalMetadata.replaceAll =
                     ep.additionalMetadata.replaceAll || undefined;
+
+                result.additionalMetadata.originType =
+                    ep.additionalMetadata.originType || undefined;
             }
 
             (result as any).staticValue = (ep as any).staticValue;
@@ -155,13 +158,13 @@ export class EditEventPropertyComponent implements OnInit {
         this.eventProperty.propertyScope = this.cachedProperty.propertyScope;
 
         if (this.eventProperty instanceof EventPropertyPrimitive) {
-            // this.EventProperty.runtimeType = (
-            //     this.cachedProperty as EventPropertyPrimitive
-            // ).runtimeType;
-            // this.EventProperty.measurementUnit = (
-            //     this.cachedProperty as EventPropertyPrimitive
-            // ).measurementUnit;
-            //
+            this.eventProperty.runtimeType = (
+                this.cachedProperty as EventPropertyPrimitive
+            ).runtimeType;
+            this.eventProperty.measurementUnit = (
+                this.cachedProperty as EventPropertyPrimitive
+            ).measurementUnit;
+
             this.eventProperty.additionalMetadata.fromMeasurementUnit =
                 this.cachedProperty.additionalMetadata.fromMeasurementUnit;
             this.eventProperty.additionalMetadata.toMeasurementUnit =
@@ -185,14 +188,17 @@ export class EditEventPropertyComponent implements OnInit {
                 this.cachedProperty.additionalMetadata.replaceWith;
             this.eventProperty.additionalMetadata.replaceAll =
                 this.cachedProperty.additionalMetadata.replaceAll;
+
+            this.eventProperty.additionalMetadata.originType =
+                this.cachedProperty.additionalMetadata.originType;
         }
         this.dialogRef.close({ data: this.eventProperty });
         this.shepherdService.trigger('adapter-field-changed');
     }
 
-    handleDataTypeChange(changed: boolean) {
+    handleDataTypeChange() {
         this.isNumericProperty = DataType.isNumberType(
-            (this.cachedProperty as any).runtimeType,
+            (this.cachedProperty as EventPropertyPrimitive).runtimeType,
         );
     }
 

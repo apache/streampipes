@@ -119,8 +119,8 @@
                 </div>
             }
             <sp-edit-data-type
-                [eventProperty]="cachedProperty"
-                (dataTypeChanged)="dataTypeChanged.emit($event)"
+                [eventProperty]="asEventPropertyPrimitive(cachedProperty)"
+                (dataTypeChanged)="dataTypeChanged.emit()"
             >
             </sp-edit-data-type>
         </sp-ep-settings-section>

@@ -22,28 +22,29 @@ package org.apache.streampipes.connect.management;
 import org.apache.streampipes.connect.shared.AdapterPipelineGeneratorBase;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
-import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AdapterEventPreviewPipeline implements IAdapterPipeline {
 
   private final List<IAdapterPipelineElement> pipelineElements;
-  private final String event;
+  private final Map<String, Object> event;
 
-  private ObjectMapper objectMapper;
+  public AdapterEventPreviewPipeline(AdapterDescription adapterDescription) {
 
-  public AdapterEventPreviewPipeline(AdapterEventPreview previewRequest) {
-    this.objectMapper = new ObjectMapper();
+    List<TransformationRuleDescription> rules = getTypeConvertionRules(adapterDescription);
+
     this.pipelineElements = new AdapterPipelineGeneratorBase()
-        .makeAdapterPipelineElements(previewRequest.getRules(), false);
-    this.event = previewRequest.getInputData();
+        .makeAdapterPipelineElements(rules, false);
+
+    this.event = adapterDescription.getSchemaTransformationConfig().getOutputs().get(0);
   }
 
   @Override
@@ -51,6 +52,16 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
     for (IAdapterPipelineElement pe : this.pipelineElements) {
       event = pe.process(event);
     }
+  }
+
+  private List<TransformationRuleDescription> getTypeConvertionRules(AdapterDescription adapterDescription) {
+    return adapterDescription.getEventSchema().getEventProperties().stream()
+                             .filter(ep -> ep.getAdditionalMetadata().containsKey("originType"))
+                             .map(ep -> new ChangeDatatypeTransformationRuleDescription(
+                                 ep.getRuntimeName(),
+                                 ((EventPropertyPrimitive) ep).getRuntimeType()
+                             ))
+                             .collect(Collectors.toList());
   }
 
   @Override
@@ -73,11 +84,10 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
     return null;
   }
 
-  public String makePreview() throws JsonProcessingException {
-    var ev = objectMapper.readValue(event, HashMap.class);
-    this.process(ev);
+  public Map<String, Object> makePreview() {
+    this.process(this.event);
 
-    return this.objectMapper.writeValueAsString(ev);
+    return this.event;
   }
 
   @Override

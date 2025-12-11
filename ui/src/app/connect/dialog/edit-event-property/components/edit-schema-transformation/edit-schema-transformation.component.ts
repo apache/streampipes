@@ -50,7 +50,7 @@ export class EditSchemaTransformationComponent implements OnInit {
     @Input() isListProperty: boolean;
     @Input() isPrimitiveProperty: boolean;
 
-    @Output() dataTypeChanged = new EventEmitter<boolean>();
+    @Output() dataTypeChanged = new EventEmitter<void>();
     @Output() timestampSemanticsChanged = new EventEmitter<boolean>();
 
     domainPropertyControl = new UntypedFormControl();
@@ -99,4 +99,10 @@ export class EditSchemaTransformationComponent implements OnInit {
             this.shepherdService.trigger('adapter-runtime-name-changed');
         }
     }
+
+    asEventPropertyPrimitive(ep: EventProperty): EventPropertyPrimitive {
+        return ep as EventPropertyPrimitive;
+    }
+
+    protected readonly EventPropertyPrimitive = EventPropertyPrimitive;
 }

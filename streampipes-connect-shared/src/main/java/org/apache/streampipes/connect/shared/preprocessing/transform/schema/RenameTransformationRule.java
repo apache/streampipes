@@ -23,6 +23,7 @@ import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransfo
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class RenameTransformationRule extends SupportsNestedTransformationRule {
   private final List<String> oldKey;
   private final String newKey;

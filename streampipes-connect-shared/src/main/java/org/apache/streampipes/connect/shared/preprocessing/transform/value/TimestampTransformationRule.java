@@ -30,6 +30,7 @@ import java.util.Map;
 
 import static java.util.TimeZone.getTimeZone;
 
+@Deprecated
 public class TimestampTransformationRule extends SupportsNestedTransformationRule {
 
   private final List<String> eventKey;

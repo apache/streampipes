@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class CorrectionValueTransformationRule extends SupportsNestedTransformationRule {
 
   private static Logger logger = LoggerFactory.getLogger(CorrectionValueTransformationRule.class);

@@ -32,7 +32,6 @@ import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointG
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -40,7 +39,6 @@ import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.fluent.Response;
@@ -50,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class GuessManagement {
 
@@ -92,9 +91,8 @@ public class GuessManagement {
     return EventSchemaUtils.getGuessSchema(event);
   }
 
-  @Deprecated
-  public String performAdapterEventPreview(AdapterEventPreview previewRequest) throws JsonProcessingException {
-    return new AdapterEventPreviewPipeline(previewRequest).makePreview();
+  public Map<String, Object> performAdapterEventPreview(AdapterDescription adapterDescription) {
+    return new AdapterEventPreviewPipeline(adapterDescription).makePreview();
   }
 
   public SampleData getSampleData(AdapterDescription adapterDescription)

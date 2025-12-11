@@ -24,7 +24,6 @@ import org.apache.streampipes.connect.management.management.GuessManagement;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
@@ -55,7 +54,6 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
   }
 
 
-
   @PostMapping(
       path = "/sample",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -78,7 +76,8 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<AdapterDescription> transformSample(@RequestBody AdapterDescription adapterDescription) throws AdapterException {
+  public ResponseEntity<AdapterDescription> transformSample(@RequestBody AdapterDescription adapterDescription) throws
+                                                                                                                AdapterException {
 
     var sampleData = managementService.transformSampleData(adapterDescription);
 
@@ -102,14 +101,10 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<?> getAdapterEventPreview(@RequestBody AdapterEventPreview previewRequest) {
+  public ResponseEntity<?> getAdapterEventPreview(@RequestBody AdapterDescription adapterDescription) {
     // TODO implement
-//    try {
-//      return ok(managementService.performAdapterEventPreview(previewRequest));
-      return ok(previewRequest.getInputData());
-//    } catch (JsonProcessingException e) {
-//      return badRequest();
-//    }
+    return ok(managementService.performAdapterEventPreview(adapterDescription));
+
   }
 
   /**

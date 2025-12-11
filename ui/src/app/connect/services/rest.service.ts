@@ -25,7 +25,6 @@ import { map } from 'rxjs/operators';
 import { UnitDescription } from '../model/UnitDescription';
 import {
     AdapterDescription,
-    AdapterEventPreview,
     GuessSchema,
     PlatformServicesCommons,
     SampleData,
@@ -92,12 +91,12 @@ export class RestService {
     }
 
     getAdapterEventPreview(
-        adapterEventPreview: AdapterEventPreview,
+        adapterDescription: AdapterDescription,
     ): Observable<Record<string, any>> {
         return this.http
             .post(
                 `${this.connectPath}/master/guess/schema/preview`,
-                adapterEventPreview,
+                adapterDescription,
             )
             .pipe(map(response => response as Record<string, any>));
     }

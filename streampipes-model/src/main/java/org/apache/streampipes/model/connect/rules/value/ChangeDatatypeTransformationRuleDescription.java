@@ -30,6 +30,11 @@ public class ChangeDatatypeTransformationRuleDescription extends ValueTransforma
   public ChangeDatatypeTransformationRuleDescription() {
   }
 
+  public ChangeDatatypeTransformationRuleDescription(String runtimeKey, String targetDatatypeXsd) {
+    this.runtimeKey = runtimeKey;
+    this.targetDatatypeXsd = targetDatatypeXsd;
+  }
+
   public ChangeDatatypeTransformationRuleDescription(ChangeDatatypeTransformationRuleDescription other) {
     super(other);
     this.runtimeKey = other.getRuntimeKey();

@@ -108,8 +108,10 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
         this.restService.getGuessSchema(this.adapterDescription).subscribe(
             guessSchema => {
                 this.eventPreview =
-                    this.adapterDescription.schemaTransformationConfig.inputs[0];
+                    this.adapterDescription.schemaTransformationConfig.outputs[0];
                 this.eventSchema = guessSchema.eventSchema;
+                this.adapterDescription.dataStream.eventSchema =
+                    this.eventSchema;
                 this.eventSchema.eventProperties.sort((a, b) => {
                     return a.runtimeName < b.runtimeName ? -1 : 1;
                 });
@@ -160,10 +162,7 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
             );
         if (this.eventPreview) {
             this.restService
-                .getAdapterEventPreview({
-                    rules: ruleDescriptions,
-                    inputData: JSON.stringify(this.eventPreview),
-                })
+                .getAdapterEventPreview(this.adapterDescription)
                 .subscribe(preview => {
                     this.resultPreview = preview;
                 });

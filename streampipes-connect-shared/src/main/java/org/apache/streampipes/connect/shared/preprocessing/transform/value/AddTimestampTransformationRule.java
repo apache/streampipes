@@ -22,6 +22,7 @@ import org.apache.streampipes.extensions.api.connect.TransformationRule;
 
 import java.util.Map;
 
+@Deprecated
 public class AddTimestampTransformationRule implements TransformationRule {
 
   private final String runtimeKey;

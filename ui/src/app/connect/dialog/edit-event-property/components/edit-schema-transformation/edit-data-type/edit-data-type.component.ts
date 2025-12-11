@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
     DataType,
     EventPropertyPrimitive,
@@ -25,12 +25,17 @@ import {
 @Component({
     selector: 'sp-edit-data-type',
     templateUrl: './edit-data-type.component.html',
-    styleUrls: ['./edit-data-type.component.scss'],
     standalone: false,
 })
-export class EditDataTypeComponent {
+export class EditDataTypeComponent implements OnInit {
     @Input() eventProperty: EventPropertyPrimitive;
-    @Output() dataTypeChanged = new EventEmitter<boolean>();
+    @Output() dataTypeChanged = new EventEmitter<void>();
+
+    originalType: string;
+
+    ngOnInit(): void {
+        this.originalType = this.eventProperty.runtimeType;
+    }
 
     runtimeDataTypes: { label: string; url: string }[] = [
         {
@@ -60,6 +65,12 @@ export class EditDataTypeComponent {
     ];
 
     valueChanged() {
-        this.dataTypeChanged.emit(true);
+        if (this.originalType === this.eventProperty.runtimeType) {
+            delete this.eventProperty.additionalMetadata['originType'];
+        } else {
+            this.eventProperty.additionalMetadata['originType'] =
+                this.originalType;
+        }
+        this.dataTypeChanged.emit();
     }
 }

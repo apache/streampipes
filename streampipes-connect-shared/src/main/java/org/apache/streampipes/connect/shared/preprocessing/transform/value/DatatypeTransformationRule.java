@@ -29,12 +29,20 @@ public class DatatypeTransformationRule implements TransformationRule {
   private final String eventKey;
   private String targetDatatypeXsd;
 
+  @Deprecated
   public DatatypeTransformationRule(String eventKey,
                                     String originalDatatypeXsd,
                                     String targetDatatypeXsd) {
     this.eventKey = eventKey;
     this.targetDatatypeXsd = targetDatatypeXsd;
   }
+
+  public DatatypeTransformationRule(String eventKey,
+                                    String targetDatatypeXsd) {
+    this.eventKey = eventKey;
+    this.targetDatatypeXsd = targetDatatypeXsd;
+  }
+
 
   @Override
   public Map<String, Object> apply(Map<String, Object> event) {
