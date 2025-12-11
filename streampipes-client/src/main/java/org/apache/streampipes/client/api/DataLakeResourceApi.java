@@ -42,12 +42,12 @@ public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeR
   @Override
   public void delete(String measurementID, Long startDate, Long endDate) {
 
-        Map<String, String> queryParams = new HashMap<>();
+    Map<String, String> queryParams = new HashMap<>();
     if (startDate != null) {
-        queryParams.put("startDate", startDate.toString());
+      queryParams.put("startDate", startDate.toString());
     }
     if (endDate != null) {
-        queryParams.put("endDate", endDate.toString());
+      queryParams.put("endDate", endDate.toString());
     }
     delete(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams), Void.class);
 
@@ -60,10 +60,10 @@ public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeR
     post(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams), queryResult);
   }
 
-
   @Override
-  public SpQueryResult get(String measurementID) {
-  return getSingle(getBaseResourcePath().addToPath(measurementID), SpQueryResult.class);
+  public SpQueryResult get(String measurementID, Map<String, String> queryParams) {
+    return getSingle(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams),
+        SpQueryResult.class);
   }
 
 }
