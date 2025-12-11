@@ -19,9 +19,11 @@
 package org.apache.streampipes.extensions.connectors.opcua.config.security;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaCertificateUtils;
 import org.apache.streampipes.model.opcua.CertificateBuilder;
 import org.apache.streampipes.model.opcua.CertificateState;
+import org.apache.streampipes.model.opcua.CertificateUtils;
 
 import org.eclipse.milo.opcua.stack.client.security.ClientCertificateValidator;
 import org.eclipse.milo.opcua.stack.core.StatusCodes;
@@ -32,6 +34,8 @@ import org.eclipse.milo.opcua.stack.core.util.validation.ValidationCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.PKIXCertPathBuilderResult;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
@@ -52,15 +56,18 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
       StatusCodes.Bad_SecurityChecksFailed
   );
 
+  private final OpcUaConfig opcUaConfig;
   private final TrustListManager trustListManager;
   private final List<X509Certificate> trustedCerts;
   private final List<ValidationCheck> validationChecks;
   private final IStreamPipesClient streamPipesClient;
 
-  public CompositeCertificateValidator(TrustListManager trustListManager,
+  public CompositeCertificateValidator(OpcUaConfig opcUaConfig,
+                                       TrustListManager trustListManager,
                                        List<X509Certificate> trustedCerts,
                                        List<ValidationCheck> validationChecks,
                                        IStreamPipesClient streamPipesClient) {
+    this.opcUaConfig = opcUaConfig;
     this.trustListManager = trustListManager;
     this.trustedCerts = trustedCerts;
     this.validationChecks = validationChecks;
@@ -96,6 +103,16 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
         ValidationCheck.NO_OPTIONAL_CHECKS,
         false
     );
+
+    if (opcUaConfig.getAssociatedResourceId() != null) {
+      try {
+        var thumbprint = CertificateUtils.getThumbprint(peer);
+        opcUaConfig.setCertificateThumbprint(thumbprint);
+        OpcUaCertificateUtils.sendUsageToCore(thumbprint, opcUaConfig.getAssociatedResourceId(), streamPipesClient);
+      } catch (NoSuchAlgorithmException | CertificateEncodingException e) {
+        LOG.warn("Error sending certificate to opcUa", e);
+      }
+    }
   }
 
   private X509Certificate getEndEntity(List<X509Certificate> chain) {
@@ -146,7 +163,8 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
   private void sendToCore(X509Certificate cert) {
     try {
       var certificate = CertificateBuilder.fromX509(cert, CertificateState.REJECTED);
-      streamPipesClient.customRequest().sendPost(OpcUaUtils.getCoreCertificatePath(), certificate);
+      opcUaConfig.setCertificateThumbprint(certificate.getThumbprint());
+      streamPipesClient.customRequest().sendPost(OpcUaCertificateUtils.getCoreCertificatePath(), certificate);
     } catch (Exception ex) {
       LOG.error("Failed to report rejected certificate to API", ex);
     }

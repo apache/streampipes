@@ -29,14 +29,6 @@
     grid-template-rows: auto auto;
     column-gap: 0.75rem;
     align-items: start;
-    //padding-left: 12px;
-    //border-left: 4px solid transparent;
-    //border-image: linear-gradient(
-    //        to bottom,
-    //        var(--color-primary),
-    //        var(--color-primary-dark)
-    //    )
-    //    1;
 }
 
 .section-outline {
@@ -46,7 +38,7 @@
 }
 
 .section-outline-compact {
-    border-radius: 0px;
+    border-radius: 5px;
 }
 
 .section-outer-compact {
@@ -54,7 +46,7 @@
 }
 
 .section-outer {
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
 }
 
 .title {
@@ -80,9 +72,9 @@
 }
 
 .section-body {
-    margin-top: 1.25rem;
-    margin-bottom: 1.25rem;
-    margin-left: 16px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: 0;
     display: block;
 }
 

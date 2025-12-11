@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,7 +15,18 @@
  * limitations under the License.
  *
  */
-s .link-configuration {
-    width: 100%;
-    margin: 5px;
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.link-type-icon {
+    font-size: var(--font-size-md);
+    height: var(--font-size-md);
+    width: var(--font-size-md);
 }

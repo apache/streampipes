@@ -49,6 +49,15 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 
 public class SpOpcUaConfigExtractor {
 
+
+  public static OpcUaAdapterConfig extractAdapterConfig(IStaticPropertyExtractor extractor,
+                                                        IStreamPipesClient streamPipesClient,
+                                                        String adapterId) {
+    var config = extractAdapterConfig(extractor, streamPipesClient);
+    config.setAssociatedResourceId(adapterId);
+    return config;
+  }
+
   /**
    * Creates {@link OpcUaAdapterConfig}  instance in accordance with the given
    * {@link org.apache.streampipes.sdk.extractor.StaticPropertyExtractor}.
@@ -116,6 +125,7 @@ public class SpOpcUaConfigExtractor {
             streamPipesClient
         )
     );
+    config.setStreamPipesClient(streamPipesClient);
 
     boolean useURL = selectedAlternativeConnection.equals(OPC_URL.name());
     if (useURL) {

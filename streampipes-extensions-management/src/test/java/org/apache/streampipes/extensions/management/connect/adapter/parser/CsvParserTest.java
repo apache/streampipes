@@ -34,6 +34,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -63,7 +64,11 @@ public class CsvParserTest extends ParserTest {
 
     var result = parser.getGuessSchema(event);
 
-    assertEquals(sampleExpected, result);
+    assertEquals(sampleExpected.getEventSchema(), result.getEventSchema());
+    assertEquals(sampleExpected.getFieldStatusInfo(), result.getFieldStatusInfo());
+
+    String preview = result.getEventPreview().get(0).toString();
+    assertTrue(preview.equals("{\"k2\":2.0,\"k1\":\"v1\"}") || preview.equals("{\"k1\":\"v1\",\"k2\":2.0}"));
   }
 
   @Test
@@ -74,7 +79,11 @@ public class CsvParserTest extends ParserTest {
 
     var result = parser.getGuessSchema(event);
 
-    assertEquals(sampleExpected, result);
+    assertEquals(sampleExpected.getEventSchema(), result.getEventSchema());
+    assertEquals(sampleExpected.getFieldStatusInfo(), result.getFieldStatusInfo());
+
+    String preview = result.getEventPreview().get(0).toString();
+    assertTrue(preview.equals("{\"k2\":2.0,\"k1\":\"v1\"}") || preview.equals("{\"k1\":\"v1\",\"k2\":2.0}"));
   }
 
   @Test

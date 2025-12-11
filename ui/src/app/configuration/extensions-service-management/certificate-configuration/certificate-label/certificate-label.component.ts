@@ -16,22 +16,24 @@
  *
  */
 
-.asset-details-panel {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
+import { Component, Input, OnInit } from '@angular/core';
+import { Certificate } from '@streampipes/platform-services';
 
-.asset-details-container {
-    width: 100%;
-    height: 100%;
-    background: var(--color-bg-0);
-}
+@Component({
+    selector: 'sp-certificate-label',
+    standalone: false,
+    templateUrl: './certificate-label.component.html',
+})
+export class CertificateLabelComponent implements OnInit {
+    @Input()
+    certificate: Certificate;
 
-.asset-tree-panel {
-    width: 400px;
-}
+    dnsNames: string[] = [];
 
-.navbar-margin {
-    margin-left: 25px;
+    ngOnInit(): void {
+        this.dnsNames = this.certificate.subjectAlternativeNames.filter(san =>
+            san.startsWith('DNS'),
+        );
+        console.log(this.dnsNames);
+    }
 }

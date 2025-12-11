@@ -16,13 +16,7 @@
  *
  */
 
-import {
-    Component,
-    Input,
-    OnChanges,
-    OnInit,
-    SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
     AssetSiteDesc,
     Isa95TypeService,
@@ -35,36 +29,25 @@ import {
     styleUrls: ['./view-asset-basics.component.scss'],
     standalone: false,
 })
-export class ViewAssetBasicsComponent implements OnInit, OnChanges {
-    @Input()
-    rootAsset: SpAsset;
-
+export class ViewAssetBasicsComponent implements OnChanges {
     @Input()
     selectedAsset: SpAsset;
 
     @Input()
     sites: AssetSiteDesc[] = [];
 
-    assetType: string;
     selectedAssetType: string;
-    assetSite: AssetSiteDesc;
 
     constructor(private isa95TypeService: Isa95TypeService) {}
-
-    ngOnInit() {
-        this.assetType =
-            this.isa95TypeService.toLabel(
-                this.rootAsset.assetType.isa95AssetType,
-            ) || '';
-        this.assetSite = this.sites.find(
-            site => this.rootAsset.assetSite.siteId === site._id,
-        );
-    }
 
     ngOnChanges(changes: SimpleChanges) {
         this.selectedAssetType =
             this.isa95TypeService.toLabel(
                 this.selectedAsset.assetType.isa95AssetType,
             ) || '';
+    }
+
+    getDescription(asset: SpAsset): string {
+        return asset?.assetDescription || 'No description available.';
     }
 }

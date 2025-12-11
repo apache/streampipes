@@ -16,8 +16,47 @@
  *
  */
 
+.links-wrapper {
+    gap: 12px;
+}
+
+.link-header {
+    margin-bottom: 6px;
+}
+
 .link-title {
-    font-size: 14pt;
-    font-weight: bold;
-    font-family: 'Roboto-Bold', sans-serif;
+    font-family: var(--font-emphasized), sans-serif;
+    font-weight: 700;
+    font-size: var(--font-size-xl);
+    margin: 0;
+}
+
+.link-subtitle {
+    color: var(--fg-muted, #555);
+    font-size: var(--font-size-sm);
+}
+
+.link-pill {
+    background: var(--color-bg-2);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: var(--font-size-sm);
+    align-self: center;
+}
+
+.link-empty {
+    padding: 14px;
+    border: 1px dashed var(--color-bg-3);
+    border-radius: 10px;
+    color: var(--fg-muted, #666);
+    background: var(--color-bg-1);
+    align-items: center;
+}
+
+.empty-title {
+    font-weight: 600;
+}
+
+.empty-subtitle {
+    font-size: var(--font-size-sm);
 }

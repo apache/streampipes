@@ -1,0 +1,107 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+@if (editMode) {
+    <sp-form-field
+        [level]="2"
+        [label]="'Custom fields' | translate"
+        [description]="
+            'Add additional fields to the asset, e.g., to manage responsibilities'
+                | translate
+        "
+    >
+        @for (
+            customField of asset.additionalData.customFields;
+            let i = $index;
+            track $index
+        ) {
+            <div
+                fxLayout="row"
+                fxLayoutGap="15px"
+                fxLayoutAlign="start center"
+                fxFlex="100"
+            >
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Field name' | translate"
+                    fxFlex="40"
+                >
+                    <mat-form-field>
+                        <input
+                            matInput
+                            placeholder="Field name"
+                            [(ngModel)]="customField.key"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Value' | translate"
+                    fxFlex="40"
+                >
+                    <mat-form-field>
+                        <input
+                            matInput
+                            placeholder="Value"
+                            [(ngModel)]="customField.value"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+
+                <sp-form-field [level]="3" label="">
+                    <button
+                        mat-icon-button
+                        type="button"
+                        (click)="removeCustomField(i)"
+                        aria-label="Remove custom field"
+                    >
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </sp-form-field>
+            </div>
+        }
+        <div>
+            <button
+                mat-flat-button
+                class="mat-basic"
+                type="button"
+                (click)="addCustomField()"
+            >
+                Add custom field
+            </button>
+        </div>
+    </sp-form-field>
+} @else {
+    <div fxLayout="column" fxLayoutGap="6px">
+        @if (customFields?.length) {
+            @for (field of customFields; track field.key ?? $index) {
+                <div
+                    fxLayout="row"
+                    fxLayoutGap="8px"
+                    fxLayoutAlign="start start"
+                >
+                    <span class="text-md font-emphasized">{{ field.key }}</span>
+                    <span class="text-md">{{ field.value }}</span>
+                </div>
+            }
+        } @else {
+            <span>No custom fields set</span>
+        }
+    </div>
+}

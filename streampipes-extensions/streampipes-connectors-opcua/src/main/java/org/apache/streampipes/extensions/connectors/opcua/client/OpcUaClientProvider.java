@@ -20,13 +20,16 @@ package org.apache.streampipes.extensions.connectors.opcua.client;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaCertificateUtils;
 
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -36,6 +39,7 @@ public class OpcUaClientProvider {
 
   private final Map<String, ConnectedOpcUaClient> clients = new ConcurrentHashMap<>();
   private final Map<String, Integer> consumers = new ConcurrentHashMap<>();
+  private final Map<String, String> serverThumbprints = new HashMap<>();
 
   public synchronized <T extends OpcUaConfig> ConnectedOpcUaClient getClient(T config)
       throws UaException, SpConfigurationException, URISyntaxException, ExecutionException, InterruptedException {
@@ -43,12 +47,24 @@ public class OpcUaClientProvider {
     if (clients.containsKey(serverId)) {
       LOG.debug("Adding new consumer to client {}", serverId);
       consumers.put(serverId, consumers.get(config.getUniqueServerId()) + 1);
-      return clients.get(serverId);
+      var client = clients.get(serverId);
+      var associatedResourceId = config.getAssociatedResourceId();
+      if (serverThumbprints.containsKey(serverId) && Objects.nonNull(associatedResourceId)) {
+        OpcUaCertificateUtils.sendUsageToCore(
+            serverThumbprints.get(serverId),
+            associatedResourceId,
+            config.getStreamPipesClient()
+        );
+      }
+      return client;
     } else {
       LOG.debug("Creating new client {}", serverId);
       var connectedClient = new SpOpcUaClient<>(config).connect();
       clients.put(serverId, connectedClient);
       consumers.put(serverId, 1);
+      if (config.getCertificateThumbprint() != null) {
+        serverThumbprints.put(serverId, config.getCertificateThumbprint());
+      }
       return connectedClient;
     }
   }

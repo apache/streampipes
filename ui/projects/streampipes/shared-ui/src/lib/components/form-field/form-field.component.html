@@ -23,12 +23,17 @@
     [class.mb-lg]="level === 2"
     [class.mb-sm]="level === 3"
 >
-    <sp-form-label
-        [level]="level"
-        [label]="label"
-        [description]="description"
-        [tooltip]="tooltip"
-    >
-    </sp-form-label>
+    <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+        <sp-form-label
+            [level]="level"
+            [label]="label"
+            [description]="description"
+            [tooltip]="tooltip"
+        >
+        </sp-form-label>
+        <span fxFlex></span>
+        <ng-content select="[form-field-actions]"></ng-content>
+    </div>
+
     <ng-content></ng-content>
 </div>

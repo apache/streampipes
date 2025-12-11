@@ -53,4 +53,5 @@ public class OpcUaAdapterConfig extends OpcUaConfig {
   public void setNamingStrategy(OpcUaNamingStrategy namingStrategy) {
     this.namingStrategy = namingStrategy;
   }
+
 }

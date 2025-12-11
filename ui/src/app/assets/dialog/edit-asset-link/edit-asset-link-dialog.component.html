@@ -20,9 +20,8 @@
     <div class="sp-dialog-content p-15 mt-10">
         @if (clonedAssetLink) {
             <div fxFlex="100" fxLayout="column">
-                <div fxLayout="column" class="link-configuration">
+                <sp-form-field [level]="3" [label]="'Link Type' | translate">
                     <mat-form-field color="accent">
-                        <mat-label>Link Type</mat-label>
                         <mat-select
                             fxFlex
                             [(value)]="selectedLinkType"
@@ -39,11 +38,10 @@
                             }
                         </mat-select>
                     </mat-form-field>
-                </div>
+                </sp-form-field>
                 @if (selectedLinkType.linkQueryHint === 'pipeline') {
-                    <div fxLayout="column" class="link-configuration">
+                    <sp-form-field [level]="3" label="Pipelines">
                         <mat-form-field color="accent" fxFlex="100">
-                            <mat-label>Pipelines</mat-label>
                             <mat-select
                                 [(ngModel)]="currentResource"
                                 fxFlex
@@ -63,12 +61,14 @@
                                 }
                             </mat-select>
                         </mat-form-field>
-                    </div>
+                    </sp-form-field>
                 }
                 @if (selectedLinkType.linkQueryHint === 'data-source') {
-                    <div fxLayout="column" class="link-configuration">
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Data Stream' | translate"
+                    >
                         <mat-form-field color="accent" fxFlex="100">
-                            <mat-label>Data Stream</mat-label>
                             <mat-select
                                 (selectionChange)="
                                     changeLabel(
@@ -88,12 +88,14 @@
                                 }
                             </mat-select>
                         </mat-form-field>
-                    </div>
+                    </sp-form-field>
                 }
                 @if (selectedLinkType.linkQueryHint === 'dashboard') {
-                    <div fxLayout="column" class="link-configuration">
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Dashboard' | translate"
+                    >
                         <mat-form-field color="accent" fxFlex="100">
-                            <mat-label>Dashboards</mat-label>
                             <mat-select
                                 (selectionChange)="
                                     changeLabel(
@@ -116,12 +118,11 @@
                                 }
                             </mat-select>
                         </mat-form-field>
-                    </div>
+                    </sp-form-field>
                 }
                 @if (selectedLinkType.linkQueryHint === 'chart') {
-                    <div fxLayout="column" class="link-configuration">
+                    <sp-form-field [level]="3" [label]="'Chart' | translate">
                         <mat-form-field color="accent" fxFlex="100">
-                            <mat-label>Chart</mat-label>
                             <mat-select
                                 (selectionChange)="
                                     changeLabel(
@@ -141,12 +142,11 @@
                                 }
                             </mat-select>
                         </mat-form-field>
-                    </div>
+                    </sp-form-field>
                 }
                 @if (selectedLinkType.linkQueryHint === 'adapter') {
-                    <div fxLayout="column" class="link-configuration">
+                    <sp-form-field [level]="3" [label]="'Adapter' | translate">
                         <mat-form-field color="accent" fxFlex="100">
-                            <mat-label>Adapter</mat-label>
                             <mat-select
                                 (selectionChange)="
                                     changeLabel(
@@ -166,12 +166,11 @@
                                 }
                             </mat-select>
                         </mat-form-field>
-                    </div>
+                    </sp-form-field>
                 }
                 @if (selectedLinkType.linkQueryHint === 'measurement') {
-                    <div fxLayout="column" class="link-configuration">
+                    <sp-form-field [level]="3" [label]="'Dataset' | translate">
                         <mat-form-field color="accent" fxFlex="100">
-                            <mat-label>Data Lake Storage</mat-label>
                             <mat-select
                                 (selectionChange)="
                                     changeLabel(
@@ -194,12 +193,11 @@
                                 }
                             </mat-select>
                         </mat-form-field>
-                    </div>
+                    </sp-form-field>
                 }
                 @if (selectedLinkType.linkQueryHint === 'file') {
-                    <div fxLayout="column" class="link-configuration">
+                    <sp-form-field [level]="3" [label]="'Files' | translate">
                         <mat-form-field color="accent" fxFlex="100">
-                            <mat-label>Files</mat-label>
                             <mat-select
                                 (selectionChange)="
                                     changeLabel(
@@ -219,11 +217,10 @@
                                 }
                             </mat-select>
                         </mat-form-field>
-                    </div>
+                    </sp-form-field>
                 }
-                <div fxLayout="column" class="link-configuration">
+                <sp-form-field [level]="3" [label]="'Label' | translate">
                     <mat-form-field color="accent">
-                        <mat-label>Label</mat-label>
                         <input
                             matInput
                             [(ngModel)]="clonedAssetLink.linkLabel"
@@ -231,10 +228,9 @@
                             required
                         />
                     </mat-form-field>
-                </div>
-                <div fxLayout="column" class="link-configuration">
+                </sp-form-field>
+                <sp-form-field [level]="3" [label]="'Resource ID' | translate">
                     <mat-form-field color="accent">
-                        <mat-label>Resource ID</mat-label>
                         <input
                             matInput
                             [(ngModel)]="clonedAssetLink.resourceId"
@@ -242,8 +238,7 @@
                             [disabled]="true"
                         />
                     </mat-form-field>
-                </div>
-                <div fxFlex="100"></div>
+                </sp-form-field>
             </div>
         }
     </div>

@@ -19,20 +19,27 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class AdapterResourceManager extends AbstractResourceManager<IAdapterStorage> {
 
-  public AdapterResourceManager(IAdapterStorage adapterStorage) {
+  private final CRUDStorage<Certificate> certificateStorage;
+
+  public AdapterResourceManager(IAdapterStorage adapterStorage,
+                                CRUDStorage<Certificate> certificateStorage) {
     super(adapterStorage);
+    this.certificateStorage = certificateStorage;
   }
 
   public AdapterResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore()
                                     .getAdapterInstanceStorage());
+    this.certificateStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getCertificateStorage();
   }
 
   /**
@@ -69,6 +76,16 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
   }
 
   public void delete(String elementId) {
+    // Remove references from certificates
+    certificateStorage
+        .findAll()
+            .stream().filter(c -> c.getAssociatedResourceIds().contains(elementId))
+            .forEach(c -> {
+              c.getAssociatedResourceIds().remove(elementId);
+              certificateStorage.updateElement(c);
+            });
+
+    // Then delete the adapter
     db.deleteElementById(elementId);
   }
 

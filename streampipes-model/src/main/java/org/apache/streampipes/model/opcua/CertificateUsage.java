@@ -16,21 +16,8 @@
  *
  */
 
-.link-type {
-    background: var(--color-secondary);
-    padding: 5px;
-    border-radius: 5px;
-}
+package org.apache.streampipes.model.opcua;
 
-.link-label {
-    margin-right: 15px;
-}
-
-.link-icon {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    padding: 5px;
-    color: var(--color-bg-1);
-    background: var(--color-bg-3);
+public record CertificateUsage(String associatedResourceId,
+                               String thumbprint) {
 }

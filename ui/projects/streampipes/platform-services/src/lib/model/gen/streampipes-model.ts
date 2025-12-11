@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-04 17:41:18.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-10 08:38:24.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -176,23 +176,6 @@ export class AdapterEventPreview {
         instance.rules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
-        return instance;
-    }
-}
-
-export class AdapterType {
-    code: string;
-    description: string;
-    label: string;
-
-    static fromData(data: AdapterType, target?: AdapterType): AdapterType {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new AdapterType();
-        instance.code = data.code;
-        instance.description = data.description;
-        instance.label = data.label;
         return instance;
     }
 }
@@ -749,6 +732,7 @@ export class CanvasPosition {
 
 export class Certificate implements Storable {
     algorithm: string;
+    associatedResourceIds: string[];
     basicConstraints: string;
     certificateDerBase64: string;
     elementId: string;
@@ -763,6 +747,7 @@ export class Certificate implements Storable {
     state: CertificateState;
     subjectAlternativeNames: string[];
     subjectDn: string;
+    thumbprint: string;
 
     static fromData(data: Certificate, target?: Certificate): Certificate {
         if (!data) {
@@ -770,6 +755,9 @@ export class Certificate implements Storable {
         }
         const instance = target || new Certificate();
         instance.algorithm = data.algorithm;
+        instance.associatedResourceIds = __getCopyArrayFn(__identity<string>())(
+            data.associatedResourceIds,
+        );
         instance.basicConstraints = data.basicConstraints;
         instance.certificateDerBase64 = data.certificateDerBase64;
         instance.elementId = data.elementId;
@@ -790,6 +778,7 @@ export class Certificate implements Storable {
             __identity<string>(),
         )(data.subjectAlternativeNames);
         instance.subjectDn = data.subjectDn;
+        instance.thumbprint = data.thumbprint;
         return instance;
     }
 }
