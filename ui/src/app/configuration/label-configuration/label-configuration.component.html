@@ -105,26 +105,28 @@
                                     <mat-icon>edit</mat-icon>
                                 </button>
                             }
-
-                            <button
-                                mat-icon-button
-                                class="btn-warn"
-                                color="accent"
-                                [matTooltip]="
+                            <div
+                                matTooltip="{{
                                     labelsinUse.includes(label._id)
                                         ? ('To delete a label, please remove the label from all assets'
                                           | translate)
                                         : ('Delete label' | translate)
-                                "
-                                [matTooltipDisabled]="
-                                    labelsinUse.includes(label._id)
-                                "
-                                (click)="deleteLabel(label)"
-                                data-cy="delete-label-button"
-                                [disabled]="labelsinUse.includes(label._id)"
+                                }}"
+                                [matTooltipShowDelay]="0"
+                                [matTooltipHideDelay]="0"
+                                class="tooltip-container"
                             >
-                                <mat-icon>delete</mat-icon>
-                            </button>
+                                <button
+                                    mat-icon-button
+                                    class="btn-warn"
+                                    color="accent"
+                                    (click)="deleteLabel(label)"
+                                    data-cy="delete-label-button"
+                                    [disabled]="labelsinUse.includes(label._id)"
+                                >
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
                         </div>
                     </td>
                 </ng-container>
