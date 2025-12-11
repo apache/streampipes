@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.model.opcua;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.security.auth.x500.X500Principal;
 
 import java.math.BigInteger;
@@ -36,6 +39,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class CertificateBuilder {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CertificateBuilder.class);
 
   // fluent setters
   public CertificateBuilder subjectDn(String v) {
@@ -128,6 +133,11 @@ public final class CertificateBuilder {
         .build();
 
     certificate.setState(state);
+    try {
+      certificate.setThumbprint(CertificateUtils.getThumbprint(cert));
+    } catch (Exception e) {
+      LOG.warn("Could not create thumbprint for certificate: {}", e.getMessage());
+    }
 
     return certificate;
   }

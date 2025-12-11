@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,12 +16,34 @@
  *
  */
 
-.asset-info {
-    margin: 10px;
-    overflow-y: auto;
-    max-height: 100%;
-}
+import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Isa95TypeService,
+    LocationConfig,
+    SpAssetModel,
+} from '@streampipes/platform-services';
 
-.ml-20 {
-    margin-left: 20px;
+@Component({
+    selector: 'sp-asset-top-banner',
+    templateUrl: './asset-top-banner.component.html',
+    styleUrls: ['./asset-top-banner.component.scss'],
+    standalone: false,
+})
+export class SpAssetTopBannerComponent implements OnInit {
+    @Input()
+    assetModel: SpAssetModel;
+
+    @Input()
+    locationConfig: LocationConfig;
+
+    assetType = undefined;
+
+    private isa95TypeService = inject(Isa95TypeService);
+
+    ngOnInit() {
+        this.assetType =
+            this.isa95TypeService.toLabel(
+                this.assetModel.assetType.isa95AssetType,
+            ) || '';
+    }
 }

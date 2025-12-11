@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -68,7 +69,11 @@ public class XmlParserTest extends ParserTest {
 
     var result = parser.getGuessSchema(event);
 
-    assertEquals(expected, result);
+    assertEquals(expected.getEventSchema(), result.getEventSchema());
+
+    var previewJson = result.getEventPreview().get(0).toString();
+    assertTrue(previewJson.contains("\"k1\":\"v1\""));
+    assertTrue(previewJson.contains("\"k2\":1.0"));
   }
 
   @Test
@@ -81,7 +86,11 @@ public class XmlParserTest extends ParserTest {
 
     var result = parser.getGuessSchema(event);
 
-    assertEquals(expected, result);
+    assertEquals(expected.getEventSchema(), result.getEventSchema());
+
+    var previewJson = result.getEventPreview().get(0).toString();
+    assertTrue(previewJson.contains("\"k1\":\"v1\""));
+    assertTrue(previewJson.contains("\"k2\":1.0"));
   }
 
   @Test

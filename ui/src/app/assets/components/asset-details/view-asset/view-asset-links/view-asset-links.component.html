@@ -16,19 +16,43 @@
   ~
   -->
 
-<div fxLayout="column">
-    <div class="link-title">Resources</div>
-    @if (assetLinkTypes.length > 0) {
-        <div fxLayout="row wrap" class="mt-20" fxLayoutGap="20px">
-            @for (link of selectedAsset.assetLinks; track link) {
-                @if (link.navigationActive) {
-                    <sp-asset-link-card
-                        [assetLink]="link"
-                        [assetLinkTypes]="assetLinkTypes"
-                    >
-                    </sp-asset-link-card>
+<div fxLayout="column" class="links-wrapper">
+    <div class="link-header" fxLayout="row" fxLayoutAlign="space-between">
+        <sp-split-section
+            [level]="2"
+            [title]="'Linked Resources' | translate"
+            [subtitle]="
+                'Adapters, dashboards, and other entries connected to this asset.'
+                    | translate
+            "
+        >
+            <div section-actions>
+                @if (selectedAsset.assetLinks?.length > 0) {
+                    <div class="link-pill">
+                        {{ selectedAsset.assetLinks.length }} linked
+                    </div>
                 }
+            </div>
+            @if (
+                assetLinkTypes.length > 0 &&
+                selectedAsset.assetLinks?.length > 0
+            ) {
+                <sp-asset-link-table
+                    [asset]="selectedAsset"
+                    [assetLinkTypes]="assetLinkTypes"
+                >
+                </sp-asset-link-table>
+            } @else {
+                <sp-alert-banner
+                    type="info"
+                    [title]="'No linked resources found.' | translate"
+                    [description]="
+                        'Attach adapters, dashboards, or pipelines in the asset editor to surface them here.'
+                            | translate
+                    "
+                >
+                </sp-alert-banner>
             }
-        </div>
-    }
+        </sp-split-section>
+    </div>
 </div>

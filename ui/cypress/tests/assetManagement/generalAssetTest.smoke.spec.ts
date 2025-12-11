@@ -36,7 +36,6 @@ describe('Creates a new adapter, add to assets', () => {
 
         // Check that everything was stored correctly
         AssetUtils.editAsset(assetName);
-        AssetBtns.assetLinksTab().click();
         AssetUtils.checkAmountOfLinkedResources(2);
 
         // Check that deletion of asset works

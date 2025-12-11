@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import {
     AssetConstants,
     AssetLinkType,
@@ -36,7 +36,7 @@ export class ViewAssetLinksComponent implements OnInit {
 
     assetLinkTypes: AssetLinkType[] = [];
 
-    constructor(private genericStorageService: GenericStorageService) {}
+    private genericStorageService = inject(GenericStorageService);
 
     ngOnInit() {
         this.genericStorageService

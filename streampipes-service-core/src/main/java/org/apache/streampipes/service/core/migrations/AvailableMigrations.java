@@ -31,6 +31,7 @@ import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissio
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinksMigration;
 import org.apache.streampipes.service.core.migrations.v099.AddAssetManagementViewMigration;
+import org.apache.streampipes.service.core.migrations.v099.ComputeCertificateThumbprintMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
@@ -70,7 +71,8 @@ public class AvailableMigrations {
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(),
         new RemoveObsoletePrivilegesMigration(),
-        new UniqueDashboardIdMigration()
+        new UniqueDashboardIdMigration(),
+        new ComputeCertificateThumbprintMigration()
     );
   }
 }

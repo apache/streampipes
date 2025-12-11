@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config;
 
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.IdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.security.SecurityConfig;
 
@@ -29,6 +30,9 @@ public class OpcUaConfig {
   private List<String> selectedNodeNames;
   private IdentityConfig identityConfig;
   private SecurityConfig securityPolicyConfig;
+  private String associatedResourceId;
+  private String certificateThumbprint;
+  private IStreamPipesClient streamPipesClient;
 
   public OpcUaConfig() {
 
@@ -69,4 +73,29 @@ public class OpcUaConfig {
   public String getUniqueServerId() {
     return String.format("%s-%s-%s", opcServerURL, securityPolicyConfig, identityConfig);
   }
+
+  public String getAssociatedResourceId() {
+    return associatedResourceId;
+  }
+
+  public void setAssociatedResourceId(String associatedResourceId) {
+    this.associatedResourceId = associatedResourceId;
+  }
+
+  public String getCertificateThumbprint() {
+    return certificateThumbprint;
+  }
+
+  public void setCertificateThumbprint(String certificateThumbprint) {
+    this.certificateThumbprint = certificateThumbprint;
+  }
+
+  public IStreamPipesClient getStreamPipesClient() {
+    return streamPipesClient;
+  }
+
+  public void setStreamPipesClient(IStreamPipesClient streamPipesClient) {
+    this.streamPipesClient = streamPipesClient;
+  }
+
 }

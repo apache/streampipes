@@ -16,58 +16,21 @@
 ~
 -->
 
-<div fxLayout="column">
-    <div class="asset-title">{{ rootAsset.assetName }}</div>
-    <div class="asset-description">{{ rootAsset.assetDescription }}</div>
-
-    <div fxLayout="column" class="asset-metadata mt-20">
-        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-            <mat-icon color="primary">precision_manufacturing</mat-icon>
-            <div class="asset-description">{{ assetType }}</div>
+<div class="asset-hero" fxLayout="row" fxLayoutGap="20px">
+    <div fxFlex class="hero-text">
+        <div class="asset-title text-2xl">{{ selectedAsset.assetName }}</div>
+        <div class="asset-subtitle text-md">
+            {{ getDescription(selectedAsset) }}
         </div>
-        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-            <mat-icon color="primary">location_on</mat-icon>
-            <div class="asset-description">{{ assetSite?.label || '-' }}</div>
-        </div>
-        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-            <mat-icon color="primary">factory</mat-icon>
-            <div class="asset-description">
-                {{ rootAsset.assetSite?.area || '-' }}
-            </div>
+        <div class="meta-row" fxLayout="row" fxLayoutGap="10px" fxLayoutWrap>
+            <sp-label
+                [labelText]="selectedAssetType"
+                icon="precision_manufacturing"
+            >
+            </sp-label>
+            <sp-view-asset-labels
+                [asset]="selectedAsset"
+            ></sp-view-asset-labels>
         </div>
     </div>
-
-    @if (selectedAsset.assetId !== rootAsset.assetId) {
-        <div fxLayout="column" class="selected-asset-metadata mt-20">
-            <div class="selected-asset-title">
-                {{ selectedAsset.assetName }}
-            </div>
-            <div class="selected-asset-description">
-                {{ selectedAsset.assetDescription }}
-            </div>
-            <div fxLayout="column" class="asset-metadata mt-20">
-                <div
-                    fxLayout="row"
-                    fxLayoutGap="10px"
-                    fxLayoutAlign="start center"
-                >
-                    <mat-icon color="primary">precision_manufacturing</mat-icon>
-                    <div class="asset-description">{{ selectedAssetType }}</div>
-                </div>
-                @if (selectedAsset.labelIds?.length > 0) {
-                    <div
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        fxLayoutAlign="start center"
-                    >
-                        <mat-icon color="primary">sell</mat-icon>
-                        <sp-view-asset-labels
-                            [asset]="selectedAsset"
-                            size="small"
-                        ></sp-view-asset-labels>
-                    </div>
-                }
-            </div>
-        </div>
-    }
 </div>

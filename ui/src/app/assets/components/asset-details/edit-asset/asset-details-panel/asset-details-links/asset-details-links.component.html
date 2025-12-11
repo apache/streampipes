@@ -16,58 +16,41 @@
 ~
 -->
 
-<div class="page-container-padding-inner">
-    <sp-basic-header-title-component
-        title="{{ 'Asset Links: ' + asset.assetName }}"
-    ></sp-basic-header-title-component>
-
-    <div class="p-10" fxLayout="column">
-        <div
-            fxLayoutAlign="end center"
-            fxLayout="row"
-            fxFlex="100"
-            fxLayoutGap="10px"
-        >
-            @if (editMode) {
-                <button
-                    [disabled]="!assetLinksLoaded"
-                    mat-flat-button
-                    color="accent"
-                    (click)="openManageAssetLinksDialog()"
-                    data-cy="assets-manage-links-button"
-                >
-                    <i class="material-icons">add</i
-                    ><span>&nbsp;{{ 'Manage links' | translate }}</span>
-                </button>
-            }
-            @if (editMode) {
-                <button
-                    [disabled]="!assetLinksLoaded"
-                    mat-flat-button
-                    color="accent"
-                    (click)="openCreateAssetLinkDialog()"
-                >
-                    <i class="material-icons">add</i
-                    ><span>&nbsp;{{ 'Add link' | translate }}</span>
-                </button>
-            }
-        </div>
-        @if (assetLinkTypes) {
-            <div fxLayout="column" fxFlex="100" class="mt-10">
-                @for (assetLinkType of assetLinkTypes; track assetLinkType) {
-                    <div>
-                        <sp-asset-link-section
-                            [assetLinkType]="assetLinkType"
-                            [asset]="asset"
-                            [editMode]="editMode"
-                            (openEditAssetLinkEmitter)="
-                                openEditAssetLinkDialog($event, false)
-                            "
-                        >
-                        </sp-asset-link-section>
-                    </div>
-                }
-            </div>
+<sp-split-section [title]="'Asset links' | translate">
+    <div section-actions fxLayoutGap="10px">
+        @if (editMode) {
+            <button
+                [disabled]="!assetLinksLoaded"
+                mat-flat-button
+                class="mat-basic"
+                (click)="openManageAssetLinksDialog()"
+                data-cy="assets-manage-links-button"
+            >
+                <i class="material-icons">add</i
+                ><span>&nbsp;{{ 'Manage links' | translate }}</span>
+            </button>
+        }
+        @if (editMode) {
+            <button
+                [disabled]="!assetLinksLoaded"
+                mat-flat-button
+                class="mat-basic"
+                (click)="openCreateAssetLinkDialog()"
+            >
+                <i class="material-icons">add</i
+                ><span>&nbsp;{{ 'Add link' | translate }}</span>
+            </button>
         }
     </div>
-</div>
+    @if (assetLinkTypes) {
+        <div fxLayout="column" fxFlex="100" class="mt-10">
+            <sp-asset-link-table
+                #assetLinkTable
+                [assetLinkTypes]="assetLinkTypes"
+                [asset]="asset"
+                [assetModel]="assetModel"
+                [editMode]="true"
+            ></sp-asset-link-table>
+        </div>
+    }
+</sp-split-section>

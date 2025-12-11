@@ -42,7 +42,7 @@ public class MiloOpcUaConfigurationProvider {
         .setApplicationName(LocalizedText.english("Apache StreamPipes"))
         .setApplicationUri(applicationUri);
 
-    spOpcConfig.getSecurityConfig().configureSecurityPolicy(opcServerUrl, endpoints, builder);
+    spOpcConfig.getSecurityConfig().configureSecurityPolicy(spOpcConfig, endpoints, builder);
     spOpcConfig.getIdentityConfig().configureIdentity(builder);
 
     return builder.build();

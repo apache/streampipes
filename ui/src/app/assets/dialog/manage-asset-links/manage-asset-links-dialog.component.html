@@ -20,48 +20,39 @@
     <div class="sp-dialog-content p-15">
         @if (clonedAssetLinks) {
             <div fxFlex="100" fxLayout="column">
-                <div fxLayout="column" class="link-configuration">
+                <sp-split-section [level]="3" [title]="'Adapters' | translate">
                     <div
+                        section-actions
                         fxLayout="row"
-                        fxLayoutAlign="start center"
-                        class="mb-10"
-                        fxFlex="100"
+                        fxLayoutAlign="end center"
+                        fxFlex
                     >
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            <span class="general-options-header mb-0"
-                                >Adapters</span
-                            >
-                        </div>
-                        <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                color="accent"
-                                class="small-button"
-                                (click)="
-                                    selectAll(
-                                        adapters,
-                                        elementIdFunction,
-                                        nameFunction,
-                                        'adapter'
-                                    )
-                                "
-                                style="margin-right: 5px; margin-left: 15px"
-                            >
-                                <span>{{ 'Select All' | translate }}</span>
-                            </button>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                class="mat-basic small-button"
-                                (click)="
-                                    deselectAll(adapters, elementIdFunction)
-                                "
-                                style="margin-right: 10px; margin-left: 5px"
-                            >
-                                <span>{{ 'Deselect All' | translate }}</span>
-                            </button>
-                        </div>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            class="small-button"
+                            (click)="
+                                selectAll(
+                                    adapters,
+                                    elementIdFunction,
+                                    nameFunction,
+                                    'adapter'
+                                )
+                            "
+                            style="margin-right: 5px; margin-left: 15px"
+                        >
+                            <span>{{ 'Select All' | translate }}</span>
+                        </button>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            class="mat-basic small-button"
+                            (click)="deselectAll(adapters, elementIdFunction)"
+                            style="margin-right: 10px; margin-left: 5px"
+                        >
+                            <span>{{ 'Deselect All' | translate }}</span>
+                        </button>
                     </div>
                     @for (element of adapters; track element) {
                         <div fxLayout="row">
@@ -84,46 +75,40 @@
                             </mat-checkbox>
                         </div>
                     }
-                </div>
-                <div fxLayout="column" class="link-configuration">
+                </sp-split-section>
+                <sp-split-section [level]="3" [title]="'Charts' | translate">
                     <div
+                        section-actions
                         fxLayout="row"
-                        fxLayoutAlign="start center"
-                        class="mb-10"
+                        fxLayoutAlign="end center"
+                        fxFlex
                     >
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            <span class="general-options-header mb-0"
-                                >Charts</span
-                            >
-                        </div>
-                        <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                color="accent"
-                                class="small-button"
-                                (click)="
-                                    selectAll(
-                                        charts,
-                                        elementIdFunction,
-                                        widgetNameFunction,
-                                        'chart'
-                                    )
-                                "
-                                style="margin-right: 5px; margin-left: 15px"
-                            >
-                                <span>{{ 'Select All' | translate }}</span>
-                            </button>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                class="mat-basic small-button"
-                                (click)="deselectAll(charts, elementIdFunction)"
-                                style="margin-right: 10px; margin-left: 5px"
-                            >
-                                <span>{{ 'Deselect All' | translate }}</span>
-                            </button>
-                        </div>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            class="small-button"
+                            (click)="
+                                selectAll(
+                                    charts,
+                                    elementIdFunction,
+                                    widgetNameFunction,
+                                    'chart'
+                                )
+                            "
+                            style="margin-right: 5px; margin-left: 15px"
+                        >
+                            <span>{{ 'Select All' | translate }}</span>
+                        </button>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            class="mat-basic small-button"
+                            (click)="deselectAll(charts, elementIdFunction)"
+                            style="margin-right: 10px; margin-left: 5px"
+                        >
+                            <span>{{ 'Deselect All' | translate }}</span>
+                        </button>
                     </div>
                     @for (element of charts; track element) {
                         <div fxLayout="row">
@@ -144,49 +129,45 @@
                             </mat-checkbox>
                         </div>
                     }
-                </div>
-                <div fxLayout="column" class="link-configuration">
+                </sp-split-section>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Dashboards' | translate"
+                >
                     <div
+                        section-actions
                         fxLayout="row"
-                        fxLayoutAlign="start center"
-                        class="mb-10"
+                        fxLayoutAlign="end center"
+                        fxFlex
                     >
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            <span class="general-options-header mb-0"
-                                >Dashboards</span
-                            >
-                        </div>
-                        <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                color="accent"
-                                class="small-button"
-                                (click)="
-                                    selectAll(
-                                        dashboards,
-                                        elementIdFunction,
-                                        nameFunction,
-                                        'dashboard'
-                                    )
-                                "
-                                style="margin-right: 5px; margin-left: 15px"
-                            >
-                                <span>{{ 'Select All' | translate }}</span>
-                            </button>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                class="mat-basic small-button"
-                                (click)="
-                                    deselectAll(dashboards, elementIdFunction)
-                                "
-                                style="margin-right: 10px; margin-left: 5px"
-                            >
-                                <span>{{ 'Deselect All' | translate }}</span>
-                            </button>
-                        </div>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            class="small-button"
+                            (click)="
+                                selectAll(
+                                    dashboards,
+                                    elementIdFunction,
+                                    nameFunction,
+                                    'dashboard'
+                                )
+                            "
+                            style="margin-right: 5px; margin-left: 15px"
+                        >
+                            <span>{{ 'Select All' | translate }}</span>
+                        </button>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            class="mat-basic small-button"
+                            (click)="deselectAll(dashboards, elementIdFunction)"
+                            style="margin-right: 10px; margin-left: 5px"
+                        >
+                            <span>{{ 'Deselect All' | translate }}</span>
+                        </button>
                     </div>
+
                     @for (element of dashboards; track element) {
                         <div fxLayout="row">
                             <mat-checkbox
@@ -205,51 +186,45 @@
                             </mat-checkbox>
                         </div>
                     }
-                </div>
-                <div fxLayout="column" class="link-configuration">
+                </sp-split-section>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Data Lake Storage' | translate"
+                >
                     <div
+                        section-actions
                         fxLayout="row"
-                        fxLayoutAlign="start center"
-                        class="mb-10"
+                        fxLayoutAlign="end center"
+                        fxFlex
                     >
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            <span class="general-options-header mb-0"
-                                >Data Lake Storage</span
-                            >
-                        </div>
-                        <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                color="accent"
-                                class="small-button"
-                                (click)="
-                                    selectAll(
-                                        dataLakeMeasures,
-                                        elementIdFunction,
-                                        measureNameFunction,
-                                        'measurement'
-                                    )
-                                "
-                                style="margin-right: 5px; margin-left: 15px"
-                            >
-                                <span>{{ 'Select All' | translate }}</span>
-                            </button>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                class="mat-basic small-button"
-                                (click)="
-                                    deselectAll(
-                                        dataLakeMeasures,
-                                        elementIdFunction
-                                    )
-                                "
-                                style="margin-right: 10px; margin-left: 5px"
-                            >
-                                <span>{{ 'Deselect All' | translate }}</span>
-                            </button>
-                        </div>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            class="small-button"
+                            (click)="
+                                selectAll(
+                                    dataLakeMeasures,
+                                    elementIdFunction,
+                                    measureNameFunction,
+                                    'measurement'
+                                )
+                            "
+                            style="margin-right: 5px; margin-left: 15px"
+                        >
+                            <span>{{ 'Select All' | translate }}</span>
+                        </button>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            class="mat-basic small-button"
+                            (click)="
+                                deselectAll(dataLakeMeasures, elementIdFunction)
+                            "
+                            style="margin-right: 10px; margin-left: 5px"
+                        >
+                            <span>{{ 'Deselect All' | translate }}</span>
+                        </button>
                     </div>
                     @for (element of dataLakeMeasures; track element) {
                         <div fxLayout="row">
@@ -269,48 +244,45 @@
                             </mat-checkbox>
                         </div>
                     }
-                </div>
-                <div fxLayout="column" class="link-configuration">
+                </sp-split-section>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Data Streams' | translate"
+                >
                     <div
+                        section-actions
                         fxLayout="row"
-                        fxLayoutAlign="start center"
-                        class="mb-10"
+                        fxLayoutAlign="end center"
+                        fxFlex
                     >
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            <span class="general-options-header mb-0"
-                                >Data Streams</span
-                            >
-                        </div>
-                        <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                color="accent"
-                                class="small-button"
-                                (click)="
-                                    selectAll(
-                                        dataSources,
-                                        elementIdFunction,
-                                        nameFunction,
-                                        'data-source'
-                                    )
-                                "
-                                style="margin-right: 5px; margin-left: 15px"
-                            >
-                                <span>{{ 'Select All' | translate }}</span>
-                            </button>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                class="mat-basic small-button"
-                                (click)="
-                                    deselectAll(dataSources, elementIdFunction)
-                                "
-                                style="margin-right: 10px; margin-left: 5px"
-                            >
-                                <span>{{ 'Deselect All' | translate }}</span>
-                            </button>
-                        </div>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            class="small-button"
+                            (click)="
+                                selectAll(
+                                    dataSources,
+                                    elementIdFunction,
+                                    nameFunction,
+                                    'data-source'
+                                )
+                            "
+                            style="margin-right: 5px; margin-left: 15px"
+                        >
+                            <span>{{ 'Select All' | translate }}</span>
+                        </button>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            class="mat-basic small-button"
+                            (click)="
+                                deselectAll(dataSources, elementIdFunction)
+                            "
+                            style="margin-right: 10px; margin-left: 5px"
+                        >
+                            <span>{{ 'Deselect All' | translate }}</span>
+                        </button>
                     </div>
                     @for (source of dataSources; track source) {
                         <div fxLayout="row">
@@ -333,46 +305,40 @@
                             </mat-checkbox>
                         </div>
                     }
-                </div>
-                <div fxLayout="column" class="link-configuration">
+                </sp-split-section>
+                <sp-split-section [level]="3" [title]="'Files' | translate">
                     <div
+                        section-actions
                         fxLayout="row"
-                        fxLayoutAlign="start center"
-                        class="mb-10"
+                        fxLayoutAlign="end center"
+                        fxFlex
                     >
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            <span class="general-options-header mb-0"
-                                >Files</span
-                            >
-                        </div>
-                        <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                color="accent"
-                                class="small-button"
-                                (click)="
-                                    selectAll(
-                                        files,
-                                        fileIdFunction,
-                                        filenameFunction,
-                                        'file'
-                                    )
-                                "
-                                style="margin-right: 5px; margin-left: 15px"
-                            >
-                                <span>{{ 'Select All' | translate }}</span>
-                            </button>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                class="mat-basic small-button"
-                                (click)="deselectAll(files, fileIdFunction)"
-                                style="margin-right: 10px; margin-left: 5px"
-                            >
-                                <span>{{ 'Deselect All' | translate }}</span>
-                            </button>
-                        </div>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            class="small-button"
+                            (click)="
+                                selectAll(
+                                    files,
+                                    fileIdFunction,
+                                    filenameFunction,
+                                    'file'
+                                )
+                            "
+                            style="margin-right: 5px; margin-left: 15px"
+                        >
+                            <span>{{ 'Select All' | translate }}</span>
+                        </button>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            class="mat-basic small-button"
+                            (click)="deselectAll(files, fileIdFunction)"
+                            style="margin-right: 10px; margin-left: 5px"
+                        >
+                            <span>{{ 'Deselect All' | translate }}</span>
+                        </button>
                     </div>
                     @for (element of files; track element) {
                         <div fxLayout="row">
@@ -392,48 +358,40 @@
                             </mat-checkbox>
                         </div>
                     }
-                </div>
-                <div fxLayout="column" class="link-configuration">
+                </sp-split-section>
+                <sp-split-section [level]="3" [title]="'Pipelines' | translate">
                     <div
+                        section-actions
                         fxLayout="row"
-                        fxLayoutAlign="start center"
-                        class="mb-10"
+                        fxLayoutAlign="end center"
+                        fxFlex
                     >
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            <span class="general-options-header mb-0"
-                                >Pipelines</span
-                            >
-                        </div>
-                        <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                color="accent"
-                                class="small-button"
-                                (click)="
-                                    selectAll(
-                                        pipelines,
-                                        elementIdFunction,
-                                        nameFunction,
-                                        'pipeline'
-                                    )
-                                "
-                                style="margin-right: 5px; margin-left: 15px"
-                            >
-                                <span>{{ 'Select All' | translate }}</span>
-                            </button>
-                            <button
-                                mat-button
-                                mat-flat-button
-                                class="mat-basic small-button"
-                                (click)="
-                                    deselectAll(pipelines, elementIdFunction)
-                                "
-                                style="margin-right: 10px; margin-left: 5px"
-                            >
-                                <span>{{ 'Deselect All' | translate }}</span>
-                            </button>
-                        </div>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            class="small-button"
+                            (click)="
+                                selectAll(
+                                    pipelines,
+                                    elementIdFunction,
+                                    nameFunction,
+                                    'pipeline'
+                                )
+                            "
+                            style="margin-right: 5px; margin-left: 15px"
+                        >
+                            <span>{{ 'Select All' | translate }}</span>
+                        </button>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            class="mat-basic small-button"
+                            (click)="deselectAll(pipelines, elementIdFunction)"
+                            style="margin-right: 10px; margin-left: 5px"
+                        >
+                            <span>{{ 'Deselect All' | translate }}</span>
+                        </button>
                     </div>
                     @for (pipeline of pipelines; track pipeline) {
                         <div fxLayout="row">
@@ -452,7 +410,7 @@
                             </mat-checkbox>
                         </div>
                     }
-                </div>
+                </sp-split-section>
             </div>
         }
     </div>

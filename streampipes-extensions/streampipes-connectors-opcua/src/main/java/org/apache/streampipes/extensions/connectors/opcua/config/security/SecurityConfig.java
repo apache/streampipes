@@ -21,7 +21,8 @@ package org.apache.streampipes.extensions.connectors.opcua.config.security;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaCertificateUtils;
 import org.apache.streampipes.model.opcua.Certificate;
 
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
@@ -56,11 +57,11 @@ public class SecurityConfig {
     this.streamPipesClient = streamPipesClient;
   }
 
-  public void configureSecurityPolicy(String opcServerUrl,
+  public void configureSecurityPolicy(OpcUaConfig config,
                                       List<EndpointDescription> endpoints,
                                       OpcUaClientConfigBuilder builder)
       throws SpConfigurationException, URISyntaxException {
-    String host = opcServerUrl.split("://")[1].split(":")[0];
+    String host = config.getOpcServerURL().split("://")[1].split(":")[0];
 
     EndpointDescription tmpEndpoint = endpoints
         .stream()
@@ -87,6 +88,7 @@ public class SecurityConfig {
         var loadedCerts = new AtomicReference<>(fetchTrustedCertsFromRest());
 
         var compositeValidator = new CompositeCertificateValidator(
+            config,
             trustListManager,
             loadedCerts.get(),
             List.of(),
@@ -130,7 +132,7 @@ public class SecurityConfig {
 
   private List<X509Certificate> fetchTrustedCertsFromRest() throws SpConfigurationException {
     try {
-      var response = streamPipesClient.customRequest().getList(OpcUaUtils.getCoreTrustedCertificatePath(), Certificate.class);
+      var response = streamPipesClient.customRequest().getList(OpcUaCertificateUtils.getCoreTrustedCertificatePath(), Certificate.class);
       return response
           .stream()
           .map(res -> {

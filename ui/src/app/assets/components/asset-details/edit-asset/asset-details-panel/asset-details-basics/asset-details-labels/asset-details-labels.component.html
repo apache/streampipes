@@ -21,77 +21,88 @@
         <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
             <div fxFlex fxLayoutAlign="start center">
                 @if (labelsAvailable) {
-                    <mat-form-field
-                        class="w-100"
-                        color="accent"
-                        subscriptSizing="dynamic"
-                        [disabled]="allLabels.length === 0"
+                    <sp-form-field
+                        fxFlex="100"
+                        [level]="2"
+                        [label]="'Labels' | translate"
+                        [description]="
+                            'Assign additional labels to better discover your assets'
+                                | translate
+                        "
                     >
-                        <mat-chip-grid #chipGrid aria-label="Labels">
-                            @for (label of labels; track label) {
-                                <mat-chip-row
-                                    (removed)="remove(label)"
-                                    [ngStyle]="{ background: label.color }"
-                                >
-                                    <span
-                                        [ngStyle]="{
-                                            color: labelTextColors[label._id]
-                                        }"
-                                        >{{ label.label }}</span
+                        <div form-field-actions>
+                            <button
+                                mat-flat-button
+                                class="mat-basic"
+                                [routerLink]="['/configuration/labels']"
+                            >
+                                {{ 'Manage Labels' | translate }}
+                            </button>
+                        </div>
+                        <mat-form-field [disabled]="allLabels.length === 0">
+                            <mat-chip-grid #chipGrid aria-label="Labels">
+                                @for (label of labels; track label) {
+                                    <mat-chip-row
+                                        (removed)="remove(label)"
+                                        [ngStyle]="{ background: label.color }"
                                     >
-                                    <button
-                                        matChipRemove
-                                        [ngStyle]="{
-                                            color: labelTextColors[label._id]
-                                        }"
+                                        <span
+                                            [ngStyle]="{
+                                                color: labelTextColors[
+                                                    label._id
+                                                ]
+                                            }"
+                                            >{{ label.label }}</span
+                                        >
+                                        <button
+                                            matChipRemove
+                                            [ngStyle]="{
+                                                color: labelTextColors[
+                                                    label._id
+                                                ]
+                                            }"
+                                        >
+                                            <mat-icon>cancel</mat-icon>
+                                        </button>
+                                    </mat-chip-row>
+                                }
+                            </mat-chip-grid>
+                            <input
+                                [placeholder]="
+                                    allLabels.length === 0
+                                        ? ('No labels available - Click \'Manage Labels\''
+                                          | translate)
+                                        : ('Click to add label' | translate)
+                                "
+                                data-cy="asset-label-input"
+                                #labelInput
+                                [formControl]="labelCtrl"
+                                [matChipInputFor]="chipGrid"
+                                [matAutocomplete]="auto"
+                                [matChipInputSeparatorKeyCodes]="
+                                    separatorKeysCodes
+                                "
+                                (matChipInputTokenEnd)="add($event)"
+                                [disabled]="allLabels.length === 0"
+                            />
+                            <mat-autocomplete
+                                #auto="matAutocomplete"
+                                (optionSelected)="selected($event)"
+                            >
+                                @for (
+                                    label of filteredLabels | async;
+                                    track label
+                                ) {
+                                    <mat-option
+                                        [value]="label._id"
+                                        [attr.data-cy]="'option-' + label.label"
+                                        >{{ label.label }}</mat-option
                                     >
-                                        <mat-icon>cancel</mat-icon>
-                                    </button>
-                                </mat-chip-row>
-                            }
-                        </mat-chip-grid>
-                        <input
-                            [placeholder]="
-                                allLabels.length === 0
-                                    ? ('No labels available - Click \'Manage Labels\''
-                                      | translate)
-                                    : ('Click to add label' | translate)
-                            "
-                            data-cy="asset-label-input"
-                            #labelInput
-                            [formControl]="labelCtrl"
-                            [matChipInputFor]="chipGrid"
-                            [matAutocomplete]="auto"
-                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                            (matChipInputTokenEnd)="add($event)"
-                            [disabled]="allLabels.length === 0"
-                        />
-                        <mat-autocomplete
-                            #auto="matAutocomplete"
-                            (optionSelected)="selected($event)"
-                        >
-                            @for (
-                                label of filteredLabels | async;
-                                track label
-                            ) {
-                                <mat-option
-                                    [value]="label._id"
-                                    [attr.data-cy]="'option-' + label.label"
-                                    >{{ label.label }}</mat-option
-                                >
-                            }
-                        </mat-autocomplete>
-                    </mat-form-field>
+                                }
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </sp-form-field>
                 }
-            </div>
-            <div fxLayoutAlign="start center">
-                <button
-                    mat-flat-button
-                    color="accent"
-                    [routerLink]="['/configuration/labels']"
-                >
-                    {{ 'Manage Labels' | translate }}
-                </button>
             </div>
         </div>
     </div>

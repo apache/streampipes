@@ -24,8 +24,10 @@ import org.apache.streampipes.model.shared.api.Storable;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @TsModel
 public final class Certificate implements Storable {
@@ -50,11 +52,14 @@ public final class Certificate implements Storable {
   private List<String> extendedKeyUsages;
   private List<String> subjectAlternativeNames;
   private String certificateDerBase64;
+  private String thumbprint;
+  private Set<String> associatedResourceIds;
 
   private CertificateState state;
 
 
   public Certificate() {
+    this.associatedResourceIds = new HashSet<>();
   }
 
   public Certificate(String subjectDn,
@@ -201,13 +206,33 @@ public final class Certificate implements Storable {
     this.state = state;
   }
 
+  public String getThumbprint() {
+    return thumbprint;
+  }
+
+  public void setThumbprint(String thumbprint) {
+    this.thumbprint = thumbprint;
+  }
+
+  public Set<String> getAssociatedResourceIds() {
+    return associatedResourceIds;
+  }
+
+  public void setAssociatedResourceIds(Set<String> associatedResourceIds) {
+    this.associatedResourceIds = associatedResourceIds;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
     Certificate that = (Certificate) o;
-    return Objects.equals(getSubjectDn(), that.getSubjectDn()) && Objects.equals(getIssuerDn(), that.getIssuerDn()) && Objects.equals(getSerialNumber(), that.getSerialNumber()) && Objects.equals(getNotBefore(), that.getNotBefore()) && Objects.equals(getNotAfter(), that.getNotAfter()) && Objects.equals(getSigAlgName(), that.getSigAlgName()) && Objects.equals(getAlgorithm(), that.getAlgorithm()) && Objects.equals(getCertificateDerBase64(), that.getCertificateDerBase64()) && getState() == that.getState();
+    if (getThumbprint() != null && that.getThumbprint() != null) {
+      return getThumbprint().equals(that.getThumbprint());
+    } else {
+      return getCertificateDerBase64().equals(that.getCertificateDerBase64());
+    }
   }
 
   @Override

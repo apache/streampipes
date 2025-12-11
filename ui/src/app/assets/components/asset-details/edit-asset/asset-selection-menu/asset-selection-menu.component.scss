@@ -16,12 +16,28 @@
  *
  */
 
-.mat-button-toggle-group {
-    flex-wrap: wrap;
-    border: none;
+.option-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.mat-button-toggle {
-    border: 1px solid var(--mat-standard-button-toggle-divider-color);
-    margin-bottom: 5px;
+.option-content:hover {
+    background: var(--color-bg-2);
+    cursor: pointer;
+}
+
+.asset-selection-outer {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.option-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.option-label {
+    font-size: var(--font-size-md);
 }

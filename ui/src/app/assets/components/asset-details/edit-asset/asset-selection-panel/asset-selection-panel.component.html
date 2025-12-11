@@ -16,15 +16,27 @@
 ~
 -->
 
-<div fxLayout="row">
+<div fxLayout="row" fxFlex="100">
     @if (assetModel) {
-        <div fxFlex="20" fxLayout="column" class="designer-panel-content">
-            <sp-basic-view [showBackLink]="false">
-                <div nav fxLayout="row">
-                    <h4 class="ml-5">Asset Hierarchy</h4>
+        <div fxFlex="30" fxLayout="column" class="designer-panel-content">
+            <sp-basic-view
+                class="w-100"
+                [showBackLink]="false"
+                [padding]="false"
+            >
+                <div nav fxLayout="row" fxLayoutAlign="space-between center">
+                    <span class="txt-lg ml-md">{{
+                        'Select asset to view details' | translate
+                    }}</span>
                 </div>
-                <div fxFlex="100" fxLayout="column">
-                    <div fxFlex fxLayout="column" class="designer-panel-config">
+
+                <div
+                    fxFlex="100"
+                    class="w-100"
+                    fxLayout="column"
+                    fxLayoutGap="12px"
+                >
+                    <div fxFlex="100" class="tree-wrapper">
                         <mat-tree
                             [dataSource]="dataSource"
                             [treeControl]="treeControl"
@@ -34,27 +46,46 @@
                             <mat-tree-node
                                 *matTreeNodeDef="let node"
                                 matTreeNodeToggle
+                                class="tree-leaf"
                             >
                                 <div
-                                    [ngClass]="
+                                    class="asset-node"
+                                    [class.selected-node]="
                                         node.assetId === selectedAsset.assetId
-                                            ? 'asset-node selected-node'
-                                            : 'asset-node'
                                     "
-                                    fxLayout="row"
-                                    fxFlex="100"
                                     [attr.data-cy]="
                                         'select-asset-' + node.assetName
                                     "
                                     (click)="selectNode(node, false)"
                                 >
-                                    <span
-                                        fxLayoutAlign="end center"
-                                        class="ml-5"
-                                        >{{ node.assetName }}</span
-                                    >
+                                    <div class="node-main">
+                                        <mat-icon
+                                            class="node-icon"
+                                            [class.node-icon-selected]="
+                                                node.assetId ===
+                                                selectedAsset.assetId
+                                            "
+                                            color="primary"
+                                        >
+                                            device_hub
+                                        </mat-icon>
+                                        <div class="node-text">
+                                            <div
+                                                class="node-title"
+                                                [class.font-emphasized]="
+                                                    node.assetId ===
+                                                    selectedAsset.assetId
+                                                "
+                                            >
+                                                {{ node.assetName }}
+                                            </div>
+                                            <div class="node-meta">
+                                                {{ node.assetDescription }}
+                                            </div>
+                                        </div>
+                                    </div>
                                     @if (editMode) {
-                                        <div fxLayoutAlign="end center" fxFlex>
+                                        <div class="node-actions">
                                             <button
                                                 mat-icon-button
                                                 [attr.data-cy]="
@@ -64,23 +95,20 @@
                                                 (click)="addAsset(node)"
                                                 color="accent"
                                             >
-                                                <i class="material-icons"
-                                                    >add</i
-                                                >
+                                                <mat-icon>add</mat-icon>
                                             </button>
                                             <button
                                                 mat-icon-button
                                                 (click)="deleteAsset(node)"
                                                 color="accent"
                                             >
-                                                <i class="material-icons"
-                                                    >delete</i
-                                                >
+                                                <mat-icon>delete</mat-icon>
                                             </button>
                                         </div>
                                     }
                                 </div>
                             </mat-tree-node>
+
                             <mat-nested-tree-node
                                 *matTreeNodeDef="let node; when: hasChild"
                             >
@@ -88,8 +116,9 @@
                                     <button
                                         mat-icon-button
                                         matTreeNodeToggle
+                                        class="node-toggle"
                                         [attr.data-cy]="
-                                            'button-' + node.nodeName
+                                            'button-' + node.assetName
                                         "
                                         [attr.aria-label]="
                                             'Toggle ' + node.nodeName
@@ -104,24 +133,42 @@
                                         </mat-icon>
                                     </button>
                                     <div
-                                        [ngClass]="
-                                            node.assetId ===
-                                            selectedAsset.assetId
-                                                ? 'asset-node selected-node'
-                                                : 'asset-node'
+                                        class="asset-node"
+                                        [class.root-node]="
+                                            node.assetId === assetModel.assetId
                                         "
-                                        fxLayout="row"
-                                        fxFlex="100"
                                         (click)="selectNode(node, true)"
                                     >
-                                        <span fxLayoutAlign="start center">{{
-                                            node.assetName
-                                        }}</span>
-                                        @if (editMode) {
-                                            <div
-                                                fxLayoutAlign="end center"
-                                                fxFlex
+                                        <div class="node-main">
+                                            <mat-icon
+                                                class="node-icon"
+                                                [class.node-icon-selected]="
+                                                    node.assetId ===
+                                                    selectedAsset.assetId
+                                                "
                                             >
+                                                account_tree
+                                            </mat-icon>
+                                            <div class="node-text">
+                                                <div
+                                                    class="node-title"
+                                                    [class.font-emphasized]="
+                                                        node.assetId ===
+                                                        selectedAsset.assetId
+                                                    "
+                                                >
+                                                    {{ node.assetName }}
+                                                </div>
+                                            </div>
+                                            @if (
+                                                node.assetId ===
+                                                assetModel.assetId
+                                            ) {
+                                                <span class="badge">Root</span>
+                                            }
+                                        </div>
+                                        @if (editMode) {
+                                            <div class="node-actions">
                                                 <button
                                                     mat-icon-button
                                                     (click)="addAsset(node)"
@@ -131,9 +178,7 @@
                                                     "
                                                     color="accent"
                                                 >
-                                                    <i class="material-icons"
-                                                        >add</i
-                                                    >
+                                                    <mat-icon>add</mat-icon>
                                                 </button>
                                             </div>
                                         }
@@ -155,8 +200,8 @@
                 </div>
             </sp-basic-view>
         </div>
+        <div fxFlex="70">
+            <ng-content></ng-content>
+        </div>
     }
-    <div fxFlex>
-        <ng-content></ng-content>
-    </div>
 </div>

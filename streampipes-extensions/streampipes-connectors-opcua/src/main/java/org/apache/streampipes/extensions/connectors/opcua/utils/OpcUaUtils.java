@@ -26,7 +26,6 @@ import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProv
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
-import org.apache.streampipes.extensions.connectors.opcua.config.security.CompositeCertificateValidator;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 
@@ -34,8 +33,6 @@ import org.eclipse.milo.opcua.sdk.client.api.UaClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -46,8 +43,6 @@ import java.util.concurrent.ExecutionException;
  * Collection of several utility functions in context of OPC UA
  */
 public class OpcUaUtils {
-
-  private static final Logger LOG = LoggerFactory.getLogger(OpcUaUtils.class);
 
   private static final String OPC_TCP_PREFIX = "opc.tcp://";
 
@@ -107,9 +102,9 @@ public class OpcUaUtils {
     } catch (UaException e) {
         throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e), e);
     } catch (ExecutionException | InterruptedException | URISyntaxException e) {
-      if (e instanceof ExecutionException && isCertificateException((ExecutionException) e)) {
+      if (e instanceof ExecutionException && OpcUaCertificateUtils.isCertificateException((ExecutionException) e)) {
         throw new SpConfigurationException(
-            makeExceptionMessage((ExecutionException) e)
+            OpcUaCertificateUtils.makeExceptionMessage((ExecutionException) e)
         );
       } else {
         throw new SpConfigurationException("Could not connect to the OPC UA server with the provided settings", e);
@@ -131,50 +126,5 @@ public class OpcUaUtils {
         return false;
       }
     }).toList();
-  }
-
-  public static String getCoreCertificatePath() {
-    return "/api/v2/admin/certificates";
-  }
-
-  public static String getCoreTrustedCertificatePath() {
-    return getCoreCertificatePath() + "/trusted";
-  }
-
-  private static boolean isCertificateException(ExecutionException e) {
-    Throwable cause = e.getCause();
-
-    if (cause instanceof UaException uaException) {
-      return checkAndLogCertificateException(uaException);
-    }
-
-    Throwable nestedCause = cause != null ? cause.getCause() : null;
-    if (nestedCause instanceof UaException uaException) {
-      return checkAndLogCertificateException(uaException);
-    }
-
-    return false;
-  }
-
-  private static boolean checkAndLogCertificateException(UaException e) {
-    var containsRejectedStatusCode = CompositeCertificateValidator.REJECTED_STATUS_CODES
-        .contains(e.getStatusCode().getValue());
-
-    if (containsRejectedStatusCode) {
-      var statusCode = CompositeCertificateValidator.REJECTED_STATUS_CODES.stream().filter(code -> code.equals(e.getStatusCode().getValue())).findFirst();
-      statusCode.ifPresent(sc -> LOG.warn("Status Code: {}", sc));
-    }
-    return containsRejectedStatusCode;
-  }
-
-  private static String makeExceptionMessage(ExecutionException e) {
-    StringBuilder message = new StringBuilder(
-       "The provided certificate could not be trusted. Administrators can accept this certificate in the settings. "
-    );
-    Throwable cause = e.getCause();
-    if (cause != null) {
-      message.append("Reason: ").append(cause.getMessage());
-    }
-    return message.toString();
   }
 }

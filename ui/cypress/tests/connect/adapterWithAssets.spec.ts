@@ -56,7 +56,6 @@ describe('Creates a new adapter with a linked asset', () => {
         AssetUtils.checkAmountOfAssetsGreaterThan(0);
 
         AssetUtils.editAsset(assetName1);
-        AssetBtns.assetLinksTab().click();
 
         //Check if Link is there
         AssetUtils.checkAmountOfLinkedResources(2);

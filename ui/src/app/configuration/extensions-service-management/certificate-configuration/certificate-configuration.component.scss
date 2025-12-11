@@ -16,23 +16,6 @@
  *
  */
 
-.box {
-    width: 340px;
-    height: 140px;
-    margin-bottom: 20px;
-}
-
-.box-content {
-    padding: 10px;
-}
-
-.box-action {
-}
-
-.link-label {
-    font-weight: normal;
-}
-
-.icon-size {
-    font-size: 22pt;
+:host {
+    --mat-table-row-item-container-height: 100%;
 }
