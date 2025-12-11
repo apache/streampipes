@@ -49,7 +49,7 @@ public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeR
     if (endDate != null) {
         queryParams.put("endDate", endDate.toString());
     }
-    delete(getBaseResourcePath().addToPath(measurementID),queryParams, Void.class);
+    delete(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams), Void.class);
 
   }
 
@@ -64,7 +64,6 @@ public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeR
   @Override
   public SpQueryResult get(String measurementID) {
   return getSingle(getBaseResourcePath().addToPath(measurementID), SpQueryResult.class);
-
   }
 
 }

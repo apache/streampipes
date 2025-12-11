@@ -65,6 +65,9 @@ public class DeleteRequest<K, V, T> extends HttpRequest<K, V, T> {
 
   @Override
   protected T afterRequest(Serializer<K, V, T> serializer, HttpEntity entity) throws IOException {
+    if (entity == null || entity.getContentLength() == 0) {
+        return null; 
+    }
     return serializer.deserialize(entityAsString(entity), responseClass);
   }
 }
