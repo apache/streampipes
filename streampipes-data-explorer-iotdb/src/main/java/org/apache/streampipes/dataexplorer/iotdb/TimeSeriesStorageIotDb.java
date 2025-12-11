@@ -172,10 +172,4 @@ public class TimeSeriesStorageIotDb extends TimeSeriesStorage {
       LOG.error("Failed to write event to IoTDB  - {}", e.getMessage());
     }
   }
-
-  @Override
-  protected void upsertTimeSeriesStorage(Event event) throws SpRuntimeException {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'upsertTimeSeriesStorage'");
-  }
 }

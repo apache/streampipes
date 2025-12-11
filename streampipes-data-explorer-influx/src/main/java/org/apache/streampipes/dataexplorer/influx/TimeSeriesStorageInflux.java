@@ -61,7 +61,6 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
     var point = initializePointWithTimestamp(event);
     iterateOverallEventProperties(event, point);
     influxDb.write(point.build());
-  
   }
 
   private void iterateOverallEventProperties(

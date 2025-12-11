@@ -142,5 +142,4 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
   protected abstract void sanitizeRuntimeNamesInEvent(Event event);
 
   protected abstract void writeToTimeSeriesStorage(Event event) throws SpRuntimeException;
-
 }
