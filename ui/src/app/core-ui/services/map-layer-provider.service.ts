@@ -18,8 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { LocationConfig } from '@streampipes/platform-services';
-import * as L from 'leaflet';
-import '@maplibre/maplibre-gl-leaflet';
+import L from 'leaflet';
 
 @Injectable({ providedIn: 'root' })
 export class MapLayerProviderService {
@@ -33,8 +32,9 @@ export class MapLayerProviderService {
                     }),
                 ];
             } else {
+                const leafletAny = L as any;
                 return [
-                    (L as any).maplibreGL({
+                    leafletAny.maplibreGL({
                         style: locationConfig.tileServerUrl,
                         attribution: locationConfig.attributionText,
                     }),
