@@ -50,6 +50,25 @@
                     ></sp-edit-label>
                 </div>
             }
+            <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                class="sort-header"
+            >
+                <button
+                    mat-icon-button
+                    (click)="toggleSort()"
+                    [matTooltip]="'Sort labels alphabetically'"
+                >
+                    <i class="material-icons">
+                        {{
+                            sortDirection === 'asc'
+                                ? 'arrow_downward'
+                                : 'arrow_upward'
+                        }}
+                    </i>
+                </button>
+            </div>
             @for (label of allLabels; track label) {
                 <div
                     fxLayout="column"

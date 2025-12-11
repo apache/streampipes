@@ -35,6 +35,7 @@ export class SpLabelConfigurationComponent implements OnInit {
     createLabelMode = false;
 
     editedLabels: string[] = [];
+    sortDirection: 'asc' | 'desc' = 'asc';
 
     constructor(
         private breadcrumbService: SpBreadcrumbService,
@@ -54,6 +55,7 @@ export class SpLabelConfigurationComponent implements OnInit {
     reloadLabels(): void {
         this.labelsService.getAllLabels().subscribe(res => {
             this.allLabels = res;
+            this.sortLabels();
         });
     }
 
@@ -80,5 +82,19 @@ export class SpLabelConfigurationComponent implements OnInit {
 
     isEditMode(labelId: string): boolean {
         return this.editedLabels.find(l => l === labelId) !== undefined;
+    }
+    toggleSort(): void {
+        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        this.sortLabels();
+    }
+
+    sortLabels(): void {
+        this.allLabels = [...this.allLabels].sort((a, b) => {
+            const labelA = a.label.toLowerCase();
+            const labelB = b.label.toLowerCase();
+            if (labelA < labelB) return this.sortDirection === 'asc' ? -1 : 1;
+            if (labelA > labelB) return this.sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
     }
 }
