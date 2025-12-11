@@ -29,7 +29,7 @@ import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import {
     DataType,
     EventPropertyPrimitive,
-    EventPropertyUnion,
+    EventProperty,
     SemanticType,
     SemanticTypesRestService,
 } from '@streampipes/platform-services';
@@ -43,7 +43,7 @@ import { Router } from '@angular/router';
 })
 export class EditSchemaTransformationComponent implements OnInit {
     @Input()
-    cachedProperty: EventPropertyUnion;
+    cachedProperty: EventProperty;
 
     @Input() isTimestampProperty: boolean;
     @Input() isNestedProperty: boolean;

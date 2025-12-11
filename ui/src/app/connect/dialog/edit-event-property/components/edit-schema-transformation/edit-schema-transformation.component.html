@@ -34,6 +34,7 @@
                     name="runtimename"
                     id="runtimename"
                     data-cy="connect-edit-field-runtime-name"
+                    disabled="true"
                     (blur)="triggerTutorialStep()"
                     [(ngModel)]="cachedProperty.runtimeName"
                 />
@@ -118,7 +119,7 @@
                 </div>
             }
             <sp-edit-data-type
-                [cachedProperty]="cachedProperty"
+                [eventProperty]="cachedProperty"
                 (dataTypeChanged)="dataTypeChanged.emit($event)"
             >
             </sp-edit-data-type>

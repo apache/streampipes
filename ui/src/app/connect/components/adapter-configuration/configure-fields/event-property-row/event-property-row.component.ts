@@ -26,11 +26,10 @@ import {
 } from '@angular/core';
 import {
     DataType,
-    EventProperty,
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
-    EventPropertyUnion,
+    EventProperty,
     EventSchema,
     SemanticType,
     FieldStatusInfo,
@@ -70,7 +69,7 @@ export class EventPropertyRowComponent implements OnInit {
     runtimeType: string;
     originalRuntimeType: string;
     originalRuntimeName: string;
-    originalProperty: EventPropertyUnion;
+    originalProperty: EventProperty;
 
     ngOnInit() {
         this.label = this.getLabel(this.eventProperty);
@@ -157,13 +156,13 @@ export class EventPropertyRowComponent implements OnInit {
         }
     }
 
-    public openEditDialog(data): void {
+    public openEditDialog(eventProperty: EventProperty): void {
         const dialogRef = this.dialogService.open(EditEventPropertyComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Edit field ' + data.runtimeName,
+            title: 'Edit field ' + eventProperty.runtimeName,
             width: '50vw',
             data: {
-                property: data,
+                property: eventProperty,
                 originalProperty: this.originalProperty,
             },
         });

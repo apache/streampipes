@@ -64,7 +64,9 @@ export class TransformationRuleService {
             );
             if (addedTimestampProperty) {
                 // add to old event schema for the case users moved the property to a nested property
-                originalSchema.eventProperties.push(addedTimestampProperty);
+                originalSchema.eventProperties.push(
+                    addedTimestampProperty as EventPropertyUnion,
+                );
 
                 const timestampRuleDescription: AddTimestampRuleDescription =
                     new AddTimestampRuleDescription();
@@ -484,8 +486,8 @@ export class TransformationRuleService {
     }
 
     private getTimestampProperty(
-        eventProperties: EventPropertyUnion[],
-    ): EventPropertyUnion {
+        eventProperties: EventProperty[],
+    ): EventProperty {
         for (const eventProperty of eventProperties) {
             if (
                 eventProperty.elementId.startsWith(
@@ -510,7 +512,7 @@ export class TransformationRuleService {
     }
 
     private getStaticValueProperties(
-        eventProperties: EventPropertyUnion[],
+        eventProperties: EventProperty[],
     ): EventPropertyPrimitive[] {
         let result: EventPropertyPrimitive[] = [];
         for (const eventProperty of eventProperties) {
@@ -595,7 +597,7 @@ export class TransformationRuleService {
     }
 
     private getDatatypeTransformRules(
-        eventProperties: EventPropertyUnion[],
+        eventProperties: EventProperty[],
         oldEventSchema: EventSchema,
         newEventSchema: EventSchema,
     ): ChangeDatatypeTransformationRuleDescription[] {
@@ -643,7 +645,7 @@ export class TransformationRuleService {
     }
 
     private getCorrectionValueRules(
-        eventProperties: EventPropertyUnion[],
+        eventProperties: EventProperty[],
         oldEventSchema: EventSchema,
         newEventSchema: EventSchema,
     ) {
@@ -697,7 +699,7 @@ export class TransformationRuleService {
     }
 
     private getRegexTransformationRules(
-        eventProperties: EventPropertyUnion[],
+        eventProperties: EventProperty[],
         oldEventSchema: EventSchema,
         newEventSchema: EventSchema,
     ) {

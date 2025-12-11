@@ -70,23 +70,8 @@
                         (timestampSemanticsChanged)="
                             handleTimestampChange($event)
                         "
-                        #schemaTransformationComponent
                     >
                     </sp-edit-schema-transformation>
-
-                    @if (isEventPropertyPrimitive) {
-                        <sp-edit-value-transformation
-                            [cachedProperty]="cachedProperty"
-                            [isTimestampProperty]="isTimestampProperty"
-                            [isNumericProperty]="isNumericProperty"
-                            [isNestedProperty]="isEventPropertyNested"
-                            [isListProperty]="isEventPropertyList"
-                            [isPrimitiveProperty]="isEventPropertyPrimitive"
-                            [isStringProperty]="isStringProperty"
-                            #valueTransformationComponent
-                        >
-                        </sp-edit-value-transformation>
-                    }
 
                     @if (!isTimestampProperty && isEventPropertyPrimitive) {
                         <sp-edit-unit-transformation
@@ -95,7 +80,6 @@
                             [isTimestampProperty]="isTimestampProperty"
                             [isNumericProperty]="isNumericProperty"
                             [isPrimitiveProperty]="isEventPropertyPrimitive"
-                            #unitTransformationComponent
                         >
                         </sp-edit-unit-transformation>
                     }

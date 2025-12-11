@@ -26,7 +26,7 @@ import { DataType } from '@streampipes/platform-services';
     standalone: false,
 })
 export class EditDataTypeComponent {
-    @Input() cachedProperty: any;
+    @Input() eventProperty: any;
     @Output() dataTypeChanged = new EventEmitter<boolean>();
 
     runtimeDataTypes: { label: string; url: string }[] = [

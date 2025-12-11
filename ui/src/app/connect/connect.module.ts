@@ -36,12 +36,10 @@ import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
-import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
 import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 
-import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
 import { StartAdapterConfigurationComponent } from './components/adapter-configuration/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
@@ -50,7 +48,6 @@ import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/filter-toolbar.component';
 import { EditSchemaTransformationComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-schema-transformation.component';
-import { EditValueTransformationComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-value-transformation.component';
 import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/components/ep-settings-section/ep-settings-section.component';
 import { SpAdapterOptionsPanelComponent } from './components/adapter-configuration/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
@@ -93,7 +90,6 @@ import { AdapterStatusLightComponent } from './components/existing-adapters/adap
 import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
 import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { AdapterDetailsDataComponent } from './components/adapter-details/adapter-details-data/adapter-details-data.component';
-import { EditRegexTransformationComponent } from './dialog/edit-event-property/components/edit-regex-transformation/edit-regex-transformation.component';
 import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapter-code-panel.component';
 import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
 import { MatTreeModule } from '@angular/material/tree';
@@ -217,18 +213,14 @@ import { EventPropertyRowComponent } from './components/adapter-configuration/co
         DeleteAdapterDialogComponent,
         ConfigureFieldsComponent,
         EditEventPropertyComponent,
-        EditRegexTransformationComponent,
         EditUnitTransformationComponent,
         EditSchemaTransformationComponent,
-        EditValueTransformationComponent,
-        EditTimestampPropertyComponent,
         EditDataTypeComponent,
         ConfigureFieldsPreviewComponent,
         ExistingAdaptersComponent,
         AdapterFilterPipe,
         AdapterConfigurationComponent,
         TimestampPipe,
-        EditCorrectionValueComponent,
         AdapterConfigurationComponent,
         ConfigurationGroupComponent,
         ConfigureFieldsErrorMessageComponent,
