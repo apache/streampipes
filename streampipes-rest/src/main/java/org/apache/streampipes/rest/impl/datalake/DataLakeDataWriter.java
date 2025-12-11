@@ -27,6 +27,7 @@ import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
+import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ public class DataLakeDataWriter {
     var runtimeNames = getRuntimeNames(measure);
     for (var row : dataSeries.getRows()) {
       var event = rowToEvent(row, dataSeries.getHeaders());
+      var tmp5 = event;
       renameTimestampField(event, measure.getTimestampField());
       checkRuntimeNames(runtimeNames, event);
       try {
@@ -128,9 +130,11 @@ public class DataLakeDataWriter {
   }
 
   private void renameTimestampField(Event event, String timestampField){
-    //TODO THE ISSUE IS HERRE
     var strippedTime = getSubstringAfterColons(timestampField);
-    event.addField(timestampField, 1765290723326L);
+    var tmp = event.getFields();
+    var temp2 = (PrimitiveField) (event.getFieldBySelector("o::" + strippedTime).getAsList().getRawValue().toArray()[1]);
+    var temp3 = temp2.getAsLong();
+    event.addField(timestampField,temp2.getAsLong());//event.getFieldByRuntimeName(strippedTime).getRawValue());
   }
 
 }
