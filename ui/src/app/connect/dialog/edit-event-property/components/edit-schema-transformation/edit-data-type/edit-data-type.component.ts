@@ -17,7 +17,10 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DataType } from '@streampipes/platform-services';
+import {
+    DataType,
+    EventPropertyPrimitive,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-edit-data-type',
@@ -26,7 +29,7 @@ import { DataType } from '@streampipes/platform-services';
     standalone: false,
 })
 export class EditDataTypeComponent {
-    @Input() eventProperty: any;
+    @Input() eventProperty: EventPropertyPrimitive;
     @Output() dataTypeChanged = new EventEmitter<boolean>();
 
     runtimeDataTypes: { label: string; url: string }[] = [

@@ -162,7 +162,7 @@ export class EventPropertyRowComponent implements OnInit {
             title: 'Edit field ' + eventProperty.runtimeName,
             width: '50vw',
             data: {
-                property: eventProperty,
+                eventProperty: eventProperty,
                 originalProperty: this.originalProperty,
             },
         });

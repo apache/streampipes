@@ -51,7 +51,7 @@ export class EditEventPropertyComponent implements OnInit {
     private formBuilder = inject(UntypedFormBuilder);
     private shepherdService = inject(ShepherdService);
 
-    @Input() EventProperty: EventProperty;
+    @Input() eventProperty: EventProperty;
 
     @Output() propertyChange = new EventEmitter<EventProperty>();
 
@@ -69,16 +69,16 @@ export class EditEventPropertyComponent implements OnInit {
     private propertyForm: UntypedFormGroup;
 
     ngOnInit(): void {
-        this.cachedProperty = this.copyEp(this.EventProperty);
+        this.cachedProperty = this.copyEp(this.eventProperty);
         this.isTimestampProperty = SemanticType.isTimestamp(
             this.cachedProperty,
         );
         this.isEventPropertyList =
-            this.EventProperty instanceof EventPropertyList;
+            this.eventProperty instanceof EventPropertyList;
         this.isEventPropertyPrimitive =
-            this.EventProperty instanceof EventPropertyPrimitive;
+            this.eventProperty instanceof EventPropertyPrimitive;
         this.isEventPropertyNested =
-            this.EventProperty instanceof EventPropertyNested;
+            this.eventProperty instanceof EventPropertyNested;
         this.isNumericProperty =
             SemanticType.isNumber(this.cachedProperty) ||
             DataType.isNumberType((this.cachedProperty as any).runtimeType);
@@ -95,28 +95,28 @@ export class EditEventPropertyComponent implements OnInit {
 
             result.measurementUnit = ep.measurementUnit;
             if (ep.additionalMetadata) {
-                // result.additionalMetadata.fromMeasurementUnit =
-                //     ep.additionalMetadata.fromMeasurementUnit || undefined;
-                // result.additionalMetadata.toMeasurementUnit =
-                //     ep.additionalMetadata.toMeasurementUnit || undefined;
-                //
-                // result.additionalMetadata.correctionValue =
-                //     ep.additionalMetadata.correctionValue || undefined;
-                // result.additionalMetadata.operator =
-                //     ep.additionalMetadata.operator || undefined;
-                //
-                // result.additionalMetadata.mode = ep.additionalMetadata.mode;
-                // result.additionalMetadata.formatString =
-                //     ep.additionalMetadata.formatString;
-                // result.additionalMetadata.multiplier =
-                //     ep.additionalMetadata.multiplier;
-                //
-                // result.additionalMetadata.regex =
-                //     ep.additionalMetadata.regex || undefined;
-                // result.additionalMetadata.replaceWith =
-                //     ep.additionalMetadata.replaceWith || undefined;
-                // result.additionalMetadata.replaceAll =
-                //     ep.additionalMetadata.replaceAll || undefined;
+                result.additionalMetadata.fromMeasurementUnit =
+                    ep.additionalMetadata.fromMeasurementUnit || undefined;
+                result.additionalMetadata.toMeasurementUnit =
+                    ep.additionalMetadata.toMeasurementUnit || undefined;
+
+                result.additionalMetadata.correctionValue =
+                    ep.additionalMetadata.correctionValue || undefined;
+                result.additionalMetadata.operator =
+                    ep.additionalMetadata.operator || undefined;
+
+                result.additionalMetadata.mode = ep.additionalMetadata.mode;
+                result.additionalMetadata.formatString =
+                    ep.additionalMetadata.formatString;
+                result.additionalMetadata.multiplier =
+                    ep.additionalMetadata.multiplier;
+
+                result.additionalMetadata.regex =
+                    ep.additionalMetadata.regex || undefined;
+                result.additionalMetadata.replaceWith =
+                    ep.additionalMetadata.replaceWith || undefined;
+                result.additionalMetadata.replaceAll =
+                    ep.additionalMetadata.replaceAll || undefined;
             }
 
             (result as any).staticValue = (ep as any).staticValue;
@@ -128,33 +128,33 @@ export class EditEventPropertyComponent implements OnInit {
                 new EventPropertyNested(),
             );
         } else {
-            // return EventPropertyList.fromData(
-            //     ep as EventPropertyList,
-            //     new EventPropertyList(),
-            // );
+            return EventPropertyList.fromData(
+                ep as EventPropertyList,
+                new EventPropertyList(),
+            );
         }
     }
 
     private createForm() {
         this.propertyForm = this.formBuilder.group({
-            label: [this.EventProperty.label, Validators.required],
-            runtimeName: [this.EventProperty.runtimeName, Validators.required],
-            description: [this.EventProperty.description, Validators.required],
+            label: [this.eventProperty.label, Validators.required],
+            runtimeName: [this.eventProperty.runtimeName, Validators.required],
+            description: [this.eventProperty.description, Validators.required],
             domainProperty: ['', Validators.required],
             dataType: ['', Validators.required],
         });
     }
 
     save(): void {
-        this.EventProperty.label = this.cachedProperty.label;
-        this.EventProperty.description = this.cachedProperty.description;
-        this.EventProperty.elementId = this.cachedProperty.elementId;
+        this.eventProperty.label = this.cachedProperty.label;
+        this.eventProperty.description = this.cachedProperty.description;
+        this.eventProperty.elementId = this.cachedProperty.elementId;
 
-        this.EventProperty.semanticType = this.cachedProperty.semanticType;
-        this.EventProperty.runtimeName = this.cachedProperty.runtimeName;
-        this.EventProperty.propertyScope = this.cachedProperty.propertyScope;
+        this.eventProperty.semanticType = this.cachedProperty.semanticType;
+        this.eventProperty.runtimeName = this.cachedProperty.runtimeName;
+        this.eventProperty.propertyScope = this.cachedProperty.propertyScope;
 
-        if (this.EventProperty instanceof EventPropertyPrimitive) {
+        if (this.eventProperty instanceof EventPropertyPrimitive) {
             // this.EventProperty.runtimeType = (
             //     this.cachedProperty as EventPropertyPrimitive
             // ).runtimeType;
@@ -162,31 +162,31 @@ export class EditEventPropertyComponent implements OnInit {
             //     this.cachedProperty as EventPropertyPrimitive
             // ).measurementUnit;
             //
-            this.EventProperty.additionalMetadata.fromMeasurementUnit =
+            this.eventProperty.additionalMetadata.fromMeasurementUnit =
                 this.cachedProperty.additionalMetadata.fromMeasurementUnit;
-            this.EventProperty.additionalMetadata.toMeasurementUnit =
+            this.eventProperty.additionalMetadata.toMeasurementUnit =
                 this.cachedProperty.additionalMetadata.toMeasurementUnit;
 
-            this.EventProperty.additionalMetadata.mode =
+            this.eventProperty.additionalMetadata.mode =
                 this.cachedProperty.additionalMetadata.mode;
-            this.EventProperty.additionalMetadata.formatString =
+            this.eventProperty.additionalMetadata.formatString =
                 this.cachedProperty.additionalMetadata.formatString;
-            this.EventProperty.additionalMetadata.multiplier =
+            this.eventProperty.additionalMetadata.multiplier =
                 this.cachedProperty.additionalMetadata.multiplier;
 
-            this.EventProperty.additionalMetadata.correctionValue =
+            this.eventProperty.additionalMetadata.correctionValue =
                 this.cachedProperty.additionalMetadata.correctionValue;
-            this.EventProperty.additionalMetadata.operator =
+            this.eventProperty.additionalMetadata.operator =
                 this.cachedProperty.additionalMetadata.operator;
 
-            this.EventProperty.additionalMetadata.regex =
+            this.eventProperty.additionalMetadata.regex =
                 this.cachedProperty.additionalMetadata.regex;
-            this.EventProperty.additionalMetadata.replaceWith =
+            this.eventProperty.additionalMetadata.replaceWith =
                 this.cachedProperty.additionalMetadata.replaceWith;
-            this.EventProperty.additionalMetadata.replaceAll =
+            this.eventProperty.additionalMetadata.replaceAll =
                 this.cachedProperty.additionalMetadata.replaceAll;
         }
-        this.dialogRef.close({ data: this.EventProperty });
+        this.dialogRef.close({ data: this.eventProperty });
         this.shepherdService.trigger('adapter-field-changed');
     }
 
