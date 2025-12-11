@@ -66,15 +66,9 @@
                     </sp-configure-fields-error-message>
                 }
 
-                @if (
-                    !isError &&
-                    !isLoading &&
-                    eventSchema &&
-                    originalSchema &&
-                    nodes
-                ) {
+                @if (!isError && !isLoading) {
                     @for (
-                        property of eventSchema.eventProperties;
+                        property of eventSchema?.eventProperties;
                         track property.elementId
                     ) {
                         <sp-event-property-row
@@ -87,13 +81,11 @@
         </sp-basic-inner-panel>
     </div>
 
-    @if (desiredPreview && isPreviewEnabled && !isLoading && !isError) {
+    @if (!isLoading && !isError) {
         <div fxFlex="100">
             <sp-configure-fields-preview
-                [originalEventSchema]="originalSchema"
-                [desiredEventSchema]="eventSchema"
-                [originalPreview]="eventPreview[0]"
-                [desiredPreview]="desiredPreview"
+                [originalPreview]="eventPreview"
+                [resultPreview]="resultPreview"
                 (updatePreviewEmitter)="updatePreview()"
             ></sp-configure-fields-preview>
         </div>

@@ -29,7 +29,6 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -55,30 +54,7 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     super(GuessManagement::new);
   }
 
-  @PostMapping(
-      path = "/schema",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<GuessSchema> guessSchema(@RequestBody AdapterDescription adapterDescription) {
 
-    var guessScheam = managementService.guessSchema(adapterDescription);
-
-    return ok(guessScheam);
-  }
-
-  @PostMapping(
-      path = "/schema/preview",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<?> getAdapterEventPreview(@RequestBody AdapterEventPreview previewRequest) {
-    try {
-      return ok(managementService.performAdapterEventPreview(previewRequest));
-    } catch (JsonProcessingException e) {
-      return badRequest();
-    }
-  }
 
   @PostMapping(
       path = "/sample",
@@ -107,6 +83,33 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     var sampleData = managementService.transformSampleData(adapterDescription);
 
     return ok(sampleData);
+  }
+
+  @PostMapping(
+      path = "/schema",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
+  public ResponseEntity<GuessSchema> guessSchema(@RequestBody AdapterDescription adapterDescription) {
+
+    var guessScheam = managementService.guessSchema(adapterDescription);
+
+    return ok(guessScheam);
+  }
+
+  @PostMapping(
+      path = "/schema/preview",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
+  public ResponseEntity<?> getAdapterEventPreview(@RequestBody AdapterEventPreview previewRequest) {
+    // TODO implement
+//    try {
+//      return ok(managementService.performAdapterEventPreview(previewRequest));
+      return ok(previewRequest.getInputData());
+//    } catch (JsonProcessingException e) {
+//      return badRequest();
+//    }
   }
 
   /**

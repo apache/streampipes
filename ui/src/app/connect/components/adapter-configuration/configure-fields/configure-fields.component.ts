@@ -28,9 +28,7 @@ import {
 } from '@angular/core';
 import {
     AdapterDescription,
-    EventPropertyUnion,
     EventSchema,
-    FieldStatusInfo,
     GuessSchema,
     SpLogMessage,
 } from '@streampipes/platform-services';
@@ -56,7 +54,6 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
     @Input()
     isEditMode: boolean;
 
-    originalSchema: EventSchema;
     eventSchema: EventSchema = new EventSchema();
     timestampPresent = false;
 
@@ -83,15 +80,12 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
     schemaGuess: GuessSchema = new GuessSchema();
     isLoading = false;
     isError = false;
-    isPreviewEnabled = false;
     errorMessage: SpLogMessage;
-    nodes: EventPropertyUnion[] = new Array<EventPropertyUnion>();
     validEventSchema = false;
     schemaErrorHints: UserErrorMessage[] = [];
 
-    eventPreview: string[];
-    desiredPreview: Record<string, any>;
-    fieldStatusInfo: Record<string, FieldStatusInfo>;
+    eventPreview: Record<string, any>;
+    resultPreview: Record<string, any>;
 
     ngOnInit() {
         this.resetEventSchema();
@@ -113,16 +107,17 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
 
         this.restService.getGuessSchema(this.adapterDescription).subscribe(
             guessSchema => {
-                this.eventPreview = guessSchema.eventPreview;
-                this.fieldStatusInfo = guessSchema.fieldStatusInfo;
+                this.eventPreview =
+                    this.adapterDescription.schemaTransformationConfig.inputs[0];
                 this.eventSchema = guessSchema.eventSchema;
                 this.eventSchema.eventProperties.sort((a, b) => {
                     return a.runtimeName < b.runtimeName ? -1 : 1;
                 });
                 this.schemaGuess = guessSchema;
 
-                this.originalSchema = guessSchema.eventSchema;
-                this.validEventSchema = this.checkIfValid(this.eventSchema);
+                this.validEventSchema = this.checkSchemaContainsTimestampField(
+                    this.eventSchema,
+                );
 
                 this.isEditableChange.emit(true);
                 this.isLoading = false;
@@ -146,9 +141,9 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
 
     public refreshTree(refreshPreview = true): void {
         if (this.eventSchema && this.eventSchema.eventProperties) {
-            this.nodes = new Array<EventPropertyUnion>();
-            this.nodes.push(...this.eventSchema.eventProperties);
-            this.validEventSchema = this.checkIfValid(this.eventSchema);
+            this.validEventSchema = this.checkSchemaContainsTimestampField(
+                this.eventSchema,
+            );
             if (refreshPreview) {
                 this.updatePreview();
             }
@@ -156,21 +151,21 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
     }
 
     public updatePreview(): void {
-        this.isPreviewEnabled = false;
+        // TODO
         const ruleDescriptions =
+            // TODO
             this.transformationRuleService.makeTransformationRuleDescriptions(
-                this.originalSchema,
+                null,
                 this.eventSchema,
             );
-        if (this.eventPreview && this.eventPreview.length > 0) {
+        if (this.eventPreview) {
             this.restService
                 .getAdapterEventPreview({
                     rules: ruleDescriptions,
-                    inputData: this.eventPreview[0],
+                    inputData: JSON.stringify(this.eventPreview),
                 })
                 .subscribe(preview => {
-                    this.desiredPreview = preview;
-                    this.isPreviewEnabled = true;
+                    this.resultPreview = preview;
                 });
         }
     }
@@ -193,7 +188,9 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
         this.goBackEmitter.emit();
     }
 
-    private checkIfValid(eventSchema: EventSchema): boolean {
+    private checkSchemaContainsTimestampField(
+        eventSchema: EventSchema,
+    ): boolean {
         this.timestampPresent = false;
         eventSchema.eventProperties.forEach(p => {
             if (SemanticType.isTimestamp(p)) {
@@ -215,25 +212,6 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
                 ),
             );
         }
-
-        if (this.fieldStatusInfo) {
-            const badFields = eventSchema.eventProperties
-                .filter(
-                    ep => this.fieldStatusInfo[ep.runtimeName] !== undefined,
-                )
-                .map(ep => this.fieldStatusInfo[ep.runtimeName])
-                .find(field => field.fieldStatus !== 'GOOD');
-            if (badFields !== undefined) {
-                this.schemaErrorHints.push(
-                    new UserErrorMessage(
-                        'Bad reading',
-                        'At least one field could not be properly read. If this is a permanent problem, consider removing it - keeping this field might cause the adapter to fail or to omit sending events.',
-                        'warning',
-                    ),
-                );
-            }
-        }
-
         return this.timestampPresent;
     }
 }

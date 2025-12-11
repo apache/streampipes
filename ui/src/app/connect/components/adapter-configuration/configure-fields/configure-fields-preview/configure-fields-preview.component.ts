@@ -16,8 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventSchema } from '@streampipes/platform-services';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'sp-configure-fields-preview',
@@ -25,22 +24,11 @@ import { EventSchema } from '@streampipes/platform-services';
     styleUrls: ['./configure-fields-preview.component.scss'],
     standalone: false,
 })
-export class ConfigureFieldsPreviewComponent implements OnInit {
-    @Input() originalEventSchema: EventSchema;
-    @Input() desiredEventSchema: EventSchema;
-
-    @Input() originalPreview: string;
-    @Input() desiredPreview: Record<string, any>;
+export class ConfigureFieldsPreviewComponent {
+    @Input() originalPreview: Record<string, any>;
+    @Input() resultPreview: Record<string, any>;
 
     @Output() updatePreviewEmitter = new EventEmitter();
-
-    originalField: Record<string, any>;
-    desiredField: Record<string, any>;
-
-    ngOnInit(): void {
-        this.originalField = JSON.parse(this.originalPreview);
-        this.desiredField = this.desiredPreview;
-    }
 
     public updateEventPreview() {
         this.updatePreviewEmitter.emit();

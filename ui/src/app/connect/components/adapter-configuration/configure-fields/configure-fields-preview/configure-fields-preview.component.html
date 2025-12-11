@@ -23,7 +23,7 @@
             [panelTitle]="'Original (Parsed)' | translate"
         >
             <pre
-                [innerHTML]="originalField | jsonpretty"
+                [innerHTML]="originalPreview | jsonpretty"
                 class="preview-text"
                 data-cy="schema-preview-original-event"
             ></pre>
@@ -49,11 +49,13 @@
                     <span>&nbsp;{{ 'Update result preview' | translate }}</span>
                 </button>
             </div>
-            <pre
-                [innerHTML]="desiredField | jsonpretty"
-                class="preview-text"
-                data-cy="schema-preview-result-event"
-            ></pre>
+            @if (resultPreview) {
+                <pre
+                    [innerHTML]="resultPreview | jsonpretty"
+                    class="preview-text"
+                    data-cy="schema-preview-result-event"
+                ></pre>
+            }
         </sp-basic-inner-panel>
     </div>
 </div>
