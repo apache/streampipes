@@ -27,6 +27,7 @@ import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
+import org.apache.streampipes.model.runtime.field.ListField;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
@@ -131,10 +132,19 @@ public class DataLakeDataWriter {
 
   private void renameTimestampField(Event event, String timestampField){
     var strippedTime = getSubstringAfterColons(timestampField);
-    var tmp = event.getFields();
-    var temp2 = (PrimitiveField) (event.getFieldBySelector("o::" + strippedTime).getAsList().getRawValue().toArray()[1]);
-    var temp3 = temp2.getAsLong();
-    event.addField(timestampField,temp2.getAsLong());//event.getFieldByRuntimeName(strippedTime).getRawValue());
+    var field = event.getFieldBySelector("o::" + strippedTime);
+    if (field instanceof ListField){
+       var temp = (PrimitiveField) (event.getFieldBySelector("o::" + strippedTime).getAsList().getRawValue().toArray()[1]);
+        event.addField(timestampField,temp.getAsLong());
+    }
+    else{
+      var temp2 = event.getFieldByRuntimeName(strippedTime)
+        .getAsPrimitive()
+        .getAsLong();
+
+      event.addField(timestampField,temp2);
+
+    }
   }
 
 }
