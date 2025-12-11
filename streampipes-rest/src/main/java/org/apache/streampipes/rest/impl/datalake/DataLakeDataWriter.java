@@ -61,7 +61,6 @@ public class DataLakeDataWriter {
     var runtimeNames = getRuntimeNames(measure);
     for (var row : dataSeries.getRows()) {
       var event = rowToEvent(row, dataSeries.getHeaders());
-      var tmp5 = event;
       renameTimestampField(event, measure.getTimestampField());
       checkRuntimeNames(runtimeNames, event);
       try {
