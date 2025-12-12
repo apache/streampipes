@@ -203,10 +203,6 @@ export class DashboardPanelComponent
         this.timeSelectionService.notify(ts);
     }
 
-    updateName(widgetId: string, name: string) {
-        this.nameChangeService.notify(widgetId, name);
-    }
-
     discardChanges() {
         this.routingService.navigateToDataViewOverview(true);
     }

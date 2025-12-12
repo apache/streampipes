@@ -16,18 +16,17 @@
  *
  */
 
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ClientDashboardItem } from '@streampipes/platform-services';
 
 @Injectable({ providedIn: 'root' })
 export class NameChangeService {
     public nameChangeSubject = new Subject<{
-        widgetId: string;
+        id: string;
         name: string;
     }>();
 
-    public notify(widgetId: string, name: string): void {
-        this.nameChangeSubject.next({ widgetId, name });
+    public notify(id: string, name: string): void {
+        this.nameChangeSubject.next({ id, name });
     }
 }

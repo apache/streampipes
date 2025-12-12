@@ -139,10 +139,6 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
         this.timeSelectionService.notify(ts);
     }
 
-    updateName(widgetId: string, name: string) {
-        this.nameChangeService.notify(widgetId, name);
-    }
-
     ngOnDestroy() {
         this.refresh$?.unsubscribe();
     }
