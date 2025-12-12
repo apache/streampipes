@@ -36,9 +36,6 @@ public class AdapterWorkerSampleDataManagement {
 
   private IAdapterGuessSchemaContext guessSchemaContext;
 
-  public AdapterWorkerSampleDataManagement() {
-  }
-
   public AdapterWorkerSampleDataManagement(IAdapterGuessSchemaContext guessSchemaContext) {
     this.guessSchemaContext = guessSchemaContext;
   }

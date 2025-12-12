@@ -32,7 +32,6 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.Image
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
@@ -369,16 +368,6 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
     executor.shutdownNow();
     LOG.info("Stopped file stream adapter for file");
-  }
-
-  @Override
-  public GuessSchema onSchemaRequested(
-      IAdapterParameterExtractor extractor,
-      IAdapterGuessSchemaContext adapterGuessSchemaContext
-  ) throws AdapterException {
-    var inputStream = getFileAsInputStreamFromEndpoint(extractor);
-    return extractor.selectedParser()
-                    .getGuessSchema(inputStream);
   }
 
   @Override

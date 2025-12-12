@@ -38,7 +38,7 @@ import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -251,8 +251,8 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    return new OpcUaSchemaProvider().getSchema(clientProvider, extractor, adapterGuessSchemaContext.getStreamPipesClient());
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                                      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    return new OpcUaSchemaProvider().getSampleData(clientProvider, extractor, adapterGuessSchemaContext.getStreamPipesClient());
   }
 }

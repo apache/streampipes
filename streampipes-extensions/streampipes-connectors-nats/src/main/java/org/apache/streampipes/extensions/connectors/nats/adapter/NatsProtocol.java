@@ -33,7 +33,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventP
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.nats.NatsConsumer;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.nats.NatsConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
@@ -85,10 +85,14 @@ public class NatsProtocol implements StreamPipesAdapter {
   }
 
   public static StaticPropertyAlternative getAccessModeAlternativesTwo() {
-    return Alternatives.from(Labels.withId(USERNAME_ACCESS),
-        StaticProperties.group(Labels.withId(USERNAME_GROUP),
+    return Alternatives.from(
+        Labels.withId(USERNAME_ACCESS),
+        StaticProperties.group(
+            Labels.withId(USERNAME_GROUP),
             StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME_KEY)),
-            StaticProperties.secretValue(Labels.withId(PASSWORD_KEY))));
+            StaticProperties.secretValue(Labels.withId(PASSWORD_KEY))
+        )
+    );
 
   }
 
@@ -98,9 +102,13 @@ public class NatsProtocol implements StreamPipesAdapter {
   }
 
   public static StaticPropertyAlternative getConnectionPropertiesAlternativesTwo() {
-    return Alternatives.from(Labels.withId(CUSTOM_PROPERTIES),
-        StaticProperties.group(Labels.withId(CONNECTION_PROPERTIES_GROUP),
-            StaticProperties.stringFreeTextProperty(Labels.withId(PROPERTIES_KEY))));
+    return Alternatives.from(
+        Labels.withId(CUSTOM_PROPERTIES),
+        StaticProperties.group(
+            Labels.withId(CONNECTION_PROPERTIES_GROUP),
+            StaticProperties.stringFreeTextProperty(Labels.withId(PROPERTIES_KEY))
+        )
+    );
 
   }
 
@@ -113,36 +121,48 @@ public class NatsProtocol implements StreamPipesAdapter {
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredTextParameter(Labels.withId(URLS_KEY), false, false)
         .requiredTextParameter(Labels.withId(SUBJECT_KEY), false, false)
-        .requiredAlternatives(Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),
-            getAccessModeAlternativesTwo())
-        .requiredAlternatives(Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
-            getConnectionPropertiesAlternativesTwo())
+        .requiredAlternatives(
+            Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),
+            getAccessModeAlternativesTwo()
+        )
+        .requiredAlternatives(
+            Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
+            getConnectionPropertiesAlternativesTwo()
+        )
         .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(
+      IAdapterParameterExtractor extractor,
+      IEventCollector collector,
+      IAdapterRuntimeContext adapterRuntimeContext
+  ) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     this.natsConsumer = new NatsConsumer(natsConfig);
     try {
       this.natsConsumer.connect(new BrokerEventProcessor(extractor.selectedParser(), collector));
     } catch (SpRuntimeException e) {
-      throw new AdapterException("Error when connecting to the Nats broker on "
-          + natsConfig.getNatsUrls() + " . ", e);
+      throw new AdapterException(
+          "Error when connecting to the Nats broker on "
+              + natsConfig.getNatsUrls() + " . ", e
+      );
     }
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(
+      IAdapterParameterExtractor extractor,
+      IAdapterRuntimeContext adapterRuntimeContext
+  ) throws AdapterException {
     this.natsConsumer.disconnect();
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public SampleData onSampleDataRequested(
+      IAdapterParameterExtractor extractor,
+      IAdapterGuessSchemaContext adapterGuessSchemaContext
+  ) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     List<byte[]> elements = new ArrayList<>();
     this.natsConsumer = new NatsConsumer(natsConfig);
@@ -168,10 +188,13 @@ public class NatsProtocol implements StreamPipesAdapter {
       }
     }
     if (elements.size() > 0) {
-      return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(elements.get(0)));
+      return extractor.selectedParser()
+                      .getSampleData(new ByteArrayInputStream(elements.get(0)));
     } else {
       throw new ParseException("Did not receive any data within " + MAX_TIMEOUT / 1000
-          + " seconds, is this subjects currently providing data?");
+                                   + " seconds, is this subjects currently providing data?");
     }
   }
+
 }
+
