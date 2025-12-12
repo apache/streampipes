@@ -170,6 +170,8 @@ export class ChartContainerComponent
     resizeTimeout: any;
 
     ngAfterViewInit(): void {
+        console.log(this.editMode);
+        console.log(this.dataViewMode);
         const container = this.el.nativeElement.querySelector(
             '.widget-content',
         ) as HTMLDivElement;
