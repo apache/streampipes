@@ -36,7 +36,11 @@
                     fxLayoutAlign="start center"
                     class="text-md font-bold"
                 >
-                    {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
+                    {{
+                        dashboardItem?.name
+                            ? dashboardItem.name
+                            : configuredWidget.baseAppearanceConfig.widgetTitle
+                    }}
                 </div>
                 @if (!kioskMode) {
                     <div fxLayout="row" fxLayoutAlign="end center">
