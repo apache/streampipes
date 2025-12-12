@@ -36,11 +36,39 @@
                     fxLayoutAlign="start center"
                     class="text-md font-bold"
                 >
-                    {{
-                        dashboardItem?.name
-                            ? dashboardItem.name
-                            : configuredWidget.baseAppearanceConfig.widgetTitle
-                    }}
+                    <!-- Display mode -->
+                    <ng-container *ngIf="!isEditingName; else editMode">
+                        {{
+                            dashboardItem?.name ||
+                                configuredWidget.baseAppearanceConfig
+                                    .widgetTitle
+                        }}
+
+                        <button
+                            mat-icon-button
+                            (click)="startEditingName()"
+                            class="ml-2"
+                        >
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </ng-container>
+
+                    <!-- Edit mode -->
+                    <ng-template #editMode>
+                        <input
+                            type="text"
+                            [(ngModel)]="tempName"
+                            class="name-input"
+                        />
+
+                        <button mat-icon-button (click)="saveName()">
+                            <mat-icon>check</mat-icon>
+                        </button>
+
+                        <button mat-icon-button (click)="cancelEditingName()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </ng-template>
                 </div>
                 @if (!kioskMode) {
                     <div fxLayout="row" fxLayoutAlign="end center">

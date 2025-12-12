@@ -121,6 +121,8 @@ export class ChartContainerComponent
     widgetLoaded = false;
     timerActive = false;
     loadingTime = 0;
+    isEditingName = false;
+    tempName = '';
 
     quickSelections: QuickTimeSelection[];
     labels: TimeSelectorLabel;
@@ -433,5 +435,20 @@ export class ChartContainerComponent
 
             this.tooltipText = `${timeString.startDate} ${timeString.startTime} - ${timeString.endDate} ${timeString.endTime}`;
         }
+    }
+
+    startEditingName() {
+        this.tempName = this.dashboardItem?.name || '';
+        this.isEditingName = true;
+    }
+
+    saveName() {
+        if (!this.dashboardItem) return;
+        this.dashboardItem.name = this.tempName.trim() || null;
+        this.isEditingName = false;
+    }
+
+    cancelEditingName() {
+        this.isEditingName = false;
     }
 }
