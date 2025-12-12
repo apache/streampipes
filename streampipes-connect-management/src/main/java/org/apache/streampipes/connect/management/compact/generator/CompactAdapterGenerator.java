@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.connect.management.compact.generator;
 
-import org.apache.streampipes.connect.shared.preprocessing.convert.ToOriginalSchemaConverter;
 import org.apache.streampipes.manager.template.CompactConfigGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactEventProperty;
@@ -29,6 +28,7 @@ import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
+import org.apache.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,10 +53,8 @@ public class CompactAdapterGenerator {
 
   public Map<String, CompactEventProperty> getSchema() {
     var map = new HashMap<String, CompactEventProperty>();
-    var originalProperties = new ToOriginalSchemaConverter(
-        adapterDescription.getEventSchema().getEventProperties()
-    ).getTransformedProperties();
-    originalProperties
+    var properties = new Cloner().properties(adapterDescription.getEventSchema().getEventProperties());
+    properties
         .forEach(ep -> map.put(ep.getRuntimeName(), new CompactEventProperty(
             ep.getLabel(),
             ep.getDescription(),

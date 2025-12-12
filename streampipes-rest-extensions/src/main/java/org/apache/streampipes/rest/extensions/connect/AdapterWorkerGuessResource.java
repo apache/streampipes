@@ -23,7 +23,6 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerGuessManagement;
 import org.apache.streampipes.extensions.management.context.AdapterContextGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
@@ -53,30 +52,6 @@ public class AdapterWorkerGuessResource extends AbstractSharedRestInterface {
 
   public AdapterWorkerGuessResource(AdapterWorkerGuessManagement guessManagement) {
     this.guessManagement = guessManagement;
-  }
-
-  @PostMapping(
-      path = "/schema",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  @Deprecated
-  public ResponseEntity<GuessSchema> guessSchema(@RequestBody AdapterDescription adapterDescription) {
-
-    try {
-      GuessSchema result = guessManagement.guessSchema(adapterDescription);
-
-      return ok(result);
-    } catch (ParseException e) {
-      LOG.error("Error while parsing events: ", e);
-      throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
-    } catch (AdapterException e) {
-      LOG.error(
-          "Error while guessing schema for AdapterDescription: {}, {}", adapterDescription.getElementId(),
-          e.getMessage()
-      );
-      throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
-    }
-
   }
 
   @PostMapping(
