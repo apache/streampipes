@@ -524,7 +524,7 @@
   "Import from application package": "Import aus Anwendungspaket",
   "Start import process": "Importvorgang starten",
   "Upload application package file": "Anwendungspaket-Datei hochladen",
-  "Error while uploading application package": "Fehler beim Hochladen des Bewerbungspakets",
+  "Error while uploading application package": "Fehler beim Hochladen des Anwendungspakets",
   "Check that the uploaded zip file is a valid export": "Prüfen Sie, ob die hochgeladene Zip-Datei ein gültiger Export ist",
   "Select resources to import": "Zu importierende Ressourcen auswählen",
   "Deselect all": "Alle abwählen",
