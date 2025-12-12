@@ -36,24 +36,23 @@
                     fxLayoutAlign="start center"
                     class="text-md font-bold"
                 >
-                    <!-- Display mode -->
                     <ng-container *ngIf="!isEditingName; else editMode">
                         {{
                             dashboardItem?.name ||
                                 configuredWidget.baseAppearanceConfig
                                     .widgetTitle
                         }}
-
-                        <button
-                            mat-icon-button
-                            (click)="startEditingName()"
-                            class="ml-2"
-                        >
-                            <mat-icon>edit</mat-icon>
-                        </button>
+                        @if (editMode) {
+                            <button
+                                mat-icon-button
+                                (click)="startEditingName()"
+                                class="ml-2"
+                            >
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        }
                     </ng-container>
 
-                    <!-- Edit mode -->
                     <ng-template #editMode>
                         <input
                             type="text"

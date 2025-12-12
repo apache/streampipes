@@ -33,6 +33,7 @@ import {
 } from '@angular/core';
 import {
     ClientDashboardItem,
+    DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     ExtendedTimeSettings,
@@ -41,7 +42,7 @@ import {
     TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subject, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { ChartRegistry } from '../../registry/chart-registry.service';
 import { ChartDirective } from './chart.directive';
@@ -50,6 +51,7 @@ import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import {
     CurrentUserService,
+    NameChangeService,
     TimeRangeSelectorMenuComponent,
     TimeSelectionService,
     TimeSelectorLabel,
@@ -159,6 +161,7 @@ export class ChartContainerComponent
         private authService: AuthService,
         private currentUserService: CurrentUserService,
         private timeSelectionService: TimeSelectionService,
+        private nameChangeService: NameChangeService,
         private el: ElementRef<HTMLDivElement>,
         private resizeService: ResizeService,
     ) {}
@@ -191,6 +194,10 @@ export class ChartContainerComponent
             this.componentRef.instance.widgetIndex =
                 changes.widgetIndex.currentValue;
         }
+        if (changes.dashboardItem.currentValue.name) {
+            console.log('Name change');
+        }
+        console.log(changes);
     }
 
     ngOnInit(): void {
@@ -445,6 +452,12 @@ export class ChartContainerComponent
     saveName() {
         if (!this.dashboardItem) return;
         this.dashboardItem.name = this.tempName.trim() || null;
+        console.log('name', this.dashboardItem.name);
+        this.nameChangeService.notify(
+            this.dashboardItem.dataViewElementId,
+            this.tempName.trim() || null,
+        );
+
         this.isEditingName = false;
     }
 
