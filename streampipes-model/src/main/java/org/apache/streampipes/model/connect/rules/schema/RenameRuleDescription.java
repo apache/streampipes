@@ -21,6 +21,7 @@ package org.apache.streampipes.model.connect.rules.schema;
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
+@Deprecated(since = "0.99.0", forRemoval = true)
 public class RenameRuleDescription extends SchemaTransformationRuleDescription {
 
   private String oldRuntimeKey;
@@ -61,7 +62,6 @@ public class RenameRuleDescription extends SchemaTransformationRuleDescription {
 
   @Override
   public void accept(ITransformationRuleVisitor visitor) {
-    visitor.visit(this);
   }
 
   @Override

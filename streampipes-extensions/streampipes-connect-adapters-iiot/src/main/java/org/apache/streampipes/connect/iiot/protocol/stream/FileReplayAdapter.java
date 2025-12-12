@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
-import org.apache.streampipes.connect.shared.preprocessing.generator.StatelessTransformationRuleGeneratorVisitor;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IParser;
@@ -335,31 +334,11 @@ public class FileReplayAdapter implements StreamPipesAdapter {
       actualEventTimestamp = (Integer) timestampFieldValue;
     }
 
-    // transform timestamp if transformation rule is present
-    actualEventTimestamp = transformTimestampIfTransformationRuleIsPresent(event, actualEventTimestamp);
-
-
     if (actualEventTimestamp == -1 && !replaceTimestamp) {
       throw new AdapterException("Timestamp field could not be parsed, skipping event. "
                                      + "Value: %s".formatted(event.get(timestampSourceFieldName)));
     }
 
-    return actualEventTimestamp;
-  }
-
-  private long transformTimestampIfTransformationRuleIsPresent(Map<String, Object> event, long actualEventTimestamp) {
-    if (timestampTranfsformationRuleDescription != null) {
-      var transformationRuleDescription = timestampTranfsformationRuleDescription;
-
-      var transformationRuleVisitor = new StatelessTransformationRuleGeneratorVisitor();
-      transformationRuleVisitor.visit(transformationRuleDescription);
-      var timestampTransformationRule = transformationRuleVisitor.getTransformationRules()
-                                                                 .get(0);
-
-      actualEventTimestamp = (Long) (
-          timestampTransformationRule.apply(event)
-                                     .get(timestampSourceFieldName));
-    }
     return actualEventTimestamp;
   }
 

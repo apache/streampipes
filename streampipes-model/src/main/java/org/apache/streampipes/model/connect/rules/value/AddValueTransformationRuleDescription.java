@@ -23,6 +23,7 @@ import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.XSD;
 
+
 public class AddValueTransformationRuleDescription extends ValueTransformationRuleDescription {
 
   private String runtimeKey;
@@ -111,7 +112,6 @@ public class AddValueTransformationRuleDescription extends ValueTransformationRu
 
   @Override
   public void accept(ITransformationRuleVisitor visitor) {
-    visitor.visit(this);
   }
 
   @Override

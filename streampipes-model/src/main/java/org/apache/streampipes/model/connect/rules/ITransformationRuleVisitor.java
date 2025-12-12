@@ -18,42 +18,18 @@
 
 package org.apache.streampipes.model.connect.rules;
 
-import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
 public interface ITransformationRuleVisitor {
-
-  void visit(DeleteRuleDescription rule);
-
-  void visit(MoveRuleDescription rule);
-
-  void visit(RenameRuleDescription rule);
-
-  void visit(RegexTransformationRuleDescription rule);
 
   void visit(EventRateTransformationRuleDescription rule);
 
   void visit(RemoveDuplicatesTransformationRuleDescription rule);
 
-  void visit(AddTimestampRuleDescription rule);
-
-  void visit(AddValueTransformationRuleDescription rule);
-
   void visit(ChangeDatatypeTransformationRuleDescription rule);
-
-  void visit(CorrectionValueTransformationRuleDescription rule);
-
-  void visit(TimestampTranfsformationRuleDescription rule);
 
   void visit(UnitTransformRuleDescription rule);
 }

@@ -18,61 +18,14 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.generator;
 
-import org.apache.streampipes.connect.shared.preprocessing.transform.schema.AddValueTransformationRule;
-import org.apache.streampipes.connect.shared.preprocessing.transform.schema.DeleteTransformationRule;
-import org.apache.streampipes.connect.shared.preprocessing.transform.schema.MoveTransformationRule;
-import org.apache.streampipes.connect.shared.preprocessing.transform.schema.RenameTransformationRule;
-import org.apache.streampipes.connect.shared.preprocessing.transform.value.AddTimestampTransformationRule;
-import org.apache.streampipes.connect.shared.preprocessing.transform.value.CorrectionValueTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.DatatypeTransformationRule;
-import org.apache.streampipes.connect.shared.preprocessing.transform.value.RegexTransformationRule;
-import org.apache.streampipes.connect.shared.preprocessing.transform.value.TimestampTranformationRuleMode;
-import org.apache.streampipes.connect.shared.preprocessing.transform.value.TimestampTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.UnitTransformationRule;
-import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
-import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
 public class StatelessTransformationRuleGeneratorVisitor extends TransformationRuleGeneratorVisitor {
-
-  @Override
-  public void visit(DeleteRuleDescription ruleDesc) {
-    rules.add(new DeleteTransformationRule(
-        Utils.toKeyArray(ruleDesc.getRuntimeKey())));
-  }
-
-  @Override
-  public void visit(MoveRuleDescription ruleDesc) {
-    rules.add(new MoveTransformationRule(
-        Utils.toKeyArray(ruleDesc.getOldRuntimeKey()),
-        Utils.toKeyArray(ruleDesc.getNewRuntimeKey())));
-  }
-
-  @Override
-  public void visit(RenameRuleDescription ruleDesc) {
-    rules.add(new RenameTransformationRule(
-        Utils.toKeyArray(ruleDesc.getOldRuntimeKey()),
-        Utils.getLastKey(ruleDesc.getNewRuntimeKey())));
-  }
-
-  @Override
-  public void visit(RegexTransformationRuleDescription rule) {
-    rules.add(new RegexTransformationRule(
-        Utils.toKeyArray(rule.getRuntimeKey()),
-        rule.getRegex(),
-        rule.getReplaceWith(),
-        rule.isReplaceAll()));
-  }
 
   @Override
   public void visit(EventRateTransformationRuleDescription ruleDesc) {
@@ -85,49 +38,10 @@ public class StatelessTransformationRuleGeneratorVisitor extends TransformationR
   }
 
   @Override
-  public void visit(AddTimestampRuleDescription ruleDesc) {
-    rules.add(new AddTimestampTransformationRule(
-        ruleDesc.getRuntimeKey()));
-  }
-
-  @Override
-  public void visit(AddValueTransformationRuleDescription ruleDesc) {
-    rules.add(new AddValueTransformationRule(
-        ruleDesc.getRuntimeKey(),
-        ruleDesc.getStaticValue(),
-        ruleDesc.getDatatype()));
-  }
-
-  @Override
   public void visit(ChangeDatatypeTransformationRuleDescription ruleDesc) {
     rules.add(new DatatypeTransformationRule(
         ruleDesc.getRuntimeKey(),
-        ruleDesc.getOriginalDatatypeXsd(),
         ruleDesc.getTargetDatatypeXsd()));
-  }
-
-  @Override
-  public void visit(CorrectionValueTransformationRuleDescription ruleDesc) {
-    rules.add(new CorrectionValueTransformationRule(
-        Utils.toKeyArray(ruleDesc.getRuntimeKey()),
-        ruleDesc.getCorrectionValue(),
-        ruleDesc.getOperator()));
-  }
-
-  @Override
-  public void visit(TimestampTranfsformationRuleDescription ruleDesc) {
-    TimestampTranformationRuleMode mode;
-    if (ruleDesc.getMode().equals(TimestampTranformationRuleMode.FORMAT_STRING.internalName())) {
-      mode = TimestampTranformationRuleMode.FORMAT_STRING;
-    } else {
-      mode = TimestampTranformationRuleMode.TIME_UNIT;
-    }
-
-    rules.add(new TimestampTransformationRule(Utils.toKeyArray(
-        ruleDesc.getRuntimeKey()),
-        mode,
-        ruleDesc.getFormatString(),
-        ruleDesc.getMultiplier()));
   }
 
   @Override

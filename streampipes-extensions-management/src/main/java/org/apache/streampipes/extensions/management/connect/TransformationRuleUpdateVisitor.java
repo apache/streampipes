@@ -21,17 +21,9 @@ package org.apache.streampipes.extensions.management.connect;
 import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.schema.EventProperty;
 
@@ -55,34 +47,6 @@ public class TransformationRuleUpdateVisitor implements ITransformationRuleVisit
   }
 
   @Override
-  public void visit(DeleteRuleDescription rule) {
-    if (containsKey(rule.getRuntimeKey())) {
-      validRules.add(rule);
-    }
-  }
-
-  @Override
-  public void visit(MoveRuleDescription rule) {
-    if (containsKey(rule.getOldRuntimeKey())) {
-      validRules.add(rule);
-    }
-  }
-
-  @Override
-  public void visit(RenameRuleDescription rule) {
-    if (containsKey(rule.getOldRuntimeKey())) {
-      validRules.add(rule);
-    }
-  }
-
-  @Override
-  public void visit(RegexTransformationRuleDescription rule) {
-    if (containsKey(rule.getRuntimeKey())) {
-      validRules.add(rule);
-    }
-  }
-
-  @Override
   public void visit(EventRateTransformationRuleDescription rule) {
     // Do nothing
   }
@@ -93,31 +57,7 @@ public class TransformationRuleUpdateVisitor implements ITransformationRuleVisit
   }
 
   @Override
-  public void visit(AddTimestampRuleDescription rule) {
-    validRules.add(rule);
-  }
-
-  @Override
-  public void visit(AddValueTransformationRuleDescription rule) {
-    validRules.add(rule);
-  }
-
-  @Override
   public void visit(ChangeDatatypeTransformationRuleDescription rule) {
-    if (containsKey(rule.getRuntimeKey())) {
-      validRules.add(rule);
-    }
-  }
-
-  @Override
-  public void visit(CorrectionValueTransformationRuleDescription rule) {
-    if (containsKey(rule.getRuntimeKey())) {
-      validRules.add(rule);
-    }
-  }
-
-  @Override
-  public void visit(TimestampTranfsformationRuleDescription rule) {
     if (containsKey(rule.getRuntimeKey())) {
       validRules.add(rule);
     }
@@ -133,18 +73,12 @@ public class TransformationRuleUpdateVisitor implements ITransformationRuleVisit
   private boolean containsKey(String fullRuntimeKey) {
     var runtimeKeys = Utils.toKeyArray(fullRuntimeKey);
     if (!runtimeKeys.isEmpty()) {
-      return this.existingPropertyRuntimeNames.contains(runtimeKeys.get(0)) || inRenameRule(runtimeKeys.get(0));
+      return this.existingPropertyRuntimeNames.contains(runtimeKeys.get(0));
     } else {
       return false;
     }
   }
 
-  private boolean inRenameRule(String runtimeKey) {
-    return this.allRules
-        .stream()
-        .filter(rule -> rule instanceof RenameRuleDescription)
-        .anyMatch(rule -> ((RenameRuleDescription) rule).getNewRuntimeKey().equals(runtimeKey));
-  }
 
   public List<TransformationRuleDescription> getValidRules() {
     return validRules;
