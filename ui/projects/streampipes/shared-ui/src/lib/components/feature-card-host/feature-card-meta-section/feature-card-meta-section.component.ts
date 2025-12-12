@@ -16,29 +16,13 @@
  *
  */
 
-import { PanelDialogComponent } from '../panel-dialog/panel-dialog.component';
-import { StandardDialogComponent } from '../standard-dialog/standard-dialog.component';
+import { Component, Input } from '@angular/core';
 
-export type BaseDialogComponentUnion =
-    | PanelDialogComponent<unknown>
-    | StandardDialogComponent<unknown>;
-
-export enum PanelType {
-    STANDARD_PANEL,
-    SLIDE_IN_PANEL,
-    CARD,
-}
-
-export interface DialogConfig {
-    width?: string;
-    panelType: PanelType;
-    disableClose?: boolean;
-    autoFocus?: boolean;
-    title: string;
-    data?: any;
-}
-
-export interface DialogPanelConfig {
-    maxWidth: string;
-    height: string;
+@Component({
+    selector: 'sp-feature-card-meta-section',
+    templateUrl: './feature-card-meta-section.component.html',
+    standalone: false,
+})
+export class FeatureCardMetaSectionComponent {
+    @Input() label: string;
 }

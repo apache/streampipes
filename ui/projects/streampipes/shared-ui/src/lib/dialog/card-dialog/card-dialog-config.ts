@@ -16,29 +16,21 @@
  *
  */
 
-import { PanelDialogComponent } from '../panel-dialog/panel-dialog.component';
-import { StandardDialogComponent } from '../standard-dialog/standard-dialog.component';
+import { BaseDialogConfig } from '../base-dialog/base-dialog.config';
+import { Overlay } from '@angular/cdk/overlay';
 
-export type BaseDialogComponentUnion =
-    | PanelDialogComponent<unknown>
-    | StandardDialogComponent<unknown>;
+export class CardDialogConfig implements BaseDialogConfig {
+    getPosition(overlay: Overlay) {
+        return overlay.position().global().end('50px').centerVertically();
+    }
 
-export enum PanelType {
-    STANDARD_PANEL,
-    SLIDE_IN_PANEL,
-    CARD,
-}
-
-export interface DialogConfig {
-    width?: string;
-    panelType: PanelType;
-    disableClose?: boolean;
-    autoFocus?: boolean;
-    title: string;
-    data?: any;
-}
-
-export interface DialogPanelConfig {
-    maxWidth: string;
-    height: string;
+    getOverlayConfig(config: any, positionStrategy: any) {
+        return {
+            hasBackdrop: true,
+            positionStrategy,
+            panelClass: 'card-dialog-outer',
+            width: config.width,
+            maxWidth: '90vw',
+        };
+    }
 }

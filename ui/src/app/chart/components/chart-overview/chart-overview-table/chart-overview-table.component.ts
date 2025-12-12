@@ -25,6 +25,7 @@ import {
 import {
     ConfirmDialogComponent,
     DateFormatService,
+    FeatureCardService,
     SpAssetBrowserService,
 } from '@streampipes/shared-ui';
 import { ChartSharedService } from '../../../../chart-shared/services/chart-shared.service';
@@ -64,6 +65,7 @@ export class ChartOverviewTableComponent implements OnInit {
     private dateFormatService = inject(DateFormatService);
     private routingService = inject(ChartRoutingService);
     private assetFilterService = inject(SpAssetBrowserService);
+    private featureCardService = inject(FeatureCardService);
 
     assetFilter$: Subscription;
     currentFilterIds = new Set<string>();
@@ -174,5 +176,9 @@ export class ChartOverviewTableComponent implements OnInit {
 
     formatDate(timestamp?: number): string {
         return this.dateFormatService.formatDate(timestamp);
+    }
+
+    openFeatureCard(chart: DataExplorerWidgetModel) {
+        this.featureCardService.openFeatureCard('chart', chart.elementId);
     }
 }

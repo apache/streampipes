@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,29 +16,32 @@
  *
  */
 
-import { PanelDialogComponent } from '../panel-dialog/panel-dialog.component';
-import { StandardDialogComponent } from '../standard-dialog/standard-dialog.component';
-
-export type BaseDialogComponentUnion =
-    | PanelDialogComponent<unknown>
-    | StandardDialogComponent<unknown>;
-
-export enum PanelType {
-    STANDARD_PANEL,
-    SLIDE_IN_PANEL,
-    CARD,
+:host {
+    width: 100%;
+    height: 100%;
 }
 
-export interface DialogConfig {
-    width?: string;
-    panelType: PanelType;
-    disableClose?: boolean;
-    autoFocus?: boolean;
-    title: string;
-    data?: any;
+$pipeline-scale: 0.4;
+
+.pipeline-preview-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: calc(100% / #{$pipeline-scale});
+    height: calc(100% / #{$pipeline-scale});
+
+    transform: scale($pipeline-scale);
+    transform-origin: top left;
+
+    display: flex;
 }
 
-export interface DialogPanelConfig {
-    maxWidth: string;
-    height: string;
+.pipeline-preview-inner > sp-pipeline-preview {
+    display: block;
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
 }

@@ -39,7 +39,26 @@
                     data-cy="data-views-table-overview"
                     *matCellDef="let element"
                 >
-                    {{ element.baseAppearanceConfig.widgetTitle }}<br />
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxLayoutGap="5px"
+                    >
+                        <button
+                            mat-icon-button
+                            (click)="
+                                openFeatureCard(element);
+                                $event.stopPropagation()
+                            "
+                        >
+                            <mat-icon>preview</mat-icon>
+                        </button>
+                        <div fxLayout="column" fxLayoutAlign="start start">
+                            <span class="text-sm">{{
+                                element.baseAppearanceConfig.widgetTitle
+                            }}</span>
+                        </div>
+                    </div>
                 </td>
             </ng-container>
 

@@ -20,7 +20,6 @@ import { ComponentType, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentRef, Injectable, Injector } from '@angular/core';
 import { DialogRef } from './dialog-ref';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
-import { BaseDialogComponent } from './base-dialog.component';
 import {
     BaseDialogComponentUnion,
     DialogConfig,
@@ -31,6 +30,8 @@ import { StandardDialogComponent } from '../standard-dialog/standard-dialog.comp
 import { BaseDialogConfig } from './base-dialog.config';
 import { PanelDialogConfig } from '../panel-dialog/panel-dialog.config';
 import { StandardDialogConfig } from '../standard-dialog/standard-dialog.config';
+import { CardDialogComponent } from '../card-dialog/card-dialog.component';
+import { CardDialogConfig } from '../card-dialog/card-dialog-config';
 
 @Injectable({
     providedIn: 'root',
@@ -84,9 +85,7 @@ export class DialogService {
         return dialogRef;
     }
 
-    private createInjector<T, OUTER extends BaseDialogComponent<T>>(
-        dialogRef: DialogRef<T>,
-    ) {
+    private createInjector<T>(dialogRef: DialogRef<T>) {
         const injectorMap = new WeakMap();
         injectorMap.set(DialogRef, dialogRef);
         return new PortalInjector(this.injector, injectorMap);
@@ -116,14 +115,22 @@ export class DialogService {
     }
 
     getPanel(panelType: PanelType): ComponentType<BaseDialogComponentUnion> {
-        return panelType === PanelType.SLIDE_IN_PANEL
-            ? PanelDialogComponent
-            : StandardDialogComponent;
+        if (panelType === PanelType.STANDARD_PANEL) {
+            return StandardDialogComponent;
+        } else if (panelType === PanelType.CARD) {
+            return CardDialogComponent;
+        } else {
+            return PanelDialogComponent;
+        }
     }
 
     getConfig(panelType: PanelType): BaseDialogConfig {
-        return panelType === PanelType.SLIDE_IN_PANEL
-            ? new PanelDialogConfig()
-            : new StandardDialogConfig();
+        if (panelType === PanelType.STANDARD_PANEL) {
+            return new StandardDialogConfig();
+        } else if (panelType === PanelType.CARD) {
+            return new CardDialogConfig();
+        } else {
+            return new PanelDialogConfig();
+        }
     }
 }

@@ -1,0 +1,8 @@
+<div class="card-root">
+    @if (activeComponent) {
+        <ng-container
+            *ngComponentOutlet="activeComponent; inputs: componentInputs"
+        >
+        </ng-container>
+    }
+</div>

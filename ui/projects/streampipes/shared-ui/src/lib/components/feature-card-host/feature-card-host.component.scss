@@ -16,29 +16,32 @@
  *
  */
 
-import { PanelDialogComponent } from '../panel-dialog/panel-dialog.component';
-import { StandardDialogComponent } from '../standard-dialog/standard-dialog.component';
-
-export type BaseDialogComponentUnion =
-    | PanelDialogComponent<unknown>
-    | StandardDialogComponent<unknown>;
-
-export enum PanelType {
-    STANDARD_PANEL,
-    SLIDE_IN_PANEL,
-    CARD,
+/* The component hosting the dynamic card */
+:host {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
 }
 
-export interface DialogConfig {
-    width?: string;
-    panelType: PanelType;
-    disableClose?: boolean;
-    autoFocus?: boolean;
-    title: string;
-    data?: any;
+/* Root container that holds the dynamic component */
+.card-root {
+    flex: 1 1 auto;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    background: var(--color-bg-0);
+    border-radius: 1rem;
 }
 
-export interface DialogPanelConfig {
-    maxWidth: string;
-    height: string;
+/* The dynamically inserted component's host element */
+.card-root > * {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
 }

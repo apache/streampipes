@@ -16,29 +16,29 @@
  *
  */
 
-import { PanelDialogComponent } from '../panel-dialog/panel-dialog.component';
-import { StandardDialogComponent } from '../standard-dialog/standard-dialog.component';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
-export type BaseDialogComponentUnion =
-    | PanelDialogComponent<unknown>
-    | StandardDialogComponent<unknown>;
+@Component({
+    selector: 'sp-feature-card-header',
+    templateUrl: './feature-card-header.component.html',
+    styleUrls: ['./feature-card-header.component.scss'],
+    standalone: false,
+})
+export class FeatureCardHeaderComponent {
+    @Input() title: string;
+    @Input() description: string;
 
-export enum PanelType {
-    STANDARD_PANEL,
-    SLIDE_IN_PANEL,
-    CARD,
-}
+    @Input() icon: string;
+    @Input() iconColor: string;
+    @Input() detailsLink: string[];
+    @Output() close: EventEmitter<void> = new EventEmitter();
 
-export interface DialogConfig {
-    width?: string;
-    panelType: PanelType;
-    disableClose?: boolean;
-    autoFocus?: boolean;
-    title: string;
-    data?: any;
-}
+    private router = inject(Router);
 
-export interface DialogPanelConfig {
-    maxWidth: string;
-    height: string;
+    ngOnInit() {}
+
+    navigateToDetails(): void {
+        this.router.navigate(this.detailsLink);
+    }
 }
