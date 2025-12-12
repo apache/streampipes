@@ -30,16 +30,16 @@ import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AdapterWorkerGuessManagement {
+public class AdapterWorkerSampleDataManagement {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerGuessManagement.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerSampleDataManagement.class);
 
   private IAdapterGuessSchemaContext guessSchemaContext;
 
-  public AdapterWorkerGuessManagement() {
+  public AdapterWorkerSampleDataManagement() {
   }
 
-  public AdapterWorkerGuessManagement(IAdapterGuessSchemaContext guessSchemaContext) {
+  public AdapterWorkerSampleDataManagement(IAdapterGuessSchemaContext guessSchemaContext) {
     this.guessSchemaContext = guessSchemaContext;
   }
 

@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.AdapterWorkerGuessManagement;
+import org.apache.streampipes.extensions.management.connect.AdapterWorkerSampleDataManagement;
 import org.apache.streampipes.extensions.management.context.AdapterContextGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.SampleData;
@@ -40,17 +40,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/worker/guess")
-public class AdapterWorkerGuessResource extends AbstractSharedRestInterface {
+public class AdapterWorkerSampleDataResource extends AbstractSharedRestInterface {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerGuessResource.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerSampleDataResource.class);
 
-  private final AdapterWorkerGuessManagement guessManagement;
+  private final AdapterWorkerSampleDataManagement guessManagement;
 
-  public AdapterWorkerGuessResource() {
-    this.guessManagement = new AdapterWorkerGuessManagement(new AdapterContextGenerator().makeGuessSchemaContext());
+  public AdapterWorkerSampleDataResource() {
+    this.guessManagement = new AdapterWorkerSampleDataManagement(new AdapterContextGenerator().makeGuessSchemaContext());
   }
 
-  public AdapterWorkerGuessResource(AdapterWorkerGuessManagement guessManagement) {
+  public AdapterWorkerSampleDataResource(AdapterWorkerSampleDataManagement guessManagement) {
     this.guessManagement = guessManagement;
   }
 
