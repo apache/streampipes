@@ -456,7 +456,7 @@ export class ChartContainerComponent
         this.dashboardItem.name = this.tempName.trim() || null;
         console.log('name', this.dashboardItem.name);
         this.nameChangeService.notify(
-            this.dashboardItem.dataViewElementId,
+            this.dashboardItem.id,
             this.tempName.trim() || null,
         );
 

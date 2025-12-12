@@ -203,8 +203,8 @@ export class DashboardPanelComponent
         this.timeSelectionService.notify(ts);
     }
 
-    updateName(widgetIndex: string, name: string) {
-        this.nameChangeService.notify(widgetIndex, name);
+    updateName(widgetId: string, name: string) {
+        this.nameChangeService.notify(widgetId, name);
     }
 
     discardChanges() {

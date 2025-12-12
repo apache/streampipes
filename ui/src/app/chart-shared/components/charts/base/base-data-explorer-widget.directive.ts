@@ -217,10 +217,9 @@ export abstract class BaseDataExplorerWidgetDirective<
         this.nameChange$ = this.nameChangeService.nameChangeSubject.subscribe(
             data => {
                 console.log('Subscribe to Name CHange', data);
-                if (
-                    this.dataViewDashboardItem.dataViewElementId ==
-                    data.widgetId
-                ) {
+                console.log('id ', this.dataViewDashboardItem.id);
+                console.log('data', data);
+                if (this.dataViewDashboardItem.id == data.widgetId) {
                     this.dataViewDashboardItem.name = data.name;
                 }
             },
