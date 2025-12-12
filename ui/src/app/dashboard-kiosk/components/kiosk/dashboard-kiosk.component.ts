@@ -27,10 +27,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { of, Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import {
-    NameChangeService,
-    TimeSelectionService,
-} from '@streampipes/shared-ui';
+import { TimeSelectionService } from '@streampipes/shared-ui';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
 import { ObservableGenerator } from '../../../chart-shared/models/dataview-dashboard.model';
@@ -47,7 +44,6 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
     private timeSelectionService = inject(TimeSelectionService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
     private dataExplorerSharedService = inject(ChartSharedService);
-    private nameChangeService = inject(NameChangeService);
 
     observableGenerator: ObservableGenerator;
     dashboard: Dashboard;

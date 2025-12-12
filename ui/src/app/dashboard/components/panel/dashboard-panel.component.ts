@@ -40,7 +40,6 @@ import { DashboardSlideViewComponent } from '../../../dashboard-shared/component
 import {
     ConfirmDialogComponent,
     CurrentUserService,
-    NameChangeService,
     SpBreadcrumbService,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
@@ -92,7 +91,6 @@ export class DashboardPanelComponent
     private detectChangesService = inject(ChartDetectChangesService);
     private dialog = inject(MatDialog);
     private timeSelectionService = inject(TimeSelectionService);
-    private nameChangeService = inject(NameChangeService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private dashboardService = inject(DashboardService);
@@ -157,8 +155,6 @@ export class DashboardPanelComponent
             .dashboardTimeSettings as TimeSettings;
         const currentTimeSettings = this.dashboard
             .dashboardTimeSettings as TimeSettings;
-        console.log('original Data', this.originalDashboard);
-        console.log('this dashboard', this.dashboard);
         return this.detectChangesService.shouldShowConfirm(
             this.originalDashboard,
             this.dashboard,

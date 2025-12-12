@@ -170,8 +170,6 @@ export class ChartContainerComponent
     resizeTimeout: any;
 
     ngAfterViewInit(): void {
-        console.log(this.editMode);
-        console.log(this.dataViewMode);
         const container = this.el.nativeElement.querySelector(
             '.widget-content',
         ) as HTMLDivElement;
@@ -196,10 +194,6 @@ export class ChartContainerComponent
             this.componentRef.instance.widgetIndex =
                 changes.widgetIndex.currentValue;
         }
-        if (changes.dashboardItem.currentValue.name) {
-            console.log('Name change');
-        }
-        console.log(changes);
     }
 
     ngOnInit(): void {
@@ -454,7 +448,6 @@ export class ChartContainerComponent
     saveName() {
         if (!this.dashboardItem) return;
         this.dashboardItem.name = this.tempName.trim() || null;
-        console.log('name', this.dashboardItem.name);
         this.nameChangeService.notify(
             this.dashboardItem.id,
             this.tempName.trim() || null,
