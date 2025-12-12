@@ -565,7 +565,7 @@
   "Recipient for test mail": "Empfänger für Test-Mail",
   "Send Test Mail": "Test-Mail senden",
   "Trying to send test mail...": "Test-Mail wird versendet...",
-  "Please check your mail inbox to ensure the mail has been delivered.": "Bitte überprüfen Sie Ihren Posteingang, um sicherzustellen, dass die Post zugestellt wurde.",
+  "Please check your mail inbox to ensure the mail has been delivered.": "Bitte überprüfen Sie Ihren Posteingang, um sicherzustellen, dass die E-Mail zugestellt wurde.",
   "Test mail send": "Test-Mail senden",
   "Could not send email": "E-Mail konnte nicht versendet werden",
   "Mail Template": "Mail-Vorlage",
