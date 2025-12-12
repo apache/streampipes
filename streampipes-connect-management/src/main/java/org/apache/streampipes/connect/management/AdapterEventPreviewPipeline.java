@@ -23,15 +23,11 @@ import org.apache.streampipes.connect.shared.AdapterPipelineGeneratorBase;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class AdapterEventPreviewPipeline implements IAdapterPipeline {
 
@@ -40,12 +36,9 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
 
   public AdapterEventPreviewPipeline(AdapterDescription adapterDescription) {
 
-    List<TransformationRuleDescription> rules = getTypeConvertionRules(adapterDescription);
-
-    rules.addAll(getUnitConvertionRules(adapterDescription));
 
     this.pipelineElements = new AdapterPipelineGeneratorBase()
-        .makeAdapterPipelineElements(rules, false);
+        .makeAdapterPipelineElements(new ArrayList<>(), false, adapterDescription, false);
 
     this.event = adapterDescription.getSchemaTransformationConfig().getOutputs().get(0);
   }
@@ -57,35 +50,6 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
     }
   }
 
-  private List<TransformationRuleDescription> getTypeConvertionRules(AdapterDescription adapterDescription) {
-    return adapterDescription.getEventSchema().getEventProperties().stream()
-                             .filter(ep -> ep.getAdditionalMetadata().containsKey("originType"))
-                             .map(ep -> new ChangeDatatypeTransformationRuleDescription(
-                                 ep.getRuntimeName(),
-                                 ((EventPropertyPrimitive) ep).getRuntimeType()
-                             ))
-                             .collect(Collectors.toList());
-  }
-
-  private List<TransformationRuleDescription> getUnitConvertionRules(AdapterDescription adapterDescription) {
-    return adapterDescription.getEventSchema().getEventProperties().stream()
-        .filter(ep -> (ep.getAdditionalMetadata().containsKey("fromMeasurementUnit") && ep.getAdditionalMetadata().containsKey("toMeasurementUnit")))
-        .map(ep -> {
-          String toUnit = ep.getAdditionalMetadata().get("toMeasurementUnit")
-                            .toString();
-          String fromUnit = ep.getAdditionalMetadata().get("fromMeasurementUnit")
-                              .toString();
-
-          var rule =
-              new UnitTransformRuleDescription(
-                  ep.getRuntimeName(),
-                  fromUnit,
-                  toUnit
-              );
-          return rule;
-        })
-        .collect(Collectors.toList());
-  }
 
   @Override
   public List<IAdapterPipelineElement> getPipelineElements() {

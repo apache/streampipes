@@ -19,29 +19,102 @@
 package org.apache.streampipes.connect.shared;
 
 import org.apache.streampipes.connect.shared.preprocessing.elements.AdapterTransformationPipelineElement;
+import org.apache.streampipes.connect.shared.preprocessing.elements.ScriptTransformationPipelineElement;
 import org.apache.streampipes.connect.shared.preprocessing.generator.StatefulTransformationRuleGeneratorVisitor;
 import org.apache.streampipes.connect.shared.preprocessing.generator.StatelessTransformationRuleGeneratorVisitor;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdapterPipelineGeneratorBase {
 
-  public List<IAdapterPipelineElement> makeAdapterPipelineElements(List<TransformationRuleDescription> rules,
-                                                                   boolean includeStateful) {
+  public List<IAdapterPipelineElement> makeAdapterPipelineElements(
+      List<TransformationRuleDescription> rules,
+      boolean includeStateful,
+      AdapterDescription adapterDescription,
+      boolean includeScript
+  ) {
+    // TODO clean up
+
+
+    rules.addAll(getTypeConvertionRules(adapterDescription));
+
+    rules.addAll(getUnitConvertionRules(adapterDescription));
+
     var elements = new ArrayList<IAdapterPipelineElement>();
+
+    if (includeScript) {
+      elements.add(new ScriptTransformationPipelineElement(
+          adapterDescription.getSchemaTransformationConfig()
+                            .getLanguage(),
+          adapterDescription.getSchemaTransformationConfig()
+                            .getScript()
+      ));
+
+    }
+
+
     elements.add(new AdapterTransformationPipelineElement(
-        rules,
-        new StatelessTransformationRuleGeneratorVisitor())
+                     rules,
+                     new StatelessTransformationRuleGeneratorVisitor()
+                 )
     );
     if (includeStateful) {
       elements.add(new AdapterTransformationPipelineElement(
-          rules,
-          new StatefulTransformationRuleGeneratorVisitor())
+                       rules,
+                       new StatefulTransformationRuleGeneratorVisitor()
+                   )
       );
     }
     return elements;
   }
+
+  private List<TransformationRuleDescription> getTypeConvertionRules(AdapterDescription adapterDescription) {
+    return adapterDescription.getEventSchema()
+                             .getEventProperties()
+                             .stream()
+                             .filter(ep -> ep.getAdditionalMetadata()
+                                             .containsKey("originType"))
+                             .map(ep -> new ChangeDatatypeTransformationRuleDescription(
+                                 ep.getRuntimeName(),
+                                 ((EventPropertyPrimitive) ep).getRuntimeType()
+                             ))
+                             .collect(Collectors.toList());
+  }
+
+  private List<TransformationRuleDescription> getUnitConvertionRules(AdapterDescription adapterDescription) {
+    return adapterDescription.getEventSchema()
+                             .getEventProperties()
+                             .stream()
+                             .filter(ep -> (
+                                 ep.getAdditionalMetadata()
+                                   .containsKey("fromMeasurementUnit") && ep.getAdditionalMetadata()
+                                                                            .containsKey("toMeasurementUnit")
+                             ))
+                             .map(ep -> {
+                               String toUnit = ep.getAdditionalMetadata()
+                                                 .get("toMeasurementUnit")
+                                                 .toString();
+                               String fromUnit = ep.getAdditionalMetadata()
+                                                   .get("fromMeasurementUnit")
+                                                   .toString();
+
+                               var rule =
+                                   new UnitTransformRuleDescription(
+                                       ep.getRuntimeName(),
+                                       fromUnit,
+                                       toUnit
+                                   );
+                               return rule;
+                             })
+                             .collect(Collectors.toList());
+  }
+
 }

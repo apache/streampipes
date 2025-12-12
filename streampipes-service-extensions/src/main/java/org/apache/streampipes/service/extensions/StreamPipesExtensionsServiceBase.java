@@ -20,6 +20,10 @@ package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.connect.transformer.api.TransformationEngine;
+import org.apache.streampipes.connect.transformer.api.TransformationEngines;
+import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
+import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
@@ -55,6 +59,7 @@ import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -85,11 +90,20 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
       SpRateLimiter.INSTANCE.createRateLimiter();
       startExtensionsService(this.getClass(), serviceDef, networkingConfig);
       ServiceLoadDataReportGenerator.getInstance().initialize();
+
+     registerTransformationEngines(List.of(
+          GroovyScriptEngine::new,
+          GraalJsScriptEngine::new
+      ));
     } catch (UnknownHostException e) {
       LOG.error(
           "Could not auto-resolve host address - "
               + "please manually provide the hostname using the SP_HOST environment variable");
     }
+  }
+
+  protected void registerTransformationEngines(List<Supplier<TransformationEngine>> transformationEngines) {
+    transformationEngines.forEach(TransformationEngines.INSTANCE::registerEngine);
   }
 
   public void afterServiceRegistered(SpServiceDefinition serviceDef,

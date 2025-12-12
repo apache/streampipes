@@ -102,7 +102,6 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> getAdapterEventPreview(@RequestBody AdapterDescription adapterDescription) {
-    // TODO implement
     return ok(managementService.performAdapterEventPreview(adapterDescription));
 
   }

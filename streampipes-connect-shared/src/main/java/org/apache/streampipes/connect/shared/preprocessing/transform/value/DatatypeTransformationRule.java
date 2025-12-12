@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.connect.TransformationRule;
 
 import java.util.Map;
 
+@Deprecated
 public class DatatypeTransformationRule implements TransformationRule {
 
   private final String eventKey;
