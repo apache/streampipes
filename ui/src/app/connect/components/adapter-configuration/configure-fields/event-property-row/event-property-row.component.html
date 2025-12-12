@@ -75,10 +75,16 @@
                         fxLayoutAlign="start center"
                         fxFlex="100"
                     >
-                        <span class="runtime-info runtime-type-info">{{
-                            originalRuntimeType
-                        }}</span>
-                        @if (originalRuntimeType !== runtimeType) {
+                        @if (originalRuntimeType) {
+                            <span class="runtime-info runtime-type-info">{{
+                                originalRuntimeType
+                            }}</span>
+                        }
+
+                        @if (
+                            originalRuntimeType &&
+                            originalRuntimeType !== runtimeType
+                        ) {
                             <span fxLayoutAlign="center center"
                                 ><i class="material-icons">arrow_right</i></span
                             >
@@ -91,6 +97,7 @@
                     </div>
                 }
             </div>
+
             <div fxLayoutAlign="end center" class="status-outer">
                 @if (showFieldStatus) {
                     <span

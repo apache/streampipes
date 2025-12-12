@@ -78,12 +78,7 @@ export class EventPropertyRowComponent implements OnInit {
         this.isNested = this.isEventPropertyNested(this.eventProperty);
         this.timestampProperty = this.isTimestampProperty(this.eventProperty);
 
-        this.originalRuntimeType = this.parseType(
-            (this.eventProperty as EventPropertyPrimitive).runtimeType,
-        );
-        this.runtimeType = this.parseType(
-            (this.eventProperty as EventPropertyPrimitive).runtimeType,
-        );
+        this.setRuntimeTypeAndOriginRuntimeType();
 
         if (!this.eventProperty.propertyScope) {
             this.eventProperty.propertyScope = 'MEASUREMENT_PROPERTY';
@@ -104,13 +99,19 @@ export class EventPropertyRowComponent implements OnInit {
             this.fieldStatusInfo &&
             this.fieldStatusInfo[this.originalRuntimeName] !== undefined;
         if (this.isPrimitive) {
+            this.setRuntimeTypeAndOriginRuntimeType();
+        }
+    }
+
+    private setRuntimeTypeAndOriginRuntimeType() {
+        if (this.eventProperty.additionalMetadata['originType']) {
             this.originalRuntimeType = this.parseType(
-                (ep as EventPropertyPrimitive).runtimeType,
-            );
-            this.runtimeType = this.parseType(
-                (this.eventProperty as EventPropertyPrimitive).runtimeType,
+                this.eventProperty.additionalMetadata['originType'],
             );
         }
+        this.runtimeType = this.parseType(
+            (this.eventProperty as EventPropertyPrimitive).runtimeType,
+        );
     }
 
     private parseType(runtimeType: string) {
