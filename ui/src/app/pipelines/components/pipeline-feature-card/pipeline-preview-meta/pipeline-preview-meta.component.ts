@@ -25,6 +25,7 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { PipelineHealthStatus } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-pipeline-preview-meta',
@@ -43,23 +44,35 @@ export class PipelinePreviewMetaComponent implements OnInit {
     @Input() lastModifiedAt?: number;
 
     @Input() status?: boolean;
-    @Input() healthStatus?: string;
+    @Input() healthStatus?: PipelineHealthStatus;
 
     @Input() dataInLabel?: string;
     @Input() dataOutLabel?: string;
 
     statusString: string;
-    statusColor: string;
+    statusTone: string;
+
+    healthStatusTone: string;
 
     private translate = inject(TranslateService);
 
     ngOnInit() {
         if (this.status) {
             this.statusString = this.translate.instant('Running');
-            this.statusColor = 'var(--color-success)';
+            this.statusTone = 'success';
         } else {
             this.statusString = this.translate.instant('Stopped');
-            this.statusColor = 'var(--color-idle)';
+            this.statusTone = 'neutral';
+        }
+
+        if (this.healthStatus === 'OK') {
+            this.healthStatusTone = 'success';
+        } else if (this.healthStatus === 'REQUIRES_ATTENTION') {
+            this.healthStatusTone = 'warning';
+        } else if (this.healthStatus === 'FAILURE') {
+            this.healthStatusTone = 'error';
+        } else {
+            this.healthStatusTone = 'neutral';
         }
     }
 }

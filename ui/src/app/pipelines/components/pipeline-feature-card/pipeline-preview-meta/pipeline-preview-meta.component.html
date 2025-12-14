@@ -32,9 +32,15 @@
             >
             <div>
                 <div class="feature-card-meta-field-label">State</div>
-                <div class="feature-card-meta-field-value">
+                <sp-label
+                    class="mt-xs"
+                    textCase="uppercase"
+                    [tone]="statusTone"
+                    size="small"
+                    variant="soft"
+                >
                     {{ statusString }}
-                </div>
+                </sp-label>
             </div>
         </div>
 
@@ -47,9 +53,15 @@
             <mat-icon class="feature-card-meta-icon">favorite</mat-icon>
             <div>
                 <div class="feature-card-meta-field-label">Health</div>
-                <div class="feature-card-meta-field-value">
-                    {{ healthStatus || 'Not available' }}
-                </div>
+                <sp-label
+                    class="mt-xs"
+                    textCase="capitalize"
+                    [tone]="healthStatusTone"
+                    size="small"
+                    variant="soft"
+                >
+                    {{ healthStatus || 'N/A' }}
+                </sp-label>
             </div>
         </div>
     </sp-feature-card-meta-section>

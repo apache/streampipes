@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
 
 public class StorePipelineStatusTask implements PipelineExecutionTask {
 
@@ -53,6 +54,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
                           PipelineExecutionInfo executionInfo) {
     if (this.start) {
       pipeline.setHealthStatus(PipelineHealthStatus.OK);
+      pipeline.setPipelineNotifications(List.of());
       setPipelineStarted(pipeline);
     } else {
       setPipelineStopped(pipeline);
