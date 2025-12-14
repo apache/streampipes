@@ -26,7 +26,8 @@
 .feature-card-meta-card {
     padding: 1.25rem;
     box-shadow: none;
-    background: #fff;
+    background: var(--color-bg-0);
+    color: var(--color-default-text);
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
@@ -66,7 +67,7 @@
 .feature-card-meta-box {
     padding: 0.5rem 0.75rem;
     border-radius: 0.5rem;
-    background: rgba(0, 0, 0, 0.03);
+    background: var(--color-bg-1);
 }
 
 .feature-preview-wrapper {
