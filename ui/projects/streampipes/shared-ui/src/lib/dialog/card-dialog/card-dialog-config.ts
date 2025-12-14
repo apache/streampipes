@@ -21,7 +21,7 @@ import { Overlay } from '@angular/cdk/overlay';
 
 export class CardDialogConfig implements BaseDialogConfig {
     getPosition(overlay: Overlay) {
-        return overlay.position().global().end('50px').centerVertically();
+        return overlay.position().global().end('120px').centerVertically();
     }
 
     getOverlayConfig(config: any, positionStrategy: any) {

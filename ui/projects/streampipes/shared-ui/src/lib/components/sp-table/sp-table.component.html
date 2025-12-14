@@ -25,6 +25,18 @@
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element">
                     <div fxLayoutAlign="end center">
+                        @if (featureCardId) {
+                            <button
+                                [matTooltip]="'Preview' | translate"
+                                mat-icon-button
+                                (click)="
+                                    openFeatureCard(element);
+                                    $event.stopPropagation()
+                                "
+                            >
+                                <mat-icon>preview</mat-icon>
+                            </button>
+                        }
                         <div
                             [matMenuTriggerFor]="menu"
                             #menuTrigger="matMenuTrigger"

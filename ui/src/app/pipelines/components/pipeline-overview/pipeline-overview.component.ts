@@ -32,7 +32,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { CurrentUserService, FeatureCardService } from '@streampipes/shared-ui';
+import { CurrentUserService } from '@streampipes/shared-ui';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -65,7 +65,6 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
 
     userSub: Subscription;
 
-    private featureCardService = inject(FeatureCardService);
     public pipelineOperationsService = inject(PipelineOperationsService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
@@ -121,9 +120,5 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.userSub?.unsubscribe();
-    }
-
-    openFeatureCard(pipeline: Pipeline): void {
-        this.featureCardService.openFeatureCard('pipeline', pipeline._id);
     }
 }

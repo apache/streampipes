@@ -19,6 +19,8 @@
 <sp-table
     [dataSource]="dataSource"
     [columns]="displayedColumns"
+    featureCardId="pipeline"
+    resourceIdKey="_id"
     [showActionsMenu]="true"
     [rowsClickable]="true"
     (rowClicked)="
@@ -159,14 +161,6 @@
         </th>
         <td mat-cell *matCellDef="let pipeline" class="truncate">
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-                <button
-                    mat-icon-button
-                    (click)="
-                        openFeatureCard(pipeline); $event.stopPropagation()
-                    "
-                >
-                    <mat-icon>preview</mat-icon>
-                </button>
                 <div fxLayout="column" fxLayoutAlign="start start">
                     <span class="text-sm">{{ pipeline.name }}</span>
                     <small> {{ pipeline.description }}</small>

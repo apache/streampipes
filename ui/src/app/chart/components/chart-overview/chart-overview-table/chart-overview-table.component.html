@@ -25,6 +25,7 @@
             fxFlex="100"
             [columns]="displayedColumns"
             [dataSource]="dataSource"
+            featureCardId="chart"
             [showActionsMenu]="true"
             [rowsClickable]="true"
             (rowClicked)="openDataView($event, true)"
@@ -44,15 +45,6 @@
                         fxLayoutAlign="start center"
                         fxLayoutGap="5px"
                     >
-                        <button
-                            mat-icon-button
-                            (click)="
-                                openFeatureCard(element);
-                                $event.stopPropagation()
-                            "
-                        >
-                            <mat-icon>preview</mat-icon>
-                        </button>
                         <div fxLayout="column" fxLayoutAlign="start start">
                             <span class="text-sm">{{
                                 element.baseAppearanceConfig.widgetTitle
