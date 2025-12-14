@@ -36,6 +36,7 @@ import {
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelinePreviewMetaComponent } from './pipeline-preview-meta/pipeline-preview-meta.component';
 import { MatDivider } from '@angular/material/list';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'sp-pipeline-feature-card',
@@ -64,6 +65,7 @@ export class PipelineFeatureCardComponent implements OnInit {
     private pipelineService = inject(PipelineService);
     private pipelineCanvasService = inject(PipelineCanvasMetadataService);
     private genericStorageService = inject(GenericStorageService);
+    private router = inject(Router);
 
     ngOnInit() {
         forkJoin([
@@ -81,5 +83,10 @@ export class PipelineFeatureCardComponent implements OnInit {
                 : new PipelineCanvasMetadata();
             this.assetLink = p[2].find(a => a.linkType === 'pipeline');
         });
+    }
+
+    navigateToPipelines(): void {
+        this.onClose();
+        this.router.navigate(['pipelines', 'details', this.resourceId]);
     }
 }

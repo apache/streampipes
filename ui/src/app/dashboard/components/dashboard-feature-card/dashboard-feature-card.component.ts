@@ -38,6 +38,7 @@ import {
 import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { DashboardSharedModule } from '../../../dashboard-shared/dashboard-shared.module';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'sp-dashboard-feature-card',
@@ -71,6 +72,7 @@ export class DashboardFeatureCardComponent implements OnInit {
     private chartSharedService = inject(ChartSharedService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
     private timeSelectionService = inject(TimeSelectionService);
+    private router = inject(Router);
 
     observableGenerator = this.chartSharedService.defaultObservableGenerator();
 
@@ -114,5 +116,10 @@ export class DashboardFeatureCardComponent implements OnInit {
             }
             this.timeSettings = this.dashboard.dashboardTimeSettings;
         });
+    }
+
+    navigateToDashboard(): void {
+        this.onClose();
+        this.router.navigate(['dashboard', this.resourceId]);
     }
 }

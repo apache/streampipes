@@ -16,8 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'sp-feature-card-header',
@@ -33,12 +32,5 @@ export class FeatureCardHeaderComponent {
     @Input() iconColor: string;
     @Input() detailsLink: string[];
     @Output() close: EventEmitter<void> = new EventEmitter();
-
-    private router = inject(Router);
-
-    ngOnInit() {}
-
-    navigateToDetails(): void {
-        this.router.navigate(this.detailsLink);
-    }
+    @Output() onDetailsClick: EventEmitter<void> = new EventEmitter();
 }

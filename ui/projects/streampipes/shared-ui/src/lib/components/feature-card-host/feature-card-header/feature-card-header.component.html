@@ -42,7 +42,7 @@
             *ngIf="detailsLink?.length"
             mat-flat-button
             class="feature-card-header__button"
-            (click)="navigateToDetails()"
+            (click)="onDetailsClick.emit()"
         >
             More details
         </button>

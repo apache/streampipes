@@ -39,6 +39,7 @@ import { ChartSharedService } from '../../../chart-shared/services/chart-shared.
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ChartRegistry } from '../../../chart-shared/registry/chart-registry.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'sp-chart-feature-card',
@@ -70,6 +71,7 @@ export class ChartFeatureCardComponent implements OnInit {
     private genericStorageService = inject(GenericStorageService);
     private chartSharedService = inject(ChartSharedService);
     private chartRegistryService = inject(ChartRegistry);
+    private router = inject(Router);
 
     chartType: string = 'Unknown';
 
@@ -91,5 +93,10 @@ export class ChartFeatureCardComponent implements OnInit {
                 this.chart.widgetType,
             ).label;
         });
+    }
+
+    navigateToChart(): void {
+        this.onClose();
+        this.router.navigate(['chart', this.resourceId]);
     }
 }

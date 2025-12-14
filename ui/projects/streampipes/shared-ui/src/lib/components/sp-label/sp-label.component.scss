@@ -101,17 +101,17 @@
 
 :host([data-size='small']) .sp-label {
     font-size: var(--font-size-sm);
-    padding: 0.14rem 0.45rem;
+    padding: 0.24rem 0.55rem;
 }
 
 :host([data-size='medium']) .sp-label {
     font-size: var(--font-size-md);
-    padding: 0.2rem 0.55rem;
+    padding: 0.26rem 0.65rem;
 }
 
 :host([data-size='large']) .sp-label {
     font-size: var(--font-size-lg);
-    padding: 0.26rem 0.65rem;
+    padding: 0.28rem 0.75rem;
 }
 
 :host([data-shape='pill']) .sp-label {
@@ -126,7 +126,6 @@
     border-radius: 0.35rem;
     padding: 0.18rem 0.45rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
     box-shadow: none;
 }
 
