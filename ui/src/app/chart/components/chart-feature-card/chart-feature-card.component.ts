@@ -72,7 +72,6 @@ export class ChartFeatureCardComponent implements OnInit {
     private chartRegistryService = inject(ChartRegistry);
 
     chartType: string = 'Unknown';
-    datasetName: string = 'Unknown';
 
     observableGenerator = this.chartSharedService.defaultObservableGenerator();
 

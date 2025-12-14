@@ -21,3 +21,7 @@
   componentPath: './chart/components/chart-feature-card/chart-feature-card.component'
   componentName: ChartFeatureCardComponent
   moduleName: spChart
+- id: dashboard
+  componentPath: './dashboard/components/dashboard-feature-card/dashboard-feature-card.component'
+  componentName: DashboardFeatureCardComponent
+  moduleName: spDashboard

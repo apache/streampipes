@@ -30,6 +30,7 @@ import {
     ConfirmDialogComponent,
     DateFormatService,
     DialogService,
+    FeatureCardService,
     PanelType,
     SpAssetBrowserService,
 } from '@streampipes/shared-ui';
@@ -79,6 +80,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     private assetFilterService = inject(SpAssetBrowserService);
     private routingService = inject(ChartRoutingService);
     private dialogService = inject(DialogService);
+    private featureCardService = inject(FeatureCardService);
 
     assetFilter$: Subscription;
     currentFilterIds = new Set<string>();
@@ -223,6 +225,13 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
 
     onRowClicked(dashboard: Dashboard) {
         this.showDashboard(dashboard);
+    }
+
+    openFeatureCard(dashboard: Dashboard) {
+        this.featureCardService.openFeatureCard(
+            'dashboard',
+            dashboard.elementId,
+        );
     }
 
     ngOnDestroy() {
