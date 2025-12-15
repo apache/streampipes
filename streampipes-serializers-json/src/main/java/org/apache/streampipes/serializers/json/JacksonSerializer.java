@@ -29,6 +29,7 @@ public class JacksonSerializer {
     mapper.activateDefaultTypingAsProperty(mapper.getPolymorphicTypeValidator(),
         ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, "@class");
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    
     return mapper;
   }
 }
