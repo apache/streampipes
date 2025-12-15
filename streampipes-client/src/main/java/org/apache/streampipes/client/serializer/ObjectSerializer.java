@@ -23,6 +23,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ObjectSerializer<K, V> extends Serializer<K, V, V> {
 
+    public ObjectSerializer() {
+        super();  
+    }
+
+    public ObjectSerializer(boolean useDefaultTyping) {
+        super(useDefaultTyping);  
+    }
+
   @Override
   public V deserialize(String response, Class<V> targetClass) {
     try {

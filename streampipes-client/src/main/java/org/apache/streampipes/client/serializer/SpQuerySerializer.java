@@ -28,25 +28,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-
 public class SpQuerySerializer {
-     public static SpQueryResult processEventDataWithTags(List<? extends Map<String,?>> events, TreeMap<String, String> tags) throws IOException {
+    public static SpQueryResult processEventDataWithTags(List<? extends Map<String, ?>> events,
+            TreeMap<String, String> tags) throws IOException {
 
         if (tags == null) {
             tags = new TreeMap<>();
         }
 
+        List<String> headers = new ArrayList<>(events.get(0).keySet());
+        List<List<Object>> rows = new ArrayList<>();
 
-    List<String> headers = new ArrayList<>(events.get(0).keySet());
-List<List<Object>> rows = new ArrayList<>();
-
-for (Map<String, ?> event : events) {
-    List<Object> row = new ArrayList<>();
-    for (String header : headers) {
-        row.add(event.get(header));
-    }
-    rows.add(row);
-}
+        for (Map<String, ?> event : events) {
+            List<Object> row = new ArrayList<>();
+            for (String header : headers) {
+                row.add(event.get(header));
+            }
+            rows.add(row);
+        }
 
         DataSeries series = new DataSeries(events.size(), rows, headers, new HashMap<>());
 
@@ -60,7 +59,6 @@ for (Map<String, ?> event : events) {
 
         queryResult.setAllDataSeries(resultSeries);
 
-        //Built JSON Object
-        return queryResult;//JacksonSerializer.getObjectMapper().writeValueAsString(queryResult);
+        return queryResult;
     }
 }
