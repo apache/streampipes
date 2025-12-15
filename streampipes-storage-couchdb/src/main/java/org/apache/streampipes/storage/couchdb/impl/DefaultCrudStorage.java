@@ -20,16 +20,22 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 
 import org.lightcouch.CouchDbClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.function.Supplier;
 
 public class DefaultCrudStorage<T extends Storable> extends AbstractDao<T> implements CRUDStorage<T> {
 
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultCrudStorage.class);
+
   public DefaultCrudStorage(Supplier<CouchDbClient> couchDbClientSupplier,
-                            Class<T> clazz) {
+      Class<T> clazz) {
     super(couchDbClientSupplier, clazz);
   }
 
@@ -46,6 +52,11 @@ public class DefaultCrudStorage<T extends Storable> extends AbstractDao<T> imple
 
   @Override
   public void deleteElement(T element) {
+    try {
+      CouchDbStorageManager.INSTANCE.getGenericStorage().deleteAssetLinkToResource(element.getElementId());
+    } catch (IOException e) {
+      LOG.error("Asset link for " + element.getElementId() + " could not be deleted.");
+    }
     delete(element.getElementId());
   }
 }

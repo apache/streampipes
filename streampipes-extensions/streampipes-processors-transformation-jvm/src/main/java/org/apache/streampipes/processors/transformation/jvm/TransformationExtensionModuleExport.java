@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.processors.transformation.jvm.migrations.StaticMetadataEnrichmentProcessorMigrationV1;
+import org.apache.streampipes.processors.transformation.jvm.migrations.StaticMetadataEnrichmentProcessorMigrationV2;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterProcessor;
@@ -44,6 +45,9 @@ import org.apache.streampipes.processors.transformation.jvm.processor.staticmeta
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.booleaninput.SwitchOperatorBooleanInputProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.numericalinput.SwitchOperatorNumericalInputProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.stringinput.SwitchOperatorStringInputProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean.TransformToBooleanProcessor;
@@ -82,6 +86,9 @@ public class TransformationExtensionModuleExport implements IExtensionModuleExpo
         new StaticMetaDataEnrichmentProcessor(),
         new StringTimerProcessor(),
         new SignalEdgeFilterProcessor(),
+        new SwitchOperatorBooleanInputProcessor(),
+        new SwitchOperatorStringInputProcessor(),
+        new SwitchOperatorNumericalInputProcessor(),
         new BooleanToStateProcessor(),
         new NumberLabelerProcessor(),
         new StringToStateProcessor(),
@@ -94,6 +101,8 @@ public class TransformationExtensionModuleExport implements IExtensionModuleExpo
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return List.of(new StaticMetadataEnrichmentProcessorMigrationV1());
+    return List.of(
+        new StaticMetadataEnrichmentProcessorMigrationV1(),
+        new StaticMetadataEnrichmentProcessorMigrationV2());
   }
 }

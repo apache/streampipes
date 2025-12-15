@@ -53,6 +53,8 @@ public class DataLakeMeasure implements Storable {
 
   private DataLakeMeasureSchemaUpdateStrategy schemaUpdateStrategy = DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA;
 
+  private RetentionTimeConfig retentionTime;
+
   public DataLakeMeasure() {
     super();
   }
@@ -72,6 +74,14 @@ public class DataLakeMeasure implements Storable {
     this.measureName = measureName;
     this.eventSchema = eventSchema;
     this.timestampField = timestampField;
+  }
+
+
+  public DataLakeMeasure(String measureName, String timestampField, EventSchema eventSchema, RetentionTimeConfig retentionTime) {
+    this.measureName = measureName;
+    this.eventSchema = eventSchema;
+    this.timestampField = timestampField;
+    this.retentionTime = retentionTime;
   }
 
   public String getMeasureName() {
@@ -139,6 +149,19 @@ public class DataLakeMeasure implements Storable {
     this.schemaUpdateStrategy = schemaUpdateStrategy;
   }
 
+
+  public void setRetentionTime(RetentionTimeConfig retentionTime) {
+    this.retentionTime = retentionTime;
+  }
+
+  public void deleteRetentionTime() {
+    this.retentionTime = null;
+  }
+
+  public RetentionTimeConfig getRetentionTime() {
+    return retentionTime;
+  }
+
   /**
    * This can be used to get the name of the timestamp property without the stream prefix
    *
@@ -147,7 +170,8 @@ public class DataLakeMeasure implements Storable {
   @TsIgnore
   @JsonIgnore
   public String getTimestampFieldName() {
-    return timestampField.split(STREAM_PREFIX_DELIMITER)[1];
+    var timestampWithPrefix = timestampField.split(STREAM_PREFIX_DELIMITER);
+    return timestampWithPrefix.length > 1 ? timestampWithPrefix[1] : timestampField;
   }
 
   @Override

@@ -24,6 +24,7 @@ import { PipelineAction } from '../../../pipelines/model/pipeline-model';
     selector: 'sp-pipeline-started-status',
     templateUrl: './pipeline-started-status.component.html',
     styleUrls: ['./pipeline-started-status.component.scss'],
+    standalone: false,
 })
 export class PipelineStartedStatusComponent implements OnInit {
     @Input()

@@ -20,13 +20,12 @@ package org.apache.streampipes.export.dataimport;
 
 
 import org.apache.streampipes.export.resolver.AdapterResolver;
+import org.apache.streampipes.export.resolver.ChartResolver;
 import org.apache.streampipes.export.resolver.DashboardResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
-import org.apache.streampipes.export.resolver.DataViewResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
-import org.apache.streampipes.export.utils.ImportAdapterMigrationUtils;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 
@@ -69,21 +68,24 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   protected void handleAdapter(String document,
                                String adapterId) throws JsonProcessingException {
     try {
-      var convertedDoc = ImportAdapterMigrationUtils.checkAndPerformMigration(document);
-      addExportItem(adapterId, new AdapterResolver().readDocument(convertedDoc).getName(), importConfig::addAdapter);
+      addExportItem(adapterId, new AdapterResolver().readDocument(document).getName(), importConfig::addAdapter);
     } catch (IllegalArgumentException e) {
       LOG.warn("Skipping import of data set adapter {}", adapterId);
     }
   }
 
   @Override
-  protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
-    addExportItem(dashboardId, new DashboardResolver().readDocument(document).getName(), importConfig::addDashboard);
+  protected void handleChart(String document, String dataViewId) throws JsonProcessingException {
+    addExportItem(
+        dataViewId,
+        new ChartResolver().readDocument(document).getBaseAppearanceConfig().get("widgetTitle").toString(),
+        importConfig::addDataView
+    );
   }
 
   @Override
-  protected void handleDataView(String document, String dataViewId) throws JsonProcessingException {
-    addExportItem(dataViewId, new DataViewResolver().readDocument(document).getName(), importConfig::addDataView);
+  protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
+    addExportItem(dashboardId, new DashboardResolver().readDocument(document).getName(), importConfig::addDashboard);
   }
 
   @Override
@@ -103,21 +105,16 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   }
 
   @Override
-  protected void handleDashboardWidget(String document, String dashboardWidgetId) {
-
-  }
-
-  @Override
-  protected void handleDataViewWidget(String document, String dataViewWidget) {
-
-  }
-
-  @Override
   protected void handleFile(String document,
                             String fileMetadataId,
                             Map<String, byte[]> zipContent) throws JsonProcessingException {
     addExportItem(fileMetadataId, new FileResolver().readDocument(document).getFilename(),
         importConfig::addFile);
+  }
+
+  @Override
+  protected void handleGenericStorageDocument(String document, String genericDocId) throws JsonProcessingException {
+    addExportItem(genericDocId, genericDocId, importConfig::addGenericStorageDocument);
   }
 
   @Override

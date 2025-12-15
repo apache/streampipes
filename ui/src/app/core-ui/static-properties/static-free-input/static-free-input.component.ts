@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import {
@@ -31,16 +31,20 @@ import {
 } from '../input.validator';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { QuillEditorComponent } from 'ngx-quill';
+import { TranslateService } from '@ngx-translate/core';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 
 @Component({
     selector: 'sp-app-static-free-input',
     templateUrl: './static-free-input.component.html',
     styleUrls: ['./static-free-input.component.scss'],
+    standalone: false,
 })
 export class StaticFreeInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FreeTextStaticProperty>
     implements OnInit
 {
+    translateService = inject(TranslateService);
     quillModules: any = {
         toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
@@ -58,6 +62,8 @@ export class StaticFreeInputComponent
     @ViewChild('textEditor', { static: false })
     quillEditorComponent: QuillEditorComponent;
 
+    @ViewChild('autosize') autosize: CdkTextareaAutosize;
+
     constructor() {
         super();
     }
@@ -66,6 +72,7 @@ export class StaticFreeInputComponent
         this.addValidator(this.staticProperty.value, this.collectValidators());
         this.enableValidators();
         this.emitUpdate();
+        console.log(this.staticProperty);
     }
 
     collectValidators() {
@@ -78,15 +85,21 @@ export class StaticFreeInputComponent
             DataType.isNumberType(this.staticProperty.requiredDomainProperty)
         ) {
             validators.push(ValidateNumber);
-            this.errorMessage = 'The value should be a number';
+            this.errorMessage = this.translateService.instant(
+                'The value should be a number',
+            );
         } else if (
             this.staticProperty.requiredDomainProperty === SemanticType.SO_URL
         ) {
             validators.push(ValidateUrl);
-            this.errorMessage = 'Please enter a valid URL';
+            this.errorMessage = this.translateService.instant(
+                'Please enter a valid URL',
+            );
         } else if (this.staticProperty.requiredDatatype === DataType.STRING) {
             validators.push(ValidateString);
-            this.errorMessage = 'Please enter a valid String';
+            this.errorMessage = this.translateService.instant(
+                'Please enter a valid String',
+            );
         }
 
         return validators;

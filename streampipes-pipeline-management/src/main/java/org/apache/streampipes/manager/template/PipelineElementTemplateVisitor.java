@@ -28,6 +28,7 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
@@ -58,11 +59,38 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   @Override
   public void visit(AnyStaticProperty property) {
     if (hasConfig(property)) {
-      List<String> value = getConfigValueAsStringList(property);
-      property.getOptions().forEach(option -> {
-        option.setSelected(value.stream().anyMatch(v -> v.equals(option.getName())));
-      });
+      var values = getConfigValueAsStringList(property);
+      if (property instanceof RuntimeResolvableAnyStaticProperty) {
+        this.handleRuntimeResolvableAnyStaticProperty(property, values);
+      } else {
+        this.handleAnyStaticProperty(property, values);
+      }
     }
+  }
+
+  /**
+   * Creates options an option for each value provided in the valuse list.
+   * Compact adapters do not call the runtime resovable endpoint, so we need to generate the options here
+   */
+  private AnyStaticProperty handleRuntimeResolvableAnyStaticProperty(AnyStaticProperty property, List<String> values) {
+    var options = new ArrayList<Option>();
+    values.forEach(v -> {
+      options.add(new Option(v, true));
+    });
+    property.setOptions(options);
+    return property;
+  }
+
+  /**
+   * For AnyStaticProperties the options are already defined, therefore we only need to set the selected to true
+   */
+  private AnyStaticProperty handleAnyStaticProperty(AnyStaticProperty property, List<String> values) {
+    property.getOptions()
+            .forEach(option -> {
+              option.setSelected(values.stream()
+                                       .anyMatch(v -> v.equals(option.getName())));
+            });
+    return property;
   }
 
   @Override
@@ -81,7 +109,8 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
         StaticProperty sp = new Cloner().staticProperty(collectionStaticProperty.getStaticPropertyTemplate());
         PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(List.of(v));
         sp.accept(visitor);
-        collectionStaticProperty.getMembers().add(sp);
+        collectionStaticProperty.getMembers()
+                                .add(sp);
       });
     }
   }
@@ -132,10 +161,13 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   public void visit(OneOfStaticProperty oneOfStaticProperty) {
     if (hasConfig(oneOfStaticProperty)) {
       String value = getConfigValueAsString(oneOfStaticProperty);
-      oneOfStaticProperty.getOptions().forEach(option ->
-          option.setSelected(option.getName().equals(value)));
+      oneOfStaticProperty.getOptions()
+                         .forEach(option ->
+                                      option.setSelected(option.getName()
+                                                               .equals(value)));
       if (oneOfStaticProperty instanceof RuntimeResolvableOneOfStaticProperty
-          && oneOfStaticProperty.getOptions().isEmpty()) {
+          && oneOfStaticProperty.getOptions()
+                                .isEmpty()) {
         oneOfStaticProperty.setOptions(List.of(new Option(value, true)));
       }
     }
@@ -172,11 +204,13 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     if (hasConfig(staticPropertyAlternatives)) {
       Map<String, Object> values = getConfig(staticPropertyAlternatives);
       var selectedId = getConfigValueAsString(staticPropertyAlternatives);
-      staticPropertyAlternatives.getAlternatives().forEach(a -> a.setSelected(false));
+      staticPropertyAlternatives.getAlternatives()
+                                .forEach(a -> a.setSelected(false));
       staticPropertyAlternatives
           .getAlternatives()
           .stream()
-          .filter(a -> a.getInternalName().equalsIgnoreCase(selectedId))
+          .filter(a -> a.getInternalName()
+                        .equalsIgnoreCase(selectedId))
           .forEach(a -> {
             a.setSelected(true);
             PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(List.of(values));
@@ -187,11 +221,12 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(StaticPropertyGroup staticPropertyGroup) {
-    staticPropertyGroup.getStaticProperties().forEach(group -> {
-      PipelineElementTemplateVisitor visitor =
-          new PipelineElementTemplateVisitor(configs);
-      group.accept(visitor);
-    });
+    staticPropertyGroup.getStaticProperties()
+                       .forEach(group -> {
+                         PipelineElementTemplateVisitor visitor =
+                             new PipelineElementTemplateVisitor(configs);
+                         group.accept(visitor);
+                       });
   }
 
   @Override
@@ -211,11 +246,12 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(RuntimeResolvableGroupStaticProperty staticPropertyGroup) {
-    staticPropertyGroup.getStaticProperties().forEach(group -> {
-      PipelineElementTemplateVisitor visitor =
-          new PipelineElementTemplateVisitor(configs);
-      group.accept(visitor);
-    });
+    staticPropertyGroup.getStaticProperties()
+                       .forEach(group -> {
+                         PipelineElementTemplateVisitor visitor =
+                             new PipelineElementTemplateVisitor(configs);
+                         group.accept(visitor);
+                       });
   }
 
 
@@ -231,16 +267,20 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
         .orElseThrow(() -> new IllegalArgumentException(String.format("No key found: %s", key)));
   }
 
-  private boolean hasKeyCaseInsensitive(String internalName,
-                                        Map<String, Object> templateConfig) {
+  private boolean hasKeyCaseInsensitive(
+      String internalName,
+      Map<String, Object> templateConfig
+  ) {
     return templateConfig
         .entrySet()
         .stream()
-        .anyMatch(entry -> entry.getKey().equalsIgnoreCase(internalName));
+        .anyMatch(entry -> entry.getKey()
+                                .equalsIgnoreCase(internalName));
   }
 
   private boolean hasConfig(StaticProperty sp) {
-    return configs.stream().anyMatch(c -> hasKeyCaseInsensitive(sp.getInternalName(), c));
+    return configs.stream()
+                  .anyMatch(c -> hasKeyCaseInsensitive(sp.getInternalName(), c));
   }
 
   private String getConfigValueAsString(StaticProperty sp) {
@@ -261,22 +301,26 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     return getValueAsStringList(getConfig(sp), sp.getInternalName());
   }
 
-  private String getCaseInsensitiveKey(Map<String, Object> config,
-                                       String key) {
-    return config.keySet().stream()
-        .filter(k -> k.equalsIgnoreCase(key))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Key not found: " + key));
+  private String getCaseInsensitiveKey(
+      Map<String, Object> config,
+      String key
+  ) {
+    return config.keySet()
+                 .stream()
+                 .filter(k -> k.equalsIgnoreCase(key))
+                 .findFirst()
+                 .orElseThrow(() -> new IllegalArgumentException("Key not found: " + key));
   }
 
   private List<String> getValueAsStringList(Map<String, Object> config, String key) {
     String caseInsensitiveKey = getCaseInsensitiveKey(config, key);
 
     return Optional.ofNullable(config.get(caseInsensitiveKey))
-        .filter(value -> value instanceof List<?>)
-        .map(value -> ((List<?>) value).stream())
-        .map(s -> s.map(String.class::cast).collect(Collectors.toList()))
-        .orElseThrow(() -> new IllegalArgumentException("Value is not a List<String>"));
+                   .filter(value -> value instanceof List<?>)
+                   .map(value -> ((List<?>) value).stream())
+                   .map(s -> s.map(String.class::cast)
+                              .collect(Collectors.toList()))
+                   .orElseThrow(() -> new IllegalArgumentException("Value is not a List<String>"));
   }
 
   private List<Map<String, Object>> getConfigValueAsList(StaticProperty sp) {
@@ -290,7 +334,8 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   private List<Map<String, Object>> getCaseInsensitiveList(Map<String, Object> map, String key) {
     for (Map.Entry<String, Object> entry : map.entrySet()) {
-      if (entry.getKey().equalsIgnoreCase(key)) {
+      if (entry.getKey()
+               .equalsIgnoreCase(key)) {
         return (List<Map<String, Object>>) entry.getValue();
       }
     }

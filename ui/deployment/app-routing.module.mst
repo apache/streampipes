@@ -22,7 +22,6 @@ import {HomeComponent} from "./home/home.component";
 import {LoginComponent} from "./login/components/login/login.component";
 import {SetupComponent} from "./login/components/setup/setup.component";
 import {StreampipesComponent} from "./core/components/streampipes/streampipes.component";
-import {StandaloneDashboardComponent} from "./dashboard/components/standalone/standalone-dashboard.component";
 import {AuthCanActivateChildrenGuard} from "./_guards/auth.can-activate-children.guard";
 import {ConfiguredCanActivateGuard} from "./_guards/configured.can-activate.guard";
 import {StartupComponent} from "./login/components/startup/startup.component";
@@ -40,6 +39,9 @@ import { RestorePasswordAllowedCanActivateGuard } from './_guards/restore-passwo
 import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
 import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
 import { UserPrivilege } from './_enums/user-privilege.enum';
+import { TermsComponent } from './login/components/terms/terms.component';
+import { AuthCanActivateGuard } from './_guards/auth.can-activate.guard';
+import { TermsCanActivateChildrenGuard } from './_guards/terms.can-activate-children.guard';
 
 {{#modulesActive}}
 {{#componentImport}}
@@ -51,14 +53,14 @@ const routes: Routes = [
   { path: 'apidocs', component: ApidocsComponent, canActivate: [ConfiguredCanActivateGuard]},
   { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard],
   data: {animation: 'LoginPage'}},
+  { path: 'dashboard-kiosk', loadChildren: () => import('./dashboard-kiosk/dashboard-kiosk.module').then(m => m.DashboardKioskModule), canActivate: [ConfiguredCanActivateGuard]},
   { path: 'register', component: RegisterComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
+  { path: 'terms', component: TermsComponent, canActivate: [AuthCanActivateGuard] },
   { path: 'activate-account', component: ActivateAccountComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
   { path: 'restore-password', component: RestorePasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'set-new-password', component: SetNewPasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
-  { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
   { path: '', component: StreampipesComponent, children: [
-      { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
       {{#modulesActive}}
       {{#componentImport}}
       { path: '{{{link}}}', component: {{{component}}}, data: { privileges: {{{privileges}}}, authPageNames: [{{{pageNames}}}]}},
@@ -71,7 +73,7 @@ const routes: Routes = [
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
       { path: 'profile', component: ProfileComponent},
-    ], canActivateChild: [AuthCanActivateChildrenGuard, PageAuthGuard] }
+    ], canActivateChild: [AuthCanActivateChildrenGuard, PageAuthGuard, TermsCanActivateChildrenGuard] }
 ];
 
 @NgModule({

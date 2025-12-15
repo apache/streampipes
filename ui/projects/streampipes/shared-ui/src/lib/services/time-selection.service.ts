@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
     DashboardLiveSettings,
@@ -40,9 +40,12 @@ import {
     subYears,
 } from 'date-fns';
 import { TimeSelectorLabel } from '../components/time-selector/time-selector.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class TimeSelectionService {
+    translateService = inject(TranslateService);
+
     legacyMappings: Record<number, string> = {
         15: TimeSelectionConstants.LAST_15_MINUTES,
         60: TimeSelectionConstants.LAST_HOUR,
@@ -53,86 +56,88 @@ export class TimeSelectionService {
     };
 
     defaultLabels: TimeSelectorLabel = {
-        quickSelectionLabel: 'Quick Selection',
-        customLabel: 'Custom',
-        maxDayRangeErrorLabel:
+        quickSelectionLabel: this.translateService.instant('Quick Selection'),
+        customLabel: this.translateService.instant('Custom'),
+        maxDayRangeErrorLabel: this.translateService.instant(
             'Maximum of ${this.maxDayRange} days can be displayed. Please select a smaller range.',
-        timeRangeSelectorTooltip: 'Modify time range',
+        ),
+        timeRangeSelectorTooltip:
+            this.translateService.instant('Modify time range'),
     };
 
     defaultQuickTimeSelections: QuickTimeSelection[] = [
         {
-            label: 'Last 15 min',
+            label: this.translateService.instant('Last 15 min'),
             timeSelectionId: TimeSelectionConstants.LAST_15_MINUTES,
             startTime: now => subMinutes(now, 15),
             endTime: now => now,
             supportsLiveRefresh: true,
         },
         {
-            label: 'Last 1 hour',
+            label: this.translateService.instant('Last 1 hour'),
             timeSelectionId: TimeSelectionConstants.LAST_HOUR,
             startTime: now => subHours(now, 1),
             endTime: now => now,
             supportsLiveRefresh: true,
         },
         {
-            label: 'Last 1 day',
+            label: this.translateService.instant('Last 1 day'),
             timeSelectionId: TimeSelectionConstants.LAST_DAY,
             startTime: now => subDays(now, 1),
             endTime: now => now,
             supportsLiveRefresh: true,
         },
         {
-            label: 'Last 1 week',
+            label: this.translateService.instant('Last 1 week'),
             timeSelectionId: TimeSelectionConstants.LAST_WEEK,
             startTime: now => subWeeks(now, 1),
             endTime: now => now,
             supportsLiveRefresh: true,
         },
         {
-            label: 'Last 1 month',
+            label: this.translateService.instant('Last 1 month'),
             timeSelectionId: TimeSelectionConstants.LAST_MONTH,
             startTime: now => subMonths(now, 1),
             endTime: now => now,
             supportsLiveRefresh: true,
         },
         {
-            label: 'Last 1 year',
+            label: this.translateService.instant('Last 1 year'),
             timeSelectionId: TimeSelectionConstants.LAST_YEAR,
             startTime: now => subYears(now, 1),
             endTime: now => now,
             supportsLiveRefresh: true,
         },
         {
-            label: 'Current day',
+            label: this.translateService.instant('Current day'),
             timeSelectionId: TimeSelectionConstants.CURRENT_DAY,
             startTime: now => startOfDay(now),
             endTime: now => now,
             supportsLiveRefresh: true,
         },
         {
-            label: 'Current hour',
+            label: this.translateService.instant('Current hour'),
             timeSelectionId: TimeSelectionConstants.CURRENT_HOUR,
             startTime: now => startOfHour(now),
             endTime: now => now,
             supportsLiveRefresh: true,
         },
         {
-            label: 'Current week',
+            label: this.translateService.instant('Current week'),
             timeSelectionId: TimeSelectionConstants.CURRENT_WEEK,
             startTime: now => startOfWeek(now),
             endTime: now => now,
             supportsLiveRefresh: true,
         },
         {
-            label: 'Current month',
+            label: this.translateService.instant('Current month'),
             timeSelectionId: TimeSelectionConstants.CURRENT_MONTH,
             startTime: now => startOfMonth(now),
             endTime: now => now,
             supportsLiveRefresh: true,
         },
         {
-            label: 'Current year',
+            label: this.translateService.instant('Current year'),
             timeSelectionId: TimeSelectionConstants.CURRENT_YEAR,
             startTime: now => startOfYear(now),
             endTime: now => now,
@@ -142,46 +147,46 @@ export class TimeSelectionService {
 
     defaultAvailableLiveSettingsOptions: DashboardLiveSettings[] = [
         {
-            label: 'Off',
+            label: this.translateService.instant('Off'),
             refreshModeActive: false,
         },
         {
-            label: '1 sec',
+            label: this.translateService.instant('1 sec'),
             refreshModeActive: true,
             refreshIntervalInSeconds: 1,
         },
         {
-            label: '2 sec',
+            label: this.translateService.instant('2 sec'),
             refreshModeActive: true,
             refreshIntervalInSeconds: 2,
         },
         {
-            label: '5 sec',
+            label: this.translateService.instant('5 sec'),
             refreshModeActive: true,
             refreshIntervalInSeconds: 5,
         },
         {
-            label: '10 sec',
+            label: this.translateService.instant('10 sec'),
             refreshModeActive: true,
             refreshIntervalInSeconds: 10,
         },
         {
-            label: '30 sec',
+            label: this.translateService.instant('30 sec'),
             refreshModeActive: true,
             refreshIntervalInSeconds: 30,
         },
         {
-            label: '1 min',
+            label: this.translateService.instant('1 min'),
             refreshModeActive: true,
             refreshIntervalInSeconds: 60,
         },
         {
-            label: '5 min',
+            label: this.translateService.instant('5 min'),
             refreshModeActive: true,
             refreshIntervalInSeconds: 300,
         },
         {
-            label: '30 min',
+            label: this.translateService.instant('30 min'),
             refreshModeActive: true,
             refreshIntervalInSeconds: 60 * 30,
         },

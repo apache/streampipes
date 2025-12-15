@@ -23,6 +23,7 @@ import { CompactPipelineTemplate } from '@streampipes/platform-services';
     selector: 'sp-template-selection',
     templateUrl: './template-selection.component.html',
     styleUrls: ['./template-selection.component.scss'],
+    standalone: false,
 })
 export class TemplateSelectionComponent {
     @Input()

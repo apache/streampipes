@@ -39,7 +39,7 @@ import {
     SpDataStream,
     WildcardTopicDefinition,
 } from '@streampipes/platform-services';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash.clonedeep';
 import { EditorService } from '../../services/editor.service';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { CompatibleElementsComponent } from '../../dialog/compatible-elements/compatible-elements.component';
@@ -50,6 +50,7 @@ import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
     selector: 'sp-pipeline-element-options',
     templateUrl: './pipeline-element-options.component.html',
     styleUrls: ['./pipeline-element-options.component.scss'],
+    standalone: false,
 })
 export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     recommendationsAvailable: any = false;

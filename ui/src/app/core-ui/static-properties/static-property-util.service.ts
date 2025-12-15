@@ -155,9 +155,11 @@ export class StaticPropertyUtilService {
             val instanceof RuntimeResolvableAnyStaticProperty ||
             val instanceof RuntimeResolvableOneOfStaticProperty
         ) {
-            val instanceof RuntimeResolvableAnyStaticProperty
-                ? (clone = new RuntimeResolvableAnyStaticProperty())
-                : (clone = new RuntimeResolvableOneOfStaticProperty());
+            if (val instanceof RuntimeResolvableAnyStaticProperty) {
+                clone = new RuntimeResolvableAnyStaticProperty();
+            } else {
+                clone = new RuntimeResolvableOneOfStaticProperty();
+            }
 
             clone.elementId = id;
             clone.dependsOn = val.dependsOn;
@@ -167,9 +169,11 @@ export class StaticPropertyUtilService {
             val instanceof AnyStaticProperty ||
             val instanceof OneOfStaticProperty
         ) {
-            val instanceof AnyStaticProperty
-                ? (clone = new AnyStaticProperty())
-                : (clone = new OneOfStaticProperty());
+            if (val instanceof AnyStaticProperty) {
+                clone = new AnyStaticProperty();
+            } else {
+                clone = new OneOfStaticProperty();
+            }
 
             clone.elementId = id;
             clone.options = val.options.map(option => this.cloneOption(option));

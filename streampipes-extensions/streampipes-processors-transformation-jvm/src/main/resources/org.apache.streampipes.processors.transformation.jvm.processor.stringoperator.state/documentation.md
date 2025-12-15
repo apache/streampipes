@@ -26,20 +26,81 @@
 
 ## Description
 
-Convert string fields to a state representing the current state of the system.
-This processor requires one or multiple string values in the data stream.
-For each of the selected values is added to the states field.
+The String To State processor transforms string properties into a list of state values. It supports:
+* Multiple string inputs
+* List-based state output
+* Field value preservation
+* State collection
+
+This processor is essential for:
+* Converting strings to states
+* Collecting multiple states
+* Preserving field values
+* Creating state lists
+
 ***
 
 ## Required input
 
-### String Fields
-String fields that are added to the state array
+The processor requires a data stream containing at least one string field to convert into a state.
 
 ***
 
 ## Configuration
-No further configuration required
+
+### State Field
+
+Select one or more string fields to convert into states. The values of these fields will be collected into a list of states.
 
 ## Output
-The output contains a new value with the string values of the state
+
+The processor creates a new event containing:
+* All original fields from the input event
+* A new field named "current_state" containing a list of the selected string field values
+
+### Example
+
+#### Input Event
+```json
+{
+  "deviceId": "sensor01",
+  "status": "running",
+  "mode": "normal"
+}
+```
+
+#### Configuration
+* State Fields: status, mode
+
+#### Output Event
+```json
+{
+  "deviceId": "sensor01",
+  "status": "running",
+  "mode": "normal",
+  "current_state": ["running", "normal"]
+}
+```
+
+## Use Cases
+
+1. **State Collection**
+   * Gather multiple states
+   * Track field values
+   * Monitor statuses
+   * Collect modes
+
+2. **State Analysis**
+   * Analyze state combinations
+   * Track value patterns
+   * Monitor field changes
+   * Process state lists
+
+## Notes
+
+* Multiple fields can be selected
+* Output is always a list
+* Original fields are preserved
+* Processing is stateless
+* Empty selections result in empty list
+* Field values are preserved as-is

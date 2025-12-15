@@ -18,26 +18,26 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.hasher;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.transformation.jvm.processor.hasher.algorithm.HashAlgorithm;
 import org.apache.streampipes.processors.transformation.jvm.processor.hasher.algorithm.HashAlgorithmType;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class FieldHasherProcessor extends StreamPipesDataProcessor {
+public class FieldHasherProcessor implements IStreamPipesDataProcessor {
 
   private static final String HASH_PROPERTIES = "property-mapping";
   private static final String HASH_ALGORITHM = "hash-algorithm";
@@ -46,42 +46,55 @@ public class FieldHasherProcessor extends StreamPipesDataProcessor {
   private HashAlgorithm hashAlgorithm;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.fieldhasher", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
-                (HASH_PROPERTIES), PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(HASH_ALGORITHM),
-            Options.from("SHA1", "SHA2", "MD5"))
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        FieldHasherProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.fieldhasher", 0)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.stringReq(),
+                                    Labels.withId(HASH_PROPERTIES), PropertyScope.NONE
+                                )
+                                .build())
+            .requiredSingleValueSelection(
+                Labels.withId(HASH_ALGORITHM),
+                Options.from("SHA1", "SHA2", "MD5")
+            )
+            .outputStrategy(OutputStrategies.keep())
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(
+      IDataProcessorParameters parameters,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) {
     var extractor = parameters.extractor();
     this.propertyName = extractor.mappingPropertyValue(HASH_PROPERTIES);
-
     this.hashAlgorithm =
-        HashAlgorithmType.valueOf(extractor.selectedSingleValue(HASH_ALGORITHM, String.class)).hashAlgorithm();
+        HashAlgorithmType.valueOf(extractor.selectedSingleValue(HASH_ALGORITHM, String.class))
+                         .hashAlgorithm();
   }
 
   @Override
-  public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
-    in.updateFieldBySelector(propertyName,
-        hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName).getAsPrimitive().getAsString()));
+  public void onEvent(Event in, SpOutputCollector out) {
+    in.updateFieldBySelector(
+        propertyName,
+        hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName)
+                                    .getAsPrimitive()
+                                    .getAsString())
+    );
     out.collect(in);
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }
+

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AssetConstants,
@@ -24,11 +24,13 @@ import {
     GenericStorageService,
     LocationConfig,
 } from '@streampipes/platform-services';
+import { EditAssetLocationComponent } from './edit-location/edit-location.component';
 
 @Component({
     selector: 'sp-manage-site-dialog-component',
     templateUrl: './manage-site-dialog.component.html',
     styleUrls: ['./manage-site-dialog.component.scss'],
+    standalone: false,
 })
 export class ManageSiteDialogComponent implements OnInit {
     @Input()
@@ -36,6 +38,9 @@ export class ManageSiteDialogComponent implements OnInit {
 
     @Input()
     locationConfig: LocationConfig;
+
+    @ViewChild('editLocation')
+    editLocationComponent: EditAssetLocationComponent;
 
     clonedSite: AssetSiteDesc;
     createMode = false;
@@ -61,7 +66,7 @@ export class ManageSiteDialogComponent implements OnInit {
         this.clonedSite = {
             appDocType: AssetConstants.ASSET_SITES_APP_DOC_NAME,
             _id: undefined,
-            label: 'New site',
+            label: '',
             location: { coordinates: { latitude: 0, longitude: 0 } },
             areas: [],
         };
@@ -69,6 +74,11 @@ export class ManageSiteDialogComponent implements OnInit {
     }
 
     store(): void {
+        const formData = this.editLocationComponent?.siteAreaControl;
+        const { label, location } = formData.value;
+        this.clonedSite.label = label;
+        this.clonedSite.location = location;
+
         const observable = this.createMode
             ? this.genericStorageService.createDocument(
                   AssetConstants.ASSET_SITES_APP_DOC_NAME,

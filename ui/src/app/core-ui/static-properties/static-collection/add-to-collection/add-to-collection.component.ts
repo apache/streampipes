@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { StaticPropertyUtilService } from '../../static-property-util.service';
 import {
     FreeTextStaticProperty,
@@ -24,13 +24,17 @@ import {
     StaticProperty,
 } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-add-to-collection',
     templateUrl: './add-to-collection.component.html',
     styleUrls: ['./add-to-collection.component.scss'],
+    standalone: false,
 })
 export class AddToCollectionComponent {
+    translateService = inject(TranslateService);
+
     @Input()
     public staticPropertyTemplate: StaticProperty;
 
@@ -45,7 +49,7 @@ export class AddToCollectionComponent {
     public fileName: string;
 
     public hasError = false;
-    public errorMessage = 'This is a test';
+    public errorMessage = this.translateService.instant('This is a test');
 
     constructor(private staticPropertyUtil: StaticPropertyUtilService) {}
 
@@ -160,11 +164,13 @@ export class AddToCollectionComponent {
             option.selected = true;
         } else {
             this.setError(
-                'Error in line ' +
-                    rowNumber +
-                    '. Value for "' +
-                    property.label +
-                    '" is not supported',
+                this.translateService.instant(
+                    'Error in line {{rowNumber}}. Value for "{{property}}" is not supported.',
+                    {
+                        rowNumber,
+                        property: property.label,
+                    },
+                ),
             );
         }
     }
@@ -176,11 +182,13 @@ export class AddToCollectionComponent {
     ) {
         if (row[property.label] === undefined || row[property.label] === '') {
             this.setError(
-                'Error in line ' +
-                    rowNumber +
-                    '. Value for "' +
-                    property.label +
-                    '" is not set',
+                this.translateService.instant(
+                    'Error in line {{rowNumber}}. Value for "{{property}}" is not set.',
+                    {
+                        rowNumber,
+                        property: property.label,
+                    },
+                ),
             );
         } else {
             property.value = row[property.label];

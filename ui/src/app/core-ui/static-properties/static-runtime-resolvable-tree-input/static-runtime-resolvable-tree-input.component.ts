@@ -32,6 +32,7 @@ import { StaticTreeInputBrowseNodesComponent } from './static-tree-input-browse-
     selector: 'sp-static-runtime-resolvable-tree-input',
     templateUrl: './static-runtime-resolvable-tree-input.component.html',
     styleUrls: ['./static-runtime-resolvable-tree-input.component.scss'],
+    standalone: false,
 })
 export class StaticRuntimeResolvableTreeInputComponent
     extends BaseRuntimeResolvableInput<RuntimeResolvableTreeInputStaticProperty>
@@ -101,7 +102,7 @@ export class StaticRuntimeResolvableTreeInputComponent
     ) {
         if (
             staticProperty.latestFetchedNodes &&
-            staticProperty.latestFetchedNodes.length > 0
+            staticProperty.nextBaseNodeToResolve !== null
         ) {
             this.latestFetchedNodes = staticProperty.latestFetchedNodes;
             if (node) {

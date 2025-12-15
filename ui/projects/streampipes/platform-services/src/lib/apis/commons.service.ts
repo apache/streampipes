@@ -22,8 +22,6 @@ import { Injectable } from '@angular/core';
     providedIn: 'root',
 })
 export class PlatformServicesCommons {
-    constructor() {}
-
     get basePath(): string {
         return '/streampipes-backend';
     }

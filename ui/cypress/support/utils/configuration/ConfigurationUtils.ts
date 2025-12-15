@@ -28,4 +28,28 @@ export class ConfigurationUtils {
     public static goToGeneralConfiguration() {
         cy.visit('#/configuration/general');
     }
+
+    public static goToLabelConfiguration() {
+        cy.visit('#/configuration/labels');
+    }
+
+    public static addNewLabel(name: string, description: string) {
+        cy.dataCy('new-label-button').click();
+        cy.dataCy('label-name').type(name);
+        cy.dataCy('label-description').type(description);
+        cy.dataCy('save-label-button').click();
+    }
+
+    public static checkLabel(labelName: string) {
+        cy.dataCy('available-labels-list').should('have.length', 1);
+        cy.dataCy('label-text').should($el => {
+            const text = $el.text().trim();
+            expect(text).to.equal(labelName);
+        });
+    }
+
+    public static deleteLabel() {
+        cy.dataCy('delete-label-button').click();
+        cy.dataCy('available-labels-list').should('have.length', 0);
+    }
 }

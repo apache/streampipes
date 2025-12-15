@@ -15,6 +15,8 @@
  *  limitations under the License.
  *
  */
+import { GeneralUtils } from '../GeneralUtils';
+
 export class ConnectBtns {
     public static detailsAdapter() {
         return cy.dataCy('details-adapter', { timeout: 10000 });
@@ -24,8 +26,12 @@ export class ConnectBtns {
         return cy.dataCy('delete-adapter', { timeout: 10000 });
     }
 
+    public static moreOptions() {
+        return cy.dataCy('more-options', { timeout: 10000 });
+    }
+
     public static editAdapter() {
-        return cy.dataCy('edit-adapter');
+        return cy.dataCy('edit-adapter', { timeout: 10000 });
     }
 
     public static stopAdapter() {
@@ -34,6 +40,16 @@ export class ConnectBtns {
 
     public static startAdapter() {
         return cy.dataCy('start-adapter');
+    }
+
+    public static adapterOperationInProgressSpinner() {
+        return cy.dataCy('adapter-operation-in-progress-spinner', {
+            timeout: 10000,
+        });
+    }
+
+    public static openActionsMenu(adapterName: string) {
+        GeneralUtils.openMenuForRow(adapterName);
     }
 
     public static refreshSchema() {
@@ -77,6 +93,10 @@ export class ConnectBtns {
         return cy.dataCy('show-code-checkbox');
     }
 
+    public static assetCheckbox() {
+        return cy.dataCy('show-asset-checkbox');
+    }
+
     // ========================================================================
 
     // =====================  Event Schema buttons  ==========================
@@ -94,6 +114,10 @@ export class ConnectBtns {
     }
 
     public static saveEditProperty() {
+        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
+            'have.length',
+            1,
+        );
         return cy.dataCy('sp-save-edit-property', { timeout: 10000 });
     }
 

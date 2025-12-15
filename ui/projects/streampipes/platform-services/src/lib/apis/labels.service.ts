@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { SpLabel } from '../model/labels/labels.model';
 import { Observable } from 'rxjs';
 import { GenericStorageService } from './generic-storage.service';
@@ -27,7 +27,7 @@ import { GenericStorageService } from './generic-storage.service';
 export class LabelsService {
     appDocType = 'sp-labels';
 
-    constructor(private genericStorageService: GenericStorageService) {}
+    private genericStorageService = inject(GenericStorageService);
 
     getAllLabels(): Observable<SpLabel[]> {
         return this.genericStorageService.getAllDocuments(this.appDocType);

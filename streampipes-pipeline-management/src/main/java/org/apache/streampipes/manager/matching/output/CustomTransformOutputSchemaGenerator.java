@@ -33,6 +33,7 @@ import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<CustomTransformOutputStrategy> {
 
@@ -79,7 +80,7 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   }
 
   private EventSchema handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
-    String resp = httpResp.returnContent().asString();
+    String resp = httpResp.returnContent().asString(StandardCharsets.UTF_8);
 
     return JacksonSerializer
         .getObjectMapper()

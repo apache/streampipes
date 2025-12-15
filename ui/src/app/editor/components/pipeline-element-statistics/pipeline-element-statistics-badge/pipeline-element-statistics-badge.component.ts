@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-pipeline-element-statistics-badge',
     templateUrl: './pipeline-element-statistics-badge.component.html',
     styleUrls: ['./pipeline-element-statistics-badge.component.scss'],
+    standalone: false,
 })
 export class PipelineElementStatisticsBadgeComponent {
     @Input()

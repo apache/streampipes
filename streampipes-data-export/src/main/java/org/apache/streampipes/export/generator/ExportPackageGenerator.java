@@ -21,12 +21,11 @@ package org.apache.streampipes.export.generator;
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.export.resolver.AbstractResolver;
 import org.apache.streampipes.export.resolver.AdapterResolver;
+import org.apache.streampipes.export.resolver.ChartResolver;
 import org.apache.streampipes.export.resolver.DashboardResolver;
-import org.apache.streampipes.export.resolver.DashboardWidgetResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
-import org.apache.streampipes.export.resolver.DataViewResolver;
-import org.apache.streampipes.export.resolver.DataViewWidgetResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
+import org.apache.streampipes.export.resolver.GenericStorageDocumentResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.export.utils.SerializationUtils;
@@ -55,12 +54,10 @@ public class ExportPackageGenerator {
 
   private final ExportConfiguration exportConfiguration;
   private ObjectMapper defaultMapper;
-  private ObjectMapper spMapper;
 
   public ExportPackageGenerator(ExportConfiguration exportConfiguration) {
     this.exportConfiguration = exportConfiguration;
     this.defaultMapper = SerializationUtils.getDefaultObjectMapper();
-    this.spMapper = SerializationUtils.getSpObjectMapper();
   }
 
   public byte[] generateExportPackage() throws IOException {
@@ -74,23 +71,10 @@ public class ExportPackageGenerator {
         .collect(Collectors.toList()), manifest);
 
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
-
       config.getAdapters().forEach(item -> addDoc(builder,
           item,
           new AdapterResolver(),
           manifest::addAdapter));
-
-      config.getDashboards().forEach(item -> {
-        var resolver = new DashboardResolver();
-        addDoc(builder,
-            item,
-            resolver,
-            manifest::addDashboard);
-
-        var widgets = resolver.getWidgets(item.getResourceId());
-        var widgetResolver = new DashboardWidgetResolver();
-        widgets.forEach(widgetId -> addDoc(builder, widgetId, widgetResolver, manifest::addDashboardWidget));
-      });
 
       config.getDataSources().forEach(item -> addDoc(builder,
           item,
@@ -107,26 +91,38 @@ public class ExportPackageGenerator {
           new PipelineResolver(),
           manifest::addPipeline));
 
-      config.getDataViews().forEach(item -> {
-        var resolver = new DataViewResolver();
+      config.getDashboards().forEach(item -> {
+        var resolver = new DashboardResolver();
         addDoc(builder,
             item,
-            resolver,
-            manifest::addDataView);
+            new DashboardResolver(),
+            manifest::addDashboard);
+        var charts = resolver.getCharts(item.getResourceId());
+        var chartResolver = new ChartResolver();
+        charts.forEach(widgetId -> addDoc(builder, widgetId, chartResolver, manifest::addDataViewWidget));
+      });
 
-        var widgets = resolver.getWidgets(item.getResourceId());
-        var widgetResolver = new DataViewWidgetResolver();
-        widgets.forEach(widgetId -> addDoc(builder, widgetId, widgetResolver, manifest::addDataViewWidget));
+      config.getDataViews().forEach(item -> {
+        addDoc(builder,
+            item,
+            new ChartResolver(),
+            manifest::addDataView);
+      });
+
+      config.getGenericStorageDocuments().forEach(item -> {
+        addDoc(builder, item, new GenericStorageDocumentResolver(), manifest::addGenericStorageDocument);
       });
 
       config.getFiles().forEach(item -> {
-        var fileResolver = new FileResolver();
-        String filename = fileResolver.findDocument(item.getResourceId()).getFilename();
-        addDoc(builder, item, new FileResolver(), manifest::addFile);
-        try {
-          builder.addBinary(filename, Files.readAllBytes(new FileManager().getFile(filename).toPath()));
-        } catch (IOException e) {
-          e.printStackTrace();
+        if (item.isSelected()) {
+          var fileResolver = new FileResolver();
+          String filename = fileResolver.findDocument(item.getResourceId()).getFilename();
+          addDoc(builder, item, new FileResolver(), manifest::addFile);
+          try {
+            builder.addBinary(filename, Files.readAllBytes(new FileManager().getFile(filename).toPath()));
+          } catch (IOException e) {
+            LOG.warn("Could not add binary file to export package: {}", e.getMessage());
+          }
         }
       });
     });
@@ -149,10 +145,12 @@ public class ExportPackageGenerator {
                       AbstractResolver<?> resolver,
                       Consumer<String> function) {
     try {
-      var resourceId = exportItem.getResourceId();
-      var sanitizedResourceId = sanitize(resourceId);
-      builder.addText(sanitizedResourceId, resolver.getSerializedDocument(resourceId));
-      function.accept(sanitizedResourceId);
+      if (exportItem.isSelected()) {
+        var resourceId = exportItem.getResourceId();
+        var sanitizedResourceId = sanitize(resourceId);
+        builder.addText(sanitizedResourceId, resolver.getSerializedDocument(resourceId));
+        function.accept(sanitizedResourceId);
+      }
     } catch (JsonProcessingException | ElementNotFoundException e) {
       LOG.warn(
           "Could not find document with resource id {} with resolver {}",
@@ -176,7 +174,7 @@ public class ExportPackageGenerator {
         builder.addText(String.valueOf(asset.get("_id")), this.defaultMapper.writeValueAsString(asset));
         manifest.addAsset(String.valueOf(asset.get("_id")));
       } catch (IOException e) {
-        e.printStackTrace();
+        LOG.warn("Could not add asset to export package: {}", e.getMessage());
       }
     });
   }

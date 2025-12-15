@@ -23,6 +23,7 @@ import { PipelineUpdateInfo } from '@streampipes/platform-services';
     selector: 'sp-adapter-started-update-migration',
     templateUrl: './adapter-started-update-migration.component.html',
     styleUrls: ['./adapter-started-update-migration.component.scss'],
+    standalone: false,
 })
 export class SpAdapterStartedUpdateMigrationComponent {
     @Input()

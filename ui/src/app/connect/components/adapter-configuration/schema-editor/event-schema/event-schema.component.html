@@ -18,13 +18,14 @@
 
 <div fxLayout="column" fxLayoutAlign="center" class="mt-20">
     <div fxFlex="90" fxLayout="column">
-        <sp-event-schema-error-hints
-            [schemaErrorHints]="schemaErrorHints"
-            [isError]="isError"
-            [isLoading]="isLoading"
-        >
-        </sp-event-schema-error-hints>
-
+        @if (!isError && !isLoading) {
+            <sp-event-schema-error-hints
+                [schemaErrorHints]="schemaErrorHints"
+                [isError]="isError"
+                [isLoading]="isLoading"
+            >
+            </sp-event-schema-error-hints>
+        }
         <sp-basic-inner-panel
             [showTitle]="false"
             outerMargin="0px 0px 20px 0px"
@@ -60,7 +61,10 @@
             </div>
 
             <div fxFlex="100">
-                <sp-loading-message *ngIf="isLoading"></sp-loading-message>
+                <sp-loading-message
+                    *ngIf="isLoading"
+                    [currentProgress]="progress"
+                ></sp-loading-message>
 
                 <sp-error-message
                     [errorMessage]="errorMessage"
@@ -123,25 +127,21 @@
 </div>
 
 <div fxLayoutAlign="end" class="mt-10">
-    <button class="mat-basic" mat-raised-button (click)="removeSelection()">
-        Cancel
+    <button class="mat-basic" mat-flat-button (click)="removeSelection()">
+        {{ 'Cancel' | translate }}
     </button>
-    <button
-        class="mat-basic stepper-button"
-        mat-raised-button
-        (click)="goBack()"
-    >
-        Back
+    <button class="mat-basic stepper-button" mat-flat-button (click)="goBack()">
+        {{ 'Back' | translate }}
     </button>
     <button
         class="stepper-button"
         id="event-schema-next-button"
         data-cy="sp-event-schema-next-button"
         color="accent"
-        mat-raised-button
+        mat-flat-button
         (click)="clickNext()"
         [disabled]="!validEventSchema"
     >
-        Next
+        {{ 'Next' | translate }}
     </button>
 </div>

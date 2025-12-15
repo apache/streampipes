@@ -18,10 +18,8 @@
 
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
     <button
-        mat-button
-        mat-raised-button
-        color="accent"
-        matTooltip="Save Pipeline"
+        mat-flat-button
+        [matTooltip]="'Save pipeline' | translate"
         [matTooltipPosition]="'above'"
         [disabled]="!pipelineValidationService.pipelineValid"
         (click)="savePipelineEmitter.emit()"
@@ -30,57 +28,59 @@
     >
         <div fxLayoutAlign="start center" fxLayout="row">
             <i class="material-icons">save</i>
-            <span>&nbsp;Save pipeline</span>
+            <span>&nbsp;{{ 'Save' | translate }}</span>
         </div>
     </button>
     <span class="assembly-options-divider"></span>
     <button
-        mat-button
-        color="accent"
-        matTooltip="Data Preview"
+        mat-flat-button
+        class="mat-basic"
+        [matTooltip]="'Data Preview' | translate"
         matTooltipPosition="above"
         (click)="togglePreviewEmitter.emit()"
         [disabled]="isPipelineAssemblyEmpty()"
     >
         <div fxLayoutAlign="start center" fxLayout="row">
             <i class="material-icons">visibility</i>
-            <span *ngIf="!previewModeActive">&nbsp;Enable live preview</span>
-            <span *ngIf="previewModeActive">&nbsp;Disable live preview</span>
+            <span *ngIf="!previewModeActive"
+                >&nbsp;{{ 'Enable live preview' | translate }}</span
+            >
+            <span *ngIf="previewModeActive"
+                >&nbsp;{{ 'Disable live preview' | translate }}</span
+            >
         </div>
     </button>
     <span class="assembly-options-divider"></span>
     <button
-        mat-button
-        color="accent"
-        matTooltip="Auto Layout"
+        mat-icon-button
+        [matTooltip]="'Auto Layout' | translate"
         [matTooltipPosition]="'above'"
         (click)="autoLayout()"
     >
         <i class="material-icons">settings_overscan</i>
-        <span>&nbsp;Auto Layout</span>
     </button>
     <span class="assembly-options-divider"></span>
     <button
-        color="accent"
-        mat-button
-        matTooltip="Add pipeline element"
+        mat-flat-button
+        [matTooltip]="'Add pipeline element' | translate"
+        class="mat-basic mr-10"
         [matTooltipPosition]="'above'"
         (click)="openDiscoverDialog()"
         data-cy="sp-editor-add-pipeline-element"
     >
         <i class="material-icons">add</i>
-        <span>&nbsp;Add element</span>
+        <span>&nbsp;{{ 'Add element' | translate }}</span>
     </button>
     <button
-        color="accent"
-        mat-button
-        matTooltip="Add template"
+        mat-flat-button
+        class="mat-basic"
+        [matTooltip]="'Add from template' | translate"
         [matTooltipPosition]="'above'"
         (click)="openAddTemplateDialog()"
         data-cy="sp-editor-add-template"
     >
         <i class="material-icons">add</i>
-        <span>&nbsp;Add template</span>
+        <span>&nbsp;{{ 'Add from template' | translate }}</span>
     </button>
     <sp-pipeline-assembly-options-pipeline-cache
         [rawPipelineModel]="rawPipelineModel"
@@ -90,9 +90,8 @@
     </sp-pipeline-assembly-options-pipeline-cache>
     <span fxFlex></span>
     <button
-        color="accent"
         mat-icon-button
-        matTooltip="Clear Assembly Area"
+        [matTooltip]="'Clear Assembly Area' | translate"
         [matTooltipPosition]="'above'"
         [disabled]="editorService.pipelineAssemblyEmpty"
         (click)="showClearAssemblyConfirmDialog($event)"

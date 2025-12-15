@@ -36,11 +36,14 @@ import {
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../model/editor.model';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    DialogService,
+    PanelType,
+    PipelineElementHelpComponent,
+} from '@streampipes/shared-ui';
 import { map } from 'rxjs/operators';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
-import { HelpComponent } from '../../core-ui/help/help.component';
-import { TopicsComponent } from 'src/app/core-ui/topics/topics.component';
+import { TopicsComponent } from '../../core-ui/topics/topics.component';
 
 @Injectable({ providedIn: 'root' })
 export class EditorService {
@@ -166,7 +169,7 @@ export class EditorService {
     }
 
     openHelpDialog(pipelineElement: PipelineElementUnion) {
-        this.dialogService.open(HelpComponent, {
+        this.dialogService.open(PipelineElementHelpComponent, {
             panelType: PanelType.STANDARD_PANEL,
             title: pipelineElement.name,
             width: '70vw',
@@ -197,10 +200,6 @@ export class EditorService {
             );
     }
 
-    deletePipelinePreviewRequest(previewId: string): Observable<any> {
-        return this.http.delete(this.pipelinePreviewBasePath + '/' + previewId);
-    }
-
     getPipelinePreviewResult(previewId: string): Observable<HttpEvent<string>> {
         return this.http.get(`${this.pipelinePreviewBasePath}/${previewId}`, {
             responseType: 'text',
@@ -211,6 +210,6 @@ export class EditorService {
     }
 
     get pipelinePreviewBasePath() {
-        return this.apiBasePath + '/pipeline-element-preview';
+        return this.apiBasePath + '/pipeline-preview';
     }
 }

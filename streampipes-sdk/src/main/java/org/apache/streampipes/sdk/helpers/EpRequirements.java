@@ -103,24 +103,24 @@ public class EpRequirements {
     return new EventPropertyPrimitive();
   }
 
-  public static EventPropertyPrimitive booleanReq(String domainProperty) {
-    return appendDomainProperty(datatypeReq(XSD.BOOLEAN.toString()), domainProperty);
+  public static EventPropertyPrimitive booleanReq(String semanticType) {
+    return appendSemanticType(datatypeReq(XSD.BOOLEAN.toString()), semanticType);
   }
 
-  public static EventPropertyPrimitive integerReq(String domainProperty) {
-    return appendDomainProperty(datatypeReq(XSD.INTEGER.toString()), domainProperty);
+  public static EventPropertyPrimitive integerReq(String semanticType) {
+    return appendSemanticType(datatypeReq(XSD.INTEGER.toString()), semanticType);
   }
 
-  public static EventPropertyPrimitive doubleReq(String domainProperty) {
-    return appendDomainProperty(datatypeReq(XSD.DOUBLE.toString()), domainProperty);
+  public static EventPropertyPrimitive doubleReq(String semanticType) {
+    return appendSemanticType(datatypeReq(XSD.DOUBLE.toString()), semanticType);
   }
 
-  public static EventPropertyPrimitive stringReq(String domainProperty) {
-    return appendDomainProperty(datatypeReq(XSD.STRING.toString()), domainProperty);
+  public static EventPropertyPrimitive stringReq(String semanticType) {
+    return appendSemanticType(datatypeReq(XSD.STRING.toString()), semanticType);
   }
 
-  public static EventPropertyPrimitive numberReq(String domainProperty) {
-    return appendDomainProperty(datatypeReq(SO.NUMBER), domainProperty);
+  public static EventPropertyPrimitive numberReq(String semanticType) {
+    return appendSemanticType(datatypeReq(SO.NUMBER), semanticType);
   }
 
   private static <T extends EventProperty> EventProperty semanticTypeReq(String semanticType,
@@ -143,32 +143,13 @@ public class EpRequirements {
     return (EventPropertyList) semanticTypeReq(semanticType, EventPropertyList.class);
   }
 
-  /**
-   * @param domainProperty the semantic type
-   * @return EventPropertyPrimitive
-   * @deprecated Use {@link EpRequirements#semanticTypeReq(String)} instead
-   */
-  @Deprecated(forRemoval = true, since = "0.97.0")
-  public static EventPropertyPrimitive domainPropertyReq(String domainProperty) {
-    return (EventPropertyPrimitive) semanticTypeReq(domainProperty, EventPropertyPrimitive.class);
-  }
 
-  /**
-   * @param domainProperty the semantic type
-   * @return EventPropertyList
-   * @deprecated Use {@link EpRequirements#semanticTypeReqList(String)} instead
-   */
-  @Deprecated(forRemoval = true, since = "0.97.0")
-  public static EventPropertyList domainPropertyReqList(String domainProperty) {
-    return (EventPropertyList) semanticTypeReq(domainProperty, EventPropertyList.class);
-  }
-
-  private static EventPropertyPrimitive appendDomainProperty(EventPropertyPrimitive property, String semanticType) {
+  private static EventPropertyPrimitive appendSemanticType(EventPropertyPrimitive property, String semanticType) {
     property.setSemanticType(semanticType);
     return property;
   }
 
   public static EventPropertyPrimitive timestampReq() {
-    return domainPropertyReq("http://schema.org/DateTime");
+    return semanticTypeReq("http://schema.org/DateTime");
   }
 }

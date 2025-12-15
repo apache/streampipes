@@ -29,17 +29,13 @@ spec:
         app: {{ .Values.external.kafka.appName }}
     spec:
       restartPolicy: {{ .Values.restartPolicy }}
-      initContainers:
-        - name: init-wait
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.external.zookeeper.service.name }} {{ .Values.external.zookeeper.service.port }} && exit 0 || sleep 3; done; exit 1"]
       volumes:
         - name: {{ .Values.external.kafka.persistence.pvName }}
           persistentVolumeClaim:
             claimName: {{ .Values.external.kafka.persistence.claimName }}
       containers:
         - name: {{ .Values.external.kafka.appName }}
-          image: fogsyio/kafka:{{ .Values.external.kafka.version }}
+          image: bitnami/kafka:{{ .Values.external.kafka.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: {{ .Values.external.kafka.port }}
@@ -47,25 +43,29 @@ spec:
             - mountPath: "/kafka"
               name: {{ .Values.external.kafka.persistence.pvName }}
           env:
-            # Known issue with kafka running in kubernetes:
-            # https://github.com/wurstmeister/kafka-docker/issues/122
-            - name: KAFKA_PORT
-              value: "{{ .Values.external.kafka.port }}"
-            - name: KAFKA_ZOOKEEPER_CONNECT
-              value: "zookeeper:{{ .Values.external.zookeeper.port }}"
-            - name: KAFKA_LISTENERS
-              value: "PLAINTEXT://:{{ .Values.external.kafka.port }},OUTSIDE://:9094"
-            - name: KAFKA_ADVERTISED_LISTENERS
-              value: "PLAINTEXT://kafka:{{ .Values.external.kafka.port }},OUTSIDE://{{ .Values.external.kafka.external.hostname }}:9094"
-            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+            - name: KAFKA_CFG_NODE_ID
+              value: "0"
+            - name: KAFKA_CFG_PROCESS_ROLES
+              value: "controller,broker"
+            - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+              value: "0@kafka:9093"
+            - name: KAFKA_CFG_LISTENERS
+              value: "PLAINTEXT://:{{ .Values.external.kafka.port }},CONTROLLER://:9093,OUTSIDE://:9094"
+            - name: KAFKA_CFG_ADVERTISED_LISTENERS
+              value: "PLAINTEXT://{{ .Values.external.kafka.port }}:9092,OUTSIDE://{{ .Values.external.kafka.external.hostname }}:9094"
+            - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT"
+            - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
               value: "PLAINTEXT"
-            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT"
-            - name: KAFKA_MESSAGE_MAX_BYTES
+            - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: KAFKA_CFG_PORT
+              value: "{{ .Values.external.kafka.port }}"
+            - name: KAFKA_CFG_MESSAGE_MAX_BYTES
               value: "5000012"
-            - name: KAFKA_FETCH_MESSAGE_MAX_BYTES
+            - name: KAFKA_CFG_FETCH_MESSAGE_MAX_BYTES
               value: "5000012"
-            - name: KAFKA_REPLICA_FETCH_MAX_BYTES
+            - name: KAFKA_CFG_REPLICA_FETCH_MAX_BYTES
               value: "10000000"
           livenessProbe:
             tcpSocket:

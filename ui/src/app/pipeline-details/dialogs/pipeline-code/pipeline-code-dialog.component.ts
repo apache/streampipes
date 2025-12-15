@@ -27,6 +27,7 @@ import { DialogRef } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-pipeline-code-dialog',
     templateUrl: './pipeline-code-dialog.component.html',
+    standalone: false,
 })
 export class PipelineCodeDialogComponent implements OnInit {
     @Input()

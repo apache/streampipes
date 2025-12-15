@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import {
@@ -31,10 +31,8 @@ import { map } from 'rxjs/operators';
     providedIn: 'root',
 })
 export class FunctionsService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     public getActiveFunctions(): Observable<FunctionDefinition[]> {
         return this.http

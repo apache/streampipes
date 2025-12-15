@@ -52,11 +52,9 @@ import org.apache.streampipes.sdk.helpers.Locales;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.KafkaException;
-import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +63,6 @@ import java.io.ByteArrayInputStream;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -78,7 +75,6 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.kafka";
 
-  private Thread thread;
   private SpKafkaConsumer kafkaConsumer;
 
   public KafkaProtocol() {
@@ -190,13 +186,9 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
     protocol.setTopicDefinition(new SimpleTopicDefinition(config.getTopic()));
 
     this.kafkaConsumer = new SpKafkaConsumer(protocol,
-        config.getTopic(),
-        new BrokerEventProcessor(extractor.selectedParser(), collector),
         config.getConfigAppenders()
     );
-
-    thread = new Thread(this.kafkaConsumer);
-    thread.start();
+    this.kafkaConsumer.connect(new BrokerEventProcessor(extractor.selectedParser(), collector));
   }
 
   @Override
@@ -215,7 +207,6 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
     }
 
     LOG.info("Kafka Adapter was sucessfully stopped");
-    thread.interrupt();
   }
 
   @Override
@@ -223,45 +214,41 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
 
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
-    final Consumer<byte[], byte[]> consumer;
-
-    consumer = createConsumer(this.config);
-    consumer.subscribe(Collections.singletonList(config.getTopic()), new ConsumerRebalanceListener() {
-      @Override
-      public void onPartitionsRevoked(Collection<TopicPartition> collection) {
-
-      }
-
-      @Override
-      public void onPartitionsAssigned(Collection<TopicPartition> collection) {
-        consumer.seekToBeginning(collection);
-      }
-    });
-
     List<byte[]> nEventsByte = new ArrayList<>();
     List<byte[]> resultEventsByte;
-    int n = 1;
 
+    try (Consumer<byte[], byte[]> consumer = createConsumer(this.config)) {
+      LOG.debug("Created consumer for topic {}", config.getTopic());
 
-    while (true) {
-      final ConsumerRecords<byte[], byte[]> consumerRecords =
-          consumer.poll(Duration.ofMillis(1000));
+      consumer.subscribe(Collections.singletonList(config.getTopic()));
 
-      consumerRecords.forEach(record -> nEventsByte.add(record.value()));
+      long startTime = System.currentTimeMillis();
+      long timeoutMillis = 15000;
+      int requiredEvents = 1;
 
-      if (nEventsByte.size() > n) {
-        resultEventsByte = nEventsByte.subList(0, n);
-        break;
-      } else if (nEventsByte.size() == n) {
-        resultEventsByte = nEventsByte;
-        break;
+      while (System.currentTimeMillis() - startTime < timeoutMillis) {
+        ConsumerRecords<byte[], byte[]> consumerRecords = consumer.poll(Duration.ofMillis(1000));
+        LOG.debug("Polled {} records from topic {}", consumerRecords.count(), config.getTopic());
+
+        consumerRecords.forEach(record -> {
+          if (record.value() != null) {
+            nEventsByte.add(record.value());
+          }
+        });
+
+        if (nEventsByte.size() >= requiredEvents) {
+          resultEventsByte = nEventsByte.subList(0, requiredEvents);
+          LOG.info("Retrieved {} events from topic {}", resultEventsByte.size(), config.getTopic());
+          return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(resultEventsByte.get(0)));
+        }
       }
 
-      consumer.commitAsync();
+      throw new AdapterException("Timeout reached (15 seconds). No events received from topic " + config.getTopic());
+
+    } catch (Exception e) {
+      throw new AdapterException("Error while guessing schema: " + e.getMessage(), e);
+    } finally {
+      LOG.debug("Closed consumer for topic {}", config.getTopic());
     }
-
-    consumer.close();
-
-    return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(resultEventsByte.get(0)));
   }
 }

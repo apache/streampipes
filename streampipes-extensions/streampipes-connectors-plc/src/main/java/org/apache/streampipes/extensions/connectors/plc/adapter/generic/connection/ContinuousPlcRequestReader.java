@@ -22,11 +22,12 @@ import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPollingSettings;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
+import org.apache.streampipes.extensions.connectors.plc.cache.SpCachedPlcConnectionManager;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.PlcConnectionManager;
-import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
+import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,31 +37,92 @@ public class ContinuousPlcRequestReader
     extends OneTimePlcRequestReader implements IPullAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(ContinuousPlcRequestReader.class);
+  private static final int MAX_IDLE_PULLS = 500;
 
   private final IEventCollector collector;
+  private int idlePullsBeforeNextAttempt = 0;
+  private int currentIdlePulls = 0;
 
-  public ContinuousPlcRequestReader(PlcConnectionManager connectionManager,
-                                    Plc4xConnectionSettings settings,
-                                    PlcRequestProvider requestProvider,
-                                    IEventCollector collector) {
+  /**
+   *  Failure and recovery strategy:
+   * - If a read fails, the number of idle pulls before the next attempt is doubled, up to a maximum of 300.
+   * - If the read is successful, the idle pull counter is reset.
+   */
+  public ContinuousPlcRequestReader(
+      PlcConnectionManager connectionManager,
+      Plc4xConnectionSettings settings,
+      PlcRequestProvider requestProvider,
+      IEventCollector collector
+  ) {
     super(connectionManager, settings, requestProvider);
     this.collector = collector;
   }
 
   @Override
   public void pullData() throws RuntimeException {
-    try (PlcConnection plcConnection = connectionManager.getConnection(settings.connectionString())) {
-      var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
-      var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
-      var event = eventGenerator.makeEvent(readResponse);
-      collector.collect(event);
-    } catch (Exception e) {
-      // ensure that the cached connection manager removes the broken connection
-      if (connectionManager instanceof CachedPlcConnectionManager) {
-        ((CachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
-      }
-      LOG.error("Error while reading from PLC with connection string {} ", settings.connectionString(), e);
+    if (currentIdlePulls < idlePullsBeforeNextAttempt) {
+      idleRead();
+    } else {
+      connectAndReadPlcData();
     }
+  }
+
+  private void connectAndReadPlcData() {
+    try (PlcConnection plcConnection = connectionManager.getConnection(settings.connectionString())) {
+      if (plcConnection.isConnected()) {
+        var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
+        var readResponse = readRequest.execute()
+            .get(5000, TimeUnit.MILLISECONDS);
+        processPlcReadResponse(readResponse);
+      } else {
+        LOG.error("Not connected to PLC with connection string {}", settings.connectionString());
+        handleFailingPlcRead();
+      }
+    } catch (Exception e) {
+      handleFailingPlcReadAndRemoveFromCache(e.getMessage());
+    }
+  }
+
+  private void handleFailingPlcReadAndRemoveFromCache(String problem) {
+    // ensure that the cached connection manager removes the broken connection
+    if (connectionManager instanceof SpCachedPlcConnectionManager) {
+      ((SpCachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
+    }
+
+    LOG.error(
+        "Error while reading from PLC with connection string {}. Setting adapter to idle for {} attempts. {} ",
+        settings.connectionString(), idlePullsBeforeNextAttempt, problem
+    );
+
+    handleFailingPlcRead();
+  }
+
+  private void handleFailingPlcRead() {
+    // Increase backoff counter on failure
+    if (idlePullsBeforeNextAttempt == 0) {
+      idlePullsBeforeNextAttempt = 1;
+    } else {
+      idlePullsBeforeNextAttempt = Math.min(idlePullsBeforeNextAttempt * 2, MAX_IDLE_PULLS);
+    }
+
+    currentIdlePulls = 0;
+  }
+
+  private void processPlcReadResponse(PlcReadResponse readResponse) {
+    var event = eventGenerator.makeEvent(readResponse);
+    collector.collect(event);
+    this.resetIdlePulls();
+  }
+
+  private void idleRead() {
+    LOG.debug("Skipping pullData call for {}. Idle pulls left: {}",
+              settings.connectionString(), idlePullsBeforeNextAttempt - currentIdlePulls);
+    currentIdlePulls++;
+  }
+
+  private void resetIdlePulls() {
+    idlePullsBeforeNextAttempt = 0;
+    currentIdlePulls = 0;
   }
 
   @Override

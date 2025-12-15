@@ -18,7 +18,7 @@
 
 <div [formGroup]="startAdapterForm" fxLayout="column" fxFlex="100">
     <sp-basic-inner-panel
-        panelTitle="Adapter settings"
+        [panelTitle]="'Adapter settings' | translate"
         outerMargin="20px 0px 10px 0px"
     >
         <div fxFlex="100">
@@ -28,18 +28,62 @@
                         formControlName="adapterName"
                         matInput
                         id="input-AdapterName"
-                        placeholder="Adapter Name"
+                        [placeholder]="'Adapter Name' | translate"
                         data-cy="sp-adapter-name"
                         required
                         (blur)="triggerTutorialAdapterNameAssigned()"
                     />
+                    <mat-error
+                        *ngIf="
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('invalidName')
+                        "
+                    >
+                        Name can only contain letters, numbers, special
+                        characters (including umlauts), punctuation, symbols,
+                        and spaces.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('leadingOrTrailingWhitespace')
+                        "
+                    >
+                        Name cannot start or end with a space.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('required') ||
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('whiteSpaceOnly')
+                        "
+                    >
+                        Adapter name is required.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('minlength') ||
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('maxlength')
+                        "
+                    >
+                        Adapter name must have between 3 and 40 characters.
+                    </mat-error>
                 </mat-form-field>
                 <mat-form-field color="accent">
                     <input
                         matInput
                         id="input-AdapterDescription"
                         [ngModelOptions]="{ standalone: true }"
-                        placeholder="Adapter Description"
+                        [placeholder]="'Adapter Description' | translate"
                         [(ngModel)]="adapterDescription.description"
                     />
                 </mat-form-field>
@@ -49,8 +93,8 @@
 
     <div fxFlex="100" fxLayout="column">
         <sp-adapter-options-panel
-            optionTitle="Run adapter"
-            optionDescription="Start adapter now"
+            [optionTitle]="'Run adapter' | translate"
+            [optionDescription]="'Start adapter now' | translate"
             optionIcon="play_arrow"
             dataCy="start-adapter-now-checkbox"
             *ngIf="!isEditMode"
@@ -59,9 +103,37 @@
         >
         </sp-adapter-options-panel>
 
+        @if (isAssetAdmin) {
+            <sp-adapter-options-panel
+                [optionTitle]="'Add to Asset' | translate"
+                [optionDescription]="
+                    'Add Adapter to an existing Asset' | translate
+                "
+                optionIcon="precision_manufacturing"
+                dataCy="show-asset-checkbox"
+                [isChecked]="
+                    showAsset && (!isEditMode || originalAssets.length > 0)
+                "
+                (optionSelectedEmitter)="showAsset = $event"
+            >
+                <sp-asset-link-configuration
+                    *ngIf="showAsset"
+                    [isEdit]="isEditMode"
+                    [itemId]="adapterDescription.elementId"
+                    (selectedAssetsChange)="onSelectedAssetsChange($event)"
+                    (deselectedAssetsChange)="onDeselectedAssetsChange($event)"
+                    (originalAssetsEmitter)="onOriginalAssetsEmitted($event)"
+                >
+                </sp-asset-link-configuration>
+            </sp-adapter-options-panel>
+        }
+
         <sp-adapter-options-panel
-            optionTitle="Remove Duplicates"
-            optionDescription="Avoid duplicated events within a certain time interval"
+            [optionTitle]="'Remove Duplicates' | translate"
+            [optionDescription]="
+                'Avoid duplicated events within a certain time interval'
+                    | translate
+            "
             optionIcon="cleaning_services"
             dataCy="connect-remove-duplicates-box"
             [isChecked]="removeDuplicates"
@@ -76,7 +148,7 @@
                     matInput
                     id="input-removeDuplicatesTime"
                     [ngModelOptions]="{ standalone: true }"
-                    placeholder="Remove Duplicates Time Window"
+                    [placeholder]="'Remove Duplicates Time Window' | translate"
                     [(ngModel)]="removeDuplicatesTime"
                     data-cy="connect-remove-duplicates-input"
                 />
@@ -84,8 +156,11 @@
         </sp-adapter-options-panel>
 
         <sp-adapter-options-panel
-            optionTitle="Reduce event rate"
-            optionDescription="Send maximum one event in the specified time window"
+            [optionTitle]="'Reduce event rate' | translate"
+            [optionDescription]="
+                'Send maximum one event in the specified time window'
+                    | translate
+            "
             optionIcon="speed"
             dataCy="connect-reduce-event-rate-box"
             [isChecked]="eventRateReduction"
@@ -102,13 +177,13 @@
                     id="input-evenRateTime"
                     [ngModelOptions]="{ standalone: true }"
                     [(ngModel)]="eventRateTime"
-                    placeholder="Time Window (Milliseconds)"
+                    [placeholder]="'Time Window (Milliseconds)' | translate"
                     matTooltipPosition="above"
                     data-cy="connect-reduce-event-input"
                 />
             </mat-form-field>
             <mat-form-field *ngIf="eventRateReduction" color="accent">
-                <mat-label>Event Aggregation</mat-label>
+                <mat-label>{{ 'Event Aggregation' | translate }}</mat-label>
                 <mat-select
                     [(ngModel)]="eventRateMode"
                     [ngModelOptions]="{ standalone: true }"
@@ -126,39 +201,51 @@
         </sp-adapter-options-panel>
 
         <!-- Start pipeline template to store raw events in data lake -->
-        <sp-adapter-options-panel
-            optionTitle="Persist events"
-            optionDescription="Store all events of this source in the internal data store"
-            optionIcon="save"
-            dataCy="sp-store-in-datalake"
-            *ngIf="!isEditMode"
-            (optionSelectedEmitter)="handlePersistOption($event)"
-        >
-            <mat-form-field *ngIf="saveInDataLake" color="accent" class="mt-10">
-                <mat-label>Select Time Field</mat-label>
-                <mat-select
-                    [(ngModel)]="dataLakeTimestampField"
-                    [ngModelOptions]="{ standalone: true }"
-                    data-cy="sp-store-in-datalake-timestamp"
+        @if (isPipelineAdmin) {
+            <sp-adapter-options-panel
+                [optionTitle]="'Persist events' | translate"
+                [optionDescription]="
+                    'Store all events of this source in the internal data store'
+                        | translate
+                "
+                optionIcon="save"
+                dataCy="sp-store-in-datalake"
+                *ngIf="!isEditMode"
+                (optionSelectedEmitter)="handlePersistOption($event)"
+            >
+                <mat-form-field
+                    *ngIf="saveInDataLake"
+                    color="accent"
+                    class="mt-10"
                 >
-                    <mat-option
-                        class="md-elevation-z1"
-                        style="background: white"
-                        *ngFor="
-                            let timestampField of eventSchema.eventProperties
-                                | timestampFilter
-                        "
-                        [value]="timestampField.runtimeName"
+                    <mat-label>{{ 'Select Time Field' | translate }}</mat-label>
+                    <mat-select
+                        [(ngModel)]="dataLakeTimestampField"
+                        [ngModelOptions]="{ standalone: true }"
+                        data-cy="sp-store-in-datalake-timestamp"
                     >
-                        {{ timestampField.runtimeName }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </sp-adapter-options-panel>
+                        <mat-option
+                            class="md-elevation-z1"
+                            style="background: white"
+                            *ngFor="
+                                let timestampField of eventSchema.eventProperties
+                                    | timestampFilter
+                            "
+                            [value]="timestampField.runtimeName"
+                        >
+                            {{ timestampField.runtimeName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </sp-adapter-options-panel>
+        }
 
         <sp-adapter-options-panel
-            optionTitle="Show code"
-            optionDescription="Show code to programmatically deploy this adapter over the API"
+            [optionTitle]="'Show code' | translate"
+            [optionDescription]="
+                'Show code to programmatically deploy this adapter over the API'
+                    | translate
+            "
             optionIcon="code"
             dataCy="show-code-checkbox"
             (optionSelectedEmitter)="showCode = $event"
@@ -174,40 +261,40 @@
     </div>
 
     <div fxLayoutAlign="end" style="margin-top: 10px">
-        <button class="mat-basic" mat-raised-button (click)="removeSelection()">
-            Cancel
+        <button class="mat-basic" mat-flat-button (click)="removeSelection()">
+            {{ 'Cancel' | translate }}
         </button>
         <button
             style="margin-left: 10px"
             class="mat-basic stepper-button"
-            mat-raised-button
+            mat-flat-button
             (click)="goBack()"
         >
-            Back
+            {{ 'Back' | translate }}
         </button>
         <button
             *ngIf="!isEditMode"
             [disabled]="!startAdapterSettingsFormValid"
-            mat-raised-button
+            mat-flat-button
             data-cy="adapter-settings-start-adapter-btn"
             color="accent"
             (click)="startAdapter()"
             mat-button
             style="margin-left: 10px"
         >
-            Start Adapter
+            {{ 'Start Adapter' | translate }}
         </button>
         <button
             *ngIf="isEditMode"
             [disabled]="!startAdapterSettingsFormValid"
-            mat-raised-button
+            mat-flat-button
             data-cy="store-edit-adapter"
             color="accent"
             (click)="editAdapter()"
             mat-button
             style="margin-left: 10px"
         >
-            Update Adapter
+            {{ 'Update Adapter' | translate }}
         </button>
     </div>
 </div>

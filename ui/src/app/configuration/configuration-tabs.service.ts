@@ -17,75 +17,77 @@
  */
 
 import { SpNavigationItem } from '@streampipes/shared-ui';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class SpConfigurationTabsService {
+    private translateService = inject(TranslateService);
     allConfigurationTabs: SpNavigationItem[] = [
         {
             itemId: 'general',
-            itemTitle: 'General',
+            itemTitle: this.translateService.instant('General'),
             itemLink: ['configuration', 'general'],
             roles: ['ROLE_ADMIN'],
         },
         {
             itemId: 'datalake',
-            itemTitle: 'Data Lake',
+            itemTitle: this.translateService.instant('Data Lake'),
             itemLink: ['configuration', 'datalake'],
             roles: ['ROLE_ADMIN'],
         },
         {
             itemId: 'export',
-            itemTitle: 'Export/Import',
+            itemTitle: this.translateService.instant('Export/Import'),
             itemLink: ['configuration', 'export'],
             roles: ['ROLE_ADMIN'],
         },
         {
             itemId: 'extensions-installation',
-            itemTitle: 'Extensions',
+            itemTitle: this.translateService.instant('Extensions'),
             itemLink: ['configuration', 'extensions-installation'],
             roles: ['ROLE_ADMIN'],
         },
         {
             itemId: 'extensions-services',
-            itemTitle: 'Extension Services',
+            itemTitle: this.translateService.instant('Extension Services'),
             itemLink: ['configuration', 'extensions-services'],
             roles: ['ROLE_ADMIN'],
         },
         {
             itemId: 'files',
-            itemTitle: 'Files',
+            itemTitle: this.translateService.instant('Files'),
             itemLink: ['configuration', 'files'],
             roles: ['PRIVILEGE_WRITE_FILES'],
         },
         {
             itemId: 'labels',
-            itemTitle: 'Labels',
+            itemTitle: this.translateService.instant('Labels'),
             itemLink: ['configuration', 'labels'],
             roles: ['PRIVILEGE_WRITE_LABELS'],
         },
         {
             itemId: 'email',
-            itemTitle: 'Mail',
+            itemTitle: this.translateService.instant('Mail'),
             itemLink: ['configuration', 'email'],
             roles: ['ROLE_ADMIN'],
         },
         {
             itemId: 'messaging',
-            itemTitle: 'Messaging',
+            itemTitle: this.translateService.instant('Messaging'),
             itemLink: ['configuration', 'messaging'],
             roles: ['ROLE_ADMIN'],
         },
         {
             itemId: 'security',
-            itemTitle: 'Security',
+            itemTitle: this.translateService.instant('Security'),
             itemLink: ['configuration', 'security'],
             roles: ['ROLE_ADMIN'],
         },
         {
             itemId: 'sites',
-            itemTitle: 'Sites',
+            itemTitle: this.translateService.instant('Sites'),
             itemLink: ['configuration', 'sites'],
             roles: ['PRIVILEGE_WRITE_ASSETS'],
         },

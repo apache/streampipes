@@ -16,9 +16,11 @@
  *
  */
 
+import { UserUtils } from '../../support/utils/UserUtils';
+
 describe('Open API Documentation from Login Page', () => {
     it('Perform Test', () => {
-        cy.visit('#/login');
+        UserUtils.goToLogin();
         cy.dataCy('view-api-docs-link').click();
         cy.get('h2').contains('Apache StreamPipes API');
         cy.get('.servers')

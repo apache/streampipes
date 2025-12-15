@@ -21,11 +21,13 @@ package org.apache.streampipes.processors.transformation.jvm.processor.measureme
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -35,13 +37,12 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticP
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.PropertyRequirementsBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.TransformOperations;
 import org.apache.streampipes.units.UnitProvider;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import com.github.jqudt.Quantity;
 import com.github.jqudt.Unit;
@@ -51,8 +52,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MeasurementUnitConverterProcessor extends StreamPipesDataProcessor
-    implements ResolvesContainerProvidedOptions {
+public class MeasurementUnitConverterProcessor implements IStreamPipesDataProcessor,
+    ResolvesContainerProvidedOptions {
 
   private static final String CONVERT_PROPERTY = "convert-property";
   private static final String OUTPUT_UNIT = "output-unit";
@@ -63,35 +64,39 @@ public class MeasurementUnitConverterProcessor extends StreamPipesDataProcessor
   private String convertProperty;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.measurementunitconverter", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(PropertyRequirementsBuilder
-                    .create()
-                    .measurementUnitPresence()
-                    .build(),
-                Labels.withId(CONVERT_PROPERTY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .requiredSingleValueSelectionFromContainer(Labels.withId(OUTPUT_UNIT))
-        .outputStrategy(OutputStrategies.transform(TransformOperations
-            .dynamicMeasurementUnitTransformation(CONVERT_PROPERTY, OUTPUT_UNIT)))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        MeasurementUnitConverterProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.measurementunitconverter", 0)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithUnaryMapping(PropertyRequirementsBuilder
+                        .create()
+                        .measurementUnitPresence()
+                        .build(),
+                    Labels.withId(CONVERT_PROPERTY),
+                    PropertyScope.MEASUREMENT_PROPERTY)
+                .build())
+            .requiredSingleValueSelectionFromContainer(Labels.withId(OUTPUT_UNIT))
+            .outputStrategy(OutputStrategies.transform(TransformOperations
+                .dynamicMeasurementUnitTransformation(CONVERT_PROPERTY, OUTPUT_UNIT)))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                               SpOutputCollector spOutputCollector,
+                               EventProcessorRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
 
     this.convertProperty = extractor.mappingPropertyValue(CONVERT_PROPERTY);
     String runtimeName = extractor.getEventPropertyBySelector(this.convertProperty).getRuntimeName();
     String inputUnitId = extractor.measurementUnit(runtimeName, 0);
-    String outputUnitId = parameters.getGraph().getStaticProperties().stream().filter(sp -> sp
+    String outputUnitId = parameters.getModel().getStaticProperties().stream().filter(sp -> sp
             .getInternalName().equals(OUTPUT_UNIT))
         .map(sp ->
             (RuntimeResolvableOneOfStaticProperty) sp)
@@ -105,7 +110,7 @@ public class MeasurementUnitConverterProcessor extends StreamPipesDataProcessor
   }
 
   @Override
-  public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
+  public void onEvent(Event in, SpOutputCollector out) {
     double value = in.getFieldBySelector(convertProperty).getAsPrimitive().getAsDouble();
 
     // transform old value to new unit
@@ -120,8 +125,7 @@ public class MeasurementUnitConverterProcessor extends StreamPipesDataProcessor
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 
   @Override

@@ -19,6 +19,7 @@ login:
     logo-navigation: 'deployment/dev/img/logo-navigation.png'
     favicon: 'deployment/dev/img/favicon.png'
 modules:
+    - spHome
     - spPipelines
     - spConnect
     - spDashboard

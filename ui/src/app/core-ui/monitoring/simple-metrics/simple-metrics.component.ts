@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-simple-metrics',
     templateUrl: './simple-metrics.component.html',
     styleUrls: [],
+    standalone: false,
 })
 export class SpSimpleMetricsComponent {
     @Input()

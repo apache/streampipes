@@ -16,7 +16,7 @@
  *
  */
 
-@import '../variables';
+@use './variables';
 
 .sp-no-padding-dialog .mat-dialog-container {
     box-shadow:
@@ -49,7 +49,7 @@
 }
 
 .sp-no-padding-dialog .mat-dialog-container .md-dialog .md-toolbar {
-    background: var(--color-primary);
+    background: var(--color-secondary);
     color: white;
 }
 
@@ -77,4 +77,9 @@
     min-height: 52px;
     overflow: hidden;
     border-top: 1px solid #cccccc;
+}
+
+.custom-dialog-container .mat-dialog-container {
+    padding: 0px;
+    overflow: auto;
 }

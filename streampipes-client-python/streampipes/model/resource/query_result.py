@@ -91,3 +91,52 @@ class QueryResult(Resource):
         df = pd.DataFrame(data=pandas_representation["rows"], columns=pandas_representation["headers"])
 
         return df
+
+    @classmethod
+    def from_pandas(
+        cls,
+        df: pd.DataFrame,
+        source_index: int = 0,
+        for_id: Optional[str] = None,
+        query_status: Literal["OK", "TOO_MUCH_DATA"] = "OK",
+    ) -> "QueryResult":
+        """Create a QueryResult object from a pandas DataFrame.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The DataFrame to convert into a QueryResult.
+        source_index : int, optional
+            Source index of the query result (default is 0).
+        for_id : str, optional
+            Optional identifier for the query result.
+        query_status : Literal["OK", "TOO_MUCH_DATA"], optional
+            Query status to set in the QueryResult (default is "OK").
+
+        Returns
+        -------
+        QueryResult
+            A QueryResult object representing the DataFrame.
+        """
+        if df.empty:
+            raise ValueError("Cannot create QueryResult from an empty DataFrame")
+        if df.isna().any().any():
+            raise ValueError("Cannot create QueryResult from a DataFrame with NaN values")
+
+        headers = df.columns.to_list()
+        if headers[0] != "timestamp":
+            raise StreamPipesUnsupportedDataSeries(f"First column must be 'timestamp', got {headers[0]!r}")
+
+        df["timestamp"] = df["timestamp"].astype("int64")
+        rows = df.values.tolist()
+        data_series = DataSeries(total=len(rows), headers=headers, rows=rows, tags=None)
+
+        return cls(
+            total=len(rows),
+            headers=headers,
+            all_data_series=[data_series],
+            spQueryStatus=query_status,
+            source_index=source_index,
+            for_id=for_id,
+            last_timestamp=int(df["timestamp"].max()),
+        )

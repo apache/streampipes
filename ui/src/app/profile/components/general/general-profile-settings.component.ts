@@ -35,6 +35,7 @@ import { Router } from '@angular/router';
     selector: 'sp-general-profile-settings',
     templateUrl: './general-profile-settings.component.html',
     styleUrls: ['./general-profile-settings.component.scss'],
+    standalone: false,
 })
 export class GeneralProfileSettingsComponent
     extends BasicProfileSettings
@@ -44,6 +45,12 @@ export class GeneralProfileSettingsComponent
     originalDarkMode = false;
     darkModeChanged = false;
     isExternalUser = false;
+
+    availableLanguages: { label: string; id: string }[] = [
+        { label: 'Browser language', id: 'browser' },
+        { label: 'English', id: 'en' },
+        { label: 'Deutsch', id: 'de' },
+    ];
 
     constructor(
         authService: AuthService,
@@ -74,6 +81,7 @@ export class GeneralProfileSettingsComponent
     }
 
     onUserDataReceived() {
+        this.selectedLanguage = this.userData.language;
         this.originalDarkMode = this.userData.darkMode;
         this.currentUserService.darkMode$.next(this.userData.darkMode);
         this.isExternalUser = this.userData.provider !== 'local';

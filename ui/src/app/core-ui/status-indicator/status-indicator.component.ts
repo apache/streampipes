@@ -16,16 +16,20 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-status-indicator',
     templateUrl: './status-indicator.component.html',
     styleUrls: ['./status-indicator.component.scss'],
+    standalone: false,
 })
 export class StatusIndicatorComponent {
+    translateService = inject(TranslateService);
+
     @Input()
-    message = 'Loading';
+    message = this.translateService.instant('Loading');
 
     @Input()
     additionalDescription = '';

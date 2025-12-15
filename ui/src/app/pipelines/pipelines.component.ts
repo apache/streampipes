@@ -43,6 +43,7 @@ import { Subscription } from 'rxjs';
     selector: 'sp-pipelines',
     templateUrl: './pipelines.component.html',
     styleUrls: ['./pipelines.component.scss'],
+    standalone: false,
 })
 export class PipelinesComponent implements OnInit, OnDestroy {
     pipeline: Pipeline;
@@ -61,6 +62,7 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     tutorialActive = false;
     tutorialActiveSubscription: Subscription;
     userSubscription: Subscription;
+    currentFilters: Set<string> = new Set<string>();
 
     constructor(
         private pipelineService: PipelineService,
@@ -103,7 +105,7 @@ export class PipelinesComponent implements OnInit, OnDestroy {
 
     getFunctions() {
         this.functionsService.getActiveFunctions().subscribe(functions => {
-            this.functions = functions.map(f => f.functionId);
+            this.functions = functions.map(f => f.functionId).sort();
             this.functionsReady = true;
         });
     }
@@ -111,12 +113,15 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     getPipelines() {
         this.pipelines = [];
         this.pipelineService.getPipelines().subscribe(pipelines => {
-            this.pipelines = pipelines;
-            this.applyPipelineFilters(new Set<string>());
+            this.pipelines = pipelines.sort((a, b) =>
+                a.name.localeCompare(b.name),
+            );
+            this.applyPipelineFilters(this.currentFilters);
         });
     }
 
     applyPipelineFilters(elementIds: Set<string>) {
+        this.currentFilters = elementIds;
         if (elementIds.size == 0) {
             this.filteredPipelines = this.pipelines;
         } else {

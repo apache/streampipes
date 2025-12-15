@@ -32,9 +32,10 @@
                 <button
                     mat-icon-button
                     color="accent"
-                    matTooltip="Back"
+                    [matTooltip]="'Back' | translate"
                     (click)="navigateBack()"
                     class="edit-menu-btn"
+                    class="mr-5"
                     data-cy="save-data-explorer-go-back-to-overview"
                 >
                     <mat-icon>arrow_back</mat-icon>

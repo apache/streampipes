@@ -33,6 +33,7 @@ import org.lightcouch.CouchDbProperties;
 public class Utils {
 
   public static final String USER_DB_NAME = "users";
+  public static final String DATA_LAKE_DB_NAME = "data-lake";
 
   public static CouchDbClient getCouchDbDataProcessorDescriptionClient() {
     return getCouchDbGsonClient("data-processor");
@@ -92,10 +93,6 @@ public class Utils {
 
   public static CouchDbClient getCouchDbNotificationClient() {
     return getCouchDbStandardSerializerClient("notification");
-  }
-
-  public static CouchDbClient getCouchDbPipelineCategoriesClient() {
-    return getCouchDbStandardSerializerClient("pipelinecategories");
   }
 
   public static CouchDbClient getCouchDbGsonClient(String dbname) {

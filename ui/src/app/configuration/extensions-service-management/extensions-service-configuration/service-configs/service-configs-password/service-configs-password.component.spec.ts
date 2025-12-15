@@ -18,7 +18,7 @@
 
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ServiceConfigsPasswordComponent } from './service-configs-password.component';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { CommonModule } from '@angular/common';
@@ -32,6 +32,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+    provideHttpClient,
+    withInterceptorsFromDi,
+} from '@angular/common/http';
 
 describe('ServiceConfigsPasswordComponent', () => {
     let fixture: ComponentFixture<ServiceConfigsPasswordComponent>;
@@ -39,8 +43,6 @@ describe('ServiceConfigsPasswordComponent', () => {
     let configurationServiceStub: Partial<ConfigurationService>;
 
     let component: ServiceConfigsPasswordComponent;
-
-    let configurationServcie: ConfigurationService;
 
     beforeEach(waitForAsync(() => {
         configurationServiceStub = {
@@ -55,6 +57,7 @@ describe('ServiceConfigsPasswordComponent', () => {
         };
 
         TestBed.configureTestingModule({
+            declarations: [ServiceConfigsPasswordComponent],
             imports: [
                 CommonModule,
                 BrowserAnimationsModule,
@@ -66,21 +69,18 @@ describe('ServiceConfigsPasswordComponent', () => {
                 MatCheckboxModule,
                 MatTooltipModule,
                 FormsModule,
-                HttpClientTestingModule,
             ],
-            declarations: [ServiceConfigsPasswordComponent],
             providers: [
                 {
                     provide: ConfigurationService,
                     useValue: configurationServiceStub,
                 },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ServiceConfigsPasswordComponent);
-
-        configurationServcie =
-            fixture.debugElement.injector.get(ConfigurationService);
 
         component = fixture.componentInstance;
     }));

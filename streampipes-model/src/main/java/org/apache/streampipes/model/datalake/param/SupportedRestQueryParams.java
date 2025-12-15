@@ -40,6 +40,10 @@ public class SupportedRestQueryParams {
   public static final String QP_AUTO_AGGREGATE = "autoAggregate";
   public static final String QP_FILTER = "filter";
   public static final String QP_MAXIMUM_AMOUNT_OF_EVENTS = "maximumAmountOfEvents";
+  public static final String QP_XLSX_USE_TEMPLATE = "useTemplate";
+  public static final String QP_XLSX_TEMPLATE_ID = "templateId";
+  public static final String QP_XLSX_START_ROW = "startRow";
+  public static final String QP_HEADER_COLUMN_NAME = "headerColumnName";
 
   public static final List<String> SUPPORTED_PARAMS = Arrays.asList(
       QP_COLUMNS,
@@ -58,7 +62,11 @@ public class SupportedRestQueryParams {
       QP_AUTO_AGGREGATE,
       QP_MISSING_VALUE_BEHAVIOUR,
       QP_FILTER,
-      QP_MAXIMUM_AMOUNT_OF_EVENTS
+      QP_MAXIMUM_AMOUNT_OF_EVENTS,
+      QP_XLSX_START_ROW,
+      QP_XLSX_TEMPLATE_ID,
+      QP_XLSX_USE_TEMPLATE,
+      QP_HEADER_COLUMN_NAME
   );
 
 }

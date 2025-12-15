@@ -19,7 +19,7 @@
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="column">
         <sp-basic-inner-panel
-            panelTitle="Service Selection"
+            [panelTitle]="'Service Selection' | translate"
             outerMargin="20px 0px"
         >
             <sp-adapter-deployment-settings
@@ -30,7 +30,7 @@
             </sp-adapter-deployment-settings>
         </sp-basic-inner-panel>
         <sp-basic-inner-panel
-            panelTitle="Basic Settings"
+            [panelTitle]="'Basic Settings' | translate"
             outerMargin="20px 0px"
         >
             <div
@@ -81,21 +81,21 @@
     <div fxLayoutAlign="end">
         <button
             class="mat-basic"
-            mat-raised-button
+            mat-flat-button
             style="margin-right: 10px"
             (click)="removeSelection()"
             data-cy="connect-new-adapter-cancel"
         >
-            Cancel
+            {{ 'Cancel' | translate }}
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             data-cy="create-template"
             (click)="openTemplateDialog()"
         >
-            Store config as template
+            {{ 'Save as template' | translate }}
         </button>
         <div id="specific-settings-next-button">
             <button
@@ -104,9 +104,9 @@
                 data-cy="adapter-settings-next-button"
                 (click)="clickNext()"
                 color="accent"
-                mat-raised-button
+                mat-flat-button
             >
-                Next
+                {{ 'Next' | translate }}
             </button>
         </div>
     </div>

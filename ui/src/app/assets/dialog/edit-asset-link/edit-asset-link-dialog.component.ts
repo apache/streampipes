@@ -22,13 +22,13 @@ import {
     AdapterService,
     AssetLink,
     AssetLinkType,
+    ChartService,
     DashboardService,
     DatalakeRestService,
-    DataViewDataExplorerService,
-    GenericStorageService,
-    PipelineService,
-    PipelineElementService,
     FilesService,
+    GenericStorageService,
+    PipelineElementService,
+    PipelineService,
 } from '@streampipes/platform-services';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
@@ -38,6 +38,7 @@ import { BaseAssetLinksDirective } from '../base-asset-links.directive';
     selector: 'sp-edit-asset-link-dialog-component',
     templateUrl: './edit-asset-link-dialog.component.html',
     styleUrls: ['./edit-asset-link-dialog.component.scss'],
+    standalone: false,
 })
 export class EditAssetLinkDialogComponent
     extends BaseAssetLinksDirective
@@ -64,7 +65,7 @@ export class EditAssetLinkDialogComponent
         private dialogRef: DialogRef<EditAssetLinkDialogComponent>,
         protected genericStorageService: GenericStorageService,
         protected pipelineService: PipelineService,
-        protected dataViewService: DataViewDataExplorerService,
+        protected chartService: ChartService,
         protected dashboardService: DashboardService,
         protected dataLakeService: DatalakeRestService,
         protected pipelineElementService: PipelineElementService,
@@ -74,7 +75,7 @@ export class EditAssetLinkDialogComponent
         super(
             genericStorageService,
             pipelineService,
-            dataViewService,
+            chartService,
             dashboardService,
             dataLakeService,
             pipelineElementService,

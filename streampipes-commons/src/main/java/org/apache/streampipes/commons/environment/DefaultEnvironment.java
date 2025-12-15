@@ -234,6 +234,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getExtAssetBaseDir() {
+    return new StringEnvironmentVariable(Envs.SP_EXT_ASSET_BASE_DIR);
+  }
+
+  @Override
   public StringEnvironmentVariable getFlinkJarFileLoc() {
     return new StringEnvironmentVariable(Envs.SP_FLINK_JAR_FILE_LOC);
   }
@@ -396,5 +401,49 @@ public class DefaultEnvironment implements Environment {
   @Override
   public BooleanEnvironmentVariable getAllowSelfSignedCertificates() {
     return new BooleanEnvironmentVariable(Envs.SP_SECURITY_ALLOW_SELFSIGNED);
+  }
+
+  @Override
+  public IntEnvironmentVariable getPlc4xMaxWaitTimeMs() {
+    return new IntEnvironmentVariable(Envs.SP_PLC4X_CONN_MAX_WAIT_TIME_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getPlc4xMaxLeaseTimeMs() {
+    return new IntEnvironmentVariable(Envs.SP_PLC4X_CONN_MAX_LEASE_TIME_MS);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getFileLoggingEnabled() {
+    return new BooleanEnvironmentVariable(Envs.SP_LOGGING_FILE_ENABLED);
+  }
+
+  @Override
+  public StringEnvironmentVariable getFileLoggingPrefix() {
+    return new StringEnvironmentVariable(Envs.SP_LOGGING_FILE_PREFIX);
+  }
+
+  @Override
+  public StringEnvironmentVariable getFileLoggingDir() {
+    return new StringEnvironmentVariable(Envs.SP_LOGGING_FILE_DIR);
+  }
+
+  @Override
+  public StringEnvironmentVariable getFileLoggingPattern() {
+    return new StringEnvironmentVariable(Envs.SP_LOGGING_FILE_PATTERN);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getConsoleLoggingEnabled() {
+    return new BooleanEnvironmentVariable(Envs.SP_LOGGING_CONSOLE_ENABLED);
+  }
+
+  @Override
+  public StringEnvironmentVariable getRetentionLocalDir() {
+    return new StringEnvironmentVariable(Envs.SP_RETENTION_LOCAL_DIR);
+  }
+  @Override
+  public StringEnvironmentVariable getDatalakeSchedulerCron() {
+    return new StringEnvironmentVariable(Envs.SP_DATALAKE_SCHEDULER_CRON);
   }
 }

@@ -17,34 +17,35 @@
   -->
 
 <div style="padding-top: 0" fxFlex="100" fxLayout="column">
-    <div *ngFor="let item of menu">
-        <div
-            *ngIf="item.visible"
-            style="min-width: 0; padding: 5px 0"
-            [ngClass]="
-                item.link === activePage
-                    ? 'sp-navbar-item-selected'
-                    : 'sp-navbar-item'
-            "
-        >
-            <button
-                mat-icon-button
-                class="button-margin-iconbar iconbar-size"
-                (click)="go(item.link)"
-                matTooltip="{{ item.title }}"
-                matTooltipPosition="right"
+    @for (item of menu; track item.title) {
+        @if (item.visible) {
+            <div
+                style="min-width: 0; padding: 5px 0"
+                [ngClass]="
+                    item.link === activePage
+                        ? 'sp-navbar-item-selected'
+                        : 'sp-navbar-item'
+                "
             >
-                <mat-icon
-                    [ngClass]="
-                        item.link === activePage
-                            ? 'sp-navbar-icon-selected'
-                            : 'sp-navbar-icon'
-                    "
-                    data-cy="navigation-icon"
+                <button
+                    mat-icon-button
+                    class="button-margin-iconbar iconbar-size"
+                    (click)="go(item.link)"
+                    matTooltip="{{ item.title }}"
+                    matTooltipPosition="right"
                 >
-                    {{ item.icon }}
-                </mat-icon>
-            </button>
-        </div>
-    </div>
+                    <mat-icon
+                        [ngClass]="
+                            item.link === activePage
+                                ? 'sp-navbar-icon-selected'
+                                : 'sp-navbar-icon'
+                        "
+                        [attr.data-cy]="'navigation-icon-' + item.link"
+                    >
+                        {{ item.icon }}
+                    </mat-icon>
+                </button>
+            </div>
+        }
+    }
 </div>

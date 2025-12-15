@@ -27,6 +27,7 @@ import { ProfileService } from '../../../profile/profile.service';
     selector: 'sp-welcome-tour',
     templateUrl: './welcome-tour.component.html',
     styleUrls: ['./welcome-tour.component.scss'],
+    standalone: false,
 })
 export class WelcomeTourComponent implements OnInit {
     @Input()

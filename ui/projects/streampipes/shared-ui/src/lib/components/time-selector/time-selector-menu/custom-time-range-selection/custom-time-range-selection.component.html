@@ -91,14 +91,14 @@
     <div fxLayout="row" fxLayoutAlign="end center" class="mt-10">
         <ng-content> </ng-content>
         <button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             data-cy="apply-custom-time"
             (click)="saveSelection()"
             [disabled]="!dateSelectionComplete"
             *ngIf="enableTimePicker"
         >
-            Apply
+            {{ 'Apply' | translate }}
         </button>
     </div>
 </div>

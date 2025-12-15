@@ -29,7 +29,7 @@ import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
@@ -57,7 +57,7 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    var builder = DataSinkBuilder.create(ID, 0)
+    var builder = DataSinkBuilder.create(ID, 2)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .category(DataSinkType.FORWARD)
@@ -79,7 +79,7 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
   public void onPipelineStarted(IDataSinkParameters parameters,
                                 EventSinkRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
-    var config = SpOpcUaConfigExtractor.extractSinkConfig(extractor);
+    var config = SpOpcUaConfigExtractor.extractSinkConfig(extractor, runtimeContext.getStreamPipesClient());
 
     String mappingPropertySelector = extractor.mappingPropertyValue(MAPPING_PROPERY.name());
 
@@ -114,6 +114,6 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
   @Override
   public StaticProperty resolveConfiguration(String staticPropertyInternalName,
                                              IStaticPropertyExtractor extractor) throws SpConfigurationException {
-    return OpcUaUtil.resolveConfig(clientProvider, staticPropertyInternalName, extractor);
+    return OpcUaUtils.resolveConfig(clientProvider, staticPropertyInternalName, extractor);
   }
 }

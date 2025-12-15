@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.97.0</version>
+        <version>0.98.0</version>
     </parent>
 
     <artifactId>streampipes-rest-extensions</artifactId>
@@ -35,17 +35,17 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest-shared</artifactId>
-            <version>0.97.0</version>
+            <version>0.98.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-extensions-management</artifactId>
-            <version>0.97.0</version>
+            <version>0.98.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-service-discovery-api</artifactId>
-            <version>0.97.0</version>
+            <version>0.98.0</version>
         </dependency>
 
         <!-- External dependencies -->
@@ -82,6 +82,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <propertyExpansion>
+                        checkstyle.config.base.path=${project.parent.basedir}/tools/maven
+                    </propertyExpansion>
+                </configuration>
             </plugin>
         </plugins>
     </build>

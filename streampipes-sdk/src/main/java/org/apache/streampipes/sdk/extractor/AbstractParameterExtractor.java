@@ -47,7 +47,6 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.StaticPropertyType;
-import org.apache.streampipes.model.staticproperty.TreeInputNode;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import com.github.drapostolos.typeparser.TypeParser;
@@ -277,60 +276,6 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
                                                    .stream()
                                                    .map(node -> typeParser.parse(node, targetClass))
                                                    .toList();
-  }
-
-  @Override
-  @Deprecated(since = "0.97.0", forRemoval = true)
-  /**
-   * This method returns a list of all nodes.
-   * Therefore, it requires both the property selectedNodesInternalNames and the nodes property to be set.
-   * The nodes are used to check for the data type. The problem with this implementation is, is that the client (e.g.
-   * UI) must get the nodes from the OPC UA server.
-   *
-   * @deprecated use {@link #selectedTreeNodesInternalNames(String, Class)} instead
-   */
-  public <V> List<V> selectedTreeNodesInternalNames(
-      String internalName,
-      Class<V> targetClass,
-      boolean onlyDataNodes
-  ) {
-    List<TreeInputNode> allNodes = new ArrayList<>();
-    RuntimeResolvableTreeInputStaticProperty sp =
-        getStaticPropertyByName(internalName, RuntimeResolvableTreeInputStaticProperty.class);
-    if (!sp.getNodes()
-           .isEmpty()) {
-      sp.getNodes()
-          .forEach(node -> buildFlatTree(node, allNodes));
-    }
-
-    if (!allNodes.isEmpty()) {
-      return sp.getSelectedNodesInternalNames()
-               .stream()
-               .filter(node -> {
-                 if (!onlyDataNodes) {
-                   return true;
-                 } else {
-                   var existingNode = allNodes.stream()
-                                              .filter(n -> n.getInternalNodeName()
-                                                            .equals(node))
-                                              .findFirst();
-                   return existingNode.map(TreeInputNode::isDataNode)
-                                      .orElse(false);
-                 }
-               })
-               .map(node -> typeParser.parse(node, targetClass))
-               .collect(Collectors.toList());
-    } else {
-      return new ArrayList<>();
-    }
-  }
-
-  private void buildFlatTree(TreeInputNode parent, List<TreeInputNode> collector) {
-    collector.add(parent);
-    if (parent.hasChildren()) {
-      parent.getChildren()
-            .forEach(child -> buildFlatTree(child, collector));
-    }
   }
 
   @Override

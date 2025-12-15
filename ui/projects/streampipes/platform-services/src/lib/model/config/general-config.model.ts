@@ -18,6 +18,12 @@
 
 import { LinkSettings } from '../gen/streampipes-model';
 
+export interface UserAcknowledgment {
+    required: boolean;
+    title: string;
+    text: string;
+}
+
 export interface GeneralConfigModel {
     hostname: string;
     port: number;
@@ -28,4 +34,5 @@ export interface GeneralConfigModel {
     defaultUserRoles: string[];
     appName: string;
     linkSettings: LinkSettings;
+    userAcknowledgment: UserAcknowledgment;
 }

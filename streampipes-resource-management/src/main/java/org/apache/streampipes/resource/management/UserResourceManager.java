@@ -82,7 +82,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
         .getUserStorageAPI()
         .getAllUserAccounts()
         .stream()
-        .filter(u -> u.getRoles().contains(DefaultRole.ROLE_ADMIN))
+        .filter(u -> u.getRoles().contains(DefaultRole.ROLE_ADMIN.name()))
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);
   }
@@ -132,6 +132,10 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     } else {
       throw new UserNotFoundException("User or token not found");
     }
+  }
+
+  public void updateUser(Principal principal) {
+    db.updateUser(principal);
   }
 
   private void createTokenAndSendActivationMail(String username) throws IOException {
@@ -194,7 +198,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
 
-  public void registerOauthUser(UserAccount userAccount) {
+  public void storeUser(UserAccount userAccount) {
     db.storeUser(userAccount);
   }
 }

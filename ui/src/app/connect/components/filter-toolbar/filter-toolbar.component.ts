@@ -25,6 +25,7 @@ import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.
     selector: 'sp-connect-filter-toolbar',
     templateUrl: './filter-toolbar.component.html',
     styleUrls: ['./filter-toolbar.component.scss'],
+    standalone: false,
 })
 export class SpConnectFilterToolbarComponent implements OnInit {
     @Output()

@@ -19,7 +19,7 @@
 <mat-accordion>
     <mat-expansion-panel [(expanded)]="expanded">
         <mat-expansion-panel-header class="expansion-panel-header">
-            Logs
+            {{ 'Logs' | translate }}
         </mat-expansion-panel-header>
         <div fxLayout="column" fxFlex="100" class="p-10">
             <div
@@ -37,13 +37,13 @@
     </mat-expansion-panel>
     <mat-expansion-panel>
         <mat-expansion-panel-header class="expansion-panel-header">
-            Status
+            {{ 'Status' | translate }}
         </mat-expansion-panel-header>
         <sp-pipeline-status [pipeline]="pipeline"> </sp-pipeline-status>
     </mat-expansion-panel>
     <mat-expansion-panel>
         <mat-expansion-panel-header class="expansion-panel-header">
-            Actions
+            {{ 'Actions' | translate }}
         </mat-expansion-panel-header>
         <sp-pipeline-actions
             (reloadPipelineEmitter)="reloadPipelineEmitter.emit()"

@@ -104,7 +104,8 @@ public class StaticMetaDataEnrichmentProcessorTest {
 
   @Test
   public void castValueOfMetaDataConfigurationDefault() {
-    StaticMetaDataConfiguration config = new StaticMetaDataConfiguration("runtimeName", "default", "default");
+    StaticMetaDataConfiguration config = new StaticMetaDataConfiguration(
+        "runtimeName", "default", "default", "", "");
 
     assertEquals("default", processor.castValueOfMetaDataConfiguration(config));
   }
@@ -112,7 +113,7 @@ public class StaticMetaDataEnrichmentProcessorTest {
   private static StaticMetaDataConfiguration getSampleMetaDataConfiguration(
       String value, String dataType
   ) {
-    return new StaticMetaDataConfiguration("runtimeName", value, dataType);
+    return new StaticMetaDataConfiguration("runtimeName", value, dataType, "", "");
   }
 
 }

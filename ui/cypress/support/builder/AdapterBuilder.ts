@@ -20,6 +20,8 @@ import { UserInput } from '../model/UserInput';
 import { UserInputType } from '../model/UserInputType';
 import { AdapterInput } from '../model/AdapterInput';
 import { TreeNodeUserInputBuilder } from './TreeNodeUserInputBuilder';
+import { DataTypeString } from '../model/DataTypeString';
+import { PropertyDataTypeChange } from '../model/PropertyDataTypeChange';
 
 export class AdapterBuilder {
     adapterInput: AdapterInput;
@@ -77,6 +79,16 @@ export class AdapterBuilder {
         userInput.treeNode = treeNode.build();
 
         this.adapterInput.adapterConfiguration.push(userInput);
+
+        return this;
+    }
+
+    public addDataTypeChange(propertyName: string, newType: DataTypeString) {
+        const propertyDataTypeChange = new PropertyDataTypeChange();
+        propertyDataTypeChange.dataType = newType;
+        propertyDataTypeChange.propertyName = propertyName;
+
+        this.adapterInput.dataTypeChanges.push(propertyDataTypeChange);
 
         return this;
     }

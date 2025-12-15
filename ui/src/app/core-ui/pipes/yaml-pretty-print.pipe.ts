@@ -21,6 +21,7 @@ import { stringify } from 'yaml';
 
 @Pipe({
     name: 'yamlpretty',
+    standalone: false,
 })
 @Injectable({ providedIn: 'root' })
 export class YamlPrettyPrintPipe implements PipeTransform {

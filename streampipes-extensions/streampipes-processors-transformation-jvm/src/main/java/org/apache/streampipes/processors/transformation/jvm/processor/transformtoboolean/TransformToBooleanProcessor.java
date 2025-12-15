@@ -19,12 +19,14 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.AbstractField;
@@ -34,14 +36,13 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,42 +52,46 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TransformToBooleanProcessor
-    extends StreamPipesDataProcessor
-    implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+    implements IStreamPipesDataProcessor, ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation,
+    ProcessingElementParameterExtractor> {
 
   private static final Logger LOG = LoggerFactory.getLogger(TransformToBooleanProcessor.class);
-
   public static final String TRANSFORM_FIELDS_ID = "transform-fields";
-
   private List<String> transformFields;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.transform-to-boolean", 0)
-        .category(DataProcessorType.BOOLEAN_OPERATOR)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithNaryMapping(
-                EpRequirements.anyProperty(),   // anyProperty? Would be nice, to exclude
-                Labels.withId(TRANSFORM_FIELDS_ID),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.customTransformation())
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        TransformToBooleanProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.transform-to-boolean", 0)
+            .category(DataProcessorType.BOOLEAN_OPERATOR)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                                                     .requiredPropertyWithNaryMapping(
+                                                         EpRequirements.anyProperty(),
+                                                         // anyProperty? Would be nice, to exclude
+                                                         Labels.withId(TRANSFORM_FIELDS_ID),
+                                                         PropertyScope.NONE
+                                                     )
+                                                     .build())
+            .outputStrategy(OutputStrategies.customTransformation())
+            .build()
+    );
   }
 
   @Override
   public EventSchema resolveOutputStrategy(
       DataProcessorInvocation processingElement,
-      ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
-
+      ProcessingElementParameterExtractor parameterExtractor
+  ) {
     EventSchema eventSchema = new EventSchema();
-    EventSchema oldEventSchema = processingElement.getInputStreams().get(0).getEventSchema();
+    EventSchema oldEventSchema = processingElement.getInputStreams()
+                                                  .get(0)
+                                                  .getEventSchema();
     // Gotta remove the "s0::" in the beginning
     Set<String> transformFields = getTransformFieldNames(parameterExtractor);
-
     for (EventProperty eventProperty : oldEventSchema.getEventProperties()) {
       //TODO: Test, if eventProperty is a primitive type (string, number, ...)
 
@@ -96,27 +101,27 @@ public class TransformToBooleanProcessor
             .create(Datatypes.Boolean, eventProperty.getRuntimeName())
             .label(eventProperty.getRuntimeName())
             .description(eventProperty.getDescription());
-
         eventSchema.addEventProperty(property.build());
       } else {
         // Otherwise just add the old event property
         eventSchema.addEventProperty(eventProperty);
       }
     }
-
     return eventSchema;
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    transformFields = parameters.extractor().mappingPropertyValues(TRANSFORM_FIELDS_ID);
-
+  public void onPipelineStarted(
+      IDataProcessorParameters parameters,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) {
+    transformFields = parameters.extractor()
+                                .mappingPropertyValues(TRANSFORM_FIELDS_ID);
   }
 
   @Override
-  public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event inputEvent, SpOutputCollector collector) {
     for (String transformField : transformFields) {
       AbstractField<?> field = inputEvent.getFieldBySelector(transformField);
       // Is the field a primitive (and no list/nested field)?
@@ -135,12 +140,12 @@ public class TransformToBooleanProcessor
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 
   private Boolean toBoolean(Object value) throws SpRuntimeException {
-    String s = value.toString().toLowerCase();
+    String s = value.toString()
+                    .toLowerCase();
     // If it is a double, maybe add some delta here?
     if (s.equals("true") || s.equals("1") || s.equals("1.0")) {
       return true;
@@ -153,12 +158,13 @@ public class TransformToBooleanProcessor
 
   private Set<String> getTransformFieldNames(ProcessingElementParameterExtractor extractor) {
     return extractor.mappingPropertyValues(TRANSFORM_FIELDS_ID)
-        .stream()
-        .map(this::removeFieldPrefix)
-        .collect(Collectors.toSet());
+                    .stream()
+                    .map(this::removeFieldPrefix)
+                    .collect(Collectors.toSet());
   }
 
   private String removeFieldPrefix(String fieldName) {
     return fieldName.substring(4);
   }
 }
+

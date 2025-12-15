@@ -26,29 +26,94 @@
 
 ## Description
 
-Buffers values of a sensor, while state does not change.
-Select a state field in the event. Events are buffered as long as state field does not change.
-When it changes result
-event is emitted.
+The State Buffer processor caches sensor values during specific states. It supports:
+* State-based value buffering
+* Timestamp tracking
+* Sensor value caching
+* State monitoring
+
+This processor is essential for:
+* Caching sensor values
+* Tracking state changes
+* Monitoring conditions
+* Storing measurements
 
 ***
 
 ## Required input
 
-Define the state and sensor value field
+The processor requires a data stream containing:
+* A timestamp field
+* A state field
+* At least one sensor value field to cache
+
+***
+
+## Configuration
 
 ### Timestamp
 
-A mapping property for a timestamp field
+Select the field containing the event timestamp. This is used to track when values are buffered.
 
 ### State
 
-Select the field representing the state
+Select the field containing the state information. This determines when values are cached.
 
-### Sensor value to cache
+### Sensor Value to Cache
 
-Select the field with the numerical values to buffer
+Select the sensor value field that should be cached while the state is active.
 
 ## Output
 
-Emits a new event on state change, with the fields `timestamp`, `state`, and a list containing all `sensor values`.
+The processor creates a new event containing:
+* A timestamp field
+* A list of buffered values
+* A list of states
+
+### Example
+
+#### Input Event
+```json
+{
+  "deviceId": "sensor01",
+  "timestamp": 1586380104915,
+  "state": ["active"],
+  "temperature": 23.5
+}
+```
+
+#### Configuration
+* Timestamp: timestamp
+* State: state
+* Sensor Value to Cache: temperature
+
+#### Output Event (when state changes from "active" to "inactive")
+```json
+{
+  "timestamp": 1586380105915,
+  "values": [23.5, 24.1, 24.3],
+  "state": ["active"]
+}
+```
+
+## Use Cases
+
+1. **State Monitoring**
+   * Cache sensor values
+   * Track state changes
+   * Monitor conditions
+   * Store measurements
+
+2. **Data Analysis**
+   * Analyze state patterns
+   * Track value changes
+   * Monitor conditions
+   * Store measurements
+
+## Notes
+
+* Values are cached during active states
+* Timestamps are preserved
+* State changes trigger updates
+* Processing is stateful
+* Multiple values can be buffered

@@ -21,10 +21,20 @@ export class GeneralUtils {
         return cy.dataCy(`tab-${identifier}`).click();
     }
 
-    public static validateAmountOfNavigationIcons(expected: number) {
-        cy.dataCy('navigation-icon', { timeout: 10000 }).should(
-            'have.length',
-            expected,
+    public static openMenuForRow(rowText: string) {
+        cy.log('ROW TEXT', rowText);
+        cy.contains('[role="row"], tr, mat-row', rowText) // be flexible on row element
+            .scrollIntoView()
+            .within(() => {
+                // Hover the trigger to open the menu
+                cy.dataCy('more-options').trigger('mouseenter', {
+                    force: true,
+                });
+            });
+
+        // Wait for the CDK overlay panel to become visible
+        cy.get('.cdk-overlay-container .mat-mdc-menu-panel:visible').should(
+            'exist',
         );
     }
 }

@@ -1,0 +1,134 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.streampipes.rest.impl.dashboard;
+
+
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
+import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.resource.management.DataExplorerResourceManager;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.storage.api.IPermissionStorage;
+
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Objects;
+
+@RestController
+@RequestMapping("/api/v3/datalake/dashboard")
+public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
+
+  private final IPermissionStorage permissionStorage;
+
+  public DataLakeDashboardResource() {
+    this.permissionStorage = getNoSqlStorage().getPermissionStorage();
+  }
+
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  @PostFilter("hasPermission(filterObject.couchDbId, 'READ')")
+  public List<DashboardModel> getAllDashboards() {
+    return getResourceManager().findAll();
+  }
+
+  @GetMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#dashboardId, 'READ')")
+  public DashboardModel getDashboard(@PathVariable("dashboardId") String dashboardId) {
+    return getResourceManager().find(dashboardId);
+  }
+
+  @GetMapping(path = "/{dashboardId}/composite", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthorityOrAnonymous(#dashboardId) and hasPermission(#dashboardId, 'READ')")
+  public ResponseEntity<?> getCompositeDashboardModel(@PathVariable("dashboardId") String dashboardId,
+                                                      @RequestHeader(value = "If-None-Match", required = false) String ifNoneMatch) {
+    var dashboard = getResourceManager().getCompositeDashboard(dashboardId);
+    var currentEtag = "\"" + dashboard.getRevisionHash() + "\"";
+    if (Objects.nonNull(ifNoneMatch)) {
+      if (currentEtag.equals(ifNoneMatch)) {
+        return ResponseEntity
+            .status(HttpStatus.NOT_MODIFIED)
+            .eTag(currentEtag)
+            .build();
+      }
+    }
+    return ResponseEntity
+        .ok()
+        .eTag(currentEtag)
+        .cacheControl(CacheControl.noCache())
+        .body(dashboard);
+  }
+
+  @PutMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardModel.couchDbId, 'WRITE')")
+  public ResponseEntity<DashboardModel> modifyDashboard(@RequestBody DashboardModel dashboardModel) {
+    getResourceManager().update(dashboardModel);
+    return ok(getResourceManager().find(dashboardModel.getElementId()));
+  }
+
+  @DeleteMapping(path = "/{dashboardId}")
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardId, 'WRITE')")
+  public ResponseEntity<Void> deleteDashboard(@PathVariable("dashboardId") String dashboardId) {
+    getResourceManager().delete(dashboardId);
+    return ok();
+  }
+
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
+  public ResponseEntity<DashboardModel> createDashboard(@RequestBody DashboardModel dashboardModel) {
+    var response = getResourceManager().create(dashboardModel, getAuthenticatedUserSid());
+    return ok(response);
+  }
+
+
+  private DataExplorerResourceManager getResourceManager() {
+    return getSpResourceManager().manageDataExplorer();
+  }
+
+  public boolean hasReadAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE);
+  }
+
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE);
+  }
+
+  public boolean hasReadAuthorityOrAnonymous(String dashboardId) {
+    return hasReadAuthority()
+        || hasAnonymousAccessAuthority(dashboardId);
+  }
+
+  private boolean hasAnonymousAccessAuthority(String dashboardId) {
+    var perms = permissionStorage.getUserPermissionsForObject(dashboardId);
+    return !perms.isEmpty() && perms.get(0).isReadAnonymous();
+  }
+}

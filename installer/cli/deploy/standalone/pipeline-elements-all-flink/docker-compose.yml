@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: "3.4"
 services:
   pipeline-elements-all-flink:
     image: ${SP_DOCKER_REGISTRY}/pipeline-elements-all-flink:${SP_VERSION}

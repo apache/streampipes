@@ -65,7 +65,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
    */
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.plc4x.s7";
 
-  private static final String S7_URL = "s7://";
+  private static final String S7_URL = "s7-light://";
 
   /**
    * Keys of user configuration parameters

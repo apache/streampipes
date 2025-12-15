@@ -19,14 +19,14 @@
     <div>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             class="small-button"
             data-cy="sp-reload"
             (click)="loadOptionsFromRestApi()"
             style="margin-right: 10px; margin-left: 10px"
         >
-            <span>Reload</span>
+            <span>{{ 'Reload' | translate }}</span>
         </button>
     </div>
     <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">

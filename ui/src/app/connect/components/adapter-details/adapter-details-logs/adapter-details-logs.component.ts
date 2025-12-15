@@ -34,6 +34,7 @@ import { SpConnectRoutes } from '../../../connect.routes';
     selector: 'sp-adapter-details-logs',
     templateUrl: './adapter-details-logs.component.html',
     styleUrls: ['./adapter-details-logs.component.scss'],
+    standalone: false,
 })
 export class SpAdapterDetailsLogsComponent
     extends SpAbstractAdapterDetailsDirective

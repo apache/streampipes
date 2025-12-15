@@ -127,10 +127,13 @@ public enum ExtensionsLogProvider {
   }
 
   private List<String> collectPipelineElementIds(Pipeline pipeline) {
+    if (pipeline != null){
     return Stream.concat(
         pipeline.getSepas().stream().map(NamedStreamPipesEntity::getElementId),
         pipeline.getActions().stream().map(NamedStreamPipesEntity::getElementId)
     ).collect(Collectors.toList());
+  }
+  return List.of();
   }
 
 }

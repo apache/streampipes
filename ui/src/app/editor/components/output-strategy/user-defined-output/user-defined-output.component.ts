@@ -30,6 +30,7 @@ import { IdGeneratorService } from '../../../../core-services/id-generator/id-ge
     selector: 'sp-user-defined-output-strategy',
     templateUrl: './user-defined-output.component.html',
     styleUrls: ['./user-defined-output.component.scss'],
+    standalone: false,
 })
 export class UserDefinedOutputStrategyComponent
     extends BaseOutputStrategy<UserDefinedOutputStrategy>

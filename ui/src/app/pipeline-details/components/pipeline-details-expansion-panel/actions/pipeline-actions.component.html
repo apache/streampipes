@@ -26,46 +26,46 @@
         <button
             mat-icon-button
             color="accent"
-            matTooltip="Start Pipeline"
+            [matTooltip]="'Start Pipeline' | translate"
             matTooltipPosition="above"
             (click)="startPipeline()"
             [disabled]="starting || !hasWritePipelinePrivileges"
         >
             <mat-icon>play_arrow</mat-icon>
         </button>
-        <span>&nbsp;Start pipeline</span>
+        <span>&nbsp;{{ 'Start pipeline' | translate }}</span>
     </div>
     <div fxLayout="row" *ngIf="pipeline.running" fxLayoutAlign="start center">
         <button
             mat-icon-button
             color="accent"
-            matTooltip="Stop Pipeline"
+            [matTooltip]="'Stop Pipeline' | translate"
             matTooltipPosition="above"
             (click)="stopPipeline()"
             [disabled]="stopping || !hasWritePipelinePrivileges"
         >
             <mat-icon>stop</mat-icon>
         </button>
-        <span>&nbsp;Stop pipeline</span>
+        <span>&nbsp;{{ 'Stop pipeline' | translate }}</span>
     </div>
     <div fxLayout="row" fxLayoutAlign="start center">
         <button
             mat-icon-button
             color="accent"
-            matTooltip="Modify Pipeline"
+            [matTooltip]="'Modify Pipeline' | translate"
             matTooltipPosition="above"
             [disabled]="!hasWritePipelinePrivileges"
             (click)="pipelineOperationsService.modifyPipeline(pipeline._id)"
         >
             <mat-icon>mode_edit</mat-icon>
         </button>
-        <span>&nbsp;Modify pipeline</span>
+        <span>&nbsp;{{ 'Modify pipeline' | translate }}</span>
     </div>
     <div fxLayout="row" fxLayoutAlign="start center">
         <button
             mat-icon-button
             color="accent"
-            matTooltip="Delete Pipeline"
+            [matTooltip]="'Delete Pipeline' | translate"
             matTooltipPosition="above"
             [disabled]="!hasWritePipelinePrivileges"
             (click)="
@@ -78,6 +78,6 @@
         >
             <mat-icon>delete</mat-icon>
         </button>
-        <span>&nbsp;Delete pipeline</span>
+        <span>&nbsp;{{ 'Delete pipeline' | translate }}</span>
     </div>
 </div>

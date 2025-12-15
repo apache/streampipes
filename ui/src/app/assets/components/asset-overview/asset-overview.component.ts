@@ -42,11 +42,12 @@ import { MatDialog } from '@angular/material/dialog';
     selector: 'sp-asset-overview',
     templateUrl: './asset-overview.component.html',
     styleUrls: ['./asset-overview.component.scss'],
+    standalone: false,
 })
 export class SpAssetOverviewComponent implements OnInit {
     existingAssets: SpAssetModel[] = [];
 
-    displayedColumns: string[] = ['name', 'action'];
+    displayedColumns: string[] = ['name', 'actions'];
 
     dataSource: MatTableDataSource<SpAssetModel> =
         new MatTableDataSource<SpAssetModel>();

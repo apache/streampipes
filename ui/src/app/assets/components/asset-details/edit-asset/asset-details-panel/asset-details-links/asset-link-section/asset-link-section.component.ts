@@ -27,6 +27,7 @@ import {
     selector: 'sp-asset-link-section',
     templateUrl: './asset-link-section.component.html',
     styleUrls: ['./asset-link-section.component.scss'],
+    standalone: false,
 })
 export class AssetLinkSectionComponent {
     @Input()

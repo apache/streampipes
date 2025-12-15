@@ -30,6 +30,7 @@ import { SpConnectRoutes } from '../../connect.routes';
     selector: 'sp-edit-adapter',
     templateUrl: './edit-adapter.component.html',
     styleUrls: ['./edit-adapter.component.scss'],
+    standalone: false,
 })
 export class EditAdapterComponent implements OnInit {
     initialized = false;

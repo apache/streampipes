@@ -17,10 +17,10 @@
   -->
 
 <sp-asset-browser
-    filteredAssetLinkType="data-view"
-    allResourcesAlias="Dashboards"
+    filteredAssetLinkType="chart"
+    [allResourcesAlias]="'Charts' | translate"
     [resourceCount]="resourceCount"
-    (filterIdsEmitter)="applyDashboardFilters($event)"
+    (filterIdsEmitter)="applyChartFilters($event)"
 >
     <sp-basic-view [showBackLink]="false" [padding]="true">
         <div
@@ -32,19 +32,7 @@
         >
             <button
                 mat-button
-                mat-raised-button
-                color="accent"
-                data-cy="open-new-dashboard-dialog"
-                (click)="openNewDashboardDialog()"
-                class="mr-10"
-                *ngIf="hasDataExplorerWritePrivileges"
-            >
-                <i class="material-icons">add</i>
-                <span>New Dashboard</span>
-            </button>
-            <button
-                mat-button
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 data-cy="open-new-data-view"
                 (click)="createNewDataView()"
@@ -52,14 +40,13 @@
                 *ngIf="hasDataExplorerWritePrivileges"
             >
                 <i class="material-icons">add</i>
-                <span>New Data View</span>
+                <span>{{ 'New chart' | translate }}</span>
             </button>
         </div>
         <div fxFlex="100" fxLayout="column">
-            <sp-data-explorer-dashboard-overview
+            <sp-data-explorer-overview-table
                 (resourceCountEmitter)="resourceCount = $event"
-            ></sp-data-explorer-dashboard-overview>
-            <sp-data-explorer-data-view-overview></sp-data-explorer-data-view-overview>
+            ></sp-data-explorer-overview-table>
         </div>
     </sp-basic-view>
 </sp-asset-browser>

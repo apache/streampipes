@@ -23,10 +23,11 @@ import { SpColorizationService } from '../../services/colorization.service';
     selector: 'sp-label',
     templateUrl: './sp-label.component.html',
     styleUrls: ['./sp-label.component.scss'],
+    standalone: false,
 })
 export class SpLabelComponent implements OnInit {
     @Input()
-    labelText: string;
+    labelText: string | number;
 
     @Input()
     small = false;
@@ -34,9 +35,9 @@ export class SpLabelComponent implements OnInit {
     @Input()
     size: 'small' | 'medium' | 'large' = 'large';
 
-    _labelBackground: string;
+    _labelBackground: string = 'var(--color-bg-2)';
 
-    labelTextColor = '';
+    labelTextColor = 'var(--color-default-text)';
     cssClass = '';
 
     constructor(private colorizationService: SpColorizationService) {}

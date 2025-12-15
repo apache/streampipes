@@ -19,18 +19,23 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { AdapterDescription } from '@streampipes/platform-services';
+import {
+    AdapterDescription,
+    LinkageData,
+} from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { Router } from '@angular/router';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-documentation/adapter-documentation-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-configuration',
     templateUrl: './adapter-configuration.component.html',
     styleUrls: ['./adapter-configuration.component.scss'],
+    standalone: false,
 })
 export class AdapterConfigurationComponent implements OnInit {
     /**
@@ -40,8 +45,10 @@ export class AdapterConfigurationComponent implements OnInit {
     @Input() adapter: AdapterDescription;
     @Input() isEditMode;
 
+    linkageData: LinkageData[];
     myStepper: MatStepper;
     parentForm: UntypedFormGroup;
+    pageTitle = '';
 
     private eventSchemaComponent: EventSchemaComponent;
 
@@ -51,10 +58,14 @@ export class AdapterConfigurationComponent implements OnInit {
         private shepherdService: ShepherdService,
         private _formBuilder: UntypedFormBuilder,
         private router: Router,
+        private translate: TranslateService,
     ) {}
 
     ngOnInit() {
         this.parentForm = this._formBuilder.group({});
+        this.pageTitle = this.isEditMode
+            ? this.translate.instant('Edit adapter: ') + this.displayName
+            : this.translate.instant('New adapter: ') + this.displayName;
     }
 
     removeSelection() {

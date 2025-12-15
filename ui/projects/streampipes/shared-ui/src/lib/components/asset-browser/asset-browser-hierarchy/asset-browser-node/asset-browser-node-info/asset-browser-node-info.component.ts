@@ -29,6 +29,7 @@ import { SpAssetBrowserService } from '../../../asset-browser.service';
     selector: 'sp-asset-browser-node-info',
     templateUrl: 'asset-browser-node-info.component.html',
     styleUrls: ['./asset-browser-node-info.component.scss'],
+    standalone: false,
 })
 export class AssetBrowserNodeInfoComponent implements OnInit {
     @Input()

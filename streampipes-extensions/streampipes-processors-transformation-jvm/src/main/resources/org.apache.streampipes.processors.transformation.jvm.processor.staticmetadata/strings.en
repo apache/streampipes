@@ -30,3 +30,8 @@ static-metadata-input-value.description=This is used for the runtime value in th
 static-metadata-input-datatype.title=Data Type
 static-metadata-input-datatype.description=Select the data type of the value
 
+static-metadata-input-label.title=Label
+static-metadata-input-label.description=An optional short label which describes the field
+
+static-metadata-input-description.title=Description
+static-metadata-input-description.description=An optional description of the field

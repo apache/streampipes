@@ -27,29 +27,49 @@
             fxLayout="column"
             style="width: 100%"
         >
-            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <b>
-                    <h4>
-                        The adapter is currently used by these pipelines:
-                        {{ namesOfPipelinesUsingAdapter }}
-                        (if you don't see those pipelines, they are created by
-                        other users)
-                    </h4>
-                    <h4>
-                        You need to delete those pipelines first before deleting
-                        the adapter.
-                    </h4>
-                    <h4>
-                        Do you want to delete all associated pipelines and the
-                        adapter?
-                    </h4>
-                </b>
+            <div
+                fxFlex="100"
+                fxLayoutAlign="center center"
+                fxLayout="column"
+                class="info-text"
+            >
+                <p>
+                    {{
+                        'The adapter is currently used by these pipelines:'
+                            | translate
+                    }}
+                    <b>{{ namesOfPipelinesUsingAdapter }}</b
+                    ><br />
+                    {{
+                        "(if you don't see those pipelines, they are created by other users)"
+                            | translate
+                    }}
+                </p>
+                <p>
+                    {{
+                        'You need to delete those pipelines first before deleting the adapter.'
+                            | translate
+                    }}
+                </p>
+                <p>
+                    <b>
+                        {{
+                            'Do you want to delete all associated pipelines and the adapter?'
+                                | translate
+                        }}</b
+                    >
+                </p>
             </div>
-            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+            <div
+                fxFlex="100"
+                fxLayoutAlign="center center"
+                fxLayout="column"
+                class="mt-10"
+            >
                 <button
                     mat-button
-                    mat-raised-button
-                    color="accent"
+                    mat-flat-button
+                    class="btn-warn"
                     (click)="deleteAdapter(true)"
                     data-cy="delete-adapter-and-associated-pipelines-confirmation"
                 >
@@ -71,9 +91,15 @@
         >
             <b>
                 <h4>
-                    Unable to delete all associated pipelines because you are
-                    not the owner of the following pipelines:
-                    {{ namesOfPipelinesNotOwnedByUser }}
+                    <p>
+                        {{
+                            'Unable to delete all associated pipelines because you are not the owner of the following pipelines: '
+                                | translate
+                        }}
+                    </p>
+                    <p>
+                        <b>{{ namesOfPipelinesNotOwnedByUser }}</b>
+                    </p>
                 </h4>
             </b>
         </div>
@@ -81,21 +107,28 @@
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <b
                     ><h4>
-                        Do you really want to delete adapter {{ adapter.name }}?
+                        {{
+                            'Do you really want to delete adapter ' | translate
+                        }}
+                        {{ adapter.name }} ?
                     </h4></b
                 >
-                <b><h5>This operation cannot be undone.</h5></b>
+                <b
+                    ><h5>
+                        {{ 'This operation cannot be undone.' | translate }}
+                    </h5></b
+                >
             </div>
 
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     (click)="deleteAdapter(false)"
                     data-cy="delete-adapter-confirmation"
                 >
-                    Delete adapter
+                    {{ 'Delete adapter' | translate }}
                 </button>
             </div>
         </div>
@@ -122,11 +155,11 @@
     <div class="sp-dialog-actions actions-align-right">
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             (click)="close(false)"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

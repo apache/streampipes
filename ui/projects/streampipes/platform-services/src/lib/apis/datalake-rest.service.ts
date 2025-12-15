@@ -16,18 +16,25 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import {
+    HttpClient,
+    HttpContext,
+    HttpParams,
+    HttpRequest,
+    HttpHeaders,
+} from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { DataLakeMeasure, SpQueryResult } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DatalakeRestService {
-    constructor(private http: HttpClient) {}
+    private http = inject(HttpClient);
 
     private get baseUrl() {
         return '/streampipes-backend';
@@ -68,6 +75,12 @@ export class DatalakeRestService {
             .pipe(map(res => res as DataLakeMeasure));
     }
 
+    getMeasurementByName(name: String): Observable<DataLakeMeasure> {
+        return this.http
+            .get(`${this.dataLakeMeasureUrl}/byName/${name}`)
+            .pipe(map(res => res as DataLakeMeasure));
+    }
+
     performMultiQuery(
         queryParams: DatalakeQueryParameters[],
     ): Observable<SpQueryResult[]> {
@@ -81,20 +94,21 @@ export class DatalakeRestService {
     getData(
         index: string,
         queryParams: DatalakeQueryParameters,
-        ignoreLoadingBar?: boolean,
+        ignoreLoadingBar = false,
     ): Observable<SpQueryResult> {
         const columns = queryParams.columns;
+        const context = ignoreLoadingBar
+            ? new HttpContext().set(NGX_LOADING_BAR_IGNORED, true)
+            : undefined;
         if (columns === '') {
             const emptyQueryResult = new SpQueryResult();
             emptyQueryResult.total = 0;
             return of(emptyQueryResult);
         } else {
             const url = this.dataLakeUrl + '/measurements/' + index;
-            const headers = ignoreLoadingBar ? { ignoreLoadingBar: '' } : {};
-            // @ts-ignore
             return this.http.get<SpQueryResult>(url, {
                 params: queryParams as unknown as HttpParams,
-                headers,
+                context,
             });
         }
     }
@@ -120,42 +134,52 @@ export class DatalakeRestService {
 
     downloadRawData(
         index: string,
-        format: string,
-        delimiter: string,
+        formatConfig: Record<string, any>,
         missingValueBehaviour: string,
         startTime?: number,
         endTime?: number,
     ) {
         const queryParams =
             startTime && endTime
-                ? { format, delimiter, startDate: startTime, endDate: endTime }
+                ? { ...formatConfig, startDate: startTime, endDate: endTime }
                 : {
-                      format,
-                      delimiter,
+                      ...formatConfig,
                       missingValueBehaviour,
                   };
+
         return this.buildDownloadRequest(index, queryParams);
     }
 
     downloadQueriedData(
         index: string,
-        format: string,
-        delimiter: string,
+        formatConfig: Record<string, any>,
         missingValueBehaviour: string,
         queryParams: DatalakeQueryParameters,
     ) {
-        (queryParams as any).format = format;
-        (queryParams as any).delimiter = delimiter;
-        (queryParams as any).missingValueBehaviour = missingValueBehaviour;
+        const qp = { ...formatConfig, ...queryParams, missingValueBehaviour };
 
-        return this.buildDownloadRequest(index, queryParams);
+        return this.buildDownloadRequest(index, qp);
+    }
+
+    cleanup(index: string, config: any) {
+        const url = `${this.dataLakeUrl}/${index}/cleanup`;
+        const request = new HttpRequest('POST', url, config, {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' }), // optional if already handled globally
+        });
+
+        return this.http.request(request);
+    }
+
+    deleteCleanup(index: string) {
+        const url = `${this.dataLakeUrl}/${index}/cleanup`;
+        return this.http.delete(url);
     }
 
     buildDownloadRequest(index: string, queryParams: any) {
         const url = this.dataLakeUrl + '/measurements/' + index + '/download';
         const request = new HttpRequest('GET', url, {
             reportProgress: true,
-            responseType: 'text',
+            responseType: 'blob',
             params: this.toHttpParams(queryParams),
         });
 

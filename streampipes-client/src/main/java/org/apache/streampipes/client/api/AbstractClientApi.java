@@ -25,6 +25,7 @@ import org.apache.streampipes.client.http.PostRequestWithoutPayload;
 import org.apache.streampipes.client.http.PostRequestWithoutPayloadResponse;
 import org.apache.streampipes.client.http.PutRequest;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.client.serializer.ListSerializer;
 import org.apache.streampipes.client.serializer.ObjectSerializer;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
@@ -33,6 +34,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
 import org.apache.http.HttpStatus;
 
+import java.util.List;
 import java.util.Optional;
 
 public class AbstractClientApi {
@@ -83,6 +85,11 @@ public class AbstractClientApi {
 
   protected <T> T getSingle(StreamPipesApiPath apiPath, Class<T> targetClass) throws SpRuntimeException {
     ObjectSerializer<Void, T> serializer = new ObjectSerializer<>();
+    return new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest();
+  }
+
+  protected <T> List<T> getList(StreamPipesApiPath apiPath, Class<T> targetClass) throws SpRuntimeException {
+    ListSerializer<Void, T> serializer = new ListSerializer<>();
     return new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest();
   }
 

@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
@@ -29,12 +29,12 @@ import {
     PipelineUpdateInfo,
 } from '../model/gen/streampipes-model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root',
+})
 export class AdapterService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     get connectPath() {
         return `${this.platformServicesCommons.apiBasePath}/connect`;
@@ -75,9 +75,16 @@ export class AdapterService {
         );
     }
 
-    stopAdapter(adapter: AdapterDescription): Observable<Message> {
+    stopAdapter(
+        adapter: AdapterDescription,
+        forceStop = false,
+    ): Observable<Message> {
         return this.http
-            .post(this.adapterMasterUrl + adapter.elementId + '/stop', {})
+            .post(
+                this.adapterMasterUrl + adapter.elementId + '/stop',
+                {},
+                { params: { forceStop } },
+            )
             .pipe(map(response => Message.fromData(response as any)));
     }
 

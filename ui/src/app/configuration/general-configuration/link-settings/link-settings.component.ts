@@ -22,6 +22,7 @@ import { FormGroup } from '@angular/forms';
 @Component({
     selector: 'sp-configuration-link-settings',
     templateUrl: './link-settings.component.html',
+    standalone: false,
 })
 export class SpConfigurationLinkSettingsComponent {
     @Input()

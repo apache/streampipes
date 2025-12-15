@@ -23,7 +23,7 @@ import { Notification } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-matching-error',
     templateUrl: './matching-error.component.html',
-    styleUrls: ['./matching-error.component.scss'],
+    standalone: false,
 })
 export class MatchingErrorComponent {
     @Input()

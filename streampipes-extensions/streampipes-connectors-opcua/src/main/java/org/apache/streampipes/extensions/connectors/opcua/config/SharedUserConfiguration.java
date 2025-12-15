@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config;
 
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaNamingStrategy;
 import org.apache.streampipes.extensions.connectors.opcua.utils.SecurityUtils;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.Option;
@@ -54,11 +56,31 @@ public class SharedUserConfiguration {
   public static final String SECURITY_POLICY = "securityPolicy";
   public static final String USER_AUTHENTICATION = "userAuthentication";
   public static final String USER_AUTHENTICATION_ANONYMOUS = "anonymous";
+  public static final String X509_GROUP = "x509Group";
+  public static final String X509_PRIVATE_KEY_PEM = "x509PrivateKeyPem";
+  public static final String X509_PUBLIC_KEY_PEM = "x509PublicKeyPem";
+
+  public static OneOfStaticProperty makeNamingStrategyOption() {
+    return StaticProperties.singleValueSelection(
+        Labels.withId(OpcUaLabels.NAMING_STRATEGY),
+        List.of(
+            OpcUaNamingStrategy.DISPLAY_NAME.toOption(),
+            OpcUaNamingStrategy.BROWSE_NAME.toOption(),
+            OpcUaNamingStrategy.PARSED_NODE_ID.toOption()
+        ));
+  }
 
   public static void appendSharedOpcUaConfig(AbstractConfigurablePipelineElementBuilder<?, ?> builder,
                                              boolean adapterConfig) {
 
     var dependsOn = getDependsOn(adapterConfig);
+
+    var x509Group = StaticProperties.group(
+            Labels.withId(X509_GROUP),
+            StaticProperties.secretValue(Labels.withId(X509_PRIVATE_KEY_PEM)),
+            StaticProperties.stringFreeTextProperty(Labels.withId(X509_PUBLIC_KEY_PEM), true, false));
+
+    x509Group.setHorizontalRendering(false);
 
     builder
         .requiredSingleValueSelection(
@@ -77,7 +99,8 @@ public class SharedUserConfiguration {
                     StaticProperties.stringFreeTextProperty(
                         Labels.withId(USERNAME)),
                     StaticProperties.secretValue(Labels.withId(PASSWORD))
-                ))
+                )),
+            Alternatives.from(Labels.withId(X509_GROUP), x509Group)
         )
         .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL),
             Alternatives.from(

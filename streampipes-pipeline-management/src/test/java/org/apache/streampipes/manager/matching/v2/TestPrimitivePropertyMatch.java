@@ -61,7 +61,7 @@ public class TestPrimitivePropertyMatch {
   public void testNegativePrimitivePropertyMatchDomain() {
 
     EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
-    EventPropertyPrimitive requirement = EpRequirements.domainPropertyReq(Geo.LNG);
+    EventPropertyPrimitive requirement = EpRequirements.semanticTypeReq(Geo.LNG);
 
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 

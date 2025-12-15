@@ -21,6 +21,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
     selector: 'sp-messaging-broker-config',
     templateUrl: './broker-config.component.html',
+    standalone: false,
 })
 export class SpMessagingBrokerConfigComponent {
     @Input()

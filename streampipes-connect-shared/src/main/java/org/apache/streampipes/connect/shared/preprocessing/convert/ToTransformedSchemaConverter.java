@@ -21,7 +21,6 @@ package org.apache.streampipes.connect.shared.preprocessing.convert;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
-import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
@@ -59,13 +58,6 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
 
   public ToTransformedSchemaConverter(List<EventProperty> properties) {
     this.properties = new Cloner().properties(properties);
-  }
-
-  @Override
-  public void visit(CreateNestedRuleDescription rule) {
-    var nested = new EventPropertyNested();
-    nested.setRuntimeName(rule.getRuntimeKey());
-    this.properties.add(nested);
   }
 
   @Override
@@ -122,6 +114,10 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
   public void visit(AddValueTransformationRuleDescription rule) {
     var property = new EventPropertyPrimitive();
     property.setElementId(STATIC_VALUE_ID_PREFIX + rule.getStaticValue());
+    var uniqueId = UUIDGenerator.generateUuid().substring(0, 10);
+
+    property.setElementId(STATIC_VALUE_ID_PREFIX + uniqueId + ":" + rule.getStaticValue());
+
     property.setRuntimeName(rule.getRuntimeKey());
     property.setRuntimeType(rule.getDatatype());
     property.setLabel(rule.getLabel());
@@ -136,6 +132,8 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
     }
     this.properties.add(property);
   }
+
+
 
   @Override
   public void visit(ChangeDatatypeTransformationRuleDescription rule) {

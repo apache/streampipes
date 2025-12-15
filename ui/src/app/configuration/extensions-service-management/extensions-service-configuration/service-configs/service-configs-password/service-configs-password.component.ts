@@ -27,6 +27,7 @@ const hiddenPasswordString = '*****';
     templateUrl: './service-configs-password.component.html',
     styleUrls: ['./service-configs-password.component.scss'],
     providers: [ConfigurationService],
+    standalone: false,
 })
 export class ServiceConfigsPasswordComponent {
     @Input() configuration: ConfigItem;

@@ -29,6 +29,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 @Component({
     selector: 'sp-asset-browser-toolbar',
     templateUrl: 'asset-browser-toolbar.component.html',
+    standalone: false,
 })
 export class AssetBrowserToolbarComponent {
     @Input()

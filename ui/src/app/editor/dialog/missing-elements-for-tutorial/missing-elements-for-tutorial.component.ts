@@ -22,7 +22,7 @@ import { DialogRef } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-missing-elements-for-tutorial',
     templateUrl: './missing-elements-for-tutorial.component.html',
-    styleUrls: ['./missing-elements-for-tutorial.component.scss'],
+    standalone: false,
 })
 export class MissingElementsForTutorialComponent {
     @Input()

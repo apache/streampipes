@@ -25,6 +25,9 @@
                 [submitPipelineForm]="submitPipelineForm"
                 [pipeline]="pipeline"
                 [storageOptions]="storageOptions"
+                [(selectedAssets)]="selectedAssets"
+                [(deselectedAssets)]="deselectedAssets"
+                [(originalAssets)]="originalAssets"
             >
             </sp-save-pipeline-settings>
 
@@ -47,18 +50,17 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions">
+    <div class="sp-dialog-actions" fxLayoutGap="10px">
         <button
-            mat-raised-button
-            color="accent"
+            mat-flat-button
             (click)="hide(false)"
             *ngIf="operationCompleted"
         >
             Create another pipeline
         </button>
         <button
-            mat-raised-button
-            color="accent"
+            mat-flat-button
+            class="mat-basic"
             data-cy="sp-navigate-to-pipeline-overview"
             (click)="navigateToPipelineOverview()"
             *ngIf="operationCompleted"
@@ -72,11 +74,9 @@
                 operationProgress ||
                 operationCompleted
             "
-            mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             (click)="savePipeline()"
-            style="margin-right: 10px"
             data-cy="sp-editor-apply"
         >
             Apply
@@ -85,10 +85,10 @@
             *ngIf="
                 !operationProgress && (!operationCompleted || !operationSuccess)
             "
-            mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             (click)="hide(true)"
+            data-cy="sp-editor-cancel"
         >
             {{ 'Cancel' }}
         </button>

@@ -23,6 +23,7 @@ import { Router } from '@angular/router';
     selector: 'sp-basic-view',
     templateUrl: './basic-view.component.html',
     styleUrls: ['./basic-view.component.scss'],
+    standalone: false,
 })
 export class SpBasicViewComponent {
     @Input()

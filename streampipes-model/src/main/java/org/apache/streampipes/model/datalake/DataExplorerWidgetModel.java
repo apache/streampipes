@@ -19,12 +19,14 @@
 package org.apache.streampipes.model.datalake;
 
 import org.apache.streampipes.model.dashboard.DashboardEntity;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@TsModel
 public class DataExplorerWidgetModel extends DashboardEntity {
 
   private String widgetId;
@@ -42,10 +44,6 @@ public class DataExplorerWidgetModel extends DashboardEntity {
 
   @JsonSerialize(using = CustomMapSerializer.class, as = Map.class)
   private Map<String, Object> timeSettings;
-
-  private String pipelineId;
-  private String measureName;
-
 
   public DataExplorerWidgetModel() {
     super();
@@ -93,22 +91,6 @@ public class DataExplorerWidgetModel extends DashboardEntity {
 
   public void setDataConfig(Map<String, Object> dataConfig) {
     this.dataConfig = dataConfig;
-  }
-
-  public String getPipelineId() {
-    return pipelineId;
-  }
-
-  public void setPipelineId(String pipelineId) {
-    this.pipelineId = pipelineId;
-  }
-
-  public String getMeasureName() {
-    return measureName;
-  }
-
-  public void setMeasureName(String measureName) {
-    this.measureName = measureName;
   }
 
   public Map<String, Object> getTimeSettings() {

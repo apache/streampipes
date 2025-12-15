@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.state;
 
+import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,15 +36,15 @@ public class StateUtils {
   public static final String LABEL_STRING_ID = "labelStringId";
 
 
-  public static String getLabelName(ProcessingElementParameterExtractor extractor) {
+  public static String getLabelName(IDataProcessorParameterExtractor extractor) {
     return extractor.textParameter(LABEL_NAME);
   }
 
-  public static List<StaticPropertyGroup> getGroupItems(ProcessingElementParameterExtractor extractor) {
+  public static List<StaticPropertyGroup> getGroupItems(IDataProcessorParameterExtractor extractor) {
     return extractor.collectionMembersAsGroup(LABEL_COLLECTION_ID);
   }
 
-  public static List<Double> getNumberValues(ProcessingElementParameterExtractor extractor) {
+  public static List<Double> getNumberValues(IDataProcessorParameterExtractor extractor) {
     return getGroupItems(extractor)
         .stream()
         .map(group -> (
@@ -56,7 +56,7 @@ public class StateUtils {
         .collect(Collectors.toList());
   }
 
-  public static List<String> getLabelStrings(ProcessingElementParameterExtractor extractor) {
+  public static List<String> getLabelStrings(IDataProcessorParameterExtractor extractor) {
     return getGroupItems(extractor)
         .stream()
         .map(group -> (extractor
@@ -66,7 +66,7 @@ public class StateUtils {
         .collect(Collectors.toList());
   }
 
-  public static List<String> getComparators(ProcessingElementParameterExtractor extractor) {
+  public static List<String> getComparators(IDataProcessorParameterExtractor extractor) {
     return getGroupItems(extractor)
         .stream()
         .map(group -> (extractor

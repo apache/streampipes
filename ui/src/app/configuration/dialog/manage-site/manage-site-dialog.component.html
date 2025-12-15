@@ -20,6 +20,7 @@
     <div class="sp-dialog-content p-15">
         <div *ngIf="clonedSite !== undefined">
             <sp-edit-asset-location-component
+                #editLocation
                 [site]="clonedSite"
                 [locationConfig]="locationConfig"
             >
@@ -30,23 +31,24 @@
     <div class="sp-dialog-actions">
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             data-cy="sites-dialog-save-button"
             color="accent"
             (click)="store()"
             style="margin-right: 10px"
+            [disabled]="editLocationComponent?.siteAreaControl.invalid"
         >
-            Save changes
+            {{ 'Save changes' | translate }}
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             data-cy="sites-dialog-cancel-button"
             (click)="close()"
             style="margin-right: 10px"
         >
-            Cancel
+            {{ 'Cancel' | translate }}
         </button>
     </div>
 </div>

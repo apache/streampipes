@@ -16,9 +16,9 @@
  *
  */
 
-import { initFederation } from '@angular-architects/native-federation';
+import { AppModule } from './app/app.module';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-initFederation('/assets/federation.manifest.json')
-    .catch(err => console.error(err))
-    .then(_ => import('./bootstrap'))
+platformBrowserDynamic()
+    .bootstrapModule(AppModule)
     .catch(err => console.error(err));

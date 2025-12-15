@@ -23,6 +23,7 @@ import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessag
     selector: 'sp-event-schema-error-hints',
     templateUrl: './event-schema-error-hints.component.html',
     styleUrls: ['./event-schema-error-hints.component.scss'],
+    standalone: false,
 })
 export class EventSchemaErrorHintsComponent {
     @Input() schemaErrorHints: UserErrorMessage[];

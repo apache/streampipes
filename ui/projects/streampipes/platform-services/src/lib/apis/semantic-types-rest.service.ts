@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
@@ -26,10 +26,8 @@ import { Observable } from 'rxjs';
     providedIn: 'root',
 })
 export class SemanticTypesRestService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     getSemanticTypes(text: string): Observable<string[]> {
         return this.http

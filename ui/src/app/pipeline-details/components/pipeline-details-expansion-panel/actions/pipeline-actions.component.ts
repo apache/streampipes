@@ -24,6 +24,7 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'sp-pipeline-actions',
     templateUrl: './pipeline-actions.component.html',
+    standalone: false,
 })
 export class PipelineActionsComponent implements OnInit {
     starting = false;

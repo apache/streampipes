@@ -27,6 +27,7 @@ import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
         './exception-details-dialog.component.scss',
         '../../../../../../../../src/scss/sp/sp-dialog.scss',
     ],
+    standalone: false,
 })
 export class SpExceptionDetailsDialogComponent implements OnInit {
     @Input()
@@ -35,12 +36,18 @@ export class SpExceptionDetailsDialogComponent implements OnInit {
     @Input()
     title: string;
 
+    @Input()
+    additionalButton = false;
+
+    @Input()
+    additionalButtonText = 'Button';
+
     constructor(
         private dialogRef: DialogRef<SpExceptionDetailsDialogComponent>,
     ) {}
 
-    close() {
-        this.dialogRef.close();
+    close(additionalButtonClicked = false) {
+        this.dialogRef.close(additionalButtonClicked);
     }
 
     ngOnInit(): void {}

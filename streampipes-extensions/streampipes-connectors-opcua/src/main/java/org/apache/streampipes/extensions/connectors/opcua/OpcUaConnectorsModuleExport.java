@@ -28,7 +28,10 @@ import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapter
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV2;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV3;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV4;
+import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV5;
+import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV6;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaSinkMigrationV1;
+import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaSinkMigrationV2;
 import org.apache.streampipes.extensions.connectors.opcua.sink.OpcUaSink;
 
 import java.util.List;
@@ -62,7 +65,10 @@ public class OpcUaConnectorsModuleExport implements IExtensionModuleExport {
         new OpcUaAdapterMigrationV2(),
         new OpcUaAdapterMigrationV3(),
         new OpcUaAdapterMigrationV4(),
-        new OpcUaSinkMigrationV1()
+        new OpcUaAdapterMigrationV5(),
+        new OpcUaAdapterMigrationV6(),
+        new OpcUaSinkMigrationV1(),
+        new OpcUaSinkMigrationV2()
     );
   }
 }

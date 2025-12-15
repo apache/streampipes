@@ -27,6 +27,7 @@ import {
     selector: 'sp-adapter-started-success',
     templateUrl: './adapter-started-success.component.html',
     styleUrls: ['./adapter-started-success.component.scss'],
+    standalone: false,
 })
 export class SpAdapterStartedSuccessComponent {
     @Input()
@@ -34,6 +35,12 @@ export class SpAdapterStartedSuccessComponent {
 
     @Input()
     adapterInstallationSuccessMessage = '';
+
+    @Input()
+    saveInAsset = '';
+
+    @Input()
+    deletedFromAsset = '';
 
     @Input()
     pipelineOperationStatus: PipelineOperationStatus;

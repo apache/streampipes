@@ -23,7 +23,13 @@ import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class ExtensionsLogger implements IExtensionsLogger {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ExtensionsLogger.class);
 
   private final String resourceId;
   private final SpMonitoringManager monitoringManager;
@@ -42,21 +48,25 @@ public class ExtensionsLogger implements IExtensionsLogger {
 
   @Override
   public void error(Exception e) {
+    LOG.error("Error while processing the internal pipeline", e);
     log(SpLogMessage.from(e));
   }
 
   @Override
   public void error(String details, Exception e) {
+    LOG.error("Error while processing the internal pipeline", e);
     log(SpLogMessage.from(e, details));
   }
 
   @Override
   public void info(String title, String details) {
+    LOG.info("Info message while processing the internal pipeline: {}, {}", title, details);
     log(SpLogMessage.info(title, details));
   }
 
   @Override
   public void warn(String title, String details) {
+    LOG.warn("Warning while processing the internal pipeline: {}, {}", title, details);
     log(SpLogMessage.warn(title, details));
   }
 

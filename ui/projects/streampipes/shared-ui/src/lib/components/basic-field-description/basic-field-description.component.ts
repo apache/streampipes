@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-basic-field-description',
     templateUrl: './basic-field-description.component.html',
     styleUrls: ['./basic-field-description.component.scss'],
+    standalone: false,
 })
 export class SpBasicFieldDescriptionComponent {
     @Input()

@@ -26,34 +26,107 @@
 
 ## Description
 
-This processor monitors a string field and counts how often the value of the string changes.
-Hereby, a change is characterized by
-the value of the field before and the value after the change, combined forming a pair.
-The processor keeps track of the counter for each pair.
+The String Counter processor counts changes in string field values. It supports:
+* Value change detection
+* Change pair tracking
+* Incremental counting
+* State transition monitoring
+
+This processor is essential for:
+* Counting value changes
+* Tracking state transitions
+* Monitoring string patterns
+* Measuring change frequency
 
 ***
 
 ## Required input
 
-A string field is required in the data stream and can be selected with the field mapping.
-
-### String Field
-
-The string field to be monitored.
+The processor requires a data stream containing at least one string field to monitor for value changes.
 
 ***
 
 ## Configuration
 
-(no further configuration required)
+### String Field
+
+Select the string field to monitor for value changes. This field will be used to detect changes and increment the counter.
 
 ## Output
 
-The following three fields are appended to the event:
+The processor creates a new event containing:
+* All original fields from the input event
+* A new field named "counter" containing the current count of value changes
+* A new field named "change_from" containing the previous value
+* A new field named "change_to" containing the new value
 
-* [counter] numerical field with the current count value for the given value pair
-* [change_from] the value of the string before the change
-* [change_to] the value of the string after the change
+### Example
 
-The event is emitted whenever the value of the string field changes.
+#### Input Event Stream
+```json
+{
+  "deviceId": "sensor01",
+  "status": "idle"
+}
+```
+```json
+{
+  "deviceId": "sensor01",
+  "status": "running"
+}
+```
+```json
+{
+  "deviceId": "sensor01",
+  "status": "idle"
+}
+```
+
+#### Configuration
+* String Field: status
+
+#### Output Event
+```json
+{
+  "deviceId": "sensor01",
+  "status": "running",
+  "change_from": "idle",
+  "change_to": "running",
+  "counter": 1
+}
+```
+```json
+{
+  "deviceId": "sensor01",
+  "status": "idle",
+  "change_from": "running",
+  "change_to": "idle",
+  "counter": 2
+}
+```
+
+## Use Cases
+
+1. **State Monitoring**
+   * Track state changes
+   * Count transitions
+   * Monitor patterns
+   * Measure frequency
+
+2. **Process Analysis**
+   * Analyze workflows
+   * Track sequences
+   * Count cycles
+   * Monitor operations
+
+## Notes
+
+* Only counts actual value changes
+* Ignores consecutive identical values
+* Processing is stateful
+* Counter is incremental
+* Events are only emitted on value changes
+* Original event fields are preserved
+* Change pairs are tracked (from -> to)
+* Counter starts at 1 for first change
 

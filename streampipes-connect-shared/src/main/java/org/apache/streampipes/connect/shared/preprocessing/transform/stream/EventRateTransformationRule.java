@@ -43,11 +43,6 @@ public class EventRateTransformationRule implements TransformationRule {
         case "none":
           lastSentToPipelineTimestamp = System.currentTimeMillis();
           return event;
-//                case "max":
-//                case "min":
-//                case "mean":
-//                case "sum":
-
       }
     }
     return null;

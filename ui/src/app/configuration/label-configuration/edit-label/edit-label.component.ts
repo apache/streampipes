@@ -16,15 +16,26 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { SpLabel } from '@streampipes/platform-services';
+import { SpColorizationService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-edit-label',
     templateUrl: './edit-label.component.html',
     styleUrls: ['./edit-label.component.scss'],
+    standalone: false,
 })
 export class SpEditLabelComponent implements OnInit {
+    private colorizationService = inject(SpColorizationService);
+
     @Input()
     editMode = false;
 
@@ -43,10 +54,17 @@ export class SpEditLabelComponent implements OnInit {
     ngOnInit(): void {
         if (!this.label) {
             this.label = {
-                color: '#00a7fc',
+                color: this.colorizationService.generateRandomColor(),
                 label: '',
                 description: '',
             };
+        }
+    }
+
+    saveLabel(): void {
+        this.saveEmitter.emit(this.label);
+        if (this.showPreview) {
+            this.label.color = this.colorizationService.generateRandomColor();
         }
     }
 }

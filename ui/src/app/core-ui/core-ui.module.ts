@@ -48,11 +48,10 @@ import { StaticOneOfInputComponent } from './static-properties/static-one-of-inp
 import { StaticRuntimeResolvableAnyInputComponent } from './static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
 import { StaticRuntimeResolvableOneOfInputComponent } from './static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
 import { DisplayRecommendedPipe } from './static-properties/filter/display-recommended.pipe';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerComponent, ColorPickerDirective } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
 import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-status/pipeline-started-status.component';
@@ -65,23 +64,9 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelineElementTemplateConfigComponent } from './pipeline-element-template-config/pipeline-element-template-config.component';
 import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
-import { DataDownloadDialogComponent } from './data-download-dialog/data-download-dialog.component';
-import { SelectDataComponent } from './data-download-dialog/components/select-data/select-data.component';
-import { SelectFormatComponent } from './data-download-dialog/components/select-format/select-format.component';
-import { DownloadComponent } from './data-download-dialog/components/download/download.component';
-import { SelectDataRangeComponent } from './data-download-dialog/components/select-data/select-data-range/select-data-range.component';
-import { SelectDataMissingValuesComponent } from './data-download-dialog/components/select-data/select-data-missing-values/select-data-missing-values.component';
 import { StatusWidgetComponent } from './status/status-widget.component';
 import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-metrics.component';
 import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
-import { DateInputComponent } from './date-input/date-input.component';
-import { HelpComponent } from './help/help.component';
-import { PipelineElementRuntimeInfoComponent } from './pipeline-element-runtime-info/pipeline-element-runtime-info.component';
-import { PipelineElementDocumentationComponent } from './pipeline-element-documentation/pipeline-element-documentation.component';
-import { MarkdownModule } from 'ngx-markdown';
-import { LivePreviewLoadingComponent } from './pipeline-element-runtime-info/live-preview-loading/live-preview-loading.component';
-import { LivePreviewTableComponent } from './pipeline-element-runtime-info/live-preview-table/live-preview-table.component';
-import { LivePreviewErrorComponent } from './pipeline-element-runtime-info/live-preview-error/live-preview-error.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -114,13 +99,15 @@ import { StaticTreeInputSelectedNodesComponent } from './static-properties/stati
 import { StaticTreeInputBrowseNodesComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-browse-nodes/static-tree-input-browse-nodes.component';
 import { StaticTreeInputNodeDetailsComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-node-details/static-tree-input-node-details.component';
 import { SingleMarkerMapComponent } from './single-marker-map/single-marker-map.component';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { StaticTreeInputTextEditorComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-text-editor/static-tree-input-text-editor.component';
 import { PipelineElementTemplateConfigItemComponent } from './pipeline-element-template-config/pipeline-element-template-config-item/pipeline-element-template-config-item.component';
 import { ConfigurationCodePanelComponent } from './configuration-code-panel/configuration-code-panel.component';
 import { JsonPrettyPrintPipe } from './pipes/json-pretty-print.pipe';
 import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
 import { TopicsComponent } from './topics/topics.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 @NgModule({
     imports: [
@@ -147,7 +134,8 @@ import { TopicsComponent } from './topics/topics.component';
         MatProgressBarModule,
         MatButtonToggleModule,
         CommonModule,
-        ColorPickerModule,
+        ColorPickerComponent,
+        ColorPickerDirective,
         FlexLayoutModule,
         CodemirrorModule,
         ReactiveFormsModule,
@@ -159,7 +147,6 @@ import { TopicsComponent } from './topics/topics.component';
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        NgxChartsModule,
         MatSliderModule,
         MatSlideToggleModule,
         MatChipsModule,
@@ -170,21 +157,17 @@ import { TopicsComponent } from './topics/topics.component';
         OverlayModule,
         QuillModule.forRoot(),
         MatTreeModule,
-        MarkdownModule.forRoot(),
+        TranslateModule.forChild(),
         LeafletModule,
+        TextFieldModule,
     ],
     declarations: [
         ConfigurationCodePanelComponent,
-        DataDownloadDialogComponent,
-        DateInputComponent,
         DisplayRecommendedPipe,
         ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
         PipelineElementTemplateConfigItemComponent,
         PipelineElementTemplatePipe,
-        PipelineElementRuntimeInfoComponent,
-        PipelineElementDocumentationComponent,
-        HelpComponent,
         TopicsComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
@@ -213,17 +196,9 @@ import { TopicsComponent } from './topics/topics.component';
         ErrorHintComponent,
         AddToCollectionComponent,
         PipelineStartedStatusComponent,
-        SelectDataComponent,
-        SelectFormatComponent,
-        DownloadComponent,
-        SelectDataRangeComponent,
-        SelectDataMissingValuesComponent,
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
-        LivePreviewLoadingComponent,
-        LivePreviewTableComponent,
-        LivePreviewErrorComponent,
         LoadingIndicatorComponent,
         StatusIndicatorComponent,
         MultiStepStatusIndicatorComponent,
@@ -234,12 +209,7 @@ import { TopicsComponent } from './topics/topics.component';
     providers: [MatDatepickerModule, DisplayRecommendedPipe],
     exports: [
         ConfigurationCodePanelComponent,
-        DataDownloadDialogComponent,
-        DateInputComponent,
         PipelineElementTemplateConfigComponent,
-        PipelineElementRuntimeInfoComponent,
-        PipelineElementDocumentationComponent,
-        HelpComponent,
         TopicsComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,

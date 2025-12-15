@@ -32,10 +32,12 @@
         >
         <span class="color-warn">{{ title }}</span>
     </div>
-    <div class="error-details-title">Probable cause</div>
+    <div class="error-details-title">{{ 'Probable cause' | translate }}</div>
     <div
         class="log-message"
-        [innerText]="message.cause || 'No more information'"
+        [innerText]="
+            message.cause ? message.cause : ('No more information' | translate)
+        "
     ></div>
     <div class="mt-10">
         <button
@@ -44,11 +46,13 @@
             color="accent"
             (click)="showDetails = !showDetails"
         >
-            Full details
+            {{ 'Full details' | translate }}
         </button>
     </div>
     <div fxFlex="100" fxLayout="column" *ngIf="showDetails" class="mt-10">
-        <div class="error-details-title">Full stack trace</div>
+        <div class="error-details-title">
+            {{ 'Full stack trace' | translate }}
+        </div>
         <div class="log-message">
             <div [innerText]="message.fullStackTrace"></div>
         </div>

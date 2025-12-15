@@ -25,6 +25,7 @@ import {
 @Pipe({
     name: 'timestampFilter',
     pure: false,
+    standalone: false,
 })
 export class TimestampPipe implements PipeTransform {
     constructor() {}

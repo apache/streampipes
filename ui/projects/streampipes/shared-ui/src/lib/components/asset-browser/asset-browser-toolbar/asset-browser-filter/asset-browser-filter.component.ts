@@ -32,6 +32,7 @@ import { SpAssetBrowserService } from '../../asset-browser.service';
     selector: 'sp-asset-browser-filter',
     templateUrl: 'asset-browser-filter.component.html',
     styleUrl: 'asset-browser-filter.component.scss',
+    standalone: false,
 })
 export class AssetBrowserFilterComponent implements OnInit, OnDestroy {
     @Input()

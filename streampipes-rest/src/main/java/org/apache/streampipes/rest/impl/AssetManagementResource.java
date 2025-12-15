@@ -57,10 +57,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
     return getGenericStorage().findAll(APP_DOC_TYPE);
   }
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public ResponseEntity<?> create(@RequestBody String asset) {
     try {
@@ -84,13 +81,10 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PutMapping(
-      path = "/{id}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public ResponseEntity<Map<String, Object>> update(@PathVariable("id") String assetId,
-                                                    @RequestBody String asset) {
+      @RequestBody String asset) {
     try {
       Map<String, Object> obj = getGenericStorage().update(assetId, asset);
       return ok(obj);
@@ -103,7 +97,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   @DeleteMapping(path = "/{id}/{rev}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public ResponseEntity<Void> delete(@PathVariable("id") String assetId,
-                                     @PathVariable("rev") String rev) {
+      @PathVariable("rev") String rev) {
     try {
       getGenericStorage().delete(assetId, rev);
       return ok();

@@ -51,15 +51,16 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
 
   public void getDataAsStream(OutputStream outputStream) throws IOException {
     var usesLimit = queryParams.has(SupportedRestQueryParams.QP_LIMIT);
+    var measurement = findByMeasurementName(queryParams.getMeasurementId()).get();
+
     var configuredWriter = ConfiguredOutputWriter
-        .getConfiguredWriter(format, queryParams, ignoreMissingData);
+        .getConfiguredWriter(measurement, format, queryParams, ignoreMissingData);
 
     if (!queryParams.has(SupportedRestQueryParams.QP_LIMIT)) {
       queryParams.update(SupportedRestQueryParams.QP_LIMIT, MAX_RESULTS_PER_QUERY);
     }
 
     var limit = queryParams.getAsInt(SupportedRestQueryParams.QP_LIMIT);
-    var measurement = findByMeasurementName(queryParams.getMeasurementId()).get();
 
     SpQueryResult dataResult;
 

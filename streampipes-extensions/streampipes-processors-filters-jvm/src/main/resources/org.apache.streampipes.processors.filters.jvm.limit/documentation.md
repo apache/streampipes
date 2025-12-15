@@ -25,40 +25,115 @@
 ***
 
 ## Description
-This limits the number of events emitted based on a specified criterion such as time, and number of events.
+The Rate Limit processor controls the frequency of events in a data stream by applying various windowing strategies. It supports:
+* Time-based rate limiting
+* Event count-based rate limiting
+* Cron-based rate limiting
+* Group-based rate limiting
+* Multiple event selection strategies
+
+This processor is essential for:
+* Controlling data flow rates
+* Reducing system load
+* Implementing sampling strategies
+* Managing resource utilization
 
 ***
 
-## Required input
-The processor works with any input event.
+## Required Input
+The processor works with any input event stream.
 
 ***
 
 ## Configuration
 
-### Enable Grouping
-Enabling this will use grouping with rate-limiting (note: disabling this will ignore `Grouping Field` property).
+### Grouping Settings
+* **Enable Grouping**: When enabled, rate limiting is applied separately to each group
+* **Grouping Field**: Field to use as the grouping key (only used when grouping is enabled)
 
-### Grouping Field
-Runtime field to be used as the grouping key. If grouping is disabled, this setting will be ignored.
+### Window Configuration
+Select one of the following window types:
 
-### Window Type
-This specifies the type of window to be used (time / length / cron).
+1. **Time Window**
+   * Window size in milliseconds
+   * Events are grouped by time intervals
+   * Example: 1000ms window emits events every second
 
-### Length Window Size
-Length window size in event count (note: only works with length window type).
+2. **Length Window**
+   * Window size in event count
+   * Events are grouped by count
+   * Example: Window size of 10 emits every 10 events
 
-### Time Window Size
-Time window size in milliseconds (note: only works with time window type).
+3. **Cron Window**
+   * Cron expression for scheduling
+   * Events are grouped by schedule
+   * Example: `0 * * ? * *` emits every minute
 
-### Cron Window Expression
-Cron expression [Link](https://www.freeformatter.com/cron-expression-generator-quartz.html) to trigger and emit events (i.e `0 * * ? * *` for every minute) (note: only works with cron window type).
-
-### Output Event Selection
-This specifies the event(s) that are selected to be emitted.
-- First: emit first event of the window.
-- Last: emit last event of the window.
-- All: emit all events of the window.
+### Event Selection
+Choose how events are selected from each window:
+* **First**: Emit the first event in the window
+* **Last**: Emit the last event in the window
+* **All**: Emit all events in the window
 
 ## Output
-The processor outputs events which satisfies rate-limiting conditions.
+The processor outputs events based on the configured window and selection strategy. The output maintains the original event structure.
+
+### Example
+
+#### Input Events
+```json
+{
+  "deviceId": "sensor01",
+  "temperature": 25.5,
+  "timestamp": 1586380104915
+}
+{
+  "deviceId": "sensor01",
+  "temperature": 26.0,
+  "timestamp": 1586380105015
+}
+{
+  "deviceId": "sensor01",
+  "temperature": 25.8,
+  "timestamp": 1586380105115
+}
+```
+
+#### Configuration
+* Window Type: Time Window
+* Window Size: 1000ms
+* Event Selection: Last
+* Grouping: Disabled
+
+#### Output Events
+```json
+{
+  "deviceId": "sensor01",
+  "temperature": 25.8,
+  "timestamp": 1586380105115
+}
+```
+
+## Use Cases
+
+1. **Data Sampling**
+   * Reduce high-frequency sensor data
+   * Sample large event streams
+   * Control data flow rates
+   * Implement periodic reporting
+
+2. **Resource Management**
+   * Prevent system overload
+   * Manage downstream processing
+   * Control storage rates
+   * Optimize network usage
+
+## Notes
+
+* Windows are processed independently for each group
+* Event selection is applied after window completion
+* State is maintained per group
+* Windows are cleared after processing
+* Cron expressions follow Quartz scheduler format
+* Time windows use system time
+* Length windows count all events

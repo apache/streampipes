@@ -34,7 +34,7 @@
                     <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             color="accent"
                             class="small-button"
                             (click)="
@@ -51,7 +51,7 @@
                         </button>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             class="mat-basic small-button"
                             (click)="deselectAll(adapters, elementIdFunction)"
                             style="margin-right: 10px; margin-left: 5px"
@@ -64,7 +64,9 @@
                     <mat-checkbox
                         color="accent"
                         [checked]="linkSelected(element.elementId)"
-                        data-cy="manage-assets-select-adapters-checkbox"
+                        [attr.data-cy]="
+                            'select-adapters-checkbox-' + element.name
+                        "
                         (change)="
                             selectLink(
                                 $event.checked,
@@ -81,6 +83,57 @@
             <div fxLayout="column" class="link-configuration">
                 <div fxLayout="row" fxLayoutAlign="start center" class="mb-10">
                     <div fxLayout="row" fxLayoutAlign="start center">
+                        <span class="general-options-header mb-0">Charts</span>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            class="small-button"
+                            (click)="
+                                selectAll(
+                                    charts,
+                                    elementIdFunction,
+                                    widgetNameFunction,
+                                    'chart'
+                                )
+                            "
+                            style="margin-right: 5px; margin-left: 15px"
+                        >
+                            <span>Select All</span>
+                        </button>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            class="mat-basic small-button"
+                            (click)="deselectAll(charts, elementIdFunction)"
+                            style="margin-right: 10px; margin-left: 5px"
+                        >
+                            <span>Deselect All</span>
+                        </button>
+                    </div>
+                </div>
+                <div *ngFor="let element of charts" fxLayout="row">
+                    <mat-checkbox
+                        color="accent"
+                        [checked]="linkSelected(element.elementId)"
+                        (change)="
+                            selectLink(
+                                $event.checked,
+                                element.elementId,
+                                element.baseAppearanceConfig.widgetTitle,
+                                'chart'
+                            )
+                        "
+                    >
+                        {{ element.baseAppearanceConfig.widgetTitle }}
+                    </mat-checkbox>
+                </div>
+            </div>
+            <div fxLayout="column" class="link-configuration">
+                <div fxLayout="row" fxLayoutAlign="start center" class="mb-10">
+                    <div fxLayout="row" fxLayoutAlign="start center">
                         <span class="general-options-header mb-0"
                             >Dashboards</span
                         >
@@ -88,7 +141,7 @@
                     <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             color="accent"
                             class="small-button"
                             (click)="
@@ -105,7 +158,7 @@
                         </button>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             class="mat-basic small-button"
                             (click)="deselectAll(dashboards, elementIdFunction)"
                             style="margin-right: 10px; margin-left: 5px"
@@ -141,7 +194,7 @@
                     <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             color="accent"
                             class="small-button"
                             (click)="
@@ -158,7 +211,7 @@
                         </button>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             class="mat-basic small-button"
                             (click)="
                                 deselectAll(dataLakeMeasures, elementIdFunction)
@@ -196,7 +249,7 @@
                     <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             color="accent"
                             class="small-button"
                             (click)="
@@ -213,7 +266,7 @@
                         </button>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             class="mat-basic small-button"
                             (click)="
                                 deselectAll(dataSources, elementIdFunction)
@@ -228,7 +281,9 @@
                     <mat-checkbox
                         color="accent"
                         [checked]="linkSelected(source.elementId)"
-                        data-cy="manage-assets-select-data-sources-checkbox"
+                        [attr.data-cy]="
+                            'select-data-stream-checkbox-' + source.name
+                        "
                         (change)="
                             selectLink(
                                 $event.checked,
@@ -245,65 +300,12 @@
             <div fxLayout="column" class="link-configuration">
                 <div fxLayout="row" fxLayoutAlign="start center" class="mb-10">
                     <div fxLayout="row" fxLayoutAlign="start center">
-                        <span class="general-options-header mb-0"
-                            >Data Views</span
-                        >
-                    </div>
-                    <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
-                        <button
-                            mat-button
-                            mat-raised-button
-                            color="accent"
-                            class="small-button"
-                            (click)="
-                                selectAll(
-                                    dataViews,
-                                    elementIdFunction,
-                                    nameFunction,
-                                    'data-view'
-                                )
-                            "
-                            style="margin-right: 5px; margin-left: 15px"
-                        >
-                            <span>Select All</span>
-                        </button>
-                        <button
-                            mat-button
-                            mat-raised-button
-                            class="mat-basic small-button"
-                            (click)="deselectAll(dataViews, elementIdFunction)"
-                            style="margin-right: 10px; margin-left: 5px"
-                        >
-                            <span>Deselect All</span>
-                        </button>
-                    </div>
-                </div>
-                <div *ngFor="let element of dataViews" fxLayout="row">
-                    <mat-checkbox
-                        color="accent"
-                        [checked]="linkSelected(element.elementId)"
-                        (change)="
-                            selectLink(
-                                $event.checked,
-                                element.elementId,
-                                element.name,
-                                'data-view'
-                            )
-                        "
-                    >
-                        {{ element.name }}
-                    </mat-checkbox>
-                </div>
-            </div>
-            <div fxLayout="column" class="link-configuration">
-                <div fxLayout="row" fxLayoutAlign="start center" class="mb-10">
-                    <div fxLayout="row" fxLayoutAlign="start center">
                         <span class="general-options-header mb-0">Files</span>
                     </div>
                     <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             color="accent"
                             class="small-button"
                             (click)="
@@ -320,7 +322,7 @@
                         </button>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             class="mat-basic small-button"
                             (click)="deselectAll(files, fileIdFunction)"
                             style="margin-right: 10px; margin-left: 5px"
@@ -356,7 +358,7 @@
                     <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             color="accent"
                             class="small-button"
                             (click)="
@@ -373,7 +375,7 @@
                         </button>
                         <button
                             mat-button
-                            mat-raised-button
+                            mat-flat-button
                             class="mat-basic small-button"
                             (click)="deselectAll(pipelines, elementIdFunction)"
                             style="margin-right: 10px; margin-left: 5px"
@@ -394,8 +396,8 @@
                                 'pipeline'
                             )
                         "
-                        >{{ pipeline.name }}</mat-checkbox
-                    >
+                        >{{ pipeline.name }}
+                    </mat-checkbox>
                 </div>
             </div>
         </div>
@@ -404,7 +406,7 @@
     <div class="sp-dialog-actions">
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             data-cy="assets-update-links-button"
             color="accent"
             (click)="store()"
@@ -414,7 +416,7 @@
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             (click)="cancel()"
             style="margin-right: 10px"

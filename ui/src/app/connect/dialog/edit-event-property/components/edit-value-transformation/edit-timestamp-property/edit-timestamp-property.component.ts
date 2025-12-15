@@ -22,6 +22,7 @@ import { Component, Input, OnInit } from '@angular/core';
     selector: 'sp-edit-timestamp-property',
     templateUrl: './edit-timestamp-property.component.html',
     styleUrls: ['./edit-timestamp-property.component.scss'],
+    standalone: false,
 })
 export class EditTimestampPropertyComponent implements OnInit {
     @Input()

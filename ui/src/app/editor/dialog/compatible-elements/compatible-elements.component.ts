@@ -29,6 +29,7 @@ import {
     selector: 'sp-compatible-elements',
     templateUrl: './compatible-elements.component.html',
     styleUrls: ['./compatible-elements.component.scss'],
+    standalone: false,
 })
 export class CompatibleElementsComponent implements OnInit {
     @Input()
@@ -87,8 +88,10 @@ export class CompatibleElementsComponent implements OnInit {
     }
 
     changeStyle(index: number, hover: boolean) {
-        hover
-            ? (this.styles[index] = this.makeHoverStyle())
-            : (this.styles[index] = this.makeStandardStyle());
+        if (hover) {
+            this.styles[index] = this.makeHoverStyle();
+        } else {
+            this.styles[index] = this.makeStandardStyle();
+        }
     }
 }

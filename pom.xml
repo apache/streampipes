@@ -29,7 +29,7 @@
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.97.0</version>
+    <version>0.98.0</version>
     <packaging>pom</packaging>
 
     <name>Apache StreamPipes</name>
@@ -39,7 +39,8 @@
     <url>https://streampipes.apache.org</url>
 
     <properties>
-        <activemq-client.version>5.18.3</activemq-client.version>
+        <activemq-client.version>5.18.7</activemq-client.version>
+        <antlr4.version>4.11.1</antlr4.version>
         <amqp-client.version>5.21.0</amqp-client.version>
         <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
         <boofcv.version>1.1.0</boofcv.version>
@@ -47,92 +48,107 @@
         <classindex.version>3.9</classindex.version>
         <checker-qual.version>3.43.0</checker-qual.version>
         <commons-codec.version>1.17.0</commons-codec.version>
+        <commons-csv.version>1.14.1</commons-csv.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-compress.version>1.27.1</commons-compress.version>
         <commons-io.version>2.17.0</commons-io.version>
-        <commons-lang3.version>3.14.0</commons-lang3.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
         <commons-logging.version>1.3.2</commons-logging.version>
         <commons-pool2.version>2.12.0</commons-pool2.version>
         <commons-text.version>1.12.0</commons-text.version>
+        <commoms-collection4.version>4.4</commoms-collection4.version>
         <ditto-client.version>1.0.0</ditto-client.version>
-        <eclipse.milo.version>0.6.14</eclipse.milo.version>
+        <eclipse.milo.version>0.6.16</eclipse.milo.version>
+        <error-prone.version>2.10.0</error-prone.version>
         <file-management.version>3.1.0</file-management.version>
         <flink.version>1.13.5</flink.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <geojson-jackson.version>1.14</geojson-jackson.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>23.0.0</graalvm.js.version>
-        <gson.version>2.10</gson.version>
-        <guava.version>33.2.0-jre</guava.version>
+        <gson.version>2.12.1</gson.version>
+        <guava.version>33.4.0-jre</guava.version>
+        <grpc.version>1.76.0</grpc.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
+        <hadoop.version>3.4.1</hadoop.version>
+        <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
         <influxdb.version>2.24</influxdb.version>
-        <inlong.version>1.12.0</inlong.version>
+        <inlong.version>1.13.0</inlong.version>
         <iotdb.version>1.3.0</iotdb.version>
-        <jackson.version>2.17.0</jackson.version>
-        <jackson.databind.version>2.17.0</jackson.databind.version>
+        <jackson.version>2.18.3</jackson.version>
+        <jackson.databind.version>2.18.3</jackson.databind.version>
         <jakarta-annotation.version>3.0.0</jakarta-annotation.version>
         <jakarta-activation-api.version>2.1.3</jakarta-activation-api.version>
         <jakarta-inject-api.version>2.0.1</jakarta-inject-api.version>
         <jakarta-servlet-api.version>6.0.0</jakarta-servlet-api.version>
         <jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
         <javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
-        <java-websocket.version>1.5.6</java-websocket.version>
+        <java-websocket.version>1.6.0</java-websocket.version>
         <jaxb-runtime.version>2.3.2</jaxb-runtime.version>
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
         <javassist.version>3.30.1-GA</javassist.version>
         <jboss-logging.version>3.5.2.Final</jboss-logging.version>
         <jedis.version>5.1.4</jedis.version>
+        <jetty-client.version>12.0.19</jetty-client.version>
         <jersey.version>3.1.3</jersey.version>
         <jgrapht.version>1.5.1</jgrapht.version>
+        <json-smart.version>2.4.10</json-smart.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jjwt.version>0.11.2</jjwt.version>
         <jts-core.version>1.19.0</jts-core.version>
-        <kafka.version>3.7.1</kafka.version>
+        <kafka.version>3.9.1</kafka.version>
         <lightcouch.version>0.2.0</lightcouch.version>
         <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
         <mailapi.version>1.4.3</mailapi.version>
-        <micrometer-prometheus.version>1.12.0</micrometer-prometheus.version>
-        <micrometer-observation.version>1.12.0</micrometer-observation.version>
+        <micrometer-prometheus.version>1.14.3</micrometer-prometheus.version>
+        <micrometer-observation.version>1.14.3</micrometer-observation.version>
         <mqtt-client.version>1.12</mqtt-client.version>
+        <milvus-sdk-java.version>2.5.10</milvus-sdk-java.version>
         <nats.version>2.19.1</nats.version>
-        <netty.version>4.1.72.Final</netty.version>
+        <netty.version>4.2.0.Final</netty.version>
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.3.1</opennlp.version>
-        <plc4x.version>0.12.0</plc4x.version>
+        <plc4x.version>0.13.1</plc4x.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
         <postgresql.version>42.7.2</postgresql.version>
         <protobuf.version>4.28.2</protobuf.version>
         <pulsar.version>3.2.2</pulsar.version>
+        <parquet.version>1.16.0</parquet.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
         <rdf4j.version>3.7.7</rdf4j.version>
         <rendersnake.version>1.9.0</rendersnake.version>
         <rocketmq.version>5.0.2</rocketmq.version>
+        <s3.version>2.25.14</s3.version>
         <siddhi.version>5.1.27</siddhi.version>
         <simple-java-mail.version>8.10.0</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
         <slf4j.version>2.0.6</slf4j.version>
+        <slf4j-simple.version>2.0.6</slf4j-simple.version>
         <snakeyaml.version>2.2</snakeyaml.version>
-        <springdoc.version>2.3.0</springdoc.version>
-        <spring.version>6.1.1</spring.version>
-        <spring-boot.version>3.2.0</spring-boot.version>
-        <spring-security.version>6.3.0</spring-security.version>
+        <springdoc.version>2.8.4</springdoc.version>
+        <spring.version>6.2.2</spring.version>
+        <spring-boot.version>3.4.2</spring-boot.version>
+        <spring-security.version>6.5.5</spring-security.version>
         <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
+        <tsfile.version>1.1.0</tsfile.version>
         <hawtbuf.version>1.11</hawtbuf.version>
         <woodstox.version>7.0.0</woodstox.version>
+        <xz.version>1.10</xz.version>
+        <qdrant-java-client.version>1.14.0</qdrant-java-client.version>
 
         <!-- Test dependencies -->
-        <junit.version>5.10.1</junit.version>
+        <junit.version>5.11.4</junit.version>
         <mockito.version>5.12.0</mockito.version>
 
         <!-- Maven settings & dependencies -->
-        <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
+        <apache-rat-plugin.version>0.16.1</apache-rat-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
         <checkstyle.version>10.17.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
@@ -143,6 +159,7 @@
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
         <maven.version>3.8.7</maven.version>
         <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
+        <spotless.version>2.43.0</spotless.version>
 
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -164,9 +181,14 @@
                 <version>${commons-codec.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>${commons-collections.version}</version>
+                  <groupId>commons-collections</groupId>
+                  <artifactId>commons-collections</artifactId>
+                  <version>${commons-collections.version}</version>
+              </dependency>
+            <dependency>
+              <groupId>org.apache.commons</groupId>
+              <artifactId>commons-csv</artifactId>
+              <version>${commons-csv.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -260,13 +282,78 @@
             </dependency>
             <dependency>
                 <groupId>io.micrometer</groupId>
-                <artifactId>micrometer-registry-prometheus</artifactId>
+                <artifactId>micrometer-registry-prometheus-simpleclient</artifactId>
                 <version>${micrometer-prometheus.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-observation</artifactId>
                 <version>${micrometer-observation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.milvus</groupId>
+                <artifactId>milvus-sdk-java</artifactId>
+                <version>${milvus-sdk-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.qdrant</groupId>
+                <artifactId>client</artifactId>
+                <version>${qdrant-java-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tsfile</groupId>
+                <artifactId>tsfile</artifactId>
+                <version>${tsfile.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.luben</groupId>
+                        <artifactId>zstd-jni</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.xerial.snappy</groupId>
+                        <artifactId>snappy-java</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.tukaani</groupId>
+                <artifactId>xz</artifactId>
+                <version>${xz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>${antlr4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.errorprone</groupId>
+                <artifactId>error_prone_annotations</artifactId>
+                <version>${error-prone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commoms-collection4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-context</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty-shaded</artifactId>
+                <version>${grpc.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.nats</groupId>
@@ -329,6 +416,11 @@
                 <version>${jakarta-xml-bind-api.version}</version>
             </dependency>
             <dependency>
+                <groupId>net.minidev</groupId>
+                <artifactId>json-smart</artifactId>
+                <version>${json-smart.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
                 <version>${activemq-client.version}</version>
@@ -359,14 +451,129 @@
                 <version>${flink.version}</version>
             </dependency>
             <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3</artifactId>
+                <version>${s3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-common</artifactId>
+                <version>${hadoop.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-http</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-io</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-util</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-handler</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-transport</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.dropwizard.metrics</groupId>
+                        <artifactId>metrics-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.reload4j</groupId>
+                        <artifactId>reload4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-transport-native-epoll</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.codehaus.woodstox</groupId>
+                        <artifactId>stax2-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.xerial.snappy</groupId>
+                        <artifactId>snappy-java</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.avro</groupId>
+                        <artifactId>avro</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.xml.bind</groupId>
+                        <artifactId>jaxb-impl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-net</groupId>
+                        <artifactId>commons-net</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.github.luben</groupId>
+                        <artifactId>zstd-jni</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-mapreduce-client-core</artifactId>
+                <version>${hadoop-mapreduce-client-core.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-http</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-io</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-util</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jersey.contribs</groupId>
+                        <artifactId>jersey-guice</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-all</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.avro</groupId>
+                        <artifactId>avro</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.inject</groupId>
+                        <artifactId>guice</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>fluent-hc</artifactId>
                 <version>${httpclient.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -389,6 +596,25 @@
                 <version>${kafka.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.parquet</groupId>
+                <artifactId>parquet-avro</artifactId>
+                <version>${parquet.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.xerial.snappy</groupId>
+                        <artifactId>snappy-java</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.avro</groupId>
+                        <artifactId>avro</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.github.luben</groupId>
+                        <artifactId>zstd-jni</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.pulsar</groupId>
                 <artifactId>pulsar-client</artifactId>
                 <version>${pulsar.version}</version>
@@ -408,6 +634,11 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcutil-jdk18on</artifactId>
                 <version>${bcprov-jdk18on.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-client</artifactId>
+                <version>${jetty-client.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>
@@ -475,6 +706,11 @@
                 <version>${slf4j.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j-simple.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-properties-migrator</artifactId>
                 <version>${spring-boot.version}</version>
@@ -487,6 +723,11 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-jersey</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-logging</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
             <dependency>
@@ -605,6 +846,7 @@
             </dependency>
 
 
+
             <!-- only used by extensions -->
             <dependency>
                 <groupId>com.google.maps</groupId>
@@ -686,6 +928,11 @@
             <dependency>
                 <groupId>org.eclipse.milo</groupId>
                 <artifactId>sdk-client</artifactId>
+                <version>${eclipse.milo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.milo</groupId>
+                <artifactId>dictionary-reader</artifactId>
                 <version>${eclipse.milo.version}</version>
             </dependency>
             <dependency>
@@ -797,6 +1044,11 @@
                 <version>${netty.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-native-epoll</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.atteo.classindex</groupId>
                 <artifactId>classindex</artifactId>
                 <version>${classindex.version}</version>
@@ -842,7 +1094,6 @@
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
-        <module>streampipes-platform-services</module>
         <module>streampipes-pipeline-management</module>
         <module>streampipes-resource-management</module>
         <module>streampipes-rest-extensions</module>
@@ -934,8 +1185,6 @@
     </profiles>
 
     <!-- Build Settings -->
-
-
     <build>
 
         <!-- Plugin Management -->
@@ -1122,6 +1371,34 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.version}</version>
+                <configuration>
+                    <skip>true</skip>
+                    <java>
+                        <importOrder>
+                            <order>org.apache.streampipes,,jakarta,javax,java,scala,\#</order>
+                        </importOrder>
+                        <eclipse>
+                            <file>tools/maven/streampipes-code-formatter.xml</file>
+                        </eclipse>
+                        <licenseHeader>
+                            <file>tools/maven/checkstyle-header.txt</file>
+                        </licenseHeader>
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>spotless-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
                 <executions>
@@ -1142,6 +1419,7 @@
                         <!-- Git related files -->
                         <exclude>**/.git/**</exclude>
                         <exclude>**/.gitignore</exclude>
+                        <exclude>**/.gitkeep</exclude>
                         <exclude>**/.spignore</exclude>
 
                         <!-- License Files for other licenses -->
@@ -1292,7 +1570,7 @@
         <developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
         <connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
         <url>https://github.com/apache/streampipes</url>
-      <tag>release/0.97.0</tag>
+      <tag>release/0.98.0</tag>
   </scm>
 
     <issueManagement>

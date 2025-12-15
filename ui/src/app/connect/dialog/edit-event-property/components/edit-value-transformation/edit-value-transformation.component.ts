@@ -27,6 +27,7 @@ import {
     selector: 'sp-edit-value-transformation',
     templateUrl: './edit-value-transformation.component.html',
     styleUrls: ['./edit-value-transformation.component.scss'],
+    standalone: false,
 })
 export class EditValueTransformationComponent implements OnInit {
     @Input()
@@ -61,6 +62,9 @@ export class EditValueTransformationComponent implements OnInit {
 
     applyStaticValue(value: any) {
         this.cachedProperty.elementId =
-            this.staticValueTransformService.makeElementId(value);
+            this.staticValueTransformService.makeElementId(
+                this.cachedProperty.elementId,
+                value,
+            );
     }
 }

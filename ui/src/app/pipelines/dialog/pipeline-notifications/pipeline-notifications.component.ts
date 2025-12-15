@@ -24,6 +24,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-pipeline-notifications',
     templateUrl: './pipeline-notifications.component.html',
     styleUrls: ['./pipeline-notifications.component.scss'],
+    standalone: false,
 })
 export class PipelineNotificationsComponent {
     @Input()

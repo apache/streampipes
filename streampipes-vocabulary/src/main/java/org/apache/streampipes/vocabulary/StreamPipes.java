@@ -30,9 +30,6 @@ public class StreamPipes {
 
   public static final String JMS_PORT = NS + "jmsPort";
 
-  public static final String ZOOKEEPER_HOST = NS + "zookeeperHost";
-  public static final String ZOOKEEPER_PORT = NS + "zookeeperPort";
-
   public static final String KAFKA_PORT = NS + "kafkaPort";
   public static final String KAFKA_HOST = NS + "kafkaHost";
 

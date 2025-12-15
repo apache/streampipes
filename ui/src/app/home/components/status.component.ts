@@ -27,6 +27,7 @@ import { zip } from 'rxjs';
     selector: 'sp-status',
     templateUrl: './status.component.html',
     styleUrls: ['./status.component.scss'],
+    standalone: false,
 })
 export class StatusComponent implements OnInit {
     @Input()

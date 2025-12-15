@@ -19,8 +19,10 @@
 <div fxLayout="column" fxFlex="100">
     <div fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
         <div fxLayoutAlign="start center" class="error-text">
-            &nbsp;There was an error while guessing the schema of your
-            configured data stream:
+            &nbsp;{{
+                'There was an error while guessing the schema of your configured data stream'
+                    | translate
+            }}:
         </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="center center" class="mt-10">

@@ -31,10 +31,10 @@ public class RequiredBoxStream {
   public static CollectedStreamRequirements getBoxStream() {
     return StreamRequirementsBuilder
         .create()
-        .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://image.com"), Labels
+        .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq("https://image.com"), Labels
                 .withId(IMAGE_PROPERTY),
-            PropertyScope.NONE)
-        .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReqList("https://streampipes.org/boundingboxes"),
+                                          PropertyScope.NONE)
+        .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReqList("https://streampipes.org/boundingboxes"),
             Labels.withId(BOX_ARRAY_PROPERTY),
             PropertyScope.NONE)
         .build();

@@ -29,13 +29,12 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.lightcouch.DocumentConflictException;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class AbstractResolver<T> {
+public abstract class AbstractResolver<T> implements DocumentResolver<T> {
 
   protected ObjectMapper spMapper;
   protected ObjectMapper defaultMapper;
@@ -61,7 +60,7 @@ public abstract class AbstractResolver<T> {
   public String getSerializedDocument(String resourceId) throws JsonProcessingException, ElementNotFoundException {
     var document = findDocument(resourceId);
     if (document != null) {
-      return SerializationUtils.getSpObjectMapper().writeValueAsString(modifyDocumentForExport(document));
+      return getObjectMapper().writeValueAsString(modifyDocumentForExport(document));
     } else {
       throw new ElementNotFoundException("Could not find element with resource id " + resourceId);
     }
@@ -71,20 +70,12 @@ public abstract class AbstractResolver<T> {
     return StorageDispatcher.INSTANCE.getNoSqlStore();
   }
 
-  public abstract T findDocument(String resourceId);
-
-  public abstract T modifyDocumentForExport(T doc);
-
-  public abstract T readDocument(String serializedDoc) throws JsonProcessingException;
-
-  public abstract ExportItem convert(T document);
-
-  public abstract void writeDocument(String document) throws JsonProcessingException, DocumentConflictException;
-
-  protected abstract T deserializeDocument(String document) throws JsonProcessingException;
-
   protected void overrideProtocol(EventGrounding grounding) {
     var newProtocol = new EventGroundingProcessor().applyOverride(grounding.getTransportProtocol());
     grounding.setTransportProtocol(newProtocol);
+  }
+
+  protected ObjectMapper getObjectMapper() {
+    return spMapper;
   }
 }

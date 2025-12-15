@@ -17,12 +17,43 @@
  */
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.model.dashboard.CompositeDashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import java.util.List;
+import java.util.Map;
 
 public class DataExplorerResourceManager extends AbstractCRUDResourceManager<DashboardModel> {
 
+  private final CRUDStorage<DataExplorerWidgetModel> widgetStorage;
+  private final IDataLakeMeasureStorage dataLakeMeasureStorage;
+
   public DataExplorerResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage(), DashboardModel.class);
+    this.widgetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerWidgetStorage();
+    this.dataLakeMeasureStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
+  }
+
+  public CompositeDashboardModel getCompositeDashboard(String dashboardId) {
+    var dashboard = db.getElementById(dashboardId);
+    var widgets = dashboard.getWidgets().stream().map(w -> widgetStorage.getElementById(w.getId())).toList();
+    var dataLakeMeasures = getMeasureNames(widgets).stream().map(dataLakeMeasureStorage::getByMeasureName).toList();
+
+    return new CompositeDashboardModel(dashboard, widgets, dataLakeMeasures);
+  }
+
+  private List<String> getMeasureNames(List<DataExplorerWidgetModel> widgets) {
+    return widgets.stream().map(DataExplorerWidgetModel::getDataConfig)
+        .map(dataConfig -> (List<?>) ((Map<?, ?>) dataConfig).get("sourceConfigs"))
+        .filter(Map.class::isInstance)
+        .map(Map.class::cast)
+        .map(cfg -> cfg.get("measureName"))
+        .filter(String.class::isInstance)
+        .map(String.class::cast)
+        .toList();
   }
 }

@@ -12,7 +12,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-version: "3.4"
 
 # global logging
 x-logging:
@@ -27,13 +26,12 @@ services:
   # StreamPipes services
   backend:
     image: "${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}"
-    environment:
-      - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-jvm:8090
     depends_on:
       - couchdb
+    environment:
+      - SP_PRIORITIZED_PROTOCOL=nats
     volumes:
       - backend:/root/.streampipes
-      - files:/spImages
     logging: *default-logging
     restart: unless-stopped
     networks:
@@ -41,6 +39,8 @@ services:
 
   ui:
     image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
+    environment:
+      - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-iiot:8090
     ports:
       - "80:8088"
     depends_on:
@@ -60,38 +60,6 @@ services:
       - COUCHDB_PASSWORD=admin
     volumes:
       - couchdb:/opt/couchdb/data
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
-  kafka:
-    image: fogsyio/kafka:2.2.0
-    hostname: kafka
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094 #  Replace localhost with your external address if Kafka should be reachable from external systems.
-      KAFKA_LISTENERS: PLAINTEXT://:9092,OUTSIDE://:9094
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_MESSAGE_MAX_BYTES: 5000012
-      KAFKA_FETCH_MESSAGE_MAX_BYTES: 5000012
-      KAFKA_REPLICA_FETCH_MAX_BYTES: 10000000
-    volumes:
-      - kafka:/kafka
-      - /var/run/docker.sock:/var/run/docker.sock
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
-  zookeeper:
-    image: fogsyio/zookeeper:3.4.13
-    volumes:
-      - zookeeper:/opt/zookeeper-3.4.13
     logging: *default-logging
     restart: unless-stopped
     networks:
@@ -117,33 +85,29 @@ services:
     networks:
       spnet:
 
+  nats:
+    image: nats
+    restart: unless-stopped
+    networks:
+      spnet:
+
   # Lite version pipeline elements
-  extensions-all-jvm:
-    image: "${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}"
-    volumes:
-      - files:/spImages
+  extensions-all-iiot:
+    image: "${SP_DOCKER_REGISTRY}/extensions-all-iiot:${SP_VERSION}"
     logging: *default-logging
     restart: unless-stopped
     networks:
       spnet:
 
-
 volumes:
   backend:
-  connect:
   couchdb:
-  kafka:
-  zookeeper:
   influxdb:
   influxdb2:
-  files:
   nginx:
 
 
 networks:
   spnet:
     driver: bridge
-    ipam:
-     config:
-       - subnet: ${SP_SUBNET}
 

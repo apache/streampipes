@@ -16,15 +16,19 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
 import {
+    DatalakeRestService,
+    DataSinkInvocation,
+    LinkageData,
     Message,
     Pipeline,
     PipelineCanvasMetadata,
     PipelineCanvasMetadataService,
     PipelineOperationStatus,
     PipelineService,
+    SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { EditorService } from '../../services/editor.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
@@ -35,7 +39,7 @@ import {
     PipelineStorageOptions,
 } from '../../model/editor.model';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
-import { Observable, of, tap } from 'rxjs';
+import { firstValueFrom, lastValueFrom, Observable, of, tap } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import {
     Status,
@@ -47,13 +51,28 @@ import { PipelineAction } from '../../../pipelines/model/pipeline-model';
     selector: 'sp-save-pipeline',
     templateUrl: './save-pipeline.component.html',
     styleUrls: ['./save-pipeline.component.scss'],
+    standalone: false,
 })
 export class SavePipelineComponent implements OnInit {
+    private editorService = inject(EditorService);
+    private dialogRef = inject(DialogRef<SavePipelineComponent>);
+    private idGeneratorService = inject(IdGeneratorService);
+    private pipelineService = inject(PipelineService);
+    private router = inject(Router);
+    private shepherdService = inject(ShepherdService);
+    private pipelineCanvasService = inject(PipelineCanvasMetadataService);
+    private assetSaveService = inject(AssetSaveService);
+    private dataLakeService = inject(DatalakeRestService);
+
     @Input()
     pipeline: Pipeline;
 
     @Input()
     originalPipeline: Pipeline;
+
+    selectedAssets: SpAssetTreeNode[];
+    deselectedAssets: SpAssetTreeNode[];
+    originalAssets: SpAssetTreeNode[];
 
     @Input()
     pipelineCanvasMetadata: PipelineCanvasMetadata;
@@ -76,16 +95,6 @@ export class SavePipelineComponent implements OnInit {
     statusIndicators: StatusIndicator[] = [];
     finalPipelineOperationStatus: PipelineOperationStatus;
     pipelineAction: PipelineAction;
-
-    constructor(
-        private editorService: EditorService,
-        private dialogRef: DialogRef<SavePipelineComponent>,
-        private idGeneratorService: IdGeneratorService,
-        private pipelineService: PipelineService,
-        private router: Router,
-        private shepherdService: ShepherdService,
-        private pipelineCanvasService: PipelineCanvasMetadataService,
-    ) {}
 
     ngOnInit() {
         this.storageOptions.updateModeActive =
@@ -138,7 +147,11 @@ export class SavePipelineComponent implements OnInit {
                 switchMap(() => this.getStartPipeline$()),
             )
             .subscribe({
-                next: message => this.onSuccess(message),
+                next: message => {
+                    this.onSuccess(message);
+                    // Add Asset as soon as pipelineId is known
+                    this.addToAsset();
+                },
                 error: msg => {
                     this.onFailure(msg);
                 },
@@ -173,6 +186,7 @@ export class SavePipelineComponent implements OnInit {
                 );
             }
         }
+
         this.performStorageOperations(stopPipeline$, savePipeline$);
     }
 
@@ -233,7 +247,7 @@ export class SavePipelineComponent implements OnInit {
         }
     }
 
-    getPipelineCanvasMetadata$(pipelineId: string): Observable<Object> {
+    getPipelineCanvasMetadata$(pipelineId: string): Observable<object> {
         let request;
         this.pipelineCanvasMetadata.pipelineId = pipelineId;
         if (this.storageOptions.updateModeActive) {
@@ -314,5 +328,60 @@ export class SavePipelineComponent implements OnInit {
                 : undefined;
         }
         this.dialogRef.close(reloadConfig);
+    }
+
+    async addToAsset(): Promise<void> {
+        let linkageData: LinkageData[] = [];
+        linkageData = await this.addPipelineLinkageData(linkageData);
+
+        await this.saveAssets(linkageData);
+    }
+    private async addPipelineLinkageData(
+        linkageData: LinkageData[],
+    ): Promise<LinkageData[]> {
+        const pipeline = await firstValueFrom(
+            this.pipelineService.getPipelineById(this.pipelineId),
+        );
+
+        linkageData.push({
+            type: 'pipeline',
+            id: this.pipelineId,
+            name: pipeline.name,
+        });
+
+        const serviceList: DataSinkInvocation[] =
+            pipeline.actions as DataSinkInvocation[];
+        const dataSinkServices: DataSinkInvocation[] = serviceList.filter(
+            action => action.serviceTagPrefix === 'DATA_SINK',
+        );
+
+        for (const service of dataSinkServices) {
+            const staticProperty = service.staticProperties.find(
+                prop => prop.internalName === 'db_measurement',
+            );
+
+            const measureFromPipeline = (staticProperty as { value: string })
+                .value;
+
+            const measure = await lastValueFrom(
+                this.dataLakeService.getMeasurementByName(measureFromPipeline),
+            );
+
+            linkageData.push({
+                type: 'measurement',
+                id: measure.elementId,
+                name: measureFromPipeline,
+            });
+        }
+        return linkageData;
+    }
+
+    private async saveAssets(linkageData: LinkageData[]): Promise<void> {
+        await this.assetSaveService.saveSelectedAssets(
+            this.selectedAssets,
+            linkageData,
+            this.deselectedAssets,
+            this.originalAssets,
+        );
     }
 }

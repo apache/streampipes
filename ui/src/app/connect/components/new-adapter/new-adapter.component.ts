@@ -29,6 +29,7 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
     selector: 'sp-new-adapter',
     templateUrl: './new-adapter.component.html',
     styleUrls: ['./new-adapter.component.scss'],
+    standalone: false,
 })
 export class NewAdapterComponent implements OnInit {
     initialized = false;

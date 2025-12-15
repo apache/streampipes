@@ -18,5 +18,4 @@ backend
 couchdb
 kafka
 ui
-zookeeper
 influxdb

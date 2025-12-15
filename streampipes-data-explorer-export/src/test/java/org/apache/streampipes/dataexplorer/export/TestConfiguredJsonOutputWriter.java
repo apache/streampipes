@@ -37,7 +37,7 @@ public class TestConfiguredJsonOutputWriter extends TestConfiguredOutputWriter {
   @Test
   public void testJsonOutputWriter() throws IOException {
     var writer = new ConfiguredJsonOutputWriter();
-    writer.configure(new ProvidedRestQueryParams(null, new HashMap<>()), true);
+    writer.configure(null, new ProvidedRestQueryParams(null, new HashMap<>()), true);
 
     try (var outputStream = new ByteArrayOutputStream()) {
       writer.beforeFirstItem(outputStream);

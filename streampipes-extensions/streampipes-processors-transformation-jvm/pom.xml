@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.97.0</version>
+        <version>0.98.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -32,7 +32,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
-            <version>1.10.0</version>
         </dependency>
 
 
@@ -40,17 +39,17 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-extensions-management</artifactId>
-            <version>0.97.0</version>
+            <version>0.98.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-wrapper-standalone</artifactId>
-            <version>0.97.0</version>
+            <version>0.98.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-test-utils</artifactId>
-            <version>0.97.0</version>
+            <version>0.98.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -72,7 +71,7 @@
       <dependency>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-test-utils-executors</artifactId>
-        <version>0.97.0</version>
+        <version>0.98.0</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

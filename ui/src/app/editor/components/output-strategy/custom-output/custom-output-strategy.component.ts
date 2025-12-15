@@ -26,6 +26,7 @@ import { UntypedFormControl } from '@angular/forms';
     selector: 'sp-custom-output-strategy',
     templateUrl: './custom-output-strategy.component.html',
     styleUrls: ['./custom-output-strategy.component.scss'],
+    standalone: false,
 })
 export class CustomOutputStrategyComponent
     extends BaseOutputStrategy<CustomOutputStrategy>

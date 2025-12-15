@@ -35,6 +35,7 @@ import { SpConnectRoutes } from '../../../connect.routes';
     selector: 'sp-adapter-details-metrics',
     templateUrl: './adapter-details-metrics.component.html',
     styleUrls: [],
+    standalone: false,
 })
 export class SpAdapterDetailsMetricsComponent
     extends SpAbstractAdapterDetailsDirective

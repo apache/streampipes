@@ -44,6 +44,8 @@
                     "
                     [pipelineOperationStatus]="pipelineOperationStatus"
                     [saveInDataLake]="saveInDataLake"
+                    [saveInAsset]="addToAssetText"
+                    [deletedFromAsset]="deletedFromAssetText"
                     [templateErrorMessage]="templateErrorMessage"
                     [adapterErrorMessage]="adapterErrorMessage"
                 ></sp-adapter-started-success>
@@ -59,10 +61,10 @@
         <button
             id="confirm_adapter_started_button"
             class="mat-basic"
-            mat-raised-button
+            mat-flat-button
             (click)="onCloseConfirm()"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

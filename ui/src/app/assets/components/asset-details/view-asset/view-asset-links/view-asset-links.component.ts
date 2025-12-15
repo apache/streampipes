@@ -28,6 +28,7 @@ import {
     selector: 'sp-view-asset-links',
     templateUrl: './view-asset-links.component.html',
     styleUrls: ['./view-asset-links.component.scss'],
+    standalone: false,
 })
 export class ViewAssetLinksComponent implements OnInit {
     @Input()

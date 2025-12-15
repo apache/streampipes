@@ -25,6 +25,7 @@ import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Pipe({
     name: 'secure',
+    standalone: false,
 })
 export class SecurePipe implements PipeTransform {
     constructor(

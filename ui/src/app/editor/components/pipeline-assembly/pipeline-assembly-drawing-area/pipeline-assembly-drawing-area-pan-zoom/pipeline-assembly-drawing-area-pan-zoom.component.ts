@@ -33,6 +33,7 @@ import { PipelineElementDraggedService } from '../../../../services/pipeline-ele
     selector: 'sp-pipeline-assembly-drawing-area-pan-zoom',
     templateUrl: './pipeline-assembly-drawing-area-pan-zoom.component.html',
     styleUrls: ['./pipeline-assembly-drawing-area-pan-zoom.component.scss'],
+    standalone: false,
 })
 export class PipelineAssemblyDrawingAreaPanZoomComponent
     implements OnInit, AfterViewInit, OnDestroy
@@ -93,8 +94,12 @@ export class PipelineAssemblyDrawingAreaPanZoomComponent
         this.doZoom(false);
     }
 
-    doZoom(zoomOut) {
-        zoomOut ? this.panzoom.zoomOut() : this.panzoom.zoomIn();
+    doZoom(zoomOut: boolean) {
+        if (zoomOut) {
+            this.panzoom.zoomOut();
+        } else {
+            this.panzoom.zoomIn();
+        }
         this.currentZoomLevel = this.panzoom.getScale();
         this.jsplumbBridge.setZoom(this.currentZoomLevel);
         this.jsplumbBridge.repaintEverything();

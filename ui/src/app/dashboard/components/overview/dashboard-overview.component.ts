@@ -16,49 +16,43 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { Dashboard, DashboardService } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EditDashboardDialogComponent } from '../../dialogs/edit-dashboard/edit-dashboard-dialog.component';
-import { Router } from '@angular/router';
-import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import {
     CurrentUserService,
-    DialogService,
-    PanelType,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.routes';
-import { zip } from 'rxjs';
+import { Dashboard } from '@streampipes/platform-services';
+import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
+import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-dashboard-overview',
     templateUrl: './dashboard-overview.component.html',
     styleUrls: ['./dashboard-overview.component.scss'],
+    standalone: false,
 })
 export class DashboardOverviewComponent implements OnInit {
-    dashboards: Dashboard[] = [];
-    filteredDashboards: Dashboard[] = [];
-
-    dataSource = new MatTableDataSource<Dashboard>();
     displayedColumns: string[] = [];
 
     isAdmin = false;
     hasDashboardWritePrivileges = false;
+    resourceCount = 0;
 
-    constructor(
-        private dashboardService: DashboardService,
-        public dialog: MatDialog,
-        private router: Router,
-        private dialogService: DialogService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private breadcrumbService: SpBreadcrumbService,
-    ) {}
+    @ViewChild(DashboardOverviewTableComponent)
+    dashboardOverview: DashboardOverviewTableComponent;
+
+    public dialog = inject(MatDialog);
+    private dataExplorerDashboardService = inject(DataExplorerDashboardService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private translateService = inject(TranslateService);
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb(
@@ -71,109 +65,41 @@ export class DashboardOverviewComponent implements OnInit {
             );
             this.displayedColumns = ['name', 'actions'];
         });
-        this.getDashboards();
-    }
-
-    getDashboards() {
-        this.dashboardService.getDashboards().subscribe(data => {
-            this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
-            this.applyDashboardFilters();
-        });
     }
 
     openNewDashboardDialog() {
-        const dashboard = {} as Dashboard;
-        dashboard.widgets = [];
-        dashboard.dashboardGeneralSettings = {};
+        const dataViewDashboard: Dashboard = {
+            dashboardGeneralSettings: {},
+            widgets: [],
+            name: '',
+            dashboardLiveSettings: {
+                refreshModeActive: false,
+                refreshIntervalInSeconds: 10,
+                label: this.translateService.instant('Off'),
+            },
+            metadata: {
+                createdAtEpochMs: Date.now(),
+                lastModifiedEpochMs: Date.now(),
+            },
+            gridColumns: 12,
+        };
 
-        this.openDashboardModificationDialog(true, dashboard);
+        this.openDashboardModificationDialog(true, dataViewDashboard);
     }
 
     openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
-        const dialogRef = this.dialogService.open(
-            EditDashboardDialogComponent,
-            {
-                panelType: PanelType.STANDARD_PANEL,
-                title: createMode ? 'New Dashboard' : 'Edit Dashboard',
-                width: '50vw',
-                data: {
-                    createMode: createMode,
-                    dashboard: dashboard,
-                },
-            },
-        );
+        const dialogRef =
+            this.dataExplorerDashboardService.openDashboardModificationDialog(
+                createMode,
+                dashboard,
+            );
 
-        dialogRef.afterClosed().subscribe(result => {
-            this.getDashboards();
-        });
-    }
-
-    openEditDashboardDialog(dashboard: Dashboard) {
-        this.openDashboardModificationDialog(false, dashboard);
-    }
-
-    openDeleteDashboardDialog(dashboard: Dashboard) {
-        // TODO add confirm dialog
-        const widgetsToDelete = dashboard.widgets.map(widget =>
-            this.dashboardService.deleteWidget(widget.id),
-        );
-        zip(
-            ...widgetsToDelete,
-            this.dashboardService.deleteDashboard(dashboard),
-        ).subscribe(result => {
-            this.getDashboards();
-        });
-    }
-
-    showDashboard(dashboard: Dashboard): void {
-        this.router.navigate(['dashboard', dashboard.elementId]);
-    }
-
-    editDashboard(dashboard: Dashboard): void {
-        this.router.navigate(['dashboard', dashboard.elementId], {
-            queryParams: { action: 'edit' },
-        });
-    }
-
-    openExternalDashboard(dashboard: Dashboard) {
-        const href = this.router.createUrlTree([
-            'standalone',
-            dashboard.elementId,
-        ]);
-        // TODO fixes bug that hashing strategy is ignored by createUrlTree
-        window.open('#' + href.toString(), '_blank');
-    }
-
-    showPermissionsDialog(dashboard: Dashboard) {
-        const dialogRef = this.dialogService.open(
-            ObjectPermissionDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Manage permissions',
-                width: '50vw',
-                data: {
-                    objectInstanceId: dashboard.elementId,
-                    headerTitle:
-                        'Manage permissions for dashboard ' + dashboard.name,
-                },
-            },
-        );
-
-        dialogRef.afterClosed().subscribe(refresh => {
-            if (refresh) {
-                this.getDashboards();
-            }
+        dialogRef.afterClosed().subscribe(() => {
+            this.dashboardOverview.getDashboards();
         });
     }
 
     applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
-        this.filteredDashboards = this.dashboards.filter(a => {
-            if (elementIds.size === 0) {
-                return true;
-            } else {
-                return elementIds.has(a.elementId);
-            }
-        });
-        this.dataSource.data = this.filteredDashboards;
+        this.dashboardOverview.applyDashboardFilters(elementIds);
     }
 }

@@ -30,6 +30,7 @@ import { Router } from '@angular/router';
     selector: 'sp-pipeline-element-icon-stand',
     templateUrl: './pipeline-element-icon-stand.component.html',
     styleUrls: ['./pipeline-element-icon-stand.component.scss'],
+    standalone: false,
 })
 export class PipelineElementIconStandComponent
     implements OnInit, AfterViewInit

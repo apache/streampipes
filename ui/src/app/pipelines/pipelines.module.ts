@@ -47,6 +47,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatMenuItem } from '@angular/material/menu';
 
 @NgModule({
     imports: [
@@ -67,6 +69,7 @@ import { MatIconModule } from '@angular/material/icon';
         EditorModule,
         PipelineDetailsModule,
         SharedUiModule,
+        TranslateModule.forChild({}),
         RouterModule.forChild([
             {
                 path: '',
@@ -98,6 +101,7 @@ import { MatIconModule } from '@angular/material/icon';
                 ],
             },
         ]),
+        MatMenuItem,
     ],
     declarations: [
         DeletePipelineDialogComponent,

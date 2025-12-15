@@ -17,15 +17,18 @@
   -->
 
 <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-    <ngx-charts-number-card
-        [ngStyle]="{ width: widgetWidth + 'px' }"
-        [view]="[widgetWidth, widgetHeight]"
-        [results]="chartData"
-        [scheme]="'cool'"
-        [cardColor]="color"
-        [animations]="false"
-        [bandColor]="bandColor"
-        [textColor]="textColor"
-    >
-    </ngx-charts-number-card>
+    <div class="status-container p-10" [ngStyle]="{ height: widgetHeight }">
+        <div fxFlex fxLayout="column">
+            <div class="status-container-label" fxLayoutAlign="start start">
+                <span>{{ label }}</span>
+            </div>
+            <div
+                class="status-container-value"
+                fxLayoutAlign="center center"
+                fxFlex
+            >
+                <span>{{ statusValue }}</span>
+            </div>
+        </div>
+    </div>
 </div>

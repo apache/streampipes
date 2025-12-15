@@ -23,6 +23,7 @@ import { EventSchema } from '@streampipes/platform-services';
     selector: 'sp-event-schema-preview',
     templateUrl: './event-schema-preview.component.html',
     styleUrls: ['./event-schema-preview.component.scss'],
+    standalone: false,
 })
 export class EventSchemaPreviewComponent implements OnInit {
     @Input() originalEventSchema: EventSchema;

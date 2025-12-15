@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import org.apache.streampipes.model.ResourceMetadata;
+import org.apache.streampipes.model.api.SpResource;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
@@ -29,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @TsModel
-public class DashboardModel implements Storable {
+public class DashboardModel implements Storable, SpResource {
 
   @JsonAlias("_id")
   @SerializedName("_id")
@@ -43,12 +45,15 @@ public class DashboardModel implements Storable {
   private String name;
   private String description;
   private boolean displayHeader;
+  private int gridColumns = 8;
 
   private Map<String, Object> dashboardTimeSettings;
   private Map<String, Object> dashboardGeneralSettings;
   private Map<String, Object> dashboardLiveSettings;
 
   private List<DashboardItem> widgets;
+
+  private ResourceMetadata metadata;
 
   public DashboardModel() {
     this.dashboardTimeSettings = new HashMap<>();
@@ -142,5 +147,14 @@ public class DashboardModel implements Storable {
 
   public void setDashboardLiveSettings(Map<String, Object> dashboardLiveSettings) {
     this.dashboardLiveSettings = dashboardLiveSettings;
+  }
+
+  public int getGridColumns() {
+    return gridColumns;
+  }
+
+  @Override
+  public ResourceMetadata getMetadata() {
+    return metadata;
   }
 }

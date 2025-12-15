@@ -23,6 +23,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    inject,
 } from '@angular/core';
 import { SpAssetBrowserService } from './asset-browser.service';
 import { AssetBrowserData } from './asset-browser.model';
@@ -30,18 +31,25 @@ import { Subscription } from 'rxjs';
 import { SpAsset } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 import { CurrentUserService } from '../../services/current-user.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-browser',
     templateUrl: 'asset-browser.component.html',
     styleUrls: ['./asset-browser.component.scss'],
+    standalone: false,
 })
 export class AssetBrowserComponent implements OnInit, OnDestroy {
+    translateService = inject(TranslateService);
+
     @Input()
     showResources = false;
 
     @Input()
-    allResourcesAlias = 'Resources';
+    hideAssetChildren = false;
+
+    @Input()
+    allResourcesAlias = this.translateService.instant('Resources');
 
     @Input()
     browserWidth = 20;

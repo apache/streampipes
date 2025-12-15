@@ -27,9 +27,9 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
+@Deprecated(since = "0.98.0", forRemoval = true)
 public abstract class StreamPipesDataProcessor
     implements IStreamPipesDataProcessor {
-
   @Override
   public void onPipelineStarted(IDataProcessorParameters params,
                                 SpOutputCollector collector,

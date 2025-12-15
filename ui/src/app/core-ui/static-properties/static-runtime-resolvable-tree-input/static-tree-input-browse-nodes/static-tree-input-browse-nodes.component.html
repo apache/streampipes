@@ -18,7 +18,9 @@
 
 <div class="tree-input-header" fxLayoutAlign="start center">
     <div fxLayout="row" fxFlex="100">
-        <div fxFlex fxLayoutAlign="start center"><b>Browse</b></div>
+        <div fxFlex fxLayoutAlign="start center">
+            <b>{{ 'Browse' | translate }}</b>
+        </div>
         <div fxLayoutAlign="end center">
             <button
                 mat-icon-button
@@ -34,7 +36,7 @@
 
 <mat-tree
     [dataSource]="dataSource"
-    [treeControl]="treeControl"
+    [childrenAccessor]="childrenAccessor"
     #tree
     class="sp-tree"
     [ngClass]="largeView ? 'tree-large-height' : 'tree-normal-height'"
@@ -50,14 +52,14 @@
                 *ngIf="node.dataNode && !isNodeSelected(node)"
                 (click)="addNode(node)"
                 [attr.data-cy]="'select-' + node.nodeName"
-                matTooltip="Add node"
+                [matTooltip]="'Add node' | translate"
                 >add_circle</i
             >
             <i
                 class="material-icons pr-5 icon-button"
                 *ngIf="node.dataNode && isNodeSelected(node)"
                 (click)="removeNode(node)"
-                matTooltip="Remove node"
+                [matTooltip]="'Remove node' | translate"
                 >remove_circle</i
             >
             <i
@@ -65,7 +67,7 @@
                 *ngIf="selectedNodeId !== node.internalNodeName"
                 [attr.data-cy]="'show-node-details-' + node.nodeName"
                 (click)="showNodeDetails(node)"
-                matTooltip="Show details"
+                [matTooltip]="'Show details' | translate"
                 >visibility</i
             >
             <i
@@ -73,7 +75,7 @@
                 *ngIf="selectedNodeId === node.internalNodeName"
                 [attr.data-cy]="'hide-node-details-' + node.nodeName"
                 (click)="hideNodeDetails()"
-                matTooltip="Show details"
+                [matTooltip]="'Show details' | translate"
                 >visibility_off</i
             >
             <span class="pr-5">{{ node.nodeName }}</span>
@@ -86,33 +88,29 @@
                 matTreeNodeToggle
                 [attr.data-cy]="'expand-' + node.nodeName"
                 [attr.aria-label]="'Toggle ' + node.nodeName"
-                (click)="loadChildren(node, treeControl.isExpanded(node))"
+                (click)="loadChildren(node, tree.isExpanded(node))"
             >
                 <mat-icon class="mat-icon-rtl-mirror">
                     {{
-                        treeControl.isExpanded(node)
-                            ? 'expand_more'
-                            : 'chevron_right'
+                        tree.isExpanded(node) ? 'expand_more' : 'chevron_right'
                     }}
                 </mat-icon>
             </button>
             <div fxLayoutAlign="start center">
                 <i
                     class="material-icons color-primary pr-5"
-                    *ngIf="!treeControl.isExpanded(node)"
+                    *ngIf="!tree.isExpanded(node)"
                     >folder</i
                 >
                 <i
                     class="material-icons color-primary pr-5"
-                    *ngIf="treeControl.isExpanded(node)"
+                    *ngIf="tree.isExpanded(node)"
                     >folder_open</i
                 >
                 <i
                     class="material-icons pr-5 icon-button"
-                    *ngIf="
-                        treeControl.isExpanded(node) && hasDataChildren(node)
-                    "
-                    matTooltip="Add all direct children"
+                    *ngIf="tree.isExpanded(node) && hasDataChildren(node)"
+                    [matTooltip]="'Add all direct children' | translate"
                     (click)="addAllDirectChildren(node)"
                     >add_circle</i
                 >
@@ -121,7 +119,7 @@
                     *ngIf="selectedNodeId !== node.internalNodeName"
                     [attr.data-cy]="'show-node-details-' + node.nodeName"
                     (click)="showNodeDetails(node)"
-                    matTooltip="Show details"
+                    [matTooltip]="'Show details' | translate"
                     >visibility</i
                 >
                 <i
@@ -129,13 +127,13 @@
                     *ngIf="selectedNodeId === node.internalNodeName"
                     [attr.data-cy]="'hide-node-details-' + node.nodeName"
                     (click)="hideNodeDetails()"
-                    matTooltip="Show details"
+                    [matTooltip]="'Show details' | translate"
                     >visibility_off</i
                 >
                 <span class="node-name pr-5">&nbsp;{{ node.nodeName }}</span>
             </div>
         </div>
-        <div *ngIf="treeControl.isExpanded(node)" role="group">
+        <div *ngIf="tree.isExpanded(node)" role="group">
             <ng-container matTreeNodeOutlet></ng-container>
         </div>
     </mat-nested-tree-node>

@@ -21,12 +21,16 @@
         <div fxFlex="100" fxLayout="column">
             <div fxFlex="100" fxLayout="column">
                 <h4>
-                    The tutorial requires pipeline elements that are not yet
-                    installed.
+                    {{
+                        'The tutorial requires pipeline elements that are not yet installed.'
+                            | translate
+                    }}
                 </h4>
                 <h5>
-                    Install the following pipeline elements and start the
-                    tutorial again:
+                    {{
+                        'Install the following pipeline elements and start the tutorial again:'
+                            | translate
+                    }}
                 </h5>
                 <div *ngFor="let missingElement of missingElementsForTutorial">
                     <li>
@@ -39,13 +43,8 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button
-            mat-button
-            mat-raised-button
-            class="mat-basic"
-            (click)="close()"
-        >
-            Close
+        <button mat-button mat-flat-button class="mat-basic" (click)="close()">
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

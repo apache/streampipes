@@ -1,0 +1,31 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.title=Signalflanken-Filter
+org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.description=Leitet die Nachricht weiter, wenn eine Signalflanke erkannt wird
+
+boolean_state_field.title=Boolesches Signal
+boolean_state_field.description=Das zu beobachtende Signal für die Flankenerkennung
+
+flank.title=Signalflanke
+flank.description=Welche Art von Signalflanke soll erkannt werden
+
+delay.title=Verzögerung
+delay.description=Wie viele Nachrichten sollen gewartet werden, bevor das Ergebnis weitergeleitet wird?
+
+event-selection-id.title=Ausgabe-Nachrichtenauswahl
+event-selection-id.description=Legt fest, welche Nachrichten ausgewählt und gesendet werden sollen 

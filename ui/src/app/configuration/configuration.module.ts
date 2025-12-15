@@ -52,7 +52,7 @@ import { SpDataImportDialogComponent } from './export/import-dialog/data-import-
 import { SpDataExportItemComponent } from './export/export-dialog/data-export-item/data-export-item.component';
 import { SpEditLabelComponent } from './label-configuration/edit-label/edit-label.component';
 import { SpLabelConfigurationComponent } from './label-configuration/label-configuration.component';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerComponent, ColorPickerDirective } from 'ngx-color-picker';
 import { ExtensionsServiceManagementComponent } from './extensions-service-management/extensions-service-management.component';
 import { ServiceConfigsComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs.component';
 import { ServiceConfigsTextComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-text/service-configs-text.component';
@@ -82,7 +82,7 @@ import { SpConfigurationLinkSettingsComponent } from './general-configuration/li
 import { SitesConfigurationComponent } from './sites-configuration/sites-configuration.component';
 import { LocationFeaturesConfigurationComponent } from './sites-configuration/location-features-configuration/location-features-configuration.component';
 import { SiteAreaConfigurationComponent } from './sites-configuration/site-area-configuration/site-area-configuration.component';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ManageSiteDialogComponent } from './dialog/manage-site/manage-site-dialog.component';
 import { EditAssetLocationComponent } from './dialog/manage-site/edit-location/edit-location.component';
 import { EditAssetLocationAreaComponent } from './dialog/manage-site/edit-location/edit-location-area/edit-location-area.component';
@@ -97,7 +97,22 @@ import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dial
 import { FileRenameDialogComponent } from './dialog/file-rename/file-rename-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-
+import { GenericStorageItemComponent } from './export/export-dialog/generic-storage-items/generic-storage-item/generic-storage-item.component';
+import { GenericStorageItemsComponent } from './export/export-dialog/generic-storage-items/generic-storage-items.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { CertificateConfigurationComponent } from './extensions-service-management/certificate-configuration/certificate-configuration.component';
+import { CertificateDetailsDialogComponent } from './dialog/certificate-details/certificate-details-dialog.component';
+import { AlternateIdConfigurationComponent } from './security-configuration/alternate-id-configuration/alternate-id-configuration.component';
+import { UserAcknowledgmentComponent } from './general-configuration/user-acknowledgement/user-acknowledgment.component';
+import { QuillEditorComponent } from 'ngx-quill';
+import { MatStepperModule } from '@angular/material/stepper';
+import { DataRetentionDialogComponent } from './dialog/data-retention-dialog/data-retention-dialog.component';
+import { ExportProviderComponent } from './dialog/export-provider-dialog/export-provider-dialog.component';
+import { SelectDataComponent } from './dialog/data-retention-dialog/components/select-retention/select-data.component';
+import { SelectDataRetentionComponent } from './dialog/data-retention-dialog/components/select-retention/select-data-retention/select-data-retention.component';
+import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/components/select-retention/select-retention-action/select-retention-action.component';
+import { SelectDataExportComponent } from './dialog/data-retention-dialog/components/select-export/select-format.component';
+import { DeleteExportProviderComponent } from './dialog/delete-export-provider/delete-export-provider-dialog.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -116,6 +131,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         MatPaginatorModule,
         MatRadioModule,
         MatSelectModule,
+        MatSortModule,
         FormsModule,
         DragDropModule,
         CoreUiModule,
@@ -190,11 +206,15 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             },
         ]),
         SharedUiModule,
-        ColorPickerModule,
+        ColorPickerComponent,
+        ColorPickerDirective,
         CodemirrorModule,
         MatSort,
         MatListModule,
         MatDialogModule,
+        MatStepperModule,
+        TranslateModule.forChild({}),
+        QuillEditorComponent,
     ],
     declarations: [
         ServiceConfigsComponent,
@@ -215,6 +235,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         FileUploadDialogComponent,
         FileRenameDialogComponent,
         GeneralConfigurationComponent,
+        GenericStorageItemComponent,
+        GenericStorageItemsComponent,
         ExtensionsServiceManagementComponent,
         LocationFeaturesConfigurationComponent,
         ManageSiteDialogComponent,
@@ -240,7 +262,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         SpMessagingBrokerConfigComponent,
         SpRegisteredExtensionsServiceComponent,
         SpExtensionsServiceConfigurationComponent,
-
+        DataRetentionDialogComponent,
+        ExportProviderComponent,
         SpExtensionsInstallationComponent,
         SpExtensionsInstallationDialogComponent,
         EndpointItemComponent,
@@ -248,6 +271,15 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         PipelineElementNameFilter,
         PipelineElementInstallationStatusFilter,
         PipelineElementTypeFilter,
+        CertificateConfigurationComponent,
+        CertificateDetailsDialogComponent,
+        AlternateIdConfigurationComponent,
+        UserAcknowledgmentComponent,
+        SelectDataComponent,
+        SelectDataRetentionComponent,
+        SelectRetentionActionComponent,
+        SelectDataExportComponent,
+        DeleteExportProviderComponent,
     ],
     providers: [
         OrderByPipe,

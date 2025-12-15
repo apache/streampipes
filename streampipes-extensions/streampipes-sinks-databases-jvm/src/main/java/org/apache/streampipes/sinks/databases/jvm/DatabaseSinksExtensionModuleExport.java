@@ -25,8 +25,12 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbSink;
 import org.apache.streampipes.sinks.databases.jvm.ditto.DittoSink;
 import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbSink;
+import org.apache.streampipes.sinks.databases.jvm.milvus.MilvusSink;
+import org.apache.streampipes.sinks.databases.jvm.parquet.ParquetSink;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlSink;
+import org.apache.streampipes.sinks.databases.jvm.qdrant.QdrantSink;
 import org.apache.streampipes.sinks.databases.jvm.redis.RedisSink;
+import org.apache.streampipes.sinks.databases.jvm.tsfile.TsFileSink;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,8 +48,11 @@ public class DatabaseSinksExtensionModuleExport implements IExtensionModuleExpor
         new PostgreSqlSink(),
         new IotDbSink(),
         new DittoSink(),
-        new RedisSink()
-    );
+        new RedisSink(),
+        new MilvusSink(),
+        new QdrantSink(),
+        new TsFileSink(),
+        new ParquetSink());
   }
 
   @Override

@@ -24,6 +24,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
     selector: 'sp-configuration-code-panel',
     templateUrl: './configuration-code-panel.component.html',
     styleUrls: ['./configuration-code-panel.component.scss'],
+    standalone: false,
 })
 export class ConfigurationCodePanelComponent implements OnInit {
     @Input()

@@ -16,28 +16,29 @@
   ~
   -->
 
-<sp-basic-header-title-component
-    [title]="elementName + ' - Metrics'"
-></sp-basic-header-title-component>
-<div fxLayout="row" fxLayoutAlign="center center">
-    <div fxFlex="50">
+<div fxLayout="column">
+    <sp-basic-header-title-component
+        [title]="elementName + ' - Metrics'"
+    ></sp-basic-header-title-component>
+    <div
+        fxLayout="row"
+        fxLayoutAlign="center center"
+        fxLayoutGap="20px"
+        fxFlex="100"
+    >
         <sp-status-widget
-            fxFlex="100"
+            fxFlex="50"
             [label]="lastPublishedLabel"
-            [widgetHeight]="400"
-            [widgetWidth]="500"
+            widgetHeight="400px"
             [statusValue]="
                 lastTimestamp === 0 ? 'n/a' : (lastTimestamp | date: 'medium')
             "
         >
         </sp-status-widget>
-    </div>
-    <div fxFlex="50">
         <sp-status-widget
-            fxFlex="100"
+            fxFlex="50"
             [label]="statusValueLabel"
-            [widgetHeight]="400"
-            [widgetWidth]="500"
+            widgetHeight="400px"
             [statusValue]="statusValue"
         >
         </sp-status-widget>

@@ -36,16 +36,17 @@ public class DefaultSpCoreConfiguration {
     coreCfg.setFilesDir(makeFileLocation());
     coreCfg.setAssetDir(makeAssetLocation());
     coreCfg.setLocalAuthConfig(LocalAuthConfig.fromDefaults(getJwtSecret()));
+    coreCfg.setExportProviderSettings(new DefaultExportProviderConfig().make());
 
     return coreCfg;
   }
 
-  private String makeAssetLocation() {
+  public String makeAssetLocation() {
     return makeStreamPipesHomeLocation()
         + "assets";
   }
 
-  private String makeFileLocation() {
+  public String makeFileLocation() {
     return makeStreamPipesHomeLocation()
         + "files";
   }

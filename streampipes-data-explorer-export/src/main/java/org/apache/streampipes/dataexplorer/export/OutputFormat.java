@@ -18,11 +18,15 @@
 
 package org.apache.streampipes.dataexplorer.export;
 
+import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 public enum OutputFormat {
   JSON(ConfiguredJsonOutputWriter::new),
-  CSV(ConfiguredCsvOutputWriter::new);
+  CSV(ConfiguredCsvOutputWriter::new),
+  XLSX(() -> new ConfiguredExcelOutputWriter(StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage()));
 
   private final Supplier<ConfiguredOutputWriter> writerSupplier;
 
@@ -32,5 +36,13 @@ public enum OutputFormat {
 
   public ConfiguredOutputWriter getWriter() {
     return writerSupplier.get();
+  }
+
+  public static OutputFormat fromString(String desiredFormat) {
+    return Arrays.stream(
+            OutputFormat.values())
+        .filter(format -> format.name().equalsIgnoreCase(desiredFormat))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException(String.format("Could not find format %s", desiredFormat)));
   }
 }

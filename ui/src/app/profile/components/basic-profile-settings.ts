@@ -18,10 +18,11 @@
 
 import { ProfileService } from '../profile.service';
 import { UserAccount } from '@streampipes/platform-services';
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { AppConstants } from '../../services/app.constants';
 import { AuthService } from '../../services/auth.service';
 import { CurrentUserService } from '@streampipes/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
 
 @Directive()
 export abstract class BasicProfileSettings {
@@ -29,6 +30,10 @@ export abstract class BasicProfileSettings {
     profileLoaded = false;
     profileUpdating = false;
     errorMessage: string;
+
+    selectedLanguage = 'browser';
+
+    private translate = inject(TranslateService);
 
     constructor(
         protected profileService: ProfileService,
@@ -41,6 +46,7 @@ export abstract class BasicProfileSettings {
         this.profileService
             .getUserProfile(this.currentUserService.user$.getValue().username)
             .subscribe(userData => {
+                userData.language ??= 'browser';
                 this.userData = userData;
                 this.onUserDataReceived();
                 this.profileLoaded = true;
@@ -49,6 +55,10 @@ export abstract class BasicProfileSettings {
 
     saveProfileSettings() {
         this.profileUpdating = true;
+        if (this.selectedLanguage !== this.userData.language) {
+            this.userData.language = this.selectedLanguage;
+            this.translate.use(this.selectedLanguage);
+        }
         this.profileService
             .updateUserProfile(this.userData)
             .subscribe(response => {

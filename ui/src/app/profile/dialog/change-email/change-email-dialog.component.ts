@@ -34,6 +34,7 @@ import { UserAccount, UserService } from '@streampipes/platform-services';
     templateUrl: './change-email-dialog.component.html',
     styleUrls: ['./change-email-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false,
 })
 export class ChangeEmailDialogComponent implements OnInit {
     parentForm: UntypedFormGroup;

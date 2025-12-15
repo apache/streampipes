@@ -1,0 +1,137 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+// variables maintained by StreamPipes committers
+
+$sp-color-adapter: #7f007f;
+$sp-color-stream: #ffeb3b;
+$sp-color-processor: #009688;
+$sp-color-sink: #3f51b5;
+
+$sp-color-error: #b71c1c;
+
+:root {
+    --mat-sys-body-medium-size: 10pt;
+
+    --color-data-view: rgb(122, 206, 227);
+    --color-dashboard: rgb(76, 115, 164);
+    --color-adapter: rgb(182, 140, 97);
+    --color-data-source: #ffeb3b;
+    --color-pipeline: rgb(102, 185, 114);
+    --color-measurement: rgb(39, 164, 155);
+    --color-file: rgb(163, 98, 190);
+
+    --button-border-radius: 5px;
+    --iconbar-width: 35px;
+    --navbar-icon-border-radius: 0;
+    --navbar-icon-padding: 0;
+
+    --color-bg-0: var(--mat-sys-surface);
+    --color-bg-1: var(--mat-sys-surface-container-low);
+    --color-bg-2: var(--mat-sys-surface-container-high);
+    --color-bg-3: var(--mat-sys-surface-container-highest);
+    --color-bg-4: var(--mat-sys-surface-container-highest);
+
+    --mat-filled-button-horizontal-padding: 16px;
+    --mdc-icon-button-icon-color: var(--mat-sys-primary);
+    --mat-option-selected-state-layer-color: var(--mat-sys-surface-container);
+
+    --mat-divider-color: var(--mat-sys-surface-container-high);
+    --mat-table-row-item-outline-color: var(--mat-sys-surface-container-high);
+    --mat-autocomplete-background-color: var(
+        --mat-sys-surface-container-lowest
+    );
+
+    --mat-standard-button-toggle-selected-state-background-color: var(
+        --mat-sys-primary-container
+    );
+    --mat-standard-button-toggle-selected-state-text-color: var(
+        --mat-sys-primary
+    );
+
+    --mat-tree-node-text-size: var(--mat-sys-body-medium-size);
+    --mat-expansion-container-text-size: var(--mat-sys-body-medium-size);
+
+    --mdc-secondary-navigation-tab-container-height: 42px;
+    --mdc-switch-track-height: 20px;
+    --mdc-switch-track-width: 44px;
+    --mat-switch-with-icon-handle-size: 20px;
+    --mdc-switch-state-layer-size: 20px;
+    --mat-switch-unselected-with-icon-handle-horizontal-margin: 0;
+    --mdc-switch-handle-surface-color: var(--color-primary);
+    --mdc-switch-unselected-icon-size: 12px;
+    --mdc-switch-selected-icon-size: 12px;
+
+    --mat-menu-container-color: var(--color-bg-0);
+    --mat-select-panel-background-color: var(--color-bg-0);
+    --mat-sidenav-container-shape: 0;
+    --mat-sidenav-container-divider-color: var(--color-bg-3);
+    --mat-standard-button-toggle-height: 30px;
+}
+
+.dark-mode {
+    --color-bg-outer: var(--color-bg-1);
+    --color-bg-page-container: var(--color-bg-0);
+    --color-bg-main-panel-header: var(--color-bg-0);
+    --color-bg-main-panel-content: var(--color-bg-0);
+    --color-bg-navbar-icon: inherit;
+    --color-bg-navbar-icon-selected: inherit;
+    --color-bg-dialog: rgb(66, 66, 66);
+    --color-shadow: #c4c4c4;
+    --color-pe: #686868;
+    --color-default-text: rgba(255, 255, 255, 0.87);
+    --color-secondary-text: #aaa;
+    --color-warn: #b36161;
+
+    --color-tab-border: #cccccc;
+
+    --canvas-color: linear-gradient(
+            90deg,
+            rgba(50, 50, 50, 0.5) 10%,
+            transparent 0%
+        ),
+        linear-gradient(rgba(50, 50, 50, 0.5) 10%, transparent 0%);
+
+    .pipeline-element-image {
+        filter: brightness(0.9) contrast(1.8) saturate(1.7);
+    }
+}
+
+.light-mode {
+    --color-bg-outer: var(--color-bg-1);
+    --color-bg-page-container: var(--color-bg-0);
+    --color-bg-main-panel-header: var(--color-bg-0);
+    --color-bg-main-panel-content: var(--color-bg-0);
+    --color-bg-navbar-icon: inherit;
+    --color-bg-navbar-icon-selected: inherit;
+    --color-bg-dialog: #ffffff;
+    --color-shadow: #555;
+    --color-pe: #ffffff;
+    --color-default-text: #121212;
+    --color-secondary-text: #555;
+    --color-warn: #b71c1c;
+
+    --color-tab-border: #cccccc;
+
+    --canvas-color: linear-gradient(
+            90deg,
+            rgba(208, 208, 208, 0.5) 10%,
+            transparent 0%
+        ),
+        linear-gradient(rgba(208, 208, 208, 0.5) 10%, transparent 0%);
+}

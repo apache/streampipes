@@ -16,40 +16,139 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
-import { Dashboard, DashboardService } from '@streampipes/platform-services';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
+import {
+    Dashboard,
+    DashboardService,
+    LinkageData,
+    SpAssetTreeNode,
+    UserInfo,
+} from '@streampipes/platform-services';
+import {
+    AssetSaveService,
+    CurrentUserService,
+    DialogRef,
+} from '@streampipes/shared-ui';
+import { UserRole } from '../../../_enums/user-role.enum';
 
 @Component({
     selector: 'sp-edit-dashboard-dialog-component',
     templateUrl: './edit-dashboard-dialog.component.html',
     styleUrls: ['./edit-dashboard-dialog.component.scss'],
+    standalone: false,
 })
-export class EditDashboardDialogComponent {
-    @Input()
-    createMode: boolean;
+export class EditDashboardDialogComponent implements OnInit {
+    @Input() createMode: boolean;
+    @Input() dashboard: Dashboard;
+    @Input() selectedAssets: SpAssetTreeNode[];
+    @Input() deselectedAssets: SpAssetTreeNode[];
+    @Input() originalAssets: SpAssetTreeNode[];
 
-    @Input()
-    dashboard: Dashboard;
+    @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() originalAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
 
-    constructor(
-        public dialogRef: DialogRef<EditDashboardDialogComponent>,
-        private dashboardService: DashboardService,
-    ) {}
+    private dialogRef = inject(DialogRef<EditDashboardDialogComponent>);
+    private dashboardService = inject(DashboardService);
+    private assetSaveService = inject(AssetSaveService);
+    private readonly currentUserService = inject(CurrentUserService);
+
+    currentUser: UserInfo;
+    isAssetAdmin = false;
+    addToAssets: boolean = false;
+
+    ngOnInit() {
+        this.currentUser = this.currentUserService.getCurrentUser();
+        this.isAssetAdmin = this.currentUserService.hasRole(
+            UserRole.ROLE_ASSET_ADMIN,
+        );
+        if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {
+            this.dashboard.dashboardGeneralSettings.defaultViewMode = 'grid';
+        }
+        if (
+            this.dashboard.dashboardGeneralSettings.globalTimeEnabled ===
+            undefined
+        ) {
+            this.dashboard.dashboardGeneralSettings.globalTimeEnabled = true;
+        }
+        if (!this.createMode) {
+            this.addToAssets = true;
+        }
+    }
 
     onCancel(): void {
         this.dialogRef.close();
     }
 
+    onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.selectedAssets = updatedAssets;
+        this.selectedAssetsChange.emit(this.selectedAssets);
+    }
+
+    onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.deselectedAssets = updatedAssets;
+        this.deselectedAssetsChange.emit(this.deselectedAssets);
+    }
+
+    onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
+        this.originalAssets = updatedAssets;
+        this.originalAssetsChange.emit(this.originalAssets);
+    }
+
+    saveToAssets(data): void {
+        let linkageData: LinkageData[];
+        try {
+            linkageData = this.createLinkageData(data);
+
+            this.saveAssets(linkageData);
+        } catch (err) {
+            console.error('Error in addToAsset:', err);
+        }
+    }
+
+    private createLinkageData(data): LinkageData[] {
+        return [
+            {
+                type: 'dashboard',
+                id: data.elementId,
+                name: data.name,
+            },
+        ];
+    }
+
+    private async saveAssets(linkageData: LinkageData[]): Promise<void> {
+        await this.assetSaveService.saveSelectedAssets(
+            this.selectedAssets,
+            linkageData,
+            this.deselectedAssets,
+            this.originalAssets,
+        );
+        this.dialogRef.close(true);
+    }
+
     onSave(): void {
+        this.dashboard.metadata.lastModifiedEpochMs = Date.now();
         if (this.createMode) {
             this.dashboardService
                 .saveDashboard(this.dashboard)
-                .subscribe(result => this.onCancel());
+                .subscribe(data => {
+                    this.saveToAssets(data);
+                    this.dialogRef.close();
+                });
         } else {
             this.dashboardService
                 .updateDashboard(this.dashboard)
-                .subscribe(result => this.onCancel());
+                .subscribe(data => {
+                    this.saveToAssets(data);
+                    this.dialogRef.close();
+                });
         }
     }
 }

@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.monitoring.ServiceLoadDataReportGenerator;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
@@ -33,6 +34,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.rest.extensions.WelcomePage;
 import org.apache.streampipes.rest.shared.exception.RestResponseLogMessageExceptionHandler;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
+import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.base.rest.ServiceHealthResource;
 import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
@@ -60,7 +62,8 @@ import java.util.stream.Collectors;
     WebSecurityConfig.class,
     WelcomePage.class,
     ServiceHealthResource.class,
-    RestResponseLogMessageExceptionHandler.class
+    RestResponseLogMessageExceptionHandler.class,
+    StreamPipesPrometheusConfig.class
 })
 @ComponentScan({"org.apache.streampipes.rest.extensions.*", "org.apache.streampipes.service.base.rest.*"})
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
@@ -78,8 +81,8 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
       String serviceId = serviceDef.getServiceGroup() + "-" + AUTO_GENERATED_SERVICE_ID;
       serviceDef.setServiceId(serviceId);
       DeclarersSingleton.getInstance().populate(networkingConfig.getHost(), networkingConfig.getPort(), serviceDef);
-
       startExtensionsService(this.getClass(), serviceDef, networkingConfig);
+      ServiceLoadDataReportGenerator.getInstance().initialize();
     } catch (UnknownHostException e) {
       LOG.error(
           "Could not auto-resolve host address - "

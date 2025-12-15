@@ -33,6 +33,7 @@ import {
     selector: 'sp-pipeline-element-discovery',
     templateUrl: './pipeline-element-discovery.component.html',
     styleUrls: ['./pipeline-element-discovery.component.scss'],
+    standalone: false,
 })
 export class PipelineElementDiscoveryComponent implements OnInit {
     @Input()
@@ -94,8 +95,10 @@ export class PipelineElementDiscoveryComponent implements OnInit {
     }
 
     changeStyle(index: number, hover: boolean) {
-        hover
-            ? (this.styles[index] = this.makeHoverStyle())
-            : (this.styles[index] = this.makeStandardStyle());
+        if (hover) {
+            this.styles[index] = this.makeHoverStyle();
+        } else {
+            this.styles[index] = this.makeStandardStyle();
+        }
     }
 }

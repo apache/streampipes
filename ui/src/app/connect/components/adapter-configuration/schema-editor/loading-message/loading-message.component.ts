@@ -16,13 +16,17 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'sp-loading-message',
     templateUrl: './loading-message.component.html',
     styleUrls: ['./loading-message.component.scss'],
+    standalone: false,
 })
 export class LoadingMessageComponent {
+    @Input()
+    currentProgress = 10;
+
     constructor() {}
 }

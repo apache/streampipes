@@ -26,6 +26,7 @@ import { PipelineElementTypeUtils } from '../../../../../editor/utils/editor.uti
     styleUrls: [
         '../../../../../editor/components/pipeline-element-icon-stand/pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component.scss',
     ],
+    standalone: false,
 })
 export class PipelineElementsRowComponent implements OnInit {
     elementType: string;

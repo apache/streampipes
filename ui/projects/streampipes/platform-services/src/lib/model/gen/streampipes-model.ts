@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-10-29 10:04:46.
+// Generated using typescript-generator version 3.2.1263 on 2025-10-23 20:03:42.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -215,7 +215,6 @@ export class TransformationRuleDescription {
         | 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
@@ -255,8 +254,6 @@ export class TransformationRuleDescription {
                 return RemoveDuplicatesTransformationRuleDescription.fromData(
                     data,
                 );
-            case 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription':
-                return CreateNestedRuleDescription.fromData(data);
             case 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription':
                 return DeleteRuleDescription.fromData(data);
             case 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription':
@@ -611,7 +608,9 @@ export class AssetExportConfiguration {
     dataSources: ExportItem[];
     dataViews: ExportItem[];
     files: ExportItem[];
+    genericStorageDocuments: ExportItem[];
     overrideBrokerSettings: boolean;
+    overwriteExistingDocuments: boolean;
     pipelines: ExportItem[];
 
     static fromData(
@@ -641,7 +640,11 @@ export class AssetExportConfiguration {
             data.dataViews,
         );
         instance.files = __getCopyArrayFn(ExportItem.fromData)(data.files);
+        instance.genericStorageDocuments = __getCopyArrayFn(
+            ExportItem.fromData,
+        )(data.genericStorageDocuments);
         instance.overrideBrokerSettings = data.overrideBrokerSettings;
+        instance.overwriteExistingDocuments = data.overwriteExistingDocuments;
         instance.pipelines = __getCopyArrayFn(ExportItem.fromData)(
             data.pipelines,
         );
@@ -663,6 +666,53 @@ export class CanvasPosition {
         const instance = target || new CanvasPosition();
         instance.x = data.x;
         instance.y = data.y;
+        return instance;
+    }
+}
+
+export class Certificate implements Storable {
+    algorithm: string;
+    basicConstraints: string;
+    certificateDerBase64: string;
+    elementId: string;
+    extendedKeyUsages: string[];
+    issuerDn: string;
+    keyUsages: string[];
+    notAfter: string;
+    notBefore: string;
+    rev: string;
+    serialNumber: string;
+    sigAlgName: string;
+    state: CertificateState;
+    subjectAlternativeNames: string[];
+    subjectDn: string;
+
+    static fromData(data: Certificate, target?: Certificate): Certificate {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new Certificate();
+        instance.algorithm = data.algorithm;
+        instance.basicConstraints = data.basicConstraints;
+        instance.certificateDerBase64 = data.certificateDerBase64;
+        instance.elementId = data.elementId;
+        instance.extendedKeyUsages = __getCopyArrayFn(__identity<string>())(
+            data.extendedKeyUsages,
+        );
+        instance.issuerDn = data.issuerDn;
+        instance.keyUsages = __getCopyArrayFn(__identity<string>())(
+            data.keyUsages,
+        );
+        instance.notAfter = data.notAfter;
+        instance.notBefore = data.notBefore;
+        instance.rev = data.rev;
+        instance.serialNumber = data.serialNumber;
+        instance.sigAlgName = data.sigAlgName;
+        instance.state = data.state;
+        instance.subjectAlternativeNames = __getCopyArrayFn(
+            __identity<string>(),
+        )(data.subjectAlternativeNames);
+        instance.subjectDn = data.subjectDn;
         return instance;
     }
 }
@@ -984,48 +1034,6 @@ export class CorrectionValueTransformationRuleDescription extends ValueTransform
     }
 }
 
-export class SchemaTransformationRuleDescription extends TransformationRuleDescription {
-    '@class':
-        | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
-
-    static 'fromData'(
-        data: SchemaTransformationRuleDescription,
-        target?: SchemaTransformationRuleDescription,
-    ): SchemaTransformationRuleDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new SchemaTransformationRuleDescription();
-        super.fromData(data, instance);
-        return instance;
-    }
-}
-
-/**
- * @deprecated since 0.97.0, for removal
- */
-export class CreateNestedRuleDescription extends SchemaTransformationRuleDescription {
-    '@class': 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription';
-    'runtimeKey': string;
-
-    static 'fromData'(
-        data: CreateNestedRuleDescription,
-        target?: CreateNestedRuleDescription,
-    ): CreateNestedRuleDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new CreateNestedRuleDescription();
-        super.fromData(data, instance);
-        instance.runtimeKey = data.runtimeKey;
-        return instance;
-    }
-}
-
 export class CreateOptions {
     persist: boolean;
     start: boolean;
@@ -1090,8 +1098,9 @@ export class CustomTransformOutputStrategy extends OutputStrategy {
     }
 }
 
-export class DashboardEntity implements Storable {
+export class DashboardEntity implements Storable, SpResource {
     elementId: string;
+    metadata: ResourceMetadata;
     rev: string;
 
     static fromData(
@@ -1103,6 +1112,7 @@ export class DashboardEntity implements Storable {
         }
         const instance = target || new DashboardEntity();
         instance.elementId = data.elementId;
+        instance.metadata = ResourceMetadata.fromData(data.metadata);
         instance.rev = data.rev;
         return instance;
     }
@@ -1144,7 +1154,7 @@ export class DashboardItem {
     }
 }
 
-export class DashboardModel implements Storable {
+export class DashboardModel implements Storable, SpResource {
     couchDbId: string;
     dashboardGeneralSettings: { [index: string]: any };
     dashboardLiveSettings: { [index: string]: any };
@@ -1152,7 +1162,9 @@ export class DashboardModel implements Storable {
     description: string;
     displayHeader: boolean;
     elementId: string;
+    gridColumns: number;
     id: string;
+    metadata: ResourceMetadata;
     name: string;
     rev: string;
     widgets: DashboardItem[];
@@ -1178,7 +1190,9 @@ export class DashboardModel implements Storable {
         instance.description = data.description;
         instance.displayHeader = data.displayHeader;
         instance.elementId = data.elementId;
+        instance.gridColumns = data.gridColumns;
         instance.id = data.id;
+        instance.metadata = ResourceMetadata.fromData(data.metadata);
         instance.name = data.name;
         instance.rev = data.rev;
         instance.widgets = __getCopyArrayFn(DashboardItem.fromData)(
@@ -1188,66 +1202,9 @@ export class DashboardModel implements Storable {
     }
 }
 
-export class DashboardWidgetModel extends DashboardEntity {
-    dashboardWidgetSettings: DashboardWidgetSettings;
-    pipelineId: string;
-    visualizationName: string;
-    widgetId: string;
-    widgetType: string;
-
-    static fromData(
-        data: DashboardWidgetModel,
-        target?: DashboardWidgetModel,
-    ): DashboardWidgetModel {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DashboardWidgetModel();
-        super.fromData(data, instance);
-        instance.dashboardWidgetSettings = DashboardWidgetSettings.fromData(
-            data.dashboardWidgetSettings,
-        );
-        instance.pipelineId = data.pipelineId;
-        instance.visualizationName = data.visualizationName;
-        instance.widgetId = data.widgetId;
-        instance.widgetType = data.widgetType;
-        return instance;
-    }
-}
-
-export class DashboardWidgetSettings {
-    config: StaticPropertyUnion[];
-    requiredSchema: EventSchema;
-    widgetDescription: string;
-    widgetIconName: string;
-    widgetLabel: string;
-    widgetName: string;
-
-    static fromData(
-        data: DashboardWidgetSettings,
-        target?: DashboardWidgetSettings,
-    ): DashboardWidgetSettings {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DashboardWidgetSettings();
-        instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
-            data.config,
-        );
-        instance.requiredSchema = EventSchema.fromData(data.requiredSchema);
-        instance.widgetDescription = data.widgetDescription;
-        instance.widgetIconName = data.widgetIconName;
-        instance.widgetLabel = data.widgetLabel;
-        instance.widgetName = data.widgetName;
-        return instance;
-    }
-}
-
 export class DataExplorerWidgetModel extends DashboardEntity {
     baseAppearanceConfig: { [index: string]: any };
     dataConfig: { [index: string]: any };
-    measureName: string;
-    pipelineId: string;
     timeSettings: { [index: string]: any };
     visualizationConfig: { [index: string]: any };
     widgetId: string;
@@ -1268,8 +1225,6 @@ export class DataExplorerWidgetModel extends DashboardEntity {
         instance.dataConfig = __getCopyObjectFn(__identity<any>())(
             data.dataConfig,
         );
-        instance.measureName = data.measureName;
-        instance.pipelineId = data.pipelineId;
         instance.timeSettings = __getCopyObjectFn(__identity<any>())(
             data.timeSettings,
         );
@@ -1290,6 +1245,7 @@ export class DataLakeMeasure implements Storable {
     'pipelineId': string;
     'pipelineIsRunning': boolean;
     'pipelineName': string;
+    'retentionTime': RetentionTimeConfig;
     'rev': string;
     'schemaUpdateStrategy': DataLakeMeasureSchemaUpdateStrategy;
     'schemaVersion': string;
@@ -1310,6 +1266,9 @@ export class DataLakeMeasure implements Storable {
         instance.pipelineId = data.pipelineId;
         instance.pipelineIsRunning = data.pipelineIsRunning;
         instance.pipelineName = data.pipelineName;
+        instance.retentionTime = RetentionTimeConfig.fromData(
+            data.retentionTime,
+        );
         instance.rev = data.rev;
         instance.schemaUpdateStrategy = data.schemaUpdateStrategy;
         instance.schemaVersion = data.schemaVersion;
@@ -1418,6 +1377,26 @@ export class DataProcessorType {
     }
 }
 
+export class DataRetentionConfig {
+    action: RetentionAction;
+    interval: RetentionInterval;
+    olderThanDays: number;
+
+    static fromData(
+        data: DataRetentionConfig,
+        target?: DataRetentionConfig,
+    ): DataRetentionConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new DataRetentionConfig();
+        instance.action = data.action;
+        instance.interval = data.interval;
+        instance.olderThanDays = data.olderThanDays;
+        return instance;
+    }
+}
+
 export class DataSeries {
     headers: string[];
     rows: any[][];
@@ -1472,6 +1451,26 @@ export class DataSinkType {
         instance.code = data.code;
         instance.description = data.description;
         instance.label = data.label;
+        return instance;
+    }
+}
+
+export class SchemaTransformationRuleDescription extends TransformationRuleDescription {
+    '@class':
+        | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
+        | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
+        | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
+        | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
+
+    static 'fromData'(
+        data: SchemaTransformationRuleDescription,
+        target?: SchemaTransformationRuleDescription,
+    ): SchemaTransformationRuleDescription {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SchemaTransformationRuleDescription();
+        super.fromData(data, instance);
         return instance;
     }
 }
@@ -1823,6 +1822,25 @@ export class EventSchema {
     }
 }
 
+export class ExportConfig {
+    csvDelimiter: string;
+    format: string;
+    headerColumnName: string;
+    missingValueBehaviour: string;
+
+    static fromData(data: ExportConfig, target?: ExportConfig): ExportConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExportConfig();
+        instance.csvDelimiter = data.csvDelimiter;
+        instance.format = data.format;
+        instance.headerColumnName = data.headerColumnName;
+        instance.missingValueBehaviour = data.missingValueBehaviour;
+        return instance;
+    }
+}
+
 export class ExportConfiguration {
     assetExportConfiguration: AssetExportConfiguration[];
 
@@ -1854,6 +1872,36 @@ export class ExportItem {
         instance.label = data.label;
         instance.resourceId = data.resourceId;
         instance.selected = data.selected;
+        return instance;
+    }
+}
+
+export class ExportProviderSettings {
+    accessKey: string;
+    awsRegion: string;
+    bucketName: string;
+    endPoint: string;
+    providerId: string;
+    providerType: ProviderType;
+    secretEncrypted: boolean;
+    secretKey: string;
+
+    static fromData(
+        data: ExportProviderSettings,
+        target?: ExportProviderSettings,
+    ): ExportProviderSettings {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExportProviderSettings();
+        instance.accessKey = data.accessKey;
+        instance.awsRegion = data.awsRegion;
+        instance.bucketName = data.bucketName;
+        instance.endPoint = data.endPoint;
+        instance.providerId = data.providerId;
+        instance.providerType = data.providerType;
+        instance.secretEncrypted = data.secretEncrypted;
+        instance.secretKey = data.secretKey;
         return instance;
     }
 }
@@ -2208,8 +2256,6 @@ export class KafkaTransportProtocol extends TransportProtocol {
     'maxRequestSize': string;
     'messageMaxBytes': string;
     'offset': string;
-    'zookeeperHost': string;
-    'zookeeperPort': number;
 
     static 'fromData'(
         data: KafkaTransportProtocol,
@@ -2228,8 +2274,6 @@ export class KafkaTransportProtocol extends TransportProtocol {
         instance.maxRequestSize = data.maxRequestSize;
         instance.messageMaxBytes = data.messageMaxBytes;
         instance.offset = data.offset;
-        instance.zookeeperHost = data.zookeeperHost;
-        instance.zookeeperPort = data.zookeeperPort;
         return instance;
     }
 }
@@ -2449,8 +2493,6 @@ export class MessagingSettings {
     prioritizedProtocols: SpProtocol[];
     pulsarUrl: string;
     supportedProtocols: string[];
-    zookeeperHost: string;
-    zookeeperPort: number;
 
     static fromData(
         data: MessagingSettings,
@@ -2479,8 +2521,6 @@ export class MessagingSettings {
         instance.supportedProtocols = __getCopyArrayFn(__identity<string>())(
             data.supportedProtocols,
         );
-        instance.zookeeperHost = data.zookeeperHost;
-        instance.zookeeperPort = data.zookeeperPort;
         return instance;
     }
 }
@@ -3312,6 +3352,64 @@ export class RenameRuleDescription extends SchemaTransformationRuleDescription {
     }
 }
 
+export class ResourceMetadata {
+    createdAtEpochMs: number;
+    lastModifiedEpochMs: number;
+
+    static fromData(
+        data: ResourceMetadata,
+        target?: ResourceMetadata,
+    ): ResourceMetadata {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ResourceMetadata();
+        instance.createdAtEpochMs = data.createdAtEpochMs;
+        instance.lastModifiedEpochMs = data.lastModifiedEpochMs;
+        return instance;
+    }
+}
+
+export class RetentionExportConfig {
+    exportConfig: ExportConfig;
+    exportProviderId: string;
+
+    static fromData(
+        data: RetentionExportConfig,
+        target?: RetentionExportConfig,
+    ): RetentionExportConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RetentionExportConfig();
+        instance.exportConfig = ExportConfig.fromData(data.exportConfig);
+        instance.exportProviderId = data.exportProviderId;
+        return instance;
+    }
+}
+
+export class RetentionTimeConfig {
+    dataRetentionConfig: DataRetentionConfig;
+    retentionExportConfig: RetentionExportConfig;
+
+    static fromData(
+        data: RetentionTimeConfig,
+        target?: RetentionTimeConfig,
+    ): RetentionTimeConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RetentionTimeConfig();
+        instance.dataRetentionConfig = DataRetentionConfig.fromData(
+            data.dataRetentionConfig,
+        );
+        instance.retentionExportConfig = RetentionExportConfig.fromData(
+            data.retentionExportConfig,
+        );
+        return instance;
+    }
+}
+
 export class RuntimeOptionsRequest {
     '@class':
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsRequest'
@@ -3625,24 +3723,6 @@ export class SpDataStream extends NamedStreamPipesEntity {
     }
 }
 
-export class SpDataStreamContainer {
-    '@class': 'org.apache.streampipes.model.SpDataStreamContainer';
-    'list': SpDataStream[];
-
-    static 'fromData'(
-        data: SpDataStreamContainer,
-        target?: SpDataStreamContainer,
-    ): SpDataStreamContainer {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new SpDataStreamContainer();
-        instance['@class'] = data['@class'];
-        instance.list = __getCopyArrayFn(SpDataStream.fromData)(data.list);
-        return instance;
-    }
-}
-
 export class SpLogEntry {
     errorMessage: SpLogMessage;
     timestamp: number;
@@ -3729,6 +3809,10 @@ export class SpQueryResult {
         instance.total = data.total;
         return instance;
     }
+}
+
+export interface SpResource {
+    metadata: ResourceMetadata;
 }
 
 export class SpServiceConfiguration implements Storable {
@@ -3873,6 +3957,7 @@ export class StreamPipesApplicationPackage {
     dataViewWidgets: string[];
     dataViews: string[];
     files: string[];
+    genericStorageDocuments: string[];
     pipelines: string[];
     requiredAdapterAppIds: string[];
     requiredDataSinkAppIds: string[];
@@ -3909,6 +3994,9 @@ export class StreamPipesApplicationPackage {
             data.dataViews,
         );
         instance.files = __getCopyArrayFn(__identity<string>())(data.files);
+        instance.genericStorageDocuments = __getCopyArrayFn(
+            __identity<string>(),
+        )(data.genericStorageDocuments);
         instance.pipelines = __getCopyArrayFn(__identity<string>())(
             data.pipelines,
         );
@@ -4121,6 +4209,8 @@ export class UserDefinedOutputStrategy extends OutputStrategy {
 export class UserInfo {
     darkMode: boolean;
     displayName: string;
+    hasAcknowledged: boolean;
+    language: string;
     roles: string[];
     showTutorial: boolean;
     username: string;
@@ -4132,33 +4222,11 @@ export class UserInfo {
         const instance = target || new UserInfo();
         instance.darkMode = data.darkMode;
         instance.displayName = data.displayName;
+        instance.hasAcknowledged = data.hasAcknowledged;
+        instance.language = data.language;
         instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         instance.showTutorial = data.showTutorial;
         instance.username = data.username;
-        return instance;
-    }
-}
-
-export class VisualizablePipeline {
-    pipelineId: string;
-    pipelineName: string;
-    schema: EventSchema;
-    topic: string;
-    visualizationName: string;
-
-    static fromData(
-        data: VisualizablePipeline,
-        target?: VisualizablePipeline,
-    ): VisualizablePipeline {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new VisualizablePipeline();
-        instance.pipelineId = data.pipelineId;
-        instance.pipelineName = data.pipelineName;
-        instance.schema = EventSchema.fromData(data.schema);
-        instance.topic = data.topic;
-        instance.visualizationName = data.visualizationName;
         return instance;
     }
 }
@@ -4207,6 +4275,8 @@ export class WildcardTopicMapping {
     }
 }
 
+export type CertificateState = 'REJECTED' | 'TRUSTED';
+
 export type ConfigurationScope =
     | 'CONTAINER_STARTUP_CONFIG'
     | 'CONTAINER_GLOBAL_CONFIG'
@@ -4246,6 +4316,12 @@ export type PropertyScope =
     | 'DIMENSION_PROPERTY'
     | 'MEASUREMENT_PROPERTY'
     | 'NONE';
+
+export type ProviderType = 'FOLDER' | 'S3';
+
+export type RetentionAction = 'DELETE' | 'SAVE' | 'SAVEDELETE';
+
+export type RetentionInterval = 'DAILY' | 'MONTHLY' | 'WEEKLY';
 
 export type SelectionStaticPropertyUnion =
     | AnyStaticProperty
@@ -4329,7 +4405,6 @@ export type TransformationRuleDescriptionUnion =
     | UnitTransformRuleDescription
     | EventRateTransformationRuleDescription
     | RemoveDuplicatesTransformationRuleDescription
-    | CreateNestedRuleDescription
     | DeleteRuleDescription
     | RenameRuleDescription
     | RegexTransformationRuleDescription

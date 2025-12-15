@@ -20,6 +20,7 @@ package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,12 +49,19 @@ public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
   }
 
   @Override
-  public void writeDocument(String document) throws JsonProcessingException {
+  public void writeDocument(String document, AssetExportConfiguration config) throws JsonProcessingException {
     getNoSqlStore().getDataLakeStorage().persist(deserializeDocument(document));
   }
 
   @Override
-  protected DataLakeMeasure deserializeDocument(String document) throws JsonProcessingException {
+  public DataLakeMeasure deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, DataLakeMeasure.class);
+  }
+
+  @Override
+  public void deleteDocument(String document) throws JsonProcessingException {
+    var measurement = readDocument(document);
+    var resourceId = measurement.getElementId();
+    getNoSqlStore().getDataLakeStorage().deleteElementById(resourceId);
   }
 }

@@ -21,6 +21,8 @@ package org.apache.streampipes.processors.transformation.jvm.processor.staticmet
 public record StaticMetaDataConfiguration(
     String runtimeName,
     String value,
-    String dataType
+    String dataType,
+    String label,
+    String description
 ) {
 }

@@ -24,6 +24,7 @@ import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
     templateUrl: './standard-dialog.component.html',
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./standard-dialog.component.scss'],
+    standalone: false,
 })
 export class StandardDialogComponent<T>
     extends BaseDialogComponent<T>

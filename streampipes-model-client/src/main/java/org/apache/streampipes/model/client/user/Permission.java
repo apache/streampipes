@@ -40,6 +40,7 @@ public class Permission implements Storable {
   private String objectInstanceId;
   private String objectClassName;
   private boolean publicElement;
+  private boolean readAnonymous;
 
   private String ownerSid;
 
@@ -125,5 +126,13 @@ public class Permission implements Storable {
 
   public void setPublicElement(boolean publicElement) {
     this.publicElement = publicElement;
+  }
+
+  public boolean isReadAnonymous() {
+    return readAnonymous;
+  }
+
+  public void setReadAnonymous(boolean readAnonymous) {
+    this.readAnonymous = readAnonymous;
   }
 }

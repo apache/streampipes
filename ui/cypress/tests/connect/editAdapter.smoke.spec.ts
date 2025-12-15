@@ -20,8 +20,8 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
-import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
-import { DataLakeBtns } from '../../support/utils/datalake/DataLakeBtns';
+import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -39,8 +39,12 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.stopAdapter().click();
 
         // click edit adapter
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+        ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
+
+        // Change adapter name and wait time
 
         const newUserConfiguration = AdapterBuilder.create(
             'Machine_Data_Simulator',
@@ -52,13 +56,11 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.configureAdapter(newUserConfiguration);
 
         // Update event schema
-
         ConnectUtils.finishEventSchemaConfiguration();
 
         cy.dataCy('sp-adapter-name').clear().type(newAdapterName);
 
         // This wait is required to ensure that there is no couch db update conflict
-        cy.wait(1000);
         ConnectBtns.storeEditAdapter().click();
 
         cy.dataCy('sp-connect-adapter-success-added', {
@@ -67,7 +69,7 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.closeAdapterPreview();
 
-        ConnectUtils.startAndValidateAdapter(3);
+        ConnectUtils.startAndValidateAdapter('Edited Adapter', 3);
         ConnectUtils.goToConnect();
 
         // Validate that name of adapter and data stream
@@ -75,12 +77,13 @@ describe('Test Edit Adapter', () => {
     });
 
     it('Successfully edit adapter with persistence pipeline', () => {
-        ConnectUtils.addMachineDataSimulator('simulator', true);
+        ConnectUtils.addMachineDataSimulator('simulator', true, '1000');
 
         ConnectUtils.goToConnect();
 
         // stop adapter and edit adapter
         ConnectBtns.stopAdapter().click();
+        ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().click();
 
         // change data type of density to integer
@@ -90,30 +93,29 @@ describe('Test Edit Adapter', () => {
             'Integer',
             true,
         );
+        ConnectEventSchemaUtils.renameProperty('density', 'density2');
 
         ConnectUtils.storeAndStartEditedAdapter();
 
         // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
-        DataLakeUtils.goToDatalakeConfiguration();
+        DataExplorerUtils.goToDatalakeConfiguration();
 
-        DataLakeUtils.waitForCountingResults();
+        DataExplorerUtils.waitForCountingResults();
 
         let initialValue;
 
-        DataLakeUtils.getDatalakeNumberOfEvents().then(value => {
+        DataExplorerUtils.getDatalakeNumberOfEvents().then(value => {
             initialValue = value;
         });
 
-        DataLakeBtns.refreshDataLakeMeasures().click();
+        cy.wait(3000);
 
-        DataLakeUtils.waitForCountingResults();
+        DataExplorerBtns.refreshDataLakeMeasures().click();
 
-        DataLakeUtils.getDatalakeNumberOfEvents().then(newValue => {
-            // IMPORTANT: Currently we implemented a workaround by showing the user a warning message when the data type is changed.
-            // In the future, we need a migration mechanism to automatically change all the StreamPipes resources that are effected
-            // by the change. Once this is implemented the following line must be changed to .not.equal.
-            // The issue is tracked here: https://github.com/apache/streampipes/issues/2954
-            expect(newValue).equal(initialValue);
+        DataExplorerUtils.waitForCountingResults();
+
+        DataExplorerUtils.getDatalakeNumberOfEvents().then(newValue => {
+            expect(newValue).not.equal(initialValue);
         });
     });
 });

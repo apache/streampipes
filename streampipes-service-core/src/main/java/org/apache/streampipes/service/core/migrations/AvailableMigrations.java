@@ -26,6 +26,11 @@ import org.apache.streampipes.service.core.migrations.v090.UpdateUsernameViewMig
 import org.apache.streampipes.service.core.migrations.v093.AdapterMigration;
 import org.apache.streampipes.service.core.migrations.v093.StoreEmailTemplatesMigration;
 import org.apache.streampipes.service.core.migrations.v095.MergeFilenamesAndRenameDuplicatesMigration;
+import org.apache.streampipes.service.core.migrations.v0980.AddDataLakeMeasureViewMigration;
+import org.apache.streampipes.service.core.migrations.v0980.AddDefaultExportProviderMigration;
+import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissionsMigration;
+import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
+import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinksMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddDataLakePipelineTemplateMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddLinkSettingsMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddRolesToUserDbMigration;
@@ -52,7 +57,12 @@ public class AvailableMigrations {
         new ModifyAssetLinkTypeMigration(),
         new RemoveNodesFromOpcUaAdaptersMigration(),
         new AddRolesToUserDbMigration(),
-        new AddDataLakePipelineTemplateMigration()
+        new AddDataLakePipelineTemplateMigration(),
+        new ModifyAssetLinksMigration(),
+        new ModifyAssetLinkTypesMigration(),
+        new AddDataLakeMeasureViewMigration(),
+        new AddDefaultExportProviderMigration(),
+        new FixImportedPermissionsMigration()
     );
   }
 }

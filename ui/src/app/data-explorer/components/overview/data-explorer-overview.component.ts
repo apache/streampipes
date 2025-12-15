@@ -16,8 +16,7 @@
  *
  */
 
-import { Component, ViewChild } from '@angular/core';
-import { Dashboard } from '@streampipes/platform-services';
+import { Component, inject, ViewChild } from '@angular/core';
 import {
     CurrentUserService,
     DialogService,
@@ -25,32 +24,24 @@ import {
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
-import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
-import { SpDataExplorerDashboardOverviewComponent } from './data-explorer-dashboard-overview/data-explorer-dashboard-overview.component';
 import { SpDataExplorerOverviewDirective } from './data-explorer-overview.directive';
-import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
+import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
+import { DashboardOverviewTableComponent } from '../../../dashboard/components/overview/dashboard-overview-table/dashboard-overview-table.component';
+import { SpDataExplorerDataViewOverviewComponent } from './data-explorer-overview-table/data-explorer-overview-table.component';
 
 @Component({
     selector: 'sp-data-explorer-overview',
     templateUrl: './data-explorer-overview.component.html',
     styleUrls: ['./data-explorer-overview.component.scss'],
+    standalone: false,
 })
 export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirective {
-    @ViewChild(SpDataExplorerDashboardOverviewComponent)
-    dashboardOverview: SpDataExplorerDashboardOverviewComponent;
-
     resourceCount = 0;
 
-    constructor(
-        public dialogService: DialogService,
-        private breadcrumbService: SpBreadcrumbService,
-        private dataExplorerDashboardService: DataExplorerDashboardService,
-        authService: AuthService,
-        currentUserService: CurrentUserService,
-        routingService: DataExplorerRoutingService,
-    ) {
-        super(dialogService, authService, currentUserService, routingService);
-    }
+    @ViewChild(SpDataExplorerDataViewOverviewComponent)
+    chartsOverview: SpDataExplorerDataViewOverviewComponent;
+
+    private breadcrumbService = inject(SpBreadcrumbService);
 
     afterInit(): void {
         this.breadcrumbService.updateBreadcrumb(
@@ -58,38 +49,11 @@ export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirecti
         );
     }
 
-    openNewDashboardDialog() {
-        const dataViewDashboard: Dashboard = {
-            dashboardGeneralSettings: {},
-            widgets: [],
-            name: '',
-            dashboardLiveSettings: {
-                refreshModeActive: false,
-                refreshIntervalInSeconds: 10,
-                label: 'Off',
-            },
-        };
-
-        this.openDashboardModificationDialog(true, dataViewDashboard);
-    }
-
     createNewDataView(): void {
         this.routingService.navigateToDataView(true);
     }
 
-    openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
-        const dialogRef =
-            this.dataExplorerDashboardService.openDashboardModificationDialog(
-                createMode,
-                dashboard,
-            );
-
-        dialogRef.afterClosed().subscribe(() => {
-            this.dashboardOverview.getDashboards();
-        });
-    }
-
-    applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
-        this.dashboardOverview.applyDashboardFilters(elementIds);
+    applyChartFilters(elementIds: Set<string> = new Set<string>()): void {
+        this.chartsOverview.applyChartFilters(elementIds);
     }
 }

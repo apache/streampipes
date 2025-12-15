@@ -33,6 +33,7 @@ import CodeMirror from 'codemirror';
     selector: 'sp-static-code-input',
     templateUrl: './static-code-input.component.html',
     styleUrls: ['./static-code-input.component.scss'],
+    standalone: false,
 })
 export class StaticCodeInputComponent
     extends AbstractValidatedStaticPropertyRenderer<CodeInputStaticProperty>
@@ -64,10 +65,12 @@ export class StaticCodeInputComponent
     }
 
     applyLanguage() {
-        this.staticProperty.language === 'None'
-            ? (this.editorOptions.mode = '')
-            : (this.editorOptions.mode =
-                  this.staticProperty.language.toLowerCase());
+        if (this.staticProperty.language === 'None') {
+            this.editorOptions.mode = '';
+        } else {
+            this.editorOptions.mode =
+                this.staticProperty.language.toLowerCase();
+        }
     }
 
     ngAfterViewInit() {

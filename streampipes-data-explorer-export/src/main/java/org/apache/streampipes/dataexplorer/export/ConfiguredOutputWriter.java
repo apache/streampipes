@@ -18,24 +18,58 @@
 
 package org.apache.streampipes.dataexplorer.export;
 
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.schema.EventProperty;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class ConfiguredOutputWriter {
 
-  public static ConfiguredOutputWriter getConfiguredWriter(OutputFormat format,
+  private final DecimalFormat df = new DecimalFormat("#");
+
+  public static ConfiguredOutputWriter getConfiguredWriter(DataLakeMeasure schema,
+                                                           OutputFormat format,
                                                            ProvidedRestQueryParams params,
                                                            boolean ignoreMissingValues) {
     var writer = format.getWriter();
-    writer.configure(params, ignoreMissingValues);
+    writer.configure(schema, params, ignoreMissingValues);
 
     return writer;
   }
 
-  public abstract void configure(ProvidedRestQueryParams params,
+  protected String getHeaderName(DataLakeMeasure schema,
+                                 String runtimeName,
+                                 String headerColumnNameStrategy) {
+    if (Objects.nonNull(schema) && headerColumnNameStrategy.equals("label")) {
+      return schema
+          .getEventSchema()
+          .getEventProperties()
+          .stream()
+          .filter(ep -> ep.getRuntimeName().equals(runtimeName))
+          .findFirst()
+          .map(ep -> extractLabel(ep, runtimeName))
+          .orElse(runtimeName);
+    } else {
+      return runtimeName;
+    }
+  }
+
+  private String extractLabel(EventProperty ep,
+                              String runtimeName) {
+    if (Objects.nonNull(ep.getLabel())) {
+      return ep.getLabel();
+    } else {
+      return runtimeName;
+    }
+  }
+
+  public abstract void configure(DataLakeMeasure schema,
+                                 ProvidedRestQueryParams params,
                                  boolean ignoreMissingValues);
 
   public abstract void beforeFirstItem(OutputStream outputStream) throws IOException;

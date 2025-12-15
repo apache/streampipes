@@ -32,11 +32,13 @@ import {
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { SpDataExportDialogComponent } from './export-dialog/data-export-dialog.component';
 import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-export-import',
     templateUrl: './data-export-import.component.html',
     styleUrls: ['./data-export-import.component.scss'],
+    standalone: false,
 })
 export class SpDataExportImportComponent implements OnInit {
     tabs: SpNavigationItem[] = [];
@@ -49,6 +51,7 @@ export class SpDataExportImportComponent implements OnInit {
         private assetManagementService: AssetManagementService,
         private dialogService: DialogService,
         private tabService: SpConfigurationTabsService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -82,7 +85,7 @@ export class SpDataExportImportComponent implements OnInit {
     openExportDialog(): void {
         const dialogRef = this.dialogService.open(SpDataExportDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Export resources',
+            title: this.translateService.instant('Export resources'),
             width: '50vw',
             data: {
                 selectedAssets: this.selectedAssets,
@@ -95,7 +98,7 @@ export class SpDataExportImportComponent implements OnInit {
     openImportDialog(): void {
         const dialogRef = this.dialogService.open(SpDataImportDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Import resources',
+            title: this.translateService.instant('Import resources'),
             width: '50vw',
             data: {},
         });

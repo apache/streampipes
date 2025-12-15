@@ -19,11 +19,12 @@
 <div fxFlex="100" fxLayout="column">
     <div class="pipeline-assembly-options page-container-nav">
         <sp-pipeline-assembly-options
+            fxFlex="100"
             #assemblyOptionsComponent
             [rawPipelineModel]="rawPipelineModel"
             [pipelineCanvasMetadata]="pipelineCanvasMetadata"
             [allElements]="allElements"
-            [jsplumbBridge]="JsplumbBridge"
+            [jsplumbBridge]="jsplumbBridge"
             [previewModeActive]="previewModeActive"
             (clearAssemblyEmitter)="clearAssembly()"
             (togglePreviewEmitter)="togglePreview()"
@@ -44,7 +45,7 @@
             [rawPipelineModel]="rawPipelineModel"
             [pipelineCanvasMetadata]="pipelineCanvasMetadata"
             [pipelineCanvasMetadataAvailable]="pipelineCanvasMetadataAvailable"
-            [jsplumbBridge]="JsplumbBridge"
+            [jsplumbBridge]="jsplumbBridge"
         >
         </sp-pipeline-assembly-drawing-area>
     </div>

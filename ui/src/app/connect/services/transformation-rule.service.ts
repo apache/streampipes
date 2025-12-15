@@ -23,7 +23,6 @@ import {
     AddValueTransformationRuleDescription,
     ChangeDatatypeTransformationRuleDescription,
     CorrectionValueTransformationRuleDescription,
-    CreateNestedRuleDescription,
     DeleteRuleDescription,
     EventProperty,
     EventPropertyNested,
@@ -81,22 +80,9 @@ export class TransformationRuleService {
                 targetSchema.eventProperties,
             );
             for (const ep of staticValueProperties) {
-                originalSchema.eventProperties.push(ep);
-                const rule: AddValueTransformationRuleDescription =
-                    new AddValueTransformationRuleDescription();
-                rule['@class'] =
-                    'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription';
-                rule.runtimeKey = ep.runtimeName;
-                rule.datatype = ep.runtimeType;
-                rule.label = ep.label;
-                rule.description = ep.description;
-                rule.propertyScope = ep.propertyScope as PropertyScope;
-                rule.semanticType = ep.semanticType;
-                rule.measurementUnit = ep.measurementUnit;
-                rule.staticValue =
-                    this.staticValueTransformService.getStaticValue(
-                        ep.elementId,
-                    );
+                this.pushCopyToOriginalSchemaIfNotExists(originalSchema, ep);
+
+                const rule = this.createAddValueTransformationRule(ep);
                 transformationRuleDescriptions.push(rule);
             }
 
@@ -118,13 +104,6 @@ export class TransformationRuleService {
                 )
                 .concat(
                     this.getRenameRules(
-                        targetSchema.eventProperties,
-                        originalSchema,
-                        targetSchema,
-                    ),
-                )
-                .concat(
-                    this.getCreateNestedRules(
                         targetSchema.eventProperties,
                         originalSchema,
                         targetSchema,
@@ -160,6 +139,56 @@ export class TransformationRuleService {
                     ),
                 );
             return transformationRuleDescriptions;
+        }
+    }
+
+    private createAddValueTransformationRule(
+        ep: EventPropertyPrimitive,
+    ): AddValueTransformationRuleDescription {
+        const rule: AddValueTransformationRuleDescription =
+            new AddValueTransformationRuleDescription();
+        rule['@class'] =
+            'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription';
+        rule.runtimeKey = ep.runtimeName;
+        rule.datatype = ep.runtimeType;
+        rule.label = ep.label;
+        rule.description = ep.description;
+        rule.propertyScope = ep.propertyScope as PropertyScope;
+        rule.semanticType = ep.semanticType;
+        rule.measurementUnit = ep.measurementUnit;
+        rule.staticValue = this.staticValueTransformService.getStaticValue(
+            ep.elementId,
+        );
+        return rule;
+    }
+
+    /**
+     * Adds a deep copy of the given `EventPropertyPrimitive` to the
+     * `originalSchema` if it does not already exist.
+     * If a property with the same unique prefix (excluding the suffix
+     * representing the ID) exists, only the element ID is updated.
+     */
+    private pushCopyToOriginalSchemaIfNotExists(
+        originalSchema: EventSchema,
+        ep: EventPropertyPrimitive,
+    ): void {
+        const uniquePrefix =
+            this.staticValueTransformService.extractUniquePrefix(ep.elementId);
+
+        const existingProperty = originalSchema.eventProperties.find(
+            property =>
+                this.staticValueTransformService.extractUniquePrefix(
+                    property.elementId,
+                ) === uniquePrefix,
+        );
+
+        if (existingProperty) {
+            existingProperty.elementId = ep.elementId;
+        } else {
+            const epCopy: EventPropertyPrimitive = JSON.parse(
+                JSON.stringify(ep),
+            );
+            originalSchema.eventProperties.push(epCopy);
         }
     }
 
@@ -206,11 +235,10 @@ export class TransformationRuleService {
                                 keyNew.lastIndexOf(this.delimiter) + 1,
                             );
                         } else {
-                            keyOfOldValue = `${keyOldPrefix}.${keyNew.substr(
+                            keyOfOldValue = `${keyOldPrefix}${this.delimiter}${keyNew.substr(
                                 keyNew.lastIndexOf(this.delimiter) + 1,
                             )}`;
                         }
-
                         const rule = new MoveRuleDescription();
                         rule['@class'] =
                             'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
@@ -223,36 +251,6 @@ export class TransformationRuleService {
         };
 
         extractMoveRules(newEventProperties, '');
-        return result;
-    }
-
-    public getCreateNestedRules(
-        newEventProperties: EventProperty[],
-        oldEventSchema: EventSchema,
-        newEventSchema: EventSchema,
-    ): CreateNestedRuleDescription[] {
-        const allNewIds: string[] = this.getAllIds(
-            newEventSchema.eventProperties,
-        );
-        const allOldIds: string[] = this.getAllIds(
-            oldEventSchema.eventProperties,
-        );
-
-        const result: CreateNestedRuleDescription[] = [];
-        for (const id of allNewIds) {
-            if (allOldIds.indexOf(id) === -1) {
-                const key = this.getCompleteRuntimeNameKey(
-                    newEventSchema.eventProperties,
-                    id,
-                );
-                const rule: CreateNestedRuleDescription =
-                    new CreateNestedRuleDescription();
-                rule['@class'] =
-                    'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription';
-                rule.runtimeKey = key;
-                result.push(rule);
-            }
-        }
         return result;
     }
 
@@ -310,12 +308,15 @@ export class TransformationRuleService {
     ): DeleteRuleDescription[] {
         const resultKeys: string[] = [];
 
-        const allNewIds: string[] = this.getAllIds(
+        let allNewIds: string[] = this.getAllIds(
             newEventSchema.eventProperties,
         );
-        const allOldIds: string[] = this.getAllIds(
+        allNewIds = this.transformStaticValueIds(allNewIds);
+
+        let allOldIds: string[] = this.getAllIds(
             oldEventSchema.eventProperties,
         );
+        allOldIds = this.transformStaticValueIds(allOldIds);
 
         for (const id of allOldIds) {
             // if not in new ids create delete rule
@@ -338,6 +339,20 @@ export class TransformationRuleService {
         }
 
         return resultRules;
+    }
+
+    /**
+     * This is required because for the static value enrichment the actual value is
+     * encoded in the elementId. Only the prefix is unique and the suffix is the value
+     */
+    private transformStaticValueIds(ids: string[]): string[] {
+        const prefix = this.staticValueTransformService.getPrefix();
+        return ids.map(id => {
+            if (id.startsWith(prefix)) {
+                return this.staticValueTransformService.extractUniquePrefix(id);
+            }
+            return id;
+        });
     }
 
     public getUnitTransformRules(

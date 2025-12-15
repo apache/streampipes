@@ -22,6 +22,7 @@ import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.d
 @Component({
     selector: 'sp-adapter-details-code',
     templateUrl: './adapter-details-code.component.html',
+    standalone: false,
 })
 export class AdapterDetailsCodeComponent
     extends SpAbstractAdapterDetailsDirective

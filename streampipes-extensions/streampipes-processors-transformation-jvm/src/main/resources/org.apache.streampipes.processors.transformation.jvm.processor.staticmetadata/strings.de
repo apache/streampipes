@@ -1,0 +1,37 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.processors.transformation.jvm.processor.staticmetadata.title=Statischer Metadaten-Anreicherer
+org.apache.streampipes.processors.transformation.jvm.processor.staticmetadata.description=Reichert Nachrichten mit Metadaten an
+
+static-metadata-input.title=Metadaten-Eingabe
+static-metadata-input.description=Eingabesammlung von Metadaten, die zur Nachricht hinzugefügt werden
+
+static-metadata-input-runtime-name.title=Laufzeitname
+static-metadata-input-runtime-name.description=Wird für den Laufzeitnamen in der Nachricht verwendet
+
+static-metadata-input-value.title=Laufzeitwert
+static-metadata-input-value.description=Wird für den Laufzeitwert in der Nachricht verwendet
+
+static-metadata-input-datatype.title=Datentyp
+static-metadata-input-datatype.description=Wähle den Datentyp des Wertes
+
+static-metadata-input-label.title=Bezeichnung
+static-metadata-input-label.description=Eine optionale kurze Bezeichnung, die das Feld beschreibt
+
+static-metadata-input-description.title=Beschreibung
+static-metadata-input-description.description=Eine optionale Beschreibung des Feldes 

@@ -35,6 +35,7 @@ import { map } from 'rxjs/operators';
     templateUrl: './edit-group-dialog.component.html',
     styleUrls: ['./edit-group-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false,
 })
 export class EditGroupDialogComponent implements OnInit {
     @Input()

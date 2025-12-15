@@ -23,6 +23,7 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
     selector: 'sp-profile',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.scss'],
+    standalone: false,
 })
 export class ProfileComponent implements OnInit {
     selectedIndex = 0;

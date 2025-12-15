@@ -20,21 +20,21 @@
     <div fxFlex="100" fxLayoutAlign="start center">
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             class="small-button"
             (click)="selectAll()"
             style="margin-right: 10px; margin-left: 10px"
         >
-            Select all
+            {{ 'Select all' | translate }}
         </button>
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic small-button"
             (click)="selectNone()"
         >
-            Select none
+            {{ 'Select none' | translate }}
         </button>
     </div>
     <div fxFlex="100" fxLayout="column" style="margin-top: 10px">

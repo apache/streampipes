@@ -18,12 +18,16 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config;
 
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.AnonymousIdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.UsernamePasswordIdentityConfig;
+import org.apache.streampipes.extensions.connectors.opcua.config.identity.X509IdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.security.SecurityConfig;
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaNamingStrategy;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MessageSecurityMode;
@@ -41,6 +45,7 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME_GROUP;
 
 public class SpOpcUaConfigExtractor {
 
@@ -51,8 +56,9 @@ public class SpOpcUaConfigExtractor {
    * @param extractor extractor for user inputs
    * @return {@link OpcUaAdapterConfig}  instance based on information from {@code extractor}
    */
-  public static OpcUaAdapterConfig extractAdapterConfig(IStaticPropertyExtractor extractor) {
-    var config = extractSharedConfig(extractor, new OpcUaAdapterConfig());
+  public static OpcUaAdapterConfig extractAdapterConfig(IStaticPropertyExtractor extractor,
+                                                        IStreamPipesClient streamPipesClient) {
+    var config = extractSharedConfig(extractor, new OpcUaAdapterConfig(), streamPipesClient);
     boolean usePullMode = extractor.selectedAlternativeInternalId(ADAPTER_TYPE.name())
         .equals(PULL_MODE.name());
 
@@ -67,15 +73,23 @@ public class SpOpcUaConfigExtractor {
       config.setIncompleteEventStrategy(incompleteEventStrategy);
     }
 
+    var namingStrategySelection = extractor.selectedSingleValueInternalName(
+        OpcUaLabels.NAMING_STRATEGY.name(), String.class
+    );
+    var namingStrategy = OpcUaNamingStrategy.valueOf(namingStrategySelection);
+    config.setNamingStrategy(namingStrategy);
+
     return config;
   }
 
-  public static OpcUaConfig extractSinkConfig(IParameterExtractor extractor) {
-    return extractSharedConfig(extractor, new OpcUaConfig());
+  public static OpcUaConfig extractSinkConfig(IParameterExtractor extractor,
+                                              IStreamPipesClient streamPipesClient) {
+    return extractSharedConfig(extractor, new OpcUaConfig(), streamPipesClient);
   }
 
   public static <T extends OpcUaConfig> T extractSharedConfig(IParameterExtractor extractor,
-                                                              T config) {
+                                                              T config,
+                                                              IStreamPipesClient streamPipesClient) {
 
     String selectedAlternativeConnection =
         extractor.selectedAlternativeInternalId(OPC_HOST_OR_URL.name());
@@ -95,32 +109,37 @@ public class SpOpcUaConfigExtractor {
         SharedUserConfiguration.SECURITY_POLICY,
         String.class
     );
-    config.setSecurityConfig(new SecurityConfig(
-        MessageSecurityMode.valueOf(selectedSecurityMode),
-        SecurityPolicy.valueOf(selectedSecurityPolicy)));
+    config.setSecurityConfig(
+        new SecurityConfig(
+            MessageSecurityMode.valueOf(selectedSecurityMode),
+            SecurityPolicy.valueOf(selectedSecurityPolicy),
+            streamPipesClient
+        )
+    );
 
     boolean useURL = selectedAlternativeConnection.equals(OPC_URL.name());
     if (useURL) {
       String serverAddress =
           extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
-      config.setOpcServerURL(OpcUaUtil.addOpcPrefixIfNotExists(serverAddress));
+      config.setOpcServerURL(OpcUaUtils.addOpcPrefixIfNotExists(serverAddress));
     } else {
-      String serverAddress = OpcUaUtil.addOpcPrefixIfNotExists(
+      String serverAddress = OpcUaUtils.addOpcPrefixIfNotExists(
           extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class)
       );
       int port = extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);
       config.setOpcServerURL(serverAddress + ":" + port);
     }
 
-    boolean unauthenticated = selectedAlternativeAuthentication.equals(
-        SharedUserConfiguration.USER_AUTHENTICATION_ANONYMOUS
-    );
-    if (unauthenticated) {
+    if (selectedAlternativeAuthentication.equals(SharedUserConfiguration.USER_AUTHENTICATION_ANONYMOUS)) {
       config.setIdentityConfig(new AnonymousIdentityConfig());
-    } else {
+    } else if (selectedAlternativeAuthentication.equals(USERNAME_GROUP.name())) {
       String username = extractor.singleValueParameter(USERNAME.name(), String.class);
       String password = extractor.secretValue(PASSWORD.name());
       config.setIdentityConfig(new UsernamePasswordIdentityConfig(username, password));
+    } else {
+      String privateKeyPem = extractor.secretValue(SharedUserConfiguration.X509_PRIVATE_KEY_PEM);
+      String publicKeyPem = extractor.textParameter(SharedUserConfiguration.X509_PUBLIC_KEY_PEM);
+      config.setIdentityConfig(new X509IdentityConfig(publicKeyPem, privateKeyPem));
     }
 
     return config;

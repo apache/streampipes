@@ -30,6 +30,8 @@ public class UserInfo {
   private Set<String> roles;
   private boolean showTutorial;
   private boolean darkMode;
+  private boolean hasAcknowledged;
+  private String language;
 
   public UserInfo() {
   }
@@ -72,5 +74,21 @@ public class UserInfo {
 
   public void setDarkMode(boolean darkMode) {
     this.darkMode = darkMode;
+  }
+
+  public boolean isHasAcknowledged() {
+    return hasAcknowledged;
+  }
+
+  public void setHasAcknowledged(boolean hasAcknowledged) {
+    this.hasAcknowledged = hasAcknowledged;
+  }
+
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
   }
 }

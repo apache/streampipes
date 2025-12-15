@@ -22,6 +22,7 @@ import { DashboardLiveSettings } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-data-explorer-refresh-interval-settings-component',
     templateUrl: './refresh-interval-settings.component.html',
+    standalone: false,
 })
 export class DataExplorerRefreshIntervalSettingsComponent implements OnInit {
     @Input() liveSettings: DashboardLiveSettings;

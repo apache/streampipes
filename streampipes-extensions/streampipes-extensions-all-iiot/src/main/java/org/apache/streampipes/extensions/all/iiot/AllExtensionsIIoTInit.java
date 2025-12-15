@@ -39,6 +39,7 @@ import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.processors.changedetection.jvm.ChangeDetectionExtensionModuleExport;
 import org.apache.streampipes.processors.enricher.jvm.EnricherExtensionModuleExport;
 import org.apache.streampipes.processors.filters.jvm.FilterExtensionModuleExport;
+import org.apache.streampipes.processors.llm.jvm.LlmExtensionModuleExport;
 import org.apache.streampipes.processors.siddhi.SiddhiFilterExtensionModuleExport;
 import org.apache.streampipes.processors.transformation.jvm.TransformationExtensionModuleExport;
 import org.apache.streampipes.service.extensions.StreamPipesExtensionsServiceBase;
@@ -80,12 +81,12 @@ public class AllExtensionsIIoTInit extends StreamPipesExtensionsServiceBase {
             new EnricherExtensionModuleExport(),
             new FilterExtensionModuleExport(),
             new SiddhiFilterExtensionModuleExport(),
-            new FilterExtensionModuleExport(),
             new TransformationExtensionModuleExport(),
             new BrokerSinksExtensionModuleExport(),
             new DatabaseSinksExtensionModuleExport(),
             new InternalSinksExtensionModuleExports(),
-            new NotificationsExtensionModuleExport()
+            new NotificationsExtensionModuleExport(),
+            new LlmExtensionModuleExport()
         )
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerMessagingProtocols(

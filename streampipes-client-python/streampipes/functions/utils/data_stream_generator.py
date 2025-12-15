@@ -16,7 +16,7 @@
 #
 
 from enum import Enum
-from typing import Dict
+from typing import Dict, Optional
 
 from streampipes.functions.broker import SupportedBroker
 from streampipes.model.common import (
@@ -53,7 +53,7 @@ class RuntimeType(Enum):
 def create_data_stream(
     name: str,
     attributes: Dict[str, str],
-    stream_id: str = None,
+    stream_id: Optional[str] = None,
     broker: SupportedBroker = SupportedBroker.NATS,
 ):
     """Creates a data stream
@@ -64,8 +64,8 @@ def create_data_stream(
         Name of the data stream to be shown at the UI.
     attributes: Dict[str, str]
         Name and types of the attributes.
-    stream_id: str
-        The id of this data stream.
+    stream_id: Optional[str]
+        The id of this data stream. If none is provided the name is used as id
 
     Returns
     -------
@@ -103,6 +103,8 @@ def create_data_stream(
             )
         ]
 
+    if not stream_id:
+        stream_id = name
     sanitized_stream_id = stream_id.replace(" ", "")
 
     # Assign a default topic name incorporating the unique stream ID to each protocol.

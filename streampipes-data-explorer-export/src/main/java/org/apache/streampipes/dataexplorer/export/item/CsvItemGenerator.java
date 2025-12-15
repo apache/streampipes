@@ -19,6 +19,8 @@
 
 package org.apache.streampipes.dataexplorer.export.item;
 
+import org.apache.streampipes.dataexplorer.export.ExportUtils;
+
 public class CsvItemGenerator extends ItemGenerator {
 
   public CsvItemGenerator(String delimiter) {
@@ -27,7 +29,7 @@ public class CsvItemGenerator extends ItemGenerator {
 
   @Override
   protected String makeItemString(String key, Object value) {
-    return value != null ? value.toString() : "";
+    return value != null ? ExportUtils.formatValue(value) : "";
   }
 
   @Override

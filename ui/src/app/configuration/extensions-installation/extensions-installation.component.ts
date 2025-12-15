@@ -30,11 +30,13 @@ import { ExtensionsInstallationService } from './extensions-installation.service
 import { SpExtensionsInstallationDialogComponent } from '../dialog/extensions-installation/extensions-installation.component';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-extensions-installation',
     templateUrl: './extensions-installation.component.html',
     styleUrls: ['./extensions-installation.component.scss'],
+    standalone: false,
 })
 export class SpExtensionsInstallationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];
@@ -59,6 +61,7 @@ export class SpExtensionsInstallationComponent implements OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: SpBreadcrumbService,
         private tabService: SpConfigurationTabsService,
+        private translateService: TranslateService,
     ) {
         this.results = [];
         this.loading = false;
@@ -162,7 +165,7 @@ export class SpExtensionsInstallationComponent implements OnInit {
         const dialogRef: DialogRef<SpExtensionsInstallationDialogComponent> =
             this.dialogService.open(SpExtensionsInstallationDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: 'Installation',
+                title: this.translateService.instant('Installation'),
                 width: '70vw',
                 data: {
                     install: install,

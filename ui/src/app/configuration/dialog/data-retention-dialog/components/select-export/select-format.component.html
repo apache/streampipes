@@ -1,0 +1,147 @@
+<!--
+  ~  Licensed to the Apache Software Foundation (ASF) under one or more
+  ~  contributor license agreements.  See the NOTICE file distributed with
+  ~  this work for additional information regarding copyright ownership.
+  ~  The ASF licenses this file to You under the Apache License, Version 2.0
+  ~  (the "License"); you may not use this file except in compliance with
+  ~  the License.  You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  ~
+  -->
+
+<sp-configuration-box [title]="'Export Settings' | translate">
+    <div>
+        <sp-configuration-box [title]="'Download Format' | translate">
+            <mat-radio-group
+                class="sp-radio-group"
+                [(ngModel)]="
+                    dataRetentionConfig.retentionExportConfig.exportConfig
+                        .format
+                "
+            >
+                <mat-radio-button
+                    value="json"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-json"
+                >
+                    JSON
+                </mat-radio-button>
+                <mat-radio-button
+                    value="csv"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-csv"
+                >
+                    CSV
+                </mat-radio-button>
+                <mat-radio-button
+                    value="xlsx"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-xlsx"
+                >
+                    EXCEL (XLSX)
+                </mat-radio-button>
+            </mat-radio-group>
+        </sp-configuration-box>
+    </div>
+
+    @if (
+        dataRetentionConfig.retentionExportConfig.exportConfig.format === 'csv'
+    ) {
+        <sp-configuration-box [title]="'Delimiter' | translate">
+            <mat-radio-group
+                [(ngModel)]="
+                    dataRetentionConfig.retentionExportConfig.exportConfig
+                        .csvDelimiter
+                "
+                class="sp-radio-group"
+            >
+                <mat-radio-button
+                    value="comma"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-delimiter-comma"
+                    >&nbsp;,
+                </mat-radio-button>
+                <mat-radio-button
+                    value="semicolon"
+                    class="sp-radio-button"
+                    data-cy="download-configuration-delimiter-semicolon"
+                    >&nbsp;;
+                </mat-radio-button>
+            </mat-radio-group>
+        </sp-configuration-box>
+    }
+    <sp-configuration-box [title]="'Export Provider' | translate">
+        <div class="mt-10 p-10">
+            <mat-form-field class="w-100">
+                <mat-label>{{ 'Select Provider Type' | translate }}</mat-label>
+                <mat-select
+                    [(ngModel)]="selectedProviderType"
+                    data-cy="exportProvider-select"
+                    (selectionChange)="onProviderTypeChange($event.value)"
+                >
+                    @for (type of providerType; track type) {
+                        <mat-option
+                            [value]="type.toUpperCase()"
+                            [attr.data-cy]="
+                                'exportProvider-' + type.toLowerCase()
+                            "
+                        >
+                            {{ type | translate }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            @if (selectedProviderType === 'S3') {
+                <mat-form-field class="w-100">
+                    <mat-label>{{ 'Select Provider' | translate }}</mat-label>
+                    <mat-select
+                        [(ngModel)]="
+                            dataRetentionConfig.retentionExportConfig
+                                .exportProviderId
+                        "
+                        data-cy="exportProviderId-select"
+                    >
+                        @for (
+                            provider of availableS3ExportProvider;
+                            track provider
+                        ) {
+                            <mat-option
+                                [value]="provider.providerId"
+                                [attr.data-cy]="
+                                    'exportProviderId-' + provider.providerId
+                                "
+                                style="font-size: 12px"
+                            >
+                                {{
+                                    'Endpoint: ' +
+                                        provider.endPoint +
+                                        ' Bucket: ' +
+                                        provider.bucketName
+                                }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
+        </div>
+        @if (
+            selectedProviderType === 'S3' &&
+            availableS3ExportProvider?.length === 0
+        ) {
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon color="primary" class="mr-5 info-icon">info</mat-icon>
+                {{
+                    'No export providers found. Please create one first.'
+                        | translate
+                }}
+            </div>
+        }
+    </sp-configuration-box>
+</sp-configuration-box>

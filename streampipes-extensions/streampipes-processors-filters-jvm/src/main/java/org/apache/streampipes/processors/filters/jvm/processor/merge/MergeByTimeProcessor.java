@@ -18,27 +18,28 @@
 package org.apache.streampipes.processors.filters.jvm.processor.merge;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.List;
 
-public class MergeByTimeProcessor extends StreamPipesDataProcessor {
+public class MergeByTimeProcessor implements IStreamPipesDataProcessor {
 
   protected static final String TIMESTAMP_MAPPING_STREAM_1_KEY = "timestamp_mapping_stream_1";
   protected static final String TIMESTAMP_MAPPING_STREAM_2_KEY = "timestamp_mapping_stream_2";
@@ -55,34 +56,37 @@ public class MergeByTimeProcessor extends StreamPipesDataProcessor {
   private StreamBuffer streamBufferS1;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.merge", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON, "merge_description.png")
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
-            EpRequirements.timestampReq(),
-            Labels.withId(TIMESTAMP_MAPPING_STREAM_1_KEY),
-            PropertyScope.NONE).build())
-        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
-            EpRequirements.timestampReq(),
-            Labels.withId(TIMESTAMP_MAPPING_STREAM_2_KEY),
-            PropertyScope.NONE).build())
-        .requiredIntegerParameter(Labels.withId(TIME_INTERVAL), NUMBER_MAPPING)
-        .outputStrategy(OutputStrategies.custom(true))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        MergeByTimeProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.filters.jvm.merge", 0)
+            .category(DataProcessorType.TRANSFORM)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON, "merge_description.png")
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+                EpRequirements.timestampReq(),
+                Labels.withId(TIMESTAMP_MAPPING_STREAM_1_KEY),
+                PropertyScope.NONE).build())
+            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+                EpRequirements.timestampReq(),
+                Labels.withId(TIMESTAMP_MAPPING_STREAM_2_KEY),
+                PropertyScope.NONE).build())
+            .requiredIntegerParameter(Labels.withId(TIME_INTERVAL), NUMBER_MAPPING)
+            .outputStrategy(OutputStrategies.custom(true))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-    this.outputSchema = processorParams.getGraph().getOutputStream().getEventSchema();
-    this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
-    this.timestampFieldStream0 = processorParams.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_STREAM_1_KEY);
-    this.timestampFieldStream1 = processorParams.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_STREAM_2_KEY);
+  public void onPipelineStarted(IDataProcessorParameters parameters, SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    this.outputSchema = parameters.getModel().getOutputStream().getEventSchema();
+    this.outputKeySelectors = parameters.extractor().outputKeySelectors();
+    this.timestampFieldStream0 = parameters.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_STREAM_1_KEY);
+    this.timestampFieldStream1 = parameters.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_STREAM_2_KEY);
 
-    this.timeInterval = processorParams.extractor().singleValueParameter(TIME_INTERVAL, Integer.class);
+    this.timeInterval = parameters.extractor().singleValueParameter(TIME_INTERVAL, Integer.class);
 
     this.streamBufferS0 = new StreamBuffer(this.timestampFieldStream0);
     this.streamBufferS1 = new StreamBuffer(this.timestampFieldStream1);
@@ -134,10 +138,8 @@ public class MergeByTimeProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() throws SpRuntimeException {
   }
-
 
   private Event mergeEvents(Event e1, Event e2) {
     return EventFactory.fromEvents(e1, e2, outputSchema).getSubset(outputKeySelectors);

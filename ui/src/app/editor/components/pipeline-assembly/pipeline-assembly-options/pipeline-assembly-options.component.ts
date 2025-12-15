@@ -49,6 +49,7 @@ import { AddTemplateDialogComponent } from '../../../dialog/add-template-dialog/
     selector: 'sp-pipeline-assembly-options',
     templateUrl: './pipeline-assembly-options.component.html',
     styleUrls: ['./pipeline-assembly-options.component.scss'],
+    standalone: false,
 })
 export class PipelineAssemblyOptionsComponent {
     @Input()
@@ -121,7 +122,6 @@ export class PipelineAssemblyOptionsComponent {
         });
         dialogRef.afterClosed().subscribe(pipeline => {
             if (pipeline !== undefined) {
-                this.clearAssemblyEmitter.emit();
                 this.displayPipelineTemplateEmitter.emit(pipeline);
             }
         });

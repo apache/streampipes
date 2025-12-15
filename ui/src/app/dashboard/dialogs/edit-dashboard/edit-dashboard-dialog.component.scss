@@ -16,8 +16,6 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
-
 .element-margin {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -29,4 +27,15 @@
 
 .mr-10 {
     margin-right: 10px;
+}
+
+.view-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: flex-start;
+}
+
+.view-radio-button {
+    margin: 5px;
 }

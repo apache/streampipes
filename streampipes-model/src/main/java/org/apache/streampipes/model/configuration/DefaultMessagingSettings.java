@@ -66,8 +66,6 @@ public class DefaultMessagingSettings {
 
     defaultSettings.setPulsarUrl(env.getPulsarUrl().getValueOrDefault());
 
-    defaultSettings.setZookeeperHost("zookeeper");
-    defaultSettings.setZookeeperPort(2181);
     return defaultSettings;
   }
 }

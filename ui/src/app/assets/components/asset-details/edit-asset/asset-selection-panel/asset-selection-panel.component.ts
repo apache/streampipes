@@ -32,6 +32,7 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
     selector: 'sp-asset-selection-panel',
     templateUrl: './asset-selection-panel.component.html',
     styleUrls: ['./asset-selection-panel.component.scss'],
+    standalone: false,
 })
 export class SpAssetSelectionPanelComponent implements OnInit {
     @Input()
@@ -95,7 +96,7 @@ export class SpAssetSelectionPanelComponent implements OnInit {
     }
 
     rerenderTree(): void {
-        this.dataSource.data = null;
+        this.dataSource.data = [];
         this.dataSource.data = [this.assetModel];
         this.treeControl.expandAll();
     }

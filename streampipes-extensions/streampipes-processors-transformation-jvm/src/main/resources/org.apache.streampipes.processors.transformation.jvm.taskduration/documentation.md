@@ -18,27 +18,123 @@
 
 ## Task Duration
 
+<p align="center">
+    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
+</p>
 
 ***
 
 ## Description
 
-This processors computes the duration of a task, i.e., a field containing a task description. It outputs an event
- every time this task value changes and computes the duration between the first occurrence of this task and the
-  current event. For instance, you can use this event to calculate the time a specific process step requires.
+The Task Duration processor calculates the time duration between state changes in a task field. It supports:
+* Task state tracking
+* Duration calculation
+* Multiple time units
+* Process identification
+* State transition timing
+* Performance measurement
+
+This processor is essential for:
+* Measuring task durations
+* Tracking process times
+* Analyzing state transitions
+* Monitoring performance
+* Building metrics
+* Optimizing workflows
+
 ***
 
 ## Required input
 
-A timestamp value is required and a field containing a task value.
+The processor requires a data stream containing:
+* A task field that changes to indicate different states
+* A timestamp field for duration calculation
 
 ***
 
 ## Configuration
 
-(no further configuration required)
+### Task Field
+Select the field that contains the task state. The processor will calculate the duration between changes in this field.
+
+### Timestamp Field
+Select the field containing the timestamp for duration calculation.
+
+### Output Unit
+Choose the time unit for the duration output:
+* Milliseconds (default)
+* Seconds
+* Minutes
 
 ## Output
 
-Emits an event that contains the process step, built from the names of the first task identifier and the identifier
- of the subsequent task. In addition, the duration is part of the output event, provided in milliseconds.
+The processor creates a new event containing:
+* A processId field showing the state transition (format: "previousState-newState")
+* A duration field showing the time between state changes in the selected unit
+
+### Example
+
+#### Input Event
+```json
+{
+  "deviceId": "machine01",
+  "timestamp": 1586380104915,
+  "taskState": "running"
+}
+```
+
+#### Configuration
+* Task Field: taskState
+* Timestamp Field: timestamp
+* Output Unit: Seconds
+
+#### Output Event (when taskState changes from "running" to "completed")
+```json
+{
+  "processId": "running-completed",
+  "duration": 120.5
+}
+```
+
+## Use Cases
+
+1. **Process Timing**
+   * Measure task durations
+   * Track state transitions
+   * Analyze process times
+   * Monitor performance
+   * Build metrics
+
+2. **Workflow Analysis**
+   * Measure step durations
+   * Track transitions
+   * Analyze workflows
+   * Monitor efficiency
+   * Build analytics
+
+3. **Performance Monitoring**
+   * Measure state durations
+   * Track changes
+   * Analyze timing
+   * Monitor efficiency
+   * Build reports
+
+4. **Quality Control**
+   * Measure cycle times
+   * Track states
+   * Analyze durations
+   * Monitor quality
+   * Build controls
+
+## Notes
+
+* Task field must change to trigger output
+* Duration is calculated between state changes
+* Multiple time units supported
+* Processing is stateful
+* ProcessId shows state transition
+* Consider time unit selection
+* No delay in processing
+* Original values not preserved
+* Only outputs on state change
+* Duration is always positive

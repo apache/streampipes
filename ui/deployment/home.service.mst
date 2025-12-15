@@ -23,7 +23,8 @@ import { ServiceLink } from './models/home.model';
 import {
     AdapterService,
     DashboardService,
-    DataViewDataExplorerService, PipelineElementService,
+    ChartService,
+    PipelineElementService,
     PipelineService
 } from '@streampipes/platform-services';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
@@ -33,8 +34,8 @@ export class HomeService {
 
     constructor(private authService: AuthService,
                 private adapterService: AdapterService,
+                private chartService: ChartService,
                 private dashboardService: DashboardService,
-                private dataViewService: DataViewDataExplorerService,
                 private pipelineService: PipelineService,
                 private pipelineElementService: PipelineElementService) {
     }

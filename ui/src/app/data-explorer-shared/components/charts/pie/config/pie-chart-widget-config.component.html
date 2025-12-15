@@ -1,0 +1,109 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <sp-configuration-box [title]="'Field' | translate">
+        <sp-select-single-property-config
+            [availableProperties]="fieldProvider.allFields"
+            [selectedProperty]="
+                currentlyConfiguredWidget.visualizationConfig.selectedProperty
+            "
+            (changeSelectedProperty)="setSelectedProperty($event)"
+        >
+        </sp-select-single-property-config>
+    </sp-configuration-box>
+
+    <sp-configuration-box [title]="'Settings' | translate">
+        <div fxLayout="column" fxLayoutGap="10px">
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="10px"
+                *ngIf="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .selectedProperty?.fieldCharacteristics.numeric
+                "
+            >
+                <small>{{ 'Rounding' | translate }}</small>
+                <mat-form-field
+                    appearance="outline"
+                    class="marginColorField"
+                    color="accent"
+                    fxFlex
+                >
+                    <mat-select
+                        [(value)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .roundingValue
+                        "
+                        (selectionChange)="updateRoundingValue($event.value)"
+                    >
+                        <mat-option [value]="100">100</mat-option>
+                        <mat-option [value]="10">10</mat-option>
+                        <mat-option [value]="1">1</mat-option>
+                        <mat-option [value]="0.1">0.1</mat-option>
+                        <mat-option [value]="0.01">0.01</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="10px"
+            >
+                <small>{{ 'Inner Radius' | translate }}</small>
+                <mat-slider min="0" max="80" step="1" fxFlex="65">
+                    <input
+                        matSliderThumb
+                        [ngModel]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .selectedRadius
+                        "
+                        (ngModelChange)="updateInnerRadius($event)"
+                        #slider
+                    />
+                </mat-slider>
+                <small>{{ slider.value }}% </small>
+            </div>
+
+            <sp-color-mapping-options-config
+                [(colorMapping)]="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .colorMappingsPieChart
+                "
+                [selectedProperty]="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .selectedProperty
+                "
+                [(showCustomColorMapping)]="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .showCustomColorMappingPieChart
+                "
+                (viewRefreshEmitter)="triggerViewUpdate()"
+            >
+            </sp-color-mapping-options-config>
+        </div>
+    </sp-configuration-box>
+</sp-visualization-config-outer>

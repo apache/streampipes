@@ -21,6 +21,7 @@ import {
     AdapterDescription,
     AdapterMonitoringService,
     AdapterService,
+    PipelineElementAssetService,
     SpLogMessage,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
@@ -43,22 +44,21 @@ import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription, zip } from 'rxjs';
-import { RestApi } from '../../../services/rest-api.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-existing-adapters',
     templateUrl: './existing-adapters.component.html',
-    styleUrls: [
-        './existing-adapters.component.scss',
-        '../../../../scss/sp/status-light.scss',
-    ],
+    styleUrls: ['./existing-adapters.component.scss'],
+    standalone: false,
 })
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     existingAdapters: AdapterDescription[] = [];
     filteredAdapters: AdapterDescription[] = [];
 
     currentFilter: AdapterFilterSettingsModel;
+    operationInProgressAdapterId: string | undefined;
 
     @ViewChild(MatSort)
     sort: MatSort;
@@ -71,7 +71,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         'lastModified',
         'messagesSent',
         'lastMessage',
-        'action',
+        'actions',
     ];
 
     dataSource: MatTableDataSource<AdapterDescription> =
@@ -83,17 +83,22 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     userSubscription: Subscription;
     tutorialActiveSubscription: Subscription;
+    currentFilterIds: Set<string> = new Set<string>();
+
+    startAdapterErrorText = 'Could not start adapter';
+    stopAdapterErrorText = 'Could not stop adapter';
 
     constructor(
         private adapterService: AdapterService,
         private dialogService: DialogService,
         private currentUserService: CurrentUserService,
         private router: Router,
-        private restApi: RestApi,
+        private pipelineElementAssetService: PipelineElementAssetService,
         private adapterFilter: AdapterFilterPipe,
         private breadcrumbService: SpBreadcrumbService,
         private adapterMonitoringService: AdapterMonitoringService,
         private shepherdService: ShepherdService,
+        private translate: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -113,29 +118,27 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     startAdapter(adapter: AdapterDescription) {
+        this.operationInProgressAdapterId = adapter.elementId;
         this.adapterService.startAdapter(adapter).subscribe(
             _ => {
                 this.getAdaptersRunning();
             },
             error => {
-                this.openAdapterStatusErrorDialog(
-                    error.error,
-                    'Could not start adapter',
-                );
+                this.operationInProgressAdapterId = undefined;
+                this.openAdapterStatusErrorDialog(adapter, error.error, true);
             },
         );
     }
 
-    stopAdapter(adapter: AdapterDescription) {
-        this.adapterService.stopAdapter(adapter).subscribe(
+    stopAdapter(adapter: AdapterDescription, forceStop = false) {
+        this.operationInProgressAdapterId = adapter.elementId;
+        this.adapterService.stopAdapter(adapter, forceStop).subscribe(
             _ => {
                 this.getAdaptersRunning();
             },
             error => {
-                this.openAdapterStatusErrorDialog(
-                    error.error,
-                    'Could not stop adapter',
-                );
+                this.operationInProgressAdapterId = undefined;
+                this.openAdapterStatusErrorDialog(adapter, error.error, false);
             },
         );
     }
@@ -154,7 +157,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         const dialogRef: DialogRef<AllAdapterActionsComponent> =
             this.dialogService.open(AllAdapterActionsComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: (action ? 'Start' : 'Stop') + ' all adapters',
+                title: action
+                    ? this.translate.instant('Start all adapters')
+                    : this.translate.instant('Stop all adapters'),
                 width: '70vw',
                 data: {
                     adapters: this.existingAdapters,
@@ -169,15 +174,34 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    openAdapterStatusErrorDialog(message: SpLogMessage, title: string) {
-        this.dialogService.open(SpExceptionDetailsDialogComponent, {
-            panelType: PanelType.STANDARD_PANEL,
-            title: 'Adapter Status',
-            width: '70vw',
-            data: {
-                message: message,
-                title: title,
+    openAdapterStatusErrorDialog(
+        adapter: AdapterDescription,
+        message: SpLogMessage,
+        startAction: boolean,
+    ) {
+        const title = startAction
+            ? this.startAdapterErrorText
+            : this.stopAdapterErrorText;
+        const dialogRef = this.dialogService.open(
+            SpExceptionDetailsDialogComponent,
+            {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translate.instant('Adapter status'),
+                width: '70vw',
+                data: {
+                    message: message,
+                    title: title,
+                    additionalButton: !startAction,
+                    additionalButtonText: this.translate.instant(
+                        'Reset adapter state',
+                    ),
+                },
             },
+        );
+        dialogRef.afterClosed().subscribe(forceStop => {
+            if (forceStop) {
+                this.stopAdapter(adapter, true);
+            }
         });
     }
 
@@ -193,7 +217,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     getIconUrl(adapter: AdapterDescription) {
         if (adapter.includedAssets.length > 0) {
-            return this.restApi.getAssetUrl(adapter.appId) + '/icon';
+            return (
+                this.pipelineElementAssetService.getAssetUrl(adapter.appId) +
+                '/icon'
+            );
         }
     }
 
@@ -202,12 +229,14 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             ObjectPermissionDialogComponent,
             {
                 panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Manage permissions',
+                title: this.translate.instant('Manage permissions'),
                 width: '50vw',
                 data: {
                     objectInstanceId: adapter.correspondingDataStreamElementId,
                     headerTitle:
-                        'Manage permissions for adapter ' + adapter.name,
+                        this.translate.instant(
+                            'Manage permissions for adapter ',
+                        ) + adapter.name,
                 },
             },
         );
@@ -231,7 +260,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         const dialogRef: DialogRef<DeleteAdapterDialogComponent> =
             this.dialogService.open(DeleteAdapterDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: 'Delete Adapter',
+                title: this.translate.instant('Delete Adapter'),
                 width: '70vw',
                 data: {
                     adapter: adapter,
@@ -249,7 +278,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.adapterService.getAdapters().subscribe(adapters => {
             this.existingAdapters = adapters;
             this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
-            this.applyAdapterFilters();
+            this.applyAdapterFilters(this.currentFilterIds);
+            this.operationInProgressAdapterId = undefined;
             this.getMonitoringInfos(adapters);
             setTimeout(() => {
                 this.dataSource.sort = this.sort;
@@ -257,7 +287,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    applyAdapterFilters(elementIds: Set<string> = new Set<string>()): void {
+    applyAdapterFilters(elementIds: Set<string>): void {
+        this.currentFilterIds = elementIds;
         this.filteredAdapters = this.adapterFilter
             .transform(this.existingAdapters, this.currentFilter)
             .filter(a => {
@@ -283,7 +314,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     applyFilter(filter: AdapterFilterSettingsModel) {
         this.currentFilter = filter;
         if (this.dataSource) {
-            this.applyAdapterFilters();
+            this.applyAdapterFilters(this.currentFilterIds);
         }
     }
 

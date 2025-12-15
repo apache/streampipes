@@ -16,7 +16,7 @@
  *
  */
 
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function ValidateUrl(control: AbstractControl) {
     if (control.value == null) {
@@ -48,4 +48,47 @@ export function ValidateString(control: AbstractControl) {
         return { validString: true };
     }
     return null;
+}
+
+export function checkForDuplicatesValidator(
+    getExistingNames: () => string[],
+): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        if (!control.value || typeof control.value !== 'string') {
+            return null;
+        }
+        const existingNames = getExistingNames();
+
+        const isDuplicate = existingNames.includes(control.value);
+
+        return isDuplicate ? { forbiddenName: { value: control.value } } : null;
+    };
+}
+
+export function ValidateName(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const value = control.value;
+
+        if (value == null) {
+            return null;
+        }
+
+        const trimmed = value.trim();
+
+        if (trimmed.length === 0) {
+            return { whiteSpaceOnly: { value } };
+        }
+
+        // value starts or ends with whitespace
+        if (/^\s|\s$/.test(value)) {
+            return { leadingOrTrailingWhitespace: { value } };
+        }
+
+        // Matches strings containing only Unicode letters, numbers,
+        // punctuation, symbols, and whitespace (including spaces)
+        const regex = /^[\p{L}\p{N}\p{P}\p{S}\s]+$/u;
+        const valid = regex.test(trimmed);
+
+        return valid ? null : { invalidName: { value } };
+    };
 }

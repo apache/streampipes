@@ -38,7 +38,8 @@ public class GenericAdapterGenerator {
   private final List<String> excludedDrivers = List.of(
       "simulated",
       "c-bus",
-      "plc4x"
+      "plc4x",
+      "s7-light"
   );
 
 

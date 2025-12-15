@@ -21,10 +21,12 @@ export * from './lib/shared-ui.module';
 export * from './lib/dialog/base-dialog/base-dialog.model';
 export * from './lib/dialog/base-dialog/base-dialog.service';
 export * from './lib/dialog/base-dialog/dialog-ref';
+export * from './lib/dialog/data-download-dialog/data-download-dialog.component';
 
 export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
 export * from './lib/dialog/panel-dialog/panel-dialog.component';
 export * from './lib/dialog/standard-dialog/standard-dialog.component';
+export * from './lib/dialog/pipeline-element-help/pipeline-element-help.component';
 
 export * from './lib/components/asset-browser/asset-browser.component';
 export * from './lib/components/basic-header-title/header-title.component';
@@ -32,18 +34,27 @@ export * from './lib/components/basic-inner-panel/basic-inner-panel.component';
 export * from './lib/components/basic-field-description/basic-field-description.component';
 export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
+export * from './lib/components/configuration-box/configuration-box.component';
+export * from './lib/components/date-input/date-input.component';
 export * from './lib/components/split-section/split-section.component';
 export * from './lib/components/sp-exception-message/sp-exception-message.component';
 export * from './lib/components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
 export * from './lib/components/sp-exception-message/exception-details/exception-details.component';
 export * from './lib/components/sp-label/sp-label.component';
 export * from './lib/components/sp-table/sp-table.component';
+export * from './lib/components/sp-table/sp-table-actions.directive';
 export * from './lib/components/warning-box/warning-box.component';
 export * from './lib/components/time-selector/time-selector.model';
 export * from './lib/components/time-selector/time-range-selector.component';
 export * from './lib/components/time-selector/time-selector-menu/time-selector-menu.component';
 export * from './lib/components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
 export * from './lib/components/time-selector/refresh-interval-settings/refresh-interval-settings.component';
+export * from './lib/components/pipeline-element-runtime-info/pipeline-element-runtime-info.component';
+export * from './lib/components/pipeline-element-documentation/pipeline-element-documentation.component';
+export * from './lib/components/pipeline-element/pipeline-element.component';
+export * from './lib/components/input-schema-panel/input-schema-panel.component';
+export * from './lib/components/sidebar-resize/sidebar-resize.component';
+export * from './lib/components/asset-link-configuration/asset-link-configuration.component';
 
 export * from './lib/models/sp-navigation.model';
 
@@ -54,3 +65,6 @@ export * from './lib/services/echarts-toolbox.service';
 export * from './lib/services/colorization.service';
 export * from './lib/services/time-selection.service';
 export * from './lib/components/asset-browser/asset-browser.service';
+export * from './lib/services/date-format.service';
+export * from './lib/services/pipeline-element-schema.service';
+export * from './lib/services/asset-configuration.service';

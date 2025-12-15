@@ -24,6 +24,7 @@ import { PipelineBtns } from './PipelineBtns';
 import { ConnectUtils } from '../connect/ConnectUtils';
 import { PipelineBuilder } from '../../builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../builder/PipelineElementBuilder';
+import { GeneralUtils } from '../GeneralUtils';
 
 export class PipelineUtils {
     public static addPipeline(pipelineInput: PipelineInput) {
@@ -34,6 +35,22 @@ export class PipelineUtils {
         PipelineUtils.configurePipeline(pipelineInput);
 
         PipelineUtils.startPipeline(pipelineInput);
+    }
+
+    public static addPipelineWithAssetLinks(
+        pipelineInput: PipelineInput,
+        assetNameList: String[],
+    ) {
+        PipelineUtils.goToPipelineEditor();
+
+        PipelineUtils.selectDataStream(pipelineInput);
+
+        PipelineUtils.configurePipeline(pipelineInput);
+
+        PipelineUtils.startPipelineWithAssetLinkage(
+            pipelineInput,
+            assetNameList,
+        );
     }
 
     /**
@@ -62,7 +79,8 @@ export class PipelineUtils {
         PipelineUtils.addPipeline(pipelineInput);
     }
 
-    public static editPipeline() {
+    public static editPipeline(pipelineName: string) {
+        GeneralUtils.openMenuForRow(pipelineName);
         cy.dataCy('modify-pipeline-btn').first().click();
     }
 
@@ -144,14 +162,56 @@ export class PipelineUtils {
         PipelineUtils.finalizePipelineStart();
     }
 
+    public static startPipelineWithAssetLinkage(
+        pipelineInput?: PipelineInput,
+        assetNameList?: String[],
+    ) {
+        // Save and start pipeline
+        cy.dataCy('sp-editor-save-pipeline').click();
+        if (pipelineInput) {
+            cy.dataCy('sp-editor-pipeline-name').type(
+                pipelineInput.pipelineName,
+            );
+        }
+        PipelineUtils.finalizePipelineStart(assetNameList);
+    }
+
+    private static addToAsset(assetNameList) {
+        cy.dataCy('sp-show-pipeline-asset-checkbox')
+            .find('input[type="checkbox"]')
+            .then($checkbox => {
+                if (!$checkbox.prop('checked')) {
+                    cy.wrap($checkbox).click();
+                }
+            });
+
+        cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
+        assetNameList.forEach(assetName => {
+            console.log(assetName);
+            cy.get('mat-tree.asset-tree')
+                .find('.mat-tree-node')
+                .contains(assetName)
+                .click();
+        });
+    }
+
     public static clonePipeline(newPipelineName: string) {
         cy.dataCy('pipeline-update-mode-clone').children().click();
         cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
     }
 
-    public static finalizePipelineStart() {
+    public static updatePipeline(newPipelineName: string) {
+        cy.dataCy('pipeline-update-mode-update').children().click();
+        cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
+    }
+
+    public static finalizePipelineStart(assetNameList?: String[]) {
         cy.dataCy('sp-editor-checkbox-navigate-to-overview').children().click();
+        if (assetNameList) {
+            PipelineUtils.addToAsset(assetNameList);
+        }
         cy.dataCy('sp-editor-apply').click();
+
         cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
             'be.visible',
         );
@@ -173,14 +233,30 @@ export class PipelineUtils {
         }
     }
 
-    public static deletePipeline() {
+    public static deletePipeline(pipelineName: string) {
         // Delete pipeline
         PipelineUtils.goToPipelines();
+        GeneralUtils.openMenuForRow(pipelineName);
         PipelineBtns.deletePipeline().should('have.length', 1);
         PipelineBtns.deletePipeline().click({ force: true });
 
         cy.dataCy('sp-pipeline-stop-and-delete').click();
+        cy.wait(2000);
 
         PipelineBtns.deletePipeline().should('have.length', 0);
+    }
+
+    public static verifyPipelineName(expectedName: string) {
+        cy.dataCy('all-pipelines-table', { timeout: 10000 })
+            .first()
+            .within(() => {
+                cy.get('td').eq(2).should('contain', expectedName);
+            });
+    }
+
+    public static verifyPipelineCount(expectedCount: number) {
+        cy.dataCy('all-pipelines-table', { timeout: 10000 })
+            .find('tr')
+            .should('have.length', expectedCount + 1);
     }
 }

@@ -36,7 +36,7 @@ public class TestConfiguredCsvOutputWriter extends TestConfiguredOutputWriter {
   @Test
   public void testCsvOutputWriter() throws IOException {
     var writer = new ConfiguredCsvOutputWriter();
-    writer.configure(new ProvidedRestQueryParams(null, new HashMap<>()), true);
+    writer.configure(null, new ProvidedRestQueryParams(null, new HashMap<>()), true);
 
     try (var outputStream = new ByteArrayOutputStream()) {
       writer.beforeFirstItem(outputStream);

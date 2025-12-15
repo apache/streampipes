@@ -29,6 +29,7 @@ import {
 @Component({
     selector: 'sp-dropped-pipeline-element',
     templateUrl: './dropped-pipeline-element.component.html',
+    standalone: false,
 })
 export class DroppedPipelineElementComponent implements OnInit {
     @Input()

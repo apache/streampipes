@@ -83,7 +83,7 @@ export class ConfigurationService {
 
     updateExtensionsServiceConfigs(
         config: SpServiceConfiguration,
-    ): Observable<Object> {
+    ): Observable<object> {
         return this.http.put(
             this.getServerUrl() +
                 `/api/v2/extensions-services-configurations/${config.serviceGroup}`,
@@ -93,7 +93,7 @@ export class ConfigurationService {
 
     updateMessagingSettings(
         messagingSettings: MessagingSettings,
-    ): Observable<Object> {
+    ): Observable<object> {
         return this.http.post(
             this.getServerUrl() + '/api/v2/messaging',
             messagingSettings,

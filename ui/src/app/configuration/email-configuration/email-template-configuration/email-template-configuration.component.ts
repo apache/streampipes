@@ -16,12 +16,13 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import {
     EmailTemplate,
     MailConfigService,
 } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 import 'codemirror/mode/htmlembedded/htmlembedded';
 
@@ -29,12 +30,14 @@ import 'codemirror/mode/htmlembedded/htmlembedded';
     selector: 'sp-email-template-configuration',
     templateUrl: './email-template-configuration.component.html',
     styleUrls: ['./email-template-configuration.component.scss'],
+    standalone: false,
 })
 export class SpEmailTemplateConfigurationComponent implements OnInit {
     template: EmailTemplate;
     originalTemplate: string;
     templateLoaded = false;
     templateStored = false;
+    private translateService = inject(TranslateService);
 
     editorOptions = {
         mode: 'htmlembedded',
@@ -48,13 +51,27 @@ export class SpEmailTemplateConfigurationComponent implements OnInit {
     };
 
     allowedPlaceholders: { placeholder: string; description: string }[] = [
-        { placeholder: '###LOGO###', description: 'The default logo' },
-        { placeholder: '###BASE_URL###', description: 'The base URL' },
-        { placeholder: '###TITLE###', description: 'Email title' },
-        { placeholder: '###PREHEADER###', description: 'Email preheader' },
+        {
+            placeholder: '###LOGO###',
+            description: this.translateService.instant('The default logo'),
+        },
+        {
+            placeholder: '###BASE_URL###',
+            description: this.translateService.instant('The base URL'),
+        },
+        {
+            placeholder: '###TITLE###',
+            description: this.translateService.instant('Email title'),
+        },
+        {
+            placeholder: '###PREHEADER###',
+            description: this.translateService.instant('Email preheader'),
+        },
         {
             placeholder: '###INNER###',
-            description: 'Email custom inner content (mandatory)',
+            description: this.translateService.instant(
+                'Email custom inner content (mandatory)',
+            ),
         },
     ];
 

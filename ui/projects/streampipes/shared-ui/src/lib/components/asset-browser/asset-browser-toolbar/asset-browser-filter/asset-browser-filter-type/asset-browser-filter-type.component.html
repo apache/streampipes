@@ -19,7 +19,7 @@
 <sp-asset-browser-filter-outer
     [selectedItems]="activeFilters.selectedTypes"
     [allItems]="allAssetTypes"
-    title="Type"
+    [title]="'Type' | translate"
     (selectAllEmitter)="selectAll()"
     (deselectAllEmitter)="selectNone()"
 >

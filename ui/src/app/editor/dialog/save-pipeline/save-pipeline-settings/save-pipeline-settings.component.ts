@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import {
     UntypedFormControl,
@@ -27,15 +34,23 @@ import {
     CompactPipeline,
     Pipeline,
     PipelineService,
+    SpAssetTreeNode,
+    UserInfo,
 } from '@streampipes/platform-services';
 import { PipelineStorageOptions } from '../../../model/editor.model';
+import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
+import { CurrentUserService } from '@streampipes/shared-ui';
+import { UserRole } from '../../../../_enums/user-role.enum';
 
 @Component({
     selector: 'sp-save-pipeline-settings',
     templateUrl: './save-pipeline-settings.component.html',
     styleUrls: ['./save-pipeline-settings.component.scss'],
+    standalone: false,
 })
 export class SavePipelineSettingsComponent implements OnInit {
+    private readonly currentUserService = inject(CurrentUserService);
+
     @Input()
     submitPipelineForm: UntypedFormGroup = new UntypedFormGroup({});
 
@@ -48,20 +63,37 @@ export class SavePipelineSettingsComponent implements OnInit {
     @Input()
     currentPipelineName: string;
 
-    compactPipeline: CompactPipeline;
+    private shepherdService = inject(ShepherdService);
+    private pipelineService = inject(PipelineService);
 
-    constructor(
-        private shepherdService: ShepherdService,
-        private pipelineService: PipelineService,
-    ) {}
+    compactPipeline: CompactPipeline;
+    currentUser: UserInfo;
+    isAssetAdmin = false;
+
+    addToAssets: boolean = false;
+    @Input()
+    selectedAssets: SpAssetTreeNode[];
+    @Input()
+    deselectedAssets: SpAssetTreeNode[];
+    @Input()
+    originalAssets: SpAssetTreeNode[];
+
+    @Output() selectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() deselectedAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
+    @Output() originalAssetsChange = new EventEmitter<SpAssetTreeNode[]>();
 
     ngOnInit() {
+        this.currentUser = this.currentUserService.getCurrentUser();
+        this.isAssetAdmin = this.currentUserService.hasRole(
+            UserRole.ROLE_ASSET_ADMIN,
+        );
         this.submitPipelineForm.addControl(
             'pipelineName',
             new UntypedFormControl(this.pipeline.name, [
                 Validators.required,
                 Validators.minLength(3),
-                Validators.maxLength(40),
+                Validators.maxLength(50),
+                ValidateName(),
             ]),
         );
         this.submitPipelineForm.addControl(
@@ -85,6 +117,24 @@ export class SavePipelineSettingsComponent implements OnInit {
         this.pipelineService
             .convertToCompactPipeline(this.pipeline)
             .subscribe(p => (this.compactPipeline = p));
+        if (this.storageOptions.updateModeActive) {
+            this.addToAssets = true;
+        }
+    }
+
+    onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.selectedAssets = updatedAssets;
+        this.selectedAssetsChange.emit(this.selectedAssets);
+    }
+
+    onDeselectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
+        this.deselectedAssets = updatedAssets;
+        this.deselectedAssetsChange.emit(this.deselectedAssets);
+    }
+
+    onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
+        this.originalAssets = updatedAssets;
+        this.originalAssetsChange.emit(this.originalAssets);
     }
 
     triggerTutorial() {

@@ -22,6 +22,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     selector: 'sp-asset-browser-filter-outer',
     templateUrl: 'asset-browser-filter-outer.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
+    standalone: false,
 })
 export class AssetBrowserFilterOuterComponent {
     @Input()

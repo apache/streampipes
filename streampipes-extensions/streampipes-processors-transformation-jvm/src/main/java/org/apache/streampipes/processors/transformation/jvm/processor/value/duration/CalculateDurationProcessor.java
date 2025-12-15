@@ -18,16 +18,18 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.value.duration;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -35,10 +37,8 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class CalculateDurationProcessor extends StreamPipesDataProcessor {
+public class CalculateDurationProcessor implements IStreamPipesDataProcessor {
 
   public static final String START_TS_FIELD_ID = "start-ts";
   public static final String END_TS_FIELD_ID = "end-ts";
@@ -54,34 +54,35 @@ public class CalculateDurationProcessor extends StreamPipesDataProcessor {
   private String endTs;
   private String unit;
 
-
-  //TODO: Change Icon
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.duration-value", 0)
-        .category(DataProcessorType.TIME)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                Labels.withId(START_TS_FIELD_ID),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                Labels.withId(END_TS_FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(UNIT_FIELD_ID),
-            Options.from(MS, SECONDS, MINUTES, HOURS))
-        .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), DURATION_FIELD_NAME,
-            SO.NUMBER)))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        CalculateDurationProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.duration-value", 0)
+            .category(DataProcessorType.TIME)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                    Labels.withId(START_TS_FIELD_ID),
+                    PropertyScope.NONE)
+                .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                    Labels.withId(END_TS_FIELD_ID),
+                    PropertyScope.NONE)
+                .build())
+            .requiredSingleValueSelection(Labels.withId(UNIT_FIELD_ID),
+                Options.from(MS, SECONDS, MINUTES, HOURS))
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), DURATION_FIELD_NAME,
+                SO.NUMBER)))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                             SpOutputCollector spOutputCollector,
+                             EventProcessorRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
     startTs = extractor.mappingPropertyValue(START_TS_FIELD_ID);
     endTs = extractor.mappingPropertyValue(END_TS_FIELD_ID);
@@ -89,7 +90,7 @@ public class CalculateDurationProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event inputEvent, SpOutputCollector collector) {
     Long start = inputEvent.getFieldBySelector(startTs).getAsPrimitive().getAsLong();
     Long end = inputEvent.getFieldBySelector(endTs).getAsPrimitive().getAsLong();
     Long duration = end - start;
@@ -108,7 +109,6 @@ public class CalculateDurationProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }

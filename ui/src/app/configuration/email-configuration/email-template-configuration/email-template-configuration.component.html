@@ -18,29 +18,30 @@
 
 <div fxFlex="100">
     <sp-split-section
-        title="Mail Template"
-        subtitle="Email Template Configuration"
+        [title]="'Mail Template' | translate"
+        [subtitle]="'Email Template Configuration' | translate"
     >
         <div fxFlex="100" fxLayout="column">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     class="small-button"
                     (click)="restoreTemplate()"
                     style="margin-right: 10px; margin-bottom: 10px"
                 >
-                    Reset changes
+                    {{ 'Reset changes' | translate }}
                 </button>
             </div>
             <div fxLayout="row" fxLayoutAlign="start center">
                 <div class="placeholder-explanation">
                     <div fxLayout="column">
                         <div>
-                            You can set various placeholder variables that will
-                            be replaced with the actual values when sending an
-                            email:
+                            {{
+                                'You can set various placeholder variables that will be replaced with the actual values when sending an email:'
+                                    | translate
+                            }}
                         </div>
                         <div
                             fxLayout="row wrap"
@@ -73,13 +74,14 @@
             <div fxLayout="row" class="mt-10">
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     (click)="saveTemplate()"
                     style="margin-right: 10px"
                     [disabled]="template.template === ''"
                 >
-                    <i class="material-icons">save</i><span>&nbsp;Save</span>
+                    <i class="material-icons">save</i
+                    ><span>&nbsp;{{ 'Save' | translate }}</span>
                 </button>
             </div>
         </div>

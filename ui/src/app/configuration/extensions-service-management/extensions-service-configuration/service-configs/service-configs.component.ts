@@ -22,6 +22,7 @@ import { SpServiceConfiguration } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-service-configs',
     templateUrl: './service-configs.component.html',
+    standalone: false,
 })
 export class ServiceConfigsComponent {
     @Input() serviceConfiguration: SpServiceConfiguration;

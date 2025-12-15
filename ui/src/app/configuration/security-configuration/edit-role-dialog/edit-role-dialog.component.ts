@@ -35,6 +35,7 @@ import { DialogRef } from '@streampipes/shared-ui';
     selector: 'sp-edit-role-dialog',
     templateUrl: './edit-role-dialog.component.html',
     styleUrls: ['./edit-role-dialog.component.scss'],
+    standalone: false,
 })
 export class EditRoleDialogComponent implements OnInit {
     @Input()
@@ -73,14 +74,23 @@ export class EditRoleDialogComponent implements OnInit {
         this.parentForm = this.fb.group({});
         this.parentForm.addControl(
             'label',
-            new FormControl(this.clonedRole.label, Validators.required),
+            new FormControl(
+                {
+                    value: this.clonedRole.label,
+                    disabled: this.clonedRole.defaultRole,
+                },
+                Validators.required,
+            ),
         );
         this.parentForm.addControl(
             'elementId',
-            new FormControl(this.clonedRole.elementId, [
-                Validators.required,
-                Validators.pattern(/^ROLE_[A-Z_]+$/),
-            ]),
+            new FormControl(
+                {
+                    value: this.clonedRole.elementId,
+                    disabled: this.clonedRole.defaultRole,
+                },
+                [Validators.required, Validators.pattern(/^ROLE_[A-Z_]+$/)],
+            ),
         );
     }
 

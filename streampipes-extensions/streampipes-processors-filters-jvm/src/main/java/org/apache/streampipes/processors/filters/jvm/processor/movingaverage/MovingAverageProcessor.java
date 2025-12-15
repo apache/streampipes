@@ -19,11 +19,13 @@
 package org.apache.streampipes.processors.filters.jvm.processor.movingaverage;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.filters.jvm.processor.movingaverage.util.MovingAverageFilter;
@@ -31,6 +33,7 @@ import org.apache.streampipes.processors.filters.jvm.processor.movingaverage.uti
 import org.apache.streampipes.processors.filters.jvm.processor.movingaverage.util.MovingMedianFilter;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -39,12 +42,8 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-;
-
-public class MovingAverageProcessor extends StreamPipesDataProcessor {
+public class MovingAverageProcessor implements IStreamPipesDataProcessor {
 
   private static final String RESULT_FIELD = "filterResult";
   private static final String NUMBER_VALUE = "number";
@@ -53,36 +52,38 @@ public class MovingAverageProcessor extends StreamPipesDataProcessor {
   private static final String MEAN_INTERNAL_NAME = "MEAN";
   private static final String MEDIAN_INTERNAL_NAME = "MEDIAN";
 
-
   private String numberName;
   private MovingFilter filter;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.movingaverage", 0)
-        .category(DataProcessorType.FILTER)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(NUMBER_VALUE),
-                PropertyScope.NONE)
-            .build())
-        .requiredIntegerParameter(Labels.withId(N_VALUE))
-        .requiredSingleValueSelection(Labels.withId(METHOD_KEY),
-            Options.from(new Tuple2<>("mean", MEAN_INTERNAL_NAME),
-                new Tuple2<>("median", MEDIAN_INTERNAL_NAME)))
-        .outputStrategy(
-            OutputStrategies.append(
-                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        MovingAverageProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.filters.jvm.movingaverage", 0)
+            .category(DataProcessorType.FILTER)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                    Labels.withId(NUMBER_VALUE),
+                    PropertyScope.NONE)
+                .build())
+            .requiredIntegerParameter(Labels.withId(N_VALUE))
+            .requiredSingleValueSelection(Labels.withId(METHOD_KEY),
+                Options.from(new Tuple2<>("mean", MEAN_INTERNAL_NAME),
+                    new Tuple2<>("median", MEDIAN_INTERNAL_NAME)))
+            .outputStrategy(
+                OutputStrategies.append(
+                    EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters parameters, SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.numberName = parameters.extractor().mappingPropertyValue(NUMBER_VALUE);
     int n = parameters.extractor().singleValueParameter(N_VALUE, Integer.class);
     String methode = parameters.extractor().selectedSingleValueInternalName(METHOD_KEY, String.class);
@@ -101,7 +102,6 @@ public class MovingAverageProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() throws SpRuntimeException {
   }
 }

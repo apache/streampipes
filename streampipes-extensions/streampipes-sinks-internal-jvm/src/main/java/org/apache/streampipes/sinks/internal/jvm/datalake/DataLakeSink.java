@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.sinks.internal.jvm.datalake;
 
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStore;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -28,6 +30,7 @@ import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
+import org.apache.streampipes.model.datalake.RetentionTimeConfig;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
@@ -46,6 +49,8 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntimeConfig {
 
@@ -71,13 +76,13 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .category(DataSinkType.INTERNAL)
         .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMP_MAPPING_KEY),
-                PropertyScope.NONE
-            )
-            .build())
+                            .create()
+                            .requiredPropertyWithUnaryMapping(
+                                EpRequirements.timestampReq(),
+                                Labels.withId(TIMESTAMP_MAPPING_KEY),
+                                PropertyScope.NONE
+                            )
+                            .build())
         .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
         .requiredSingleValueSelection(
             Labels.withId(SCHEMA_UPDATE_KEY),
@@ -90,27 +95,24 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
 
   @Override
   public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  
     var extractor = parameters.extractor();
     var timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
     var measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
     var dimensions = extractor.selectedMultiValues(DIMENSIONS_KEY, String.class);
     var ignoreDuplicates = extractor.slideToggleValue(IGNORE_DUPLICATES_KEY);
-    var eventSchema = new EventSchema(parameters.getInputSchemaInfos()
-        .get(0)
-        .getEventSchema()
-        .getEventProperties()
-        .stream()
-        .peek(ep -> {
-          if (dimensions.contains(ep.getRuntimeName())) {
-            LOG.info("Using {} as dimension", ep.getRuntimeName());
-            ep.setPropertyScope(PropertyScope.DIMENSION_PROPERTY.name());
-          }
-        })
-        .toList()
+    var eventSchema = this.assignPropertyScopesBasedOnDimensions(
+        parameters.getInputSchemaInfos()
+                  .get(0)
+                  .getEventSchema(),
+        dimensions
     );
 
+    this.ensureMeasurementPropertiesExist(eventSchema);
 
-    var measure = new DataLakeMeasure(measureName, timestampField, eventSchema);
+    var retentionTimeConfig = getRetentionTime(measureName, runtimeContext.getStreamPipesClient());
+
+    var measure = new DataLakeMeasure(measureName, timestampField, eventSchema, retentionTimeConfig);
 
     var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
@@ -121,11 +123,12 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
     }
 
     measure = new DataExplorerDispatcher().getDataExplorerManager()
-        .getMeasurementSanitizer(runtimeContext.getStreamPipesClient(), measure)
-        .sanitizeAndRegister();
+                                          .getMeasurementSanitizer(runtimeContext.getStreamPipesClient(), measure)
+                                          .sanitizeAndRegister();
 
     this.timeSeriesStore = new TimeSeriesStore(
-        new DataExplorerDispatcher().getDataExplorerManager().getTimeseriesStorage(measure, ignoreDuplicates),
+        new DataExplorerDispatcher().getDataExplorerManager()
+                                    .getTimeseriesStorage(measure, ignoreDuplicates),
         measure,
         Environments.getEnvironment(),
         true
@@ -144,11 +147,88 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
   }
 
   @Override
-  public StaticProperty resolveConfiguration(String staticPropertyInternalName,
-                                             IStaticPropertyExtractor extractor) {
+  public StaticProperty resolveConfiguration(
+      String staticPropertyInternalName,
+      IStaticPropertyExtractor extractor
+  ) {
     var staticProperty = extractor.getStaticPropertyByName(DIMENSIONS_KEY, RuntimeResolvableAnyStaticProperty.class);
     var inputFields = extractor.getInputEventProperties(0);
     new DataLakeDimensionProvider().applyOptions(inputFields, staticProperty);
     return staticProperty;
+  }
+
+  private RetentionTimeConfig getRetentionTime(String measureName, IStreamPipesClient client){
+
+    IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher().getDataExplorerManager()
+        .getSchemaManagement();
+
+    var originalMeasure = dataExplorerSchemaManagement.getExistingMeasureByName(measureName);
+
+    RetentionTimeConfig retentionTime = null;
+
+    if (originalMeasure.isPresent()){
+      retentionTime = originalMeasure.get().getRetentionTime();
+    }
+  return retentionTime;
+  }
+
+  /**
+   * Assigns property scopes to event properties based on the provided list of dimension names.
+   *
+   * @param eventSchema The event schema whose properties will be updated.
+   * @param dimensions  The list of property runtime names to be marked as dimensions.
+   * @return A new {@link EventSchema} with updated property scopes.
+   */
+  private EventSchema assignPropertyScopesBasedOnDimensions(EventSchema eventSchema, List<String> dimensions) {
+
+    var eventProperties = eventSchema
+        .getEventProperties()
+        .stream()
+        .peek(ep -> {
+          // Set all properties to DIMENSION_PROPERTY when seleted in dimensions
+          if (dimensions.contains(ep.getRuntimeName())) {
+            LOG.info("Using {} as dimension", ep.getRuntimeName());
+            ep.setPropertyScope(PropertyScope.DIMENSION_PROPERTY.name());
+          }
+        })
+        .peek(ep -> {
+          // Remova all dimensions from DIMENSION_PROPERTY scope if not part of dimensions
+          if (PropertyScope.DIMENSION_PROPERTY.name()
+                .equals(ep.getPropertyScope())) {
+            if (!dimensions.contains(ep.getRuntimeName())) {
+              ep.setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
+            }
+          }
+        })
+        .toList();
+
+    return new EventSchema(eventProperties);
+  }
+
+  /**
+   * Validates that not all properties in the given {@link EventSchema} are marked as dimensions.
+   * If that is the case, influx db is not able to query the data correclty.
+   * This validation is due to the usage of influxdb, if we change the dabtabase in the future, we can remove this
+   * validation.
+   *
+   * @param eventSchema The event schema to validate.
+   * @throws SpRuntimeException if all properties are marked as dimensions.
+   */
+  private void ensureMeasurementPropertiesExist(EventSchema eventSchema) throws SpRuntimeException {
+    int amountOfPropertiesWithoutTimestamp = eventSchema.getEventProperties()
+                                                        .size() - 1;
+    long amountOfDimensionProperties = eventSchema
+        .getEventProperties()
+        .stream()
+        .filter(ep -> PropertyScope.DIMENSION_PROPERTY.name()
+                                                      .equals(ep.getPropertyScope()))
+        .count();
+
+    if (amountOfPropertiesWithoutTimestamp > 0 && amountOfDimensionProperties == amountOfPropertiesWithoutTimestamp) {
+      throw new SpRuntimeException(
+          "Cannot store data: All properties are marked as dimensions. "
+              + "At least one property must be a measurement value. Please edit the pipeline to fix this problem.");
+
+    }
   }
 }

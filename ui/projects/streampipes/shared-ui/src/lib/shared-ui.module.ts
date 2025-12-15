@@ -65,11 +65,41 @@ import { TimeRangeSelectorComponent } from './components/time-selector/time-rang
 import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
 import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
 import { DataExplorerRefreshIntervalSettingsComponent } from './components/time-selector/refresh-interval-settings/refresh-interval-settings.component';
+import { SidebarResizeComponent } from './components/sidebar-resize/sidebar-resize.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import { FormsModule } from '@angular/forms';
 import { MatTreeModule } from '@angular/material/tree';
+import { DataDownloadDialogComponent } from './dialog/data-download-dialog/data-download-dialog.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { SelectDataComponent } from './dialog/data-download-dialog/components/select-data/select-data.component';
+import { SelectFormatComponent } from './dialog/data-download-dialog/components/select-format/select-format.component';
+import { DownloadComponent } from './dialog/data-download-dialog/components/download/download.component';
+import { SelectDataRangeComponent } from './dialog/data-download-dialog/components/select-data/select-data-range/select-data-range.component';
+import { SelectDataMissingValuesComponent } from './dialog/data-download-dialog/components/select-data/select-data-missing-values/select-data-missing-values.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { SpConfigurationBoxComponent } from './components/configuration-box/configuration-box.component';
+import { DateInputComponent } from './components/date-input/date-input.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
+import { TranslateModule } from '@ngx-translate/core';
+import { LivePreviewLoadingComponent } from './components/pipeline-element-runtime-info/live-preview-loading/live-preview-loading.component';
+import { LivePreviewTableComponent } from './components/pipeline-element-runtime-info/live-preview-table/live-preview-table.component';
+import { LivePreviewErrorComponent } from './components/pipeline-element-runtime-info/live-preview-error/live-preview-error.component';
+import { PipelineElementRuntimeInfoComponent } from './components/pipeline-element-runtime-info/pipeline-element-runtime-info.component';
+import { PipelineElementDocumentationComponent } from './components/pipeline-element-documentation/pipeline-element-documentation.component';
+import { MarkdownModule } from 'ngx-markdown';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PipelineElementHelpComponent } from './dialog/pipeline-element-help/pipeline-element-help.component';
+import { PipelineElementComponent } from './components/pipeline-element/pipeline-element.component';
+import { InputSchemaPanelComponent } from './components/input-schema-panel/input-schema-panel.component';
+import { InputSchemaPropertyComponent } from './components/input-schema-panel/input-schema-property/input-schema-property.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { SpTableActionsDirective } from './components/sp-table/sp-table-actions.directive';
+import { AssetLinkConfigurationComponent } from './components/asset-link-configuration/asset-link-configuration.component';
 
 @NgModule({
     declarations: [
@@ -85,6 +115,8 @@ import { MatTreeModule } from '@angular/material/tree';
         AssetBrowserToolbarComponent,
         ConfirmDialogComponent,
         CustomTimeRangeSelectionComponent,
+        DataDownloadDialogComponent,
+        DateInputComponent,
         PanelDialogComponent,
         StandardDialogComponent,
         SpBasicFieldDescriptionComponent,
@@ -102,33 +134,68 @@ import { MatTreeModule } from '@angular/material/tree';
         TimeRangeSelectorComponent,
         TimeRangeSelectorMenuComponent,
         DataExplorerRefreshIntervalSettingsComponent,
+        SelectDataComponent,
+        SelectFormatComponent,
+        DownloadComponent,
+        SpConfigurationBoxComponent,
+        SelectDataRangeComponent,
+        SelectDataMissingValuesComponent,
+        SidebarResizeComponent,
+        LivePreviewLoadingComponent,
+        LivePreviewTableComponent,
+        LivePreviewErrorComponent,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        PipelineElementHelpComponent,
+        PipelineElementComponent,
+        InputSchemaPanelComponent,
+        InputSchemaPropertyComponent,
+        SortByRuntimeNamePipe,
+        SpTableActionsDirective,
+        AssetLinkConfigurationComponent,
     ],
     imports: [
         CommonModule,
         FlexLayoutModule,
         FormsModule,
         MatButtonModule,
+        MatCheckboxModule,
         MatDividerModule,
         MatFormFieldModule,
         MatIconModule,
+        MatInputModule,
         MatMenuModule,
         MatSelectModule,
         MatTabsModule,
         MatTooltipModule,
         MatTreeModule,
         MatDatepickerModule,
+        MatExpansionModule,
         MatCardModule,
         PortalModule,
         OverlayModule,
         MatDialogModule,
+        MatStepperModule,
         MatTableModule,
         MatPaginator,
+        MatRadioModule,
+        MatProgressSpinnerModule,
         MatSort,
+        TranslateModule.forChild({}),
+        DragDropModule,
+        MarkdownModule.forRoot(),
     ],
-    providers: [DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
+    providers: [
+        DefaultMatCalendarRangeStrategy,
+        MatRangeDateSelectionModel,
+        SortByRuntimeNamePipe,
+    ],
     exports: [
         AssetBrowserComponent,
+        AssetLinkConfigurationComponent,
         ConfirmDialogComponent,
+        DataDownloadDialogComponent,
+        DateInputComponent,
         PanelDialogComponent,
         StandardDialogComponent,
         SpBasicFieldDescriptionComponent,
@@ -136,6 +203,7 @@ import { MatTreeModule } from '@angular/material/tree';
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
         SpBasicNavTabsComponent,
+        SpConfigurationBoxComponent,
         SpExceptionDetailsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,
@@ -147,6 +215,13 @@ import { MatTreeModule } from '@angular/material/tree';
         TimeRangeSelectorComponent,
         TimeRangeSelectorMenuComponent,
         DataExplorerRefreshIntervalSettingsComponent,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        PipelineElementHelpComponent,
+        PipelineElementComponent,
+        InputSchemaPanelComponent,
+        SidebarResizeComponent,
+        SpTableActionsDirective,
     ],
 })
 export class SharedUiModule {}

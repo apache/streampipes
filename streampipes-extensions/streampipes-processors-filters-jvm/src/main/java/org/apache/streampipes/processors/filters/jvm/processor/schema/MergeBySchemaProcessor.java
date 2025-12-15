@@ -18,52 +18,59 @@
 package org.apache.streampipes.processors.filters.jvm.processor.schema;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-
-public class MergeBySchemaProcessor extends StreamPipesDataProcessor {
-
+public class MergeBySchemaProcessor implements IStreamPipesDataProcessor {
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.schema", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .withLocales(Locales.EN)
-        .outputStrategy(OutputStrategies.keep())
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        MergeBySchemaProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.filters.jvm.schema", 0)
+            .category(DataProcessorType.TRANSFORM)
+            .withAssets(ExtensionAssetType.DOCUMENTATION)
+            .withLocales(Locales.EN)
+            .outputStrategy(OutputStrategies.keep())
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredProperty(EpRequirements.anyProperty())
+                .build())
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredProperty(EpRequirements.anyProperty())
+                .build())
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    var schema1 = params.getInputStreamParams()
+                                .get(1)
+                                .getSchemaInfo()
+                                .getEventSchema();
+    var schema2 = params.getInputStreamParams()
+                                .get(0)
+                                .getSchemaInfo()
+                                .getEventSchema();
 
-    EventSchema schema1 = processorParams.getInputStreamParams().get(1).getSchemaInfo().getEventSchema();
-    EventSchema schema2 = processorParams.getInputStreamParams().get(0).getSchemaInfo().getEventSchema();
     if (!schema1.equals(schema2)) {
-      throw new SpRuntimeException("Schemas does not match.Cannot merge events");
+      throw new SpRuntimeException("Schemas do not match. Cannot merge events.");
     }
   }
 
@@ -73,7 +80,6 @@ public class MergeBySchemaProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() throws SpRuntimeException {
   }
 }

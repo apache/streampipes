@@ -16,8 +16,10 @@
  *
  */
 
+import { DataTypeString } from './DataTypeString';
+
 export class EventPropertyInput {
     runtimeName: string;
-    runtimeType: 'String' | 'Boolean' | 'Integer' | 'Long' | 'Double' | 'Float';
+    runtimeType: DataTypeString;
     semanticType = '';
 }

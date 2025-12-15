@@ -22,13 +22,13 @@ import {
     AdapterService,
     AssetLink,
     AssetLinkType,
+    ChartService,
     DashboardService,
     DatalakeRestService,
-    DataViewDataExplorerService,
-    GenericStorageService,
-    PipelineService,
-    PipelineElementService,
     FilesService,
+    GenericStorageService,
+    PipelineElementService,
+    PipelineService,
 } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
 
@@ -36,6 +36,7 @@ import { BaseAssetLinksDirective } from '../base-asset-links.directive';
     selector: 'sp-manage-asset-links-dialog-component',
     templateUrl: './manage-asset-links-dialog.component.html',
     styleUrls: ['./manage-asset-links-dialog.component.scss'],
+    standalone: false,
 })
 export class SpManageAssetLinksDialogComponent
     extends BaseAssetLinksDirective
@@ -54,12 +55,13 @@ export class SpManageAssetLinksDialogComponent
     nameFunction = el => el.name;
     filenameFunction = el => el.filename;
     measureNameFunction = el => el.measureName;
+    widgetNameFunction = el => el.baseAppearanceConfig.widgetTitle;
 
     constructor(
         private dialogRef: DialogRef<SpManageAssetLinksDialogComponent>,
         protected genericStorageService: GenericStorageService,
         protected pipelineService: PipelineService,
-        protected dataViewService: DataViewDataExplorerService,
+        protected chartService: ChartService,
         protected dashboardService: DashboardService,
         protected dataLakeService: DatalakeRestService,
         protected pipelineElementService: PipelineElementService,
@@ -69,7 +71,7 @@ export class SpManageAssetLinksDialogComponent
         super(
             genericStorageService,
             pipelineService,
-            dataViewService,
+            chartService,
             dashboardService,
             dataLakeService,
             pipelineElementService,

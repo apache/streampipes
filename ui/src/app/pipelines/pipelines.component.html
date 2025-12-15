@@ -28,38 +28,40 @@
             fxFlex="100"
             fxLayoutAlign="start center"
             fxLayout="row"
+            fxLayoutGap="10px"
             class="pl-10"
         >
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 *ngIf="hasPipelineWritePrivileges"
                 (click)="navigateToPipelineEditor()"
                 data-cy="pipelines-navigate-to-editor"
             >
-                <i class="material-icons">add</i>&nbsp;New pipeline
+                <i class="material-icons">add</i>&nbsp;{{
+                    'New Pipeline' | translate
+                }}
             </button>
             <button
-                class="mr-10"
-                mat-button
-                color="accent"
+                mat-flat-button
+                class="mat-basic"
                 (click)="startAllPipelines(true)"
                 [disabled]="checkCurrentSelectionStatus(false)"
                 *ngIf="hasPipelineWritePrivileges"
             >
                 <mat-icon>play_arrow</mat-icon>
-                <span>Start all pipelines</span>
+                <span>{{ 'Start All Pipelines' | translate }}</span>
             </button>
             <button
-                mat-button
-                color="accent"
+                mat-flat-button
+                class="mat-basic"
                 (click)="startAllPipelines(false)"
                 [disabled]="checkCurrentSelectionStatus(true)"
                 *ngIf="hasPipelineWritePrivileges"
             >
                 <mat-icon>stop</mat-icon>
-                <span>Stop all pipelines</span>
+                <span>{{ 'Stop all pipelines' | translate }}</span>
             </button>
             <span fxFlex></span>
             <button
@@ -87,7 +89,7 @@
                     title="Pipelines"
                 ></sp-basic-header-title-component>
                 <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-                    <div fxFlex="90">
+                    <div fxFlex="100">
                         <sp-pipeline-overview
                             [pipelines]="filteredPipelines"
                             (refreshPipelinesEmitter)="getPipelines()"
@@ -104,7 +106,7 @@
                         fxLayout="row"
                         fxLayoutAlign="center start"
                     >
-                        <div fxFlex="90">
+                        <div fxFlex="100">
                             <sp-functions-overview
                                 [functions]="functions"
                                 *ngIf="functionsReady"

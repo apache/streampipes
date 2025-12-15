@@ -37,6 +37,7 @@
                         [assetBrowserData]="assetBrowserData"
                         [assetSelectionMode]="assetSelectionMode"
                         [resourceCount]="resourceCount"
+                        [hideAssetChildren]="hideAssetChildren"
                         [filteredAssetLinkType]="filteredAssetLinkType"
                         (selectedAssetEmitter)="applyAssetFilter($event)"
                         class="asset-hierarchy"
@@ -50,17 +51,17 @@
                         fxLayout="column"
                         fxFlex="100"
                     >
-                        <span class="asset-creation-hint"
-                            >No assets found - use assets to better organize
-                            resources!</span
-                        >
+                        <span class="asset-creation-hint">{{
+                            'No assets found - use assets to better organize resources!'
+                                | translate
+                        }}</span>
                         <button
                             mat-button
                             color="accent"
                             class="mt-10"
                             (click)="navigateToAssetManagement()"
                         >
-                            Manage assets
+                            {{ 'Manage assets' | translate }}
                         </button>
                     </div>
                 }
@@ -70,7 +71,7 @@
                         class="asset-hierarchy asset-browser-text"
                         fxLayoutAlign="center center"
                     >
-                        Asset Browser
+                        {{ 'Asset Browser' | translate }}
                     </div>
                 }
             </sp-basic-view>

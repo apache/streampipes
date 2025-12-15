@@ -24,29 +24,37 @@ import {
     Output,
     SimpleChanges,
     ViewChild,
+    inject,
 } from '@angular/core';
 import { AssetBrowserData } from '../asset-browser.model';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SpAsset } from '@streampipes/platform-services';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-browser-hierarchy',
     templateUrl: 'asset-browser-hierarchy.component.html',
     styleUrls: ['./asset-browser-hierarchy.component.scss'],
+    standalone: false,
 })
 export class AssetBrowserHierarchyComponent implements OnChanges {
+    translateService = inject(TranslateService);
+
     @Input()
     assetBrowserData: AssetBrowserData;
 
     @Input()
-    allResourcesAlias = 'Resources';
+    allResourcesAlias = this.translateService.instant('Resources');
 
     @Input()
     assetSelectionMode = false;
 
     @Input()
     filteredAssetLinkType: string;
+
+    @Input()
+    hideAssetChildren = false;
 
     @Input()
     resourceCount = 0;
@@ -91,11 +99,27 @@ export class AssetBrowserHierarchyComponent implements OnChanges {
     makeRootNode(): SpAsset {
         return {
             assetId: '_root',
-            assetName: `All ${this.allResourcesAlias}`,
+            assetName: this.translateService.instant(
+                'All {{allResourcesAlias}}',
+                { allResourcesAlias: this.allResourcesAlias },
+            ),
             assetDescription: '',
             assetLinks: [],
-            assets: this.assetBrowserData.assets,
+            assets: this.makeAssets(),
             assetType: undefined,
         };
+    }
+
+    private cloneWithoutChildren(assets: SpAsset[]): SpAsset[] {
+        return assets.map(a => ({
+            ...a,
+            assets: [],
+        }));
+    }
+
+    makeAssets(): SpAsset[] {
+        return this.hideAssetChildren
+            ? this.cloneWithoutChildren(this.assetBrowserData.assets)
+            : this.assetBrowserData.assets;
     }
 }

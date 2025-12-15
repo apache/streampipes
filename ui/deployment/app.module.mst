@@ -20,10 +20,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient, withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
@@ -36,10 +38,6 @@ import { NotificationCountService } from './services/notification-count-service'
 import { AuthService } from './services/auth.service';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
-
-{{#modulesActive}}
-import { {{{moduleName}}} } from '{{{path}}}';
-{{/modulesActive}}
 
 import { NotificationModule } from './notifications/notifications.module';
 
@@ -56,6 +54,7 @@ import { ValueDistributionTransform } from './core-ui/echarts-transform/value-di
 import { HistogramTransform } from './core-ui/echarts-transform/histogram.transform';
 import { RoundValuesTransform} from './core-ui/echarts-transform/round-values.transform';
 import { MapTransform } from './core-ui/echarts-transform/map.transform';
+import { MarkdownModule } from 'ngx-markdown';
 
 import * as echarts from 'echarts';
 import * as transform from 'echarts-simple-transform';
@@ -68,6 +67,11 @@ echarts.registerTransform(MapTransform);
 
 
 import * as $ from 'jquery';
+
+
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
     declarations: [
@@ -91,6 +95,14 @@ import * as $ from 'jquery';
         PipelineDetailsModule,
         ServicesModule,
         ProfileModule,
+        MarkdownModule.forRoot(),
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+            }),
         NgxEchartsModule.forRoot({
             echarts: () => import('echarts'),
         }),
@@ -99,7 +111,7 @@ import * as $ from 'jquery';
         AuthService,
         AvailableRolesService,
         NotificationCountService,
-        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' }},
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' }},
         { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorProvider, multi: true },
         { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
     ],

@@ -18,17 +18,17 @@
 <div *ngIf="!showFileSelecion">
     <button mat-button mat-flat-button (click)="add()">
         <mat-icon class="icon">add</mat-icon>
-        <span>Add</span>
+        <span>{{ 'Add' | translate }}</span>
     </button>
     <button mat-button mat-flat-button (click)="selectFileSelection()">
         <mat-icon class="icon">add</mat-icon>
-        <span>Import from file</span>
+        <span>{{ 'Import from file' | translate }}</span>
     </button>
 </div>
 <div *ngIf="showFileSelecion">
     <button mat-button mat-flat-button (click)="closeFileSelection()">
         <mat-icon class="icon">arrow_back</mat-icon>
-        <span>Back</span>
+        <span>{{ 'Back' | translate }}</span>
     </button>
     <div fxFlex="100" style="margin: 5px; width: 100%">
         <mat-form-field
@@ -37,7 +37,7 @@
             color="accent"
             *ngIf="!hasError"
         >
-            <input matInput placeholder="File" disabled />
+            <input matInput [placeholder]="'File' | translate" disabled />
             <input
                 #fileInput
                 type="file"

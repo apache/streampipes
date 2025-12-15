@@ -38,6 +38,7 @@ import { StaticTreeInputServiceService } from '../static-tree-input-service.serv
         './static-tree-input-browse-nodes.component.scss',
         '../static-runtime-resolvable-tree-input.component.scss',
     ],
+    standalone: false,
 })
 export class StaticTreeInputBrowseNodesComponent implements OnInit {
     @Input()
@@ -58,7 +59,7 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
     tree: MatTree<TreeInputNode>;
 
     largeView = false;
-    treeControl = new NestedTreeControl<TreeInputNode>(node => node.children);
+    childrenAccessor = node => node.children;
     dataSource = new MatTreeNestedDataSource<TreeInputNode>();
 
     selectedNodeId: string;
@@ -70,21 +71,17 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.treeControl = new NestedTreeControl<TreeInputNode>(
-            node => node.children,
-        );
-
         this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();
+        this.dataSource.data = [];
     }
 
     updateNodes(nodes: TreeInputNode[]) {
-        this.dataSource.data = nodes;
+        this.dataSource.data = nodes || [];
     }
 
     refreshTree() {
         const data = this.dataSource.data.slice();
-        this.dataSource.data = null;
-        this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();
+        this.dataSource.data = [];
         this.dataSource.data = [...data];
     }
 

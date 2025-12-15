@@ -19,7 +19,8 @@
 import { StaticProperty } from '@streampipes/platform-services';
 import { AbstractStaticPropertyRenderer } from './abstract-static-property';
 import { UntypedFormControl, ValidatorFn } from '@angular/forms';
-import { Directive, OnDestroy } from '@angular/core';
+import { Directive, OnDestroy, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Directive()
 export abstract class AbstractValidatedStaticPropertyRenderer<
@@ -28,7 +29,8 @@ export abstract class AbstractValidatedStaticPropertyRenderer<
     extends AbstractStaticPropertyRenderer<T>
     implements OnDestroy
 {
-    errorMessage = 'Please enter a value';
+    translateService = inject(TranslateService);
+    errorMessage = this.translateService.instant('Please enter a value');
     fieldValid: boolean;
 
     constructor() {

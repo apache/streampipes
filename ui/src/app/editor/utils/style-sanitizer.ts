@@ -19,7 +19,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
-@Pipe({ name: 'safeCss' })
+@Pipe({
+    name: 'safeCss',
+    standalone: false,
+})
 export class SafeCss implements PipeTransform {
     constructor(private domSanitizer: DomSanitizer) {}
 

@@ -19,23 +19,24 @@
 package org.apache.streampipes.processors.filters.jvm.processor.sdt;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class SwingingDoorTrendingFilterProcessor extends StreamPipesDataProcessor {
+public class SwingingDoorTrendingFilterProcessor implements IStreamPipesDataProcessor {
 
   public static final String SDT_TIMESTAMP_FIELD_KEY = "sdt-timestamp-field";
   public static final String SDT_VALUE_FIELD_KEY = "sdt-value-field";
@@ -53,28 +54,31 @@ public class SwingingDoorTrendingFilterProcessor extends StreamPipesDataProcesso
   private SwingingDoorTrendingFilter sdtFilter;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.sdt", 0)
-        .category(DataProcessorType.FILTER)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                Labels.withId(SDT_TIMESTAMP_FIELD_KEY), PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(SDT_VALUE_FIELD_KEY), PropertyScope.NONE)
-            .build())
-        .requiredFloatParameter(Labels.withId(SDT_COMPRESSION_DEVIATION_KEY))
-        .requiredLongParameter(Labels.withId(SDT_COMPRESSION_MIN_INTERVAL_KEY), 0L)
-        .requiredLongParameter(Labels.withId(SDT_COMPRESSION_MAX_INTERVAL_KEY), Long.MAX_VALUE)
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        SwingingDoorTrendingFilterProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.filters.jvm.sdt", 0)
+            .category(DataProcessorType.FILTER)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                    Labels.withId(SDT_TIMESTAMP_FIELD_KEY), PropertyScope.NONE)
+                .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                    Labels.withId(SDT_VALUE_FIELD_KEY), PropertyScope.NONE)
+                .build())
+            .requiredFloatParameter(Labels.withId(SDT_COMPRESSION_DEVIATION_KEY))
+            .requiredLongParameter(Labels.withId(SDT_COMPRESSION_MIN_INTERVAL_KEY), 0L)
+            .requiredLongParameter(Labels.withId(SDT_COMPRESSION_MAX_INTERVAL_KEY), Long.MAX_VALUE)
+            .outputStrategy(OutputStrategies.keep())
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters parameters, SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     // extract field names on stream
     sdtTimestampField = parameters.extractor().mappingPropertyValue(SDT_TIMESTAMP_FIELD_KEY);
     sdtValueField = parameters.extractor().mappingPropertyValue(SDT_VALUE_FIELD_KEY);
@@ -128,7 +132,6 @@ public class SwingingDoorTrendingFilterProcessor extends StreamPipesDataProcesso
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-    // nothing to do
+  public void onPipelineStopped() {
   }
 }

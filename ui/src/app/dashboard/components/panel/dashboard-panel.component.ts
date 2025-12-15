@@ -16,210 +16,308 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Observable, of, Subscription, timer } from 'rxjs';
+import { DashboardGridViewComponent } from '../../../dashboard-shared/components/chart-view/grid-view/dashboard-grid-view.component';
 import {
     ClientDashboardItem,
     Dashboard,
+    DashboardLiveSettings,
     DashboardService,
-    DashboardWidgetModel,
+    DataExplorerWidgetModel,
     DataLakeMeasure,
-    DatalakeRestService,
+    TimeSelectionConstants,
+    TimeSettings,
 } from '@streampipes/platform-services';
-import { forkJoin, Observable, of, Subscription } from 'rxjs';
-import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
-import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import {
-    ConfirmDialogComponent,
-    CurrentUserService,
-    DialogService,
-    PanelType,
-    SpBreadcrumbService,
-} from '@streampipes/shared-ui';
+import { AuthService } from '../../../services/auth.service';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import {
     ActivatedRoute,
     ActivatedRouteSnapshot,
     RouterStateSnapshot,
 } from '@angular/router';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { AuthService } from '../../../services/auth.service';
-import { SpDashboardRoutes } from '../../dashboard.routes';
-import { map } from 'rxjs/operators';
+import { DashboardSlideViewComponent } from '../../../dashboard-shared/components/chart-view/slide-view/dashboard-slide-view.component';
+import {
+    ConfirmDialogComponent,
+    CurrentUserService,
+    SpBreadcrumbService,
+    TimeSelectionService,
+} from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { SpDashboardRoutes } from '../../dashboard.routes';
+import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
+import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
+import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
+import { TranslateService } from '@ngx-translate/core';
+import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
+import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
 
 @Component({
     selector: 'sp-dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
     styleUrls: ['./dashboard-panel.component.scss'],
+    standalone: false,
 })
-export class DashboardPanelComponent implements OnInit {
+export class DashboardPanelComponent
+    implements OnInit, OnDestroy, SupportsUnsavedChangeDialog
+{
+    dashboardLoaded = false;
+    originalDashboard: Dashboard;
     dashboard: Dashboard;
-    editMode: boolean;
-    @Output() editModeChange: EventEmitter<boolean> = new EventEmitter();
+    widgets: DataExplorerWidgetModel[] = [];
+    dashboardNotFound = false;
 
-    public items: ClientDashboardItem[];
+    /**
+     * This is the date range (start, end) to view the data and is set in data-explorer.ts
+     */
+    timeSettings: TimeSettings;
+    viewMode = 'grid';
 
-    protected subscription: Subscription;
+    editMode = false;
+    timeRangeVisible = true;
 
-    widgetIdsToRemove: string[] = [];
-    widgetsToUpdate: Map<string, DashboardWidgetModel> = new Map<
-        string,
-        DashboardWidgetModel
-    >();
-    allMeasurements: DataLakeMeasure[];
+    _dashboardGrid: DashboardGridViewComponent;
+    _dashboardSlide: DashboardSlideViewComponent;
 
-    headerVisible = true;
+    hasDataExplorerWritePrivileges = false;
 
-    constructor(
-        private dashboardService: DashboardService,
-        private datalakeRestService: DatalakeRestService,
-        private dialogService: DialogService,
-        private dialog: MatDialog,
-        private refreshDashboardService: RefreshDashboardService,
-        private route: ActivatedRoute,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private breadcrumbService: SpBreadcrumbService,
-    ) {}
+    public items: Dashboard[];
+
+    dataLakeMeasure: DataLakeMeasure;
+    authSubscription: Subscription;
+    refreshSubscription: Subscription;
+
+    private detectChangesService = inject(DataExplorerDetectChangesService);
+    private dialog = inject(MatDialog);
+    private timeSelectionService = inject(TimeSelectionService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
+    private dashboardService = inject(DashboardService);
+    private route = inject(ActivatedRoute);
+    private routingService = inject(DataExplorerRoutingService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private translateService = inject(TranslateService);
+    private dataExplorerDashboardService = inject(DataExplorerDashboardService);
+    private dataExplorerSharedService = inject(DataExplorerSharedService);
+
+    observableGenerator =
+        this.dataExplorerSharedService.defaultObservableGenerator();
 
     public ngOnInit() {
         const params = this.route.snapshot.params;
         const queryParams = this.route.snapshot.queryParams;
 
-        this.currentUserService.user$.subscribe(user => {
-            const hasDashboardWritePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
+        const startTime = params.startTime;
+        const endTime = params.endTime;
+
+        this.getDashboard(params.id, startTime, endTime);
+
+        this.authSubscription = this.currentUserService.user$.subscribe(_ => {
+            this.hasDataExplorerWritePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
             );
-            if (queryParams.action === 'edit' && hasDashboardWritePrivileges) {
+            if (queryParams.editMode && this.hasDataExplorerWritePrivileges) {
                 this.editMode = true;
             }
         });
-
-        this.getDashboard(params.id);
-        this.getAllMeasurements();
     }
 
-    getDashboard(dashboardId: string): void {
-        this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
-            if (dashboard) {
-                this.dashboard = dashboard;
+    ngOnDestroy() {
+        this.authSubscription?.unsubscribe();
+        this.refreshSubscription?.unsubscribe();
+    }
+
+    addChartToDashboard(dataViewElementId: string) {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const dashboardItem = {} as ClientDashboardItem;
+        dashboardItem.id = dataViewElementId;
+        dashboardItem.cols = 3;
+        dashboardItem.rows = 4;
+        dashboardItem.x = 0;
+        dashboardItem.y = 0;
+        dashboardItem.widgetId =
+            this.dataExplorerDashboardService.makeUniqueWidgetId();
+        this.dashboard.widgets.push(dashboardItem);
+        setTimeout(() => {
+            if (this.viewMode === 'grid') {
+                this.dashboardGrid.loadWidgetConfig(dataViewElementId, true);
+            } else {
+                this.dashboardSlide.loadWidgetConfig(dataViewElementId, true);
+            }
+        });
+    }
+
+    setShouldShowConfirm(): boolean {
+        const originalTimeSettings = this.originalDashboard
+            .dashboardTimeSettings as TimeSettings;
+        const currentTimeSettings = this.dashboard
+            .dashboardTimeSettings as TimeSettings;
+        return this.detectChangesService.shouldShowConfirm(
+            this.originalDashboard,
+            this.dashboard,
+            originalTimeSettings,
+            currentTimeSettings,
+            model => {
+                model.dashboardTimeSettings = undefined;
+            },
+        );
+    }
+
+    persistDashboardChanges() {
+        this.dashboard.dashboardGeneralSettings.defaultViewMode = this.viewMode;
+        this.dashboard.metadata ??= {
+            createdAtEpochMs: undefined,
+            lastModifiedEpochMs: undefined,
+        };
+        this.dashboard.metadata.lastModifiedEpochMs = Date.now();
+        this.dashboardService
+            .updateDashboard(this.dashboard)
+            .subscribe(result => {
+                this.routingService.navigateToDashboardOverview(true);
+            });
+    }
+
+    startEditMode(widgetModel: DataExplorerWidgetModel) {
+        this.routingService.navigateToDataView(
+            true,
+            widgetModel.elementId,
+            true,
+        );
+    }
+
+    removeChartFromDashboard(widgetIndex: number) {
+        this.dashboard.widgets.splice(widgetIndex, 1);
+        this.widgets.splice(widgetIndex, 1);
+    }
+
+    updateDateRange(timeSettings: TimeSettings) {
+        let ts = undefined;
+        if (this.dashboard.dashboardGeneralSettings.globalTimeEnabled) {
+            this.timeSettings = timeSettings;
+            this.dashboard.dashboardTimeSettings = timeSettings;
+            ts = timeSettings;
+        }
+        this.timeSelectionService.notify(ts);
+    }
+
+    discardChanges() {
+        this.routingService.navigateToDataViewOverview(true);
+    }
+
+    triggerEditMode() {
+        this.editMode = true;
+    }
+
+    deleteDashboard() {
+        this.dashboardService.deleteDashboard(this.dashboard).subscribe(_ => {
+            this.goBackToOverview();
+        });
+    }
+
+    getDashboard(dashboardId: string, startTime: number, endTime: number) {
+        this.dashboardService
+            .getCompositeDashboard(dashboardId)
+            .pipe(
+                catchError(() => {
+                    this.dashboardNotFound = true;
+                    return of(null);
+                }),
+            )
+            .subscribe(resp => {
+                if (!resp) {
+                    return;
+                }
+                if (resp.ok) {
+                    const compositeDashboard = resp.body;
+                    compositeDashboard.dashboard.widgets.forEach(w => {
+                        w.widgetId ??=
+                            this.dataExplorerDashboardService.makeUniqueWidgetId();
+                    });
+                    this.dashboard = compositeDashboard.dashboard;
+                    this.widgets = compositeDashboard.widgets;
+                    this.originalDashboard = JSON.parse(
+                        JSON.stringify(compositeDashboard.dashboard),
+                    );
+                }
                 this.breadcrumbService.updateBreadcrumb(
                     this.breadcrumbService.makeRoute(
                         [SpDashboardRoutes.BASE],
                         this.dashboard.name,
                     ),
                 );
-            }
-        });
-    }
-
-    getAllMeasurements(): void {
-        this.datalakeRestService
-            .getAllMeasurementSeries()
-            .subscribe(res => (this.allMeasurements = res));
-    }
-
-    addWidget(): void {
-        const dialogRef = this.dialogService.open(
-            AddVisualizationDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Add widget',
-                width: '50vw',
-            },
-        );
-
-        dialogRef.afterClosed().subscribe(widget => {
-            if (widget) {
-                this.addWidgetToDashboard(widget);
-            }
-        });
-    }
-
-    addWidgetToDashboard(widget: DashboardWidgetModel) {
-        const dashboardItem = {} as ClientDashboardItem;
-        dashboardItem.widgetId = widget.elementId;
-        dashboardItem.id = widget.elementId;
-        // TODO there should be a widget type DashboardWidget
-        dashboardItem.widgetType = widget.dashboardWidgetSettings.widgetName;
-        dashboardItem.cols = 4;
-        dashboardItem.rows = 4;
-        dashboardItem.x = 0;
-        dashboardItem.y = 0;
-        this.dashboard.widgets.push(dashboardItem);
-    }
-
-    updateDashboardAndCloseEditMode() {
-        this.dashboardService
-            .updateDashboard(this.dashboard)
-            .subscribe(result => {
-                if (this.widgetsToUpdate.size > 0) {
-                    forkJoin(this.prepareWidgetUpdates()).subscribe(() => {
-                        this.closeEditModeAndReloadDashboard();
-                    });
-                } else {
-                    this.deleteWidgets();
-                    this.closeEditModeAndReloadDashboard();
+                this.viewMode =
+                    this.dashboard.dashboardGeneralSettings.defaultViewMode ||
+                    'grid';
+                if (
+                    this.dashboard.dashboardGeneralSettings
+                        .globalTimeEnabled === undefined
+                ) {
+                    this.dashboard.dashboardGeneralSettings.globalTimeEnabled =
+                        true;
                 }
+                if (!this.dashboard.dashboardTimeSettings.startTime) {
+                    this.dashboard.dashboardTimeSettings =
+                        this.timeSelectionService.getDefaultTimeSettings();
+                } else {
+                    this.timeSelectionService.updateTimeSettings(
+                        this.timeSelectionService.defaultQuickTimeSelections,
+                        this.dashboard.dashboardTimeSettings,
+                        new Date(),
+                    );
+                }
+                this.timeSettings =
+                    startTime && endTime
+                        ? this.overrideTime(+startTime, +endTime)
+                        : this.dashboard.dashboardTimeSettings;
+                this.dashboardLoaded = true;
+                this.modifyRefreshInterval(
+                    this.dashboard.dashboardLiveSettings,
+                );
             });
     }
 
-    closeEditModeAndReloadDashboard() {
-        this.editMode = !this.editMode;
-        this.getDashboard(this.dashboard.elementId);
+    overrideTime(startTime: number, endTime: number): TimeSettings {
+        return {
+            startTime,
+            endTime,
+            dynamicSelection: -1,
+            timeSelectionId: TimeSelectionConstants.CUSTOM,
+        };
     }
 
-    prepareWidgetUpdates(): Observable<any>[] {
-        const promises: Observable<any>[] = [];
-        this.widgetsToUpdate.forEach((widget, key) => {
-            promises.push(this.dashboardService.updateWidget(widget));
-        });
-
-        return promises;
+    goBackToOverview() {
+        this.routingService.navigateToDataViewOverview();
     }
 
-    discardChanges() {
-        this.editModeChange.emit(!this.editMode);
-        this.refreshDashboardService.notify(this.dashboard.elementId);
-    }
-
-    removeAndQueueItemForDeletion(widget: ClientDashboardItem) {
-        this.dashboard.widgets.splice(
-            this.dashboard.widgets.indexOf(widget),
-            1,
-        );
-        this.widgetIdsToRemove.push(widget.id);
-    }
-
-    updateAndQueueItemForDeletion(dashboardWidget: DashboardWidgetModel) {
-        this.widgetsToUpdate.set(dashboardWidget.elementId, dashboardWidget);
-    }
-
-    deleteWidgets() {
-        this.widgetIdsToRemove.forEach(widgetId => {
-            this.dashboardService.deleteWidget(widgetId).subscribe();
-        });
-    }
-
-    confirmLeaveDashboard(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
+    confirmLeaveDialog(
+        _route: ActivatedRouteSnapshot,
+        _state: RouterStateSnapshot,
     ): Observable<boolean> {
-        if (this.editMode) {
+        if (this.editMode && this.setShouldShowConfirm()) {
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
                 width: '500px',
                 data: {
-                    title: 'Save changes?',
-                    subtitle:
-                        'Update all changes to dashboard widgets or discard current changes.',
-                    cancelTitle: 'Discard changes',
-                    okTitle: 'Update',
+                    title: this.translateService.instant('Save changes?'),
+                    subtitle: this.translateService.instant(
+                        'Update all changes to dashboard charts or discard current changes.',
+                    ),
+                    cancelTitle:
+                        this.translateService.instant('Discard changes'),
+                    okTitle: this.translateService.instant('Update'),
                     confirmAndCancel: true,
                 },
             });
             return dialogRef.afterClosed().pipe(
                 map(shouldUpdate => {
                     if (shouldUpdate) {
-                        this.updateDashboardAndCloseEditMode();
+                        this.dashboard.dashboardGeneralSettings.defaultViewMode =
+                            this.viewMode;
+                        this.dashboardService
+                            .updateDashboard(this.dashboard)
+                            .subscribe(result => {
+                                return true;
+                            });
                     }
                     return true;
                 }),
@@ -227,5 +325,55 @@ export class DashboardPanelComponent implements OnInit {
         } else {
             return of(true);
         }
+    }
+
+    modifyRefreshInterval(liveSettings: DashboardLiveSettings): void {
+        this.dashboard.dashboardLiveSettings = liveSettings;
+        this.refreshSubscription?.unsubscribe();
+        if (this.dashboard.dashboardLiveSettings.refreshModeActive) {
+            this.createQuerySubscription();
+        }
+    }
+
+    createQuerySubscription() {
+        this.refreshSubscription = timer(
+            0,
+            this.dashboard.dashboardLiveSettings.refreshIntervalInSeconds *
+                1000,
+        )
+            .pipe(
+                switchMap(() => {
+                    this.timeSelectionService.updateTimeSettings(
+                        this.timeSelectionService.defaultQuickTimeSelections,
+                        this.timeSettings,
+                        new Date(),
+                    );
+                    this.updateDateRange(this.timeSettings);
+                    return of(null);
+                }),
+            )
+            .subscribe();
+    }
+
+    @ViewChild('dashboardGrid', { static: false })
+    set dashboardGrid(v: DashboardGridViewComponent) {
+        if (v) {
+            this._dashboardGrid = v;
+        }
+    }
+
+    get dashboardGrid(): DashboardGridViewComponent {
+        return this._dashboardGrid;
+    }
+
+    @ViewChild('dashboardSlide', { static: false })
+    set dashboardSlide(v: DashboardSlideViewComponent) {
+        if (v) {
+            this._dashboardSlide = v;
+        }
+    }
+
+    get dashboardSlide(): DashboardSlideViewComponent {
+        return this._dashboardSlide;
     }
 }

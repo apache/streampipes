@@ -16,8 +16,6 @@
  *
  */
 
-@import '../../../../../../../src/scss/sp/colors';
-
 app-dialog-container {
     width: 100%;
     background-color: var(--color-bg-dialog);
@@ -37,7 +35,7 @@ app-dialog-container {
     height: 50px;
     min-height: 50px;
     width: 100%;
-    background: var(--color-primary);
+    background: var(--color-secondary);
     align-items: center;
 }
 
