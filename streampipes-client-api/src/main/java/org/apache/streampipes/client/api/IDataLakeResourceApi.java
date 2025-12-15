@@ -26,7 +26,7 @@ public interface IDataLakeResourceApi {
   
   void delete(String measurementID, Long startDate, Long endDate);
 
-  void update(String measurementID, String queryResult, boolean ignoreSchemaMismatch);
+  void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch);
 
   SpQueryResult get(String measurementID, Map<String, String> queryParams);
 
