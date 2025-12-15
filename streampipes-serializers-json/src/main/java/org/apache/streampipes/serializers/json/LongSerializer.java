@@ -16,18 +16,20 @@
  *
  */
 
-package org.apache.streampipes.client.api;
+package org.apache.streampipes.serializers.json;
 
-import org.apache.streampipes.model.datalake.SpQueryResult;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 
-import java.util.Map;
+import java.io.IOException;
 
-public interface IDataLakeResourceApi {
-  
-  void delete(String measurementID, Long startDate, Long endDate);
-
-  void update(String measurementID, String queryResult, boolean ignoreSchemaMismatch);
-
-  SpQueryResult get(String measurementID, Map<String, String> queryParams);
-
+public class LongSerializer extends JsonSerializer<Long> {
+    @Override
+    public void serialize(Long value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        gen.writeStartArray();
+        gen.writeString("java.lang.Long");  
+        gen.writeNumber(value);       
+        gen.writeEndArray();
+    }
 }

@@ -20,8 +20,6 @@ package org.apache.streampipes.client.serializer;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,20 +30,23 @@ import java.util.TreeMap;
 
 
 public class SpQuerySerializer {
-     public static SpQueryResult processJsonDataWithTags(String jsonData, TreeMap<String, String> tags) throws IOException {
+     public static SpQueryResult processEventDataWithTags(List<? extends Map<String,?>> events, TreeMap<String, String> tags) throws IOException {
 
         if (tags == null) {
             tags = new TreeMap<>();
         }
 
-       
-        List<Map<String, Object>> events = parse(jsonData);
 
-        List<String> headers = new ArrayList<>(events.get(0).keySet());
-        List<List<Object>> rows = new ArrayList<>();
-        for (Map<String, Object> event : events) {
-            rows.add(new ArrayList<>(event.values()));
-        }
+    List<String> headers = new ArrayList<>(events.get(0).keySet());
+List<List<Object>> rows = new ArrayList<>();
+
+for (Map<String, ?> event : events) {
+    List<Object> row = new ArrayList<>();
+    for (String header : headers) {
+        row.add(event.get(header));
+    }
+    rows.add(row);
+}
 
         DataSeries series = new DataSeries(events.size(), rows, headers, new HashMap<>());
 
@@ -59,13 +60,7 @@ public class SpQuerySerializer {
 
         queryResult.setAllDataSeries(resultSeries);
 
-        return queryResult;
+        //Built JSON Object
+        return queryResult;//JacksonSerializer.getObjectMapper().writeValueAsString(queryResult);
     }
-
-
-    public static List<Map<String, Object>> parse(String json) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(json, mapper.getTypeFactory()
-                .constructCollectionType(List.class, Map.class));
-}
 }

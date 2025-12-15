@@ -54,7 +54,7 @@ public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeR
   }
 
   @Override
-  public void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch) {
+  public void update(String measurementID, String queryResult, boolean ignoreSchemaMismatch) {
     Map<String, String> queryParams = new HashMap<>();
     queryParams.put("ignoreSchemaMismatch", String.valueOf(ignoreSchemaMismatch));
     post(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams), queryResult);
