@@ -35,7 +35,7 @@ jobs:
       - name: Install and configure Poetry
         uses: snok/install-poetry@v1
         with:
-          version: 1.5.1
+          version: 2.2.1
           in-project: true
           prefer-active-python: true
 
