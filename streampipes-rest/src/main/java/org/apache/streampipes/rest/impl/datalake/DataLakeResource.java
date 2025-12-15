@@ -123,7 +123,8 @@ public class DataLakeResource extends AbstractRestResource {
       @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(value = "endDate", required = false) Long endDate) {
 
     if (this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)) {
-      return ok(Notifications.success("Successfully deleted measure " + measurementID + " between " + startDate + " and " + endDate));
+      return ok(Notifications
+          .success("Successfully deleted measure " + measurementID + " between " + startDate + " and " + endDate));
     } else {
       return ResponseEntity
           .status(HttpStatus.NOT_FOUND)
@@ -286,7 +287,7 @@ public class DataLakeResource extends AbstractRestResource {
       @PathVariable String measurementID,
       @RequestBody SpQueryResult queryResult,
       @Parameter(in = ParameterIn.QUERY, description = "should not identical schemas be stored") @RequestParam(value = "ignoreSchemaMismatch", required = false) boolean ignoreSchemaMismatch) {
-      var dataWriter = new DataLakeDataWriter(ignoreSchemaMismatch);
+    var dataWriter = new DataLakeDataWriter(ignoreSchemaMismatch);
     try {
       dataWriter.writeData(measurementID, queryResult);
     } catch (SpRuntimeException e) {
