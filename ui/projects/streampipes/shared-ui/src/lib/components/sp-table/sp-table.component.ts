@@ -43,6 +43,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { SpTableActionsDirective } from './sp-table-actions.directive';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { LocalStorageService } from '../../services/local-storage-settings.service';
+import { FeatureCardService } from '../feature-card-host/feature-card.service';
 
 @Component({
     selector: 'sp-table',
@@ -61,6 +62,8 @@ export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
     @Input() columns: string[];
     @Input() rowsClickable = false;
     @Input() showActionsMenu = false;
+    @Input() featureCardId: string;
+    @Input() resourceIdKey = 'elementId';
 
     @Input() dataSource: MatTableDataSource<T>;
 
@@ -74,6 +77,7 @@ export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
     trigger: MatMenuTrigger | undefined = undefined;
 
     private localStorageService = inject(LocalStorageService);
+    private featureCardService = inject(FeatureCardService);
 
     readonly pageSize: Signal<number>;
 
@@ -119,5 +123,12 @@ export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
 
     onPage(event: PageEvent) {
         this.localStorageService.set('paginator-page-size', event.pageSize);
+    }
+
+    openFeatureCard(element: T) {
+        this.featureCardService.openFeatureCard(
+            this.featureCardId,
+            element[this.resourceIdKey],
+        );
     }
 }

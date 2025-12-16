@@ -222,7 +222,10 @@
                     </th>
                     <td mat-cell *matCellDef="let adapter">
                         <sp-label
+                            minWidth="50px"
+                            tone="neutral"
                             size="small"
+                            shape="badge"
                             [labelText]="
                                 adapterMetrics[adapter.elementId]?.messagesOut
                                     .counter || 0

@@ -128,7 +128,8 @@ public class DataLakeDataWriter {
 
   private void renameTimestampField(Event event, String timestampField){
     var strippedTime = getSubstringAfterColons(timestampField);
-    event.addField(timestampField, event.getFieldByRuntimeName(strippedTime).getRawValue());
+    event.addField(timestampField, event.getFieldByRuntimeName(strippedTime).getAsPrimitive()
+          .getAsLong());
   }
 
 }

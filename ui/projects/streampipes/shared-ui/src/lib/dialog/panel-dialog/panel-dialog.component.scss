@@ -18,7 +18,7 @@
 
 app-dialog-container {
     width: 100%;
-    background-color: var(--color-bg-dialog);
+    background-color: var(--color-bg-0);
     color: var(--color-default-text);
     box-shadow: -7px 0px 5px -5px #777;
 }
@@ -46,8 +46,8 @@ app-dialog-container {
 
 .dialog-title {
     padding: 5px 5px 5px 15px;
-    font-size: 20px;
-    color: white;
+    font-size: var(--font-size-lg);
+    color: var(--color-bg-0);
 }
 
 #portal {

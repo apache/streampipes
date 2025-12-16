@@ -230,7 +230,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
           try {
             managementService.deleteAdapter(elementId);
 
-            return ok(Notifications.success("Adapter with id: " + elementId + " is dexleted."));
+            return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
           } catch (AdapterException e) {
             LOG.error("Error while deleting adapter with id {}", elementId, e);
             return ok(Notifications.error(e.getMessage()));

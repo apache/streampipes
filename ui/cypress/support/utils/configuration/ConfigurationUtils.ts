@@ -52,6 +52,6 @@ export class ConfigurationUtils {
 
     public static deleteLabel() {
         cy.dataCy('delete-label-button').click();
-        cy.dataCy('available-labels-list').should('have.length', 0);
+        cy.dataCy('no-table-entries').should('be.visible');
     }
 }

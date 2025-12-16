@@ -1,0 +1,47 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:host {
+    width: 100%;
+    height: 100%;
+}
+
+$dashboard-scale: 0.5;
+
+.dashboard-preview-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: calc(100% / #{$dashboard-scale});
+    height: calc(100% / #{$dashboard-scale});
+
+    transform: scale($dashboard-scale);
+    transform-origin: top left;
+
+    display: flex;
+}
+
+.dashboard-preview-inner > sp-dashboard-grid-view {
+    display: block;
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}

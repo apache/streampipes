@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.execution.task;
 
+import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
 
 public class StorePipelineStatusTask implements PipelineExecutionTask {
 
@@ -36,6 +38,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
 
   private final boolean start;
   private final boolean forceStop;
+  private final PipelinesStats pipelinesStats = new PipelinesStats();
 
   public StorePipelineStatusTask(boolean start,
                                  boolean forceStop) {
@@ -53,6 +56,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
                           PipelineExecutionInfo executionInfo) {
     if (this.start) {
       pipeline.setHealthStatus(PipelineHealthStatus.OK);
+      pipeline.setPipelineNotifications(List.of());
       setPipelineStarted(pipeline);
     } else {
       setPipelineStopped(pipeline);
@@ -62,6 +66,9 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
   private void setPipelineStarted(Pipeline pipeline) {
     pipeline.setRunning(true);
     pipeline.setStartedAt(new Date().getTime());
+    pipelinesStats.updatePipelineRunningState(pipeline.getElementId(),pipeline.getName()
+                                                                  ,  true);
+    pipelinesStats.updatePipelineHealthState(pipeline.getElementId(),pipeline.getName(), pipeline.getHealthStatus().toString());
     try {
       getPipelineStorageApi().updateElement(pipeline);
     } catch (DocumentConflictException dce) {
@@ -71,6 +78,9 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
 
   private void setPipelineStopped(Pipeline pipeline) {
     pipeline.setRunning(false);
+    pipelinesStats.updatePipelineRunningState(pipeline.getElementId(),pipeline.getName()
+                                                                  , false);
+    pipelinesStats.updatePipelineHealthState(pipeline.getElementId(),pipeline.getName(), pipeline.getHealthStatus().toString());
     getPipelineStorageApi().updateElement(pipeline);
   }
 

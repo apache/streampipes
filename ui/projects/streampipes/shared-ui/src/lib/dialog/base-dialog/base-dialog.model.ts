@@ -26,6 +26,7 @@ export type BaseDialogComponentUnion =
 export enum PanelType {
     STANDARD_PANEL,
     SLIDE_IN_PANEL,
+    CARD,
 }
 
 export interface DialogConfig {

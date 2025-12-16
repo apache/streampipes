@@ -41,7 +41,7 @@
         data-cy="all-sites-table"
     >
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>
                 <b>{{ 'Site' | translate }}</b>
             </th>
             <td mat-cell *matCellDef="let site" data-cy="site-table-row-label">
@@ -49,7 +49,7 @@
             </td>
         </ng-container>
         <ng-container matColumnDef="areas">
-            <th mat-header-cell *matHeaderCellDef>
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>
                 <b>{{ 'Areas' | translate }}</b>
             </th>
             <td mat-cell *matCellDef="let site" data-cy="site-table-row-areas">
@@ -68,17 +68,30 @@
                     >
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button
-                        [attr.data-cy]="
-                            'sites-delete-button-' +
-                            site.label.replaceAll(' ', '_')
-                        "
-                        (click)="deleteSite(site)"
-                        mat-icon-button
-                        color="accent"
+                    <div
+                        matTooltip="{{
+                            allUsedSiteIds.includes(site._id)
+                                ? ('To delete a site, please remove the site from all assets'
+                                  | translate)
+                                : ('Delete site' | translate)
+                        }}"
+                        [matTooltipShowDelay]="0"
+                        [matTooltipHideDelay]="0"
+                        class="tooltip-container"
                     >
-                        <mat-icon>delete</mat-icon>
-                    </button>
+                        <button
+                            [attr.data-cy]="
+                                'sites-delete-button-' +
+                                site.label.replaceAll(' ', '_')
+                            "
+                            (click)="deleteSite(site)"
+                            mat-icon-button
+                            color="accent"
+                            [disabled]="allUsedSiteIds.includes(site._id)"
+                        >
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
                 </div>
             </td>
         </ng-container>

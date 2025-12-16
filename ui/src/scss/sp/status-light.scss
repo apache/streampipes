@@ -24,21 +24,21 @@
 }
 
 .light-red {
-    background-color: red;
-    box-shadow: 0 0 5px 2px red;
+    background-color: var(--color-error);
+    box-shadow: 0 0 5px 2px var(--color-error);
 }
 
 .light-yellow {
-    background-color: #dede2d;
-    box-shadow: 0 0 5px 2px #dede2d;
+    background-color: var(--color-warning);
+    box-shadow: 0 0 5px 2px var(--color-warning);
 }
 
 .light-green {
-    background-color: green;
-    box-shadow: 0 0 5px 2px green;
+    background-color: var(--color-success);
+    box-shadow: 0 0 5px 2px var(--color-success);
 }
 
 .light-neutral {
-    background-color: #b4b4b4;
-    box-shadow: 0 0 2px 1px #b4b4b4;
+    background-color: var(--color-neutral);
+    box-shadow: 0 0 2px 1px var(--color-neutral);
 }

@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
@@ -51,6 +52,7 @@ public class AdapterUpdateManagement {
   private final AdapterMasterManagement adapterMasterManagement;
   private final AdapterResourceManager adapterResourceManager;
   private final DataStreamResourceManager dataStreamResourceManager;
+    private static final PipelinesStats pipelinesStats = new PipelinesStats();
 
   public AdapterUpdateManagement(AdapterMasterManagement adapterMasterManagement) {
     this.adapterMasterManagement = adapterMasterManagement;
@@ -88,6 +90,7 @@ public class AdapterUpdateManagement {
         var canAutoMigrate = canAutoMigrate(modificationMessage);
         if (!canAutoMigrate) {
           modifiedPipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
+          pipelinesStats.updatePipelineHealthState(modifiedPipeline.getElementId(), modifiedPipeline.getName(),modifiedPipeline.getHealthStatus().toString());
           modifiedPipeline.setPipelineNotifications(toNotification(updateInfo));
           modifiedPipeline.setValid(false);
         }
