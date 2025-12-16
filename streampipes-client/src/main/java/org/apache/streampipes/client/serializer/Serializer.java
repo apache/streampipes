@@ -18,21 +18,18 @@
 package org.apache.streampipes.client.serializer;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 public abstract class Serializer<K, V, T> {
 
   protected ObjectMapper objectMapper;
 
   public Serializer() {
-    this.objectMapper = new ObjectMapper();
-    // TODO This can also be set globally in spring boot!
-    this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    //this.objectMapper = JacksonSerializer.getObjectMapper();
+    this.objectMapper = JacksonSerializer.getObjectMapper();
+
   }
 
   public String serialize(K object) {
