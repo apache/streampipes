@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,21 +16,16 @@
  *
  */
 
-.assets-wrapper,
-.assets-content {
-    flex: 1 1 auto;
-    min-height: 0; /* super important so children can fill and scroll correctly */
+.asset-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 5px;
+    align-items: center;
 }
 
-.assets-wrapper > .section-body {
-    height: 100%;
-}
-
-.asset-section {
-    background: var(--color-bg-0);
-}
-
-.map {
-    flex: 1 1 auto;
-    min-height: 0;
+.cell-nowrap {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

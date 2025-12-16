@@ -28,6 +28,7 @@ export interface StatusBox {
     viewRoles: string[];
     createRoles: string[];
     icon: string;
+    assetLinkTypeId: string;
 }
 
 export interface Link {

@@ -32,6 +32,26 @@ import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.compone
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { WelcomeComponent } from './components/welcome/welcome.component';
+import { HomeAssetMapComponent } from './components/asset-map/home-asset-map.component';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import { AssetMapPopupComponent } from './components/asset-map/asset-map-popup/asset-map-popup.component';
+import { AssetLinkChipComponent } from './components/asset-map/asset-map-popup/asset-link-chip/asset-link-chip.component';
+import { FormsModule } from '@angular/forms';
+import { HomeAssetTableComponent } from './components/asset-table/home-asset-table.component';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableModule,
+} from '@angular/material/table';
+import { MatMenuItem } from '@angular/material/menu';
+import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
+import { AssetTableLinkPreviewComponent } from './components/asset-table/asset-table-link-preview/asset-table-link-preview.component';
 
 @NgModule({
     imports: [
@@ -56,8 +76,24 @@ import { TranslateModule } from '@ngx-translate/core';
                 ],
             },
         ]),
+        CoreUiModule,
+        MatButtonToggleModule,
+        LeafletModule,
+        FormsModule,
+        MatSortModule,
+        MatTableModule,
     ],
-    declarations: [HomeComponent, StatusComponent, WelcomeTourComponent],
+    declarations: [
+        HomeComponent,
+        StatusComponent,
+        WelcomeTourComponent,
+        WelcomeComponent,
+        HomeAssetMapComponent,
+        AssetMapPopupComponent,
+        AssetLinkChipComponent,
+        HomeAssetTableComponent,
+        AssetTableLinkPreviewComponent,
+    ],
     providers: [HomeService],
 })
 export class HomeModule {}

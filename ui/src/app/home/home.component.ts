@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HomeService } from './home.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../services/app.constants';
@@ -33,13 +33,19 @@ import { ShepherdService } from '../services/tour/shepherd.service';
 import {
     AdapterDescription,
     AdapterService,
+    AssetConstants,
+    AssetLinkType,
+    AssetManagementService,
+    AssetSiteDesc,
+    GenericStorageService,
+    LocationConfig,
+    LocationConfigService,
     NamedStreamPipesEntity,
-    Pipeline,
     PipelineElementService,
-    PipelineService,
+    SpAssetModel,
     UserInfo,
 } from '@streampipes/platform-services';
-import { zip } from 'rxjs';
+import { forkJoin, zip } from 'rxjs';
 import { StatusBox } from './models/home.model';
 
 @Component({
@@ -53,10 +59,12 @@ export class HomeComponent implements OnInit {
 
     availablePipelineElements: NamedStreamPipesEntity[] = [];
     availableAdapters: AdapterDescription[] = [];
-    availablePipelines: Pipeline[] = [];
-    runningPipelines: Pipeline[] = [];
 
     statusBoxes: StatusBox[] = [];
+    locationConfig: LocationConfig;
+    assets: SpAssetModel[] = [];
+    sites: Record<string, AssetSiteDesc> = {};
+    assetLinkTypes: Record<string, AssetLinkType> = {};
 
     requiredAdapterForTutorialAppId: any =
         'org.apache.streampipes.connect.iiot.adapters.simulator.machine';
@@ -68,19 +76,23 @@ export class HomeComponent implements OnInit {
 
     isTutorialOpen = false;
     currentUser: UserInfo;
+    selectedView = 'table';
+    contentLoaded = false;
 
-    constructor(
-        private homeService: HomeService,
-        private currentUserService: CurrentUserService,
-        private router: Router,
-        public appConstants: AppConstants,
-        private breadcrumbService: SpBreadcrumbService,
-        private dialogService: DialogService,
-        private shepherdService: ShepherdService,
-        private pipelineService: PipelineService,
-        private pipelineElementService: PipelineElementService,
-        private adapterService: AdapterService,
-    ) {
+    private homeService = inject(HomeService);
+    private currentUserService = inject(CurrentUserService);
+    private router = inject(Router);
+    public appConstants = inject(AppConstants);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private dialogService = inject(DialogService);
+    private shepherdService = inject(ShepherdService);
+    private pipelineElementService = inject(PipelineElementService);
+    private adapterService = inject(AdapterService);
+    private genericStorageService = inject(GenericStorageService);
+    private locationService = inject(LocationConfigService);
+    private assetService = inject(AssetManagementService);
+
+    constructor() {
         this.serviceLinks = this.homeService.getFilteredServiceLinks();
         this.statusBoxes = this.homeService
             .getFilteredServiceLinks()
@@ -91,7 +103,27 @@ export class HomeComponent implements OnInit {
     ngOnInit() {
         this.currentUser = this.currentUserService.getCurrentUser();
         const isAdmin = this.hasRole(UserRole.ROLE_ADMIN);
-        this.showStatus = true;
+        forkJoin([
+            this.genericStorageService.getAllDocuments(
+                AssetConstants.ASSET_LINK_TYPES_DOC_NAME,
+            ),
+            this.locationService.getLocationConfig(),
+            this.assetService.getAllAssets(),
+            this.genericStorageService.getAllDocuments(
+                AssetConstants.ASSET_SITES_APP_DOC_NAME,
+            ),
+        ]).subscribe(res => {
+            res[0].forEach(doc => {
+                this.assetLinkTypes[doc.linkType] = doc;
+            });
+            this.locationConfig = res[1];
+            this.assets = res[2];
+            res[3].forEach(doc => {
+                this.sites[doc._id] = doc;
+            });
+            this.contentLoaded = true;
+            this.showStatus = true;
+        });
         if (isAdmin) {
             this.loadResources();
         }
@@ -100,14 +132,6 @@ export class HomeComponent implements OnInit {
 
     hasRole(role: UserRole): boolean {
         return this.currentUser.roles.indexOf(role) > -1;
-    }
-
-    openLink(link) {
-        if (link.link.newWindow) {
-            window.open(link.link.value);
-        } else {
-            this.router.navigate([link.link.value]);
-        }
     }
 
     checkForTutorial() {
@@ -209,19 +233,16 @@ export class HomeComponent implements OnInit {
 
     loadResources(): void {
         zip(
-            this.pipelineService.getPipelines(),
             this.adapterService.getAdapterDescriptions(),
             this.pipelineElementService.getDataStreams(),
             this.pipelineElementService.getDataProcessors(),
             this.pipelineElementService.getDataSinks(),
         ).subscribe(res => {
-            this.availablePipelines = res[0];
-            this.runningPipelines = res[0].filter(p => p.running);
-            this.availableAdapters = res[1];
+            this.availableAdapters = res[0];
             this.availablePipelineElements = this.availablePipelineElements
+                .concat(...res[1])
                 .concat(...res[2])
-                .concat(...res[3])
-                .concat(...res[4]);
+                .concat(...res[3]);
             this.checkForTutorial();
         });
     }

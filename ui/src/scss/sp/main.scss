@@ -29,6 +29,10 @@ html {
     white-space: nowrap;
 }
 
+.leaflet-popup-content-wrapper {
+    background: var(--color-bg-0);
+}
+
 md-progress-linear.md-accent .md-container {
     background-color: rgb(168, 168, 168);
 }
@@ -49,10 +53,6 @@ body {
     height: auto !important;
     width: 100%;
 
-    --color-adapter: #{spThemeVars.$sp-color-adapter};
-    --color-stream: #{spThemeVars.$sp-color-stream};
-    --color-processor: #{spThemeVars.$sp-color-processor};
-    --color-sink: #{spThemeVars.$sp-color-sink};
     --color-tab-border: var(--color-bg-3);
 }
 
@@ -145,8 +145,12 @@ md-content {
 
 .page-container {
     margin: 10px;
-    min-height: calc(100% - 20px);
-    background: var(--color-bg-main-panel-content);
+    min-height: calc(100vh - 76px);
+    background: var(--color-bg-0);
+}
+
+.page-container-no-bg {
+    background: inherit;
 }
 
 .page-container-padding-inner {
