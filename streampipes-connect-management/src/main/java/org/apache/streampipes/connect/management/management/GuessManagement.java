@@ -50,11 +50,11 @@ public class GuessManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
-  private final ObjectMapper objectMapper;
+  private  ObjectMapper objectMapper;
 
   public GuessManagement() {
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
-    this.objectMapper = JacksonSerializer.getObjectMapper();
+    this.objectMapper = JacksonSerializer.getDefaultObjectMapper();
   }
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription)
