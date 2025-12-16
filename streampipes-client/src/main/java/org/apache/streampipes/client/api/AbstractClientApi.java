@@ -56,9 +56,11 @@ public class AbstractClientApi {
   }
 
   protected <T> void post(StreamPipesApiPath apiPath, T object) {
-    ObjectSerializer<T, Void> serializer = new ObjectSerializer<>();
-    new PostRequestWithoutPayloadResponse<>(clientConfig, apiPath, serializer, object).executeRequest();
+
+    ObjectSerializer <T,Void> serializer = new ObjectSerializer<>(true);
+    new PostRequestWithoutPayloadResponse(clientConfig, apiPath, serializer, object).executeRequest();
   }
+
 
   protected <T> void put(StreamPipesApiPath apiPath, T object) {
     ObjectSerializer<T, Void> serializer = new ObjectSerializer<>();

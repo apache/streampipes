@@ -21,6 +21,7 @@ import org.apache.streampipes.client.api.AdapterApi;
 import org.apache.streampipes.client.api.AdminApi;
 import org.apache.streampipes.client.api.CustomRequestApi;
 import org.apache.streampipes.client.api.DataLakeMeasureApi;
+import org.apache.streampipes.client.api.DataLakeResourceApi;
 import org.apache.streampipes.client.api.DataProcessorApi;
 import org.apache.streampipes.client.api.DataSinkApi;
 import org.apache.streampipes.client.api.DataStreamApi;
@@ -224,5 +225,10 @@ public class StreamPipesClient implements
   @Override
   public FileApi fileApi() {
     return new FileApi(config);
+  }
+
+    @Override
+  public DataLakeResourceApi dataLakeResourceApi () {
+    return new DataLakeResourceApi (config);
   }
 }
