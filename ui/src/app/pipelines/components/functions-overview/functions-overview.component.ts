@@ -38,7 +38,8 @@ export class FunctionsOverviewComponent implements OnInit {
     constructor(private router: Router) {}
 
     ngOnInit(): void {
-        this.dataSource = new MatTableDataSource<FunctionId>(this.functions);
+        this.dataSource = new MatTableDataSource<FunctionId>();
+        this.dataSource.data = this.functions;
     }
 
     showFunctionDetails(functionId: string): void {

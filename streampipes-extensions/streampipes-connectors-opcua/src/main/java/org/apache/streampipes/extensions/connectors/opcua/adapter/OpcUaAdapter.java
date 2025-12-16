@@ -205,7 +205,8 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     this.opcUaAdapterConfig =
         SpOpcUaConfigExtractor.extractAdapterConfig(
             extractor.getStaticPropertyExtractor(),
-            adapterRuntimeContext.getStreamPipesClient()
+            adapterRuntimeContext.getStreamPipesClient(),
+            extractor.getAdapterDescription().getElementId()
         );
     this.collector = collector;
     this.prepareAdapter(extractor);

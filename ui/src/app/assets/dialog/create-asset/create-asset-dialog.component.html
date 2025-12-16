@@ -24,23 +24,28 @@
                 fxLayout="column"
                 style="margin: 5px; width: 100%"
             >
-                <mat-form-field class="full-width" color="accent">
-                    <mat-label>{{ 'Asset Name' | translate }}</mat-label>
-                    <input
-                        matInput
-                        data-cy="asset-name"
-                        [(ngModel)]="assetModel.assetName"
-                    />
-                </mat-form-field>
-                <mat-form-field class="full-width" color="accent">
-                    <mat-label>{{ 'Description' | translate }}</mat-label>
-                    <input matInput [(ngModel)]="assetModel.assetDescription" />
-                </mat-form-field>
+                <sp-form-field [level]="2" [label]="'Asset Name' | translate">
+                    <mat-form-field>
+                        <input
+                            matInput
+                            data-cy="asset-name"
+                            [(ngModel)]="assetModel.assetName"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+                <sp-form-field [level]="2" [label]="'Description' | translate">
+                    <mat-form-field>
+                        <input
+                            matInput
+                            [(ngModel)]="assetModel.assetDescription"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions actions-align-left">
+    <div class="sp-dialog-actions actions-align-left" fxLayoutGap="10px">
         <button
             mat-button
             mat-flat-button

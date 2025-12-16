@@ -16,21 +16,20 @@
  *
  */
 
+:host {
+    display: block;
+    height: 100%;
+}
+
 .designer-panel-content {
     padding: 0;
+    overflow: hidden;
+}
+
+.tree-wrapper {
+    padding: 5px 5px 10px 2px;
     overflow-y: auto;
-}
-
-.designer-panel-config {
-    padding: 0;
-}
-
-.designer-panel-title {
-    margin-left: 5px;
-}
-
-.designer-panel-header {
-    border-bottom: 1px solid var(--color-tab-border);
+    flex: 1 1 auto;
 }
 
 .sp-tree-invisible {
@@ -45,18 +44,21 @@
 }
 
 .sp-tree .mat-nested-tree-node div[role='group'] {
-    padding-left: 20px;
+    padding-left: 10px;
+    border-left: 1px solid var(--color-bg-2);
+    margin-left: 12px;
 }
 
 .sp-tree div[role='group'] > .mat-tree-node {
-    padding-left: 20px;
+    padding-left: 6px;
 }
 
 .mat-tree-node {
-    min-height: 35px;
+    min-height: 48px;
+    font-family: inherit;
 }
 
-.mat-tree-node:hover {
+.mat-tree-node:hover .asset-node {
     background: var(--color-bg-1);
 }
 
@@ -64,6 +66,19 @@
     font-weight: normal;
     cursor: pointer;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding: 8px 10px;
+    transition:
+        border-color 100ms ease,
+        box-shadow 100ms ease;
+    background: var(--color-bg-0);
+}
+
+.asset-node:hover {
+    border-color: var(--color-primary);
 }
 
 .asset-node-disabled {
@@ -71,7 +86,55 @@
     cursor: default;
 }
 
-.selected-node {
-    font-family: 'Roboto-Bold', serif;
-    font-weight: bolder;
+.root-node {
+    margin-left: -8px;
+}
+
+.badge {
+    background: var(--color-primary);
+    color: #fff;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: var(--font-size-xs);
+}
+
+.node-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.node-icon {
+    background: var(--color-bg-2);
+    color: var(--color-primary);
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.node-icon-selected {
+    background: color-mix(in srgb, var(--color-primary) 30%, white);
+    color: var(--color-primary);
+}
+
+.node-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.node-title {
+    font-size: var(--font-size-md);
+}
+
+.node-meta {
+    font-size: var(--font-size-xs);
+    color: var(--fg-muted, #666);
+}
+
+.node-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.node-toggle {
+    margin-right: 6px;
 }

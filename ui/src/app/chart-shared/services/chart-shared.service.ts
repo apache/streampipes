@@ -29,6 +29,7 @@ import {
     DialogService,
     ObjectPermissionDialogComponent,
     PanelType,
+    TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
 import { ObservableGenerator } from '../models/dataview-dashboard.model';
@@ -40,6 +41,20 @@ export class ChartSharedService {
     private dataViewQueryGeneratorService = inject(
         DataViewQueryGeneratorService,
     );
+    private timeSelectionService = inject(TimeSelectionService);
+
+    makeChartTimeSettings(chart: DataExplorerWidgetModel): TimeSettings {
+        if (!chart.timeSettings?.startTime) {
+            return this.timeSelectionService.getDefaultTimeSettings();
+        } else {
+            this.timeSelectionService.updateTimeSettings(
+                this.timeSelectionService.defaultQuickTimeSelections,
+                chart.timeSettings as TimeSettings,
+                new Date(),
+            );
+            return chart.timeSettings as TimeSettings;
+        }
+    }
 
     openPermissionsDialog(
         elementId: string,

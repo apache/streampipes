@@ -59,13 +59,12 @@ export class SpAssetSelectionPanelComponent implements OnInit {
     ngOnInit(): void {
         this.treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
         this.dataSource = new MatTreeNestedDataSource<SpAsset>();
-        this.dataSource.data = [this.assetModel];
-        this.treeControl.dataNodes = [this.assetModel];
-        this.treeControl.expandAll();
+        this.resetTree();
     }
 
     selectNode(asset: SpAsset, rootNode: boolean) {
         this.selectedAssetEmitter.emit({ asset, rootNode });
+        this.expandToAsset(asset.assetId);
     }
 
     addAsset(node: SpAsset) {
@@ -76,6 +75,12 @@ export class SpAssetSelectionPanelComponent implements OnInit {
         this.dataSource.data = [this.assetModel];
         this.treeControl.dataNodes = [this.assetModel];
         this.rerenderTree();
+    }
+
+    rerenderTree(): void {
+        this.dataSource.data = [];
+        this.dataSource.data = [this.assetModel];
+        this.treeControl.expandAll();
     }
 
     deleteAsset(node: SpAsset) {
@@ -95,12 +100,6 @@ export class SpAssetSelectionPanelComponent implements OnInit {
         }
     }
 
-    rerenderTree(): void {
-        this.dataSource.data = [];
-        this.dataSource.data = [this.assetModel];
-        this.treeControl.expandAll();
-    }
-
     makeNewAsset(): SpAsset {
         return {
             assetId: this.makeAssetId(),
@@ -117,5 +116,36 @@ export class SpAssetSelectionPanelComponent implements OnInit {
 
     makeAssetId(): string {
         return 'a' + Math.random().toString(36).substring(2, 9);
+    }
+
+    private resetTree() {
+        this.dataSource.data = [this.assetModel];
+        this.treeControl.dataNodes = [this.assetModel];
+        this.treeControl.expandAll();
+    }
+
+    private expandToAsset(assetId: string) {
+        const path = this.findPath(this.assetModel, assetId);
+        if (path) {
+            path.forEach(node => this.treeControl.expand(node));
+        }
+    }
+
+    private findPath(
+        node: SpAsset,
+        targetId: string,
+        path: SpAsset[] = [],
+    ): SpAsset[] | undefined {
+        const currentPath = [...path, node];
+        if (node.assetId === targetId) {
+            return currentPath;
+        }
+        for (const child of node.assets || []) {
+            const res = this.findPath(child, targetId, currentPath);
+            if (res) {
+                return res;
+            }
+        }
+        return undefined;
     }
 }

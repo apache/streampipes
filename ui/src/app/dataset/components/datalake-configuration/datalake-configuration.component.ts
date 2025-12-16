@@ -17,6 +17,7 @@
  */
 
 import {
+    AfterViewInit,
     ChangeDetectorRef,
     Component,
     inject,
@@ -40,10 +41,9 @@ import {
     DialogService,
     PanelType,
     SpBreadcrumbService,
-    SpNavigationItem,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { DeleteDatalakeIndexComponent } from '../../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
-import { SpConfigurationTabsService } from '../../../configuration/configuration-tabs.service';
 import { SpConfigurationRoutes } from '../../../configuration/configuration.routes';
 import { DataRetentionDialogComponent } from '../../dialog/data-retention-dialog/data-retention-dialog.component';
 import { ExportProviderComponent } from '../../dialog/export-provider-dialog/export-provider-dialog.component';
@@ -58,9 +58,11 @@ import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log
     styleUrls: ['./datalake-configuration.component.scss'],
     standalone: false,
 })
-export class DatalakeConfigurationComponent implements OnInit {
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
+    paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(SpTableComponent)
+    spTable!: SpTableComponent<DataLakeConfigurationEntry>;
 
     private datalakeRestService = inject(DatalakeRestService);
     private dataViewDataExplorerService = inject(ChartService);
@@ -68,7 +70,6 @@ export class DatalakeConfigurationComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
-    private cdr = inject(ChangeDetectorRef);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
@@ -96,7 +97,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         'test',
     ];
 
-    pageSize = 15;
+    pageSize = 10;
     pageIndex = 0;
 
     ngOnInit(): void {
@@ -106,6 +107,17 @@ export class DatalakeConfigurationComponent implements OnInit {
         ]);
         this.loadAvailableMeasurements();
         this.loadAvailableExportProvider();
+    }
+
+    ngAfterViewInit() {
+        this.paginator = this.spTable.paginator;
+        this.dataSource.sort = this.sort;
+
+        this.spTable.paginator.page.subscribe(event => {
+            this.pageIndex = event.pageIndex;
+            this.pageSize = event.pageSize;
+            this.receiveMeasurementSizes(this.pageIndex);
+        });
     }
 
     loadAvailableExportProvider() {
@@ -136,7 +148,6 @@ export class DatalakeConfigurationComponent implements OnInit {
                             if (measurement?.retentionTime != null) {
                                 entry.retention = measurement.retentionTime;
                             }
-                            console.log(entry.retention);
                             inUseMeasurements.forEach(inUseMeasurement => {
                                 if (
                                     inUseMeasurement.measureName ===
@@ -315,6 +326,7 @@ export class DatalakeConfigurationComponent implements OnInit {
 
     onPageChange(event: any) {
         this.pageIndex = event.pageIndex;
+        this.pageSize = event.pageSize;
         this.receiveMeasurementSizes(this.pageIndex);
     }
 

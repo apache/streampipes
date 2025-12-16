@@ -1,0 +1,87 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.feature-card-outer {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.feature-card-meta-card {
+    padding: 1.25rem;
+    box-shadow: none;
+    background: var(--color-bg-0);
+    color: var(--color-default-text);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.feature-card-meta-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.feature-card-meta-section__label {
+    font-size: var(--text-xs, 0.75rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 0.25rem;
+}
+
+.feature-card-meta-icon {
+    font-size: 1.2rem !important;
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+    opacity: 0.75;
+}
+
+.feature-card-meta-field-label {
+    font-size: var(--text-xs, 0.75rem);
+    opacity: 0.8;
+}
+
+.feature-card-meta-field-value {
+    font-size: var(--text-sm, 0.85rem);
+    font-weight: 500;
+}
+
+.feature-card-meta-box {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    background: var(--color-bg-1);
+}
+
+.feature-preview-wrapper {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    margin: var(--space-md);
+}
+
+.feature-preview-scale {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    border: 1px solid var(--color-bg-3);
+    border-radius: 10px;
+    overflow: hidden;
+}

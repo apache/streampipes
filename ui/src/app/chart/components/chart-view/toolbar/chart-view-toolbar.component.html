@@ -72,7 +72,7 @@
                     {{ 'Save' | translate }}
                 </button>
             }
-            @if (isAssetAdmin) {
+            @if (editMode && isAssetAdmin) {
                 <button
                     mat-flat-button
                     [matTooltip]="'Add to Asset' | translate"

@@ -25,6 +25,18 @@
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element">
                     <div fxLayoutAlign="end center">
+                        @if (featureCardId) {
+                            <button
+                                [matTooltip]="'Preview' | translate"
+                                mat-icon-button
+                                (click)="
+                                    openFeatureCard(element);
+                                    $event.stopPropagation()
+                                "
+                            >
+                                <mat-icon>preview</mat-icon>
+                            </button>
+                        }
                         <div
                             [matMenuTriggerFor]="menu"
                             #menuTrigger="matMenuTrigger"
@@ -81,10 +93,11 @@
     <div fxFlex="100" fxLayoutAlign="end end" class="paginator-container">
         <mat-paginator
             #paginator
-            [pageSize]="pageSize"
+            [pageSize]="pageSize()"
             [pageSizeOptions]="[5, 10, 20, 50]"
             [hidePageSize]="false"
             [showFirstLastButtons]="true"
+            (page)="onPage($event)"
         >
         </mat-paginator>
     </div>

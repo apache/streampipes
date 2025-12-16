@@ -23,9 +23,11 @@ import {
     ContentChild,
     ContentChildren,
     EventEmitter,
+    inject,
     Input,
     Output,
     QueryList,
+    Signal,
     TemplateRef,
     ViewChild,
 } from '@angular/core';
@@ -37,9 +39,11 @@ import {
     MatTable,
     MatTableDataSource,
 } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { SpTableActionsDirective } from './sp-table-actions.directive';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { LocalStorageService } from '../../services/local-storage-settings.service';
+import { FeatureCardService } from '../feature-card-host/feature-card.service';
 
 @Component({
     selector: 'sp-table',
@@ -58,6 +62,8 @@ export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
     @Input() columns: string[];
     @Input() rowsClickable = false;
     @Input() showActionsMenu = false;
+    @Input() featureCardId: string;
+    @Input() resourceIdKey = 'elementId';
 
     @Input() dataSource: MatTableDataSource<T>;
 
@@ -67,9 +73,20 @@ export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
     @ContentChild(SpTableActionsDirective, { read: TemplateRef })
     actionsTemplate?: TemplateRef<any>;
 
-    pageSize = 10;
     timedOutCloser: any;
     trigger: MatMenuTrigger | undefined = undefined;
+
+    private localStorageService = inject(LocalStorageService);
+    private featureCardService = inject(FeatureCardService);
+
+    readonly pageSize: Signal<number>;
+
+    constructor() {
+        this.pageSize = this.localStorageService.signalFor(
+            'paginator-page-size',
+            10,
+        );
+    }
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
@@ -102,5 +119,16 @@ export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
             trigger.closeMenu();
             this.trigger = undefined;
         }, 50);
+    }
+
+    onPage(event: PageEvent) {
+        this.localStorageService.set('paginator-page-size', event.pageSize);
+    }
+
+    openFeatureCard(element: T) {
+        this.featureCardService.openFeatureCard(
+            this.featureCardId,
+            element[this.resourceIdKey],
+        );
     }
 }

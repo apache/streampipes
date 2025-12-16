@@ -24,20 +24,27 @@ import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
 @Component({
     selector: 'sp-asset-details',
     templateUrl: './asset-details.component.html',
-    styleUrls: ['./asset-details.component.scss'],
     standalone: false,
 })
 export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
-    activeTab = 'basic';
-
     private router = inject(Router);
     private assetBrowserService = inject(SpAssetBrowserService);
 
     saveAsset() {
+        this.cleanupEmpty();
         this.assetService.updateAsset(this.asset).subscribe(res => {
             this.assetBrowserService.loadAssetData();
             this.router.navigate(['assets']);
         });
+    }
+
+    cleanupEmpty(): void {
+        if (this.asset.additionalData?.customFields) {
+            this.asset.additionalData!.customFields =
+                this.asset.additionalData.customFields.filter(
+                    f => f.key?.trim() || f.value?.trim(),
+                );
+        }
     }
 
     onAssetAvailable() {}

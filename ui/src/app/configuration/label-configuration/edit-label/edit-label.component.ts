@@ -55,7 +55,7 @@ export class SpEditLabelComponent implements OnInit {
         if (!this.label) {
             this.label = {
                 color: this.colorizationService.generateRandomColor(),
-                label: '',
+                label: 'New label',
                 description: '',
             };
         }

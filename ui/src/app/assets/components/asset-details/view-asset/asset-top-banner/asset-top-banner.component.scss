@@ -1,0 +1,49 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.asset-root-banner {
+    display: flex;
+    align-items: stretch !important;
+    gap: 10px;
+    padding: 10px 12px;
+    margin: 4px 8px 0;
+}
+
+.banner-text {
+    min-width: 0;
+}
+
+.banner-meta {
+    margin-top: 4px;
+}
+
+.map-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    border: 1px solid var(--color-bg-3);
+    border-radius: 12px;
+    background: var(--color-bg-1);
+    overflow: hidden;
+}
+
+.map-empty {
+    padding: 24px;
+    color: var(--fg-muted, #666);
+}

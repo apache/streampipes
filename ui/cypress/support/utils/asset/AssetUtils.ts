@@ -114,9 +114,10 @@ export class AssetUtils {
     }
 
     public static checkAmountOfLinkedResources(amount: number) {
-        cy.dataCy('linked-resources-list')
-            .children()
-            .should('have.length', amount);
+        cy.dataCy('asset-links-table', { timeout: 10000 }).should(
+            'have.length',
+            amount,
+        );
     }
 
     public static checkAssetCanBeEdited(assetName: string) {
@@ -141,10 +142,7 @@ export class AssetUtils {
         amount: number,
     ) {
         AssetUtils.goToAssets();
-        cy.wait(400);
         AssetUtils.editAsset(assetName);
-        cy.wait(400);
-        AssetBtns.assetLinksTab().click();
         AssetUtils.checkAmountOfLinkedResources(amount);
     }
 
@@ -154,8 +152,7 @@ export class AssetUtils {
     ) {
         AssetUtils.goToAssets();
         AssetUtils.editAsset(assetName);
-        AssetBtns.assetLinksTab().click();
-        cy.dataCy('linked-resources-list').children().contains(name);
+        cy.dataCy('asset-links-table').children().contains(name);
         //.should('have.length', amount);
     }
 
@@ -175,7 +172,6 @@ export class AssetUtils {
 
         AssetUtils.addNewAsset(AssetBuilder.create(assetName).build());
 
-        AssetBtns.assetLinksTab().click();
         AssetUtils.openManageAssetLinks();
 
         AssetUtils.selectAdapterAssetLink(adapterName);

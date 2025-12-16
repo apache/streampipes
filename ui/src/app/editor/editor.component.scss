@@ -22,6 +22,8 @@
 
 .page-container {
     border: 0;
+    min-height: calc(100% - 20px);
+    margin: 10px;
 }
 
 .border {

@@ -24,6 +24,7 @@
         <sp-table
             fxFlex="100"
             [columns]="displayedColumns"
+            featureCardId="dashboard"
             [showActionsMenu]="true"
             [rowsClickable]="true"
             [dataSource]="dataSource"
@@ -39,11 +40,15 @@
                     data-cy="dashboard-table-overview"
                     *matCellDef="let element"
                 >
-                    <div>
-                        <b>{{ element.name }}</b>
-                    </div>
-                    <div>
-                        <small> {{ element.description }}</small>
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxLayoutGap="5px"
+                    >
+                        <div fxLayout="column" fxLayoutAlign="start start">
+                            <span class="text-sm">{{ element.name }}</span>
+                            <small> {{ element.description }}</small>
+                        </div>
                     </div>
                 </td>
             </ng-container>

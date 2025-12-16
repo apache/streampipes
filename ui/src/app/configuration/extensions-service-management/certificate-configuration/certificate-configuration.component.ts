@@ -24,13 +24,14 @@ import {
 } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { CertificateDetailsDialogComponent } from '../../dialog/certificate-details/certificate-details-dialog.component';
+import { CertificateDetailsDialogComponent } from '../../../core-ui/certificate-details/certificate-details-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-certificate-configuration',
     standalone: false,
     templateUrl: './certificate-configuration.component.html',
+    styleUrls: ['./certificate-configuration.component.scss'],
 })
 export class CertificateConfigurationComponent implements OnInit {
     private certificateService = inject(CertificateService);

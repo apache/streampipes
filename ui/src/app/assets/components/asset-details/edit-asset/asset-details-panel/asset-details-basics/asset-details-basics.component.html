@@ -16,127 +16,101 @@
 ~
 -->
 
-<div class="page-container-padding-inner">
-    <sp-basic-header-title-component
+<div class="page-container-padding-inner" fxLayout="column">
+    <sp-split-section
+        [level]="2"
         [title]="('Basics' | translate) + ': ' + asset.assetName"
-    ></sp-basic-header-title-component>
-    <div class="p-10">
-        <div fxLayout="column" fxFlex="100">
-            <sp-basic-field-description
-                fxFlex="100"
-                descriptionPanelWidth="30"
-                [label]="'Name' | translate"
-                [description]="'A short name of the asset' | translate"
-            >
-                <mat-form-field
-                    color="accent"
-                    class="w-100"
-                    subscriptSizing="dynamic"
+    >
+        <sp-form-field
+            [level]="2"
+            [label]="'Name' | translate"
+            [description]="'A short name of the asset' | translate"
+        >
+            <mat-form-field>
+                <input
+                    data-cy="asset-name"
+                    matInput
+                    [(ngModel)]="asset.assetName"
+                    [disabled]="!editMode"
+                />
+            </mat-form-field>
+        </sp-form-field>
+        <sp-form-field
+            fxFlex="100"
+            [level]="2"
+            [label]="'Description' | translate"
+            [description]="'A longer description of this asset' | translate"
+        >
+            <mat-form-field>
+                <input
+                    matInput
+                    [(ngModel)]="asset.assetDescription"
+                    [disabled]="!editMode"
+                />
+            </mat-form-field>
+        </sp-form-field>
+        <sp-form-field
+            fxFlex="100"
+            [level]="2"
+            label="Asset ID"
+            [description]="'A unique id for this asset in one word' | translate"
+        >
+            <mat-form-field>
+                <input
+                    matInput
+                    [(ngModel)]="asset.assetId"
+                    [disabled]="!editMode"
+                />
+            </mat-form-field>
+        </sp-form-field>
+        <sp-form-field
+            fxFlex="100"
+            [level]="2"
+            [label]="'Asset Type' | translate"
+            [description]="'The ISA95 type of this asset' | translate"
+        >
+            <mat-form-field class="w-100">
+                <mat-select
+                    data-cy="asset-type-select"
+                    [disabled]="!editMode"
+                    [(ngModel)]="asset.assetType.isa95AssetType"
+                    [aria-label]="'Asset Type' | translate"
                 >
-                    <input
-                        data-cy="asset-name"
-                        matInput
-                        [(ngModel)]="asset.assetName"
-                        [disabled]="!editMode"
-                    />
-                </mat-form-field>
-            </sp-basic-field-description>
-            <sp-basic-field-description
-                fxFlex="100"
-                descriptionPanelWidth="30"
-                [label]="'Description' | translate"
-                [description]="'A longer description of this asset' | translate"
+                    @for (isaType of isa95Types; track isaType) {
+                        <mat-option
+                            [value]="isaType.type"
+                            [attr.data-cy]="'option-' + isaType.type"
+                            >{{ isaType.label }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </sp-form-field>
+    </sp-split-section>
+    <sp-split-section
+        [level]="2"
+        [title]="'Labels & custom fields' | translate"
+    >
+        <sp-asset-details-labels [asset]="asset" [editMode]="editMode">
+        </sp-asset-details-labels>
+        <sp-asset-details-custom-fields [asset]="asset" [editMode]="editMode">
+        </sp-asset-details-custom-fields>
+    </sp-split-section>
+    @if (rootNode) {
+        <sp-split-section [level]="2" [title]="'Sites' | translate">
+            <sp-asset-details-site
+                [asset]="asset"
+                [sites]="sites"
+                [editMode]="editMode"
             >
-                <mat-form-field
-                    color="accent"
-                    class="w-100"
-                    subscriptSizing="dynamic"
-                >
-                    <input
-                        matInput
-                        [(ngModel)]="asset.assetDescription"
-                        [disabled]="!editMode"
-                    />
-                </mat-form-field>
-            </sp-basic-field-description>
-            <sp-basic-field-description
-                fxFlex="100"
-                descriptionPanelWidth="30"
-                label="Asset ID"
-                [description]="
-                    'A unique id for this asset in one word' | translate
-                "
-            >
-                <mat-form-field
-                    color="accent"
-                    class="w-100"
-                    subscriptSizing="dynamic"
-                >
-                    <input
-                        matInput
-                        [(ngModel)]="asset.assetId"
-                        [disabled]="!editMode"
-                    />
-                </mat-form-field>
-            </sp-basic-field-description>
-            <sp-basic-field-description
-                fxFlex="100"
-                descriptionPanelWidth="30"
-                [label]="'Asset Type' | translate"
-                [description]="'The ISA95 type of this asset' | translate"
-            >
-                <mat-form-field class="w-100">
-                    <mat-select
-                        data-cy="asset-type-select"
-                        [disabled]="!editMode"
-                        [(ngModel)]="asset.assetType.isa95AssetType"
-                        [aria-label]="'Asset Type' | translate"
-                    >
-                        @for (isaType of isa95Types; track isaType) {
-                            <mat-option
-                                [value]="isaType.type"
-                                [attr.data-cy]="'option-' + isaType.type"
-                                >{{ isaType.label }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-            </sp-basic-field-description>
-            <sp-basic-field-description
-                fxFlex="100"
-                descriptionPanelWidth="30"
-                [label]="'Labels' | translate"
-                [description]="
-                    'Assign additional labels to better discover your assets'
-                        | translate
-                "
-            >
-                <sp-asset-details-labels
-                    [asset]="asset"
-                    [editMode]="editMode"
-                    class="w-100"
-                >
-                </sp-asset-details-labels>
-            </sp-basic-field-description>
-            @if (rootNode) {
-                <sp-basic-field-description
-                    fxFlex="100"
-                    descriptionPanelWidth="30"
-                    [label]="'Sites' | translate"
-                    [description]="
-                        'Assign a location (site and area) to this asset'
-                            | translate
-                    "
-                >
-                    <sp-asset-details-site
-                        class="w-100"
-                        [asset]="asset"
-                        [sites]="sites"
-                        [editMode]="editMode"
-                    >
-                    </sp-asset-details-site>
-                </sp-basic-field-description>
-            }
-        </div>
-    </div>
+            </sp-asset-details-site>
+        </sp-split-section>
+    }
+
+    <sp-asset-details-links
+        [asset]="asset"
+        [assetModel]="assetModel"
+        [editMode]="true"
+    >
+    </sp-asset-details-links>
 </div>

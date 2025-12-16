@@ -49,39 +49,35 @@
 }
 
 .alert-info {
-    background-color: #f0f7ff;
-    border-color: #3b82f6;
-    color: #1c529f;
+    background-color: var(--color-info-bg);
+    color: var(--color-info);
 }
 
 .alert-icon-info {
-    color: #3b82f6;
+    color: var(--color-info);
 }
 
 .alert-warning {
-    background-color: #fff8e8;
-    border-color: #f97316;
-    color: #9a3412;
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
 }
 .alert-icon-warning {
-    color: #f97316;
+    color: var(--color-warning);
 }
 
 .alert-error {
-    background-color: #fff5f5;
-    border-color: #ef4444;
-    color: #991b1b;
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
 }
 .alert-icon-error {
-    color: #ef4444;
+    color: var(--color-error);
 }
 
 .alert-success {
-    background-color: #f0fdf4;
-    border-color: #22c55e;
-    color: #166534;
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
 }
 
 .alert-icon-success {
-    color: #22c55e;
+    color: var(--color-success);
 }

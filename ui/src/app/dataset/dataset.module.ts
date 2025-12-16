@@ -32,11 +32,8 @@ import { ExportProviderComponent } from './dialog/export-provider-dialog/export-
 import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/components/select-retention/select-retention-action/select-retention-action.component';
 import { SelectDataExportComponent } from './dialog/data-retention-dialog/components/select-export/select-format.component';
 import { DeleteExportProviderComponent } from './dialog/delete-export-provider/delete-export-provider-dialog.component';
-import {
-    DefaultLayoutDirective,
-    FlexLayoutModule,
-} from '@ngbracket/ngx-layout';
-import { MatButtonModule, MatIconButton } from '@angular/material/button';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -103,6 +100,8 @@ import { ExportProviderConnectionTestComponent } from './dialog/export-provider-
         SelectDataExportComponent,
         DeleteExportProviderComponent,
     ],
+    providers: [],
+
     exports: [],
 })
 export class DatasetModule {

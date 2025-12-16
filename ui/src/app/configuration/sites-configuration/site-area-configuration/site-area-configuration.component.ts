@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
     AssetConstants,
     AssetSiteDesc,
@@ -27,6 +27,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ManageSiteDialogComponent } from '../../dialog/manage-site/manage-site-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'sp-site-area-configuration',
@@ -40,6 +41,11 @@ export class SiteAreaConfigurationComponent implements OnInit {
     allSites: AssetSiteDesc[] = [];
     dataSource: MatTableDataSource<AssetSiteDesc> =
         new MatTableDataSource<AssetSiteDesc>();
+
+    allUsedSiteIds = [];
+
+    @ViewChild(MatSort)
+    sort: MatSort;
     displayedColumns = ['name', 'areas', 'actions'];
 
     constructor(
@@ -50,6 +56,14 @@ export class SiteAreaConfigurationComponent implements OnInit {
 
     ngOnInit() {
         this.loadSites();
+        this.dataSource.sortingDataAccessor = (site, column) => {
+            if (column === 'name') {
+                return site.label;
+            } else if (column === 'areas') {
+                return site.areas.toString();
+            }
+            return site[column];
+        };
     }
 
     loadSites(): void {
@@ -58,7 +72,27 @@ export class SiteAreaConfigurationComponent implements OnInit {
             .subscribe(res => {
                 this.allSites = res;
                 this.dataSource.data = this.allSites;
+                setTimeout(() => {
+                    this.dataSource.sort = this.sort;
+                });
             });
+        this.listSitesInUse();
+    }
+
+    listSitesInUse(): void {
+        this.genericStorageService
+            .getAllDocuments(AssetConstants.ASSET_APP_DOC_NAME)
+            .subscribe(res => {
+                this.allUsedSiteIds = this.extractSiteIds(res);
+            });
+    }
+
+    extractSiteIds(assets) {
+        const allSiteIds = new Set<string>();
+
+        assets.forEach(asset => allSiteIds.add(asset.assetSite.siteId));
+
+        return Array.from(allSiteIds);
     }
 
     deleteSite(site: AssetSiteDesc): void {

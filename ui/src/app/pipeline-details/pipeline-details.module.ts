@@ -80,7 +80,7 @@ import { TranslateModule } from '@ngx-translate/core';
         PipelineDetailsToolbarComponent,
     ],
     providers: [],
-    exports: [],
+    exports: [PipelinePreviewComponent],
 })
 export class PipelineDetailsModule {
     constructor() {}

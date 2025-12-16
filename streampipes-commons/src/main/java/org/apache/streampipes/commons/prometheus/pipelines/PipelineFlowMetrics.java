@@ -23,25 +23,29 @@ import io.prometheus.client.Gauge;
 
 
 public class PipelineFlowMetrics {
-
-  public static final Gauge RECEIVED_TOTAL_DATA_GAUGE = StreamPipesCollectorRegistry.registerGauge(
+@Deprecated
+    public static final Gauge RECEIVED_TOTAL_DATA_GAUGE = StreamPipesCollectorRegistry.registerGauge(
       "received_total_data",
-      "Total amount of data received by the pipeline"
+      "DEPRECATED. Total amount of data received by the pipeline"
   );
-
+@Deprecated
   public static final Gauge PROCESSED_DATA_GAUGE = StreamPipesCollectorRegistry.registerGauge(
       "processed_data",
-      "Number of data obtained from pipeline processing"
+      "DEPRECATED. Number of data obtained from pipeline processing"
   );
-
+@Deprecated
   public static final Gauge ELEMENT_INPUT_TOTAL_DATA_GAUGE = StreamPipesCollectorRegistry.registerGauge(
       "element_input_total_data",
-      "Total amount of data received by elements"
+      "DEPRECATED. Total amount of data received by elements"
   );
-
+@Deprecated
   public static final Gauge ELEMENT_OUTPUT_TOTAL_DATA_GAUGE = StreamPipesCollectorRegistry.registerGauge(
       "element_output_total_data",
-      "Total amount of data sent by elements"
+      "DEPRECATED. Total amount of data sent by elements"
   );
+
+  public static final Gauge ELEMENT_FLOW_GAUGE = StreamPipesCollectorRegistry.registerGauge(
+                                                    "sp_core_pipeline_element_data_total",
+                                                     "Total amount of data received/sent by a pipeline element (e.g., filter)","pipelineId", "elemenetId","elementType", "operation");
 
 }

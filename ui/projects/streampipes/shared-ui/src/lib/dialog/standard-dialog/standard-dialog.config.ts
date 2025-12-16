@@ -17,17 +17,9 @@
  */
 
 import { BaseDialogConfig } from '../base-dialog/base-dialog.config';
-import { DialogPanelConfig } from '../base-dialog/base-dialog.model';
 import { Overlay } from '@angular/cdk/overlay';
 
 export class StandardDialogConfig implements BaseDialogConfig {
-    getConfig(): DialogPanelConfig {
-        const config: DialogPanelConfig = {} as DialogPanelConfig;
-        config.maxWidth = '90vw';
-        config.height = '50vh';
-        return config;
-    }
-
     getPosition(overlay: Overlay) {
         return overlay
             .position()

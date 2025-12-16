@@ -18,6 +18,9 @@
 
 import { AppModule } from './app/app.module';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+// needed so that maplibre attaches to leaflet upon startup
+import 'leaflet';
+import '@maplibre/maplibre-gl-leaflet';
 
 platformBrowserDynamic()
     .bootstrapModule(AppModule)

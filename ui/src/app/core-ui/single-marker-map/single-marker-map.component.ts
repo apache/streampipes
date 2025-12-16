@@ -25,7 +25,6 @@ import {
     MapOptions,
     marker,
     Marker,
-    tileLayer,
 } from 'leaflet';
 import {
     AssetLocation,
@@ -80,6 +79,7 @@ export class SingleMarkerMapComponent implements OnInit, ControlValueAccessor {
                 this.locationConfig,
             ),
             zoom: this.assetLocation.zoom || 1,
+            zoomControl: !this.readonly,
             center: {
                 lat: this.assetLocation.coordinates.latitude,
                 lng: this.assetLocation.coordinates.longitude,
@@ -104,8 +104,10 @@ export class SingleMarkerMapComponent implements OnInit, ControlValueAccessor {
     onMapReady(map: Map) {
         this.map = map;
         this.map.attributionControl.setPrefix('');
-        this.map.invalidateSize();
         this.addMarker(this.assetLocation.coordinates);
+        setTimeout(() => {
+            this.map.invalidateSize();
+        }, 0);
     }
 
     onZoomChange(zoom: number): void {

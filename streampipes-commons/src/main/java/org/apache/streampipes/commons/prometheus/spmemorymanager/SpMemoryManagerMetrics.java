@@ -26,19 +26,33 @@ import io.prometheus.client.Gauge;
  * Memory Manager Metrics Manager
  */
 public class SpMemoryManagerMetrics {
-    
-  public static final Gauge MEMORY_USED_BYTES = StreamPipesCollectorRegistry.registerGauge(
+  
+  @Deprecated
+  public static final Gauge MEMORY_USED_BYTES_LEGACY = StreamPipesCollectorRegistry.registerGauge(
         "sp_memory_used_bytes",
+        "DEPRECATED: Use sp_memory_used_bytes instead. Amount of memory used in bytes"
+  );
+  @Deprecated
+  public static final Gauge MEMORY_ALLOCATION_RATE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
+        "sp_memory_allocation_rate_bytes_per_second",
+        "DEPRECATED: Use sp_memory_allocation_rate_bytes_per_second instead. Memory allocation rate in bytes per second"
+  );
+
+
+  public static final Gauge MEMORY_USED_BYTES = StreamPipesCollectorRegistry.registerGauge(
+        "sp_extension_memory_used_bytes",
         "Amount of memory used in bytes"
   );
 
   public static final Gauge MEMORY_ALLOCATION_RATE = StreamPipesCollectorRegistry.registerGauge(
-        "sp_memory_allocation_rate_bytes_per_second",
+        "sp_extension_memory_allocation_rate_bytes_per_second",
         "Memory allocation rate in bytes per second"
   );
-
   public static void updateCoreMetrics(double memoryUsedBytes, double allocationRate) {
     MEMORY_USED_BYTES.set(memoryUsedBytes);
     MEMORY_ALLOCATION_RATE.set(allocationRate);
+
+    MEMORY_USED_BYTES_LEGACY.set(memoryUsedBytes);
+    MEMORY_ALLOCATION_RATE_LEGACY.set(allocationRate);
   }
 }

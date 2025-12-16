@@ -68,14 +68,12 @@ describe('Test Saving Pipeline with Asset Link', () => {
         // CLick on Asset
 
         AssetUtils.editAsset(assetName1);
-        AssetBtns.assetLinksTab().click();
         AssetUtils.checkAmountOfLinkedResources(2);
 
         // Go Back to Asset
         AssetUtils.goToAssets();
         AssetUtils.checkAmountOfAssetsGreaterThan(0);
         AssetUtils.editAsset(assetName2);
-        AssetBtns.assetLinksTab().click();
         AssetUtils.checkAmountOfLinkedResources(2);
     });
 
