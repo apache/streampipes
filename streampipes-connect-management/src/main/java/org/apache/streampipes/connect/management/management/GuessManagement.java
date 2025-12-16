@@ -32,7 +32,6 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -54,7 +53,7 @@ public class GuessManagement {
 
   public GuessManagement() {
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
-    this.objectMapper = JacksonSerializer.getObjectMapper();
+    this.objectMapper = new ObjectMapper();//JacksonSerializer.getObjectMapper();
   }
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription)
