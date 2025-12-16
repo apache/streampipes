@@ -25,7 +25,6 @@ import org.apache.streampipes.messaging.SpProtocolManager;
 public class StreamPipesClientConfig implements IStreamPipesClientConfig {
 
   private final ClientConnectionUrlResolver connectionConfig;
-  //private final ObjectMapper serializer;
 
   public StreamPipesClientConfig(ClientConnectionUrlResolver connectionConfig) {
     this.connectionConfig = connectionConfig;
