@@ -55,8 +55,7 @@ public class DatatypeUtils {
         } else if (XSD.BOOLEAN.toString().equals(targetDatatypeXsd)) {
           return Boolean.parseBoolean(stringValue);
         } else if (XSD.INTEGER.toString().equals(targetDatatypeXsd)) {
-          var floatingNumber = ((Double) Double.parseDouble(stringValue)).intValue();
-          return Integer.parseInt(String.valueOf(Math.round(floatingNumber)));
+          return ((Double) Double.parseDouble(stringValue)).intValue();
         } else if (XSD.LONG.toString().equals(targetDatatypeXsd)) {
           var floatingNumber = Double.parseDouble(stringValue);
           return Long.parseLong(String.valueOf(Math.round(floatingNumber)));
