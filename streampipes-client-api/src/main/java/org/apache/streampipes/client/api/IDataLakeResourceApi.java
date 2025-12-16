@@ -15,29 +15,19 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.client.serializer;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+package org.apache.streampipes.client.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 
-public class ObjectSerializer<K, V> extends Serializer<K, V, V> {
+import java.util.Map;
 
-    public ObjectSerializer() {
-        super();  
-    }
+public interface IDataLakeResourceApi {
+  
+  void delete(String measurementID, Long startDate, Long endDate);
 
-    public ObjectSerializer(boolean useDefaultTyping) {
-        super(useDefaultTyping);  
-    }
+  void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch);
 
-  @Override
-  public V deserialize(String response, Class<V> targetClass) {
-    try {
-      return objectMapper.readValue(response, targetClass);
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-      throw new SpRuntimeException(e.fillInStackTrace());
-    }
-  }
+  SpQueryResult get(String measurementID, Map<String, String> queryParams);
+
 }
