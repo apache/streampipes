@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.zip.ZipFileExtractor;
 import org.apache.streampipes.export.constants.ExportConstants;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +44,7 @@ public abstract class ImportGenerator<T> {
 
   public ImportGenerator() {
     this.spMapper = SerializationUtils.getSpObjectMapper();
-    this.defaultMapper = SerializationUtils.getDefaultObjectMapper();
+    this.defaultMapper = JacksonSerializer.getObjectMapper();
   }
 
   public T generate(InputStream inputStream) throws IOException {

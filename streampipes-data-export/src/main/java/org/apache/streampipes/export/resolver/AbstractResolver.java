@@ -24,6 +24,7 @@ import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -41,7 +42,7 @@ public abstract class AbstractResolver<T> implements DocumentResolver<T> {
 
   public AbstractResolver() {
     this.spMapper = SerializationUtils.getSpObjectMapper();
-    this.defaultMapper = SerializationUtils.getDefaultObjectMapper();
+    this.defaultMapper = JacksonSerializer.getObjectMapper();
   }
 
   public Set<ExportItem> resolve(Set<AssetLink> assetLinks) {

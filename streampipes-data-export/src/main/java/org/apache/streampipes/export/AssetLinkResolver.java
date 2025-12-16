@@ -26,10 +26,10 @@ import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +50,7 @@ public class AssetLinkResolver {
 
   public AssetLinkResolver(String assetId) {
     this.assetId = assetId;
-    this.mapper = SerializationUtils.getDefaultObjectMapper();
+    this.mapper = JacksonSerializer.getObjectMapper();
   }
 
   public AssetExportConfiguration resolveResources() {
