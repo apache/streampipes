@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class JacksonSerializer {
 
-  public static ObjectMapper getDefaultObjectMapper() {
+  public static ObjectMapper getObjectMapper() {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     //TODO do I need? 
@@ -33,7 +33,7 @@ public class JacksonSerializer {
     return mapper;
   }
 
-  public static ObjectMapper getObjectMapper() {
+  /**public static ObjectMapper getObjectMapper() {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     mapper.activateDefaultTypingAsProperty(mapper.getPolymorphicTypeValidator(),
@@ -41,5 +41,5 @@ public class JacksonSerializer {
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
     return mapper;
-  }
+  }*/
 }
