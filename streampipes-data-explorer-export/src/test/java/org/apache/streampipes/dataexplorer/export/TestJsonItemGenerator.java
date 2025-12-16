@@ -19,8 +19,8 @@
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +31,7 @@ public class TestJsonItemGenerator extends TestItemGenerator {
 
   @Test
   public void testJsonWriter() {
-    var writer = new JsonItemGenerator(new ObjectMapper());
+    var writer = new JsonItemGenerator(new JacksonSerializer(true).getObjectMapper());
 
     String result = writer.createItem(row, columns);
 

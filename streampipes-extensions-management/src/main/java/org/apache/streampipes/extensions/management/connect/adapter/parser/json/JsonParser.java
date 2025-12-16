@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,7 +35,7 @@ public abstract class JsonParser {
   protected final ParserUtils parserUtils;
 
   public JsonParser() {
-    this.mapper = new ObjectMapper();
+    this.mapper = new JacksonSerializer(true).getObjectMapper();
     this.parserUtils = new ParserUtils();
   }
 

@@ -19,6 +19,7 @@
 package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -38,7 +39,7 @@ public class MoveAssetContentMigration implements Migration {
   private static final Logger LOG = LoggerFactory.getLogger(MoveAssetContentMigration.class);
 
   private IGenericStorage genericStorage;
-  private final ObjectMapper mapper = new ObjectMapper();
+  private final ObjectMapper mapper = new JacksonSerializer(true).getObjectMapper();
 
   private static final Set<String> allowedKeys = Set.of(
       "assetId",

@@ -19,11 +19,10 @@
 package org.apache.streampipes.service.core.migrations.v0980;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class ModifyAssetLinksMigration implements Migration {
     var assets = storage.findAll(GenericDocTypes.DOC_ASSET_MANGEMENT);
     for (Map<String, Object> asset : assets) {
       updateAssetLink(asset);
-      storage.update(asset.get("_id").toString(), new ObjectMapper().writeValueAsString(asset));
+      storage.update(asset.get("_id").toString(),new JacksonSerializer(true).getObjectMapper().writeValueAsString(asset));
     }
   }
 

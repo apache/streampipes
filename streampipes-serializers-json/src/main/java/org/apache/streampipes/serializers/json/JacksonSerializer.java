@@ -23,23 +23,22 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class JacksonSerializer {
 
-  public static ObjectMapper getObjectMapper() {
+
+  private boolean failOnUnknownProperties;
+
+  public JacksonSerializer() {
+    this.failOnUnknownProperties = false;  
+  }
+
+  public JacksonSerializer(boolean failOnUnknownProperties) {
+    this.failOnUnknownProperties = failOnUnknownProperties;
+  }
+
+  public ObjectMapper getObjectMapper() {
     ObjectMapper mapper = new ObjectMapper();
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    //TODO do I need? 
-    //mapper.deactivateDefaultTyping();
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, this.failOnUnknownProperties);
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
     return mapper;
   }
-
-  /**public static ObjectMapper getObjectMapper() {
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    mapper.activateDefaultTypingAsProperty(mapper.getPolymorphicTypeValidator(),
-        ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, "@class");
-    mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-    return mapper;
-  }*/
 }

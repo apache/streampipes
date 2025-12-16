@@ -34,6 +34,7 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -76,7 +77,7 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
 
   public MSTeamsSink() {
     super();
-    this.objectMapper = new ObjectMapper();
+    this.objectMapper = new JacksonSerializer(true).getObjectMapper();
   }
 
   @Override
@@ -97,7 +98,7 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   ) {
     super.onPipelineStarted(parameters, runtimeContext);
 
-    this.objectMapper = new ObjectMapper();
+    this.objectMapper = new JacksonSerializer(true).getObjectMapper();
 
     var extractor = parameters.extractor();
     webhookUrl = extractor.secretValue(KEY_WEBHOOK_URL);

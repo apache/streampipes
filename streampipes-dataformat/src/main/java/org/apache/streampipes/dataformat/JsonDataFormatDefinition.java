@@ -19,6 +19,7 @@
 package org.apache.streampipes.dataformat;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +33,7 @@ public class JsonDataFormatDefinition implements SpDataFormatDefinition {
   private final ObjectMapper objectMapper;
 
   public JsonDataFormatDefinition() {
-    this.objectMapper = new ObjectMapper();
+    this.objectMapper = new JacksonSerializer(true).getObjectMapper();
   }
 
   @Override

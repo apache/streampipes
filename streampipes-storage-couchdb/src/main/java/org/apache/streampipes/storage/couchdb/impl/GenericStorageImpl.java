@@ -19,6 +19,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.file.GenericStorageAttachment;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
@@ -50,10 +51,9 @@ public class GenericStorageImpl implements IGenericStorage {
   private final ObjectMapper mapper;
 
   public GenericStorageImpl() {
-    this.mapper = new ObjectMapper();
+    this.mapper = new JacksonSerializer().getObjectMapper();
     this.mapper
-        .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        .setSerializationInclusion(JsonInclude.Include.NON_NULL);
   }
 
   @Override

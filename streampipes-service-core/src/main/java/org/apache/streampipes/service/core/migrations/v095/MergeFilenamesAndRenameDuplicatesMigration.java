@@ -20,6 +20,7 @@ package org.apache.streampipes.service.core.migrations.v095;
 
 import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
@@ -46,7 +47,7 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
 
   private CouchDbClient couchDbClient;
 
-  private final ObjectMapper mapper = new ObjectMapper();
+  private final ObjectMapper mapper = new JacksonSerializer(true).getObjectMapper();
 
   private final CRUDStorage<FileMetadata> fileMetadataStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage();

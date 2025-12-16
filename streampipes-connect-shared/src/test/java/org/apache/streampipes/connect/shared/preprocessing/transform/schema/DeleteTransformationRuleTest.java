@@ -18,21 +18,24 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DeleteTransformationRuleTest {
 
 
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private ObjectMapper objectMapper = new JacksonSerializer(true).getObjectMapper();;
 
   @Test
   public void transformSimple() {

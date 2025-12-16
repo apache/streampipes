@@ -19,11 +19,10 @@
 package org.apache.streampipes.service.core.migrations.v0980;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.List;
@@ -54,10 +53,10 @@ public class ModifyAssetLinkTypesMigration implements Migration {
         al.put("navPaths", List.of("dataexplorer", "chart"));
         al.put("linkIcon", "query_stats");
         al.put("linkQueryHint", "chart");
-        storage.update(al.get("_id").toString(), new ObjectMapper().writeValueAsString(al));
+        storage.update(al.get("_id").toString(),new JacksonSerializer(true).getObjectMapper().writeValueAsString(al));
       } else if (al.get("linkType").equals("dashboard")) {
         al.put("linkIcon", "dashboard");
-        storage.update(al.get("_id").toString(), new ObjectMapper().writeValueAsString(al));
+        storage.update(al.get("_id").toString(),new JacksonSerializer(true).getObjectMapper().writeValueAsString(al));
       }
     }
   }

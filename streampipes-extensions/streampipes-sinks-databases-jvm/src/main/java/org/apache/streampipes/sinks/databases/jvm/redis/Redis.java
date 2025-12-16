@@ -20,9 +20,9 @@ package org.apache.streampipes.sinks.databases.jvm.redis;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -125,7 +125,7 @@ public class Redis {
 
   private String getEventValue(Event event) throws SpRuntimeException {
     try {
-      return new ObjectMapper().writeValueAsString(event.getRaw());
+      return new JacksonSerializer(true).getObjectMapper().writeValueAsString(event.getRaw());
     } catch (JsonProcessingException e) {
       throw new SpRuntimeException("Could not convert event to JSON", e);
     }

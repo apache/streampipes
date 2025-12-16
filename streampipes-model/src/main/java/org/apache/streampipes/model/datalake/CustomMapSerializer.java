@@ -17,14 +17,14 @@
  */
 package org.apache.streampipes.model.datalake;
 
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 import java.util.Map;
-
 /* TODO This is a really ugly hack to properly serialize custom configuration maps
     that are only typed in the UI.
  */
@@ -37,6 +37,6 @@ class CustomMapSerializer extends JsonSerializer<Map> {
 
   @Override
   public void serialize(Map s, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-    jsonGenerator.writeRawValue(new ObjectMapper().writeValueAsString(s));
+    jsonGenerator.writeRawValue(new JacksonSerializer(true).getObjectMapper().writeValueAsString(s));
   }
 }

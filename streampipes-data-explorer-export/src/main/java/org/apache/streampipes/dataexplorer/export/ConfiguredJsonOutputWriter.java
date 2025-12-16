@@ -22,8 +22,7 @@ import org.apache.streampipes.dataexplorer.export.item.ItemGenerator;
 import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,7 +36,7 @@ public class ConfiguredJsonOutputWriter extends ConfiguredOutputWriter {
   private final ItemGenerator itemGenerator;
 
   public ConfiguredJsonOutputWriter() {
-    this.itemGenerator = new JsonItemGenerator(new ObjectMapper());
+    this.itemGenerator = new JsonItemGenerator(new JacksonSerializer(true).getObjectMapper());
   }
 
   @Override

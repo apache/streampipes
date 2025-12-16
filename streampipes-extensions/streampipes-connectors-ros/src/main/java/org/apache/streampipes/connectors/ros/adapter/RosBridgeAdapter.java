@@ -36,6 +36,7 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,7 +69,7 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
   private String host;
   private int port;
 
-  private final ObjectMapper mapper = new ObjectMapper();
+  private final ObjectMapper mapper = new JacksonSerializer(true).getObjectMapper();
 
   private Ros ros;
 

@@ -19,7 +19,8 @@
 package org.apache.streampipes.connect.iiot.adapters.oi4.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -63,14 +64,14 @@ public class DataSetMessageDeserializationTest {
 
   @Test
   public void testObjectDeserialization() throws JsonProcessingException {
-    var mapper = new ObjectMapper();
+    var mapper = new JacksonSerializer(true).getObjectMapper();
     var deserialized = mapper.readValue(datasetMessageObjectPayload, DataSetMessage.class);
     Assertions.assertEquals(4, deserialized.payload().size());
   }
 
   @Test
   public void testArrayDeserialization() throws JsonProcessingException {
-    var mapper = new ObjectMapper();
+    var mapper = new JacksonSerializer(true).getObjectMapper();
     var deserialized = mapper.readValue(datasetMessageArrayPayload, DataSetMessage.class);
     Assertions.assertEquals(4, deserialized.payload().size());
   }

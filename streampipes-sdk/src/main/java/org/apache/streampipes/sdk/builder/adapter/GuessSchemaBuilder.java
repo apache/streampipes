@@ -21,6 +21,7 @@ import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +42,7 @@ public class GuessSchemaBuilder {
   private GuessSchemaBuilder() {
     this.eventProperties = new ArrayList<>();
     this.samples = new HashMap<>();
-    this.objectMapper = new ObjectMapper();
+    this.objectMapper = new JacksonSerializer(true).getObjectMapper();
     this.fieldStatusInfos = new HashMap<>();
   }
 

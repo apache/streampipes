@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.manager.runtime;
 
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -37,7 +39,7 @@ public class RateLimitedRuntimeInfoProvider {
   public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
                                         ClientDisconnectCallback callback) {
     this.runtimeInfoProvider = runtimeInfoProvider;
-    this.objectMapper = new ObjectMapper();
+    this.objectMapper = new JacksonSerializer(true).getObjectMapper();
     this.callback = callback;
   }
 

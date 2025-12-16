@@ -27,6 +27,7 @@ import org.apache.streampipes.integration.utils.Utils;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -98,7 +99,7 @@ public class PulsarAdapterTester extends AdapterTesterBase {
                 pulsarContainer.getBrokerPort()))
         .build();
          Producer<byte[]> producer = client.newProducer().topic(TOPIC).create()) {
-      var objectMapper = new ObjectMapper();
+      var objectMapper = new JacksonSerializer(true).getObjectMapper();
 
       events.forEach(event -> {
         try {

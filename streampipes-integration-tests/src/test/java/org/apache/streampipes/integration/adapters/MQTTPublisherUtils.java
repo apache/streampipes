@@ -21,9 +21,9 @@ package org.apache.streampipes.integration.adapters;
 import org.apache.streampipes.integration.containers.MosquittoContainer;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -32,8 +32,8 @@ import java.util.Map;
 public class MQTTPublisherUtils {
 
     public static void publishEvents(MqttPublisher publisher, List<Map<String, Object>> events) {
-        var objectMapper = new ObjectMapper();
-
+        var objectMapper = new JacksonSerializer(true).getObjectMapper();
+ 
         events.forEach(event -> {
 
             try {
