@@ -55,6 +55,7 @@ public class GuessManagement {
   public GuessManagement() {
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
     this.objectMapper = new JacksonSerializer().getObjectMapper();
+
   }
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription)
