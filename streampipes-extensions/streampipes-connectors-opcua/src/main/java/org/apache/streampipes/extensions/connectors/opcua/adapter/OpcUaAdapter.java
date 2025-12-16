@@ -39,7 +39,6 @@ import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.connect.guess.SampleData;
-import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -60,7 +59,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ADAPTER_TYPE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
@@ -95,20 +93,12 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     this.nodeIdToLabelMapping = new HashMap<>();
   }
 
-  private void prepareAdapter(IAdapterParameterExtractor extractor) throws AdapterException {
-    List<String> deleteKeys = extractor
-        .getAdapterDescription()
-        .getSchemaRules()
-        .stream()
-        .filter(rule -> rule instanceof DeleteRuleDescription)
-        .map(rule -> ((DeleteRuleDescription) rule).getRuntimeKey())
-        .collect(Collectors.toList());
-
+  private void prepareAdapter() throws AdapterException {
     try {
       this.connectedClient = clientProvider.getClient(this.opcUaAdapterConfig);
       OpcUaNodeBrowser browserClient =
           new OpcUaNodeBrowser(this.connectedClient.getClient(), this.opcUaAdapterConfig);
-      this.nodeProvider = browserClient.makeNodeProvider(deleteKeys);
+      this.nodeProvider = browserClient.makeNodeProvider(List.of());
       this.allNodes = nodeProvider.getNodes();
 
       if (opcUaAdapterConfig.inPullMode()) {
@@ -209,7 +199,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
             extractor.getAdapterDescription().getElementId()
         );
     this.collector = collector;
-    this.prepareAdapter(extractor);
+    this.prepareAdapter();
     this.numberOfEventProperties =
         nodeProvider.getNumberOfEventProperties(this.connectedClient.getClient());
 

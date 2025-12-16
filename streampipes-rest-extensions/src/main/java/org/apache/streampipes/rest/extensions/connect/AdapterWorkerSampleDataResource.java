@@ -68,6 +68,14 @@ public class AdapterWorkerSampleDataResource extends AbstractSharedRestInterface
   }
 
   @ExceptionHandler(value = {ParseException.class})
+  private ResponseEntity<Object> handleParceException(ParseException ex) {
+    var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
+    return ResponseEntity
+        .status(spLogMessageException.getStatus())
+        .body(spLogMessageException.getSpMessage());
+  }
+
+  @ExceptionHandler(value = {AdapterException.class})
   private ResponseEntity<Object> handleAdapterException(AdapterException ex) {
     var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
     return ResponseEntity
