@@ -23,10 +23,6 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
 import org.apache.streampipes.extensions.connectors.influx.shared.SharedInfluxClient;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.influxdb.InfluxDBIOException;
@@ -40,8 +36,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.apache.streampipes.vocabulary.SO.DATE_TIME;
 
 public class InfluxDbClient extends SharedInfluxClient {
 
@@ -126,31 +120,29 @@ public class InfluxDbClient extends SharedInfluxClient {
     return false;
   }
 
-  public GuessSchema getSchema() throws AdapterException {
+  public Map<String, Object> getSampleEvent(InfluxDbClient influxDbClient) throws AdapterException {
     connect();
     loadColumns();
 
-    EventSchema eventSchema = new EventSchema();
-    GuessSchema guessSchema = new GuessSchema();
-    List<EventProperty> allProperties = new ArrayList<>();
 
-    for (Column column : columns) {
-      PrimitivePropertyBuilder property = PrimitivePropertyBuilder
-          .create(column.getDatatypes(), column.getName())
-          .label(column.getName());
-      // Setting the timestamp field to the correct semantic type
-      if (column.getName().equals("time")) {
-        property.semanticType(DATE_TIME);
+    List<List<Object>> queryResult = influxDbClient.query("SELECT *"
+                                                              + " FROM " + influxDbClient.getMeasurement()
+                                                              + " LIMIT 1 ");
+
+
+    if (queryResult.size() == 1) {
+      for (List<Object> value : queryResult) {
+        try {
+          return influxDbClient.extractEvent(value);
+        } catch (SpRuntimeException e) {
+          throw new AdapterException(e.getMessage());
+        }
       }
-      allProperties.add(property.build());
     }
 
-    eventSchema.setEventProperties(allProperties);
-    guessSchema.setEventSchema(eventSchema);
-
-    disconnect();
-    return guessSchema;
+    throw new AdapterException("No sample data coulde be found");
   }
+
 
   // Client must be connected before calling this method
   void loadColumns() throws AdapterException {
