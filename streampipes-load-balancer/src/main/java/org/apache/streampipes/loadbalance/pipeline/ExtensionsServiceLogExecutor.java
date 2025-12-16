@@ -77,8 +77,30 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
   private void updatePipelineFlow() {
     pipelineFlowStats.clear();
+   ExtensionsLogProvider.INSTANCE.getMetricsGroupedByPipeline().forEach((pipelineId, data) -> {
+    data.forEach((k, v) -> {
+        // Total "in" count
+        long dataCountIn = v.getMessagesIn()
+                .values()
+                .stream()
+                .mapToLong(m -> m.getCounter())
+                .sum();
+
+        long dataCountOut = v.getMessagesOut().getCounter();
+
+        pipelineFlowStats.updateElementFlow(
+                pipelineId,
+               k,
+                InstanceIdExtractor.getSimpleName(k),
+                dataCountIn,
+                dataCountOut
+        );
+    });
+});
+/** When removing the deprectated gauges this also becomes deprecated */
     ExtensionsLogProvider.INSTANCE.getAllMetricsInfos().forEach((k, v) -> {
       String className = InstanceIdExtractor.getSimpleName(k);
+
       if (AdapterDescription.class.getSimpleName().toLowerCase().equals(className)) {
         pipelineFlowStats.increaseReceivedTotalData(v.getMessagesOut().getCounter());
       } else if (DataProcessorInvocation.class.getSimpleName().toLowerCase().equals(className)) {

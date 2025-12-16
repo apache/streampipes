@@ -21,37 +21,48 @@ import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
 
 import io.prometheus.client.Gauge;
 
-
 public class PipelinesMetrics {
 
-  public static final Gauge ALL_PIPELINES_GAUGE = StreamPipesCollectorRegistry.registerGauge(
-                                                   "all_pipelines",
-                                                    "Total number of pipelines");
+    @Deprecated
+    public static final Gauge ALL_PIPELINES_GAUGE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
+            "all_pipelines",
+            "DEPRECATED: Use sp_core_pipeline_count_total instead. Total number of pipelines");
 
+    @Deprecated
+    public static final Gauge RUNNING_PIPELINES_GAUGE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
+            "running_pipelines",
+            "DEPRECATED: Use sp_core_pipeline_running_state operation = running instead. Number of running pipelines");
+    @Deprecated
+    public static final Gauge STOPPED_PIPELINES_GAUGE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
+            "stopped_pipelines",
+            "DEPRECATED: Use ssp_core_pipeline_running_state operation = stopped instead. Number of stopped pipelines");
 
-  public static final Gauge RUNNING_PIPELINES_GAUGE = StreamPipesCollectorRegistry.registerGauge(
-                                                   "running_pipelines",
-                                                    "Number of running pipelines");
+    @Deprecated
+    public static final Gauge HEALTHY_PIPELINES_GAUGE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
+            "healthy_pipelines",
+            "DEPRECATED: Use sp_core_pipeline_health_state operation = OK instead. Number of healthy pipelines");
+    @Deprecated
+    public static final Gauge FAILED_PIPELINES_GAUGE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
+            "failed_pipelines",
+            "DEPRECATED: Use sp_core_pipeline_health_state operation = FAILED instead. Number of failed pipelines");
+    @Deprecated
+    public static final Gauge ATTENTION_REQUIRED_PIPELINES_GAUGE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
+            "attention_required_pipelines",
+            "DEPRECATED: Use sp_core_pipeline_health_state operation = ATTENTION_REQUIRED instead. Number of pipelines requiring attention");
+    @Deprecated
+    public static final Gauge ELEMENT_COUNT_GAUGE_LEGACY = StreamPipesCollectorRegistry.registerGauge(
+            "element_count",
+            "DEPRECATED. Total number of elements in the pipeline");
 
-  public static final Gauge STOPPED_PIPELINES_GAUGE = StreamPipesCollectorRegistry.registerGauge(
-                                                    "stopped_pipelines",
-                                                     "Number of stopped pipelines");
-
-
-  public static final Gauge HEALTHY_PIPELINES_GAUGE = StreamPipesCollectorRegistry.registerGauge(
-                                                    "healthy_pipelines",
-                                                     "Number of healthy pipelines");
-
-  public static final Gauge FAILED_PIPELINES_GAUGE = StreamPipesCollectorRegistry.registerGauge(
-                                                    "failed_pipelines",
-                                                     "Number of failed pipelines");
-
-  public static final Gauge ATTENTION_REQUIRED_PIPELINES_GAUGE = StreamPipesCollectorRegistry.registerGauge(
-                                                    "attention_required_pipelines",
-                                                     "Number of pipelines requiring attention");
-
-  public static final Gauge ELEMENT_COUNT_GAUGE = StreamPipesCollectorRegistry.registerGauge(
-                                                    "element_count",
-                                                     "Total number of elements in the pipeline");
+    public static final Gauge ALL_PIPELINES_GAUGE = StreamPipesCollectorRegistry.registerGauge(
+            "sp_core_pipeline_count_total",
+            "Total number of pipelines");
+    public static final Gauge HEALTH_PIPELINES_GAUGE = StreamPipesCollectorRegistry.registerGauge(
+            "sp_core_pipeline_health_state",
+            "running pipelines per status (failed, attention, healthy)",
+            "pipelineId", "pipelineName", "operation");
+    public static final Gauge STATUS_PIPELINES_GAUGE = StreamPipesCollectorRegistry.registerGauge(
+            "sp_core_pipeline_running_state",
+            "Number of failed pipelines", "pipelineId", "pipelineName", "operation");
 
 }

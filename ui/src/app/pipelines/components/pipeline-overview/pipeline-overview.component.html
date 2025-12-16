@@ -19,6 +19,8 @@
 <sp-table
     [dataSource]="dataSource"
     [columns]="displayedColumns"
+    featureCardId="pipeline"
+    resourceIdKey="_id"
     [showActionsMenu]="true"
     [rowsClickable]="true"
     (rowClicked)="
@@ -158,9 +160,11 @@
             {{ 'Name' | translate }}
         </th>
         <td mat-cell *matCellDef="let pipeline" class="truncate">
-            <div fxLayout="column" fxLayoutAlign="start start">
-                <b>{{ pipeline.name }}</b>
-                <small> {{ pipeline.description }}</small>
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                <div fxLayout="column" fxLayoutAlign="start start">
+                    <span class="text-sm">{{ pipeline.name }}</span>
+                    <small> {{ pipeline.description }}</small>
+                </div>
             </div>
         </td>
     </ng-container>

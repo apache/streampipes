@@ -80,6 +80,7 @@
             <button
                 mat-menu-item
                 data-cy="details-asset-link"
+                [disabled]="!hasFeatureCard(element.linkType)"
                 (click)="openDetails(element)"
             >
                 <mat-icon>visibility</mat-icon>

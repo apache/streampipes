@@ -25,8 +25,10 @@
     >
         @for (label of assignedLabels; track label) {
             <sp-label
+                variant="solid"
+                shape="pill"
                 [labelText]="label.label"
-                [labelBackground]="label.color"
+                [color]="label.color"
                 [size]="size"
             ></sp-label>
         }

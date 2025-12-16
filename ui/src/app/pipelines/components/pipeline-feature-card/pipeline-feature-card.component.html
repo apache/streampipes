@@ -1,0 +1,53 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+@if (pipeline && pipelineCanvasMetadata) {
+    <div fxFlexFill fxLayout="column" class="feature-card-outer">
+        <sp-feature-card-header
+            [title]="pipeline.name"
+            [description]="pipeline.description"
+            [icon]="assetLink.linkIcon"
+            [iconColor]="assetLink.linkColor"
+            [detailsLink]="assetLink.navPaths"
+            (close)="onClose?.()"
+            (onDetailsClick)="navigateToPipelines()"
+        >
+        </sp-feature-card-header>
+
+        <sp-pipeline-preview-meta
+            [lastModifiedAt]="pipeline.createdAt"
+            [status]="pipeline.running"
+            [healthStatus]="pipeline.healthStatus"
+        >
+        </sp-pipeline-preview-meta>
+
+        <mat-divider></mat-divider>
+
+        <div fxFlex fxLayout="column" class="feature-preview-wrapper">
+            <div class="feature-preview-scale">
+                <div class="pipeline-preview-inner">
+                    <sp-pipeline-preview
+                        [pipeline]="pipeline"
+                        [pipelineCanvasMetadata]="pipelineCanvasMetadata"
+                    >
+                    </sp-pipeline-preview>
+                </div>
+            </div>
+        </div>
+    </div>
+}

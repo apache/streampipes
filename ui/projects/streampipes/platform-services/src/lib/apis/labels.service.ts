@@ -20,6 +20,7 @@ import { inject, Injectable } from '@angular/core';
 import { SpLabel } from '../model/labels/labels.model';
 import { Observable } from 'rxjs';
 import { GenericStorageService } from './generic-storage.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -31,6 +32,30 @@ export class LabelsService {
 
     getAllLabels(): Observable<SpLabel[]> {
         return this.genericStorageService.getAllDocuments(this.appDocType);
+    }
+
+    getLabelsInUse(): Observable<string[]> {
+        return this.genericStorageService
+            .getAllDocuments('asset-management')
+            .pipe(map(docs => this.extractLabelIds(docs)));
+    }
+
+    extractLabelIds(assets) {
+        const allLabelIds = new Set<string>();
+
+        const extractLabelsFromAsset = asset => {
+            if (asset.labelIds) {
+                asset.labelIds.forEach(labelId => allLabelIds.add(labelId));
+            }
+            if (asset.assets) {
+                asset.assets.forEach(subasset =>
+                    extractLabelsFromAsset(subasset),
+                );
+            }
+        };
+        assets.forEach(asset => extractLabelsFromAsset(asset));
+
+        return Array.from(allLabelIds);
     }
 
     addLabel(label: SpLabel): Observable<SpLabel> {

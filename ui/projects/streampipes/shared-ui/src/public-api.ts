@@ -22,6 +22,7 @@ export * from './lib/dialog/base-dialog/base-dialog.model';
 export * from './lib/dialog/base-dialog/base-dialog.service';
 export * from './lib/dialog/base-dialog/dialog-ref';
 export * from './lib/dialog/data-download-dialog/data-download-dialog.component';
+export * from './lib/dialog/card-dialog/card-dialog.component';
 
 export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
 export * from './lib/dialog/panel-dialog/panel-dialog.component';
@@ -58,6 +59,9 @@ export * from './lib/components/pipeline-element/pipeline-element.component';
 export * from './lib/components/input-schema-panel/input-schema-panel.component';
 export * from './lib/components/sidebar-resize/sidebar-resize.component';
 export * from './lib/components/asset-link-configuration/asset-link-configuration.component';
+export * from './lib/components/feature-card-host/feature-card-header/feature-card-header.component';
+export * from './lib/components/feature-card-host/feature-card-meta-section/feature-card-meta-section.component';
+export * from './lib/components/feature-card-host/feature-card-meta-creation/feature-card-meta-creation.component';
 
 export * from './lib/models/sp-navigation.model';
 
@@ -71,3 +75,4 @@ export * from './lib/components/asset-browser/asset-browser.service';
 export * from './lib/services/date-format.service';
 export * from './lib/services/pipeline-element-schema.service';
 export * from './lib/services/asset-configuration.service';
+export * from './lib/components/feature-card-host/feature-card.service';

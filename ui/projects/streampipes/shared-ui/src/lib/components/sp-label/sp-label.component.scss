@@ -16,32 +16,133 @@
  *
  */
 
-.basic-label {
-    border-radius: 15px;
-    padding: 5px 7px;
+:host {
+    --sp-label-color: var(--color-neutral);
+    --sp-label-surface: var(--color-bg-2);
+    --sp-label-contrast: var(--color-default-text);
+
+    --sp-label-bg: transparent;
+    --sp-label-fg: var(--sp-label-color);
+    --sp-label-border: transparent;
+
     display: inline-flex;
-    align-items: center;
-    text-align: center;
-    gap: 5px;
 }
 
-.basic-label.no-icon {
+.sp-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    background: var(--sp-label-bg);
+    color: var(--sp-label-fg);
+
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+
+    min-width: var(--sp-label-min-width, auto);
     justify-content: center;
 }
 
-.medium-label {
-    font-size: 11pt;
-    padding: 4px 12px;
-}
-
-.small-label {
-    font-size: 10pt;
-    padding: 2px 10px;
-}
-
-.centered-icon {
-    line-height: 1;
+.sp-label.has-icon sp-icon {
     display: inline-flex;
-    align-items: center;
-    font-size: inherit;
+}
+
+/* -----------------------
+   Variants
+------------------------ */
+
+:host([data-variant='solid']) {
+    --sp-label-bg: var(--sp-label-color);
+    --sp-label-fg: var(--sp-label-contrast);
+    --sp-label-border: transparent;
+}
+
+:host([data-variant='soft']) {
+    --sp-label-bg: color-mix(
+        in srgb,
+        var(--sp-label-color) 14%,
+        var(--sp-label-surface)
+    );
+    --sp-label-fg: var(--sp-label-color);
+    border: 0;
+    --sp-label-border: color-mix(
+        in srgb,
+        var(--sp-label-color) 35%,
+        transparent
+    );
+}
+
+:host([data-variant='outline']) {
+    --sp-label-bg: transparent;
+    --sp-label-fg: var(--sp-label-color);
+    --sp-label-border: color-mix(
+        in srgb,
+        var(--sp-label-color) 60%,
+        transparent
+    );
+}
+
+:host([data-size='medium']) .sp-label > i {
+    font-size: var(--font-size-md);
+    height: var(--font-size-md);
+    width: var(--font-size-md);
+}
+
+:host([data-size='small']) .sp-label > i {
+    font-size: var(--font-size-sm);
+    height: var(--font-size-sm);
+    width: var(--font-size-sm);
+}
+
+:host([data-size='small']) .sp-label {
+    font-size: var(--font-size-sm);
+    padding: 0.24rem 0.55rem;
+}
+
+:host([data-size='medium']) .sp-label {
+    font-size: var(--font-size-md);
+    padding: 0.26rem 0.65rem;
+}
+
+:host([data-size='large']) .sp-label {
+    font-size: var(--font-size-lg);
+    padding: 0.28rem 0.75rem;
+}
+
+:host([data-shape='pill']) .sp-label {
+    border-radius: 999px;
+}
+
+:host([data-shape='rounded']) .sp-label {
+    border-radius: 0.6rem;
+}
+
+:host([data-shape='badge']) .sp-label {
+    border-radius: 0.35rem;
+    padding: 0.18rem 0.45rem;
+    font-weight: 600;
+    box-shadow: none;
+}
+
+:host([data-shape='badge'][data-size='small']) .sp-label,
+:host([data-shape='badge'][data-size='medium']) .sp-label,
+:host([data-shape='badge'][data-size='large']) .sp-label {
+    padding: 0.18rem 0.45rem;
+}
+
+:host([data-case='normal']) .sp-label {
+    text-transform: none;
+}
+
+:host([data-case='uppercase']) .sp-label {
+    text-transform: uppercase;
+}
+
+:host([data-case='capitalize']) .sp-label {
+    text-transform: capitalize;
 }

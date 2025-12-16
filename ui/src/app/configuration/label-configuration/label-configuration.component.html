@@ -50,64 +50,90 @@
                     ></sp-edit-label>
                 </div>
             }
-            @for (label of allLabels; track label) {
-                <div
-                    fxLayout="column"
-                    class="label-item"
-                    data-cy="available-labels-list"
-                >
-                    <div
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                        fxLayoutGap="10px"
-                    >
+
+            <sp-table
+                class="mt-10"
+                [dataSource]="dataSource"
+                [columns]="['label', 'description', 'actions']"
+                matSort
+                data-cy="available-labels-list"
+            >
+                <ng-container matColumnDef="label">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        <b>{{ 'Label' | translate }}</b>
+                    </th>
+                    <td mat-cell *matCellDef="let label">
                         <sp-label
-                            size="small"
-                            fxFlex="20"
                             [labelText]="label.label"
-                            [labelBackground]="label.color"
+                            [color]="label.color"
+                            variant="solid"
+                            shape="pill"
+                            size="medium"
                             data-cy="label-text"
                         >
                         </sp-label>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        <b>{{ 'Description' | translate }}</b>
+                    </th>
+
+                    <td mat-cell *matCellDef="let label">
                         @if (!isEditMode(label._id)) {
-                            <span fxFlex="50">{{ label.description }}</span>
+                            {{ label.description }}
                         }
-                        <div fxFlex fxLayoutAlign="end center">
-                            @if (!isEditMode(label._id)) {
-                                <button
-                                    mat-icon-button
-                                    [matTooltip]="'Edit label' | translate"
-                                    color="accent"
-                                    (click)="editedLabels.push(label._id)"
-                                >
-                                    <i class="material-icons">edit</i>
-                                </button>
-                            }
-                            <button
-                                mat-icon-button
-                                [matTooltip]="'Delete label' | translate"
-                                class="btn-warn"
-                                (click)="deleteLabel(label)"
-                                data-cy="delete-label-button"
-                            >
-                                <i class="material-icons">delete</i>
-                            </button>
-                        </div>
-                    </div>
-                    @if (isEditMode(label._id)) {
-                        <div fxLayout="column">
+                        @if (isEditMode(label._id)) {
                             <sp-edit-label
                                 [editMode]="true"
                                 [showPreview]="false"
                                 [label]="label"
                                 (cancelEmitter)="removeEditedLabel(label._id)"
                                 (saveEmitter)="updateLabel(label)"
+                            ></sp-edit-label>
+                        }
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let label">
+                        <div fxLayout="row" fxLayoutAlign="end center">
+                            @if (!isEditMode(label._id)) {
+                                <button
+                                    mat-icon-button
+                                    color="accent"
+                                    [matTooltip]="'Edit label' | translate"
+                                    (click)="editedLabels.push(label._id)"
+                                >
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                            }
+                            <div
+                                matTooltip="{{
+                                    labelsinUse.includes(label._id)
+                                        ? ('To delete a label, please remove the label from all assets'
+                                          | translate)
+                                        : ('Delete label' | translate)
+                                }}"
+                                [matTooltipShowDelay]="0"
+                                [matTooltipHideDelay]="0"
+                                class="tooltip-container"
                             >
-                            </sp-edit-label>
+                                <button
+                                    mat-icon-button
+                                    class="btn-warn"
+                                    color="accent"
+                                    (click)="deleteLabel(label)"
+                                    data-cy="delete-label-button"
+                                    [disabled]="labelsinUse.includes(label._id)"
+                                >
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
                         </div>
-                    }
-                </div>
-            }
+                    </td>
+                </ng-container>
+            </sp-table>
         </sp-split-section>
     </div>
 </sp-basic-nav-tabs>

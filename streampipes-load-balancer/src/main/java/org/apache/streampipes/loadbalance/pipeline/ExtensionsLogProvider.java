@@ -43,7 +43,7 @@ public enum   ExtensionsLogProvider {
 
   public void addMonitoringInfos(SpEndpointMonitoringInfo monitoringInfo) {
     allMetricsInfos.putAll(monitoringInfo.getMetricsInfos());
-    monitoringInfo.getLogInfos().forEach((key, value) -> {
+    monitoringInfo.getLogInfos().forEach((key, value) -> {    
       if (!allLogInfos.containsKey(key)) {
         allLogInfos.put(key, new ArrayList<>());
       }
@@ -118,15 +118,39 @@ public enum   ExtensionsLogProvider {
   public Map<String, SpMetricsEntry> getAllMetricsInfos() {
     return this.allMetricsInfos;
   }
-
+  
   private List<String> collectPipelineElementIds(Pipeline pipeline) {
     if (pipeline != null){
-    return Stream.concat(
-        pipeline.getSepas().stream().map(NamedStreamPipesEntity::getElementId),
-        pipeline.getActions().stream().map(NamedStreamPipesEntity::getElementId)
-    ).collect(Collectors.toList());
+  return Stream.concat(
+        Stream.concat(
+            pipeline.getStreams().stream()
+               .map(s -> s.getCorrespondingAdapterId()),
+            pipeline.getSepas().stream()
+                .map(NamedStreamPipesEntity::getElementId)
+        ),
+        pipeline.getActions().stream()
+            .map(NamedStreamPipesEntity::getElementId)
+    )
+    .collect(Collectors.toList());
   }
   return List.of();
   }
+
+
+  public Map<String, Map<String, SpMetricsEntry>> getMetricsGroupedByPipeline() {
+
+    var allPipelines = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getPipelineStorageAPI().findAll();
+
+    Map<String, Map<String, SpMetricsEntry>> result = new HashMap<>();
+
+    for (Pipeline pipeline : allPipelines) {
+        var metrics = ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipeline.getPipelineId());
+        result.put(pipeline.getElementId(), metrics);
+    }
+
+    return result;
+}
 
 }

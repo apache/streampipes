@@ -47,16 +47,33 @@ public class AdapterMetrics {
 
   private static final String ELEMENT_NOT_FOUND_TEMPLATE = "No entry for adapter '%s' found. Please register it first.";
 
-  private final Gauge totalAdapterEventsPublishedMetric;
+/**
+ * @deprecated Use {@link #totalAdapterEventsPublishedMetric} instead.
+ */
+@Deprecated
+public final Gauge totalAdapterEventsPublishedMetricLegacy;
 
-  public AdapterMetrics() {
-    this.totalAdapterEventsPublishedMetric = StreamPipesCollectorRegistry.registerGauge(
+public final Gauge totalAdapterEventsPublishedMetric;
+
+public AdapterMetrics() {
+
+    this.totalAdapterEventsPublishedMetricLegacy = StreamPipesCollectorRegistry.registerGauge(
         "adapter_events_published_total",
+        "DEPRECATED: Use sp_core_adapter_instance_events_published_total instead. Total amount of events published per adapter",
+        "adapterId", "adapterName"
+    );
+
+    this.totalAdapterEventsPublishedMetric = StreamPipesCollectorRegistry.registerGauge(
+        "sp_core_adapter_instance_events_published_total",
         "Total amount of events published per adapter",
         "adapterId", "adapterName"
     );
+
     this.registeredAdapters = new HashMap<>();
-  }
+}
+
+
+ 
 
   /**
    * Registers a new adapter with the given adapterId and adapterName.
@@ -93,6 +110,8 @@ public class AdapterMetrics {
       // Order of labels needs to be preserved and match the one in AdapterMetrics#register
       totalAdapterEventsPublishedMetric.labels(adapterId, adapterName)
                                        .set(totalEventsPublished);
+      totalAdapterEventsPublishedMetricLegacy.labels(adapterId, adapterName)
+                                       .set(totalEventsPublished);
     } else {
       throw new NoSuchElementException(ELEMENT_NOT_FOUND_TEMPLATE.formatted(adapterId));
     }
@@ -109,6 +128,7 @@ public class AdapterMetrics {
   public void remove(String adapterId, String adapterName) {
     if (contains(adapterId)) {
       this.totalAdapterEventsPublishedMetric.remove(adapterId, adapterName);
+      this.totalAdapterEventsPublishedMetricLegacy.remove(adapterId, adapterName);
       this.registeredAdapters.remove(adapterId);
     } else {
       throw new NoSuchElementException(ELEMENT_NOT_FOUND_TEMPLATE.formatted(adapterId));

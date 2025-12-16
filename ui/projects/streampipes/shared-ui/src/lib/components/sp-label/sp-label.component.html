@@ -16,18 +16,16 @@
   ~
   -->
 
-<span
-    class="basic-label"
-    [ngClass]="cssClass"
-    [class.no-icon]="icon === undefined"
-    [ngStyle]="{
-        background: labelBackground,
-        borderColor: 'color-mix(in srgb, ' + labelBackground + ' 70%, black)',
-        color: labelTextColor
-    }"
->
+<span class="sp-label" [class.has-icon]="!!icon" [style.min-width]="minWidth">
     @if (icon) {
         <i class="material-icons centered-icon">{{ icon }}</i>
     }
-    {{ labelText }}
+    @if (labelText !== undefined && labelText !== null) {
+        <ng-container>
+            {{ labelText }}
+        </ng-container>
+    }
+    @if (labelText === undefined || labelText === null) {
+        <ng-content></ng-content>
+    }
 </span>

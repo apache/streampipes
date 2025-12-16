@@ -193,18 +193,10 @@ export class ChartViewComponent
                     this.originalDataView = JSON.parse(
                         JSON.stringify(this.dataView),
                     );
-                    if (!this.dataView.timeSettings?.startTime) {
-                        this.timeSettings = this.makeDefaultTimeSettings();
-                    } else {
-                        this.timeSelectionService.updateTimeSettings(
-                            this.timeSelectionService
-                                .defaultQuickTimeSelections,
-                            this.dataView.timeSettings as TimeSettings,
-                            new Date(),
+                    this.timeSettings =
+                        this.dataExplorerSharedService.makeChartTimeSettings(
+                            this.dataView,
                         );
-                        this.timeSettings = this.dataView
-                            .timeSettings as TimeSettings;
-                    }
                     this.afterDataViewLoaded();
                 }
             });
@@ -213,8 +205,6 @@ export class ChartViewComponent
     afterDataViewLoaded(): void {
         this.dataViewLoaded = true;
         setTimeout(() => {
-            const width = this.outerPanel.nativeElement.offsetWidth;
-            const height = this.outerPanel.nativeElement.offsetHeight;
             this.timeSelectionService.notify(this.timeSettings);
             this.updateQueryParams(this.timeSettings);
         });

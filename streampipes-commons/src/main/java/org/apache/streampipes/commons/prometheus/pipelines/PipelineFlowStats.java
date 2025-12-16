@@ -109,4 +109,9 @@ public class PipelineFlowStats {
 
   }
 
+  public void updateElementFlow(String pipelineId, String elementId, String elementType,  long valuesReceived, long valuesSend){
+    PipelineFlowMetrics.ELEMENT_FLOW_GAUGE.labels(pipelineId, elementId,elementType,"received").set(valuesReceived);
+     PipelineFlowMetrics.ELEMENT_FLOW_GAUGE.labels(pipelineId, elementId,elementType,"send").set(valuesSend);
+  }
+
 }

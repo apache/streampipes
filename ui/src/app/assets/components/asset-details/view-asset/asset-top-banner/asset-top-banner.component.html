@@ -27,14 +27,18 @@
             </sp-basic-header-title-component>
             <div class="banner-meta" fxLayout="row" fxLayoutGap="10px">
                 <sp-label
+                    shape="badge"
                     [labelText]="assetType"
+                    tone="neutral"
                     icon="precision_manufacturing"
                     size="small"
                 >
                 </sp-label>
                 @if (assetModel.assetSite?.siteId) {
                     <sp-label
+                        shape="badge"
                         [labelText]="assetModel.assetSite?.area"
+                        tone="neutral"
                         icon="location_on"
                         size="small"
                     >
