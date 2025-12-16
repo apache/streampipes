@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-10 13:31:13.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-16 11:01:04.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -114,6 +113,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'rules': TransformationRuleDescriptionUnion[];
     'running': boolean;
     'schemaRules': TransformationRuleDescriptionUnion[];
+    'schemaTransformationConfig': SchemaTransformationConfig;
     'selectedEndpointUrl': string;
     'streamRules': TransformationRuleDescriptionUnion[];
     'valueRules': TransformationRuleDescriptionUnion[];
@@ -149,6 +149,10 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         instance.schemaRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.schemaRules);
+        instance.schemaTransformationConfig =
+            SchemaTransformationConfig.fromData(
+                data.schemaTransformationConfig,
+            );
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
         instance.streamRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
@@ -156,26 +160,6 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         instance.valueRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.valueRules);
-        return instance;
-    }
-}
-
-export class AdapterEventPreview {
-    inputData: string;
-    rules: TransformationRuleDescriptionUnion[];
-
-    static fromData(
-        data: AdapterEventPreview,
-        target?: AdapterEventPreview,
-    ): AdapterEventPreview {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new AdapterEventPreview();
-        instance.inputData = data.inputData;
-        instance.rules = __getCopyArrayFn(
-            TransformationRuleDescription.fromDataUnion,
-        )(data.rules);
         return instance;
     }
 }
@@ -301,6 +285,9 @@ export class ValueTransformationRuleDescription extends TransformationRuleDescri
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class AddTimestampRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription';
     'propertyScope': PropertyScope;
@@ -1077,6 +1064,9 @@ export class ConsumedMessagesInfo extends MessagesInfo {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class CorrectionValueTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription';
     'correctionValue': number;
@@ -1532,6 +1522,9 @@ export class DataSinkType {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class SchemaTransformationRuleDescription extends TransformationRuleDescription {
     '@class':
         | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
@@ -1552,6 +1545,9 @@ export class SchemaTransformationRuleDescription extends TransformationRuleDescr
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class DeleteRuleDescription extends SchemaTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription';
     'runtimeKey': string;
@@ -2621,6 +2617,9 @@ export class MessagingSettings {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class MoveRuleDescription extends SchemaTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
     'newRuntimeKey': string;
@@ -3389,6 +3388,9 @@ export class QuantitativeValue extends ValueSpecification {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class RegexTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription';
     'regex': string;
@@ -3432,6 +3434,9 @@ export class RemoveDuplicatesTransformationRuleDescription extends StreamTransfo
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class RenameRuleDescription extends SchemaTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription';
     'newRuntimeKey': string;
@@ -3711,6 +3716,47 @@ export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
         instance.selectedNodesInternalNames = __getCopyArrayFn(
             __identity<string>(),
         )(data.selectedNodesInternalNames);
+        return instance;
+    }
+}
+
+export class SampleData {
+    samples: { [index: string]: any }[];
+
+    static fromData(data: SampleData, target?: SampleData): SampleData {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SampleData();
+        instance.samples = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.samples);
+        return instance;
+    }
+}
+
+export class SchemaTransformationConfig {
+    inputs: { [index: string]: any }[];
+    language: string;
+    outputs: { [index: string]: any }[];
+    script: string;
+
+    static fromData(
+        data: SchemaTransformationConfig,
+        target?: SchemaTransformationConfig,
+    ): SchemaTransformationConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SchemaTransformationConfig();
+        instance.inputs = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.inputs);
+        instance.language = data.language;
+        instance.outputs = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.outputs);
+        instance.script = data.script;
         return instance;
     }
 }
@@ -4213,6 +4259,9 @@ export class SuccessMessage extends Message {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class TimestampTranfsformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription';
     'formatString': string;
