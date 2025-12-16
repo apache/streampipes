@@ -23,7 +23,9 @@ import {
     EnvironmentInjector,
     inject,
     Input,
+    OnChanges,
     OnInit,
+    SimpleChanges,
 } from '@angular/core';
 import {
     AssetLinkType,
@@ -33,6 +35,8 @@ import {
     SpAssetModel,
 } from '@streampipes/platform-services';
 import {
+    featureGroup,
+    FeatureGroup,
     icon,
     latLng,
     latLngBounds,
@@ -58,7 +62,7 @@ import {
     styleUrls: ['./home-asset-map.component.scss'],
     standalone: false,
 })
-export class HomeAssetMapComponent implements OnInit {
+export class HomeAssetMapComponent implements OnInit, OnChanges {
     @Input()
     locationConfig: LocationConfig;
 
@@ -76,6 +80,7 @@ export class HomeAssetMapComponent implements OnInit {
     layers: Layer[];
     marker: Marker;
     bounds: LatLngBounds;
+    markersGroup: FeatureGroup = featureGroup();
 
     private currentPopupRef: ComponentRef<AssetMapPopupComponent> | null = null;
 
@@ -94,6 +99,12 @@ export class HomeAssetMapComponent implements OnInit {
             zoomControl: true,
             center: result.center,
         };
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['assets'] && this.map) {
+            this.refreshMarkersAndView();
+        }
     }
 
     getCenterAndBounds(): { center: LatLngExpression; bounds: L.LatLngBounds } {
@@ -123,7 +134,8 @@ export class HomeAssetMapComponent implements OnInit {
     onMapReady(map: Map) {
         this.map = map;
         this.map.attributionControl.setPrefix('');
-        this.createMarkers();
+        this.markersGroup.addTo(this.map);
+        this.refreshMarkersAndView();
 
         setTimeout(() => {
             map.invalidateSize();
@@ -133,7 +145,8 @@ export class HomeAssetMapComponent implements OnInit {
         }, 0);
     }
 
-    createMarkers(): void {
+    refreshMarkersAndView(): void {
+        this.markersGroup.clearLayers();
         const assetsWithSite = this.assets.filter(a => a.assetSite !== null);
 
         assetsWithSite.forEach(asset => {
@@ -146,8 +159,13 @@ export class HomeAssetMapComponent implements OnInit {
             marker.on('click', (e: LeafletMouseEvent) => {
                 this.openPopup(e, asset, site);
             });
-            marker.addTo(this.map);
+            this.markersGroup.addLayer(marker);
         });
+        const result = this.getCenterAndBounds();
+        this.bounds = result.bounds;
+        if (this.bounds.isValid()) {
+            this.map.fitBounds(this.bounds, { padding: [24, 24] });
+        }
     }
 
     makeMarker(location: LatLng): Marker {

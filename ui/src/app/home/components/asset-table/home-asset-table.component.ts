@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    ViewChild,
+} from '@angular/core';
 import {
     AssetLinkType,
     AssetSiteDesc,
@@ -34,7 +41,7 @@ import { Router } from '@angular/router';
     styleUrls: ['./home-asset-table.component.scss'],
     standalone: false,
 })
-export class HomeAssetTableComponent implements OnInit {
+export class HomeAssetTableComponent implements OnChanges {
     @Input()
     locationConfig: LocationConfig;
 
@@ -64,8 +71,12 @@ export class HomeAssetTableComponent implements OnInit {
     private isa95TypeService = inject(Isa95TypeService);
     private router = inject(Router);
 
-    ngOnInit() {
+    ngOnChanges(changes: SimpleChanges) {
+        console.log(changes);
         this.dataSource.data = this.assets;
+        setTimeout(() => {
+            this.dataSource.sort = this.sort;
+        });
     }
 
     getIsa95Type(asset: SpAssetModel): string {

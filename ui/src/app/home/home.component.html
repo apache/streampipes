@@ -63,7 +63,7 @@
                                 [assetLinkTypes]="assetLinkTypes"
                                 [sites]="sites"
                                 [locationConfig]="locationConfig"
-                                [assets]="assets"
+                                [assets]="filteredAssets"
                             ></sp-home-asset-map>
                         } @else {
                             <sp-alert-banner
@@ -83,7 +83,7 @@
                             [assetLinkTypes]="assetLinkTypes"
                             [sites]="sites"
                             [locationConfig]="locationConfig"
-                            [assets]="assets"
+                            [assets]="filteredAssets"
                         >
                         </sp-home-asset-table>
                     }

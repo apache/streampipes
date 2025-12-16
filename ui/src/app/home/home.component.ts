@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { HomeService } from './home.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../services/app.constants';
@@ -24,6 +24,7 @@ import {
     CurrentUserService,
     DialogService,
     PanelType,
+    SpAssetBrowserService,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { UserRole } from '../_enums/user-role.enum';
@@ -45,7 +46,7 @@ import {
     SpAssetModel,
     UserInfo,
 } from '@streampipes/platform-services';
-import { forkJoin, zip } from 'rxjs';
+import { forkJoin, Subscription, zip } from 'rxjs';
 import { StatusBox } from './models/home.model';
 import { LocalStorageService } from '../../../projects/streampipes/shared-ui/src/lib/services/local-storage-settings.service';
 
@@ -54,7 +55,7 @@ import { LocalStorageService } from '../../../projects/streampipes/shared-ui/src
     styleUrls: ['./home.component.scss'],
     standalone: false,
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
     serviceLinks = [];
     showStatus = false;
 
@@ -64,6 +65,7 @@ export class HomeComponent implements OnInit {
     statusBoxes: StatusBox[] = [];
     locationConfig: LocationConfig;
     assets: SpAssetModel[] = [];
+    filteredAssets: SpAssetModel[] = [];
     sites: Record<string, AssetSiteDesc> = {};
     assetLinkTypes: Record<string, AssetLinkType> = {};
 
@@ -93,6 +95,9 @@ export class HomeComponent implements OnInit {
     private locationService = inject(LocationConfigService);
     private assetService = inject(AssetManagementService);
     private localStorageService = inject(LocalStorageService);
+    private assetFilterService = inject(SpAssetBrowserService);
+
+    assetFilter$: Subscription;
 
     constructor() {
         this.serviceLinks = this.homeService.getFilteredServiceLinks();
@@ -107,6 +112,10 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
         this.currentUser = this.currentUserService.getCurrentUser();
+        this.assetFilter$ =
+            this.assetFilterService.currentAssetFilter$.subscribe(filter => {
+                this.filteredAssets = filter.selectedAssets as SpAssetModel[];
+            });
         const isAdmin = this.hasRole(UserRole.ROLE_ADMIN);
         forkJoin([
             this.genericStorageService.getAllDocuments(
@@ -255,5 +264,9 @@ export class HomeComponent implements OnInit {
     updateView(view: string): void {
         this.selectedView.set(view);
         this.localStorageService.set('default-asset-view', view);
+    }
+
+    ngOnDestroy() {
+        this.assetFilter$?.unsubscribe();
     }
 }
