@@ -20,7 +20,6 @@ package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.export.utils.EventGroundingProcessor;
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.grounding.EventGrounding;
@@ -37,11 +36,9 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractResolver<T> implements DocumentResolver<T> {
 
-  protected ObjectMapper spMapper;
   protected ObjectMapper defaultMapper;
 
   public AbstractResolver() {
-    this.spMapper = SerializationUtils.getSpObjectMapper();
     this.defaultMapper = JacksonSerializer.getObjectMapper();
   }
 
@@ -77,6 +74,6 @@ public abstract class AbstractResolver<T> implements DocumentResolver<T> {
   }
 
   protected ObjectMapper getObjectMapper() {
-    return spMapper;
+    return defaultMapper;
   }
 }

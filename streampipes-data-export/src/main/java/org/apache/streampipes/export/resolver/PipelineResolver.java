@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
@@ -51,7 +50,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
 
   @Override
   public Pipeline readDocument(String serializedDoc) throws JsonProcessingException {
-    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, Pipeline.class);
+    return this.defaultMapper.readValue(serializedDoc, Pipeline.class);
   }
 
   @Override
@@ -86,7 +85,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
 
   @Override
   public Pipeline deserializeDocument(String document) throws JsonProcessingException {
-    return this.spMapper.readValue(document, Pipeline.class);
+    return this.defaultMapper.readValue(document, Pipeline.class);
   }
 
   @Override

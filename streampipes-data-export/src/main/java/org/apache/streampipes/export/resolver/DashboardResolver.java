@@ -19,7 +19,6 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.dashboard.DashboardItem;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
@@ -51,7 +50,7 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public DashboardModel readDocument(String serializedDoc) throws JsonProcessingException {
-    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, DashboardModel.class);
+    return this.defaultMapper.readValue(serializedDoc, DashboardModel.class);
   }
 
   @Override
@@ -66,7 +65,7 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public DashboardModel deserializeDocument(String document) throws JsonProcessingException {
-    return this.spMapper.readValue(document, DashboardModel.class);
+    return this.defaultMapper.readValue(document, DashboardModel.class);
   }
 
   @Override

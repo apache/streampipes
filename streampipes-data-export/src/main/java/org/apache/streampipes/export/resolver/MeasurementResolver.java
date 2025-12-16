@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
@@ -40,7 +39,7 @@ public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
 
   @Override
   public DataLakeMeasure readDocument(String serializedDoc) throws JsonProcessingException {
-    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, DataLakeMeasure.class);
+    return this.defaultMapper.readValue(serializedDoc, DataLakeMeasure.class);
   }
 
   @Override
@@ -55,7 +54,7 @@ public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
 
   @Override
   public DataLakeMeasure deserializeDocument(String document) throws JsonProcessingException {
-    return this.spMapper.readValue(document, DataLakeMeasure.class);
+    return this.defaultMapper.readValue(document, DataLakeMeasure.class);
   }
 
   @Override
