@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { HomeService } from './home.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../services/app.constants';
@@ -47,6 +47,7 @@ import {
 } from '@streampipes/platform-services';
 import { forkJoin, zip } from 'rxjs';
 import { StatusBox } from './models/home.model';
+import { LocalStorageService } from '../../../projects/streampipes/shared-ui/src/lib/services/local-storage-settings.service';
 
 @Component({
     templateUrl: './home.component.html',
@@ -76,7 +77,7 @@ export class HomeComponent implements OnInit {
 
     isTutorialOpen = false;
     currentUser: UserInfo;
-    selectedView = 'table';
+    selectedView = signal<string>('table');
     contentLoaded = false;
 
     private homeService = inject(HomeService);
@@ -91,6 +92,7 @@ export class HomeComponent implements OnInit {
     private genericStorageService = inject(GenericStorageService);
     private locationService = inject(LocationConfigService);
     private assetService = inject(AssetManagementService);
+    private localStorageService = inject(LocalStorageService);
 
     constructor() {
         this.serviceLinks = this.homeService.getFilteredServiceLinks();
@@ -98,6 +100,9 @@ export class HomeComponent implements OnInit {
             .getFilteredServiceLinks()
             .filter(s => s.showStatusBox)
             .map(s => s.statusBox);
+        this.selectedView.set(
+            this.localStorageService.get('default-asset-view', 'table'),
+        );
     }
 
     ngOnInit() {
@@ -245,5 +250,10 @@ export class HomeComponent implements OnInit {
                 .concat(...res[3]);
             this.checkForTutorial();
         });
+    }
+
+    updateView(view: string): void {
+        this.selectedView.set(view);
+        this.localStorageService.set('default-asset-view', view);
     }
 }

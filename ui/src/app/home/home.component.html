@@ -44,14 +44,10 @@
                     <mat-button-toggle-group
                         name="Asset view"
                         aria-label="Asset view mode"
-                        [(ngModel)]="selectedView"
+                        [value]="selectedView()"
+                        (change)="updateView($event.value)"
                     >
-                        <mat-button-toggle
-                            value="map"
-                            [disabled]="
-                                !locationConfig ||
-                                !locationConfig.locationEnabled
-                            "
+                        <mat-button-toggle value="map"
                             >{{ 'Map' | translate }}
                         </mat-button-toggle>
                         <mat-button-toggle value="table">{{
@@ -60,14 +56,28 @@
                     </mat-button-toggle-group>
                 </div>
                 <div fxFlexFill fxLayout="column" class="assets-content">
-                    @if (selectedView === 'map') {
-                        <sp-home-asset-map
-                            class="h-100 map"
-                            [assetLinkTypes]="assetLinkTypes"
-                            [sites]="sites"
-                            [locationConfig]="locationConfig"
-                            [assets]="assets"
-                        ></sp-home-asset-map>
+                    @if (selectedView() === 'map') {
+                        @if (locationConfig && locationConfig.locationEnabled) {
+                            <sp-home-asset-map
+                                class="h-100 map"
+                                [assetLinkTypes]="assetLinkTypes"
+                                [sites]="sites"
+                                [locationConfig]="locationConfig"
+                                [assets]="assets"
+                            ></sp-home-asset-map>
+                        } @else {
+                            <sp-alert-banner
+                                type="info"
+                                [title]="
+                                    'Map configuration required' | translate
+                                "
+                                [description]="
+                                    'To enable the map view, a map provider needs to be configured. Admins can configure map providers under Settings -> Sites.'
+                                        | translate
+                                "
+                            >
+                            </sp-alert-banner>
+                        }
                     } @else {
                         <sp-home-asset-table
                             [assetLinkTypes]="assetLinkTypes"
