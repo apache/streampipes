@@ -41,7 +41,7 @@ public abstract class ImportGenerator<T> {
   protected ObjectMapper defaultMapper;
 
   public ImportGenerator() {
-    this.defaultMapper = JacksonSerializer.getObjectMapper();
+    this.defaultMapper = new JacksonSerializer(true).getObjectMapper();
   }
 
   public T generate(InputStream inputStream) throws IOException {

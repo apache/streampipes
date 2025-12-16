@@ -38,7 +38,6 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +57,7 @@ public class ExportPackageGenerator {
 
   public ExportPackageGenerator(ExportConfiguration exportConfiguration) {
     this.exportConfiguration = exportConfiguration;
-    this.defaultMapper = JacksonSerializer.getObjectMapper();
+    this.defaultMapper = new JacksonSerializer(true).getObjectMapper();
   }
 
   public byte[] generateExportPackage() throws IOException {

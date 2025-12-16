@@ -42,7 +42,7 @@ public class PipelineElementEndpointHealthCheck {
   }
 
   private List<String> asList(String json) throws JsonProcessingException {
-    return Arrays.asList(JacksonSerializer.getObjectMapper().readValue(json, String[].class));
+    return Arrays.asList(new JacksonSerializer().getObjectMapper().readValue(json, String[].class));
   }
 
   private String makeRequestUrl() {

@@ -100,7 +100,7 @@ public class BooleanToStateProcessor implements IStreamPipesDataProcessor {
     try {
       jsonConfigurationString = jsonConfigurationString.replaceAll("(?m)^//.*", "");
       jsonConfiguration =
-          JacksonSerializer.getObjectMapper().readValue(jsonConfigurationString, Map.class);
+          new JacksonSerializer().getObjectMapper().readValue(jsonConfigurationString, Map.class);
     } catch (JsonProcessingException e) {
       LOG.info("Error when parsing the json configuration: " + jsonConfigurationString);
       throw new SpRuntimeException("The following mapping configuration is not valid: " + jsonConfigurationString);

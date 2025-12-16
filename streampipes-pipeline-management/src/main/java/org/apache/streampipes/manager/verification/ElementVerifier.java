@@ -182,7 +182,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   }
 
   protected T transform() throws JsonProcessingException {
-    return JacksonSerializer.getObjectMapper()
+    return new JacksonSerializer().getObjectMapper()
                             .readValue(graphData, elementClass);
   }
 

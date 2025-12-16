@@ -50,9 +50,9 @@ public class TestJacksonSerializer {
     PipelineElementTemplate template = PipelineElementTemplateHelpers.makePipelineElementTemplate();
 
     try {
-      String json = JacksonSerializer.getObjectMapper().writeValueAsString(template);
+      String json = new JacksonSerializer().getObjectMapper().writeValueAsString(template);
       PipelineElementTemplate template2 =
-          JacksonSerializer.getObjectMapper().readValue(json, PipelineElementTemplate.class);
+          new JacksonSerializer().getObjectMapper().readValue(json, PipelineElementTemplate.class);
       assertions(template2);
       Assertions.assertEquals(2,
           findValue(template2, "test-key-2"));

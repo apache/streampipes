@@ -53,7 +53,7 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
 
   @Override
   public Map<String, Object> readDocument(String serializedDocument) throws JsonProcessingException {
-    return JacksonSerializer.getObjectMapper().readValue(serializedDocument, new TypeReference<>() {
+    return new JacksonSerializer(true).getObjectMapper().readValue(serializedDocument, new TypeReference<>() {
     });
   }
 
@@ -75,7 +75,7 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
 
   @Override
   public Map<String, Object> deserializeDocument(String document) throws JsonProcessingException {
-    return JacksonSerializer.getObjectMapper().readValue(document, new TypeReference<>() {
+    return new JacksonSerializer(true).getObjectMapper().readValue(document, new TypeReference<>() {
     });
   }
 

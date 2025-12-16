@@ -58,7 +58,7 @@ public abstract class PipelineElementHttpRequest {
                                                  EndpointSelectable pipelineElement,
                                                  String endpointUrl) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString();
-    org.apache.streampipes.model.Response streamPipesResp = JacksonSerializer
+    org.apache.streampipes.model.Response streamPipesResp = new JacksonSerializer()
         .getObjectMapper()
         .readValue(resp, org.apache.streampipes.model.Response.class);
     return convert(streamPipesResp, endpointUrl, pipelineElement.getName());

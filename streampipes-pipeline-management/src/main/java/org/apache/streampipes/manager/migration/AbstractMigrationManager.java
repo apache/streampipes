@@ -69,7 +69,7 @@ public abstract class AbstractMigrationManager {
 
       var migrationRequest = new MigrationRequest<>(pipelineElement, migrationConfig);
 
-      String serializedRequest = JacksonSerializer.getObjectMapper().writeValueAsString(migrationRequest);
+      String serializedRequest = new JacksonSerializer().getObjectMapper().writeValueAsString(migrationRequest);
 
       var migrationResponse = ExtensionServiceExecutions.extServicePostRequest(
           url,
@@ -80,7 +80,7 @@ public abstract class AbstractMigrationManager {
       };
 
       String migrationResponseString = migrationResponse.returnContent().asString();
-      return JacksonSerializer
+      return new JacksonSerializer()
           .getObjectMapper()
           .readValue(migrationResponseString, typeReference);
     } catch (JsonProcessingException e) {

@@ -38,7 +38,7 @@ public class ContainerProvidedOptionsHandler {
   public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request) {
 
     try {
-      var payload = JacksonSerializer.getObjectMapper().writeValueAsString(request);
+      var payload = new JacksonSerializer().getObjectMapper().writeValueAsString(request);
       var url = getEndpointUrl(request.getAppId());
       var resp = ExtensionServiceExecutions.extServicePostRequest(url, payload).execute();
 
@@ -51,7 +51,7 @@ public class ContainerProvidedOptionsHandler {
 
   private RuntimeOptionsResponse handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString(StandardCharsets.UTF_8);
-    return JacksonSerializer.getObjectMapper().readValue(resp, RuntimeOptionsResponse.class);
+    return new JacksonSerializer().getObjectMapper().readValue(resp, RuntimeOptionsResponse.class);
   }
 
   private String getEndpointUrl(String appId) throws NoServiceEndpointsAvailableException {

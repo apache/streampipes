@@ -40,7 +40,7 @@ public class ChartResolver extends AbstractResolver<DataExplorerWidgetModel> {
 
   @Override
   public DataExplorerWidgetModel readDocument(String serializedDoc) throws JsonProcessingException {
-    return JacksonSerializer.getObjectMapper().readValue(serializedDoc, DataExplorerWidgetModel.class);
+    return new JacksonSerializer(true).getObjectMapper().readValue(serializedDoc, DataExplorerWidgetModel.class);
   }
 
   @Override

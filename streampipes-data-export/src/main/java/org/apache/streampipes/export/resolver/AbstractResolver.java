@@ -39,7 +39,7 @@ public abstract class AbstractResolver<T> implements DocumentResolver<T> {
   protected ObjectMapper defaultMapper;
 
   public AbstractResolver() {
-    this.defaultMapper = JacksonSerializer.getObjectMapper();
+    this.defaultMapper = new JacksonSerializer(true).getObjectMapper();
   }
 
   public Set<ExportItem> resolve(Set<AssetLink> assetLinks) {

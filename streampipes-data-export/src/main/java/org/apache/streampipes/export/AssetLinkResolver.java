@@ -50,7 +50,7 @@ public class AssetLinkResolver {
 
   public AssetLinkResolver(String assetId) {
     this.assetId = assetId;
-    this.mapper = JacksonSerializer.getObjectMapper();
+    this.mapper = new JacksonSerializer(true).getObjectMapper();
   }
 
   public AssetExportConfiguration resolveResources() {

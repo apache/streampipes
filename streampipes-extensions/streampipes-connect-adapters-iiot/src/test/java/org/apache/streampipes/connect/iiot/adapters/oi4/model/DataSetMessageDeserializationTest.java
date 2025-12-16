@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.connect.iiot.adapters.oi4.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -84,6 +84,6 @@ public class ExtensionsServiceReportExecutor {
    */
   private static ServiceLoadDataReport parseLogResponse(String response)
       throws JsonProcessingException {
-    return JacksonSerializer.getObjectMapper().readValue(response, ServiceLoadDataReport.class);
+    return new JacksonSerializer().getObjectMapper().readValue(response, ServiceLoadDataReport.class);
   }
 }
