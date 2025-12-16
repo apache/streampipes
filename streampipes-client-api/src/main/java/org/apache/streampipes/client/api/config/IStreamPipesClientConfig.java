@@ -20,10 +20,7 @@ package org.apache.streampipes.client.api.config;
 
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public interface IStreamPipesClientConfig {
-  ObjectMapper getSerializer();
 
   void addTransportProtocol(SpProtocolDefinitionFactory<?> protocolDefinitionFactory);
 
