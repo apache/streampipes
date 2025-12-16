@@ -20,7 +20,6 @@ package org.apache.streampipes.export.dataimport;
 
 import org.apache.streampipes.commons.zip.ZipFileExtractor;
 import org.apache.streampipes.export.constants.ExportConstants;
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
@@ -39,11 +38,9 @@ public abstract class ImportGenerator<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(ImportGenerator.class);
 
-  protected ObjectMapper spMapper;
   protected ObjectMapper defaultMapper;
 
   public ImportGenerator() {
-    this.spMapper = SerializationUtils.getSpObjectMapper();
     this.defaultMapper = JacksonSerializer.getObjectMapper();
   }
 
