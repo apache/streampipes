@@ -447,10 +447,10 @@ export class ChartContainerComponent
 
     saveName() {
         if (!this.dashboardItem) return;
-        this.dashboardItem.name = this.tempName.trim() || null;
+        this.dashboardItem.name = this.tempName.trim();
         this.nameChangeService.notify(
             this.dashboardItem.id,
-            this.tempName.trim() || null,
+            this.tempName.trim(),
         );
 
         this.isEditingName = false;
