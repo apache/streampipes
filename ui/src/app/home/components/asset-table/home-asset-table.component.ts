@@ -80,14 +80,6 @@ export class HomeAssetTableComponent implements OnInit {
         }
     }
 
-    getArea(asset: SpAssetModel): string {
-        if (!asset.assetSite?.siteId) {
-            return '-';
-        } else {
-            return asset.assetSite.area;
-        }
-    }
-
     navigateToAsset(asset: SpAssetModel): void {
         this.router.navigate(['assets', 'details', asset.elementId, 'view']);
     }

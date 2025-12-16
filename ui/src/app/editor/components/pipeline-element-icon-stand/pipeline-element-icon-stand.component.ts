@@ -40,7 +40,7 @@ export class PipelineElementIconStandComponent
             title: 'Data Streams',
             filters: [PipelineElementType.DataStream],
             open: true,
-            color: 'var(--color-stream)',
+            color: 'var(--color-data-source)',
             sort: 'name',
         },
         {

@@ -37,7 +37,18 @@
             {{ 'Type' | translate }}
         </th>
         <td mat-cell *matCellDef="let asset">
-            <span class="cell-nowrap">{{ getIsa95Type(asset) }}</span>
+            @if (asset.assetType?.isa95AssetType) {
+                <sp-label
+                    tone="neutral"
+                    variant="soft"
+                    size="small"
+                    class="cell-nowrap"
+                >
+                    {{ getIsa95Type(asset) }}
+                </sp-label>
+            } @else {
+                <span class="cell-nowrap">-</span>
+            }
         </td>
     </ng-container>
 

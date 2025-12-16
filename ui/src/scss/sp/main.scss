@@ -16,7 +16,6 @@
  *
  */
 
-@use './variables' as spThemeVars;
 @use '../custom-theme/custom-variables' as customThemeVars;
 
 html {
@@ -376,39 +375,39 @@ md-content {
 }
 
 .adapter-label {
-    background: spThemeVars.$sp-color-adapter;
+    background: var(--color-adapter);
     color: white;
 }
 
 .stream-label {
-    background: spThemeVars.$sp-color-stream;
+    background: var(--color-data-source);
     color: black;
 }
 
 .processor-label {
-    background: spThemeVars.$sp-color-processor;
+    background: var(--color-processor);
 }
 
 .sink-label {
-    background: spThemeVars.$sp-color-sink;
+    background: var(--color-sink);
 }
 
 .adapter {
     border-radius: 50%;
-    border: 2px solid spThemeVars.$sp-color-adapter;
+    border: 2px solid var(--color-adapter);
 }
 
 .stream {
     border-radius: 50%;
-    border: 2px solid spThemeVars.$sp-color-stream;
+    border: 2px solid var(--color-data-source);
 }
 
 .action {
-    border: 2px solid spThemeVars.$sp-color-sink;
+    border: 2px solid var(--color-sink);
 }
 
 .sepa {
-    border: 2px solid spThemeVars.$sp-color-processor;
+    border: 2px solid var(--color-processor);
 }
 
 .draggable-img {
