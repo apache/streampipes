@@ -41,6 +41,7 @@ import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-l
 import {
     CurrentUserService,
     DialogService,
+    FeatureCardService,
     PanelType,
 } from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
@@ -91,6 +92,7 @@ export class AssetLinkTableComponent
     private currentUserService = inject(CurrentUserService);
     private authService = inject(AuthService);
     private certificateService = inject(CertificateService);
+    private featureCardService = inject(FeatureCardService);
 
     ngOnInit() {
         this.user$ = this.currentUserService.user$.subscribe(user => {
@@ -125,7 +127,12 @@ export class AssetLinkTableComponent
         this.dataSource.data = this.asset.assetLinks;
     }
 
-    openDetails(assetLink: AssetLink) {}
+    openDetails(assetLink: AssetLink) {
+        this.featureCardService.openFeatureCard(
+            assetLink.linkType,
+            assetLink.resourceId,
+        );
+    }
 
     navigate(assetLink: AssetLink) {
         const linkType = this.assetLinkTypes.find(
@@ -167,6 +174,10 @@ export class AssetLinkTableComponent
         this.asset.assetLinks.splice(index, 1);
         this.asset.assetLinks = [...this.asset.assetLinks];
         this.refreshData();
+    }
+
+    hasFeatureCard(linkType: string): boolean {
+        return this.featureCardService.supportsFeatureCard(linkType);
     }
 
     ngOnDestroy() {

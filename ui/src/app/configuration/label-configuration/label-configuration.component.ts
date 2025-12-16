@@ -16,11 +16,13 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { LabelsService, SpLabel } from '@streampipes/platform-services';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'sp-label-configuration',
@@ -33,6 +35,14 @@ export class SpLabelConfigurationComponent implements OnInit {
 
     allLabels: SpLabel[] = [];
     createLabelMode = false;
+
+    dataSource: MatTableDataSource<SpLabel> = new MatTableDataSource<SpLabel>();
+
+    @ViewChild(MatSort)
+    sort: MatSort;
+
+    displayedColumns = ['name', 'description', 'actions'];
+    labelsinUse = [];
 
     editedLabels: string[] = [];
 
@@ -54,6 +64,13 @@ export class SpLabelConfigurationComponent implements OnInit {
     reloadLabels(): void {
         this.labelsService.getAllLabels().subscribe(res => {
             this.allLabels = res;
+            this.dataSource.data = this.allLabels;
+            setTimeout(() => {
+                this.dataSource.sort = this.sort;
+            });
+        });
+        this.labelsService.getLabelsInUse().subscribe(labelsInUse => {
+            this.labelsinUse = labelsInUse;
         });
     }
 

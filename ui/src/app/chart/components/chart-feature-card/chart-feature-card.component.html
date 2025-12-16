@@ -1,0 +1,94 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+@if (chart && timeSettings) {
+    <div fxFlexFill fxLayout="column" class="feature-card-outer">
+        <sp-feature-card-header
+            [title]="chart.baseAppearanceConfig.widgetTitle"
+            [icon]="assetLinkType.linkIcon"
+            [iconColor]="assetLinkType.linkColor"
+            [detailsLink]="assetLinkType.navPaths"
+            (close)="onClose?.()"
+            (onDetailsClick)="navigateToChart()"
+        >
+        </sp-feature-card-header>
+
+        <div class="feature-card-meta-card">
+            <sp-feature-card-meta-creation
+                [creationTimestamp]="chart.metadata?.createdAtEpochMs"
+                [lastModifiedTimestamp]="chart.metadata?.lastModifiedEpochMs"
+            >
+            </sp-feature-card-meta-creation>
+
+            <sp-feature-card-meta-section [label]="'Info' | translate">
+                <div
+                    class="feature-card-meta-box"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayoutGap="0.75rem"
+                >
+                    <mat-icon class="feature-card-meta-icon"
+                        >insert_chart</mat-icon
+                    >
+                    <div>
+                        <div class="feature-card-meta-field-label">
+                            {{ 'Chart' | translate }}
+                        </div>
+                        <div class="feature-card-meta-field-value">
+                            {{ chartType }}
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="feature-card-meta-box"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayoutGap="0.75rem"
+                >
+                    <mat-icon class="feature-card-meta-icon">folder</mat-icon>
+                    <div>
+                        <div class="feature-card-meta-field-label">
+                            {{ 'Dataset' | translate }}
+                        </div>
+                        <div class="feature-card-meta-field-value">
+                            {{ chart.dataConfig.sourceConfigs[0].measureName }}
+                        </div>
+                    </div>
+                </div>
+            </sp-feature-card-meta-section>
+        </div>
+
+        <span fxFlex></span>
+        <div fxFlex fxLayout="column" class="feature-preview-wrapper">
+            <div class="feature-preview-scale">
+                <div class="chart-preview-inner" style="max-height: 900px">
+                    <sp-chart-container
+                        fxFlex
+                        [dataViewMode]="true"
+                        [editMode]="false"
+                        [configuredWidget]="chart"
+                        [observableGenerator]="observableGenerator"
+                        [timeSettings]="timeSettings"
+                    >
+                    </sp-chart-container>
+                </div>
+            </div>
+        </div>
+    </div>
+}

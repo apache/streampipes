@@ -59,6 +59,17 @@ $sp-color-error: #b71c1c;
     --color-bg-3: var(--mat-sys-surface-container-highest);
     --color-bg-4: var(--mat-sys-surface-container-highest);
 
+    // for alert banners and labels
+    --color-info: #2563eb;
+    --color-success: #16a34a;
+    --color-warning: #f59e0b;
+    --color-error: #dc2626;
+    --color-neutral: #64748b;
+    --color-info-bg: light-dark(#eff6ff, #06184b);
+    --color-success-bg: light-dark(#ecfdf5, #14532d);
+    --color-warning-bg: light-dark(#fffae6, #78350f);
+    --color-error-bg: light-dark(#fef2f2, #670b0b);
+
     --mat-filled-button-horizontal-padding: 1.3rem;
     --mdc-icon-button-icon-color: var(--mat-sys-primary);
     --mat-option-selected-state-layer-color: var(--mat-sys-surface-container);
@@ -109,8 +120,9 @@ $sp-color-error: #b71c1c;
     --color-pe: #686868;
     --color-default-text: rgba(255, 255, 255, 0.87);
     --color-secondary-text: #aaa;
-    --color-warn: #b36161;
 
+    // only used for buttons
+    --color-warn: #b36161;
     --color-tab-border: #cccccc;
 
     --canvas-color: linear-gradient(

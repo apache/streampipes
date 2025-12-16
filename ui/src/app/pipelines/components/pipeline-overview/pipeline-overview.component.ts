@@ -20,6 +20,7 @@ import { Pipeline } from '@streampipes/platform-services';
 import {
     Component,
     EventEmitter,
+    inject,
     Input,
     OnDestroy,
     OnInit,
@@ -58,20 +59,15 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     dataSource: MatTableDataSource<Pipeline> = new MatTableDataSource();
     @ViewChild(MatSort) sort: MatSort;
 
-    starting: any;
-    stopping: any;
+    starting = false;
+    stopping = false;
     hasPipelineWritePrivileges = false;
 
     userSub: Subscription;
 
-    constructor(
-        public pipelineOperationsService: PipelineOperationsService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-    ) {
-        this.starting = false;
-        this.stopping = false;
-    }
+    public pipelineOperationsService = inject(PipelineOperationsService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
 
     ngOnInit() {
         this.userSub = this.currentUserService.user$.subscribe(user => {

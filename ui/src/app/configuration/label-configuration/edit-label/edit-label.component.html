@@ -28,29 +28,41 @@
         fxLayoutAlign="start center"
     >
         @if (label && showPreview) {
-            <sp-label
-                size="small"
-                [labelBackground]="label.color"
-                [labelText]="label.label"
-            ></sp-label>
+            <sp-form-field [level]="3" label="" class="mt-xs">
+                <sp-label
+                    variant="solid"
+                    size="medium"
+                    shape="pill"
+                    [labelText]="label.label"
+                    [color]="label.color"
+                ></sp-label>
+            </sp-form-field>
         }
-        <mat-form-field color="accent" appearance="outline">
-            <mat-label>{{ 'Label' | translate }}</mat-label>
-            <input matInput [(ngModel)]="label.label" data-cy="label-name" />
-        </mat-form-field>
-        <mat-form-field color="accent" appearance="outline">
-            <mat-label>{{ 'Description' | translate }}</mat-label>
+        <sp-form-field [level]="3" [label]="'Label' | translate">
+            <mat-form-field color="accent" appearance="outline">
+                <input
+                    matInput
+                    [(ngModel)]="label.label"
+                    data-cy="label-name"
+                />
+            </mat-form-field>
+        </sp-form-field>
+        <sp-form-field [level]="3" [label]="'Description' | translate">
+            <mat-form-field color="accent" appearance="outline">
+                <input
+                    matInput
+                    [(ngModel)]="label.description"
+                    data-cy="label-description"
+                />
+            </mat-form-field>
+        </sp-form-field>
+        <sp-form-field [level]="3" [label]="'Color' | translate">
             <input
-                matInput
-                [(ngModel)]="label.description"
-                data-cy="label-description"
+                [(colorPicker)]="label.color"
+                [cpPosition]="'bottom'"
+                [style.background]="label.color"
             />
-        </mat-form-field>
-        <input
-            [(colorPicker)]="label.color"
-            [cpPosition]="'bottom'"
-            [style.background]="label.color"
-        />
+        </sp-form-field>
         <div fxFlex fxLayoutAlign="end center">
             <button
                 mat-button

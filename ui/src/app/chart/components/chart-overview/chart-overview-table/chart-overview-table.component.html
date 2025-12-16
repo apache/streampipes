@@ -25,6 +25,7 @@
             fxFlex="100"
             [columns]="displayedColumns"
             [dataSource]="dataSource"
+            featureCardId="chart"
             [showActionsMenu]="true"
             [rowsClickable]="true"
             (rowClicked)="openDataView($event, true)"
@@ -39,7 +40,17 @@
                     data-cy="data-views-table-overview"
                     *matCellDef="let element"
                 >
-                    {{ element.baseAppearanceConfig.widgetTitle }}<br />
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxLayoutGap="5px"
+                    >
+                        <div fxLayout="column" fxLayoutAlign="start start">
+                            <span class="text-sm">{{
+                                element.baseAppearanceConfig.widgetTitle
+                            }}</span>
+                        </div>
+                    </div>
                 </td>
             </ng-container>
 

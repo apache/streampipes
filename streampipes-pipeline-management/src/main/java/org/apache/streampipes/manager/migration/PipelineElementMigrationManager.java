@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.migration;
 
+import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -50,6 +51,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
   private final IPipelineStorage pipelineStorage;
   private final IDataProcessorStorage dataProcessorStorage;
   private final IDataSinkStorage dataSinkStorage;
+  private final PipelinesStats pipelinesStats = new PipelinesStats();
 
   public PipelineElementMigrationManager(IPipelineStorage pipelineStorage,
                                          IDataProcessorStorage dataProcessorStorage,
@@ -166,6 +168,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
         failedMigration -> "Failed migration of pipeline element: %s".formatted(failedMigration.message())
     ).toList());
     pipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
+    pipelinesStats.updatePipelineHealthState(pipeline.getPipelineId(), pipeline.getName(), pipeline.getHealthStatus().toString());
 
     pipelineStorage.updateElement(pipeline);
 

@@ -64,10 +64,43 @@ const routes: Routes = [
   { path: '', component: StreampipesComponent, children: [
       {{#modulesActive}}
       {{#componentImport}}
-      { path: '{{{link}}}', component: {{{component}}}, data: { privileges: {{{privileges}}}, authPageNames: [{{{pageNames}}}]}},
+      { path: '{{{link}}}', component: {{{component}}}, data: {
+        privileges: {{{privileges}}},
+        authPageNames: [{{{pageNames}}}]
+        {{#hasFeatureCards}},
+          cards: [
+            {{#featureCards}}
+            {
+              id: '{{{id}}}',
+              loadComponent: () =>
+                import('{{{componentPath}}}')
+                  .then(m => m.{{{componentName}}})
+            },
+            {{/featureCards}}
+          ]
+         {{/hasFeatureCards}}
+        }
+      },
       {{/componentImport}}
       {{^componentImport}}
-      { path: '{{{link}}}', data: { privileges: {{{privileges}}}, authPageNames: [{{{pageNames}}}]}, loadChildren: () => import('{{{path}}}').then(m => m.{{{moduleName}}})},
+      { path: '{{{link}}}', data: {
+        privileges: {{{privileges}}},
+        authPageNames: [{{{pageNames}}}]
+        {{#hasFeatureCards}},
+          cards: [
+            {{#featureCards}}
+            {
+              id: '{{{id}}}',
+              loadComponent: () =>
+                import('{{{componentPath}}}')
+                  .then(m => m.{{{componentName}}})
+            },
+            {{/featureCards}}
+          ]
+         {{/hasFeatureCards}}
+        },
+        loadChildren: () => import('{{{path}}}').then(m => m.{{{moduleName}}})
+      },
       {{/componentImport}}
       {{/modulesActive}}
 

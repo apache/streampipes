@@ -22,7 +22,12 @@
     </span>
     <div fxLayout="row wrap" class="mt-sm">
         @for (dnsName of dnsNames; track $index) {
-            <sp-label size="small" [labelText]="dnsName"></sp-label>
+            <sp-label
+                shape="badge"
+                tone="neutral"
+                size="small"
+                [labelText]="dnsName"
+            ></sp-label>
         }
     </div>
 </div>

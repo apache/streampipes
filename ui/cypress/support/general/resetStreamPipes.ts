@@ -31,5 +31,6 @@ export const resetStreamPipes = () => {
         auth: {
             bearer: window.localStorage.getItem('auth-token'),
         },
+        retryOnStatusCodeFailure: true,
     });
 };

@@ -55,6 +55,7 @@ try {
 // Read Modules-File and check if it is valid
 let modules = {};
 let categories = [];
+let featureCards = [];
 try {
     modules = yaml.load(fs.readFileSync('deployment/modules.yml', 'utf8'));
 } catch (error) {
@@ -73,9 +74,37 @@ try {
     process.exit(1);
 }
 
+try {
+    featureCards = yaml.load(
+        fs.readFileSync('deployment/feature-cards.yml', 'utf8'),
+    );
+} catch (error) {
+    console.log(
+        'Invalid file feature-cards.yml. Check if the file exists in your build configuration. Pre-Build failed.',
+    );
+    process.exit(1);
+}
+
+const featureCardsByModule = {};
+for (const card of featureCards || []) {
+    const moduleKey = card.moduleName;
+    if (!moduleKey) {
+        console.warn('feature-cards.yml entry without moduleName:', card);
+        continue;
+    }
+    if (!featureCardsByModule[moduleKey]) {
+        featureCardsByModule[moduleKey] = [];
+    }
+    featureCardsByModule[moduleKey].push(card);
+}
+
 // Add active Modules to Template-Variable
-let modulesActive = { modulesActive: [], categoriesActive: categories };
+let modulesActive = {
+    modulesActive: [],
+    categoriesActive: categories,
+};
 for (let module of config.modules) {
+    const cardsForModule = featureCardsByModule[module] || [];
     modulesActive['modulesActive'].push({
         module: module,
         componentImport: modules[module]['componentImport'],
@@ -94,6 +123,8 @@ for (let module of config.modules) {
         showStatusBox: modules[module]['showStatusBox'],
         statusBox: modules[module]['statusBox'],
         category: modules[module]['category'],
+        featureCards: cardsForModule,
+        hasFeatureCards: cardsForModule.length > 0,
     });
     console.log('Active Angular Module: ' + module);
 }

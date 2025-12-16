@@ -111,6 +111,11 @@ import { PaginatorService } from './components/sp-table/sp-paginator/sp-paginato
 import { SpAlertBannerComponent } from './components/alert-banner/alert-banner.component';
 import { FormFieldComponent } from './components/form-field/form-field.component';
 import { FormLabelComponent } from './components/form-label/form-label.component';
+import { CardDialogComponent } from './dialog/card-dialog/card-dialog.component';
+import { FeatureCardHostComponent } from './components/feature-card-host/feature-card-host.component';
+import { FeatureCardHeaderComponent } from './components/feature-card-host/feature-card-header/feature-card-header.component';
+import { FeatureCardMetaSectionComponent } from './components/feature-card-host/feature-card-meta-section/feature-card-meta-section.component';
+import { FeatureCardMetaCreationComponent } from './components/feature-card-host/feature-card-meta-creation/feature-card-meta-creation.component';
 
 @NgModule({
     declarations: [
@@ -167,6 +172,11 @@ import { FormLabelComponent } from './components/form-label/form-label.component
         ObjectPermissionDialogComponent,
         FormFieldComponent,
         FormLabelComponent,
+        CardDialogComponent,
+        FeatureCardHostComponent,
+        FeatureCardHeaderComponent,
+        FeatureCardMetaSectionComponent,
+        FeatureCardMetaCreationComponent,
     ],
     imports: [
         CommonModule,
@@ -249,6 +259,10 @@ import { FormLabelComponent } from './components/form-label/form-label.component
         ObjectPermissionDialogComponent,
         FormFieldComponent,
         FormLabelComponent,
+        CardDialogComponent,
+        FeatureCardHeaderComponent,
+        FeatureCardMetaSectionComponent,
+        FeatureCardMetaCreationComponent,
     ],
 })
 export class SharedUiModule {}

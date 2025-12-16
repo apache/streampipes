@@ -69,26 +69,21 @@
                         [title]="'Dataset' | translate"
                     >
                         @if (availableMeasurements.length === 0) {
+                            <sp-alert-banner
+                                type="warning"
+                                icon="warning"
+                                [title]="'No datasets available' | translate"
+                                [description]="
+                                    'Please connect an adapter or verify your pipeline is running'
+                                        | translate
+                                "
+                            >
+                            </sp-alert-banner>
                             <div
                                 class="warning-container"
                                 fxLayout="column"
                                 fxLayoutAlign="start stretch"
                             >
-                                <div
-                                    class="warning"
-                                    fxLayout="row"
-                                    fxLayoutAlign="start center"
-                                >
-                                    <i class="material-icons warning-icon"
-                                        >warning</i
-                                    >
-                                    <b>
-                                        {{
-                                            'No data available! Please connect an adapter or verify your pipeline is running'
-                                                | translate
-                                        }}
-                                    </b>
-                                </div>
                                 <div
                                     fxFlex
                                     fxLayout="row"
