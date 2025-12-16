@@ -42,7 +42,6 @@ import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.PlcConnectionManager;
@@ -141,28 +140,6 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
 
   }
 
-
-  /**
-   * Transforms chosen data type to StreamPipes supported data type
-   *
-   * @param plcType
-   * @return
-   */
-  private Datatypes getStreamPipesDataType(String plcType) throws AdapterException {
-
-    String type = plcType.substring(plcType.lastIndexOf(":") + 1);
-
-    switch (type) {
-      case "DISCRETEINPUT":
-      case "COIL":
-        return Datatypes.Boolean;
-      case "INPUTREGISTER":
-      case "HOLDINGREGISTER":
-        return Datatypes.Integer;
-      default:
-        throw new AdapterException("Datatype " + plcType + " is not supported");
-    }
-  }
 
   /**
    * This method is executed when the adapter is started. A connection to the PLC is initialized
