@@ -32,8 +32,6 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +43,6 @@ public class MqttAdapterTLSTester extends AdapterTesterBase {
   MosquittoContainer mosquittoContainer;
 
   private static final String TOPIC = "testtopic";
-
-  private static final Logger LOG =
-      LoggerFactory.getLogger(MqttAdapterTLSTester.class.getCanonicalName());
 
   @Override
   public void startAdapterService() {
@@ -127,7 +122,6 @@ public class MqttAdapterTLSTester extends AdapterTesterBase {
     } catch (AdapterException e) {
       throw new RuntimeException(e);
     }
-        LOG.info("Remove Docker ");
     if (mosquittoContainer != null) {
       mosquittoContainer.stop();
     }

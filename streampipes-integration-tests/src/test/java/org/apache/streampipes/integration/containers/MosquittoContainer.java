@@ -20,6 +20,7 @@ package org.apache.streampipes.integration.containers;
 
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 
 public class MosquittoContainer extends GenericContainer<MosquittoContainer> {
 
@@ -47,6 +48,7 @@ public class MosquittoContainer extends GenericContainer<MosquittoContainer> {
         "passwd",
         "/mosquitto/config/passwd",
         BindMode.READ_ONLY);
+    this.waitingFor(new LogMessageWaitStrategy().withRegEx(".*mosquitto version .* running.*\\n"));
     super.start();
   }
 

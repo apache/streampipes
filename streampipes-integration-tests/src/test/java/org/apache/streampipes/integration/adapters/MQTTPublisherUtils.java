@@ -25,22 +25,16 @@ import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
 public class MQTTPublisherUtils {
 
-      private static final Logger LOG =
-      LoggerFactory.getLogger(MQTTPublisherUtils.class.getCanonicalName());
     public static void publishEvents(MqttPublisher publisher, List<Map<String, Object>> events) {
         var objectMapper = new ObjectMapper();
 
         events.forEach(event -> {
-
-            LOG.info("event " + event.toString());
             try {
                 var serializedEvent = objectMapper.writeValueAsBytes(event);
                 publisher.publish(serializedEvent);
@@ -48,8 +42,6 @@ public class MQTTPublisherUtils {
                 throw new RuntimeException(e);
             }
         });
-
-        //publisher.disconnect();
     }
 
     @NotNull

@@ -156,7 +156,7 @@
     <profile>
       <id>selfsigned</id>
       <activation>
-        <activeByDefault>true</activeByDefault> <!-- You can change this to false if you don't want it to be active by default -->
+        <activeByDefault>false</activeByDefault> <!-- You can change this to false if you don't want it to be active by default -->
       </activation>
       <build>
         <plugins>
