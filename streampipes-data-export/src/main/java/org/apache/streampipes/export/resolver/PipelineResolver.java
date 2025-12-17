@@ -85,7 +85,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
 
   @Override
   public Pipeline deserializeDocument(String document) throws JsonProcessingException {
-    return this.defaultMapper.readValue(document, Pipeline.class);
+    return this.spMapper.readValue(document, Pipeline.class);
   }
 
   @Override

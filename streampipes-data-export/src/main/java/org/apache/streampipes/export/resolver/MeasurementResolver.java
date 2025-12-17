@@ -54,7 +54,7 @@ public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
 
   @Override
   public DataLakeMeasure deserializeDocument(String document) throws JsonProcessingException {
-    return this.defaultMapper.readValue(document, DataLakeMeasure.class);
+    return this.spMapper.readValue(document, DataLakeMeasure.class);
   }
 
   @Override

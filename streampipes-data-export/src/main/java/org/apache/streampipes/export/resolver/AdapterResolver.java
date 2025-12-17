@@ -53,7 +53,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
 
   @Override
   public AdapterDescription readDocument(String serializedDoc) throws JsonProcessingException {
-    return this.defaultMapper.readValue(serializedDoc, AdapterDescription.class);
+    return this.spMapper.readValue(serializedDoc, AdapterDescription.class);
   }
 
   @Override
@@ -74,7 +74,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
 
   @Override
   public AdapterDescription deserializeDocument(String document) throws JsonProcessingException {
-    return this.defaultMapper.readValue(document, AdapterDescription.class);
+    return this.spMapper.readValue(document, AdapterDescription.class);
   }
 
   @Override

@@ -65,7 +65,7 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public DashboardModel deserializeDocument(String document) throws JsonProcessingException {
-    return this.defaultMapper.readValue(document, DashboardModel.class);
+    return this.spMapper.readValue(document, DashboardModel.class);
   }
 
   @Override

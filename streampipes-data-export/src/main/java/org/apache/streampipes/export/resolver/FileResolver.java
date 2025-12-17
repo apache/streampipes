@@ -54,7 +54,7 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
 
   @Override
   public FileMetadata deserializeDocument(String document) throws JsonProcessingException {
-    return this.defaultMapper.readValue(document, FileMetadata.class);
+    return this.spMapper.readValue(document, FileMetadata.class);
   }
 
   @Override

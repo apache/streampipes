@@ -61,7 +61,7 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
 
   @Override
   public SpDataStream deserializeDocument(String document) throws JsonProcessingException {
-    return this.defaultMapper.readValue(document, SpDataStream.class);
+    return this.spMapper.readValue(document, SpDataStream.class);
   }
 
   @Override

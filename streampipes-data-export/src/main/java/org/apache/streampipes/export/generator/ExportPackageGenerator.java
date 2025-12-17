@@ -57,7 +57,7 @@ public class ExportPackageGenerator {
 
   public ExportPackageGenerator(ExportConfiguration exportConfiguration) {
     this.exportConfiguration = exportConfiguration;
-    this.defaultMapper = new JacksonSerializer(true).getObjectMapper();
+    this.defaultMapper = new JacksonSerializer(true, false).getObjectMapper();
   }
 
   public byte[] generateExportPackage() throws IOException {

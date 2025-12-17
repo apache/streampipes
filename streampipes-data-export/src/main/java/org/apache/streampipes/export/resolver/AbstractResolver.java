@@ -37,9 +37,11 @@ import java.util.stream.Collectors;
 public abstract class AbstractResolver<T> implements DocumentResolver<T> {
 
   protected ObjectMapper defaultMapper;
+  protected ObjectMapper spMapper;
 
   public AbstractResolver() {
     this.defaultMapper = new JacksonSerializer(true).getObjectMapper();
+    this.spMapper = new JacksonSerializer().getObjectMapper();
   }
 
   public Set<ExportItem> resolve(Set<AssetLink> assetLinks) {
@@ -74,6 +76,6 @@ public abstract class AbstractResolver<T> implements DocumentResolver<T> {
   }
 
   protected ObjectMapper getObjectMapper() {
-    return defaultMapper;
+    return spMapper;
   }
 }
