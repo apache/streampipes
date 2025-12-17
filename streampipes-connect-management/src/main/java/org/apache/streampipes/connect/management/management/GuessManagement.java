@@ -50,7 +50,7 @@ public class GuessManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
-  private  ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
   public GuessManagement() {
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
