@@ -33,6 +33,7 @@ import {
 } from '@angular/core';
 import {
     ClientDashboardItem,
+    DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     ExtendedTimeSettings,
@@ -41,7 +42,7 @@ import {
     TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subject, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { ChartRegistry } from '../../registry/chart-registry.service';
 import { ChartDirective } from './chart.directive';
@@ -50,6 +51,7 @@ import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import {
     CurrentUserService,
+    NameChangeService,
     TimeRangeSelectorMenuComponent,
     TimeSelectionService,
     TimeSelectorLabel,
@@ -121,6 +123,8 @@ export class ChartContainerComponent
     widgetLoaded = false;
     timerActive = false;
     loadingTime = 0;
+    isEditingName = false;
+    tempName = '';
 
     quickSelections: QuickTimeSelection[];
     labels: TimeSelectorLabel;
@@ -157,6 +161,7 @@ export class ChartContainerComponent
         private authService: AuthService,
         private currentUserService: CurrentUserService,
         private timeSelectionService: TimeSelectionService,
+        private nameChangeService: NameChangeService,
         private el: ElementRef<HTMLDivElement>,
         private resizeService: ResizeService,
     ) {}
@@ -433,5 +438,25 @@ export class ChartContainerComponent
 
             this.tooltipText = `${timeString.startDate} ${timeString.startTime} - ${timeString.endDate} ${timeString.endTime}`;
         }
+    }
+
+    startEditingName() {
+        this.tempName = this.dashboardItem?.name || '';
+        this.isEditingName = true;
+    }
+
+    saveName() {
+        if (!this.dashboardItem) return;
+        this.dashboardItem.name = this.tempName.trim();
+        this.nameChangeService.notify(
+            this.dashboardItem.id,
+            this.tempName.trim(),
+        );
+
+        this.isEditingName = false;
+    }
+
+    cancelEditingName() {
+        this.isEditingName = false;
     }
 }
