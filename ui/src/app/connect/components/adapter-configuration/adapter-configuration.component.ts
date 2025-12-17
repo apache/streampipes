@@ -24,6 +24,9 @@ import { Router } from '@angular/router';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { AdapterConfigurationStateService } from './adapter-configuration-state-service/adapter-configuration-state.service';
+import { AdapterProcessingState } from './adapter-configuration-state-service/AdapterProcessingState';
 
 @Component({
     selector: 'sp-adapter-configuration',
@@ -36,12 +39,17 @@ export class AdapterConfigurationComponent implements OnInit {
     private shepherdService = inject(ShepherdService);
     private router = inject(Router);
     private translate = inject(TranslateService);
+    private store = inject(AdapterConfigurationStateService);
+
+    @Input() adapterDescription: AdapterDescription;
+
+    // Use a local observable to drive the template
+    public state$: Observable<AdapterProcessingState> = this.store.state$;
 
     /**
      * Used to display the type of the configured adapter
      */
     @Input() displayName = '';
-    @Input() adapter: AdapterDescription;
     @Input() isEditMode: boolean;
 
     myStepper: MatStepper;
@@ -51,6 +59,18 @@ export class AdapterConfigurationComponent implements OnInit {
         this.pageTitle = this.isEditMode
             ? this.translate.instant('Edit adapter: ') + this.displayName
             : this.translate.instant('New adapter: ') + this.displayName;
+
+        if (!this.adapterDescription.schemaTransformationConfig) {
+            this.adapterDescription.schemaTransformationConfig = {
+                inputs: [],
+                language: 'javascript',
+                outputs: [],
+                script: '',
+            };
+        }
+        if (this.adapterDescription) {
+            this.store.initializeOrUpdateAdapter(this.adapterDescription);
+        }
     }
 
     navigateToAdapterCatalog() {
@@ -59,8 +79,10 @@ export class AdapterConfigurationComponent implements OnInit {
 
     nextAdapterSettings() {
         this.shepherdService.trigger('specific-settings-next-button');
-        // this.eventSchemaComponent.guessSchema();
         this.goForward();
+        // TODO check how to change the adatper settings component
+        this.store.initializeOrUpdateAdapter(this.adapterDescription);
+        this.store.getSampleEvent(this.adapterDescription);
     }
 
     nextConfigureSchema() {
@@ -94,7 +116,7 @@ export class AdapterConfigurationComponent implements OnInit {
             title: 'Documentation',
             width: '50vw',
             data: {
-                appId: this.adapter.appId,
+                appId: this.adapterDescription.appId,
             },
         });
     }

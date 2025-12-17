@@ -16,14 +16,19 @@
  *
  */
 
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { MatStepper } from '@angular/material/stepper';
-import { RestService } from '../../../services/rest.service';
 import {
-    AdapterDescription,
-    SpLogMessage,
-} from '@streampipes/platform-services';
-import { HttpErrorResponse } from '@angular/common/http';
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
+import { MatStepper } from '@angular/material/stepper';
+import { AdapterDescription } from '@streampipes/platform-services';
+import { filter, map } from 'rxjs/operators';
+import { shareReplay } from 'rxjs';
+import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
 
 @Component({
     selector: 'sp-configure-schema',
@@ -31,8 +36,8 @@ import { HttpErrorResponse } from '@angular/common/http';
     templateUrl: './configure-schema.component.html',
     styleUrl: './configure-schema.component.scss',
 })
-export class ConfigureSchemaComponent {
-    restService = inject(RestService);
+export class ConfigureSchemaComponent implements OnInit {
+    private stateService = inject(AdapterConfigurationStateService);
 
     @Input()
     adapterDescription: AdapterDescription;
@@ -46,11 +51,35 @@ export class ConfigureSchemaComponent {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    scriptExecutionErrorMessage: SpLogMessage = null;
-    scriptExecutionLoading: boolean = false;
+    private adapterDescription$ = this.stateService.state$.pipe(
+        map(state => state.adapterDescription),
+        filter(adapter => !!adapter),
+        shareReplay(1), // Prevents multiple extractions for different async pipes
+    );
 
-    sampleEventExecutionErrorMessage: SpLogMessage = null;
-    sampleEventLoading: boolean = false;
+    // variables related to get sample
+    isSampleLoading$ = this.stateService.state$.pipe(
+        map(s => s.isGettingSample),
+    );
+    sampleErrorMessage$ = this.stateService.state$.pipe(
+        map(s => s.sampleError),
+    );
+    input$ = this.adapterDescription$.pipe(
+        map(a => a.schemaTransformationConfig?.inputs?.[0] || {}),
+    );
+
+    // variables related to run script
+    isRunningScript$ = this.stateService.state$.pipe(
+        map(s => s.isRunningScript),
+    );
+    scriptError$ = this.stateService.state$.pipe(map(s => s.scriptError));
+    output$ = this.adapterDescription$.pipe(
+        map(a => a.schemaTransformationConfig?.outputs?.[0] || {}),
+    );
+    script = `// returns the same event
+function transform(event) {
+  return event;
+}`;
 
     sampleScripts: any[] = [
         {
@@ -98,7 +127,6 @@ function transform(event) {
         if (s) {
             this.script = s.value;
             // optional: reset output when selecting a new sample
-            this.output = null;
         }
     }
 
@@ -116,52 +144,26 @@ function transform(event) {
         },
     };
 
-    input = {};
-    output = {};
+    ngOnInit(): void {
+        this.initializeScriptVariable();
+    }
 
-    script = `// returns the same event
-function transform(event) {
-  return event;
-}`;
+    private initializeScriptVariable(): void {
+        if (this.adapterDescription.schemaTransformationConfig.script != '') {
+            this.script =
+                this.adapterDescription.schemaTransformationConfig.script;
+        } else {
+            this.adapterDescription.schemaTransformationConfig.script =
+                this.script;
+        }
+    }
 
     getSampleEvent(): void {
-        this.sampleEventExecutionErrorMessage = null;
-        this.sampleEventLoading = true;
-        this.restService.getSampleEvents(this.adapterDescription).subscribe({
-            next: sampleData => {
-                this.input = sampleData.samples[0];
-                this.sampleEventLoading = false;
-            },
-            error: (error: HttpErrorResponse) => {
-                this.sampleEventExecutionErrorMessage = error.error;
-                this.sampleEventLoading = false;
-            },
-        });
+        this.stateService.getSampleEvent(this.adapterDescription);
     }
 
     runScript(): void {
-        this.adapterDescription.schemaTransformationConfig = {
-            language: 'javascript',
-            script: this.script,
-            inputs: [this.input],
-            outputs: [],
-        };
-
-        this.scriptExecutionErrorMessage = null;
-        this.scriptExecutionLoading = true;
-        this.restService.sampleTransform(this.adapterDescription).subscribe({
-            next: adapterDescriptionResponse => {
-                this.adapterDescription.schemaTransformationConfig.outputs =
-                    adapterDescriptionResponse.schemaTransformationConfig.outputs;
-                this.output =
-                    this.adapterDescription.schemaTransformationConfig.outputs[0];
-                this.scriptExecutionLoading = false;
-            },
-            error: (error: HttpErrorResponse) => {
-                this.scriptExecutionErrorMessage = error.error;
-                this.scriptExecutionLoading = false;
-            },
-        });
+        this.stateService.runScript(this.adapterDescription, this.script);
     }
 
     public cancel() {

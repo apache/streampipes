@@ -35,74 +35,80 @@
             <i class="material-icons">close</i>
         </button>
     </div>
-    @if (adapter) {
-        <div fxLayout="column" fxLayoutAlign="center stretch">
-            <sp-basic-header-title-component
-                [title]="pageTitle"
-            ></sp-basic-header-title-component>
-            <mat-horizontal-stepper
-                [linear]="true"
-                #stepper
-                color="accent"
-                class="stepper"
-            >
-                <mat-step>
-                    <ng-template matStepLabel>{{
-                        'Settings' | translate
-                    }}</ng-template>
-                    <sp-adapter-settings
-                        [adapterDescription]="adapter"
-                        (updateAdapterDescriptionEmitter)="adapter = $event"
-                        (nextEmitter)="nextAdapterSettings()"
-                        (cancelEmitter)="navigateToAdapterCatalog()"
-                    >
-                    </sp-adapter-settings>
-                </mat-step>
+    @if (state$ | async; as state) {
+        @if (state.adapterDescription) {
+            <div fxLayout="column" fxLayoutAlign="center stretch">
+                <sp-basic-header-title-component
+                    [title]="pageTitle"
+                ></sp-basic-header-title-component>
+                <mat-horizontal-stepper
+                    [linear]="true"
+                    #stepper
+                    color="accent"
+                    class="stepper"
+                >
+                    <mat-step>
+                        <ng-template matStepLabel
+                            >{{ 'Settings' | translate }}
+                        </ng-template>
+                        <sp-adapter-settings
+                            [adapterDescription]="state.adapterDescription"
+                            (updateAdapterDescriptionEmitter)="
+                                adapterDescription = $event
+                            "
+                            (nextEmitter)="nextAdapterSettings()"
+                            (cancelEmitter)="navigateToAdapterCatalog()"
+                        >
+                        </sp-adapter-settings>
+                    </mat-step>
 
-                <mat-step>
-                    <ng-template matStepLabel>{{
-                        'Configure schema' | translate
-                    }}</ng-template>
-                    <sp-configure-schema
-                        [adapterDescription]="adapter"
-                        (nextEmitter)="nextConfigureSchema()"
-                        (goBackEmitter)="goBack()"
-                        (cancelEmitter)="navigateToAdapterCatalog()"
-                    >
-                    </sp-configure-schema>
-                </mat-step>
+                    <mat-step>
+                        <ng-template matStepLabel
+                            >{{ 'Configure schema' | translate }}
+                        </ng-template>
+                        <sp-configure-schema
+                            [adapterDescription]="state.adapterDescription"
+                            (nextEmitter)="nextConfigureSchema()"
+                            (goBackEmitter)="goBack()"
+                            (cancelEmitter)="navigateToAdapterCatalog()"
+                        >
+                        </sp-configure-schema>
+                    </mat-step>
 
-                <mat-step>
-                    <ng-template matStepLabel>{{
-                        'Configure fields' | translate
-                    }}</ng-template>
+                    <mat-step>
+                        <ng-template matStepLabel
+                            >{{ 'Configure fields' | translate }}
+                        </ng-template>
 
-                    <sp-configure-fields
-                        fxLayout="column"
-                        fxFlex="100"
-                        [adapterDescription]="adapter"
-                        [isEditMode]="isEditMode"
-                        (nextEmitter)="nextConfigureFields()"
-                        (goBackEmitter)="goBack()"
-                        (cancelEmitter)="navigateToAdapterCatalog()"
-                    >
-                    </sp-configure-fields>
-                </mat-step>
-                <mat-step>
-                    <ng-template matStepLabel>{{
-                        'Start adapter' | translate
-                    }}</ng-template>
-                    <sp-start-adapter-configuration
-                        [adapterDescription]="adapter"
-                        [eventSchema]="adapter.dataStream.eventSchema"
-                        [isEditMode]="isEditMode"
-                        (cancelEmitter)="navigateToAdapterCatalog()"
-                        (goBackEmitter)="goBack()"
-                        (adapterStartedEmitter)="adapterWasStarted()"
-                    >
-                    </sp-start-adapter-configuration>
-                </mat-step>
-            </mat-horizontal-stepper>
-        </div>
+                        <sp-configure-fields
+                            fxLayout="column"
+                            fxFlex="100"
+                            [adapterDescription]="state.adapterDescription"
+                            [isEditMode]="isEditMode"
+                            (nextEmitter)="nextConfigureFields()"
+                            (goBackEmitter)="goBack()"
+                            (cancelEmitter)="navigateToAdapterCatalog()"
+                        >
+                        </sp-configure-fields>
+                    </mat-step>
+                    <mat-step>
+                        <ng-template matStepLabel
+                            >{{ 'Start adapter' | translate }}
+                        </ng-template>
+                        <sp-start-adapter-configuration
+                            [adapterDescription]="state.adapterDescription"
+                            [eventSchema]="
+                                adapterDescription.dataStream.eventSchema
+                            "
+                            [isEditMode]="isEditMode"
+                            (cancelEmitter)="navigateToAdapterCatalog()"
+                            (goBackEmitter)="goBack()"
+                            (adapterStartedEmitter)="adapterWasStarted()"
+                        >
+                        </sp-start-adapter-configuration>
+                    </mat-step>
+                </mat-horizontal-stepper>
+            </div>
+        }
     }
 </sp-basic-view>

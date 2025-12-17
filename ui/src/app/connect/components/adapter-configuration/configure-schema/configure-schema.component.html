@@ -52,21 +52,7 @@
                     <mat-icon>play_circle_filled</mat-icon>
                     <span>Run script</span>
                 </button>
-                <button
-                    color="accent"
-                    mat-button
-                    matTooltip="Get Sample Event"
-                    (click)="getSampleEvent()"
-                >
-                    <mat-icon>refresh</mat-icon>
-                    <span>Get Sample Event</span>
-                </button>
             </div>
-            <label
-                >Script (provide function body that receives `event` and returns
-                transformed event)</label
-            >
-
             <ngx-codemirror
                 style="width: 100%; height: 220px"
                 [(ngModel)]="script"
@@ -82,7 +68,17 @@
                 [showTitle]="true"
                 [panelTitle]="'Original (Parsed)' | translate"
             >
-                @if (sampleEventLoading) {
+                <div header fxLayoutAlign="end center" fxFlex="100">
+                    <button
+                        color="accent"
+                        mat-button
+                        matTooltip="Get New Sample"
+                        (click)="getSampleEvent()"
+                    >
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                </div>
+                @if (isSampleLoading$ | async) {
                     <div class="sp-dialog-content">
                         <div
                             fxFlex="100"
@@ -94,14 +90,14 @@
                         </div>
                     </div>
                 } @else {
-                    @if (sampleEventExecutionErrorMessage) {
+                    @if (sampleErrorMessage$ | async; as error) {
                         <sp-exception-message
-                            [message]="sampleEventExecutionErrorMessage"
+                            [message]="error"
                             [showDetails]="true"
                         ></sp-exception-message>
                     } @else {
                         <pre
-                            [innerHTML]="input | jsonpretty"
+                            [innerHTML]="input$ | async | jsonpretty"
                             class="preview-text"
                             data-cy="schema-preview-original-event"
                         ></pre>
@@ -117,7 +113,7 @@
                 fxFlex="100"
                 data-cy="connect-schema-update-preview"
             >
-                @if (scriptExecutionLoading) {
+                @if (isRunningScript$ | async) {
                     <div class="sp-dialog-content">
                         <div
                             fxFlex="100"
@@ -129,14 +125,14 @@
                         </div>
                     </div>
                 } @else {
-                    @if (scriptExecutionErrorMessage) {
+                    @if (scriptError$ | async; as error) {
                         <sp-exception-message
-                            [message]="scriptExecutionErrorMessage"
+                            [message]="error"
                             [showDetails]="true"
                         ></sp-exception-message>
                     } @else {
                         <pre
-                            [innerHTML]="output | jsonpretty"
+                            [innerHTML]="output$ | async | jsonpretty"
                             class="preview-text"
                             data-cy="schema-preview-result-event"
                         ></pre>
