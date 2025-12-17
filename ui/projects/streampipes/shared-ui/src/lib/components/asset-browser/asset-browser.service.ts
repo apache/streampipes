@@ -39,7 +39,6 @@ import { LocalStorageService } from '../../services/local-storage-settings.servi
 @Injectable({ providedIn: 'root' })
 export class SpAssetBrowserService {
     assetData$ = new BehaviorSubject<AssetBrowserData>(undefined);
-    expanded$ = new BehaviorSubject<boolean>(true);
     filter$ = new BehaviorSubject<AssetFilter>(undefined);
     currentAssetFilter$ = new BehaviorSubject<FilterResult>({
         filterActive: false,
@@ -53,7 +52,6 @@ export class SpAssetBrowserService {
     private typeService = inject(Isa95TypeService);
     private assetService = inject(AssetManagementService);
     private currentUserService = inject(CurrentUserService);
-    private localStorageService = inject(LocalStorageService);
 
     constructor() {
         this.loadAssetData();
@@ -96,14 +94,14 @@ export class SpAssetBrowserService {
             this.assetData$.getValue() !== undefined
         ) {
             const data = this.assetData$.getValue();
-            const filters = this.localStorageService.get('asset-filters', {
+            const filters = {
                 selectedSites: [...data.sites].sort((a, b) =>
                     a.label.localeCompare(b.label),
                 ),
                 selectedLabels: [...data.labels],
                 selectedTypes: [...this.typeService.getTypeDescriptions()],
                 selectedAssetModels: [...data.assets],
-            } as AssetFilter);
+            };
             this.filter$.next(filters);
             this.applyFilters(filters);
         }
@@ -115,7 +113,6 @@ export class SpAssetBrowserService {
     }
 
     applyFilters(filter: AssetFilter) {
-        this.localStorageService.set('asset-filters', filter);
         const clonedLoadedAssetData = JSON.parse(
             JSON.stringify(this.loadedAssetData),
         ) as AssetBrowserData;
