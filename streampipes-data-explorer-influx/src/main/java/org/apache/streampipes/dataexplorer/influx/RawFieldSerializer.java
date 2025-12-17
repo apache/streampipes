@@ -19,6 +19,7 @@
 package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +29,8 @@ public class RawFieldSerializer {
   protected ObjectMapper objectMapper;
 
   public RawFieldSerializer() {
-    this.objectMapper = new ObjectMapper().activateDefaultTyping(
+    this.objectMapper = new JacksonSerializer().getObjectMapper();
+    this.objectMapper.activateDefaultTyping(
         BasicPolymorphicTypeValidator.builder()
             .allowIfBaseType(Object.class)
             .build(),
