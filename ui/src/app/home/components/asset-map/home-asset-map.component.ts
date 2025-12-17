@@ -138,7 +138,9 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
             if (sw.equals(ne)) {
                 this.map.setView(sw, Math.min(this.map.getMaxZoom() ?? 18, 18));
             } else {
-                this.map.fitBounds(bounds, { padding: [24, 24] });
+                setTimeout(() => {
+                    this.map.fitBounds(bounds, { padding: [24, 24] });
+                });
             }
         }
     }

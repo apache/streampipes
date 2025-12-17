@@ -40,8 +40,8 @@
                 [title]="'Assets' | translate"
                 class="asset-section"
             >
-                @if (assets.length > 0) {
-                    <div section-actions>
+                <div section-actions>
+                    @if (assets.length > 0) {
                         <mat-button-toggle-group
                             name="Asset view"
                             aria-label="Asset view mode"
@@ -55,7 +55,9 @@
                                 'Table' | translate
                             }}</mat-button-toggle>
                         </mat-button-toggle-group>
-                    </div>
+                    }
+                </div>
+                @if (assets.length > 0) {
                     <div fxFlexFill fxLayout="column" class="assets-content">
                         @if (selectedView() === 'map') {
                             @if (
