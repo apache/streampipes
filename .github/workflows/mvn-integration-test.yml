@@ -42,7 +42,7 @@ jobs:
           sudo apt install -y maven
        # Step 1: Build everything but skip tests
       - name: Build all StreamPipes modules (skip tests)
-        run: mvn clean install -Dmaven.test.skip
+        run: mvn -B clean install -DskipTests
 
       # Step 2: Run only integration tests (selfsigned)
       - name: Run Integration Tests (selfsigned)
