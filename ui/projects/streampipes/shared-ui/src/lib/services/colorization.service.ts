@@ -23,17 +23,11 @@ type Rgb = { r: number; g: number; b: number; a: number };
 @Injectable({ providedIn: 'root' })
 export class SpColorizationService {
     generateRandomColor(): string {
-        // Hue: full color wheel
         const h = Math.floor(Math.random() * 360);
-
-        // Saturation: avoid dull or neon colors
-        const s = 55 + Math.random() * 25; // 55–80%
-
-        // Lightness: avoid too dark or too light
-        const l = 40 + Math.random() * 25; // 40–65%
-
-        const { r, g, b } = this.hslToRgb(h, s / 100, l / 100);
-        return this.rgbToHex({ r, g, b, a: 1 });
+        const s = 55 + Math.random() * 25;
+        const l = 40 + Math.random() * 25;
+        const rgb = this.hslToRgb(h / 360, s / 100, l / 100);
+        return this.rgbToHex({ ...rgb, a: 1 });
     }
 
     generateContrastColor(bgColor: string): string {

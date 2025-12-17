@@ -173,7 +173,7 @@ export class ChartContainerComponent
         const container = this.el.nativeElement.querySelector(
             '.widget-content',
         ) as HTMLDivElement;
-        const obs = new ResizeObserver(entries => {
+        this.resizeObserver = new ResizeObserver(entries => {
             clearTimeout(this.resizeTimeout);
             this.resizeTimeout = setTimeout(() => {
                 const { width, height } =
@@ -186,7 +186,7 @@ export class ChartContainerComponent
                 });
             }, 100);
         });
-        obs.observe(container);
+        this.resizeObserver.observe(container);
     }
 
     ngOnChanges(changes: SimpleChanges): void {

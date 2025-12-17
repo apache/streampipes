@@ -43,6 +43,9 @@ export class Isa95TypeService {
     }
 
     toLabel(type: Isa95Type): string {
+        if (!type) {
+            return '';
+        }
         return type
             .toLocaleLowerCase()
             .replace(/_/g, ' ')

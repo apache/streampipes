@@ -16,73 +16,79 @@
 ~
 -->
 
-<sp-basic-view [hideNavbar]="true">
-    <div fxFlex fxLayout="row" fxLayoutAlign="start start">
-        <div fxFlex="100">
-            <div fxFlex="100" fxLayout="column">
-                <div class="p-10 header-margin" fxLayoutAlign="center center">
-                    <span class="text-3xl font-bold"
-                        >{{ 'Welcome' | translate }}!</span
-                    >
-                </div>
-                <div fxLayout="column" fxFlex="100" class="home-margin">
-                    @if (showStatus) {
-                        <div
-                            fxFlex="100"
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                            fxLayoutGap="10px"
-                        >
-                            @for (box of statusBoxes; track box) {
-                                <sp-status
-                                    [fxFlex]="100 / statusBoxes.length"
-                                    [statusBox]="box"
-                                    [currentUser]="currentUser"
-                                ></sp-status>
-                            }
-                        </div>
-                    }
-                    <div fxFlex="100">
-                        <sp-basic-inner-panel
-                            innerPadding="0"
-                            panelTitle="{{ appConstants.APP_NAME }} Modules"
-                        >
-                            <div fxFlex="100" fxLayout="column">
-                                <mat-list class="modules-list">
-                                    @for (link of serviceLinks; track link) {
-                                        <mat-list-item
-                                            (click)="openLink(link)"
-                                            class="list-item"
-                                        >
-                                            <div
-                                                matListItemAvatar
-                                                class="pipeline-avatar sp-primary-bg"
-                                            >
-                                                <mat-icon>{{
-                                                    link.icon
-                                                }}</mat-icon>
-                                            </div>
-                                            <span
-                                                class="text-md font-bold"
-                                                matListItemTitle
-                                            >
-                                                {{ link.name }}
-                                            </span>
-                                            <span
-                                                matListItemLine
-                                                class="text-sm font-medium"
-                                            >
-                                                {{ link.description }}
-                                            </span>
-                                            <mat-divider></mat-divider>
-                                        </mat-list-item>
-                                    }
-                                </mat-list>
-                            </div>
-                        </sp-basic-inner-panel>
-                    </div>
-                </div>
-            </div>
+<div fxLayout="column" class="page-container page-container-no-bg">
+    @if (currentUser) {
+        <sp-welcome [user]="currentUser"></sp-welcome>
+    }
+    @if (showStatus) {
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            @for (box of statusBoxes; track box) {
+                <sp-status
+                    [fxFlex]="100 / statusBoxes.length"
+                    [statusBox]="box"
+                    [assetLinkType]="assetLinkTypes[box.assetLinkTypeId]"
+                    [currentUser]="currentUser"
+                ></sp-status>
+            }
         </div>
+    }
+    <div fxFlex class="assets-wrapper">
+        @if (contentLoaded) {
+            <sp-split-section
+                fxFlex
+                [level]="2"
+                [title]="'Assets' | translate"
+                class="asset-section"
+            >
+                <div section-actions>
+                    <mat-button-toggle-group
+                        name="Asset view"
+                        aria-label="Asset view mode"
+                        [value]="selectedView()"
+                        (change)="updateView($event.value)"
+                    >
+                        <mat-button-toggle value="map"
+                            >{{ 'Map' | translate }}
+                        </mat-button-toggle>
+                        <mat-button-toggle value="table">{{
+                            'Table' | translate
+                        }}</mat-button-toggle>
+                    </mat-button-toggle-group>
+                </div>
+                <div fxFlexFill fxLayout="column" class="assets-content">
+                    @if (selectedView() === 'map') {
+                        @if (locationConfig && locationConfig.locationEnabled) {
+                            <sp-home-asset-map
+                                class="h-100 map"
+                                [assetLinkTypes]="assetLinkTypes"
+                                [sites]="sites"
+                                [locationConfig]="locationConfig"
+                                [assets]="filteredAssets"
+                            ></sp-home-asset-map>
+                        } @else {
+                            <sp-alert-banner
+                                type="info"
+                                [title]="
+                                    'Map configuration required' | translate
+                                "
+                                [description]="
+                                    'To enable the map view, a map provider needs to be configured. Admins can configure map providers under Settings -> Sites.'
+                                        | translate
+                                "
+                            >
+                            </sp-alert-banner>
+                        }
+                    } @else {
+                        <sp-home-asset-table
+                            [assetLinkTypes]="assetLinkTypes"
+                            [sites]="sites"
+                            [locationConfig]="locationConfig"
+                            [assets]="filteredAssets"
+                        >
+                        </sp-home-asset-table>
+                    }
+                </div>
+            </sp-split-section>
+        }
     </div>
-</sp-basic-view>
+</div>

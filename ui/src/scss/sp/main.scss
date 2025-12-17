@@ -16,7 +16,6 @@
  *
  */
 
-@use './variables' as spThemeVars;
 @use '../custom-theme/custom-variables' as customThemeVars;
 
 html {
@@ -27,6 +26,10 @@ html {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.leaflet-popup-content-wrapper {
+    background: var(--color-bg-0);
 }
 
 md-progress-linear.md-accent .md-container {
@@ -49,10 +52,6 @@ body {
     height: auto !important;
     width: 100%;
 
-    --color-adapter: #{spThemeVars.$sp-color-adapter};
-    --color-stream: #{spThemeVars.$sp-color-stream};
-    --color-processor: #{spThemeVars.$sp-color-processor};
-    --color-sink: #{spThemeVars.$sp-color-sink};
     --color-tab-border: var(--color-bg-3);
 }
 
@@ -145,8 +144,12 @@ md-content {
 
 .page-container {
     margin: 10px;
-    min-height: calc(100% - 20px);
-    background: var(--color-bg-main-panel-content);
+    min-height: calc(100vh - 76px);
+    background: var(--color-bg-0);
+}
+
+.page-container-no-bg {
+    background: inherit;
 }
 
 .page-container-padding-inner {
@@ -372,39 +375,39 @@ md-content {
 }
 
 .adapter-label {
-    background: spThemeVars.$sp-color-adapter;
+    background: var(--color-adapter);
     color: white;
 }
 
 .stream-label {
-    background: spThemeVars.$sp-color-stream;
+    background: var(--color-data-source);
     color: black;
 }
 
 .processor-label {
-    background: spThemeVars.$sp-color-processor;
+    background: var(--color-processor);
 }
 
 .sink-label {
-    background: spThemeVars.$sp-color-sink;
+    background: var(--color-sink);
 }
 
 .adapter {
     border-radius: 50%;
-    border: 2px solid spThemeVars.$sp-color-adapter;
+    border: 2px solid var(--color-adapter);
 }
 
 .stream {
     border-radius: 50%;
-    border: 2px solid spThemeVars.$sp-color-stream;
+    border: 2px solid var(--color-data-source);
 }
 
 .action {
-    border: 2px solid spThemeVars.$sp-color-sink;
+    border: 2px solid var(--color-sink);
 }
 
 .sepa {
-    border: 2px solid spThemeVars.$sp-color-processor;
+    border: 2px solid var(--color-processor);
 }
 
 .draggable-img {

@@ -16,33 +16,132 @@
  *
  */
 
+:host {
+    --status-box-color: #2c3e50;
+    --status-box-bg: color-mix(
+        in srgb,
+        var(--status-box-color) 14%,
+        var(--color-bg-0)
+    );
+}
+
 .status-container {
-    height: 150px;
     width: 100%;
-    color: var(--color-secondary);
-    border-radius: 10px;
+    box-sizing: border-box;
+
+    min-height: 112px;
+    height: auto;
+
+    border-radius: 14px;
     margin-bottom: 20px;
+
     border: 1px solid var(--color-bg-2);
-    background: var(--color-bg-1);
+    background: var(--status-box-bg);
+    color: var(--status-box-color);
+
+    transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        border-color 160ms ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.status-container-number {
-    font-weight: bold;
+/* Inner layout */
+.status-content {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
 }
 
+/* Left column */
+.status-main {
+    display: grid;
+    gap: 6px;
+    align-content: center;
+    min-width: 0; /* allows text truncation */
+}
+
+.status-number {
+    font-weight: 700;
+    font-size: 2rem; /* ~text-3xl */
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.status-title {
+    font-weight: 600;
+    font-size: 1rem;
+    opacity: 0.9;
+
+    /* avoid overflow on long titles */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Action link */
+.status-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 6px;
+    width: fit-content;
+
+    color: var(--status-box-color);
+    text-decoration: none;
+
+    font-weight: 600;
+    font-size: 0.9rem;
+    opacity: 0.9;
+
+    padding: 6px 10px;
+    border-radius: 999px;
+
+    /* subtle “chip” feel without changing colors */
+    background: color-mix(in srgb, var(--status-box-color) 8%, transparent);
+    transition:
+        transform 160ms ease,
+        opacity 160ms ease,
+        background 160ms ease;
+}
+
+.status-action .material-icons {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* Right icon */
+.status-icon {
+    font-size: 52px; /* big but not overpowering */
+    color: var(--status-box-color);
+    opacity: 0.5;
+    line-height: 1;
+    justify-self: end;
+
+    /* keep the icon visually tucked in */
+    transform: translateY(2px);
+    pointer-events: none;
+}
+
+/* Hover / active */
 .status-container:hover {
     cursor: pointer;
-    opacity: 0.8;
+    opacity: 1;
+    transform: translateY(-2px);
 }
 
-.status-container-create-link {
-    color: var(--color-primary);
+.status-container:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
-.status-container-create-link:hover {
-    font-weight: bold;
-}
-
-.status-container-icon {
-    color: var(--mat-sys-outline-variant);
+/* Action hover */
+.status-action:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+    background: color-mix(in srgb, var(--status-box-color) 12%, transparent);
 }

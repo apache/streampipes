@@ -446,6 +446,7 @@ export class DataExplorerUtils {
      * @param amountOfFilter the amount of filters that should be set. 0 if no filter should be visible
      */
     public static checkIfFilterIsSet(amountOfFilter: number) {
+        cy.wait(1000);
         if (amountOfFilter === 0) {
             cy.dataCy('design-panel-data-settings-filter-field').should(
                 'not.exist',
