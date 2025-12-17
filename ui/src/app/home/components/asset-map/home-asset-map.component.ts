@@ -126,15 +126,20 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
             this.markersGroup.addLayer(marker);
         });
         const bounds = (this.markersGroup as any).getBounds?.();
-        if (!bounds || !bounds.isValid()) return;
-
-        const sw = bounds.getSouthWest();
-        const ne = bounds.getNorthEast();
-
-        if (sw.equals(ne)) {
-            this.map.setView(sw, Math.min(this.map.getMaxZoom() ?? 18, 18));
+        if (!bounds || !bounds.isValid()) {
+            this.map.setView(
+                { lat: 0, lng: 0 },
+                Math.min(this.map.getMaxZoom() ?? 3, 3),
+            );
         } else {
-            this.map.fitBounds(bounds, { padding: [24, 24] });
+            const sw = bounds.getSouthWest();
+            const ne = bounds.getNorthEast();
+
+            if (sw.equals(ne)) {
+                this.map.setView(sw, Math.min(this.map.getMaxZoom() ?? 18, 18));
+            } else {
+                this.map.fitBounds(bounds, { padding: [24, 24] });
+            }
         }
     }
 

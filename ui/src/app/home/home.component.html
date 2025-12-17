@@ -40,54 +40,68 @@
                 [title]="'Assets' | translate"
                 class="asset-section"
             >
-                <div section-actions>
-                    <mat-button-toggle-group
-                        name="Asset view"
-                        aria-label="Asset view mode"
-                        [value]="selectedView()"
-                        (change)="updateView($event.value)"
-                    >
-                        <mat-button-toggle value="map"
-                            >{{ 'Map' | translate }}
-                        </mat-button-toggle>
-                        <mat-button-toggle value="table">{{
-                            'Table' | translate
-                        }}</mat-button-toggle>
-                    </mat-button-toggle-group>
-                </div>
-                <div fxFlexFill fxLayout="column" class="assets-content">
-                    @if (selectedView() === 'map') {
-                        @if (locationConfig && locationConfig.locationEnabled) {
-                            <sp-home-asset-map
-                                class="h-100 map"
+                @if (assets.length > 0) {
+                    <div section-actions>
+                        <mat-button-toggle-group
+                            name="Asset view"
+                            aria-label="Asset view mode"
+                            [value]="selectedView()"
+                            (change)="updateView($event.value)"
+                        >
+                            <mat-button-toggle value="map"
+                                >{{ 'Map' | translate }}
+                            </mat-button-toggle>
+                            <mat-button-toggle value="table">{{
+                                'Table' | translate
+                            }}</mat-button-toggle>
+                        </mat-button-toggle-group>
+                    </div>
+                    <div fxFlexFill fxLayout="column" class="assets-content">
+                        @if (selectedView() === 'map') {
+                            @if (
+                                locationConfig && locationConfig.locationEnabled
+                            ) {
+                                <sp-home-asset-map
+                                    class="h-100 map"
+                                    [assetLinkTypes]="assetLinkTypes"
+                                    [sites]="sites"
+                                    [locationConfig]="locationConfig"
+                                    [assets]="filteredAssets"
+                                ></sp-home-asset-map>
+                            } @else {
+                                <sp-alert-banner
+                                    type="info"
+                                    [title]="
+                                        'Map configuration required' | translate
+                                    "
+                                    [description]="
+                                        'To enable the map view, a map provider needs to be configured. Admins can configure map providers under Settings -> Sites.'
+                                            | translate
+                                    "
+                                >
+                                </sp-alert-banner>
+                            }
+                        } @else {
+                            <sp-home-asset-table
                                 [assetLinkTypes]="assetLinkTypes"
                                 [sites]="sites"
                                 [locationConfig]="locationConfig"
                                 [assets]="filteredAssets"
-                            ></sp-home-asset-map>
-                        } @else {
-                            <sp-alert-banner
-                                type="info"
-                                [title]="
-                                    'Map configuration required' | translate
-                                "
-                                [description]="
-                                    'To enable the map view, a map provider needs to be configured. Admins can configure map providers under Settings -> Sites.'
-                                        | translate
-                                "
                             >
-                            </sp-alert-banner>
+                            </sp-home-asset-table>
                         }
-                    } @else {
-                        <sp-home-asset-table
-                            [assetLinkTypes]="assetLinkTypes"
-                            [sites]="sites"
-                            [locationConfig]="locationConfig"
-                            [assets]="filteredAssets"
-                        >
-                        </sp-home-asset-table>
-                    }
-                </div>
+                    </div>
+                } @else {
+                    <sp-alert-banner
+                        type="info"
+                        [title]="'No assets found.' | translate"
+                        [description]="
+                            'Start by creating an asset in Assets → New Asset. Once created, you can add asset links to better organize and track your resources.'
+                                | translate
+                        "
+                    >
+                    </sp-alert-banner>
+                }
             </sp-split-section>
         }
     </div>
