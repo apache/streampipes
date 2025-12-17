@@ -93,6 +93,7 @@ mkdocs-material = "9.3.2"
 mkdocstrings = { version = "0.25.0", extras = ["python"] }
 numpydoc = "1.9.0"
 pytkdocs = { version = "0.16.1", extras = ["numpy-style"] }
+setuptools = "^68.0"
 
 [tool.poetry.group.stubs]
 optional = true
