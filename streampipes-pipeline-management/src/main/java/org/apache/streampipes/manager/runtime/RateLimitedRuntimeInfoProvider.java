@@ -39,7 +39,7 @@ public class RateLimitedRuntimeInfoProvider {
   public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
                                         ClientDisconnectCallback callback) {
     this.runtimeInfoProvider = runtimeInfoProvider;
-    this.objectMapper = new JacksonSerializer(true).getObjectMapper();
+    this.objectMapper = new JacksonSerializer(true, false).getObjectMapper();
     this.callback = callback;
   }
 

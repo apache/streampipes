@@ -25,20 +25,29 @@ public class JacksonSerializer {
 
 
   private boolean failOnUnknownProperties;
+  private boolean prettyPrint;
 
   public JacksonSerializer() {
-    this.failOnUnknownProperties = false;  
+    this.failOnUnknownProperties = false; 
+    // Pretty Print needs to be disabled for the adapter data preview
+    this.prettyPrint = true;  
   }
 
   public JacksonSerializer(boolean failOnUnknownProperties) {
     this.failOnUnknownProperties = failOnUnknownProperties;
   }
 
+  public JacksonSerializer(boolean failOnUnknownProperties, boolean prettyPrint) {
+    this.failOnUnknownProperties = failOnUnknownProperties;
+    this.prettyPrint = prettyPrint;
+  }
+
   public ObjectMapper getObjectMapper() {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, this.failOnUnknownProperties);
+    if (this.prettyPrint){
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
+    }
     return mapper;
   }
 }
