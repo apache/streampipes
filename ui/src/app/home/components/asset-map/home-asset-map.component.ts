@@ -38,10 +38,6 @@ import {
     featureGroup,
     FeatureGroup,
     icon,
-    latLng,
-    latLngBounds,
-    LatLngBounds,
-    LatLngExpression,
     Layer,
     LeafletMouseEvent,
     Map,
@@ -79,7 +75,6 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
     mapOptions: MapOptions;
     layers: Layer[];
     marker: Marker;
-    bounds: LatLngBounds;
     markersGroup: FeatureGroup = featureGroup();
 
     private currentPopupRef: ComponentRef<AssetMapPopupComponent> | null = null;
@@ -88,16 +83,12 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
     private injector = inject(EnvironmentInjector);
 
     ngOnInit() {
-        const result = this.getCenterAndBounds();
-        this.bounds = result.bounds;
-
         this.mapOptions = {
             layers: this.mapLayerProviderService.getMapLayers(
                 this.locationConfig,
             ),
             zoom: 10,
             zoomControl: true,
-            center: result.center,
         };
     }
 
@@ -105,30 +96,6 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
         if (changes['assets'] && this.map) {
             this.refreshMarkersAndView();
         }
-    }
-
-    getCenterAndBounds(): { center: LatLngExpression; bounds: L.LatLngBounds } {
-        const latLngs = this.assets
-            .filter(a => a.assetSite !== null)
-            .map(s => s.assetSite.siteId)
-            .map(s => this.sites[s])
-            .map(s => s.location.coordinates)
-            .map(coordinates =>
-                latLng(coordinates.latitude, coordinates.longitude),
-            );
-
-        if (latLngs.length === 0) {
-            return {
-                center: { lat: 0, lng: 0 },
-                bounds: latLngBounds([
-                    [0, 0],
-                    [0, 0],
-                ]),
-            };
-        }
-
-        const bounds = latLngBounds(latLngs);
-        return { center: bounds.getCenter(), bounds };
     }
 
     onMapReady(map: Map) {
@@ -139,9 +106,6 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
 
         setTimeout(() => {
             map.invalidateSize();
-            if (this.bounds && this.bounds.isValid()) {
-                map.fitBounds(this.bounds, { padding: [24, 24] });
-            }
         }, 0);
     }
 
@@ -161,10 +125,16 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
             });
             this.markersGroup.addLayer(marker);
         });
-        const result = this.getCenterAndBounds();
-        this.bounds = result.bounds;
-        if (this.bounds.isValid()) {
-            this.map.fitBounds(this.bounds, { padding: [24, 24] });
+        const bounds = (this.markersGroup as any).getBounds?.();
+        if (!bounds || !bounds.isValid()) return;
+
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+
+        if (sw.equals(ne)) {
+            this.map.setView(sw, Math.min(this.map.getMaxZoom() ?? 18, 18));
+        } else {
+            this.map.fitBounds(bounds, { padding: [24, 24] });
         }
     }
 

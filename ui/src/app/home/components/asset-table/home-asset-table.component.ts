@@ -72,7 +72,6 @@ export class HomeAssetTableComponent implements OnChanges {
     private router = inject(Router);
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log(changes);
         this.dataSource.data = this.assets;
         setTimeout(() => {
             this.dataSource.sort = this.sort;
