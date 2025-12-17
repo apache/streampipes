@@ -24,6 +24,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
@@ -42,7 +43,9 @@ public class GuessSchemaBuilder {
   private GuessSchemaBuilder() {
     this.eventProperties = new ArrayList<>();
     this.samples = new HashMap<>();
-    this.objectMapper = new JacksonSerializer(true).getObjectMapper();
+    this.objectMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
     this.fieldStatusInfos = new HashMap<>();
   }
 

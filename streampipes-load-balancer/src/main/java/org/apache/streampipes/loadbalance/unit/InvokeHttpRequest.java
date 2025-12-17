@@ -58,7 +58,7 @@ public class InvokeHttpRequest{
   }
 
   private String toJson(EndpointSelectable pipelineElement) throws JsonProcessingException {
-    return new JacksonSerializer().getObjectMapper().writeValueAsString(pipelineElement);
+    return JacksonSerializer.getObjectMapper().writeValueAsString(pipelineElement);
   }
 
   public PipelineElementStatus execute(EndpointSelectable pipelineElement,
@@ -80,7 +80,7 @@ public class InvokeHttpRequest{
                                                  EndpointSelectable pipelineElement,
                                                  String endpointUrl) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString();
-    org.apache.streampipes.model.Response streamPipesResp = new JacksonSerializer()
+    org.apache.streampipes.model.Response streamPipesResp = JacksonSerializer
             .getObjectMapper()
             .readValue(resp, org.apache.streampipes.model.Response.class);
     return convert(streamPipesResp, endpointUrl, pipelineElement.getName());

@@ -21,8 +21,11 @@ package org.apache.streampipes.connect.iiot.adapters.oi4.model;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 public class DataSetMessageDeserializationTest {
 
@@ -64,14 +67,18 @@ public class DataSetMessageDeserializationTest {
 
   @Test
   public void testObjectDeserialization() throws JsonProcessingException {
-    var mapper = new JacksonSerializer(true).getObjectMapper();
+    var mapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
     var deserialized = mapper.readValue(datasetMessageObjectPayload, DataSetMessage.class);
     Assertions.assertEquals(4, deserialized.payload().size());
   }
 
   @Test
   public void testArrayDeserialization() throws JsonProcessingException {
-    var mapper = new JacksonSerializer(true).getObjectMapper();
+    var mapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
     var deserialized = mapper.readValue(datasetMessageArrayPayload, DataSetMessage.class);
     Assertions.assertEquals(4, deserialized.payload().size());
   }

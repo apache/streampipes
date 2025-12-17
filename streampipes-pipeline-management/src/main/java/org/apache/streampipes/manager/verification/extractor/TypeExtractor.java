@@ -49,7 +49,7 @@ public class TypeExtractor {
   public ElementVerifier<?> getTypeVerifier() throws SepaParseException {
     try {
       ObjectNode jsonNode =
-          new JacksonSerializer().getObjectMapper().readValue(this.extensionElementDescription, ObjectNode.class);
+          JacksonSerializer.getObjectMapper().readValue(this.extensionElementDescription, ObjectNode.class);
       String jsonClassName = jsonNode.get("@class").asText();
       return getTypeDef(jsonClassName);
     } catch (JsonProcessingException e) {

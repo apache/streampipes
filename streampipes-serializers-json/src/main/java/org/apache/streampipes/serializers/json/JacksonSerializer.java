@@ -20,33 +20,29 @@ package org.apache.streampipes.serializers.json;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.cfg.ConfigFeature;
+
+import java.util.Map;
 
 public class JacksonSerializer {
 
-
-  private boolean failOnUnknownProperties;
-  private boolean prettyPrint;
-
-  public JacksonSerializer() {
-    this.failOnUnknownProperties = false; 
-    // Pretty Print needs to be disabled for the adapter data preview
-    this.prettyPrint = true;  
-  }
-
-  public JacksonSerializer(boolean failOnUnknownProperties) {
-    this.failOnUnknownProperties = failOnUnknownProperties;
-  }
-
-  public JacksonSerializer(boolean failOnUnknownProperties, boolean prettyPrint) {
-    this.failOnUnknownProperties = failOnUnknownProperties;
-    this.prettyPrint = prettyPrint;
-  }
-
-  public ObjectMapper getObjectMapper() {
+  public static ObjectMapper getObjectMapper() {
     ObjectMapper mapper = new ObjectMapper();
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, this.failOnUnknownProperties);
-    if (this.prettyPrint){
-    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+    return mapper;
+  }
+
+  public static ObjectMapper getObjectMapper(Map<ConfigFeature, Boolean> settings) {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+    for (Map.Entry<ConfigFeature, Boolean> entry : settings.entrySet()) {
+      if (entry.getKey() instanceof SerializationFeature) {
+        mapper.configure((SerializationFeature) entry.getKey(), entry.getValue());
+      } else if (entry.getKey() instanceof DeserializationFeature) {
+        mapper.configure((DeserializationFeature) entry.getKey(), entry.getValue());
+      }
     }
     return mapper;
   }

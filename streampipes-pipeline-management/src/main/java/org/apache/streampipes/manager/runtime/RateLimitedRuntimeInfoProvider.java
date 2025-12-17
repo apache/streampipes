@@ -20,10 +20,13 @@ package org.apache.streampipes.manager.runtime;
 
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class RateLimitedRuntimeInfoProvider {
@@ -39,7 +42,10 @@ public class RateLimitedRuntimeInfoProvider {
   public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
                                         ClientDisconnectCallback callback) {
     this.runtimeInfoProvider = runtimeInfoProvider;
-    this.objectMapper = new JacksonSerializer(true, false).getObjectMapper();
+    this.objectMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
+      SerializationFeature.INDENT_OUTPUT, false
+    ));
     this.callback = callback;
   }
 

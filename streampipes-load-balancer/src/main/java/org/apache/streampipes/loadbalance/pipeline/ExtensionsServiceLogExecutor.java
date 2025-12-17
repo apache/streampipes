@@ -132,6 +132,6 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
   private SpEndpointMonitoringInfo parseLogResponse(String response)
       throws JsonProcessingException {
-    return new JacksonSerializer().getObjectMapper().readValue(response, SpEndpointMonitoringInfo.class);
+    return JacksonSerializer.getObjectMapper().readValue(response, SpEndpointMonitoringInfo.class);
   }
 }

@@ -29,7 +29,7 @@ public class RawFieldSerializer {
   protected ObjectMapper objectMapper;
 
   public RawFieldSerializer() {
-    this.objectMapper = new JacksonSerializer().getObjectMapper();
+    this.objectMapper = JacksonSerializer.getObjectMapper();
     this.objectMapper.activateDefaultTyping(
         BasicPolymorphicTypeValidator.builder()
             .allowIfBaseType(Object.class)

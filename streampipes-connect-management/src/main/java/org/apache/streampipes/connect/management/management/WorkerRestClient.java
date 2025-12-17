@@ -77,7 +77,7 @@ public class WorkerRestClient {
               .extServiceGetRequest(url)
               .execute().returnContent().asString();
 
-      return new JacksonSerializer().getObjectMapper().readValue(responseString, List.class);
+      return JacksonSerializer.getObjectMapper().readValue(responseString, List.class);
     } catch (IOException e) {
       throw new AdapterException("List of running adapters could not be fetched from: " + url);
     }
@@ -101,7 +101,7 @@ public class WorkerRestClient {
                                                 String url,
                                                 String action) throws AdapterException {
     try {
-      String adapterDescription = new JacksonSerializer().getObjectMapper().writeValueAsString(ad);
+      String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
       var response = triggerPost(url, ad.getCorrespondingDataStreamElementId(), adapterDescription);
       var responseString = getResponseBody(response);
@@ -134,7 +134,7 @@ public class WorkerRestClient {
     String url = baseUrl + WorkerPaths.getRuntimeResolvablePath(appId);
 
     try {
-      String payload = new JacksonSerializer().getObjectMapper().writeValueAsString(runtimeOptionsRequest);
+      String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
       var response = ExtensionServiceExecutions.extServicePostRequest(url, payload)
               .execute()
               .returnResponse();
@@ -233,7 +233,7 @@ public class WorkerRestClient {
   }
 
   private static ObjectMapper getSerializer() {
-    return new JacksonSerializer().getObjectMapper();
+    return JacksonSerializer.getObjectMapper();
   }
 }
 

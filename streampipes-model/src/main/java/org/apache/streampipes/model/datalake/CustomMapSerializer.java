@@ -20,6 +20,7 @@ package org.apache.streampipes.model.datalake;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
@@ -37,6 +38,8 @@ class CustomMapSerializer extends JsonSerializer<Map> {
 
   @Override
   public void serialize(Map s, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-    jsonGenerator.writeRawValue(new JacksonSerializer(true).getObjectMapper().writeValueAsString(s));
+    jsonGenerator.writeRawValue(JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    )).writeValueAsString(s));
   }
 }

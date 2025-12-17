@@ -30,6 +30,7 @@ import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
@@ -98,7 +99,9 @@ public class PulsarAdapterTester extends AdapterTesterBase {
                 pulsarContainer.getBrokerPort()))
         .build();
          Producer<byte[]> producer = client.newProducer().topic(TOPIC).create()) {
-      var objectMapper = new JacksonSerializer(true).getObjectMapper();
+      var objectMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
 
       events.forEach(event -> {
         try {

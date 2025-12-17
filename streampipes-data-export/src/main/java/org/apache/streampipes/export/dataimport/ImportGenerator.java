@@ -24,7 +24,9 @@ import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.lightcouch.DocumentConflictException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +43,10 @@ public abstract class ImportGenerator<T> {
   protected ObjectMapper defaultMapper;
 
   public ImportGenerator() {
-    this.defaultMapper = new JacksonSerializer(true, false).getObjectMapper();
+    this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
+      SerializationFeature.INDENT_OUTPUT, false 
+    ));
   }
 
   public T generate(InputStream inputStream) throws IOException {

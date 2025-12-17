@@ -27,6 +27,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
@@ -41,7 +42,9 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
   private ObjectMapper objectMapper;
 
   public AdapterEventPreviewPipeline(AdapterEventPreview previewRequest) {
-    this.objectMapper = new JacksonSerializer(true).getObjectMapper();
+    this.objectMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
     this.pipelineElements = new AdapterPipelineGeneratorBase()
         .makeAdapterPipelineElements(previewRequest.getRules(), false);
     this.event = previewRequest.getInputData();

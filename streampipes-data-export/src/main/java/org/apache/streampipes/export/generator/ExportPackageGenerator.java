@@ -37,7 +37,9 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +59,10 @@ public class ExportPackageGenerator {
 
   public ExportPackageGenerator(ExportConfiguration exportConfiguration) {
     this.exportConfiguration = exportConfiguration;
-    this.defaultMapper = new JacksonSerializer(true, false).getObjectMapper();
+    this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
+      SerializationFeature.INDENT_OUTPUT, false 
+    ));
   }
 
   public byte[] generateExportPackage() throws IOException {

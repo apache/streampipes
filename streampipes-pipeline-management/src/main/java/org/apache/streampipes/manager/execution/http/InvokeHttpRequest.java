@@ -49,6 +49,6 @@ public class InvokeHttpRequest extends PipelineElementHttpRequest {
   }
 
   private String toJson(EndpointSelectable pipelineElement) throws JsonProcessingException {
-    return new JacksonSerializer().getObjectMapper().writeValueAsString(pipelineElement);
+    return JacksonSerializer.getObjectMapper().writeValueAsString(pipelineElement);
   }
 }

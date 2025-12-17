@@ -25,6 +25,7 @@ import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import org.slf4j.Logger;
@@ -39,7 +40,9 @@ public class ModifyAssetLinkTypeMigration implements Migration {
   private static final Logger LOG = LoggerFactory.getLogger(ModifyAssetLinkTypeMigration.class);
 
   private final IGenericStorage genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
-  private final ObjectMapper objectMapper = new JacksonSerializer(true).getObjectMapper();
+  private final ObjectMapper objectMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
 
   public ModifyAssetLinkTypeMigration() {
 

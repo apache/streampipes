@@ -24,6 +24,7 @@ import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pulsar.client.api.ClientBuilder;
 import org.apache.pulsar.client.api.Producer;
@@ -74,7 +75,9 @@ public class TestPulsarPublisherSink {
     when(producerBuilder.create()).thenReturn(producer);
     when(producer.send(Mockito.any(byte[].class))).thenAnswer(data -> {
       HashMap<String, String> map;
-      ObjectMapper mapper = new JacksonSerializer(true).getObjectMapper();
+      ObjectMapper mapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
       String json = new String((byte[]) data.getArgument(0));
       map = mapper.readValue(json, new TypeReference<>() {
       });

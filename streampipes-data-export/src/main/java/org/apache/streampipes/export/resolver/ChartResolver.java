@@ -24,6 +24,9 @@ import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+
+import java.util.Map;
 
 public class ChartResolver extends AbstractResolver<DataExplorerWidgetModel> {
 
@@ -40,7 +43,9 @@ public class ChartResolver extends AbstractResolver<DataExplorerWidgetModel> {
 
   @Override
   public DataExplorerWidgetModel readDocument(String serializedDoc) throws JsonProcessingException {
-    return new JacksonSerializer(true).getObjectMapper().readValue(serializedDoc, DataExplorerWidgetModel.class);
+    return JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    )).readValue(serializedDoc, DataExplorerWidgetModel.class);
   }
 
   @Override

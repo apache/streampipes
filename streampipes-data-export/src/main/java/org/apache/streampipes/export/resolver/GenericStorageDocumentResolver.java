@@ -24,6 +24,7 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.lightcouch.DocumentConflictException;
 import org.slf4j.Logger;
@@ -53,7 +54,9 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
 
   @Override
   public Map<String, Object> readDocument(String serializedDocument) throws JsonProcessingException {
-    return new JacksonSerializer(true).getObjectMapper().readValue(serializedDocument, new TypeReference<>() {
+    return JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    )).readValue(serializedDocument, new TypeReference<>() {
     });
   }
 
@@ -75,7 +78,9 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
 
   @Override
   public Map<String, Object> deserializeDocument(String document) throws JsonProcessingException {
-    return new JacksonSerializer(true).getObjectMapper().readValue(document, new TypeReference<>() {
+    return JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    )).readValue(document, new TypeReference<>() {
     });
   }
 

@@ -28,7 +28,7 @@ public abstract class Serializer<K, V, T> {
   protected ObjectMapper objectMapper;
 
   public Serializer() {
-    this.objectMapper = new JacksonSerializer().getObjectMapper();
+    this.objectMapper = JacksonSerializer.getObjectMapper();
 
   }
 

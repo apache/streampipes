@@ -24,6 +24,7 @@ import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -32,7 +33,9 @@ import java.util.Map;
 public class MQTTPublisherUtils {
 
     public static void publishEvents(MqttPublisher publisher, List<Map<String, Object>> events) {
-        var objectMapper = new JacksonSerializer(true).getObjectMapper();
+        var objectMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
  
         events.forEach(event -> {
 

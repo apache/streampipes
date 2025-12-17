@@ -23,11 +23,14 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.apache.commons.lang3.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.exceptions.JedisException;
+
+import java.util.Map;
 
 public class Redis {
 
@@ -125,7 +128,9 @@ public class Redis {
 
   private String getEventValue(Event event) throws SpRuntimeException {
     try {
-      return new JacksonSerializer(true).getObjectMapper().writeValueAsString(event.getRaw());
+      return JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    )).writeValueAsString(event.getRaw());
     } catch (JsonProcessingException e) {
       throw new SpRuntimeException("Could not convert event to JSON", e);
     }

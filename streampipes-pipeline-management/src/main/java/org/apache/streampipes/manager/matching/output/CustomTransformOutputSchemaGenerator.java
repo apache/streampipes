@@ -64,7 +64,7 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
 
   private EventSchema makeRequest() {
     try {
-      String httpRequestBody = new JacksonSerializer().getObjectMapper().writeValueAsString(dataProcessorInvocation);
+      String httpRequestBody = JacksonSerializer.getObjectMapper().writeValueAsString(dataProcessorInvocation);
       String endpointUrl = new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(
           dataProcessorInvocation.getAppId(),
           SpServiceUrlProvider.DATA_PROCESSOR
@@ -82,7 +82,7 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   private EventSchema handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString(StandardCharsets.UTF_8);
 
-    return new JacksonSerializer()
+    return JacksonSerializer
         .getObjectMapper()
         .readValue(resp, EventSchema.class);
   }

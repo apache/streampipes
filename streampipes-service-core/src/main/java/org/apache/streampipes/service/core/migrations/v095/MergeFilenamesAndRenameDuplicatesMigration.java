@@ -26,6 +26,7 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
@@ -47,7 +48,9 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
 
   private CouchDbClient couchDbClient;
 
-  private final ObjectMapper mapper = new JacksonSerializer(true).getObjectMapper();
+  private final ObjectMapper mapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
 
   private final CRUDStorage<FileMetadata> fileMetadataStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage();

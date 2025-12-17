@@ -50,7 +50,7 @@ public class GenericStorageImpl implements IGenericStorage {
   private final ObjectMapper mapper;
 
   public GenericStorageImpl() {
-    this.mapper = new JacksonSerializer().getObjectMapper();
+    this.mapper = JacksonSerializer.getObjectMapper();
     this.mapper
         .setSerializationInclusion(JsonInclude.Include.NON_NULL);
   }

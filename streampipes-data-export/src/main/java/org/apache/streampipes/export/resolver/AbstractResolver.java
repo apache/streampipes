@@ -28,8 +28,10 @@ import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,8 +42,10 @@ public abstract class AbstractResolver<T> implements DocumentResolver<T> {
   protected ObjectMapper spMapper;
 
   public AbstractResolver() {
-    this.defaultMapper = new JacksonSerializer(true).getObjectMapper();
-    this.spMapper = new JacksonSerializer().getObjectMapper();
+    this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
+    this.spMapper = JacksonSerializer.getObjectMapper();
   }
 
   public Set<ExportItem> resolve(Set<AssetLink> assetLinks) {
