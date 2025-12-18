@@ -16,21 +16,16 @@
  *
  */
 
-.asset-hierarchy {
-    height: calc(100vh - 145px);
-    max-height: calc(100vh - 145px);
-    overflow-y: auto;
-    margin-left: 5px;
-    margin-top: 5px;
+.asset-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 5px;
+    align-items: center;
 }
 
-.asset-browser-text {
-    text-orientation: mixed;
-    writing-mode: tb-rl;
-    text-align: center;
-}
-
-.asset-creation-hint {
-    font-size: 10pt;
-    text-align: center;
+.cell-nowrap {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

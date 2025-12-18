@@ -56,14 +56,10 @@ import { SpExceptionDetailsComponent } from './components/sp-exception-message/e
 import { SpBasicFieldDescriptionComponent } from './components/basic-field-description/basic-field-description.component';
 import { AssetBrowserToolbarComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-toolbar.component';
 import { AssetBrowserFilterComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter.component';
-import { AssetBrowserComponent } from './components/asset-browser/asset-browser.component';
 import { AssetBrowserFilterLabelsComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-labels/asset-browser-filter-labels.component';
 import { AssetBrowserFilterOuterComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-outer/asset-browser-filter-outer.component';
 import { AssetBrowserFilterSitesComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-sites/asset-browser-filter-sites.component';
 import { AssetBrowserFilterTypeComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-type/asset-browser-filter-type.component';
-import { AssetBrowserHierarchyComponent } from './components/asset-browser/asset-browser-hierarchy/asset-browser-hierarchy.component';
-import { AssetBrowserNodeComponent } from './components/asset-browser/asset-browser-hierarchy/asset-browser-node/asset-browser-node.component';
-import { AssetBrowserNodeInfoComponent } from './components/asset-browser/asset-browser-hierarchy/asset-browser-node/asset-browser-node-info/asset-browser-node-info.component';
 import { TimeRangeSelectorComponent } from './components/time-selector/time-range-selector.component';
 import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
 import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
@@ -119,15 +115,11 @@ import { FeatureCardMetaCreationComponent } from './components/feature-card-host
 
 @NgModule({
     declarations: [
-        AssetBrowserComponent,
         AssetBrowserFilterComponent,
         AssetBrowserFilterLabelsComponent,
         AssetBrowserFilterOuterComponent,
         AssetBrowserFilterSitesComponent,
         AssetBrowserFilterTypeComponent,
-        AssetBrowserHierarchyComponent,
-        AssetBrowserNodeComponent,
-        AssetBrowserNodeInfoComponent,
         AssetBrowserToolbarComponent,
         ConfirmDialogComponent,
         CustomTimeRangeSelectionComponent,
@@ -225,7 +217,6 @@ import { FeatureCardMetaCreationComponent } from './components/feature-card-host
         },
     ],
     exports: [
-        AssetBrowserComponent,
         AssetBrowserToolbarComponent,
         AssetLinkConfigurationComponent,
         ConfirmDialogComponent,

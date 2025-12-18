@@ -18,13 +18,6 @@
 
 // variables maintained by StreamPipes committers
 
-$sp-color-adapter: #7f007f;
-$sp-color-stream: #ffeb3b;
-$sp-color-processor: #009688;
-$sp-color-sink: #3f51b5;
-
-$sp-color-error: #b71c1c;
-
 :root {
     --mat-sys-body-large-size: var(--font-size-md);
     --mat-sys-body-medium-size: var(--font-size-sm);
@@ -40,13 +33,15 @@ $sp-color-error: #b71c1c;
 
     --fg-muted: color-mix(in oklab, currentColor 60%, transparent);
 
-    --color-data-view: rgb(122, 206, 227);
-    --color-dashboard: rgb(76, 115, 164);
-    --color-adapter: rgb(182, 140, 97);
-    --color-data-source: #ffeb3b;
-    --color-pipeline: rgb(102, 185, 114);
-    --color-measurement: rgb(39, 164, 155);
-    --color-file: rgb(163, 98, 190);
+    --color-data-view: rgb(96, 165, 250);
+    --color-dashboard: rgb(79, 129, 189);
+    --color-adapter: rgb(180, 140, 95);
+    --color-data-source: rgb(234, 179, 8);
+    --color-pipeline: rgb(74, 182, 155);
+    --color-measurement: rgb(56, 178, 172);
+    --color-file: rgb(168, 85, 247);
+    --color-processor: #009688;
+    --color-sink: #3f51b5;
 
     --button-border-radius: 5px;
     --iconbar-width: 35px;

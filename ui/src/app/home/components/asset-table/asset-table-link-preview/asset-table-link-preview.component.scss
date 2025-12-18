@@ -1,0 +1,114 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.link-chip {
+    --lc: var(--link-color, #6b778c);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 28px;
+    padding: 4px 6px;
+
+    background: color-mix(in srgb, var(--color-bg-0) 85%, var(--lc) 15%);
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+
+    cursor: pointer;
+    user-select: none;
+    color: var(--lc);
+
+    z-index: 0;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+        border-color: var(--lc);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        transform: translateY(-1px);
+        z-index: 50;
+        outline: none;
+    }
+
+    .link-icon {
+        font-size: 16px;
+        line-height: 1;
+        color: var(--lc);
+        position: relative;
+        z-index: 3;
+    }
+
+    .chip-expander {
+        position: absolute;
+        left: -1px;
+        top: -1px;
+        height: calc(100% + 2px);
+
+        width: max-content;
+        max-width: 340px;
+
+        display: inline-flex;
+        align-items: center;
+
+        padding-left: calc(6px + 16px + 6px);
+        padding-right: 10px;
+
+        border-radius: 6px;
+        background: color-mix(in srgb, #ffffff 85%, var(--lc) 15%);
+        border: 1px solid #e1e4e8;
+
+        box-sizing: border-box;
+        pointer-events: none;
+        clip-path: inset(0 100% 0 0 round 6px);
+        opacity: 0;
+
+        transition:
+            clip-path 220ms ease,
+            opacity 120ms ease,
+            box-shadow 220ms ease,
+            border-color 220ms ease;
+
+        z-index: 2;
+    }
+
+    .link-label {
+        font-size: var(--font-size-xs);
+        font-weight: 500;
+        color: var(--lc);
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        max-width: 260px;
+    }
+
+    &:hover .chip-expander,
+    &:focus-visible .chip-expander {
+        opacity: 1;
+        clip-path: inset(0 0 0 0 round 6px);
+        border-color: var(--lc);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+    }
+}

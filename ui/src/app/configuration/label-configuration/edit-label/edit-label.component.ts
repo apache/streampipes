@@ -65,6 +65,7 @@ export class SpEditLabelComponent implements OnInit {
         this.saveEmitter.emit(this.label);
         if (this.showPreview) {
             this.label.color = this.colorizationService.generateRandomColor();
+            console.log(this.label.color);
         }
     }
 }
