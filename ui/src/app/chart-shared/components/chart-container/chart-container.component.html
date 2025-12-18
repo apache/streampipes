@@ -43,8 +43,9 @@
                                     configuredWidget.baseAppearanceConfig
                                         .widgetTitle
                             }}
-                            @if (editMode) {
+                            @if (!dataViewMode && editMode) {
                                 <button
+                                    class="ml-xs"
                                     mat-icon-button
                                     (click)="startEditingName()"
                                 >
