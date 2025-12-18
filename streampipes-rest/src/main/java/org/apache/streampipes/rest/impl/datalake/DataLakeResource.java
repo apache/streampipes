@@ -48,6 +48,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -158,11 +159,14 @@ public class DataLakeResource extends AbstractRestResource {
           .body("Measurement series with given id not found.");
     }
   }
-
+  
+  //TODO START HERE EXEMPLARY WITH IMPL
   @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class)))) })
-  public ResponseEntity<List<DataLakeMeasure>> getAll() {
+   @PreAuthorize("this.hasReadAuthority()")
+     @PostFilter("hasPermission(filterObject.measureName, 'READ')")
+      public ResponseEntity<List<DataLakeMeasure>> getAll() {
     List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
     return ok(allMeasurements);
   }
