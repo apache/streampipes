@@ -31,7 +31,6 @@ import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
@@ -90,7 +89,7 @@ import static org.apache.streampipes.model.datalake.param.SupportedRestQueryPara
 
 @RestController
 @RequestMapping("/api/v4/datalake")
-public class DataLakeResource extends AbstractRestResource {
+public class DataLakeResource extends AbstractDataLakeResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
@@ -161,14 +160,15 @@ public class DataLakeResource extends AbstractRestResource {
   }
   
   //TODO START HERE EXEMPLARY WITH IMPL
+  //TODO How to enable this with usage of default entity
   @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class)))) })
    @PreAuthorize("this.hasReadAuthority()")
      @PostFilter("hasPermission(filterObject.measureName, 'READ')")
-      public ResponseEntity<List<DataLakeMeasure>> getAll() {
+      public List<DataLakeMeasure> getAll() {
     List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
-    return ok(allMeasurements);
+    return allMeasurements;
   }
 
   @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -333,6 +333,7 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @DeleteMapping(path = "/{elementId}/cleanup")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId) {
     var measure = this.dataExplorerSchemaManagement.getById(elementId);
     measure.deleteRetentionTime();
