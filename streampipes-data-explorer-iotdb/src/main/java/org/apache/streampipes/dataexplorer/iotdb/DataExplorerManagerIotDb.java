@@ -36,8 +36,10 @@ import java.util.List;
 public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
-  public IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements, List<String> measurementsToCount) {
-    return new DataLakeMeasurementCounterIotDb(allMeasurements, measurementsToCount);
+  public IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements,
+                                                           List<String> measurementsToCount,
+                                                           int daysBack) {
+    return new DataLakeMeasurementCounterIotDb(allMeasurements, measurementsToCount, daysBack);
   }
 
   @Override

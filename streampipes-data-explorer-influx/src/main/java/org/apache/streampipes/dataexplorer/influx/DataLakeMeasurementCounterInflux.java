@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter {
 
@@ -37,9 +38,10 @@ public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter
 
   public DataLakeMeasurementCounterInflux(
       List<DataLakeMeasure> allMeasurements,
-      List<String> measurementNames
+      List<String> measurementNames,
+      int daysBack
   ) {
-    super(allMeasurements, measurementNames);
+    super(allMeasurements, measurementNames, daysBack);
   }
 
   @Override
@@ -54,10 +56,16 @@ public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter
         return 0;
       }
 
+      var endTime = System.currentTimeMillis();
+      long startTime = endTime - TimeUnit.DAYS.toMillis(daysBack);
       var builder = DataLakeInfluxQueryBuilder
           .create(measure.getMeasureName())
-          .withEndTime(System.currentTimeMillis())
+          .withEndTime(endTime)
           .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);
+
+      if (daysBack > -1) {
+        builder.withStartTime(startTime);
+      }
       var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(builder.build(), Optional.empty(), true);
 
       return queryResult.getTotal() > 0 ? extractResult(queryResult, COUNT_FIELD) : 0;
