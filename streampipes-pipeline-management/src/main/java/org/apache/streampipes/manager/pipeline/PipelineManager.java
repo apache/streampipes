@@ -24,6 +24,8 @@ import org.apache.streampipes.manager.permission.PermissionManager;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
+import org.apache.streampipes.model.client.user.PermissionBuilder;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.CrudResourceManager;
@@ -82,6 +84,19 @@ public class PipelineManager {
 
     Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
     getPermissionStorage().persist(permission);
+    // TODO also filter for only DataLake
+    List<DataSinkInvocation>  datasinks = pipeline.getActions().stream()
+        .filter(DataSinkInvocation.class::isInstance)
+        .map(DataSinkInvocation.class::cast)
+        .collect(Collectors.toList());
+
+    // How to write Permission to backend 
+    datasinks.forEach(datasink -> {
+    Permission permissionDatasinks = PermissionBuilder
+        .create(datasink.getElementId(), datasink.getClass(), principalSid)
+        .build();
+    getPermissionStorage().persist(permissionDatasinks);
+});
 
     return pipelineId;
   }
