@@ -115,6 +115,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}")
+  @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(#measurementID, 'WRITE')")
   @Operation(summary = "Remove data from a single measurement series with given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
@@ -135,6 +136,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}/drop")
+  @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(#measurementID, 'WRITE')")
   @Operation(summary = "Drop a single measurement series with given id from Data Lake and "
       + "remove related event property", tags = {
           "Data Lake" }, responses = {
@@ -221,6 +223,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
 
   @PostMapping(path = "/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<SpQueryResult>> getData(@RequestBody List<Map<String, String>> queryParams) {
+    //TODO
     var results = queryParams
         .stream()
         .map(qp -> new ProvidedRestQueryParams(qp.get("measureName"), qp))
@@ -286,6 +289,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @PostMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
   @Operation(summary = "Store a measurement series to a data lake with the given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "400", description = "Can't store the given data to this data lake"),
@@ -305,6 +309,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @DeleteMapping(path = "/measurements")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   @Operation(summary = "Remove all stored measurement series from Data Lake", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "200", description = "All measurement series successfully removed") })
   public ResponseEntity<?> removeAll() {
