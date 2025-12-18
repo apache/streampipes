@@ -38,7 +38,6 @@ export class AssetTableLinkPreviewComponent implements OnInit {
     private featureCardService = inject(FeatureCardService);
 
     ngOnInit() {
-        console.log(this.assetLinkTypes);
         this.currentLinkType = this.assetLinkTypes[this.assetLink.linkType];
     }
 
