@@ -44,12 +44,14 @@ public class RoleManager {
             DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE,
-            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE
+            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE,
+            DefaultPrivilege.Constants.PRIVILEGE_READ_DATASET_VALUE
         )),
         Role.createDefaultRole(DefaultRole.Constants.ROLE_DASHBOARD_USER_VALUE, "Dashboard User", List.of(
             DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE,
-            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE
+            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE,
+            DefaultPrivilege.Constants.PRIVILEGE_READ_DATASET_VALUE
         )),
         Role.createDefaultRole(DefaultRole.Constants.ROLE_PIPELINE_ADMIN_VALUE, "Pipeline Admin", List.of(
             DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_VALUE,
@@ -57,13 +59,16 @@ public class RoleManager {
             DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_READ_FILES_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_WRITE_FILES_VALUE,
-            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE
+            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE,
+            DefaultPrivilege.Constants.PRIVILEGE_READ_DATASET_VALUE,
+            DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATASET_VALUE
         )),
         Role.createDefaultRole(DefaultRole.Constants.ROLE_PIPELINE_USER_VALUE, "Pipeline User", List.of(
             DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_READ_FILES_VALUE,
-            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE
+            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE,
+            DefaultPrivilege.Constants.PRIVILEGE_READ_DATASET_VALUE
         )),
         Role.createDefaultRole(DefaultRole.Constants.ROLE_ASSET_ADMIN_VALUE, "Asset Admin", List.of(
             DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE,
@@ -82,11 +87,13 @@ public class RoleManager {
         Role.createDefaultRole(DefaultRole.Constants.ROLE_DATA_EXPLORER_ADMIN_VALUE, "Data Explorer Admin", List.of(
             DefaultPrivilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE,
-            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE
+            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE,
+            DefaultPrivilege.Constants.PRIVILEGE_READ_DATASET_VALUE
         )),
         Role.createDefaultRole(DefaultRole.Constants.ROLE_DATA_EXPLORER_USER_VALUE, "Data Explorer User", List.of(
             DefaultPrivilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE,
-            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE
+            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE,
+            DefaultPrivilege.Constants.PRIVILEGE_READ_DATASET_VALUE
         )),
         Role.createDefaultRole(DefaultRole.Constants.ROLE_CONNECT_ADMIN_VALUE, "Connect Admin", List.of(
             DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE,
