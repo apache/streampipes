@@ -25,9 +25,11 @@ import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.resource.management.CrudResourceManager;
 import org.apache.streampipes.resource.management.NotificationsResourceManager;
 import org.apache.streampipes.storage.api.IPermissionStorage;
@@ -84,16 +86,26 @@ public class PipelineManager {
 
     Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
     getPermissionStorage().persist(permission);
-    // TODO also filter for only DataLake
+    // TODO also filter for only DataLake --> This does not solve the issue as I want permissions on datalake and not the sinkcompinent
     List<DataSinkInvocation>  datasinks = pipeline.getActions().stream()
         .filter(DataSinkInvocation.class::isInstance)
         .map(DataSinkInvocation.class::cast)
+        .filter(ds -> "org.apache.streampipes.sinks.internal.jvm.datalake"
+                .equals(ds.getAppId()))
         .collect(Collectors.toList());
+      
 
     // How to write Permission to backend 
     datasinks.forEach(datasink -> {
+    var datameasure = datasink.getStaticProperties().stream()
+    .filter(sp -> "db_measurement".equals(sp.getInternalName()))
+    .filter(sp -> sp instanceof FreeTextStaticProperty)
+    .map(sp -> ((FreeTextStaticProperty) sp).getValue())
+    .findFirst()
+    .orElse(null);
+
     Permission permissionDatasinks = PermissionBuilder
-        .create(datasink.getElementId(), datasink.getClass(), principalSid)
+        .create(datameasure, DataLakeMeasure.class, principalSid)
         .build();
     getPermissionStorage().persist(permissionDatasinks);
 });
