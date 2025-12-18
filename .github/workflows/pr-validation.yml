@@ -217,11 +217,7 @@ jobs:
         working-directory: ./streampipes-client-python
         run: |
           poetry install --with docs
-      - name: Ensure setuptools is installed
-        working-directory: ./streampipes-client-python
-        run: |
-              poetry run python -m pip install --upgrade pip setuptools
-
+          
       - name: Build MkDocs
         working-directory: ./streampipes-client-python
         run: |
