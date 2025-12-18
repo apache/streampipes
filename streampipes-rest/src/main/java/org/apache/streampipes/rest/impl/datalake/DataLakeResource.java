@@ -32,6 +32,7 @@ import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,6 +50,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -159,26 +161,28 @@ public class DataLakeResource extends AbstractDataLakeResource {
     }
   }
   
-  //TODO START HERE EXEMPLARY WITH IMPL
-  //TODO How to enable this with usage of default entity
   @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class)))) })
    @PreAuthorize("this.hasReadAuthority()")
      @PostFilter("hasPermission(filterObject.measureName, 'READ')")
-      public List<DataLakeMeasure> getAll() {
+      public  List<DataLakeMeasure> getAll() {
     List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
     return allMeasurements;
   }
 
   @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
+   @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(#measurementId, 'READ')")
+   // TODO Müsste ich hier nicht noch überprüfen ob es auch für die ID fgitl ? 
   public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
       @RequestParam("fields") String fields) {
+    //var measurementName  = this.dataExplorerSchemaManagement.getById(measurementId).getMeasureName();
     Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measurementId, fields);
     return ok(tagValues);
   }
 
   @GetMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
   @Operation(summary = "Get data from a single measurement series by a given id", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
       @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class))) })
@@ -229,6 +233,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
   @Operation(summary = "Download data from a single measurement series by a given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
@@ -374,4 +379,21 @@ public class DataLakeResource extends AbstractDataLakeResource {
   private boolean isIgnoreMissingValues(String missingValueBehaviour) {
     return "ignore".equals(missingValueBehaviour);
   }
+
+  public boolean checkDatasetPermission(String measurementId,
+                                         String permission) {
+                                          LOG.info(measurementId);
+                                            LOG.info(this.dataExplorerSchemaManagement.getById(measurementId).getMeasureName(),
+        permission);
+    var spPermissionEvaluator = new SpPermissionEvaluator();
+    var authentication = SecurityContextHolder.getContext()
+        .getAuthentication();
+    return spPermissionEvaluator.hasPermission(
+        authentication,
+        this.dataExplorerSchemaManagement.getById(measurementId).getMeasureName(),
+        permission);
+  }
+
+
+
 }

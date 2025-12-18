@@ -17,11 +17,17 @@
  */
 package org.apache.streampipes.rest.impl.datalake;
 
+import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 
 
 public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
+
+    private final SpPermissionEvaluator permissionEvaluator = new SpPermissionEvaluator();
+    private final IDataExplorerSchemaManagement dataExplorer = new DataExplorerDispatcher().getDataExplorerManager().getSchemaManagement();;
 
   /**
    * required by Spring expression
@@ -29,11 +35,11 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
   public boolean hasReadAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_DATASET_VALUE);
   }
-
   /**
    * required by Spring expression
    */
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATASET_VALUE);
   }
+  
 }
