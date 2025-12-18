@@ -27,7 +27,7 @@ public class DataLakeMeasurementCounterTestImpl extends DataLakeMeasurementCount
   public DataLakeMeasurementCounterTestImpl(
       List<DataLakeMeasure> allMeasurements, List<String> measurementNames
   ) {
-    super(allMeasurements, measurementNames);
+    super(allMeasurements, measurementNames, -1);
   }
 
   @Override
