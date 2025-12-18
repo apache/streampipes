@@ -27,6 +27,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +55,7 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<DataLakeMeasure> addDataLake(@RequestBody DataLakeMeasure dataLakeMeasure) {
     DataLakeMeasure result = this.dataLakeMeasureManagement.createOrUpdateMeasurement(dataLakeMeasure);
     return ok(result);
@@ -68,7 +71,9 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
    */
   @Operation(summary = "Retrieve measurement counts", description = "Retrieves the entry counts for the specified measurements from the data lake.")
   @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Map<String, Integer>> getEntryCountsOfMeasurments(
+  @PreAuthorize("this.hasReadAuthority()")
+  @PostFilter("hasPermission(filterObject.measureName, 'READ')")
+  public Map<String, Integer> getEntryCountsOfMeasurments(
       @Parameter(description = "A list of measurement names to return the count.") @RequestParam(value = "measurementNames") List<String> measurementNames) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
     var result = new DataExplorerDispatcher()
@@ -77,10 +82,11 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
             allMeasurements,
             measurementNames)
         .countMeasurementSizes();
-    return ok(result);
+    return result;
   }
 
   @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(id, 'READ')")
   public ResponseEntity<?> getDataLakeMeasure(@PathVariable("id") String elementId) {
     var measure = this.dataLakeMeasureManagement.getById(elementId);
     if (Objects.nonNull(measure)) {
@@ -91,6 +97,7 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(path = "byName/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
+   @PreAuthorize("this.hasReadAuthority() and checkPermission(measureName, 'READ')")
   public ResponseEntity<?> getDataLakeMeasureName(@PathVariable("measureName") String measureName) {
     var measure = this.dataLakeMeasureManagement.getExistingMeasureByName(measureName);
     if (Objects.nonNull(measure)) {
@@ -101,6 +108,7 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
   }
 
   @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+   @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(id, 'READ')")
   public ResponseEntity<?> updateDataLakeMeasure(
       @PathVariable("id") String elementId,
       @RequestBody DataLakeMeasure measure) {
@@ -116,6 +124,7 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
   }
 
   @DeleteMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+   @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(#id, 'READ')")
   public ResponseEntity<?> deleteDataLakeMeasure(@PathVariable("id") String elementId) {
     try {
       this.dataLakeMeasureManagement.deleteMeasurement(elementId);
