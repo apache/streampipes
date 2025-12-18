@@ -23,12 +23,14 @@
 }
 
 .assets-wrapper > .section-body {
-    height: 100%;
+    min-height: 100%;
 }
 
 .asset-section {
     background: var(--color-bg-0);
     margin-bottom: 0;
+    flex: 0 0 auto; /* do NOT stretch */
+    min-height: 100%; /* keep current minimum */
 }
 
 .map {

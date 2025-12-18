@@ -86,7 +86,7 @@ export class HomeAssetTableComponent implements OnChanges {
         if (!asset.assetSite?.siteId) {
             return '-';
         } else {
-            return this.sites[asset.assetSite.siteId].label;
+            return this.sites[asset.assetSite.siteId]?.label || '-';
         }
     }
 
