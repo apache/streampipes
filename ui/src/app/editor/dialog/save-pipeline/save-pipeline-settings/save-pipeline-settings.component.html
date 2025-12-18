@@ -36,7 +36,9 @@
                             .get('pipelineName')
                             .hasError('whiteSpaceOnly')
                     ) {
-                        <mat-error> Pipeline name is required. </mat-error>
+                        <mat-error>
+                            {{ 'Pipeline name is required.' | translate }}
+                        </mat-error>
                     }
                     @if (
                         submitPipelineForm
@@ -44,7 +46,10 @@
                             .hasError('leadingOrTrailingWhitespace')
                     ) {
                         <mat-error>
-                            Pipeline name cannot start or end with a space.
+                            {{
+                                'Pipeline name cannot start or end with a space.'
+                                    | translate
+                            }}
                         </mat-error>
                     }
                     @if (
@@ -56,7 +61,10 @@
                             .hasError('maxlength')
                     ) {
                         <mat-error>
-                            Pipeline name must have between 3 and 50 characters.
+                            {{
+                                'Pipeline name must have between 3 and 50 characters.'
+                                    | translate
+                            }}
                         </mat-error>
                     }
                     @if (
@@ -99,14 +107,14 @@
                     style="padding-left: 0"
                     data-cy="pipeline-update-mode-update"
                 >
-                    Update pipeline
+                    {{ 'Update pipeline' | translate }}
                 </mat-radio-button>
                 <mat-radio-button
                     [value]="'clone'"
                     class="mb-10"
                     data-cy="pipeline-update-mode-clone"
                 >
-                    Create new pipeline
+                    {{ 'Create new pipeline' | translate }}
                 </mat-radio-button>
             </mat-radio-group>
         </div>
@@ -117,14 +125,14 @@
             color="accent"
             data-cy="sp-editor-checkbox-start-immediately"
         >
-            Start pipeline immediately
+            {{ 'Start pipeline immediately' | translate }}
         </mat-checkbox>
         <mat-checkbox
             [(ngModel)]="storageOptions.navigateToPipelineOverview"
             color="accent"
             data-cy="sp-editor-checkbox-navigate-to-overview"
         >
-            Navigate to pipeline overview afterwards
+            {{ 'Navigate to pipeline overview afterwards' | translate }}
         </mat-checkbox>
         @if (isAssetAdmin) {
             <mat-checkbox
@@ -132,7 +140,7 @@
                 color="accent"
                 data-cy="sp-show-pipeline-asset-checkbox"
             >
-                Add Pipeline to Assets
+                {{ 'Add Pipeline to Assets' | translate }}
             </mat-checkbox>
             @if (addToAssets) {
                 <div class="mt-10">
@@ -154,9 +162,9 @@
     </sp-split-section>
     <div class="mt-10">
         <mat-expansion-panel class="mat-elevation-z0 border-1">
-            <mat-expansion-panel-header
-                >Show pipeline configuration as code</mat-expansion-panel-header
-            >
+            <mat-expansion-panel-header>{{
+                'Show pipeline configuration as code' | translate
+            }}</mat-expansion-panel-header>
             @if (compactPipeline) {
                 <sp-configuration-code-panel
                     [configuration]="compactPipeline"

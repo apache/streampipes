@@ -46,6 +46,7 @@ import {
     StatusIndicator,
 } from '../../../core-ui/multi-step-status-indicator/multi-step-status-indicator.model';
 import { PipelineAction } from '../../../pipelines/model/pipeline-model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-save-pipeline',
@@ -63,6 +64,7 @@ export class SavePipelineComponent implements OnInit {
     private pipelineCanvasService = inject(PipelineCanvasMetadataService);
     private assetSaveService = inject(AssetSaveService);
     private dataLakeService = inject(DatalakeRestService);
+    private translateService = inject(TranslateService);
 
     @Input()
     pipeline: Pipeline;
@@ -124,7 +126,10 @@ export class SavePipelineComponent implements OnInit {
         stopPipeline$
             .pipe(
                 tap(() =>
-                    this.addStatusIndicator('Saving pipeline', Status.PROGRESS),
+                    this.addStatusIndicator(
+                        this.translateService.instant('Saving pipeline'),
+                        Status.PROGRESS,
+                    ),
                 ),
                 switchMap(() => savePipeline$),
                 tap(message => {
@@ -138,7 +143,10 @@ export class SavePipelineComponent implements OnInit {
                 // only continue if pipeline was saved
                 filter(message => message.success),
                 tap(() =>
-                    this.addStatusIndicator('Saving metadata', Status.PROGRESS),
+                    this.addStatusIndicator(
+                        this.translateService.instant('Saving metadata'),
+                        Status.PROGRESS,
+                    ),
                 ),
                 switchMap(() =>
                     this.getPipelineCanvasMetadata$(this.pipelineId),
@@ -200,7 +208,10 @@ export class SavePipelineComponent implements OnInit {
     getStopPipeline$(): Observable<PipelineOperationStatus> {
         return of(null).pipe(
             tap(() =>
-                this.addStatusIndicator('Stopping pipeline', Status.PROGRESS),
+                this.addStatusIndicator(
+                    this.translateService.instant('Stopping pipeline'),
+                    Status.PROGRESS,
+                ),
             ),
             switchMap(() =>
                 this.pipelineService.stopPipeline(this.originalPipeline._id),
@@ -222,7 +233,7 @@ export class SavePipelineComponent implements OnInit {
             return of(null).pipe(
                 tap(() =>
                     this.addStatusIndicator(
-                        'Starting pipeline',
+                        this.translateService.instant('Starting pipeline'),
                         Status.PROGRESS,
                     ),
                 ),
