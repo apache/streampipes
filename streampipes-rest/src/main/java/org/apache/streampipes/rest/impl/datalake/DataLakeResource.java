@@ -173,16 +173,14 @@ public class DataLakeResource extends AbstractDataLakeResource {
 
   @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
    @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(#measurementId, 'READ')")
-   // TODO Müsste ich hier nicht noch überprüfen ob es auch für die ID fgitl ? 
   public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
       @RequestParam("fields") String fields) {
-    //var measurementName  = this.dataExplorerSchemaManagement.getById(measurementId).getMeasureName();
     Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measurementId, fields);
     return ok(tagValues);
   }
 
   @GetMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority()")
+  @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(#measurementID, 'READ')")
   @Operation(summary = "Get data from a single measurement series by a given id", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
       @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class))) })
@@ -233,7 +231,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  @PreAuthorize("this.hasReadAuthority()")
+  @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(#measurementID, 'READ')")
   @Operation(summary = "Download data from a single measurement series by a given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
