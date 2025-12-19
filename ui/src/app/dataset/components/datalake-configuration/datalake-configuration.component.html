@@ -217,27 +217,37 @@
                             'Download data from index' | translate
                         }}</span>
                     </button>
-                    <button
-                        mat-menu-item
-                        data-cy="datalake-truncate-btn"
-                        (click)="cleanDatalakeIndex(element.name)"
-                    >
-                        <mat-icon>local_fire_department</mat-icon>
-                        <span>{{
-                            'Truncate all data from index' | translate
-                        }}</span>
-                    </button>
-                    <button
-                        mat-menu-item
-                        data-cy="datalake-delete-btn"
-                        [disabled]="!element.remove"
-                        (click)="deleteDatalakeIndex(element.name)"
-                    >
-                        <mat-icon>delete</mat-icon>
-                        <span>{{
-                            'Remove index from database' | translate
-                        }}</span>
-                    </button>
+                    @if (writeAccess) {
+                        <button
+                            mat-menu-item
+                            data-cy="datalake-truncate-btn"
+                            (click)="cleanDatalakeIndex(element.name)"
+                        >
+                            <mat-icon>local_fire_department</mat-icon>
+                            <span>{{
+                                'Truncate all data from index' | translate
+                            }}</span>
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-cy="datalake-delete-btn"
+                            [disabled]="!element.remove"
+                            (click)="deleteDatalakeIndex(element.name)"
+                        >
+                            <mat-icon>delete</mat-icon>
+                            <span>{{
+                                'Remove index from database' | translate
+                            }}</span>
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-cy="open-manage-permissions"
+                            (click)="showPermissionsDialog(element.name)"
+                        >
+                            <mat-icon>share</mat-icon>
+                            <span>{{ 'Manage permissions' | translate }}</span>
+                        </button>
+                    }
                 </ng-template>
             </sp-table>
         </div>

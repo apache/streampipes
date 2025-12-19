@@ -41,6 +41,7 @@ import {
     DataDownloadDialogComponent,
     DialogRef,
     DialogService,
+    ObjectPermissionDialogComponent,
     PanelType,
     SpBreadcrumbService,
     SpTableComponent,
@@ -54,6 +55,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 import { UserRole } from 'src/app/_enums/user-role.enum';
+import { UserPrivilege } from 'src/app/_enums/user-privilege.enum';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -74,6 +76,7 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
     private currentUserService = inject(CurrentUserService);
+    private translate = inject(TranslateService);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
@@ -104,6 +107,7 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     pageSize = 10;
     pageIndex = 0;
     isAdmin = false;
+    writeAccess = false;
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb([
@@ -114,7 +118,10 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
         this.loadAvailableExportProvider();
         const currentUser = this.currentUserService.getCurrentUser();
         this.isAdmin = currentUser.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
-        console.log(this.isAdmin);
+        this.writeAccess =
+            currentUser.roles.indexOf(UserPrivilege.PRIVILEGE_WRITE_DATASET) >
+                -1 || this.isAdmin;
+        console.log(currentUser);
     }
 
     ngAfterViewInit() {
@@ -356,5 +363,22 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
                     });
                 });
         }
+    }
+    showPermissionsDialog(measurementName: string) {
+        const dialogRef = this.dialogService.open(
+            ObjectPermissionDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translate.instant('Manage permissions'),
+                width: '50vw',
+                data: {
+                    objectInstanceId: measurementName,
+                    headerTitle:
+                        this.translate.instant(
+                            'Manage permissions for dataset ',
+                        ) + measurementName,
+                },
+            },
+        );
     }
 }
