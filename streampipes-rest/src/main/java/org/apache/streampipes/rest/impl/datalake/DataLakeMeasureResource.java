@@ -109,7 +109,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   }
 
   @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-   @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(#elementId, 'READ')")
+   @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(#elementId, 'WRITE')")
   public ResponseEntity<?> updateDataLakeMeasure(
       @PathVariable("id") String elementId,
       @RequestBody DataLakeMeasure measure) {
