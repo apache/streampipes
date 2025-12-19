@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.connect.management.util;
 
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.vocabulary.XSD;
@@ -40,7 +40,7 @@ public class EventSchemaUtils {
 
   private static final Logger LOG = LoggerFactory.getLogger(EventSchemaUtils.class);
 
-  public static GuessSchema getGuessSchema(Map<String, Object> event) {
+  public static EventSchema guessEventSchema(Map<String, Object> event) {
     var schemaBuilder = GuessSchemaBuilder.create();
 
     event
@@ -56,7 +56,7 @@ public class EventSchemaUtils {
                   ));
         });
 
-    return schemaBuilder.build();
+    return schemaBuilder.build().eventSchema;
   }
 
 

@@ -25,7 +25,7 @@ import { map } from 'rxjs/operators';
 import { UnitDescription } from '../model/UnitDescription';
 import {
     AdapterDescription,
-    GuessSchema,
+    EventSchema,
     PlatformServicesCommons,
     SampleData,
     SpDataStream,
@@ -43,14 +43,14 @@ export class RestService {
         return this.platformServicesCommons.apiBasePath + '/connect';
     }
 
-    getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
+    guessEventSchema(adapter: AdapterDescription): Observable<EventSchema> {
         return this.http
             .post(`${this.connectPath}/master/guess/schema`, adapter, {
                 context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
             })
             .pipe(
                 map(response => {
-                    return GuessSchema.fromData(response as GuessSchema);
+                    return EventSchema.fromData(response as EventSchema);
                 }),
             );
     }

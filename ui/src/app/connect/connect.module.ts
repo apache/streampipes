@@ -103,8 +103,8 @@ import { ConfigureFieldsPreviewComponent } from './components/adapter-configurat
 import { ConfigureFieldsErrorMessageComponent } from './components/adapter-configuration/configure-fields/error-message/configure-fields-error-message.component';
 import { ConfigureFieldsLoadingMessageComponent } from './components/adapter-configuration/configure-fields/configure-fields-loading-message/configure-fields-loading-message.component';
 import { ConfigureFieldsHeaderComponent } from './components/adapter-configuration/configure-fields/configure-fields-header/configure-fields-header.component';
-import { ConfigureFieldsErrorHintsComponent } from './components/adapter-configuration/configure-fields/configure-fields-error-hints/configure-fields-error-hints.component';
 import { EventPropertyRowComponent } from './components/adapter-configuration/configure-fields/event-property-row/event-property-row.component';
+import { NoTimestampErrorHintComponent } from './components/adapter-configuration/configure-fields/no-timestamp-error-hint/no-timestamp-error-hint.component';
 
 @NgModule({
     imports: [
@@ -241,11 +241,11 @@ import { EventPropertyRowComponent } from './components/adapter-configuration/co
         SpConnectFilterToolbarComponent,
         CreateAdapterComponent,
         EditAdapterComponent,
-        ConfigureFieldsErrorHintsComponent,
         CanNotEditAdapterDialog,
         AllAdapterActionsComponent,
         ConfigureSchemaComponent,
         EventPropertyRowComponent,
+        NoTimestampErrorHintComponent,
     ],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

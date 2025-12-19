@@ -35,6 +35,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -86,9 +87,9 @@ public class GuessManagement {
     }
   }
 
-  public GuessSchema guessSchema(AdapterDescription adapterDescription) {
+  public EventSchema guessSchema(AdapterDescription adapterDescription) {
     var event = adapterDescription.getSchemaTransformationConfig().getOutputs().get(0);
-    return EventSchemaUtils.getGuessSchema(event);
+    return EventSchemaUtils.guessEventSchema(event);
   }
 
   public Map<String, Object> performAdapterEventPreview(AdapterDescription adapterDescription) {

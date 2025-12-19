@@ -41,6 +41,7 @@ export class AdapterConfigurationStateService {
         isRunningScript: false,
         scriptError: null,
     };
+
     private stateSubject = new BehaviorSubject<AdapterProcessingState>(
         this.initialState,
     );

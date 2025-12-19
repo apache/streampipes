@@ -24,8 +24,8 @@ import org.apache.streampipes.connect.management.management.GuessManagement;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
 
 import org.slf4j.Logger;
@@ -89,11 +89,11 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<GuessSchema> guessSchema(@RequestBody AdapterDescription adapterDescription) {
+  public ResponseEntity<EventSchema> guessSchema(@RequestBody AdapterDescription adapterDescription) {
 
-    var guessScheam = managementService.guessSchema(adapterDescription);
+    var eventSchema = managementService.guessSchema(adapterDescription);
 
-    return ok(guessScheam);
+    return ok(eventSchema);
   }
 
   @PostMapping(

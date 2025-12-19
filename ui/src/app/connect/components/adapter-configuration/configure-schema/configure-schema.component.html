@@ -25,27 +25,6 @@
                 <button
                     color="accent"
                     mat-button
-                    matTooltip="Select existing format"
-                    [matMenuTriggerFor]="sampleMenu"
-                    data-cy="select-existing-format-button"
-                >
-                    <mat-icon>format_list_bulleted</mat-icon>
-                    <span>Select existing format</span>
-                </button>
-
-                <mat-menu #sampleMenu="matMenu" data-cy="sample-script-menu">
-                    <button
-                        mat-menu-item
-                        *ngFor="let s of sampleScripts"
-                        (click)="selectSample(s.key)"
-                        data-cy="sample-script-{{ s.key }}"
-                    >
-                        {{ s.title }}
-                    </button>
-                </mat-menu>
-                <button
-                    color="accent"
-                    mat-button
                     matTooltip="Run script"
                     (click)="runScript()"
                 >

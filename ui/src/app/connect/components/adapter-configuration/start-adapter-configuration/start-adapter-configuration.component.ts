@@ -46,7 +46,6 @@ import {
 } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
-import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 import { TranslateService } from '@ngx-translate/core';
 import { UserRole } from '../../../../_enums/user-role.enum';
@@ -67,7 +66,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     private shepherdService = inject(ShepherdService);
     private formBuilder = inject(UntypedFormBuilder);
     private timestampPipe = inject(TimestampPipe);
-    private transformationRuleService = inject(TransformationRuleService);
     private translateService = inject(TranslateService);
     private currentUserService = inject(CurrentUserService);
 
@@ -160,28 +158,30 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     applySelectedEventRateReduction(): void {
-        const eventRateRule =
-            this.transformationRuleService.getExistingTransformationRule<EventRateTransformationRuleDescription>(
-                this.adapterDescription,
-                StartAdapterConfigurationComponent.EventRateTransformationRuleId,
-            );
-        if (eventRateRule !== undefined) {
-            this.eventRateReduction = true;
-            this.eventRateTime = eventRateRule.aggregationTimeWindow;
-            this.eventRateMode = eventRateRule.aggregationType;
-        }
+        // TODO create the rule based on the UI input
+        // const eventRateRule =
+        //     this.transformationRuleService.getExistingTransformationRule<EventRateTransformationRuleDescription>(
+        //         this.adapterDescription,
+        //         StartAdapterConfigurationComponent.EventRateTransformationRuleId,
+        //     );
+        // if (eventRateRule !== undefined) {
+        //     this.eventRateReduction = true;
+        //     this.eventRateTime = eventRateRule.aggregationTimeWindow;
+        //     this.eventRateMode = eventRateRule.aggregationType;
+        // }
     }
 
     applySelectedRemoveDuplicates(): void {
-        const removeDuplicatesRule =
-            this.transformationRuleService.getExistingTransformationRule<RemoveDuplicatesTransformationRuleDescription>(
-                this.adapterDescription,
-                StartAdapterConfigurationComponent.RemoveDuplicatesTransformationRuleId,
-            );
-        if (removeDuplicatesRule !== undefined) {
-            this.removeDuplicates = true;
-            this.removeDuplicatesTime = +removeDuplicatesRule.filterTimeWindow;
-        }
+        // TODO create the rule based on the UI input
+        // const removeDuplicatesRule =
+        //     this.transformationRuleService.getExistingTransformationRule<RemoveDuplicatesTransformationRuleDescription>(
+        //         this.adapterDescription,
+        //         StartAdapterConfigurationComponent.RemoveDuplicatesTransformationRuleId,
+        //     );
+        // if (removeDuplicatesRule !== undefined) {
+        //     this.removeDuplicates = true;
+        //     this.removeDuplicatesTime = +removeDuplicatesRule.filterTimeWindow;
+        // }
     }
 
     findDefaultTimestamp(selected: boolean) {

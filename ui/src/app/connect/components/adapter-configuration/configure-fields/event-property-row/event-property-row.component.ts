@@ -54,8 +54,7 @@ export class EventPropertyRowComponent implements OnInit {
     @Input() originalEventSchema: EventSchema;
     @Input() fieldStatusInfo: Record<string, FieldStatusInfo>;
 
-    @Output() eventSchemaChange = new EventEmitter<EventSchema>();
-    @Output() refreshTreeEmitter = new EventEmitter<boolean>();
+    @Output() eventPropertyChange = new EventEmitter<void>();
 
     label: string;
 
@@ -169,13 +168,13 @@ export class EventPropertyRowComponent implements OnInit {
         });
         this.shepherdService.trigger('adapter-edit-field-clicked');
 
-        dialogRef.afterClosed().subscribe(refresh => {
+        dialogRef.afterClosed().subscribe(_ => {
             this.timestampProperty = this.isTimestampProperty(
                 this.eventProperty,
             );
             this.label = this.getLabel(this.eventProperty);
             this.checkAndDisplayProperties();
-            this.refreshTreeEmitter.emit(true);
+            this.eventPropertyChange.emit();
         });
     }
 

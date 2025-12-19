@@ -21,21 +21,17 @@ import {
     EventEmitter,
     inject,
     Input,
-    OnChanges,
     OnInit,
     Output,
-    SimpleChanges,
 } from '@angular/core';
 import {
     AdapterDescription,
     EventSchema,
-    GuessSchema,
     SpLogMessage,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { SemanticType } from '@streampipes/platform-services';
 import { RestService } from '../../../services/rest.service';
-import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 
 @Component({
@@ -44,23 +40,14 @@ import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
     styleUrls: ['./configure-fields.component.scss'],
     standalone: false,
 })
-export class ConfigureFieldsComponent implements OnInit, OnChanges {
+export class ConfigureFieldsComponent implements OnInit {
     private restService = inject(RestService);
-    private transformationRuleService = inject(TransformationRuleService);
 
     @Input()
     adapterDescription: AdapterDescription;
 
     @Input()
     isEditMode: boolean;
-
-    eventSchema: EventSchema = new EventSchema();
-    timestampPresent = false;
-
-    refreshedEventSchema = false;
-
-    @Output()
-    isEditableChange = new EventEmitter<boolean>();
 
     @Output()
     goBackEmitter: EventEmitter<MatStepper> = new EventEmitter();
@@ -77,7 +64,9 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    schemaGuess: GuessSchema = new GuessSchema();
+    eventSchema: EventSchema = new EventSchema();
+    timestampPresent = false;
+
     isLoading = false;
     isError = false;
     errorMessage: SpLogMessage;
@@ -105,32 +94,26 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
         this.isLoading = true;
         this.isError = false;
 
-        this.restService.getGuessSchema(this.adapterDescription).subscribe(
-            guessSchema => {
-                this.eventPreview =
-                    this.adapterDescription.schemaTransformationConfig.outputs[0];
-                this.eventSchema = guessSchema.eventSchema;
+        this.eventPreview =
+            this.adapterDescription.schemaTransformationConfig.outputs[0];
+
+        this.restService.guessEventSchema(this.adapterDescription).subscribe(
+            eventSchema => {
+                this.eventSchema = eventSchema;
+
                 this.adapterDescription.dataStream.eventSchema =
                     this.eventSchema;
                 this.eventSchema.eventProperties.sort((a, b) => {
                     return a.runtimeName < b.runtimeName ? -1 : 1;
                 });
-                this.schemaGuess = guessSchema;
 
                 this.validEventSchema = this.checkSchemaContainsTimestampField(
                     this.eventSchema,
                 );
 
-                this.isEditableChange.emit(true);
                 this.isLoading = false;
-                this.refreshedEventSchema = true;
-                this.refreshTree();
-                if (
-                    guessSchema.eventPreview &&
-                    guessSchema.eventPreview.length > 0
-                ) {
-                    this.updatePreview();
-                }
+
+                this.updatePreview();
             },
             errorMessage => {
                 this.errorMessage = errorMessage.error;
@@ -141,25 +124,15 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
         );
     }
 
-    public refreshTree(refreshPreview = true): void {
-        if (this.eventSchema && this.eventSchema.eventProperties) {
-            this.validEventSchema = this.checkSchemaContainsTimestampField(
-                this.eventSchema,
-            );
-            if (refreshPreview) {
-                this.updatePreview();
-            }
-        }
+    public eventPropertyChange(): void {
+        this.validEventSchema = this.checkSchemaContainsTimestampField(
+            this.eventSchema,
+        );
+
+        this.updatePreview();
     }
 
     public updatePreview(): void {
-        // TODO
-        const ruleDescriptions =
-            // TODO
-            this.transformationRuleService.makeTransformationRuleDescriptions(
-                null,
-                this.eventSchema,
-            );
         if (this.eventPreview) {
             this.restService
                 .getAdapterEventPreview(this.adapterDescription)
@@ -167,12 +140,6 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
                     this.resultPreview = preview;
                 });
         }
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        setTimeout(() => {
-            this.refreshTree();
-        }, 200);
     }
 
     public cancel() {
@@ -199,7 +166,7 @@ export class ConfigureFieldsComponent implements OnInit, OnChanges {
 
         this.schemaErrorHints = [];
 
-        if (this.isEditMode && !this.refreshedEventSchema) {
+        if (this.isEditMode) {
             this.setEventSchemaEditWarning();
         }
 

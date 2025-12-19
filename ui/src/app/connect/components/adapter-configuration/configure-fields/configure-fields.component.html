@@ -18,14 +18,10 @@
 
 <div fxLayout="column" fxLayoutAlign="center" class="mt-20">
     <div fxFlex="90" fxLayout="column">
-        @if (!isError && !isLoading) {
-            <sp-configure-fields-error-hints
-                [schemaErrorHints]="schemaErrorHints"
-                [isError]="isError"
-                [isLoading]="isLoading"
-            >
-            </sp-configure-fields-error-hints>
+        @if (!isError && !isLoading && !timestampPresent) {
+            <sp-no-timestamp-error-hint> </sp-no-timestamp-error-hint>
         }
+
         <sp-basic-inner-panel
             [showTitle]="false"
             outerMargin="0px 0px 20px 0px"
@@ -73,7 +69,7 @@
                     ) {
                         <sp-event-property-row
                             [eventProperty]="property"
-                            (refreshTreeEmitter)="refreshTree()"
+                            (eventPropertyChange)="eventPropertyChange()"
                         ></sp-event-property-row>
                     }
                 }

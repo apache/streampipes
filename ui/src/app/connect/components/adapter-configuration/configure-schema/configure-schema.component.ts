@@ -81,55 +81,6 @@ function transform(event) {
   return event;
 }`;
 
-    sampleScripts: any[] = [
-        {
-            key: 'identity',
-            title: 'Identity (return event)',
-            value: `// returns the same event
-function transform(event) {
-  return event;
-}`,
-        },
-        {
-            key: 'complex',
-            title: 'Simulator (Complex event)',
-            value: ` var flattened = {};
-
-    // 1. Define the keys we want to extract (hardcoded list of top-level primitives)
-    var KEYS_TO_EXTRACT = [
-        "phase",
-        "sensorType",
-        "active",
-        "timestamp",
-        "sensorId"
-    ];
-
-    // Handles null or non-object inputs gracefully
-    if (typeof event !== 'object' || event === null) {
-        return flattened;
-    }
-
-    // 2. Iterate only over the hardcoded list of keys using a traditional for loop
-    for (var i = 0; i < KEYS_TO_EXTRACT.length; i++) {
-        var key = KEYS_TO_EXTRACT[i];
-        // Use hasOwnProperty to ensure the property exists directly on the object
-        if (Object.prototype.hasOwnProperty.call(event, key)) {
-            flattened[key] = event[key];
-        }
-    }
-
-    return flattened;`,
-        },
-    ];
-
-    selectSample(key: string) {
-        const s = this.sampleScripts.find(x => x.key === key);
-        if (s) {
-            this.script = s.value;
-            // optional: reset output when selecting a new sample
-        }
-    }
-
     editorOptions = {
         mode: 'javascript',
         autoRefresh: true,
