@@ -115,7 +115,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}")
-  @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(#measurementID, 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and this.checkPermission(#measurementID, 'WRITE')")
   @Operation(summary = "Remove data from a single measurement series with given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
@@ -136,7 +136,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}/drop")
-  @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(#measurementID, 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and this.checkPermission(#measurementID, 'WRITE')")
   @Operation(summary = "Drop a single measurement series with given id from Data Lake and "
       + "remove related event property", tags = {
           "Data Lake" }, responses = {
@@ -174,7 +174,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
-   @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(#measurementId, 'READ')")
+   @PreAuthorize("this.hasReadAuthority() and this.checkPermission(#measurementId, 'READ')")
   public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
       @RequestParam("fields") String fields) {
     Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measurementId, fields);
@@ -182,7 +182,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @GetMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(#measurementID, 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and this.checkPermission(#measurementID, 'READ')")
   @Operation(summary = "Get data from a single measurement series by a given id", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
       @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class))) })
@@ -234,7 +234,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(#measurementID, 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and this.checkPermission(#measurementID, 'READ')")
   @Operation(summary = "Download data from a single measurement series by a given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
@@ -383,6 +383,18 @@ public class DataLakeResource extends AbstractDataLakeResource {
     return "ignore".equals(missingValueBehaviour);
   }
 
+  public boolean checkPermission(String measurementName,
+                                         String permission) {
+
+    var spPermissionEvaluator = new SpPermissionEvaluator();
+    var authentication = SecurityContextHolder.getContext()
+        .getAuthentication();
+    return spPermissionEvaluator.hasPermission(
+        authentication,
+       measurementName,
+        permission);
+  }
+/**
   public boolean checkDatasetPermission(String measurementId,
                                          String permission) {
                                           LOG.info(measurementId);
@@ -395,7 +407,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
         authentication,
         this.dataExplorerSchemaManagement.getById(measurementId).getMeasureName(),
         permission);
-  }
+  }*/
 
 
 
