@@ -377,17 +377,4 @@ public class DataLakeResource extends AbstractDataLakeResource {
   private boolean isIgnoreMissingValues(String missingValueBehaviour) {
     return "ignore".equals(missingValueBehaviour);
   }
-
-  public boolean checkPermission(String measurementName,
-                                         String permission) {
-
-    var spPermissionEvaluator = new SpPermissionEvaluator();
-    var authentication = SecurityContextHolder.getContext()
-        .getAuthentication();
-    return spPermissionEvaluator.hasPermission(
-        authentication,
-       measurementName,
-        permission);
-  }
-
 }
