@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.security;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_READ_ADAPTER_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_READ_ASSETS_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE;
+import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_READ_DATASET_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_READ_FILES_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE;
@@ -28,6 +29,7 @@ import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constant
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE;
+import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATASET_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_FILES_VALUE;
 import static org.apache.streampipes.model.client.user.DefaultPrivilege.Constants.PRIVILEGE_WRITE_GENERIC_STORAGE_VALUE;
@@ -63,6 +65,11 @@ public class AuthConstants {
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_PIPELINE_VALUE + Q + BE2;
   public static final String HAS_WRITE_PIPELINE_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_PIPELINE_VALUE + Q + BE2;
+
+  public static final String HAS_READ_DATASET_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_DATASET_VALUE + Q + BE2;
+  public static final String HAS_DATASET_PIPELINE_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_DATASET_VALUE + Q + BE2;
 
   public static final String HAS_READ_PIPELINE_ELEMENT_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE + Q + BE2;
