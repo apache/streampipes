@@ -102,30 +102,34 @@
                                 fxLayout="row"
                                 fxLayoutAlign="start center"
                             >
-                                <button
-                                    color="accent"
-                                    mat-icon-button
-                                    [matTooltip]="
-                                        'Set retention rate' | translate
-                                    "
-                                    data-cy="datalake-retention-btn"
-                                    matTooltipPosition="above"
-                                    (click)="
-                                        openRetentionDialog(
-                                            configurationEntry.elementId
-                                        )
-                                    "
-                                >
-                                    <i
-                                        class="material-icons"
-                                        [ngStyle]="{
-                                            color: configurationEntry?.retention
-                                                ? 'green'
-                                                : 'red'
-                                        }"
-                                        >history</i
+                                @if (isAdmin) {
+                                    <button
+                                        color="accent"
+                                        mat-icon-button
+                                        [matTooltip]="
+                                            'Set retention rate' | translate
+                                        "
+                                        data-cy="datalake-retention-btn"
+                                        matTooltipPosition="above"
+                                        (click)="
+                                            openRetentionDialog(
+                                                configurationEntry.elementId
+                                            )
+                                        "
                                     >
-                                </button>
+                                        <i
+                                            class="material-icons"
+                                            [ngStyle]="{
+                                                color: configurationEntry?.retention
+                                                    ? 'green'
+                                                    : 'red'
+                                            }"
+                                            >history</i
+                                        >
+                                    </button>
+                                } @else {
+                                    <p>-</p>
+                                }
                             </span>
                         </div>
                     </td>
