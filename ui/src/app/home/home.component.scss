@@ -16,76 +16,24 @@
  *
  */
 
-.mt-0 {
-    margin-top: 0;
+.assets-wrapper,
+.assets-content {
+    flex: 1 1 auto;
+    min-height: 0; /* super important so children can fill and scroll correctly */
 }
 
-.round-border {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+.assets-wrapper > .section-body {
+    min-height: 100%;
 }
 
-.header-margin {
-    margin-top: 20px;
+.asset-section {
+    background: var(--color-bg-0);
+    margin-bottom: 0;
+    flex: 0 0 auto; /* do NOT stretch */
+    min-height: 100%; /* keep current minimum */
 }
 
-.welcome-primary {
-    color: var(--color-secondary);
-}
-
-.welcome-accent {
-    color: var(--color-primary);
-}
-
-.home-margin {
-    margin: 10px;
-}
-
-.home-padding {
-    padding: 15px;
-}
-
-.p-10 {
-    padding: 10px;
-}
-
-.home-image-small {
-    height: 150px;
-    width: 100%;
-}
-
-.pipeline-avatar {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    color: white;
-}
-
-.mdc-list-item--with-leading-avatar .mat-mdc-list-item-avatar {
-    border-radius: 50%;
-    background-color: var(--color-primary);
-}
-
-.pt-0 {
-    padding-top: 0;
-}
-
-::ng-deep .modules-list.mat-list-base {
-    padding-top: 0;
-}
-
-.list-item:nth-child(even) {
-    background-color: var(--color-bg-1);
-}
-.list-item:nth-child(odd) {
-    background-color: var(--color-bg-0);
-}
-
-.list-item:hover {
-    background-color: var(--color-bg-2);
-    cursor: pointer;
-}
-
-.list-item {
-    --mdc-list-list-item-two-line-container-height: 68px;
+.map {
+    flex: 1 1 auto;
+    min-height: 0;
 }

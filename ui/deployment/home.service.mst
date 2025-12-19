@@ -67,7 +67,8 @@ export class HomeService {
                     dataFns: {{{statusBox.dataFns}}},
                     viewRoles: {{{statusBox.viewRoles}}},
                     createRoles: {{{statusBox.createRoles}}},
-                    icon: '{{{icon}}}'
+                    icon: '{{{icon}}}',
+                    assetLinkTypeId: '{{{assetLinkTypeId}}}'
                }
                {{/statusBox}}
            },

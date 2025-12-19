@@ -1,0 +1,120 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:host {
+    display: block;
+}
+
+.sp-map-card {
+    width: 380px;
+    background: var(--color-bg-0);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-bg-2);
+    padding-bottom: 8px;
+}
+
+.asset-identity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-default-text);
+
+    i {
+        color: var(--fg-muted);
+        font-size: 1.1rem;
+    }
+
+    h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--color-default-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px;
+    }
+}
+
+.card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    color: var(--color-default-text);
+
+    label {
+        font-size: 0.7rem;
+        color: var(--fg-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+    }
+
+    span {
+        font-size: 0.9rem;
+        color: var(--color-default-text);
+        font-weight: 500;
+    }
+}
+
+.card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.link-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+
+    max-height: 100px;
+    overflow-y: auto;
+    padding-right: 4px;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #e0e0e0;
+        border-radius: 4px;
+    }
+}
+
+.no-links {
+    text-align: center;
+    color: var(--color-default-text);
+    padding: 4px 0;
+}

@@ -38,7 +38,6 @@ public class MQTTPublisherUtils {
     ));
  
         events.forEach(event -> {
-
             try {
                 var serializedEvent = objectMapper.writeValueAsBytes(event);
                 publisher.publish(serializedEvent);
@@ -46,8 +45,6 @@ public class MQTTPublisherUtils {
                 throw new RuntimeException(e);
             }
         });
-
-        publisher.disconnect();
     }
 
     @NotNull
@@ -59,6 +56,10 @@ public class MQTTPublisherUtils {
         MqttPublisher publisher = new MqttPublisher(mqttSettings);
         publisher.connect();
         return publisher;
+    }
+
+    public static void closeConnection(MqttPublisher publisher) {
+        publisher.disconnect();
     }
 
 }

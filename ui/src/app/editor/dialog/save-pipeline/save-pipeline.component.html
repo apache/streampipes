@@ -82,7 +82,7 @@
                 (click)="savePipeline()"
                 data-cy="sp-editor-apply"
             >
-                Apply
+                {{ 'Apply' | translate }}
             </button>
         }
         @if (!operationProgress && (!operationCompleted || !operationSuccess)) {
@@ -92,7 +92,7 @@
                 (click)="hide(true)"
                 data-cy="sp-editor-cancel"
             >
-                {{ 'Cancel' }}
+                {{ 'Cancel' | translate }}
             </button>
         }
     </div>

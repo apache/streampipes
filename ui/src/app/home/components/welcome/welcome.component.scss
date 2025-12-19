@@ -16,13 +16,29 @@
  *
  */
 
-.node-info-outer {
-    background: var(--color-bg-0);
-    min-width: 150px;
-    height: 100%;
-    border: 1px solid var(--color-bg-2);
-    padding: 10px;
-    box-shadow:
-        rgba(50, 50, 93, 0.25) 0 2px 5px -1px,
-        rgba(0, 0, 0, 0.3) 0 1px 3px -1px;
+.home-header {
+    margin-bottom: 24px;
+    padding: 4px 0;
+}
+
+.home-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.home-title {
+    margin: 0;
+
+    font-size: var(--font-size-xl);
+    color: var(--color-text-primary, #0f172a);
+}
+
+.home-subtitle {
+    margin: 0;
+
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+
+    color: var(--color-text-secondary, #64748b);
 }

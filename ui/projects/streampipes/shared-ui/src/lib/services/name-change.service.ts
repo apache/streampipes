@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,39 +16,17 @@
  *
  */
 
-.sp-tree-invisible {
-    display: none;
-}
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
-.sp-tree ul,
-.sp-tree li {
-    margin-top: 0;
-    margin-bottom: 0;
-    list-style-type: none;
-}
+@Injectable({ providedIn: 'root' })
+export class NameChangeService {
+    public nameChangeSubject = new Subject<{
+        id: string;
+        name: string;
+    }>();
 
-.sp-tree .mat-nested-tree-node div[role='group'] {
-    padding-left: 20px;
-}
-
-.sp-tree div[role='group'] > .mat-tree-node {
-    padding-left: 20px;
-}
-
-.mat-tree-node {
-    min-height: 35px;
-}
-
-.mat-tree-node:hover {
-    background: var(--color-bg-1);
-}
-
-.placeholder-icon {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.placeholder-icon .mat-icon.invisible {
-    visibility: hidden;
+    public notify(id: string, name: string): void {
+        this.nameChangeSubject.next({ id, name });
+    }
 }

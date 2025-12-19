@@ -34,11 +34,11 @@ import {
     FilterResult,
 } from './asset-browser.model';
 import { CurrentUserService } from '../../services/current-user.service';
+import { LocalStorageService } from '../../services/local-storage-settings.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpAssetBrowserService {
     assetData$ = new BehaviorSubject<AssetBrowserData>(undefined);
-    expanded$ = new BehaviorSubject<boolean>(true);
     filter$ = new BehaviorSubject<AssetFilter>(undefined);
     currentAssetFilter$ = new BehaviorSubject<FilterResult>({
         filterActive: false,
@@ -94,7 +94,7 @@ export class SpAssetBrowserService {
             this.assetData$.getValue() !== undefined
         ) {
             const data = this.assetData$.getValue();
-            const filters: AssetFilter = {
+            const filters = {
                 selectedSites: [...data.sites].sort((a, b) =>
                     a.label.localeCompare(b.label),
                 ),

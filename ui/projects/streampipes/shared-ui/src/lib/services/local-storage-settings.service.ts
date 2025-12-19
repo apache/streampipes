@@ -38,6 +38,14 @@ export class LocalStorageService {
         }
     }
 
+    remove(key: string): void {
+        try {
+            localStorage.removeItem(this.buildKey(key));
+        } catch {
+            // ignore
+        }
+    }
+
     set<T>(key: string, value: T): void {
         try {
             localStorage.setItem(this.buildKey(key), JSON.stringify(value));

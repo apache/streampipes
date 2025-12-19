@@ -52,18 +52,30 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
 
     List<List<Object>> resultingValues = new ArrayList<>();
 
-    values.forEach(v -> {
+    values.forEach(row -> {
+
+      convertTimestampValueToLong(row);
+
       if (ignoreMissingValues) {
-        if (!v.contains(null)) {
-          resultingValues.add(v);
+        if (!row.contains(null)) {
+          resultingValues.add(row);
         }
       } else {
-        resultingValues.add(v);
+        resultingValues.add(row);
       }
 
     });
 
     return new DataSeries(resultingValues.size(), resultingValues, columns, series.getTags());
+  }
+
+  /**
+   * The influx client always returns a double for timestamp values. This method converts them to long values.
+   */
+  private void convertTimestampValueToLong(List<Object> row) {
+    if (!row.isEmpty()) {
+      row.set(0, ((Number) row.get(0)).longValue());
+    }
   }
 
   protected SpQueryResult postQuery(QueryResult queryResult,
@@ -78,7 +90,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
         result.setHeaders(series.getHeaders());
         result.addDataResult(series);
         List<Object> lastValue = rs.getValues().get(rs.getValues().size() - 1);
-        lastTimestamp.set(Math.max(lastTimestamp.get(), ((Double) lastValue.get(0)).longValue()));
+        lastTimestamp.set(Math.max(lastTimestamp.get(), (long) lastValue.get(0)));
       });
 
       result.setTotal(result.getAllDataSeries().stream().mapToInt(DataSeries::getTotal).sum());

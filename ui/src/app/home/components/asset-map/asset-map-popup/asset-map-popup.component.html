@@ -1,0 +1,68 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-map-card">
+    <div class="card-header">
+        <div class="asset-identity">
+            <i class="material-icons">precision_manufacturing</i>
+            <h4 [title]="asset.assetName">{{ asset.assetName }}</h4>
+        </div>
+        <div>
+            <sp-label
+                tone="neutral"
+                variant="soft"
+                [labelText]="isa95Type"
+                size="small"
+            ></sp-label>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="meta-item">
+            <label>{{ 'Location' | translate }}</label>
+            <span>{{ site.label || 'Unknown' }}</span>
+        </div>
+        <div class="meta-item">
+            <label>{{ 'Area' | translate }}</label>
+            <span>{{ asset.assetSite.area || '-' }}</span>
+        </div>
+    </div>
+
+    <div class="card-actions">
+        @if (asset.assetLinks && asset.assetLinks.length > 0) {
+            <div class="link-grid">
+                @for (link of asset.assetLinks; track $index) {
+                    <sp-asset-map-link-chip
+                        [assetLink]="link"
+                        [assetLinkTypes]="assetLinkTypes"
+                    >
+                    </sp-asset-map-link-chip>
+                }
+            </div>
+        } @else {
+            <div class="no-links">
+                <small>{{ 'No linked resources' | translate }}</small>
+            </div>
+        }
+
+        <button mat-flat-button (click)="navigateToAsset()">
+            <mat-icon>arrow_forward</mat-icon>
+            <span>{{ 'Show asset' | translate }}</span>
+        </button>
+    </div>
+</div>
