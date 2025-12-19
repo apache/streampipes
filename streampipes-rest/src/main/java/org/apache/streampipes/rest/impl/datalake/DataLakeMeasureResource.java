@@ -21,7 +21,7 @@ package org.apache.streampipes.rest.impl.datalake;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +46,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v4/datalake/measure")
-public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
+public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
   private final IDataExplorerSchemaManagement dataLakeMeasureManagement;
 
@@ -71,9 +72,10 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
    */
   @Operation(summary = "Retrieve measurement counts", description = "Retrieves the entry counts for the specified measurements from the data lake.")
   @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority()")
-  @PostFilter("hasPermission(filterObject.measureName, 'READ')")
+  //@PreAuthorize("this.hasReadAuthority()")
+  //@PostFilter("hasPermission(filterObject.measureName, 'READ')")
   public Map<String, Integer> getEntryCountsOfMeasurments(
+    //TODO
       @Parameter(description = "A list of measurement names to return the count.") @RequestParam(value = "measurementNames") List<String> measurementNames) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
     var result = new DataExplorerDispatcher()
@@ -86,7 +88,7 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(id, 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(#id, 'READ')")
   public ResponseEntity<?> getDataLakeMeasure(@PathVariable("id") String elementId) {
     var measure = this.dataLakeMeasureManagement.getById(elementId);
     if (Objects.nonNull(measure)) {
@@ -97,7 +99,7 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(path = "byName/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
-   @PreAuthorize("this.hasReadAuthority() and checkPermission(measureName, 'READ')")
+ @PreAuthorize("this.hasReadAuthority() and this.checkPermission(#measureName, 'READ')")
   public ResponseEntity<?> getDataLakeMeasureName(@PathVariable("measureName") String measureName) {
     var measure = this.dataLakeMeasureManagement.getExistingMeasureByName(measureName);
     if (Objects.nonNull(measure)) {
@@ -133,4 +135,18 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
       return badRequest(e.getMessage());
     }
   }
+    public boolean checkPermission(String measurementName,
+                                         String permission) {
+                                          //LOG.info(measurementName);
+                                            //LOG.info(this.dataExplorerSchemaManagement.getById(measurementId).getMeasureName(),
+        //permission);
+    var spPermissionEvaluator = new SpPermissionEvaluator();
+    var authentication = SecurityContextHolder.getContext()
+        .getAuthentication();
+    return spPermissionEvaluator.hasPermission(
+        authentication,
+       measurementName,
+        permission);
+  }
+
 }
