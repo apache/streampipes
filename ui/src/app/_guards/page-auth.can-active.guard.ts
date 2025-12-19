@@ -40,7 +40,6 @@ export class PageAuthGuard implements CanActivate, CanActivateChild {
 
     canActivateChild(activatedRouteSnapshot: ActivatedRouteSnapshot): boolean {
         const privileges: string[] = activatedRouteSnapshot.data.privileges;
-        console.log(privileges);
 
         return this.authService.isAnyAccessGranted(privileges, true);
     }

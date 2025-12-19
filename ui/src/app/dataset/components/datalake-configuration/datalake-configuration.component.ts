@@ -32,10 +32,12 @@ import {
     ExportProviderSettings,
     ExportProviderService,
     RetentionLog,
+    UserService,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {
+    CurrentUserService,
     DataDownloadDialogComponent,
     DialogRef,
     DialogService,
@@ -51,6 +53,7 @@ import { DeleteExportProviderComponent } from '../../dialog/delete-export-provid
 import { TranslateService } from '@ngx-translate/core';
 import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
+import { UserRole } from 'src/app/_enums/user-role.enum';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -70,6 +73,7 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
+    private currentUserService = inject(CurrentUserService);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
@@ -99,6 +103,7 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
 
     pageSize = 10;
     pageIndex = 0;
+    isAdmin = false;
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb([
@@ -107,6 +112,9 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
         ]);
         this.loadAvailableMeasurements();
         this.loadAvailableExportProvider();
+        const currentUser = this.currentUserService.getCurrentUser();
+        this.isAdmin = currentUser.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+        console.log(this.isAdmin);
     }
 
     ngAfterViewInit() {
