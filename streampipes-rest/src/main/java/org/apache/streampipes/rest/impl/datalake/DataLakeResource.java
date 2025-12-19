@@ -394,21 +394,5 @@ public class DataLakeResource extends AbstractDataLakeResource {
        measurementName,
         permission);
   }
-/**
-  public boolean checkDatasetPermission(String measurementId,
-                                         String permission) {
-                                          LOG.info(measurementId);
-                                            LOG.info(this.dataExplorerSchemaManagement.getById(measurementId).getMeasureName(),
-        permission);
-    var spPermissionEvaluator = new SpPermissionEvaluator();
-    var authentication = SecurityContextHolder.getContext()
-        .getAuthentication();
-    return spPermissionEvaluator.hasPermission(
-        authentication,
-        this.dataExplorerSchemaManagement.getById(measurementId).getMeasureName(),
-        permission);
-  }*/
-
-
 
 }
