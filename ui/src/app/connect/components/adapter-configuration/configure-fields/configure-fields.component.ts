@@ -18,11 +18,13 @@
 
 import {
     Component,
+    computed,
     EventEmitter,
     inject,
     Input,
     OnInit,
     Output,
+    signal,
 } from '@angular/core';
 import {
     AdapterDescription,
@@ -32,7 +34,6 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import { SemanticType } from '@streampipes/platform-services';
 import { RestService } from '../../../services/rest.service';
-import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 
 @Component({
     selector: 'sp-configure-fields',
@@ -64,30 +65,26 @@ export class ConfigureFieldsComponent implements OnInit {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    eventSchema: EventSchema = new EventSchema();
-    timestampPresent = false;
+    eventSchema = signal<EventSchema>(new EventSchema());
+
+    // automatically set the value if the event schema has a timestamp or not
+    timestampPresent = computed(() => {
+        return (
+            this.eventSchema().eventProperties?.some(p =>
+                SemanticType.isTimestamp(p),
+            ) ?? false
+        );
+    });
 
     isLoading = false;
     isError = false;
     errorMessage: SpLogMessage;
-    validEventSchema = false;
-    schemaErrorHints: UserErrorMessage[] = [];
 
     eventPreview: Record<string, any>;
     resultPreview: Record<string, any>;
 
     ngOnInit() {
         this.resetEventSchema();
-    }
-
-    public setEventSchemaEditWarning() {
-        this.schemaErrorHints.push(
-            new UserErrorMessage(
-                'Edit mode',
-                'Changes in the adapter might require you to refresh the event schema.',
-                'info',
-            ),
-        );
     }
 
     public resetEventSchema(): void {
@@ -99,40 +96,44 @@ export class ConfigureFieldsComponent implements OnInit {
 
         this.restService.guessEventSchema(this.adapterDescription).subscribe(
             eventSchema => {
-                this.eventSchema = eventSchema;
+                this.sortEventPropertiesAlphabetically(eventSchema);
 
-                this.adapterDescription.dataStream.eventSchema =
-                    this.eventSchema;
-                this.eventSchema.eventProperties.sort((a, b) => {
-                    return a.runtimeName < b.runtimeName ? -1 : 1;
-                });
+                this.adapterDescription.dataStream.eventSchema = eventSchema;
 
-                this.validEventSchema = this.checkSchemaContainsTimestampField(
-                    this.eventSchema,
-                );
+                this.eventSchema.set(eventSchema);
 
                 this.isLoading = false;
 
-                this.updatePreview();
+                this.updateEventPreview();
             },
             errorMessage => {
                 this.errorMessage = errorMessage.error;
                 this.isError = true;
                 this.isLoading = false;
-                this.eventSchema = new EventSchema();
+                this.eventSchema.set(new EventSchema());
             },
         );
     }
 
-    public eventPropertyChange(): void {
-        this.validEventSchema = this.checkSchemaContainsTimestampField(
-            this.eventSchema,
-        );
-
-        this.updatePreview();
+    private sortEventPropertiesAlphabetically(eventSchema: EventSchema) {
+        eventSchema.eventProperties.sort((a, b) => {
+            return a.runtimeName < b.runtimeName ? -1 : 1;
+        });
     }
 
-    public updatePreview(): void {
+    public eventPropertyChanged(): void {
+        // Force signal update to retrigger computed signals
+        this.eventSchema.update(currentSchema => {
+            return {
+                ...currentSchema,
+                eventProperties: [...currentSchema.eventProperties],
+            };
+        });
+
+        this.updateEventPreview();
+    }
+
+    public updateEventPreview(): void {
         if (this.eventPreview) {
             this.restService
                 .getAdapterEventPreview(this.adapterDescription)
@@ -152,32 +153,5 @@ export class ConfigureFieldsComponent implements OnInit {
 
     public goBack() {
         this.goBackEmitter.emit();
-    }
-
-    private checkSchemaContainsTimestampField(
-        eventSchema: EventSchema,
-    ): boolean {
-        this.timestampPresent = false;
-        eventSchema.eventProperties.forEach(p => {
-            if (SemanticType.isTimestamp(p)) {
-                this.timestampPresent = true;
-            }
-        });
-
-        this.schemaErrorHints = [];
-
-        if (this.isEditMode) {
-            this.setEventSchemaEditWarning();
-        }
-
-        if (!this.timestampPresent) {
-            this.schemaErrorHints.push(
-                new UserErrorMessage(
-                    'Missing Timestamp',
-                    'The timestamp must be a UNIX timestamp in milliseconds. Edit the timestamp field or add an ingestion timestamp.',
-                ),
-            );
-        }
-        return this.timestampPresent;
     }
 }
