@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v4/datalake/measure")
@@ -72,10 +73,9 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
    */
   @Operation(summary = "Retrieve measurement counts", description = "Retrieves the entry counts for the specified measurements from the data lake.")
   @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
-  //@PreAuthorize("this.hasReadAuthority()")
-  //@PostFilter("hasPermission(filterObject.measureName, 'READ')")
+  @PreAuthorize("this.hasReadAuthority()")
+  @PostFilter("hasPermission(filterObject.key, 'READ')")
   public Map<String, Integer> getEntryCountsOfMeasurments(
-    //TODO
       @Parameter(description = "A list of measurement names to return the count.") @RequestParam(value = "measurementNames") List<String> measurementNames) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
     var result = new DataExplorerDispatcher()
@@ -110,7 +110,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   }
 
   @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-   @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(id, 'READ')")
+   @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(#id, 'READ')")
   public ResponseEntity<?> updateDataLakeMeasure(
       @PathVariable("id") String elementId,
       @RequestBody DataLakeMeasure measure) {
@@ -137,15 +137,24 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   }
     public boolean checkPermission(String measurementName,
                                          String permission) {
-                                          //LOG.info(measurementName);
-                                            //LOG.info(this.dataExplorerSchemaManagement.getById(measurementId).getMeasureName(),
-        //permission);
+
     var spPermissionEvaluator = new SpPermissionEvaluator();
     var authentication = SecurityContextHolder.getContext()
         .getAuthentication();
     return spPermissionEvaluator.hasPermission(
         authentication,
        measurementName,
+        permission);
+  }
+
+    public boolean checkDatasetPermission(String measurementId,
+                                         String permission) {
+    var spPermissionEvaluator = new SpPermissionEvaluator();
+    var authentication = SecurityContextHolder.getContext()
+        .getAuthentication();
+    return spPermissionEvaluator.hasPermission(
+        authentication,
+        this.dataLakeMeasureManagement.getById(measurementId).getMeasureName(),
         permission);
   }
 
