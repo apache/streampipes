@@ -18,10 +18,8 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,11 +45,8 @@ import java.util.Objects;
 @RequestMapping("/api/v4/datalake/measure")
 public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
-  private final IDataExplorerSchemaManagement dataLakeMeasureManagement;
-
   public DataLakeMeasureResource() {
-    this.dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
-        .getSchemaManagement();
+    super();
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -133,28 +127,6 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
     }
-  }
-    public boolean checkPermission(String measurementName,
-                                         String permission) {
-
-    var spPermissionEvaluator = new SpPermissionEvaluator();
-    var authentication = SecurityContextHolder.getContext()
-        .getAuthentication();
-    return spPermissionEvaluator.hasPermission(
-        authentication,
-       measurementName,
-        permission);
-  }
-
-    public boolean checkDatasetPermission(String measurementId,
-                                         String permission) {
-    var spPermissionEvaluator = new SpPermissionEvaluator();
-    var authentication = SecurityContextHolder.getContext()
-        .getAuthentication();
-    return spPermissionEvaluator.hasPermission(
-        authentication,
-        this.dataLakeMeasureManagement.getById(measurementId).getMeasureName(),
-        permission);
   }
 
 }

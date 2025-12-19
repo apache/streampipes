@@ -95,23 +95,18 @@ public class DataLakeResource extends AbstractDataLakeResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
-  private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
   private static DataLakeExportManager dataLakeExportManager = new DataLakeExportManager();
 
   public DataLakeResource() {
-    this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
-        .getDataExplorerManager()
-        .getSchemaManagement();
+    super();
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getQueryManagement(this.dataExplorerSchemaManagement);
+        .getQueryManagement(this.dataLakeMeasureManagement);
   }
 
   public DataLakeResource(IDataExplorerQueryManagement dataExplorerQueryManagement) {
+    super();
     this.dataExplorerQueryManagement = dataExplorerQueryManagement;
-    this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
-        .getDataExplorerManager()
-        .getSchemaManagement();
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}")
@@ -148,7 +143,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
     boolean isSuccessDataLake = this.dataExplorerQueryManagement.deleteData(measurementID);
 
     if (isSuccessDataLake) {
-      boolean isSuccessEventProperty = this.dataExplorerSchemaManagement.deleteMeasurementByName(measurementID);
+      boolean isSuccessEventProperty = this.dataLakeMeasureManagement.deleteMeasurementByName(measurementID);
       if (isSuccessEventProperty) {
         return ok();
       } else {
@@ -169,7 +164,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
    @PreAuthorize("this.hasReadAuthority()")
      @PostFilter("hasPermission(filterObject.measureName, 'READ')")
       public  List<DataLakeMeasure> getAll() {
-    List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
+    List<DataLakeMeasure> allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
     return allMeasurements;
   }
 
@@ -329,10 +324,10 @@ public class DataLakeResource extends AbstractDataLakeResource {
   public ResponseEntity<?> setDataLakeRetention(
       @PathVariable String elementId,
       @RequestBody RetentionTimeConfig retention) {
-    var measure = this.dataExplorerSchemaManagement.getById(elementId);
+    var measure = this.dataLakeMeasureManagement.getById(elementId);
     measure.setRetentionTime(retention);
     try {
-      this.dataExplorerSchemaManagement.updateMeasurement(measure);
+      this.dataLakeMeasureManagement.updateMeasurement(measure);
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
     }
@@ -343,10 +338,10 @@ public class DataLakeResource extends AbstractDataLakeResource {
   @DeleteMapping(path = "/{elementId}/cleanup")
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId) {
-    var measure = this.dataExplorerSchemaManagement.getById(elementId);
+    var measure = this.dataLakeMeasureManagement.getById(elementId);
     measure.deleteRetentionTime();
     try {
-      this.dataExplorerSchemaManagement.updateMeasurement(measure);
+      this.dataLakeMeasureManagement.updateMeasurement(measure);
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
     }
@@ -361,7 +356,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
       @PathVariable String elementId) {
 
     try {
-      var measure = this.dataExplorerSchemaManagement.getById(elementId);
+      var measure = this.dataLakeMeasureManagement.getById(elementId);
       dataLakeExportManager.cleanupSingleMeasurement(measure);
       return ok();
 

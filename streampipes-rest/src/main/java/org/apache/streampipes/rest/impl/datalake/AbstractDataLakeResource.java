@@ -17,22 +17,60 @@
  */
 package org.apache.streampipes.rest.impl.datalake;
 
+import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
+
+  final IDataExplorerSchemaManagement dataLakeMeasureManagement;
+
+  
+
+  public AbstractDataLakeResource() {
+    this.dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
+        .getSchemaManagement();
+  }
+
   /**
    * required by Spring expression
    */
   public boolean hasReadAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_DATASET_VALUE);
   }
+
   /**
    * required by Spring expression
    */
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATASET_VALUE);
   }
-  
+
+  public boolean checkPermission(String measurementName,
+      String permission) {
+
+    var spPermissionEvaluator = new SpPermissionEvaluator();
+    var authentication = SecurityContextHolder.getContext()
+        .getAuthentication();
+    return spPermissionEvaluator.hasPermission(
+        authentication,
+        measurementName,
+        permission);
+  }
+
+  public boolean checkDatasetPermission(String measurementId,
+      String permission) {
+    var spPermissionEvaluator = new SpPermissionEvaluator();
+    var authentication = SecurityContextHolder.getContext()
+        .getAuthentication();
+    return spPermissionEvaluator.hasPermission(
+        authentication,
+        this.dataLakeMeasureManagement.getById(measurementId).getMeasureName(),
+        permission);
+  }
+
 }
