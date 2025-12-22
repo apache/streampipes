@@ -35,8 +35,9 @@
             <i class="material-icons">close</i>
         </button>
     </div>
-    @if (state$ | async; as state) {
-        @if (state.adapterDescription) {
+    @let adapterConfigurationState = state();
+    @if (adapterConfigurationState) {
+        @if (adapterConfigurationState.adapterDescription) {
             <div fxLayout="column" fxLayoutAlign="center stretch">
                 <sp-basic-header-title-component
                     [title]="pageTitle"
@@ -52,7 +53,9 @@
                             >{{ 'Settings' | translate }}
                         </ng-template>
                         <sp-adapter-settings
-                            [adapterDescription]="state.adapterDescription"
+                            [adapterDescription]="
+                                adapterConfigurationState.adapterDescription
+                            "
                             (updateAdapterDescriptionEmitter)="
                                 adapterDescription = $event
                             "
@@ -67,7 +70,9 @@
                             >{{ 'Configure schema' | translate }}
                         </ng-template>
                         <sp-configure-schema
-                            [adapterDescription]="state.adapterDescription"
+                            [adapterDescription]="
+                                adapterConfigurationState.adapterDescription
+                            "
                             (nextEmitter)="nextConfigureSchema()"
                             (goBackEmitter)="goBack()"
                             (cancelEmitter)="navigateToAdapterCatalog()"
@@ -83,7 +88,9 @@
                         <sp-configure-fields
                             fxLayout="column"
                             fxFlex="100"
-                            [adapterDescription]="state.adapterDescription"
+                            [adapterDescription]="
+                                adapterConfigurationState.adapterDescription
+                            "
                             [isEditMode]="isEditMode"
                             (nextEmitter)="nextConfigureFields()"
                             (goBackEmitter)="goBack()"
@@ -96,7 +103,9 @@
                             >{{ 'Start adapter' | translate }}
                         </ng-template>
                         <sp-start-adapter-configuration
-                            [adapterDescription]="state.adapterDescription"
+                            [adapterDescription]="
+                                adapterConfigurationState.adapterDescription
+                            "
                             [eventSchema]="
                                 adapterDescription.dataStream.eventSchema
                             "

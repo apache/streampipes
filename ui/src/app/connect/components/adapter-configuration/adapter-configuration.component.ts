@@ -24,9 +24,7 @@ import { Router } from '@angular/router';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
 import { AdapterConfigurationStateService } from './adapter-configuration-state-service/adapter-configuration-state.service';
-import { AdapterConfigurationState } from './adapter-configuration-state-service/AdapterConfigurationState';
 
 @Component({
     selector: 'sp-adapter-configuration',
@@ -43,9 +41,7 @@ export class AdapterConfigurationComponent implements OnInit {
 
     @Input() adapterDescription: AdapterDescription;
 
-    // Use a local observable to drive the template
-    public state$: Observable<AdapterConfigurationState> =
-        this.stateService.state$;
+    public state = this.stateService.state;
 
     /**
      * Used to display the type of the configured adapter

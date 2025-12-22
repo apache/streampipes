@@ -31,7 +31,6 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import { SemanticType } from '@streampipes/platform-services';
 import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'sp-configure-fields',
@@ -63,7 +62,11 @@ export class ConfigureFieldsComponent {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    adapterConfigurationState = toSignal(this.stateService.state$);
+    adapter = computed(() => this.stateService.state().adapterDescription);
+
+    eventSchema = computed(
+        () => this.adapter()?.dataStream?.eventSchema || new EventSchema(),
+    );
 
     timestampPresent = computed(() => {
         return (
@@ -73,27 +76,18 @@ export class ConfigureFieldsComponent {
         );
     });
 
-    eventSchema = computed(
-        () =>
-            this.adapterConfigurationState()?.adapterDescription?.dataStream
-                ?.eventSchema || new EventSchema(),
-    );
     eventPreview = computed(
-        () =>
-            this.adapterConfigurationState()?.adapterDescription
-                ?.schemaTransformationConfig?.outputs?.[0] || {},
+        () => this.adapter()?.schemaTransformationConfig?.outputs?.[0] || {},
     );
-    resultPreview = computed(
-        () => this.adapterConfigurationState()?.resultPreview,
-    );
-    isLoading = computed(
-        () => this.adapterConfigurationState()?.isGettingEventSchema,
-    );
-    isError = computed(
-        () => !!this.adapterConfigurationState()?.getEventSchemaError,
-    );
+
+    resultPreview = computed(() => this.stateService.state().resultPreview);
+
+    isLoading = computed(() => this.stateService.state().isGettingEventSchema);
+
+    isError = computed(() => !!this.stateService.state().getEventSchemaError);
+
     errorMessage = computed(
-        () => this.adapterConfigurationState()?.getEventSchemaError,
+        () => this.stateService.state().getEventSchemaError,
     );
 
     public resetEventSchema(): void {
@@ -105,6 +99,7 @@ export class ConfigureFieldsComponent {
     }
 
     public eventPropertyChanged(): void {
+        this.stateService.updateAdapter(this.adapterDescription);
         this.stateService.updateEventPreview(this.adapterDescription);
     }
 

@@ -57,7 +57,7 @@
                         <mat-icon>refresh</mat-icon>
                     </button>
                 </div>
-                @if (isSampleLoading$ | async) {
+                @if (isSampleLoading()) {
                     <div class="sp-dialog-content">
                         <div
                             fxFlex="100"
@@ -69,14 +69,16 @@
                         </div>
                     </div>
                 } @else {
-                    @if (sampleErrorMessage$ | async; as error) {
+                    @let error = sampleErrorMessage();
+
+                    @if (error) {
                         <sp-exception-message
                             [message]="error"
                             [showDetails]="true"
                         ></sp-exception-message>
                     } @else {
                         <pre
-                            [innerHTML]="input$ | async | jsonpretty"
+                            [innerHTML]="input() | jsonpretty"
                             class="preview-text"
                             data-cy="schema-preview-original-event"
                         ></pre>
@@ -92,7 +94,7 @@
                 fxFlex="100"
                 data-cy="connect-schema-update-preview"
             >
-                @if (isRunningScript$ | async) {
+                @if (isRunningScript()) {
                     <div class="sp-dialog-content">
                         <div
                             fxFlex="100"
@@ -104,14 +106,15 @@
                         </div>
                     </div>
                 } @else {
-                    @if (scriptError$ | async; as error) {
+                    @let error = scriptError();
+                    @if (error) {
                         <sp-exception-message
                             [message]="error"
                             [showDetails]="true"
                         ></sp-exception-message>
                     } @else {
                         <pre
-                            [innerHTML]="output$ | async | jsonpretty"
+                            [innerHTML]="output() | jsonpretty"
                             class="preview-text"
                             data-cy="schema-preview-result-event"
                         ></pre>

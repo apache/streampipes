@@ -126,7 +126,7 @@
     "ng-lint-staged": "^12.0.4",
     "ng-packagr": "^19.2.2",
     "path": "^0.12.7",
-    "prettier": "3.2.5",
+    "prettier": "3.7.4",
     "resize-observer-polyfill": "^1.5.1",
     "typescript": "5.8.3"
   }

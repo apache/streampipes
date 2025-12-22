@@ -16,8 +16,7 @@
  *
  */
 
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
 import {
     AdapterDescription,
     EventSchema,
@@ -46,20 +45,36 @@ export class AdapterConfigurationStateService {
         resultPreview: {},
     };
 
-    private stateSubject = new BehaviorSubject<AdapterConfigurationState>(
-        this.initialState,
-    );
+    private _state = signal<AdapterConfigurationState>(this.initialState);
 
-    state$: Observable<AdapterConfigurationState> =
-        this.stateSubject.asObservable();
+    public state = this._state.asReadonly();
 
-    private updateState(newState: Partial<AdapterConfigurationState>): void {
-        const currentState = this.stateSubject.getValue();
-        this.stateSubject.next({ ...currentState, ...newState });
+    public updateState(newState: Partial<AdapterConfigurationState>): void {
+        this._state.update(current => ({ ...current, ...newState }));
     }
 
     public initializeOrUpdateAdapter(adapter: AdapterDescription): void {
         this.updateState({ adapterDescription: adapter });
+    }
+
+    public updateAdapter(adapter: AdapterDescription): void {
+        // Cloning is required to trigger all computed signals
+        const clonedAdapter = this.cloneAdapter(adapter);
+        this.updateState({
+            adapterDescription: { ...clonedAdapter },
+        });
+    }
+
+    private cloneAdapter(adapter: AdapterDescription): AdapterDescription {
+        return {
+            ...adapter,
+            dataStream: {
+                ...adapter.dataStream,
+                eventSchema: {
+                    ...adapter.dataStream.eventSchema,
+                },
+            },
+        };
     }
 
     // New action method focusing on state transitions

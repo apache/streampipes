@@ -18,6 +18,7 @@
 
 import {
     Component,
+    computed,
     EventEmitter,
     inject,
     Input,
@@ -26,8 +27,6 @@ import {
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterDescription } from '@streampipes/platform-services';
-import { filter, map } from 'rxjs/operators';
-import { shareReplay } from 'rxjs';
 import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
 
 @Component({
@@ -51,31 +50,25 @@ export class ConfigureSchemaComponent implements OnInit {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    private adapterDescription$ = this.stateService.state$.pipe(
-        map(state => state.adapterDescription),
-        filter(adapter => !!adapter),
-        shareReplay(1), // Prevents multiple extractions for different async pipes
+    isSampleLoading = computed(() => this.stateService.state().isGettingSample);
+
+    sampleErrorMessage = computed(() => this.stateService.state().sampleError);
+    input = computed(
+        () =>
+            this.stateService.state().adapterDescription
+                ?.schemaTransformationConfig?.inputs?.[0] || {},
     );
 
-    // variables related to get sample
-    isSampleLoading$ = this.stateService.state$.pipe(
-        map(s => s.isGettingSample),
-    );
-    sampleErrorMessage$ = this.stateService.state$.pipe(
-        map(s => s.sampleError),
-    );
-    input$ = this.adapterDescription$.pipe(
-        map(a => a.schemaTransformationConfig?.inputs?.[0] || {}),
+    isRunningScript = computed(() => this.stateService.state().isRunningScript);
+
+    scriptError = computed(() => this.stateService.state().scriptError);
+
+    output = computed(
+        () =>
+            this.stateService.state().adapterDescription
+                ?.schemaTransformationConfig?.outputs?.[0] || {},
     );
 
-    // variables related to run script
-    isRunningScript$ = this.stateService.state$.pipe(
-        map(s => s.isRunningScript),
-    );
-    scriptError$ = this.stateService.state$.pipe(map(s => s.scriptError));
-    output$ = this.adapterDescription$.pipe(
-        map(a => a.schemaTransformationConfig?.outputs?.[0] || {}),
-    );
     script = `// returns the same event
 function transform(event) {
   return event;
