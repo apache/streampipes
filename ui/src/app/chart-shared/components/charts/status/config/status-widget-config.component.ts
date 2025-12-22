@@ -83,8 +83,7 @@ export class StatusWidgetConfigComponent extends BaseWidgetConfig<
                 () => this.fieldProvider.allFields[0],
             );
         this.currentlyConfiguredWidget.visualizationConfig.selectedInterval ??= 5;
-        this.currentlyConfiguredWidget.visualizationConfig.selectedMappingGreenTrue ??=
-            true;
+        this.currentlyConfiguredWidget.visualizationConfig.selectedMappingGreenTrue ??= true;
     }
     protected requiredFieldsForChartPresent(): boolean {
         return true;

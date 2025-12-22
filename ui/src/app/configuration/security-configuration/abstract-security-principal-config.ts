@@ -39,8 +39,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Directive()
 export abstract class AbstractSecurityPrincipalConfig<
     T extends UserAccount | ServiceAccount,
-> implements OnInit
-{
+> implements OnInit {
     users: T[] = [];
 
     @ViewChild(MatSort) sort: MatSort;

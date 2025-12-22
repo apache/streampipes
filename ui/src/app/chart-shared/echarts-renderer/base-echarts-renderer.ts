@@ -40,9 +40,9 @@ import { ChartColorizationService } from '../services/chart-colorization.service
 import { SpFieldUpdateService } from '../services/field-update.service';
 import { FieldUpdateInfo } from '../models/field-update.model';
 
-export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
-    implements SpEchartsRenderer<T>
-{
+export abstract class SpBaseEchartsRenderer<
+    T extends DataExplorerWidgetModel,
+> implements SpEchartsRenderer<T> {
     protected fieldProvider = inject(ChartFieldProviderService);
 
     protected basicOptionsGeneratorService = inject(

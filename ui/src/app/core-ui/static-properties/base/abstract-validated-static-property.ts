@@ -24,8 +24,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Directive()
 export abstract class AbstractValidatedStaticPropertyRenderer<
-        T extends StaticProperty,
-    >
+    T extends StaticProperty,
+>
     extends AbstractStaticPropertyRenderer<T>
     implements OnDestroy
 {
