@@ -98,8 +98,7 @@ export class TrafficLightWidgetConfigComponent extends BaseWidgetConfig<
             this.fieldProvider.allFields,
             () => this.fieldProvider.allFields[0],
         );
-        this.currentlyConfiguredWidget.visualizationConfig.selectedUpperLimit ??=
-            true;
+        this.currentlyConfiguredWidget.visualizationConfig.selectedUpperLimit ??= true;
         this.updateWarningRangeInterval();
     }
     protected requiredFieldsForChartPresent(): boolean {
