@@ -71,6 +71,7 @@ spConnect:
     showStatusBox: true
     statusBox:
         link: "['connect']"
+        assetLinkTypeId: 'adapter'
         createLinks: "['connect', 'create']"
         title: 'Adapters'
         createTitle: 'New adapter'
@@ -94,6 +95,7 @@ spPipelines:
     showStatusBox: true
     statusBox:
         link: "['pipelines']"
+        assetLinkTypeId: 'pipeline'
         createLinks: "['pipelines', 'create']"
         title: 'Pipelines'
         createTitle: 'New pipeline'
@@ -132,6 +134,7 @@ spDashboard:
     showStatusBox: true
     statusBox:
         link: "['dashboard']"
+        assetLinkTypeId: 'dashboard'
         createLinks: "['dashboard']"
         title: 'Dashboards'
         createTitle: 'New dashboard'
@@ -155,6 +158,7 @@ spChart:
     showStatusBox: true
     statusBox:
         link: "['chart']"
+        assetLinkTypeId: 'chart'
         createLinks: "['chart']"
         title: 'Charts'
         createTitle: 'New chart'

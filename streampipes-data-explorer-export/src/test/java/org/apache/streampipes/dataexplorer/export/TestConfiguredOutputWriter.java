@@ -31,8 +31,8 @@ public abstract class TestConfiguredOutputWriter {
   @BeforeEach
   public void before() {
     this.rows = Arrays.asList(
-        Arrays.asList(1668578077051.0, "test", 1),
-        Arrays.asList(1668578127050.0, "test2", 2)
+        Arrays.asList(1668578077051L, "test", 1),
+        Arrays.asList(1668578127050L, "test2", 2)
     );
 
     this.columns = Arrays.asList("time", "string", "number");

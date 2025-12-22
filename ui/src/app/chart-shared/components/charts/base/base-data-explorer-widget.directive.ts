@@ -46,13 +46,16 @@ import { ChartFieldProviderService } from '../../../services/chart-field-provide
 import { catchError, switchMap } from 'rxjs/operators';
 import { ChartRegistry } from '../../../registry/chart-registry.service';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
-import { TimeSelectionService } from '@streampipes/shared-ui';
+import {
+    NameChangeService,
+    TimeSelectionService,
+} from '@streampipes/shared-ui';
 import { WidgetSize } from '../../../models/dataset.model';
 
 @Directive()
 export abstract class BaseDataExplorerWidgetDirective<
-        T extends DataExplorerWidgetModel,
-    >
+    T extends DataExplorerWidgetModel,
+>
     implements BaseWidgetData<T>, OnInit
 {
     private static TOO_MUCH_DATA_PARAMETER = 10000;
@@ -108,6 +111,7 @@ export abstract class BaseDataExplorerWidgetDirective<
     widgetConfiguration$: Subscription;
     resize$: Subscription;
     timeSelection$: Subscription;
+    nameChange$: Subscription;
 
     requestQueue$: Subject<Observable<SpQueryResult>[]> = new Subject<
         Observable<SpQueryResult>[]
@@ -116,6 +120,7 @@ export abstract class BaseDataExplorerWidgetDirective<
     protected widgetConfigurationService = inject(ChartConfigurationService);
     protected resizeService = inject(ResizeService);
     protected timeSelectionService = inject(TimeSelectionService);
+    protected nameChangeService = inject(NameChangeService);
     protected widgetRegistryService = inject(ChartRegistry);
     protected fieldUpdateService = inject(SpFieldUpdateService);
     public fieldService = inject(ChartFieldProviderService);
@@ -209,6 +214,14 @@ export abstract class BaseDataExplorerWidgetDirective<
                     }
                 },
             );
+        this.nameChange$ = this.nameChangeService.nameChangeSubject.subscribe(
+            data => {
+                if (this.dataViewDashboardItem.id == data.id) {
+                    this.dataViewDashboardItem.name = data.name;
+                }
+            },
+        );
+
         this.updateData();
     }
 
@@ -216,6 +229,7 @@ export abstract class BaseDataExplorerWidgetDirective<
         this.widgetConfiguration$?.unsubscribe();
         this.resize$?.unsubscribe();
         this.timeSelection$.unsubscribe();
+        this.nameChange$.unsubscribe();
         this.requestQueue$?.unsubscribe();
     }
 

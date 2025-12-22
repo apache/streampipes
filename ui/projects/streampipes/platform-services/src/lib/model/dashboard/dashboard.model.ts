@@ -28,6 +28,7 @@ export interface ClientDashboardItem {
     widgetType: string;
     timeSettings?: TimeSettings;
     id: string;
+    name?: string;
     cols?: number;
     rows?: number;
     x: number;

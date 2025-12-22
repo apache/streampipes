@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class UserInfoUtil {
@@ -35,7 +36,8 @@ public class UserInfoUtil {
 
   private static UserInfo toUserInfo(UserAccount userAccount,
                                      Set<String> roles) {
-    UserInfo userInfo = prepareUserInfo(userAccount, roles);
+    var displayName = Objects.nonNull(userAccount.getFullName()) ? userAccount.getFullName() : userAccount.getUsername();
+    UserInfo userInfo = prepareUserInfo(userAccount, roles, displayName);
     userInfo.setShowTutorial(!userAccount.isHideTutorial());
     userInfo.setHasAcknowledged(userAccount.isHasAcknowledged());
     userInfo.setLanguage(userAccount.getLanguage());
@@ -44,14 +46,15 @@ public class UserInfoUtil {
 
   private static UserInfo toServiceUserInfo(ServiceAccount serviceAccount,
                                             Set<String> roles) {
-    return prepareUserInfo(serviceAccount, roles);
+    return prepareUserInfo(serviceAccount, roles, serviceAccount.getUsername());
   }
 
   private static UserInfo prepareUserInfo(Principal principal,
-                                          Set<String> roles) {
+                                          Set<String> roles,
+                                          String displayName) {
     UserInfo userInfo = new UserInfo();
     userInfo.setUsername(principal.getUsername());
-    userInfo.setDisplayName(principal.getUsername());
+    userInfo.setDisplayName(displayName);
     userInfo.setRoles(roles);
 
     return userInfo;

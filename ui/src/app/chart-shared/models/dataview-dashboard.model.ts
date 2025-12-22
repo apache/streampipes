@@ -99,8 +99,7 @@ export interface DataZoomConfig {
     type: 'slider' | 'inside';
 }
 
-export interface TimeSeriesAppearanceConfig
-    extends WidgetEchartsAppearanceConfig {
+export interface TimeSeriesAppearanceConfig extends WidgetEchartsAppearanceConfig {
     dataZoom: DataZoomConfig;
 }
 

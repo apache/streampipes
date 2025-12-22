@@ -19,9 +19,8 @@
 // tslint:disable-next-line:no-implicit-dependencies
 import { defineConfig } from 'cypress';
 
-const develocityReporter = require.resolve(
-    '@gradle-tech/develocity-agent/cypress-reporter',
-);
+const develocityReporter =
+    require.resolve('@gradle-tech/develocity-agent/cypress-reporter');
 
 export default defineConfig({
     projectId: 'q1jdu2',

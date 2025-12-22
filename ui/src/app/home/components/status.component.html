@@ -16,40 +16,25 @@
 ~
 -->
 
-<div
-    fxFlex="100"
-    class="status-container p-10"
-    (click)="navigate(statusBox.link)"
->
-    <div fxLayout="row" fxFlex="100">
-        <div fxFlex fxLayout="column" fxLayoutAlign="start start">
-            <div fxFlex fxLayout="column">
-                <div class="status-container-number text-3xl">
-                    <span>{{ resourceCount }}</span>
-                </div>
-                <div class="text-xl" fxFlex fxLayoutAlign="end end">
-                    <span>{{ statusBox.title }}</span>
-                </div>
-            </div>
-            <div fxFlex="100" fxLayoutAlign="end end" class="w-100">
-                @if (showCreateLink) {
-                    <div fxFlex="100" fxLayoutAlign="start center">
-                        <a
-                            (click)="navigate(statusBox.createLink)"
-                            fxLayoutAlign="start center"
-                            class="status-container-create-link text-md"
-                        >
-                            <i class="material-icons">add_circle</i>
-                            <span>&nbsp;{{ statusBox.createTitle }}</span>
-                        </a>
-                    </div>
-                }
-            </div>
+<div class="status-container" (click)="navigate(statusBox.link)">
+    <div class="status-content p-sm">
+        <div class="status-main">
+            <div class="status-number">{{ resourceCount }}</div>
+            <div class="status-title">{{ statusBox.title }}</div>
+
+            @if (showCreateLink) {
+                <a
+                    class="status-action"
+                    (click)="
+                        $event.stopPropagation(); navigate(statusBox.createLink)
+                    "
+                >
+                    <i class="material-icons">add_circle</i>
+                    <span>{{ 'New' | translate }}</span>
+                </a>
+            }
         </div>
-    </div>
-    <div fxLayoutAlign="start start">
-        <i class="material-icons status-container-icon text-5xl">{{
-            statusBox.icon
-        }}</i>
+
+        <i class="material-icons status-icon">{{ statusBox.icon }}</i>
     </div>
 </div>

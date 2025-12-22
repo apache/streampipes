@@ -16,9 +16,9 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, inject, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserInfo } from '@streampipes/platform-services';
+import { AssetLinkType, UserInfo } from '@streampipes/platform-services';
 import { StatusBox } from '../models/home.model';
 import { UserRole } from '../../_enums/user-role.enum';
 import { zip } from 'rxjs';
@@ -39,11 +39,18 @@ export class StatusComponent implements OnInit {
     @Input()
     currentUser: UserInfo;
 
+    @Input()
+    assetLinkType: AssetLinkType;
+
+    @HostBinding('style.--status-box-color') statusBoxColor: string | null =
+        null;
+
     showCreateLink = true;
 
-    constructor(private router: Router) {}
+    private router = inject(Router);
 
     ngOnInit() {
+        this.statusBoxColor = this.assetLinkType.linkColor;
         zip(this.statusBox.dataFns).subscribe(res => {
             let totalLength = 0;
             res.forEach(response => {
@@ -52,6 +59,7 @@ export class StatusComponent implements OnInit {
 
             this.resourceCount = totalLength;
         });
+
         this.showCreateLink = this.shouldShowCreateLink();
     }
 

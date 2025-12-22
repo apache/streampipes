@@ -30,7 +30,7 @@ public abstract class TestItemGenerator {
 
   @BeforeEach
   public void before() {
-    this.row = Arrays.asList(1668578077051.0, "test", 1);
+    this.row = Arrays.asList(1668578077051L, "test", 1);
     this.columns = Arrays.asList("time", "string", "number");
   }
 }
