@@ -20,9 +20,10 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
     AdapterDescription,
+    EventSchema,
     SpLogMessage,
 } from '@streampipes/platform-services';
-import { AdapterProcessingState } from './AdapterProcessingState';
+import { AdapterConfigurationState } from './AdapterConfigurationState';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RestService } from '../../../services/rest.service';
 
@@ -32,25 +33,27 @@ import { RestService } from '../../../services/rest.service';
 export class AdapterConfigurationStateService {
     private restService = inject(RestService);
 
-    private initialState: AdapterProcessingState = {
+    private initialState: AdapterConfigurationState = {
         adapterDescription: null,
-        isSaving: false,
-        saveError: null,
         isGettingSample: false,
         sampleError: null,
         isRunningScript: false,
         scriptError: null,
+
+        isGettingEventSchema: false,
+        getEventSchemaError: null,
+        isPreviewLoading: false,
+        resultPreview: {},
     };
 
-    private stateSubject = new BehaviorSubject<AdapterProcessingState>(
+    private stateSubject = new BehaviorSubject<AdapterConfigurationState>(
         this.initialState,
     );
 
-    state$: Observable<AdapterProcessingState> =
+    state$: Observable<AdapterConfigurationState> =
         this.stateSubject.asObservable();
 
-    // Helper function to update the state subject
-    private updateState(newState: Partial<AdapterProcessingState>): void {
+    private updateState(newState: Partial<AdapterConfigurationState>): void {
         const currentState = this.stateSubject.getValue();
         this.stateSubject.next({ ...currentState, ...newState });
     }
@@ -96,8 +99,6 @@ export class AdapterConfigurationStateService {
         });
     }
 
-    // adapter-configuration-store.service.ts
-
     public runScript(adapter: AdapterDescription, script: string): void {
         // 1. Prepare state for loading
         this.updateState({
@@ -128,6 +129,50 @@ export class AdapterConfigurationStateService {
                     scriptError: error.error as SpLogMessage,
                 });
             },
+        });
+    }
+
+    public getEventSchema(adapter: AdapterDescription): void {
+        this.updateState({
+            isGettingEventSchema: true,
+            getEventSchemaError: null,
+        });
+
+        this.restService.getEventSchema(adapter).subscribe({
+            next: schema => {
+                this.sortEventPropertiesAlphabetically(schema);
+
+                const updatedAdapter = { ...adapter };
+                updatedAdapter.dataStream.eventSchema = schema;
+
+                this.updateState({
+                    adapterDescription: updatedAdapter,
+                    isGettingEventSchema: false,
+                });
+
+                this.updateEventPreview(updatedAdapter);
+            },
+            error: err =>
+                this.updateState({
+                    isGettingEventSchema: false,
+                    getEventSchemaError: err.error,
+                }),
+        });
+    }
+
+    private sortEventPropertiesAlphabetically(eventSchema: EventSchema) {
+        eventSchema.eventProperties.sort((a, b) => {
+            return a.runtimeName < b.runtimeName ? -1 : 1;
+        });
+    }
+
+    public updateEventPreview(adapter: AdapterDescription): void {
+        this.updateState({ isPreviewLoading: true });
+        this.restService.getAdapterEventPreview(adapter).subscribe(preview => {
+            this.updateState({
+                resultPreview: preview,
+                isPreviewLoading: false,
+            });
         });
     }
 }

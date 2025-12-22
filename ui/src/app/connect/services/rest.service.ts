@@ -43,7 +43,7 @@ export class RestService {
         return this.platformServicesCommons.apiBasePath + '/connect';
     }
 
-    guessEventSchema(adapter: AdapterDescription): Observable<EventSchema> {
+    getEventSchema(adapter: AdapterDescription): Observable<EventSchema> {
         return this.http
             .post(`${this.connectPath}/master/guess/schema`, adapter, {
                 context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),

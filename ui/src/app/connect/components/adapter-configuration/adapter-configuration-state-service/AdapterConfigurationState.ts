@@ -39,12 +39,17 @@ import {
     SpLogMessage,
 } from '@streampipes/platform-services';
 
-export class AdapterProcessingState {
+export class AdapterConfigurationState {
+    // configure schema
     adapterDescription: AdapterDescription;
-    isSaving: boolean;
-    saveError: '';
     isGettingSample: boolean;
-    sampleError: SpLogMessage;
+    sampleError: SpLogMessage | null;
     isRunningScript: boolean;
-    scriptError: SpLogMessage;
+    scriptError: SpLogMessage | null;
+
+    // configure fields
+    isGettingEventSchema: boolean;
+    getEventSchemaError: SpLogMessage | null;
+    isPreviewLoading: boolean;
+    resultPreview: Record<string, any> | null;
 }

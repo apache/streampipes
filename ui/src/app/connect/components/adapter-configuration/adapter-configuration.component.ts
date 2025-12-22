@@ -26,7 +26,7 @@ import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-docu
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { AdapterConfigurationStateService } from './adapter-configuration-state-service/adapter-configuration-state.service';
-import { AdapterProcessingState } from './adapter-configuration-state-service/AdapterProcessingState';
+import { AdapterConfigurationState } from './adapter-configuration-state-service/AdapterConfigurationState';
 
 @Component({
     selector: 'sp-adapter-configuration',
@@ -39,12 +39,13 @@ export class AdapterConfigurationComponent implements OnInit {
     private shepherdService = inject(ShepherdService);
     private router = inject(Router);
     private translate = inject(TranslateService);
-    private store = inject(AdapterConfigurationStateService);
+    private stateService = inject(AdapterConfigurationStateService);
 
     @Input() adapterDescription: AdapterDescription;
 
     // Use a local observable to drive the template
-    public state$: Observable<AdapterProcessingState> = this.store.state$;
+    public state$: Observable<AdapterConfigurationState> =
+        this.stateService.state$;
 
     /**
      * Used to display the type of the configured adapter
@@ -69,7 +70,9 @@ export class AdapterConfigurationComponent implements OnInit {
             };
         }
         if (this.adapterDescription) {
-            this.store.initializeOrUpdateAdapter(this.adapterDescription);
+            this.stateService.initializeOrUpdateAdapter(
+                this.adapterDescription,
+            );
         }
     }
 
@@ -81,11 +84,16 @@ export class AdapterConfigurationComponent implements OnInit {
         this.shepherdService.trigger('specific-settings-next-button');
         this.goForward();
         // TODO check how to change the adatper settings component
-        this.store.initializeOrUpdateAdapter(this.adapterDescription);
-        this.store.getSampleEvent(this.adapterDescription);
+        this.stateService.initializeOrUpdateAdapter(this.adapterDescription);
+        this.stateService.getSampleEvent(this.adapterDescription);
     }
 
     nextConfigureSchema() {
+        if (
+            this.adapterDescription.eventSchema?.eventProperties?.length === 0
+        ) {
+            this.stateService.getEventSchema(this.adapterDescription);
+        }
         this.goForward();
     }
 

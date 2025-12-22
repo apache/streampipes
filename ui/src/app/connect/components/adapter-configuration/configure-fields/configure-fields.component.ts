@@ -22,18 +22,16 @@ import {
     EventEmitter,
     inject,
     Input,
-    OnInit,
     Output,
-    signal,
 } from '@angular/core';
 import {
     AdapterDescription,
     EventSchema,
-    SpLogMessage,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { SemanticType } from '@streampipes/platform-services';
-import { RestService } from '../../../services/rest.service';
+import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'sp-configure-fields',
@@ -41,8 +39,8 @@ import { RestService } from '../../../services/rest.service';
     styleUrls: ['./configure-fields.component.scss'],
     standalone: false,
 })
-export class ConfigureFieldsComponent implements OnInit {
-    private restService = inject(RestService);
+export class ConfigureFieldsComponent {
+    private stateService = inject(AdapterConfigurationStateService);
 
     @Input()
     adapterDescription: AdapterDescription;
@@ -65,9 +63,8 @@ export class ConfigureFieldsComponent implements OnInit {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    eventSchema = signal<EventSchema>(new EventSchema());
+    adapterConfigurationState = toSignal(this.stateService.state$);
 
-    // automatically set the value if the event schema has a timestamp or not
     timestampPresent = computed(() => {
         return (
             this.eventSchema().eventProperties?.some(p =>
@@ -76,71 +73,39 @@ export class ConfigureFieldsComponent implements OnInit {
         );
     });
 
-    isLoading = false;
-    isError = false;
-    errorMessage: SpLogMessage;
-
-    eventPreview: Record<string, any>;
-    resultPreview: Record<string, any>;
-
-    ngOnInit() {
-        this.resetEventSchema();
-    }
+    eventSchema = computed(
+        () =>
+            this.adapterConfigurationState()?.adapterDescription?.dataStream
+                ?.eventSchema || new EventSchema(),
+    );
+    eventPreview = computed(
+        () =>
+            this.adapterConfigurationState()?.adapterDescription
+                ?.schemaTransformationConfig?.outputs?.[0] || {},
+    );
+    resultPreview = computed(
+        () => this.adapterConfigurationState()?.resultPreview,
+    );
+    isLoading = computed(
+        () => this.adapterConfigurationState()?.isGettingEventSchema,
+    );
+    isError = computed(
+        () => !!this.adapterConfigurationState()?.getEventSchemaError,
+    );
+    errorMessage = computed(
+        () => this.adapterConfigurationState()?.getEventSchemaError,
+    );
 
     public resetEventSchema(): void {
-        this.isLoading = true;
-        this.isError = false;
-
-        this.eventPreview =
-            this.adapterDescription.schemaTransformationConfig.outputs[0];
-
-        this.restService.guessEventSchema(this.adapterDescription).subscribe(
-            eventSchema => {
-                this.sortEventPropertiesAlphabetically(eventSchema);
-
-                this.adapterDescription.dataStream.eventSchema = eventSchema;
-
-                this.eventSchema.set(eventSchema);
-
-                this.isLoading = false;
-
-                this.updateEventPreview();
-            },
-            errorMessage => {
-                this.errorMessage = errorMessage.error;
-                this.isError = true;
-                this.isLoading = false;
-                this.eventSchema.set(new EventSchema());
-            },
-        );
+        this.stateService.getEventSchema(this.adapterDescription);
     }
 
-    private sortEventPropertiesAlphabetically(eventSchema: EventSchema) {
-        eventSchema.eventProperties.sort((a, b) => {
-            return a.runtimeName < b.runtimeName ? -1 : 1;
-        });
+    public refreshEventPreview(): void {
+        this.stateService.updateEventPreview(this.adapterDescription);
     }
 
     public eventPropertyChanged(): void {
-        // Force signal update to retrigger computed signals
-        this.eventSchema.update(currentSchema => {
-            return {
-                ...currentSchema,
-                eventProperties: [...currentSchema.eventProperties],
-            };
-        });
-
-        this.updateEventPreview();
-    }
-
-    public updateEventPreview(): void {
-        if (this.eventPreview) {
-            this.restService
-                .getAdapterEventPreview(this.adapterDescription)
-                .subscribe(preview => {
-                    this.resultPreview = preview;
-                });
-        }
+        this.stateService.updateEventPreview(this.adapterDescription);
     }
 
     public cancel() {

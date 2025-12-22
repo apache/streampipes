@@ -18,7 +18,7 @@
 
 <div fxLayout="column" fxLayoutAlign="center" class="mt-20">
     <div fxFlex="90" fxLayout="column">
-        @if (!isError && !isLoading && !timestampPresent()) {
+        @if (!isError() && !isLoading() && !timestampPresent()) {
             <sp-no-timestamp-error-hint> </sp-no-timestamp-error-hint>
         }
 
@@ -26,7 +26,7 @@
             [showTitle]="false"
             outerMargin="0px 0px 20px 0px"
         >
-            @if (!isLoading && !isError) {
+            @if (!isLoading() && !isError()) {
                 <div header fxFlex="100">
                     <sp-configure-fields-header
                         fxFlex="100"
@@ -35,7 +35,7 @@
                     </sp-configure-fields-header>
                 </div>
             }
-            @if (!isLoading && isError) {
+            @if (!isLoading() && isError()) {
                 <div header fxFlex="100">
                     <div fxLayout="row" fxLayoutAlign="end center">
                         <button
@@ -51,18 +51,18 @@
             }
 
             <div fxFlex="100">
-                @if (isLoading) {
+                @if (isLoading()) {
                     <sp-configure-fields-loading-message></sp-configure-fields-loading-message>
                 }
 
-                @if (isError && !isLoading) {
+                @if (isError() && !isLoading()) {
                     <sp-configure-fields-error-message
-                        [errorMessage]="errorMessage"
+                        [errorMessage]="errorMessage()"
                     >
                     </sp-configure-fields-error-message>
                 }
 
-                @if (!isError && !isLoading) {
+                @if (!isError() && !isLoading()) {
                     @for (
                         property of eventSchema()?.eventProperties;
                         track property.elementId
@@ -77,12 +77,12 @@
         </sp-basic-inner-panel>
     </div>
 
-    @if (!isLoading && !isError) {
+    @if (!isLoading() && !isError()) {
         <div fxFlex="100">
             <sp-configure-fields-preview
-                [originalPreview]="eventPreview"
-                [resultPreview]="resultPreview"
-                (updatePreviewEmitter)="updateEventPreview()"
+                [originalPreview]="eventPreview()"
+                [resultPreview]="resultPreview()"
+                (refreshPreviewEmitter)="refreshEventPreview()"
             ></sp-configure-fields-preview>
         </div>
     }

@@ -28,9 +28,9 @@ export class ConfigureFieldsPreviewComponent {
     @Input() originalPreview: Record<string, any>;
     @Input() resultPreview: Record<string, any>;
 
-    @Output() updatePreviewEmitter = new EventEmitter();
+    @Output() refreshPreviewEmitter = new EventEmitter();
 
-    public updateEventPreview() {
-        this.updatePreviewEmitter.emit();
+    public refreshEventPreview() {
+        this.refreshPreviewEmitter.emit();
     }
 }
