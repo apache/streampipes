@@ -66,9 +66,11 @@ export class AdapterConfigurationComponent implements OnInit {
             };
         }
         if (this.adapterDescription) {
-            this.stateService.initializeOrUpdateAdapter(
-                this.adapterDescription,
-            );
+            if (!this.isEditMode) {
+                this.stateService.initializeCreateMode(this.adapterDescription);
+            } else {
+                this.stateService.initializeEditMode(this.adapterDescription);
+            }
         }
     }
 
@@ -80,8 +82,14 @@ export class AdapterConfigurationComponent implements OnInit {
     nextAdapterSettings() {
         this.shepherdService.trigger('specific-settings-next-button');
         this.goForward();
-        this.stateService.initializeOrUpdateAdapter(this.adapterDescription);
-        this.stateService.getSampleEvent(this.adapterDescription);
+        this.stateService.updateAdapter(this.adapterDescription);
+
+        if (
+            this.adapterDescription.schemaTransformationConfig.inputs.length ==
+            0
+        ) {
+            this.stateService.getSampleEvent(this.adapterDescription);
+        }
     }
 
     nextConfigureSchema() {

@@ -54,8 +54,15 @@ export class AdapterConfigurationStateService {
         this._state.update(current => ({ ...current, ...newState }));
     }
 
-    public initializeOrUpdateAdapter(adapter: AdapterDescription): void {
+    public initializeCreateMode(adapter: AdapterDescription): void {
         this.updateState({ adapterDescription: adapter });
+    }
+
+    public initializeEditMode(adapter: AdapterDescription): void {
+        this.updateState({
+            adapterDescription: adapter,
+            autoLoadSchema: false,
+        });
     }
 
     public updateAdapter(adapter: AdapterDescription): void {
