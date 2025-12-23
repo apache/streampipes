@@ -20,28 +20,32 @@ package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.export.utils.EventGroundingProcessor;
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class AbstractResolver<T> implements DocumentResolver<T> {
 
-  protected ObjectMapper spMapper;
   protected ObjectMapper defaultMapper;
+  protected ObjectMapper spMapper;
 
   public AbstractResolver() {
-    this.spMapper = SerializationUtils.getSpObjectMapper();
-    this.defaultMapper = SerializationUtils.getDefaultObjectMapper();
+    this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
+    this.spMapper = JacksonSerializer.getObjectMapper();
   }
 
   public Set<ExportItem> resolve(Set<AssetLink> assetLinks) {

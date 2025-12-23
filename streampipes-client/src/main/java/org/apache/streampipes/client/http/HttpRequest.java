@@ -25,7 +25,6 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.commons.exceptions.SpHttpErrorStatusCode;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -50,7 +49,6 @@ public abstract class HttpRequest<K, V, T> {
   private final StreamPipesClientConfig clientConfig;
   private final ClientConnectionUrlResolver connectionConfig;
   private final StreamPipesApiPath apiPath;
-  private final ObjectMapper objectMapper;
   private final Serializer<K, V, T> serializer;
 
   public HttpRequest(StreamPipesClientConfig clientConfig,
@@ -58,7 +56,6 @@ public abstract class HttpRequest<K, V, T> {
                      Serializer<K, V, T> serializer) {
     this.clientConfig = clientConfig;
     this.connectionConfig = clientConfig.getConnectionConfig();
-    this.objectMapper = clientConfig.getSerializer();
     this.apiPath = apiPath;
     this.serializer = serializer;
   }

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.file.FileMetadata;
@@ -40,7 +39,7 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
 
   @Override
   public FileMetadata readDocument(String serializedDoc) throws JsonProcessingException {
-    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, FileMetadata.class);
+    return this.defaultMapper.readValue(serializedDoc, FileMetadata.class);
   }
 
   @Override
@@ -55,7 +54,7 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
 
   @Override
   public FileMetadata deserializeDocument(String document) throws JsonProcessingException {
-    return SerializationUtils.getSpObjectMapper().readValue(document, FileMetadata.class);
+    return this.spMapper.readValue(document, FileMetadata.class);
   }
 
   @Override
