@@ -28,15 +28,8 @@ public abstract class Serializer<K, V, T> {
   protected ObjectMapper objectMapper;
 
   public Serializer() {
-    this(false);
-  }
+    this.objectMapper = JacksonSerializer.getObjectMapper();
 
-  public Serializer(boolean useDefaultTyping) {
-    if (useDefaultTyping) {
-      this.objectMapper = JacksonSerializer.getObjectMapper().deactivateDefaultTyping();
-    } else {
-      this.objectMapper = JacksonSerializer.getObjectMapper();
-    }
   }
 
   public String serialize(K object) {

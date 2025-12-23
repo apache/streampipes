@@ -45,7 +45,9 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -92,7 +94,9 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
 
   public Oi4Adapter() {
-    mapper = new ObjectMapper();
+    mapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
   }
 
   @Override

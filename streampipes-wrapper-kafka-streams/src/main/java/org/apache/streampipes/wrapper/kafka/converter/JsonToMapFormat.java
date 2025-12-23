@@ -18,7 +18,9 @@
 package org.apache.streampipes.wrapper.kafka.converter;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.streams.kstream.ValueMapper;
 
@@ -34,7 +36,9 @@ public class JsonToMapFormat implements ValueMapper<String, Iterable<Map<String,
   private InvocableStreamPipesEntity graph;
 
   public JsonToMapFormat(InvocableStreamPipesEntity graph) {
-    this.mapper = new ObjectMapper();
+    this.mapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
     this.graph = graph;
   }
 

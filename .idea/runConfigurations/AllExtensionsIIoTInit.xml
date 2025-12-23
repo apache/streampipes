@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="sp_core" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+  <configuration default="false" name="AllExtensionsIIoTInit" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <option name="ACTIVE_PROFILES" value="192.168.2.140" />
     <envs>
       <env name="SP_BACKEND_HOST" value="localhost" />
       <env name="SP_COUCHDB_HOST" value="localhost" />
@@ -12,8 +13,8 @@
       <env name="SP_PRIORITIZED_PROTOCOL" value="kafka" />
       <env name="SP_HOST" value="192.168.2.140" />
     </envs>
-    <module name="streampipes-service-core" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.service.core.StreamPipesCoreApplication" />
+    <module name="streampipes-extensions-all-iiot" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.extensions.all.iiot.AllExtensionsIIoTInit" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

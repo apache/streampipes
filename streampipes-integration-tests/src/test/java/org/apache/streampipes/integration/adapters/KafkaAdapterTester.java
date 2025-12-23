@@ -32,9 +32,10 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -146,7 +147,9 @@ public class KafkaAdapterTester extends AdapterTesterBase {
   @Override
   public void publishEvents(List<Map<String, Object>> events) {
     var publisher = getSpKafkaProducer();
-    var objectMapper = new ObjectMapper();
+    var objectMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
 
     events.forEach(event -> {
       try {

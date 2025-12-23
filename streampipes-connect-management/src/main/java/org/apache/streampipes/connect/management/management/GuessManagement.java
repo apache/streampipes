@@ -61,7 +61,6 @@ public class GuessManagement {
   public GuessManagement() {
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
     this.objectMapper = JacksonSerializer.getObjectMapper();
-    this.plainObjectMapper = new ObjectMapper();
   }
 
   @Deprecated

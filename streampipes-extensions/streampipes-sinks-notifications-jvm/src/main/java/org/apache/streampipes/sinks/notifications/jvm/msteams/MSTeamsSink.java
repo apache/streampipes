@@ -34,9 +34,11 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpStatus;
@@ -50,6 +52,7 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 public class MSTeamsSink extends StreamPipesNotificationSink {
 
@@ -76,7 +79,9 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
 
   public MSTeamsSink() {
     super();
-    this.objectMapper = new ObjectMapper();
+    this.objectMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
   }
 
   @Override
@@ -97,7 +102,9 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   ) {
     super.onPipelineStarted(parameters, runtimeContext);
 
-    this.objectMapper = new ObjectMapper();
+    this.objectMapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
 
     var extractor = parameters.extractor();
     webhookUrl = extractor.secretValue(KEY_WEBHOOK_URL);

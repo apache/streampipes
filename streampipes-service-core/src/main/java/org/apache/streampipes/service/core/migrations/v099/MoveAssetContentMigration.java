@@ -19,10 +19,12 @@
 package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +40,9 @@ public class MoveAssetContentMigration implements Migration {
   private static final Logger LOG = LoggerFactory.getLogger(MoveAssetContentMigration.class);
 
   private IGenericStorage genericStorage;
-  private final ObjectMapper mapper = new ObjectMapper();
+  private final ObjectMapper mapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
 
   private static final Set<String> allowedKeys = Set.of(
       "assetId",

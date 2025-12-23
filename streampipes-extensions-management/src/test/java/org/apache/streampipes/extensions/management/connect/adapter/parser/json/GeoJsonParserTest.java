@@ -23,10 +23,11 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.vocabulary.Geo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -100,7 +101,9 @@ public class GeoJsonParserTest {
 
   private InputStream toEvent(Map<String, Object> event) {
     try {
-      var s = new ObjectMapper().writeValueAsString(event);
+      var s = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    )).writeValueAsString(event);
       return IOUtils.toInputStream(s, StandardCharsets.UTF_8);
     } catch (JsonProcessingException e) {
       Assertions.fail("Could not convert event to string: " + event);
