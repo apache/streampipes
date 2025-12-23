@@ -94,13 +94,14 @@ function transform(event) {
     }
 
     private initializeScriptVariable(): void {
-        // if (this.adapterDescription.schemaTransformationConfig.script != '') {
-        //     this.script =
-        //         this.adapterDescription.schemaTransformationConfig.script;
-        // } else {
-        //     this.adapterDescription.schemaTransformationConfig.script =
-        //         this.script;
-        // }
+        if (this.adapterDescription.schemaTransformationConfig.script != '') {
+            this.script.set(
+                this.adapterDescription.schemaTransformationConfig.script,
+            );
+        } else {
+            this.adapterDescription.schemaTransformationConfig.script =
+                this.script();
+        }
     }
 
     onCodeChange(newCode: string) {
