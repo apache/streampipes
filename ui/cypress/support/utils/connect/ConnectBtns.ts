@@ -195,6 +195,10 @@ export class ConnectBtns {
         return cy.dataCy('configure-schema-next-button');
     }
 
+    public static eventPropertyRow() {
+        return cy.dataCy('event-property-row', { timeout: 10000 });
+    }
+
     public static configureSchemaEventPreviewOriginal() {
         return cy.dataCy('configure-schema-event-preview-original');
     }

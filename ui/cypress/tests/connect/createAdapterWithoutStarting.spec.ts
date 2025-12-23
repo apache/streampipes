@@ -29,6 +29,7 @@ describe('Creates a new adapter without starting it', () => {
             .setName('Machine Data Simulator Test')
             .addInput('input', 'wait-time-ms', '1000')
             .setStartAdapter(false)
+            .setTimestampProperty('timestamp')
             .build();
 
         ConnectUtils.testAdapter(adapterInput);

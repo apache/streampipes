@@ -73,6 +73,7 @@ export class AdapterConfigurationComponent implements OnInit {
     }
 
     navigateToAdapterCatalog() {
+        this.stateService.reset();
         this.router.navigate(['connect']).then();
     }
 
@@ -106,6 +107,7 @@ export class AdapterConfigurationComponent implements OnInit {
     }
 
     public adapterWasStarted() {
+        this.stateService.reset();
         this.router.navigate(['connect']);
     }
 

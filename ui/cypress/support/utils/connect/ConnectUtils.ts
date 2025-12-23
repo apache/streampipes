@@ -41,6 +41,8 @@ export class ConnectUtils {
 
         ConnectUtils.configureSchema(adapterConfiguration);
 
+        ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
+
         if (adapterConfiguration.timestampProperty) {
             ConnectEventSchemaUtils.markPropertyAsTimestamp(
                 adapterConfiguration.timestampProperty,
@@ -146,25 +148,14 @@ export class ConnectUtils {
     ) {
         const builder = AdapterBuilder.create('Machine_Data_Simulator')
             .setName(name)
+            .setTimestampProperty('timestamp')
             .addInput('input', 'wait-time-ms', waitingTime);
 
         if (persist) {
             builder.setTimestampProperty('timestamp').setStoreInDataLake();
         }
 
-        const configuration = builder.build();
-
-        ConnectUtils.goToConnect();
-
-        ConnectUtils.goToNewAdapterPage();
-
-        ConnectUtils.selectAdapter(configuration.adapterType);
-
-        ConnectUtils.configureAdapter(configuration);
-
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
-
-        ConnectUtils.startAdapter(configuration);
+        ConnectUtils.testAdapter(builder.build());
     }
 
     public static goToConnect() {
@@ -211,12 +202,13 @@ export class ConnectUtils {
         }
     }
 
+    public static eventSchemaWithFieldsShouldBeVisible() {
+        ConnectBtns.eventPropertyRow().should('have.length.at.least', 1);
+    }
+
     public static finishEventSchemaConfiguration() {
-        // Click next
-        cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should(
-            'be.visible',
-        );
-        cy.get('#event-schema-next-button').click();
+        ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
+        ConnectBtns.configureSchemaNextBtn().click();
     }
 
     public static startAdapter(

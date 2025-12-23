@@ -193,4 +193,8 @@ export class AdapterConfigurationStateService {
             });
         });
     }
+
+    public reset(): void {
+        this._state.set({ ...this.initialState });
+    }
 }

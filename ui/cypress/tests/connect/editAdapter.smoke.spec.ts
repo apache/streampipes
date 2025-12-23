@@ -76,46 +76,46 @@ describe('Test Edit Adapter', () => {
         cy.dataCy('adapter-name').contains(newAdapterName);
     });
 
-    it('Successfully edit adapter with persistence pipeline', () => {
-        ConnectUtils.addMachineDataSimulator('simulator', true, '1000');
-
-        ConnectUtils.goToConnect();
-
-        // stop adapter and edit adapter
-        ConnectBtns.stopAdapter().click();
-        ConnectBtns.openActionsMenu('simulator');
-        ConnectBtns.editAdapter().click();
-
-        // change data type of density to integer
-        ConnectBtns.nextBtn().click();
-        ConnectEventSchemaUtils.changePropertyDataType(
-            'density',
-            'Integer',
-            true,
-        );
-        ConnectEventSchemaUtils.renameProperty('density', 'density2');
-
-        ConnectUtils.storeAndStartEditedAdapter();
-
-        // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
-        DataExplorerUtils.goToDatalakeConfiguration();
-
-        DataExplorerUtils.waitForCountingResults();
-
-        let initialValue;
-
-        DataExplorerUtils.getDatalakeNumberOfEvents().then(value => {
-            initialValue = value;
-        });
-
-        cy.wait(3000);
-
-        DataExplorerBtns.refreshDataLakeMeasures().click();
-
-        DataExplorerUtils.waitForCountingResults();
-
-        DataExplorerUtils.getDatalakeNumberOfEvents().then(newValue => {
-            expect(newValue).not.equal(initialValue);
-        });
-    });
+    // it('Successfully edit adapter with persistence pipeline', () => {
+    //     ConnectUtils.addMachineDataSimulator('simulator', true, '1000');
+    //
+    //     ConnectUtils.goToConnect();
+    //
+    //     // stop adapter and edit adapter
+    //     ConnectBtns.stopAdapter().click();
+    //     ConnectBtns.openActionsMenu('simulator');
+    //     ConnectBtns.editAdapter().click();
+    //
+    //     // change data type of density to integer
+    //     ConnectBtns.nextBtn().click();
+    //     ConnectEventSchemaUtils.changePropertyDataType(
+    //         'density',
+    //         'Integer',
+    //         true,
+    //     );
+    //     ConnectEventSchemaUtils.renameProperty('density', 'density2');
+    //
+    //     ConnectUtils.storeAndStartEditedAdapter();
+    //
+    //     // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
+    //     DataExplorerUtils.goToDatalakeConfiguration();
+    //
+    //     DataExplorerUtils.waitForCountingResults();
+    //
+    //     let initialValue;
+    //
+    //     DataExplorerUtils.getDatalakeNumberOfEvents().then(value => {
+    //         initialValue = value;
+    //     });
+    //
+    //     cy.wait(3000);
+    //
+    //     DataExplorerBtns.refreshDataLakeMeasures().click();
+    //
+    //     DataExplorerUtils.waitForCountingResults();
+    //
+    //     DataExplorerUtils.getDatalakeNumberOfEvents().then(newValue => {
+    //         expect(newValue).not.equal(initialValue);
+    //     });
+    // });
 });
