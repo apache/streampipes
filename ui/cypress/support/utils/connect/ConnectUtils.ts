@@ -77,6 +77,12 @@ export class ConnectUtils {
 
         ConnectUtils.configureAdapter(adapterConfiguration);
 
+        cy.wait(1000);
+
+        ConnectUtils.finishEventSchemaConfiguration();
+
+        ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
+
         ConnectUtils.configureDimensionProperties(adapterConfiguration);
 
         if (adapterConfiguration.timestampProperty) {
@@ -85,7 +91,7 @@ export class ConnectUtils {
             );
         }
 
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectUtils.finishConfigureFieldsConfiguration();
     }
 
     public static addAdapterWithLinkedAssets(
@@ -199,10 +205,6 @@ export class ConnectUtils {
         }
     }
 
-    public static eventSchemaWithFieldsShouldBeVisible() {
-        ConnectBtns.eventPropertyRow().should('have.length.at.least', 1);
-    }
-
     public static finishEventSchemaConfiguration() {
         ConnectBtns.configureSchemaNextBtn().click();
     }
@@ -210,6 +212,10 @@ export class ConnectUtils {
     public static finishConfigureFieldsConfiguration() {
         ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
         ConnectBtns.configureFieldsNextBtn().click();
+    }
+
+    public static eventSchemaWithFieldsShouldBeVisible() {
+        ConnectBtns.eventPropertyRow().should('have.length.at.least', 1);
     }
 
     public static startAdapter(

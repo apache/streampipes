@@ -56,7 +56,6 @@ public class GuessManagement {
   private static final Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
   private final ObjectMapper objectMapper;
-  private final ObjectMapper plainObjectMapper;
 
   public GuessManagement() {
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
@@ -114,7 +113,7 @@ public class GuessManagement {
     var responseString = EntityUtils.toString(httpResponse.getEntity());
 
     if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-      return plainObjectMapper.readValue(responseString, SampleData.class);
+      return objectMapper.readValue(responseString, SampleData.class);
     } else {
       var exception = objectMapper.readValue(responseString, SpLogMessage.class);
       throw new WorkerAdapterException(exception);
