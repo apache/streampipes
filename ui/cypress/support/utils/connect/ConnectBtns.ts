@@ -42,6 +42,10 @@ export class ConnectBtns {
         return cy.dataCy('start-adapter');
     }
 
+    public static adapterNameInput() {
+        return cy.dataCy('sp-adapter-name');
+    }
+
     public static adapterOperationInProgressSpinner() {
         return cy.dataCy('adapter-operation-in-progress-spinner', {
             timeout: 10000,
@@ -78,6 +82,19 @@ export class ConnectBtns {
 
     public static connectNewAdapterCancel() {
         return cy.dataCy('connect-new-adapter-cancel');
+    }
+
+    public static getNewSampleBtn() {
+        return cy.dataCy('connect-get-new-sample-button');
+    }
+    public static refreshSchemaBtn() {
+        return cy.dataCy('connect-refresh-schema-button', { timeout: 10000 });
+    }
+
+    public static connectAdapterAddedSuccessfully() {
+        return cy.dataCy('sp-connect-adapter-success-added', {
+            timeout: 60000,
+        });
     }
 
     // =====================  Adapter settings btns  ==========================

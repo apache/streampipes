@@ -37,7 +37,7 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         ConnectBtns.adapterSettingsNextBtn().click();
 
         ConnectBtns.configureFieldsNextBtn().click();
-        cy.dataCy('sp-adapter-name').type('Test Adapter');
+        ConnectBtns.adapterNameInput().type('Test Adapter');
         ConnectBtns.connectRemoveDuplicateBox().click();
         cy.dataCy('connect-remove-duplicates-input').type('10000');
         ConnectBtns.connectReduceEventRate().click();

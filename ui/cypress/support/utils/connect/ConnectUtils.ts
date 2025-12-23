@@ -137,8 +137,8 @@ export class ConnectUtils {
     }
 
     public static renameAdapter(newName: string) {
-        cy.dataCy('sp-adapter-name').clear().type(newName);
-        cy.dataCy('sp-adapter-name').should('have.value', newName);
+        ConnectBtns.adapterNameInput().clear().type(newName);
+        ConnectBtns.adapterNameInput().should('have.value', newName);
     }
 
     public static addMachineDataSimulator(
@@ -184,11 +184,8 @@ export class ConnectUtils {
      * Clicks next on the adapter settings page
      */
     public static finishAdapterSettings() {
-        // Next Button should not be disabled
-        cy.get('button').contains('Next').parent().should('not.be.disabled');
-
-        // Click next
-        cy.get('button').contains('Next').parent().click();
+        ConnectBtns.adapterSettingsNextBtn().should('not.be.disabled');
+        ConnectBtns.adapterSettingsNextBtn().click();
     }
 
     public static configureFormat(adapterInput: AdapterInput) {
@@ -207,8 +204,12 @@ export class ConnectUtils {
     }
 
     public static finishEventSchemaConfiguration() {
-        ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
         ConnectBtns.configureSchemaNextBtn().click();
+    }
+
+    public static finishConfigureFieldsConfiguration() {
+        ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
+        ConnectBtns.configureFieldsNextBtn().click();
     }
 
     public static startAdapter(
@@ -219,7 +220,7 @@ export class ConnectUtils {
         assetNameList = [],
     ) {
         // Set adapter name
-        cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
+        ConnectBtns.adapterNameInput().type(adapterInput.adapterName);
 
         if (adapterInput.storeInDataLake) {
             cy.dataCy('sp-store-in-datalake', {
@@ -306,14 +307,6 @@ export class ConnectUtils {
             'be.visible',
         );
         ConnectBtns.deleteAdapter().should('have.length', 0);
-    }
-
-    public static storeAndStartEditedAdapter() {
-        ConnectUtils.finishEventSchemaConfiguration();
-        ConnectBtns.storeEditAdapter().click();
-        ConnectBtns.updateAndMigratePipelines().click();
-        ConnectUtils.closeAdapterPreview();
-        ConnectBtns.startAdapter().click();
     }
 
     public static deleteAdapterAndAssociatedPipelines(switchUserCheck = false) {
