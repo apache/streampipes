@@ -34,7 +34,8 @@
             </div>
             <ngx-codemirror
                 style="width: 100%; height: 220px"
-                [(ngModel)]="script"
+                [ngModel]="script()"
+                (ngModelChange)="onCodeChange($event)"
                 [options]="editorOptions"
                 data-cy="event-preview-script-editor"
             ></ngx-codemirror>

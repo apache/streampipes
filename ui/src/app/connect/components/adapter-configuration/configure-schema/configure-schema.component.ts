@@ -24,6 +24,7 @@ import {
     Input,
     OnInit,
     Output,
+    signal,
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterDescription } from '@streampipes/platform-services';
@@ -69,10 +70,10 @@ export class ConfigureSchemaComponent implements OnInit {
                 ?.schemaTransformationConfig?.outputs?.[0] || {},
     );
 
-    script = `// returns the same event
+    script = signal(`// returns the same event
 function transform(event) {
   return event;
-}`;
+}`);
 
     editorOptions = {
         mode: 'javascript',
@@ -93,13 +94,17 @@ function transform(event) {
     }
 
     private initializeScriptVariable(): void {
-        if (this.adapterDescription.schemaTransformationConfig.script != '') {
-            this.script =
-                this.adapterDescription.schemaTransformationConfig.script;
-        } else {
-            this.adapterDescription.schemaTransformationConfig.script =
-                this.script;
-        }
+        // if (this.adapterDescription.schemaTransformationConfig.script != '') {
+        //     this.script =
+        //         this.adapterDescription.schemaTransformationConfig.script;
+        // } else {
+        //     this.adapterDescription.schemaTransformationConfig.script =
+        //         this.script;
+        // }
+    }
+
+    onCodeChange(newCode: string) {
+        this.script.set(newCode);
     }
 
     getSampleEvent(): void {
@@ -107,7 +112,7 @@ function transform(event) {
     }
 
     runScript(): void {
-        this.stateService.runScript(this.adapterDescription, this.script);
+        this.stateService.runScript(this.adapterDescription, this.script());
     }
 
     public cancel() {
