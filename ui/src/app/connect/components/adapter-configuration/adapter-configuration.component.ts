@@ -79,16 +79,15 @@ export class AdapterConfigurationComponent implements OnInit {
     nextAdapterSettings() {
         this.shepherdService.trigger('specific-settings-next-button');
         this.goForward();
-        // TODO check how to change the adatper settings component
         this.stateService.initializeOrUpdateAdapter(this.adapterDescription);
         this.stateService.getSampleEvent(this.adapterDescription);
     }
 
     nextConfigureSchema() {
-        if (
-            this.adapterDescription.eventSchema?.eventProperties?.length === 0
-        ) {
+        if (this.stateService.state().autoLoadSchema) {
             this.stateService.getEventSchema(this.adapterDescription);
+        } else {
+            this.stateService.updateEventPreview(this.adapterDescription);
         }
         this.goForward();
     }

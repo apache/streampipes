@@ -39,6 +39,7 @@ export class AdapterConfigurationStateService {
         isRunningScript: false,
         scriptError: null,
 
+        autoLoadSchema: true,
         isGettingEventSchema: false,
         getEventSchemaError: null,
         isPreviewLoading: false,
@@ -163,6 +164,7 @@ export class AdapterConfigurationStateService {
                 this.updateState({
                     adapterDescription: updatedAdapter,
                     isGettingEventSchema: false,
+                    autoLoadSchema: false,
                 });
 
                 this.updateEventPreview(updatedAdapter);
@@ -171,6 +173,7 @@ export class AdapterConfigurationStateService {
                 this.updateState({
                     isGettingEventSchema: false,
                     getEventSchemaError: err.error,
+                    autoLoadSchema: true,
                 }),
         });
     }

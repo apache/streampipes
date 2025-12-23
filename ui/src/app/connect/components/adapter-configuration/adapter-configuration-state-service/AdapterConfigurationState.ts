@@ -48,6 +48,7 @@ export class AdapterConfigurationState {
     scriptError: SpLogMessage | null;
 
     // configure fields
+    autoLoadSchema: boolean;
     isGettingEventSchema: boolean;
     getEventSchemaError: SpLogMessage | null;
     isPreviewLoading: boolean;
