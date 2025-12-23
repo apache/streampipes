@@ -36,7 +36,7 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         ConnectUtils.selectAdapter(configuration.adapterType);
         ConnectBtns.adapterSettingsNextBtn().click();
 
-        ConnectBtns.schemaNextBtn().click();
+        ConnectBtns.configureFieldsNextBtn().click();
         cy.dataCy('sp-adapter-name').type('Test Adapter');
         ConnectBtns.connectRemoveDuplicateBox().click();
         cy.dataCy('connect-remove-duplicates-input').type('10000');
@@ -50,7 +50,7 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
         ConnectBtns.adapterSettingsNextBtn().click();
-        ConnectBtns.schemaNextBtn().click();
+        ConnectBtns.configureFieldsNextBtn().click();
 
         ConnectBtns.connectRemoveDuplicateBox()
             .find('input')

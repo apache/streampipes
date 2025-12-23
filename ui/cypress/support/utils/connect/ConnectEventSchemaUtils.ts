@@ -39,7 +39,7 @@ export class ConnectEventSchemaUtils {
 
     public static markPropertyAsTimestamp(propertyName: string) {
         // Mark property as timestamp
-        this.eventSchemaNextBtnDisabled();
+        this.configureFieldsNextBtnDisabled();
         // Edit timestamp
 
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
@@ -50,15 +50,15 @@ export class ConnectEventSchemaUtils {
         // Close
         ConnectBtns.saveEditProperty().click();
 
-        this.eventSchemaNextBtnEnabled();
+        this.configureFieldsNextBtnEnabled();
     }
 
     public static addTimestampProperty() {
-        this.eventSchemaNextBtnDisabled();
+        this.configureFieldsNextBtnDisabled();
         cy.dataCy('connect-schema-add-timestamp-btn', {
             timeout: 10000,
         }).click();
-        this.eventSchemaNextBtnEnabled();
+        this.configureFieldsNextBtnEnabled();
     }
 
     public static editTimestampPropertyWithRegex(
@@ -271,12 +271,12 @@ export class ConnectEventSchemaUtils {
         }
     }
 
-    public static eventSchemaNextBtnDisabled() {
-        cy.get('#event-schema-next-button').should('be.disabled');
+    public static configureFieldsNextBtnDisabled() {
+        ConnectBtns.configureFieldsNextBtn().should('be.disabled');
     }
 
-    public static eventSchemaNextBtnEnabled() {
-        cy.get('#event-schema-next-button').parent().should('not.be.disabled');
+    public static configureFieldsNextBtnEnabled() {
+        ConnectBtns.configureFieldsNextBtn().parent().should('not.be.disabled');
     }
 
     public static schemaPreviewResultEvent() {
@@ -284,11 +284,8 @@ export class ConnectEventSchemaUtils {
     }
 
     public static finishEventSchemaConfiguration() {
-        // Click next
-        cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should(
-            'be.visible',
-        );
-        cy.dataCy('sp-event-schema-next-button').click();
+        ConnectEventSchemaUtils.configureFieldsNextBtnEnabled();
+        ConnectBtns.configureFieldsNextBtn().click();
     }
 
     public static clickEditProperty(propertyName: string, validation = true) {

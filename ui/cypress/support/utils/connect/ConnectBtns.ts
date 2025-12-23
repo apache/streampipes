@@ -191,8 +191,20 @@ export class ConnectBtns {
         });
     }
 
-    public static schemaNextBtn() {
-        return cy.dataCy('sp-event-schema-next-button');
+    public static configureSchemaNextBtn() {
+        return cy.dataCy('configure-schema-next-button');
+    }
+
+    public static configureSchemaEventPreviewOriginal() {
+        return cy.dataCy('configure-schema-event-preview-original');
+    }
+
+    public static configureSchemaEventPreviewResult() {
+        return cy.dataCy('configure-schema-event-preview-result');
+    }
+
+    public static configureFieldsNextBtn() {
+        return cy.dataCy('configure-fields-next-button');
     }
 
     public static semanticTypeInput() {

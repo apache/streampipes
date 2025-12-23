@@ -28,6 +28,7 @@ describe('Test Machine Data Simulator Adapter', () => {
         const adapterInput = AdapterBuilder.create('Machine_Data_Simulator')
             .setName('Machine Data Simulator Test')
             .addInput('input', 'wait-time-ms', '1000')
+            .setTimestampProperty('timestamp')
             .build();
 
         ConnectUtils.testAdapter(adapterInput);

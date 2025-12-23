@@ -39,6 +39,8 @@ export class ConnectUtils {
 
         ConnectUtils.configureAdapter(adapterConfiguration);
 
+        ConnectUtils.configureSchema(adapterConfiguration);
+
         if (adapterConfiguration.timestampProperty) {
             ConnectEventSchemaUtils.markPropertyAsTimestamp(
                 adapterConfiguration.timestampProperty,
@@ -109,6 +111,13 @@ export class ConnectUtils {
         ConnectUtils.selectAdapter(adapterInput.adapterType);
 
         ConnectUtils.configureAdapter(adapterInput);
+    }
+
+    private static configureSchema(adapterConfiguration: AdapterInput) {
+        ConnectBtns.configureSchemaEventPreviewOriginal().should('be.visible');
+        ConnectBtns.configureSchemaEventPreviewResult().should('be.visible');
+
+        ConnectBtns.configureSchemaNextBtn().click();
     }
 
     private static configureDimensionProperties(

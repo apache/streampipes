@@ -81,7 +81,7 @@
                         <pre
                             [innerHTML]="input() | jsonpretty"
                             class="preview-text"
-                            data-cy="schema-preview-original-event"
+                            data-cy="configure-schema-event-preview-original"
                         ></pre>
                     }
                 }
@@ -117,7 +117,7 @@
                         <pre
                             [innerHTML]="output() | jsonpretty"
                             class="preview-text"
-                            data-cy="schema-preview-result-event"
+                            data-cy="configure-schema-event-preview-result"
                         ></pre>
                     }
                 }
@@ -138,7 +138,7 @@
         </button>
         <button
             class="stepper-button"
-            data-cy="sp-event-schema-next-button"
+            data-cy="configure-schema-next-button"
             color="accent"
             mat-flat-button
             (click)="next()"
