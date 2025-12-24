@@ -87,14 +87,6 @@ export class SpAssetBrowserService {
             this.reloadFilters();
         });
     }
-    /**
-     * Reloads asset data from the backend.
-     * This method should be called after creating, updating, or deleting assets or asset links
-     * to ensure the filter reflects the latest data.
-     */
-    reloadAssetData(): void {
-        this.loadAssetData();
-    }
 
     private reloadFilters(): void {
         if (
