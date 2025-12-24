@@ -59,12 +59,10 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<?> getSampleData(@RequestBody AdapterDescription adapterDescription) {
+  public ResponseEntity<?> getSampleData(@RequestBody AdapterDescription adapterDescription)
+      throws WorkerAdapterException {
     try {
       return ok(managementService.getSampleData(adapterDescription));
-    } catch (WorkerAdapterException e) {
-      LOG.error(e.getMessage());
-      return serverError(SpLogMessage.from(e));
     } catch (NoServiceEndpointsAvailableException | IOException e) {
       LOG.error(e.getMessage());
       return serverError(SpLogMessage.from(e));
@@ -113,13 +111,19 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE);
   }
 
-  // TODO move this to another place
+  // TODO move these ExceptionHandlers to another place
+  @ExceptionHandler(value = {WorkerAdapterException.class})
+  private ResponseEntity<Object> handleAdapterException(WorkerAdapterException ex, WebRequest request) {
+    var spLogMessageException = ex.getExceptionMessage();
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(spLogMessageException);
+  }
   @ExceptionHandler(value = {AdapterException.class})
   private ResponseEntity<Object> handleAdapterException(AdapterException ex, WebRequest request) {
     var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
     return handleSpLogMessageException(spLogMessageException, request);
   }
-
   @ExceptionHandler(value = {SpLogMessageException.class})
   protected ResponseEntity<Object> handleSpLogMessageException(
       RuntimeException ex, WebRequest request) {
