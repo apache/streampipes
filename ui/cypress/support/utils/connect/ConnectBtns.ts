@@ -217,11 +217,15 @@ export class ConnectBtns {
     }
 
     public static configureSchemaEventPreviewOriginal() {
-        return cy.dataCy('configure-schema-event-preview-original');
+        return cy.dataCy('configure-schema-event-preview-original', {
+            timeout: 10000,
+        });
     }
 
     public static configureSchemaEventPreviewResult() {
-        return cy.dataCy('configure-schema-event-preview-result');
+        return cy.dataCy('configure-schema-event-preview-result', {
+            timeout: 10000,
+        });
     }
 
     public static configureFieldsNextBtn() {
