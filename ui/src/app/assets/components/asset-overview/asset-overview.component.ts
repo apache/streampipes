@@ -163,6 +163,8 @@ export class SpAssetOverviewComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(ev => {
             if (ev) {
+                this.loadAssets();
+                this.assetBrowserService.reloadAssetData();
                 this.goToDetailsView(assetModel, true);
             }
         });
