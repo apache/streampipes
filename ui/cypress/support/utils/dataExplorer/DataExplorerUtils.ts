@@ -704,6 +704,7 @@ export class DataExplorerUtils {
     }
 
     public static waitForCountingResults() {
+        cy.dataCy('datalake-total-count-button').click();
         cy.dataCy('datalake-number-of-events-spinner', {
             timeout: 10000,
         }).should('exist');
