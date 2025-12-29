@@ -77,17 +77,12 @@
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>
                         {{ '# Events (7d)' | translate }}
                     </th>
-                    <td
-                        mat-cell
-                        data-cy="datalake-number-of-events"
-                        *matCellDef="let configurationEntry"
-                    >
+                    <td mat-cell *matCellDef="let configurationEntry">
                         @if (configurationEntry.eventsLatestLoading) {
                             <mat-spinner
                                 [diameter]="20"
                                 fxLayoutAlign="center"
                                 color="accent"
-                                data-cy="datalake-number-of-events-spinner"
                                 >{{ 'Loading' | translate }}
                             </mat-spinner>
                         } @else {
@@ -144,6 +139,7 @@
                                     <sp-label
                                         tone="neutral"
                                         class="cursor-pointer"
+                                        data-cy="datalake-total-count-button"
                                         minWidth="100px"
                                         [labelText]="
                                             'Click to load' | translate
