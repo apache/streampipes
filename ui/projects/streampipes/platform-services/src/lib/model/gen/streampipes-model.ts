@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-16 11:01:04.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-29 11:22:19.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -864,11 +864,10 @@ export class CompactAdapter {
     configuration: { [index: string]: any }[];
     createOptions: CreateOptions;
     description: string;
-    enrich: EnrichmentConfig;
     id: string;
     name: string;
     schema: { [index: string]: CompactEventProperty };
-    transform: TransformationConfig;
+    schemaTransformationConfig: SchemaTransformationConfig;
 
     static fromData(
         data: CompactAdapter,
@@ -884,18 +883,21 @@ export class CompactAdapter {
         )(data.configuration);
         instance.createOptions = CreateOptions.fromData(data.createOptions);
         instance.description = data.description;
-        instance.enrich = EnrichmentConfig.fromData(data.enrich);
         instance.id = data.id;
         instance.name = data.name;
         instance.schema = __getCopyObjectFn(CompactEventProperty.fromData)(
             data.schema,
         );
-        instance.transform = TransformationConfig.fromData(data.transform);
+        instance.schemaTransformationConfig =
+            SchemaTransformationConfig.fromData(
+                data.schemaTransformationConfig,
+            );
         return instance;
     }
 }
 
 export class CompactEventProperty {
+    additionalMetadata: { [index: string]: any };
     description: string;
     label: string;
     propertyScope: string;
@@ -909,6 +911,9 @@ export class CompactEventProperty {
             return data;
         }
         const instance = target || new CompactEventProperty();
+        instance.additionalMetadata = __getCopyObjectFn(__identity<any>())(
+            data.additionalMetadata,
+        );
         instance.description = data.description;
         instance.label = data.label;
         instance.propertyScope = data.propertyScope;
@@ -1591,22 +1596,6 @@ export interface EndpointSelectable {
     detachPath: string;
     name: string;
     selectedEndpointUrl: string;
-}
-
-export class EnrichmentConfig {
-    timestamp: string;
-
-    static fromData(
-        data: EnrichmentConfig,
-        target?: EnrichmentConfig,
-    ): EnrichmentConfig {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new EnrichmentConfig();
-        instance.timestamp = data.timestamp;
-        return instance;
-    }
 }
 
 export class ValueSpecification {
@@ -4325,26 +4314,6 @@ export class TransformOutputStrategy extends OutputStrategy {
         instance.transformOperations = __getCopyArrayFn(
             TransformOperation.fromData,
         )(data.transformOperations);
-        return instance;
-    }
-}
-
-export class TransformationConfig {
-    measurementUnit: { [index: string]: string };
-    rename: { [index: string]: string };
-
-    static fromData(
-        data: TransformationConfig,
-        target?: TransformationConfig,
-    ): TransformationConfig {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new TransformationConfig();
-        instance.measurementUnit = __getCopyObjectFn(__identity<string>())(
-            data.measurementUnit,
-        );
-        instance.rename = __getCopyObjectFn(__identity<string>())(data.rename);
         return instance;
     }
 }

@@ -20,11 +20,14 @@ package org.apache.streampipes.model.connect.adapter.compact;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Map;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CompactEventProperty(
     String label,
     String description,
     String propertyScope,
-    String semanticType
+    String semanticType,
+    Map<String, Object> additionalMetadata
 ) {
 }

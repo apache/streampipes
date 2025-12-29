@@ -48,6 +48,10 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
   )
       throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException, AdapterException {
 
+    if (compactAdapter.schemaTransformationConfig().getScript() != null) {
+      adapterDescription.getSchemaTransformationConfig().setScript(compactAdapter.schemaTransformationConfig().getScript());
+    }
+
     var sampleData = guessManagement.getSampleData(adapterDescription);
     adapterDescription.getSchemaTransformationConfig()
                       .setInputs(sampleData.getSamples());

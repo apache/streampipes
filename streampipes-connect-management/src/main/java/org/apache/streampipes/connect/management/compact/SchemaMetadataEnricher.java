@@ -24,6 +24,9 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.XSD;
 
+import java.net.URI;
+import java.util.Map;
+
 public class SchemaMetadataEnricher {
 
   public void enrich(EventProperty property,
@@ -39,6 +42,17 @@ public class SchemaMetadataEnricher {
     }
     if (property instanceof EventPropertyPrimitive && propertyDef.semanticType() != null) {
       property.setSemanticType(propertyDef.semanticType());
+    }
+
+    if (propertyDef.additionalMetadata().containsKey("fromMeasurementUnit") && propertyDef.additionalMetadata().get("toMeasurementUnit") != null) {
+      String toUnit = propertyDef.additionalMetadata().get("toMeasurementUnit")
+                                 .toString();
+      String fromUnit = propertyDef.additionalMetadata().get("fromMeasurementUnit")
+                                   .toString();
+      ((EventPropertyPrimitive) property).setMeasurementUnit(URI.create(toUnit));
+
+      property.setAdditionalMetadata(Map.of("fromMeasurementUnit", fromUnit,
+                                           "toMeasurementUnit", toUnit));
     }
   }
 

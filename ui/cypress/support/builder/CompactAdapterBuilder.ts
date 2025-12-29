@@ -29,10 +29,6 @@ export class CompactAdapterBuilder {
             persist: false,
             start: false,
         };
-        this.compactAdapter.transform = {
-            rename: {},
-            measurementUnit: {},
-        };
     }
 
     public static create(appId: string) {
@@ -51,8 +47,9 @@ export class CompactAdapterBuilder {
         this.compactAdapter.schema[propertyName] = {
             description: '',
             label: '',
-            propertyScope: 'HEADER_PROPERTY',
+            propertyScope: 'header',
             semanticType: 'http://schema.org/DateTime',
+            additionalMetadata: {},
         };
         return this;
     }
@@ -67,13 +64,36 @@ export class CompactAdapterBuilder {
         return this;
     }
 
-    public withRename(from: string, to: string) {
-        this.compactAdapter.transform.rename[from] = to;
+    public withScript(script: string) {
+        if (!this.compactAdapter.schemaTransformationConfig) {
+            this.compactAdapter.schemaTransformationConfig = {
+                inputs: [],
+                language: 'javascript',
+                outputs: [],
+                script: script,
+            };
+        } else {
+            this.compactAdapter.schemaTransformationConfig.script = script;
+        }
         return this;
     }
 
-    public withMeasurementUnit(property: string, unit: string) {
-        this.compactAdapter.transform.measurementUnit[property] = unit;
+    public withMeasurementUnit(
+        propertyName: string,
+        original: string,
+        target: string,
+    ) {
+        this.compactAdapter.schema[propertyName] = {
+            description: '',
+            label: '',
+            propertyScope: 'measurement',
+            semanticType: '',
+            additionalMetadata: {
+                fromMeasurementUnit: original,
+                toMeasurementUnit: target,
+            },
+        };
+
         return this;
     }
 

@@ -29,7 +29,13 @@ describe('Add Compact Adapters', () => {
     it('Add an adapter and rename a property', () => {
         const newPropertyName = 'temperature_renamed';
         const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
-            .withRename('temperature', newPropertyName)
+            .withScript(
+                'function transform(event) {\n' +
+                    '  event.temperature_renamed = event.temperature \n' +
+                    '  delete event.temperature \n' +
+                    '  return event;\n' +
+                    '}',
+            )
             .setStart()
             .build();
 
@@ -50,8 +56,12 @@ describe('Add Compact Adapters', () => {
 
     it('Add an adapter and change measurement unit', () => {
         const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
+            .withScript(
+                'function transform(event) {\n' + '  return event;\n' + '}',
+            )
             .withMeasurementUnit(
                 'temperature',
+                'http://qudt.org/vocab/unit#DegreeCelsius',
                 'http://qudt.org/vocab/unit#DegreeFahrenheit',
             )
             .setStart()

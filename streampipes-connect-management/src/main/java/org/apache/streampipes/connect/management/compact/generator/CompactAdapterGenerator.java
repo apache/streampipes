@@ -53,7 +53,8 @@ public class CompactAdapterGenerator {
             ep.getLabel(),
             ep.getDescription(),
             ep.getPropertyScope(),
-            ep.getSemanticType()
+            ep.getSemanticType(),
+            ep.getAdditionalMetadata()
         )));
     return map;
   }
