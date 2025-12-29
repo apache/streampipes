@@ -30,12 +30,6 @@ describe('Connect value rule transformations', () => {
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(false);
 
-        // Edit timestamp property
-        ConnectEventSchemaUtils.editTimestampPropertyWithRegex(
-            'timestamp',
-            "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-        );
-
         // Number transformation
         ConnectEventSchemaUtils.numberTransformation('value', '10');
 

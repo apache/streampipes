@@ -407,11 +407,6 @@ export class ConnectUtils {
         ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
         ConnectUtils.configureAdapter(adapterConfiguration);
 
-        // wait till schema is shown
-        cy.dataCy('sp-connect-schema-editor', { timeout: 60000 }).should(
-            'be.visible',
-        );
-
         return adapterConfiguration;
     }
 

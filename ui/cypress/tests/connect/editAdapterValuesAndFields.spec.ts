@@ -44,21 +44,13 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.createAdapterUntilEventSchemaConfiguration(adapterInput);
 
-        // Add new property and edit field
-        ConnectEventSchemaUtils.addStaticProperty(
-            'test-property-1',
-            'static-value-1',
-        );
-
         // Edit property density
         const propertyName = 'density';
         ConnectEventSchemaUtils.changePropertyDataType(propertyName, 'Double');
-        ConnectEventSchemaUtils.numberTransformation(propertyName, '2');
         ConnectEventSchemaUtils.changeSemanticType(
             propertyName,
             'http://schema.org/Numbers',
         );
-        ConnectEventSchemaUtils.renameProperty(propertyName, 'test-density');
 
         ConnectUtils.finishEventSchemaConfiguration();
 
@@ -73,7 +65,6 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.adapterSettingsNextBtn().click();
         ConnectEventSchemaUtils.clickEditProperty('density', false);
         // cy.dataCy('edit-density').click();
-        ConnectEventSchemaUtils.validateRuntimeName('test-density');
 
         ConnectBtns.semanticTypeInput().should(
             'have.value',

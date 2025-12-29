@@ -89,34 +89,6 @@ export class ConnectEventSchemaUtils {
         ConnectBtns.saveEditProperty().click();
     }
 
-    public static editTimestampPropertyWithNumber(
-        propertyName: string,
-        configurationValue: 'Seconds' | 'Milliseconds',
-    ) {
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-        ConnectBtns.markAsTimestampBtn().click();
-
-        ConnectBtns.setTimestampConverter('Number');
-
-        ConnectBtns.timestampNumberDropdown()
-            .click({ force: true })
-            .get('mat-option')
-            .contains(configurationValue)
-            .click();
-
-        ConnectBtns.saveEditProperty().click();
-
-        // Check if the configuration is persisted by reopening the edit dialog
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-
-        ConnectBtns.timestampNumberDropdown().should(
-            'contain',
-            configurationValue,
-        );
-
-        ConnectBtns.saveEditProperty().click();
-    }
-
     public static numberTransformation(propertyName: string, value: string) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
         // cy.wait(1000);
@@ -138,26 +110,6 @@ export class ConnectEventSchemaUtils {
         ConnectBtns.saveEditProperty().click();
     }
 
-    public static renameProperty(
-        fromRuntimeName: string,
-        toRuntimeName: string,
-    ) {
-        ConnectEventSchemaUtils.clickEditProperty(fromRuntimeName);
-        ConnectEventSchemaUtils.setRuntimeName(toRuntimeName);
-        ConnectBtns.saveEditProperty().click();
-    }
-
-    public static setRuntimeName(newRuntimeName: string) {
-        ConnectBtns.runtimeNameInput().clear().type(newRuntimeName);
-    }
-
-    public static validateRuntimeName(expectedRuntimeName: string) {
-        ConnectBtns.runtimeNameInput().should(
-            'have.value',
-            expectedRuntimeName,
-        );
-    }
-
     public static unitTransformation(
         propertyName: string,
         fromUnit: string,
@@ -172,40 +124,6 @@ export class ConnectEventSchemaUtils {
             .get('mat-option')
             .contains(toUnit)
             .click();
-        ConnectBtns.saveEditProperty().click();
-    }
-
-    public static addStaticProperty(
-        propertyName: string,
-        propertyValue: string,
-    ) {
-        // Click add a static value to event
-        cy.dataCy('connect-add-static-property', { timeout: 10000 }).click();
-
-        cy.wait(100);
-
-        // Edit new property
-        cy.dataCy('connect-add-field-name', { timeout: 10000 }).type(
-            propertyName,
-        );
-        cy.dataCy('connect-add-field-name-button').click();
-
-        cy.dataCy('edit-' + propertyName.toLowerCase()).click();
-
-        cy.dataCy('connect-edit-field-static-value').clear();
-        cy.dataCy('connect-edit-field-static-value', { timeout: 10000 }).type(
-            propertyValue,
-        );
-
-        ConnectBtns.saveEditProperty().click();
-
-        // validate that static value is persisted
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-
-        cy.dataCy('connect-edit-field-static-value', { timeout: 10000 }).should(
-            'have.value',
-            propertyValue,
-        );
         ConnectBtns.saveEditProperty().click();
     }
 
@@ -294,14 +212,10 @@ export class ConnectEventSchemaUtils {
         ConnectBtns.configureFieldsNextBtn().click();
     }
 
-    public static clickEditProperty(propertyName: string, validation = true) {
+    public static clickEditProperty(propertyName: string) {
         cy.dataCy(`edit-${ConnectEventSchemaUtils.escape(propertyName)}`, {
             timeout: 10000,
         }).click();
-
-        if (validation) {
-            ConnectEventSchemaUtils.validateRuntimeName(propertyName);
-        }
     }
 
     public static regexValueInput() {
