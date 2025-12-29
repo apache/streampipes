@@ -89,27 +89,6 @@ export class ConnectEventSchemaUtils {
         ConnectBtns.saveEditProperty().click();
     }
 
-    public static numberTransformation(propertyName: string, value: string) {
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-        // cy.wait(1000);
-        ConnectBtns.connectSchemaCorrectionValueInput().type(value);
-        ConnectBtns.connectSchemaCorrectionOperatorInput()
-            .click()
-            .get('mat-option')
-            .contains('Multiply')
-            .click();
-
-        ConnectBtns.saveEditProperty().click();
-        cy.dataCy('edit-' + propertyName.toLowerCase(), {
-            timeout: 10000,
-        }).click({ force: true });
-        ConnectBtns.connectSchemaCorrectionValueInput().should(
-            'have.value',
-            value,
-        );
-        ConnectBtns.saveEditProperty().click();
-    }
-
     public static unitTransformation(
         propertyName: string,
         fromUnit: string,
@@ -125,22 +104,6 @@ export class ConnectEventSchemaUtils {
             .contains(toUnit)
             .click();
         ConnectBtns.saveEditProperty().click();
-    }
-
-    public static deleteProperty(propertyName: string) {
-        cy.dataCy('"delete-property-' + propertyName + '"', { timeout: 10000 })
-            .children()
-            .click({ force: true });
-        cy.dataCy('connect-schema-delete-properties-btn', {
-            timeout: 10000,
-        }).click({ force: true });
-
-        // The following two commands are required to fix flaky tests
-        // if another solution can be found, it can be removed
-        cy.wait(200);
-        cy.dataCy('connect-schema-update-preview-btn', {
-            timeout: 10000,
-        }).click({ force: true });
     }
 
     public static changePropertyDataTypes(

@@ -29,8 +29,10 @@ import java.util.Map;
 
 public class SchemaMetadataEnricher {
 
-  public void enrich(EventProperty property,
-                     CompactEventProperty propertyDef) {
+  public void enrich(
+      EventProperty property,
+      CompactEventProperty propertyDef
+  ) {
     if (propertyDef.propertyScope() != null) {
       property.setPropertyScope(convertScope(propertyDef.propertyScope()).name());
     }
@@ -44,15 +46,24 @@ public class SchemaMetadataEnricher {
       property.setSemanticType(propertyDef.semanticType());
     }
 
-    if (propertyDef.additionalMetadata().containsKey("fromMeasurementUnit") && propertyDef.additionalMetadata().get("toMeasurementUnit") != null) {
-      String toUnit = propertyDef.additionalMetadata().get("toMeasurementUnit")
+    if (propertyDef.additionalMetadata() != null
+        && propertyDef.additionalMetadata()
+                      .containsKey("fromMeasurementUnit")
+        && propertyDef.additionalMetadata()
+                      .get(
+                          "toMeasurementUnit") != null) {
+      String toUnit = propertyDef.additionalMetadata()
+                                 .get("toMeasurementUnit")
                                  .toString();
-      String fromUnit = propertyDef.additionalMetadata().get("fromMeasurementUnit")
+      String fromUnit = propertyDef.additionalMetadata()
+                                   .get("fromMeasurementUnit")
                                    .toString();
       ((EventPropertyPrimitive) property).setMeasurementUnit(URI.create(toUnit));
 
-      property.setAdditionalMetadata(Map.of("fromMeasurementUnit", fromUnit,
-                                           "toMeasurementUnit", toUnit));
+      property.setAdditionalMetadata(Map.of(
+          "fromMeasurementUnit", fromUnit,
+          "toMeasurementUnit", toUnit
+      ));
     }
   }
 

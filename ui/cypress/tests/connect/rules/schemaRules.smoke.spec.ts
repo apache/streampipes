@@ -32,14 +32,12 @@ describe('Connect schema rule transformations', () => {
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(true);
 
-        ConnectBtns.configureSchemaScriptEditor()
-            .type('{backspace}'.repeat(17)) // 2. Delete the "  return event;\n}" part
-            .type(
-                "  event['dot'] = event ['contains.dot'];\n" +
-                    "  delete event['contains.dot'];\n" +
-                    '  return event;\n' +
-                    '}',
-            );
+        ConnectUtils.replaceAdapterScript(
+            "  event['dot'] = event ['contains.dot'];\n" +
+                "  delete event['contains.dot'];\n" +
+                '  return event;\n' +
+                '}',
+        );
 
         ConnectBtns.configureSchemaRunScriptBtn().click();
 

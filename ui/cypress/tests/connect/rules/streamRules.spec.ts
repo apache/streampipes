@@ -30,8 +30,11 @@ describe('Connect aggregation rule transformations', () => {
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(false);
 
+        cy.wait(1000);
+        ConnectUtils.finishEventSchemaConfiguration();
+
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectUtils.finishConfigureFieldsConfiguration();
 
         cy.dataCy('connect-reduce-event-rate-box').children().click();
         cy.dataCy('connect-reduce-event-input').type('2000');
@@ -54,8 +57,11 @@ describe('Remove duplicates rule transformations', () => {
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(false);
 
+        cy.wait(1000);
+        ConnectUtils.finishEventSchemaConfiguration();
+
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectUtils.finishConfigureFieldsConfiguration();
 
         cy.dataCy('connect-remove-duplicates-box').children().click();
         cy.dataCy('connect-remove-duplicates-input').type('10000');

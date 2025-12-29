@@ -28,10 +28,10 @@ describe('Connect value rule transformations', () => {
 
     it('Perform Test', () => {
         const adapterConfiguration =
-            ConnectUtils.setUpPreprocessingRuleTest(false);
+            ConnectUtils.setUpPreprocessingRuleTest(true);
 
-        // Number transformation
-        ConnectEventSchemaUtils.numberTransformation('value', '10');
+        cy.wait(1000);
+        ConnectUtils.finishEventSchemaConfiguration();
 
         // Unit transformation
         ConnectEventSchemaUtils.unitTransformation(
@@ -40,12 +40,13 @@ describe('Connect value rule transformations', () => {
             'Degree Fahrenheit',
         );
 
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+        ConnectUtils.finishConfigureFieldsConfiguration();
 
         ConnectUtils.tearDownPreprocessingRuleTest(
             adapterConfiguration,
             'cypress/fixtures/connect/valueRules/expected.csv',
-            false,
+            true,
             2000,
         );
     });

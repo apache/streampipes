@@ -195,12 +195,10 @@ const makeAdapterInputTemplate = (): AdapterBuilder => {
 
 const validateResult = expected => {
     //ConnectBtns.formatSelectionNextBtn().click();
-    cy.dataCy('schema-preview-original-event', { timeout: 10000 }).then(
-        value => {
-            const jsonResult = removeWhitespaceExceptInQuotes(value.text());
-            expect(jsonResult).to.deep.equal(expected);
-        },
-    );
+    ConnectBtns.configureSchemaEventPreviewOriginal().then(value => {
+        const jsonResult = removeWhitespaceExceptInQuotes(value.text());
+        expect(jsonResult).to.deep.equal(expected);
+    });
 };
 
 const removeWhitespaceExceptInQuotes = (input: string): string => {

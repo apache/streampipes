@@ -56,9 +56,7 @@ describe('Add Compact Adapters', () => {
 
     it('Add an adapter and change measurement unit', () => {
         const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
-            .withScript(
-                'function transform(event) {\n' + '  return event;\n' + '}',
-            )
+
             .withMeasurementUnit(
                 'temperature',
                 'http://qudt.org/vocab/unit#DegreeCelsius',

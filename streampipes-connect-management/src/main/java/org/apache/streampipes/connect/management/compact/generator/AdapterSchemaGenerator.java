@@ -48,8 +48,11 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
   )
       throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException, AdapterException {
 
-    if (compactAdapter.schemaTransformationConfig().getScript() != null) {
-      adapterDescription.getSchemaTransformationConfig().setScript(compactAdapter.schemaTransformationConfig().getScript());
+    if (compactAdapter.schemaTransformationConfig() != null && compactAdapter.schemaTransformationConfig()
+                                                                             .getScript() != null) {
+      adapterDescription.getSchemaTransformationConfig()
+                        .setScript(compactAdapter.schemaTransformationConfig()
+                                                 .getScript());
     }
 
     var sampleData = guessManagement.getSampleData(adapterDescription);
@@ -86,8 +89,8 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
     if (adapterDescription.getSchemaTransformationConfig()
                           .getScript() == null
         || adapterDescription.getSchemaTransformationConfig()
-                          .getScript()
-                          .isEmpty()) {
+                             .getScript()
+                             .isEmpty()) {
       adapterDescription.getSchemaTransformationConfig()
                         .setScript("""
                                    function transform(event) {
@@ -100,10 +103,10 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
 
   private void setDefaultScriptLanguageIfNotSet(AdapterDescription adapterDescription) {
     if (adapterDescription.getSchemaTransformationConfig()
-        .getLanguage() == null
+                          .getLanguage() == null
         || adapterDescription.getSchemaTransformationConfig()
-                          .getLanguage()
-                          .isEmpty()) {
+                             .getLanguage()
+                             .isEmpty()) {
       adapterDescription.getSchemaTransformationConfig()
                         .setLanguage("javascript");
     }
