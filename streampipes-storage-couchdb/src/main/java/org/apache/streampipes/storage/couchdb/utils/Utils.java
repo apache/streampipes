@@ -30,6 +30,7 @@ import org.apache.http.entity.ContentType;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 
+@Deprecated
 public class Utils {
 
   public static final String USER_DB_NAME = "users";
