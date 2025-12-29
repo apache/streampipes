@@ -76,6 +76,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.config = new ArrayList<>();
     this.dataStream = new SpDataStream();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
+    this.schemaTransformationConfig = new SchemaTransformationConfig();
   }
 
   public AdapterDescription(int version) {
@@ -85,6 +86,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.config = new ArrayList<>();
     this.dataStream = new SpDataStream();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
+    this.schemaTransformationConfig = new SchemaTransformationConfig();
     this.setVersion(version);
   }
 

@@ -65,7 +65,8 @@ public class GuessManagement {
   @Deprecated
   public GuessSchema guessSchemaOld(AdapterDescription adapterDescription)
       throws ParseException, WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
-    SecretProvider.getDecryptionService().apply(adapterDescription);
+    SecretProvider.getDecryptionService()
+                  .apply(adapterDescription);
     var workerUrl = getWorkerUrl(adapterDescription, WorkerPaths.getGuessSchemaPath());
     var description = objectMapper.writeValueAsString(adapterDescription);
 
@@ -77,7 +78,8 @@ public class GuessManagement {
     var httpResponse = requestResponse.returnResponse();
     var responseString = EntityUtils.toString(httpResponse.getEntity());
 
-    if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+    if (httpResponse.getStatusLine()
+                    .getStatusCode() == HttpStatus.SC_OK) {
       return objectMapper.readValue(responseString, GuessSchema.class);
     } else {
       var exception = objectMapper.readValue(responseString, SpLogMessage.class);
@@ -86,7 +88,9 @@ public class GuessManagement {
   }
 
   public EventSchema guessSchema(AdapterDescription adapterDescription) {
-    var event = adapterDescription.getSchemaTransformationConfig().getOutputs().get(0);
+    var event = adapterDescription.getSchemaTransformationConfig()
+                                  .getOutputs()
+                                  .get(0);
     return EventSchemaUtils.guessEventSchema(event);
   }
 
@@ -97,7 +101,8 @@ public class GuessManagement {
   public SampleData getSampleData(AdapterDescription adapterDescription)
       throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
 
-    SecretProvider.getDecryptionService().apply(adapterDescription);
+    SecretProvider.getDecryptionService()
+                  .apply(adapterDescription);
 
     var workerUrl = getWorkerUrl(adapterDescription, WorkerPaths.getSamplePath());
 
@@ -112,7 +117,8 @@ public class GuessManagement {
 
     var responseString = EntityUtils.toString(httpResponse.getEntity());
 
-    if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+    if (httpResponse.getStatusLine()
+                    .getStatusCode() == HttpStatus.SC_OK) {
       return objectMapper.readValue(responseString, SampleData.class);
     } else {
       var exception = objectMapper.readValue(responseString, SpLogMessage.class);
@@ -121,32 +127,50 @@ public class GuessManagement {
   }
 
   public AdapterDescription transformSampleData(AdapterDescription adapterDescription) throws AdapterException {
-    try {
-      var transformationScript = adapterDescription.getSchemaTransformationConfig();
-      var engine = TransformationEngines.INSTANCE.getTransformationEngine(transformationScript.getLanguage());
-      var compiledScript = engine.compile(transformationScript.getScript());
+    if (adapterDescription.getSchemaTransformationConfig()
+                          .getScript() == null || adapterDescription.getSchemaTransformationConfig()
+                                                                    .getLanguage() == null) {
+      adapterDescription.getSchemaTransformationConfig()
+                        .setOutputs(adapterDescription.getSchemaTransformationConfig().getInputs());
 
-      var samples = adapterDescription.getSchemaTransformationConfig().getInputs();
-      if (!samples.isEmpty()) {
-        var result = compiledScript.transform(samples.get(0));
+    } else {
 
-        adapterDescription.getSchemaTransformationConfig().setOutputs(List.of(result));
-        return adapterDescription;
-      } else {
-        throw new AdapterException("No samples available to transform");
+      try {
+
+
+        var transformationScript = adapterDescription.getSchemaTransformationConfig();
+        var engine = TransformationEngines.INSTANCE.getTransformationEngine(transformationScript.getLanguage());
+        var compiledScript = engine.compile(transformationScript.getScript());
+
+        var samples = adapterDescription.getSchemaTransformationConfig()
+                                        .getInputs();
+        if (!samples.isEmpty()) {
+          var result = compiledScript.transform(samples.get(0));
+
+          adapterDescription.getSchemaTransformationConfig()
+                            .setOutputs(List.of(result));
+        } else {
+          throw new AdapterException("No samples available to transform");
+        }
+
+      } catch (ScriptCompilationException | ScriptExecutionException e) {
+        throw new AdapterException(String.format("Could not execute script: %s", e.getMessage()));
       }
-
-    } catch (ScriptCompilationException | ScriptExecutionException e) {
-      throw new AdapterException(String.format("Could not execute script: %s", e.getMessage()));
     }
+
+    return adapterDescription;
   }
 
-  private String getWorkerUrl(AdapterDescription adapterDescription,
-                              String suffix) throws NoServiceEndpointsAvailableException {
+  private String getWorkerUrl(
+      AdapterDescription adapterDescription,
+      String suffix
+  ) throws NoServiceEndpointsAvailableException {
     var baseUrl = endpointGenerator.getEndpointBaseUrl(
         adapterDescription.getAppId(),
         SpServiceUrlProvider.ADAPTER,
-        adapterDescription.getDeploymentConfiguration().getDesiredServiceTags());
+        adapterDescription.getDeploymentConfiguration()
+                          .getDesiredServiceTags()
+    );
 
     return baseUrl + suffix;
   }

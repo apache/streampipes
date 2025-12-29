@@ -19,12 +19,12 @@
 package org.apache.streampipes.connect.management.compact.generator;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.compact.SchemaMetadataEnricher;
 import org.apache.streampipes.connect.management.management.GuessManagement;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import java.io.IOException;
 
@@ -33,29 +33,75 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
   private final SchemaMetadataEnricher enricher;
   private final GuessManagement guessManagement;
 
-  public AdapterSchemaGenerator(SchemaMetadataEnricher enricher,
-                                GuessManagement guessManagement) {
+  public AdapterSchemaGenerator(
+      SchemaMetadataEnricher enricher,
+      GuessManagement guessManagement
+  ) {
     this.enricher = enricher;
     this.guessManagement = guessManagement;
   }
 
   @Override
-  public void apply(AdapterDescription adapterDescription,
-                    CompactAdapter compactAdapter)
-      throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
+  public void apply(
+      AdapterDescription adapterDescription,
+      CompactAdapter compactAdapter
+  )
+      throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException, AdapterException {
 
-    GuessSchema result = guessManagement.guessSchemaOld(adapterDescription);
-    adapterDescription.getDataStream().setEventSchema(result.getEventSchema());
+    var sampleData = guessManagement.getSampleData(adapterDescription);
+    adapterDescription.getSchemaTransformationConfig()
+                      .setInputs(sampleData.getSamples());
+
+    setDefaultScriptIfNotSet(adapterDescription);
+    setDefaultScriptLanguageIfNotSet(adapterDescription);
+
+    guessManagement.transformSampleData(adapterDescription);
+
+    var eventSchema = guessManagement.guessSchema(adapterDescription);
+    if (eventSchema != null) {
+      adapterDescription.getDataStream()
+                        .setEventSchema(eventSchema);
+    }
 
     var schemaDef = compactAdapter.schema();
 
     if (schemaDef != null) {
-      adapterDescription.getDataStream().getEventSchema().getEventProperties().forEach(ep -> {
-        if (schemaDef.containsKey(ep.getRuntimeName())) {
-          var compactPropertyDef = schemaDef.get(ep.getRuntimeName());
-          enricher.enrich(ep, compactPropertyDef);
-        }
-      });
+      adapterDescription.getDataStream()
+                        .getEventSchema()
+                        .getEventProperties()
+                        .forEach(ep -> {
+                          if (schemaDef.containsKey(ep.getRuntimeName())) {
+                            var compactPropertyDef = schemaDef.get(ep.getRuntimeName());
+                            enricher.enrich(ep, compactPropertyDef);
+                          }
+                        });
+    }
+  }
+
+  private void setDefaultScriptIfNotSet(AdapterDescription adapterDescription) {
+    if (adapterDescription.getSchemaTransformationConfig()
+                          .getScript() == null
+        || adapterDescription.getSchemaTransformationConfig()
+                          .getScript()
+                          .isEmpty()) {
+      adapterDescription.getSchemaTransformationConfig()
+                        .setScript("""
+                                   function transform(event) {
+                                     return event;
+                                   }
+                                   """);
+
+    }
+  }
+
+  private void setDefaultScriptLanguageIfNotSet(AdapterDescription adapterDescription) {
+    if (adapterDescription.getSchemaTransformationConfig()
+        .getLanguage() == null
+        || adapterDescription.getSchemaTransformationConfig()
+                          .getLanguage()
+                          .isEmpty()) {
+      adapterDescription.getSchemaTransformationConfig()
+                        .setLanguage("javascript");
     }
   }
 }

@@ -94,10 +94,10 @@ function transform(event) {
     }
 
     private initializeScriptVariable(): void {
-        if (this.adapterDescription.schemaTransformationConfig.script != '') {
-            this.script.set(
-                this.adapterDescription.schemaTransformationConfig.script,
-            );
+        const currentScript =
+            this.adapterDescription.schemaTransformationConfig.script;
+        if (currentScript) {
+            this.script.set(currentScript);
         } else {
             this.adapterDescription.schemaTransformationConfig.script =
                 this.script();

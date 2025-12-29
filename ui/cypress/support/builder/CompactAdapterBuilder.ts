@@ -23,6 +23,7 @@ export class CompactAdapterBuilder {
 
     constructor() {
         this.compactAdapter = new CompactAdapter();
+        this.compactAdapter.schema = {};
         this.compactAdapter.configuration = [];
         this.compactAdapter.createOptions = {
             persist: false,
@@ -43,6 +44,16 @@ export class CompactAdapterBuilder {
     // Optional parameter, when not set a random id will be generated
     public setId(id: string) {
         this.compactAdapter.id = id;
+        return this;
+    }
+
+    public withTimestampProperty(propertyName: string) {
+        this.compactAdapter.schema[propertyName] = {
+            description: '',
+            label: '',
+            propertyScope: 'HEADER_PROPERTY',
+            semanticType: 'http://schema.org/DateTime',
+        };
         return this;
     }
 
