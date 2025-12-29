@@ -121,6 +121,7 @@ export class OpcUaUtils {
             );
 
         builder.setAutoAddTimestampPropery();
+        builder.setTimestampProperty('timestamp');
 
         return builder;
     }

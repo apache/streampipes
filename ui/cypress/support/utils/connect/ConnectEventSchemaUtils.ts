@@ -54,11 +54,17 @@ export class ConnectEventSchemaUtils {
     }
 
     public static addTimestampProperty() {
-        this.configureFieldsNextBtnDisabled();
-        cy.dataCy('connect-schema-add-timestamp-btn', {
-            timeout: 10000,
-        }).click();
-        this.configureFieldsNextBtnEnabled();
+        this.addTimestampFieldToScript();
+        ConnectBtns.configureSchemaRunScriptBtn().click();
+        ConnectBtns.configureSchemaEventPreviewResult().contains('timestamp');
+    }
+
+    private static addTimestampFieldToScript() {
+        ConnectBtns.configureSchemaScriptEditor()
+            .type('{backspace}'.repeat(17)) // 2. Delete the "  return event;\n}" part
+            .type(
+                '  event.timestamp = new Date().getTime();{enter}return event;{enter}}',
+            );
     }
 
     public static editTimestampPropertyWithRegex(

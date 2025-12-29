@@ -86,7 +86,16 @@ const editAdapterTest = (adapterInput: AdapterInput) => {
     // Remove a node and validate that resulting events do not contain the property
     TreeStaticPropertyUtils.removeSelectedNode('ns=3;s=RandomUnsignedInt32');
     ConnectUtils.finishAdapterSettings();
-    ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+
+    // Currently the user must trigger get sample manually, this should be automated in the future
+    ConnectBtns.getNewSampleBtn().click();
+    ConnectUtils.finishEventSchemaConfiguration();
+    // Same as for new sample, once automated, this can be removed
+    cy.wait(1000);
+    ConnectBtns.refreshSchemaBtn().click();
+    ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+    ConnectUtils.finishConfigureFieldsConfiguration();
+
     ConnectBtns.storeEditAdapter().click();
     ConnectUtils.closeAdapterPreview();
     ConnectUtils.validateEventsInPreview(adapterInput.adapterName, 4);

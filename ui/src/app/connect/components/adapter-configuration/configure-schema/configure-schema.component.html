@@ -26,6 +26,7 @@
                     color="accent"
                     mat-button
                     matTooltip="Run script"
+                    data-cy="configure-schema-run-script-button"
                     (click)="runScript()"
                 >
                     <mat-icon>play_circle_filled</mat-icon>
@@ -37,7 +38,7 @@
                 [ngModel]="script()"
                 (ngModelChange)="onCodeChange($event)"
                 [options]="editorOptions"
-                data-cy="event-preview-script-editor"
+                data-cy="configure-schema-script-editor"
             ></ngx-codemirror>
         </sp-basic-inner-panel>
     </div>

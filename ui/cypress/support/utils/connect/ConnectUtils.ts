@@ -49,10 +49,6 @@ export class ConnectUtils {
             );
         }
 
-        if (adapterConfiguration.autoAddTimestamp) {
-            ConnectEventSchemaUtils.addTimestampProperty();
-        }
-
         ConnectEventSchemaUtils.changePropertyDataTypes(
             adapterConfiguration.dataTypeChanges,
         );
@@ -124,6 +120,10 @@ export class ConnectUtils {
     private static configureSchema(adapterConfiguration: AdapterInput) {
         ConnectBtns.configureSchemaEventPreviewOriginal().should('be.visible');
         ConnectBtns.configureSchemaEventPreviewResult().should('be.visible');
+
+        if (adapterConfiguration.autoAddTimestamp) {
+            ConnectEventSchemaUtils.addTimestampProperty();
+        }
 
         ConnectBtns.configureSchemaNextBtn().click();
     }

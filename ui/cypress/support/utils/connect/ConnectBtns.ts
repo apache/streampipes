@@ -216,6 +216,18 @@ export class ConnectBtns {
         return cy.dataCy('event-property-row', { timeout: 10000 });
     }
 
+    public static configureSchemaScriptEditor() {
+        return cy.dataCy('configure-schema-script-editor', {
+            timeout: 10000,
+        });
+    }
+
+    public static configureSchemaRunScriptBtn() {
+        return cy.dataCy('configure-schema-run-script-button', {
+            timeout: 10000,
+        });
+    }
+
     public static configureSchemaEventPreviewOriginal() {
         return cy.dataCy('configure-schema-event-preview-original', {
             timeout: 10000,
