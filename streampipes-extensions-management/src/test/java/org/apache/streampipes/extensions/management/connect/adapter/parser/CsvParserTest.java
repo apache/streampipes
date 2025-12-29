@@ -28,6 +28,7 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.junit.jupiter.api.Test;
 
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +69,7 @@ public class CsvParserTest extends ParserTest {
     assertEquals(sampleExpected.getFieldStatusInfo(), result.getFieldStatusInfo());
 
     String preview = result.getEventPreview().get(0).toString();
+    preview = preview.replaceAll("[\\s\\n\\r]+", "");
     assertTrue(preview.equals("{\"k2\":2.0,\"k1\":\"v1\"}") || preview.equals("{\"k1\":\"v1\",\"k2\":2.0}"));
   }
 
@@ -83,6 +85,7 @@ public class CsvParserTest extends ParserTest {
     assertEquals(sampleExpected.getFieldStatusInfo(), result.getFieldStatusInfo());
 
     String preview = result.getEventPreview().get(0).toString();
+     preview = preview.replaceAll("[\\s\\n\\r]+", "");
     assertTrue(preview.equals("{\"k2\":2.0,\"k1\":\"v1\"}") || preview.equals("{\"k1\":\"v1\",\"k2\":2.0}"));
   }
 

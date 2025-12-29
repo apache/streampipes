@@ -24,10 +24,11 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.util.
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+ 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.geojson.Feature;
 import org.geojson.LineString;
 import org.geojson.MultiLineString;
@@ -53,7 +54,9 @@ public class GeoJsonParser extends JsonParser {
   public GuessSchema getGuessSchema(InputStream inputStream) {
     Feature geoFeature = null;
     try {
-      geoFeature = new ObjectMapper().readValue(inputStream, Feature.class);
+      geoFeature = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    )).readValue(inputStream, Feature.class);
 
     } catch (IOException e) {
       throw new ParseException("Could not parse geo json into a feature type", e);
