@@ -23,7 +23,6 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
@@ -59,14 +58,13 @@ public class AvroParser implements IParser {
   public static final String SCHEMA_REGISTRY = "schemaRegistry";
   public static final String FLATTEN_RECORDS = "flattenRecord";
 
-  private final ParserUtils parserUtils;
   private DatumReader<GenericRecord> datumReader;
   private boolean schemaRegistry;
   private boolean flattenRecord;
 
 
   public AvroParser() {
-    parserUtils = new ParserUtils();
+
   }
 
   public AvroParser(String schemaString, boolean schemaRegistry, boolean flattenRecord) {
@@ -104,13 +102,6 @@ public class AvroParser implements IParser {
       .build();
   }
 
-
-  @Override
-  public GuessSchema getGuessSchema(InputStream inputStream) throws ParseException {
-    GenericRecord avroRecord = getRecord(inputStream);
-    var event = toMap(avroRecord);
-    return parserUtils.getGuessSchema(event);
-  }
 
   @Override
   public SampleData getSampleData(InputStream inputStream) throws AdapterException {

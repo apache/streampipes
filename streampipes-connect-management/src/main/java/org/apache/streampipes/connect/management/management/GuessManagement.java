@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.management.AdapterEventPreviewPipeline;
 import org.apache.streampipes.connect.management.util.EventSchemaUtils;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
@@ -32,7 +31,6 @@ import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointG
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -42,7 +40,6 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.fluent.Response;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,31 +57,6 @@ public class GuessManagement {
   public GuessManagement() {
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
     this.objectMapper = JacksonSerializer.getObjectMapper();
-  }
-
-  @Deprecated
-  public GuessSchema guessSchemaOld(AdapterDescription adapterDescription)
-      throws ParseException, WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
-    SecretProvider.getDecryptionService()
-                  .apply(adapterDescription);
-    var workerUrl = getWorkerUrl(adapterDescription, WorkerPaths.getGuessSchemaPath());
-    var description = objectMapper.writeValueAsString(adapterDescription);
-
-    LOG.debug("Calling guess schema at: {}", workerUrl);
-    Response requestResponse = ExtensionServiceExecutions
-        .extServicePostRequest(workerUrl, description)
-        .execute();
-
-    var httpResponse = requestResponse.returnResponse();
-    var responseString = EntityUtils.toString(httpResponse.getEntity());
-
-    if (httpResponse.getStatusLine()
-                    .getStatusCode() == HttpStatus.SC_OK) {
-      return objectMapper.readValue(responseString, GuessSchema.class);
-    } else {
-      var exception = objectMapper.readValue(responseString, SpLogMessage.class);
-      throw new WorkerAdapterException(exception);
-    }
   }
 
   public EventSchema guessSchema(AdapterDescription adapterDescription) {

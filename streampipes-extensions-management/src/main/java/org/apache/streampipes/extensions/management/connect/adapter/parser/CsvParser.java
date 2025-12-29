@@ -26,7 +26,6 @@ import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.Tuple2;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -65,13 +64,12 @@ public class CsvParser implements IParser {
 
   public static final String DESCRIPTION = "Can be used to read CSV";
 
-  private final ParserUtils parserUtils;
 
   private boolean header;
   private char delimiter;
 
   public CsvParser() {
-    parserUtils = new ParserUtils();
+
   }
 
   public CsvParser(boolean header, char delimiter) {
@@ -110,17 +108,6 @@ public class CsvParser implements IParser {
                                        List.of(new Option("Header", "Header"))
                                    )
                                    .build();
-  }
-
-  @Override
-  public GuessSchema getGuessSchema(InputStream inputStream) throws ParseException {
-    var csvReader = getCsvReader(inputStream);
-
-    var headerAndSample = getHeaderAndFirstSample(csvReader);
-
-    var event = toMap(headerAndSample.k, headerAndSample.v, true);
-
-    return parserUtils.getGuessSchema(event);
   }
 
   @Override

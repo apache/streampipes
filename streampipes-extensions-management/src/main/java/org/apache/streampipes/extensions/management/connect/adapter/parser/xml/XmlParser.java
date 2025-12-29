@@ -22,9 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
@@ -52,17 +50,14 @@ public class XmlParser implements IParser {
   private String tag;
   private final XmlMapper xmlMapper;
 
-  private final ParserUtils parserUtils;
 
   public XmlParser() {
     xmlMapper = new XmlMapper();
-    parserUtils = new ParserUtils();
   }
 
   public XmlParser(String tag) {
     this.tag = tag;
     xmlMapper = new XmlMapper();
-    parserUtils = new ParserUtils();
   }
 
   @Override
@@ -80,13 +75,6 @@ public class XmlParser implements IParser {
     var configuredTag = extractor.singleValueParameter(TAG, String.class);
 
     return new XmlParser(configuredTag);
-  }
-
-  @Override
-  public GuessSchema getGuessSchema(InputStream inputStream) throws ParseException {
-    var event = getEvents(inputStream).get(0);
-    var converter = new XmlMapConverter(event);
-    return parserUtils.getGuessSchema(converter.convert());
   }
 
   @Override

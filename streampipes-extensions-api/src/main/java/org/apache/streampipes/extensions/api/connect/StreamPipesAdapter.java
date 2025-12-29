@@ -56,28 +56,15 @@ public interface StreamPipesAdapter {
       IAdapterRuntimeContext adapterRuntimeContext
   ) throws AdapterException;
 
-//  @Deprecated(forRemoval = true, since = "0.98.0")
-//    // This can be removed once we have validated that the new approach works as expected
-//  GuessSchema onSchemaRequested(
-//      IAdapterParameterExtractor extractor,
-//      IAdapterGuessSchemaContext adapterGuessSchemaContext
-//  ) throws AdapterException;
-
+    @Deprecated(forRemoval = true, since = "0.98.0")
     default GuessSchema onSchemaRequested(
       IAdapterParameterExtractor extractor,
       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     throw new UnsupportedOperationException("Event preview is not supported by this adapter.");
   }
 
-
-  default SampleData onSampleDataRequested(
+  SampleData onSampleDataRequested(
       IAdapterParameterExtractor extractor,
-      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    throw new UnsupportedOperationException("Event preview is not supported by this adapter.");
-  }
-
-//  SampleData onSampleDataRequested(
-//      IAdapterParameterExtractor extractor,
-//      IAdapterGuessSchemaContext adapterGuessSchemaContext
-//  ) throws AdapterException;
+      IAdapterGuessSchemaContext adapterGuessSchemaContext
+  ) throws AdapterException;
 }

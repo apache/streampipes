@@ -20,7 +20,6 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser.json
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 
@@ -39,12 +38,6 @@ public class JsonArrayKeyParser extends JsonParser {
   }
 
   private static final Logger LOG = LoggerFactory.getLogger(JsonArrayKeyParser.class);
-
-  @Override
-  public GuessSchema getGuessSchema(InputStream inputStream) throws ParseException {
-    var event = getEvents(inputStream).get(0);
-    return parserUtils.getGuessSchema(event);
-  }
 
   @Override
   public SampleData getSampleData(InputStream inputStream) {

@@ -23,13 +23,10 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
-import org.apache.streampipes.sdk.helpers.EpProperties;
 
 import org.apache.commons.io.IOUtils;
 
@@ -55,17 +52,6 @@ public class ImageParser implements IParser {
   @Override
   public IParser fromDescription(List<StaticProperty> configuration) {
     return new ImageParser();
-  }
-
-  @Override
-  public GuessSchema getGuessSchema(InputStream inputStream) throws ParseException {
-    // validate that image can be parsed
-    var image = parseImage(inputStream);
-
-    return GuessSchemaBuilder.create()
-        .property(EpProperties.imageProperty("image"))
-        .sample("image", image)
-        .build();
   }
 
   @Override

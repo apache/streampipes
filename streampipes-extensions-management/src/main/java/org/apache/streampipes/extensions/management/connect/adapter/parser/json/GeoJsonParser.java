@@ -54,7 +54,6 @@ public class GeoJsonParser extends JsonParser {
 
   private static final Logger LOG = LoggerFactory.getLogger(JsonArrayKeyParser.class);
 
-  @Override
   public GuessSchema getGuessSchema(InputStream inputStream) {
     Feature geoFeature = null;
     try {

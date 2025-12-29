@@ -30,7 +30,7 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.HttpServerAdapterManagement;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -51,6 +51,8 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class HttpServerProtocol implements StreamPipesAdapter {
 
@@ -132,9 +134,9 @@ public class HttpServerProtocol implements StreamPipesAdapter {
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor parameterExtractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    IStaticPropertyExtractor propertyExtractor = parameterExtractor.getStaticPropertyExtractor();
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                                          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    IStaticPropertyExtractor propertyExtractor = extractor.getStaticPropertyExtractor();
     applyConfiguration(propertyExtractor);
     GuessSchemaBuilder schemaBuilder = GuessSchemaBuilder.create();
 
@@ -142,21 +144,35 @@ public class HttpServerProtocol implements StreamPipesAdapter {
     if (selectedImportMode.equals(MANUALLY)) {
       CollectionStaticProperty sp = (CollectionStaticProperty) propertyExtractor.getStaticPropertyByName(EP_CONFIG);
 
+      var event = new HashMap<String, Object>();
+
       for (StaticProperty member : sp.getMembers()) {
         StaticPropertyExtractor memberExtractor =
             StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
         schemaBuilder.property(makeProperty(memberExtractor));
+
+        var type = memberExtractor.selectedSingleValue(EP_RUNTIME_TYPE, String.class);
+
+        switch (type) {
+          case "String" -> event.put(memberExtractor.singleValueParameter(EP_RUNTIME_NAME, String.class), "sample text");
+          case "Boolean" -> event.put(memberExtractor.singleValueParameter(EP_RUNTIME_NAME, String.class), true);
+          case "Integer" -> event.put(memberExtractor.singleValueParameter(EP_RUNTIME_NAME, String.class), 42);
+          default -> event.put(memberExtractor.singleValueParameter(EP_RUNTIME_NAME, String.class), 3.14);
+        }
       }
-      return schemaBuilder.build();
+      var sampleData = new SampleData();
+      sampleData.setSamples(List.of(event));
+      return sampleData;
     } else if (selectedImportMode.equals(FILE_IMPORT)){
       String fileName = propertyExtractor.selectedFilename(FILE);
       InputStream dataInputStream = this.getDataFromEndpoint(fileName);
 
-      return parameterExtractor.selectedParser().getGuessSchema(dataInputStream);
+      return extractor.selectedParser().getSampleData(dataInputStream);
     } else {
       throw new AdapterException("Unknown import mode selected: " + selectedImportMode);
     }
   }
+
 
 
   private InputStream getDataFromEndpoint(String fileName) throws ParseException {

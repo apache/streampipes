@@ -20,7 +20,6 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser.json
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 
@@ -36,12 +35,6 @@ public class JsonObjectParser extends JsonParser {
 
   public Map<String, Object> next() {
     return toMap(inputStream, Map.class);
-  }
-
-  @Override
-  public GuessSchema getGuessSchema(InputStream inputStream) {
-    var event = toMap(inputStream, Map.class);
-    return parserUtils.getGuessSchema(event);
   }
 
   @Override

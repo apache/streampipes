@@ -27,7 +27,6 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.json.
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -119,11 +118,6 @@ public class JsonParsers implements IParser {
                         Labels.from("key", "Key", "Key of the array within the Json object")))),
             Alternatives.from(Labels.from(KEY_GEO_JSON, LABEL_GEO_JSON, DESCRIPTION_GEO_JSON)))
         .build();
-  }
-
-  @Override
-  public GuessSchema getGuessSchema(InputStream inputStream) {
-    return selectedParser.getGuessSchema(inputStream);
   }
 
   @Override

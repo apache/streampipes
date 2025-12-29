@@ -20,7 +20,6 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser.json
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 
@@ -29,16 +28,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class JsonArrayParser extends JsonParser {
-
-  @Override
-  public GuessSchema getGuessSchema(InputStream inputStream) {
-    var events = toMap(inputStream, Map[].class);
-    if (events.length == 0) {
-      throw new ParseException("Cannot guess schema from an empty array of events. Please provide at least one event.");
-    }
-
-    return parserUtils.getGuessSchema(events[0]);
-  }
 
   @Override
   public SampleData getSampleData(InputStream inputStream) {
