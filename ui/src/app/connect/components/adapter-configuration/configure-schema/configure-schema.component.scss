@@ -18,3 +18,22 @@
 .stepper-button {
     margin-left: 10px;
 }
+
+.code-editor-outer {
+    margin: var(--space-2xs);
+}
+
+.code-editor {
+    width: 100%;
+    height: 220px;
+}
+
+.preview-text {
+    margin: var(--space-2xs);
+    background-color: var(--color-code-bg);
+    font:
+        var(--font-size-xs) Inconsolata,
+        monospace;
+    color: white;
+    padding: 10px;
+}

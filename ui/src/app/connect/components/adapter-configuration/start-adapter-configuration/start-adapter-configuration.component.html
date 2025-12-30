@@ -23,68 +23,76 @@
     >
         <div fxFlex="100">
             <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
-                <mat-form-field color="accent">
-                    <input
-                        formControlName="adapterName"
-                        matInput
-                        id="input-AdapterName"
-                        [placeholder]="'Adapter Name' | translate"
-                        data-cy="sp-adapter-name"
-                        required
-                        (blur)="triggerTutorialAdapterNameAssigned()"
-                    />
-                    @if (
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('invalidName')
-                    ) {
-                        <mat-error>
-                            Name can only contain letters, numbers, special
-                            characters (including umlauts), punctuation,
-                            symbols, and spaces.
-                        </mat-error>
-                    }
-                    @if (
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('leadingOrTrailingWhitespace')
-                    ) {
-                        <mat-error>
-                            Name cannot start or end with a space.
-                        </mat-error>
-                    }
-                    @if (
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('required') ||
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('whiteSpaceOnly')
-                    ) {
-                        <mat-error> Adapter name is required. </mat-error>
-                    }
-                    @if (
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('minlength') ||
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('maxlength')
-                    ) {
-                        <mat-error>
-                            Adapter name must have between 3 and 40 characters.
-                        </mat-error>
-                    }
-                </mat-form-field>
-                <mat-form-field color="accent">
-                    <input
-                        matInput
-                        id="input-AdapterDescription"
-                        [ngModelOptions]="{ standalone: true }"
-                        [placeholder]="'Adapter Description' | translate"
-                        [(ngModel)]="adapterDescription.description"
-                    />
-                </mat-form-field>
+                <sp-form-field [level]="2" [label]="'Adapter Name' | translate">
+                    <mat-form-field color="accent">
+                        <input
+                            formControlName="adapterName"
+                            matInput
+                            id="input-AdapterName"
+                            [placeholder]="'Adapter Name' | translate"
+                            data-cy="sp-adapter-name"
+                            required
+                            (blur)="triggerTutorialAdapterNameAssigned()"
+                        />
+                        @if (
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('invalidName')
+                        ) {
+                            <mat-error>
+                                Name can only contain letters, numbers, special
+                                characters (including umlauts), punctuation,
+                                symbols, and spaces.
+                            </mat-error>
+                        }
+                        @if (
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('leadingOrTrailingWhitespace')
+                        ) {
+                            <mat-error>
+                                Name cannot start or end with a space.
+                            </mat-error>
+                        }
+                        @if (
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('required') ||
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('whiteSpaceOnly')
+                        ) {
+                            <mat-error> Adapter name is required. </mat-error>
+                        }
+                        @if (
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('minlength') ||
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('maxlength')
+                        ) {
+                            <mat-error>
+                                Adapter name must have between 3 and 40
+                                characters.
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </sp-form-field>
+                <sp-form-field
+                    [level]="2"
+                    [label]="'Adapter Description' | translate"
+                >
+                    <mat-form-field color="accent">
+                        <input
+                            matInput
+                            id="input-AdapterDescription"
+                            [ngModelOptions]="{ standalone: true }"
+                            [placeholder]="'Adapter Description' | translate"
+                            [(ngModel)]="adapterDescription.description"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
             </div>
         </div>
     </sp-basic-inner-panel>

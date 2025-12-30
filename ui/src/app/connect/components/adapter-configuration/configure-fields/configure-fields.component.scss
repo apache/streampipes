@@ -170,3 +170,11 @@ ul {
 .mt-20 {
     margin-top: 20px;
 }
+
+.row-outer {
+    padding: var(--space-2xs);
+}
+
+.row-outer:not(:last-child) {
+    border-bottom: 1px solid var(--color-bg-2);
+}

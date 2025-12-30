@@ -16,18 +16,19 @@
 ~
 -->
 
-<div class="general-options-panel" fxLayout="column">
-    <div class="general-options-header"><span>Schema</span></div>
-    <sp-ep-settings-section
-        sectionTitle="Field runtime name"
-        sectionDescription="Identifies the field in the underlying runtime format"
+<sp-split-section [title]="'Schema' | translate" [level]="3">
+    <sp-form-field
+        [level]="3"
+        [label]="'Field runtime name' | translate"
+        [description]="
+            'Identifies the field in the underlying runtime format' | translate
+        "
     >
         <div
             attr.id="input-runtime-name-{{ cachedProperty.label }}"
             fxFlex="100"
         >
             <mat-form-field class="w-100" color="accent">
-                <mat-label>Field runtime name</mat-label>
                 <input
                     matInput
                     placeholder="RuntimeName"
@@ -40,14 +41,15 @@
                 />
             </mat-form-field>
         </div>
-    </sp-ep-settings-section>
+    </sp-form-field>
 
     @if (isPrimitiveProperty) {
-        <sp-ep-settings-section
-            sectionTitle="Field semantic type"
-            sectionDescription="Identifies field semantics, e.g., oil temperature"
-            fxLayout="column"
-            fxFlex="100"
+        <sp-form-field
+            [level]="3"
+            [label]="'Semantic type' | translate"
+            [description]="
+                'Identifies field semantics, e.g., oil temperature' | translate
+            "
         >
             <div fxFlex="100" fxLayout="column" style="margin-bottom: 5px">
                 <mat-checkbox
@@ -60,46 +62,45 @@
                     Mark as timestamp
                 </mat-checkbox>
             </div>
-            @if (isPrimitiveProperty) {
-                <div fxFlex="100" fxLayout="column">
-                    <mat-form-field class="w-100" color="accent" fxFlex="100">
-                        <input
-                            matInput
-                            placeholder="Semantic Type"
-                            data-cy="semantic-type"
-                            [(ngModel)]="cachedProperty.semanticType"
-                            [matAutocomplete]="st"
-                            [disabled]="isTimestampProperty"
-                            [matAutocompleteDisabled]="isTimestampProperty"
-                            [formControl]="domainPropertyControl"
-                        />
-                        <mat-autocomplete
-                            #st="matAutocomplete"
-                            [panelWidth]="'400px'"
-                        >
-                            @for (
-                                semanticType of semanticTypes | async;
-                                track semanticType
-                            ) {
-                                <mat-option
-                                    [value]="semanticType"
-                                    style="font-size: 10pt"
-                                    [matTooltip]="semanticType"
-                                >
-                                    {{ semanticType }}
-                                </mat-option>
-                            }
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-            }
-        </sp-ep-settings-section>
+            <div fxFlex="100" fxLayout="column">
+                <mat-form-field class="w-100" color="accent" fxFlex="100">
+                    <input
+                        matInput
+                        placeholder="Semantic Type"
+                        data-cy="semantic-type"
+                        [(ngModel)]="cachedProperty.semanticType"
+                        [matAutocomplete]="st"
+                        [disabled]="isTimestampProperty"
+                        [matAutocompleteDisabled]="isTimestampProperty"
+                        [formControl]="domainPropertyControl"
+                    />
+                    <mat-autocomplete
+                        #st="matAutocomplete"
+                        [panelWidth]="'400px'"
+                    >
+                        @for (
+                            semanticType of semanticTypes | async;
+                            track semanticType
+                        ) {
+                            <mat-option
+                                [value]="semanticType"
+                                style="font-size: 10pt"
+                                [matTooltip]="semanticType"
+                            >
+                                {{ semanticType }}
+                            </mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </sp-form-field>
     }
 
     @if (!isTimestampProperty && !isNestedProperty) {
-        <sp-ep-settings-section
-            sectionTitle="Field data type"
-            sectionDescription="The data type of the field values"
+        <sp-form-field
+            [level]="3"
+            [label]="'Data type' | translate"
+            [description]="'The data type of the field values' | translate"
         >
             @if (adapterIsInEditMode) {
                 <div class="warning-message">
@@ -123,6 +124,6 @@
                 (dataTypeChanged)="dataTypeChanged.emit()"
             >
             </sp-edit-data-type>
-        </sp-ep-settings-section>
+        </sp-form-field>
     }
-</div>
+</sp-split-section>

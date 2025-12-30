@@ -34,9 +34,14 @@
             <div fxLayout="fill" fxFlex="100">
                 <div fxLayoutAlign="start center" fxLayout="row">
                     @if (showTitle) {
-                        <div class="content-box-title text-lg">
-                            {{ panelTitle }}
-                        </div>
+                        <sp-basic-header-title-component
+                            [title]="panelTitle"
+                            [level]="3"
+                            class="content-box-title"
+                        ></sp-basic-header-title-component>
+                        <!--                        <div class="content-box-title text-lg">-->
+                        <!--                            {{ panelTitle }}-->
+                        <!--                        </div>-->
                     }
                 </div>
                 <ng-content select="[header]" class="pr-5"></ng-content>

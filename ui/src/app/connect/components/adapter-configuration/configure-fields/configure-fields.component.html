@@ -24,6 +24,7 @@
 
         <sp-basic-inner-panel
             [showTitle]="false"
+            innerPadding="5px 5px"
             outerMargin="0px 0px 20px 0px"
         >
             @if (!isLoading() && !isError()) {
@@ -68,6 +69,7 @@
                         track property.elementId
                     ) {
                         <sp-event-property-row
+                            class="row-outer"
                             data-cy="event-property-row"
                             [eventProperty]="property"
                             (eventPropertyChange)="eventPropertyChanged()"

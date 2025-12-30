@@ -21,6 +21,5 @@ import { Component } from '@angular/core';
     selector: 'sp-no-timestamp-error-hint',
     standalone: false,
     templateUrl: './no-timestamp-error-hint.component.html',
-    styleUrl: './no-timestamp-error-hint.component.scss',
 })
 export class NoTimestampErrorHintComponent {}

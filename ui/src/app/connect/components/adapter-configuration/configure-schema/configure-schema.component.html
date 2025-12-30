@@ -18,6 +18,7 @@
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="column">
         <sp-basic-inner-panel
+            innerPadding="0"
             [panelTitle]="'Basic Settings' | translate"
             outerMargin="20px 0px"
         >
@@ -33,19 +34,22 @@
                     <span>Run script</span>
                 </button>
             </div>
-            <ngx-codemirror
-                style="width: 100%; height: 220px"
-                [ngModel]="script()"
-                (ngModelChange)="onCodeChange($event)"
-                [options]="editorOptions"
-                data-cy="configure-schema-script-editor"
-            ></ngx-codemirror>
+            <div class="code-editor-outer">
+                <ngx-codemirror
+                    class="code-editor"
+                    [ngModel]="script()"
+                    (ngModelChange)="onCodeChange($event)"
+                    [options]="editorOptions"
+                    data-cy="configure-schema-script-editor"
+                ></ngx-codemirror>
+            </div>
         </sp-basic-inner-panel>
     </div>
 
     <div fxFlex="100" fxLayout="row" fxLayoutGap="15px">
         <div fxFlex="50" fxLayout="column">
             <sp-basic-inner-panel
+                innerPadding="0"
                 [showTitle]="true"
                 [panelTitle]="'Original (Parsed)' | translate"
             >
@@ -93,6 +97,7 @@
         <div fxFlex="50" fxLayout="column">
             <sp-basic-inner-panel
                 [showTitle]="true"
+                innerPadding="0"
                 [panelTitle]="'Result' | translate"
                 fxFlex="100"
                 data-cy="connect-schema-update-preview"
@@ -112,6 +117,7 @@
                     @let error = scriptError();
                     @if (error) {
                         <sp-exception-message
+                            class="p-xs"
                             [message]="error"
                             [showDetails]="true"
                         ></sp-exception-message>

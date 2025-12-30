@@ -148,8 +148,8 @@
             @if (isNested || isPrimitive || isList) {
                 <div fxLayoutAlign="end center" class="ml-5 mr-5">
                     <button
-                        color="accent"
-                        mat-button
+                        mat-flat-button
+                        class="mat-basic"
                         (click)="openEditDialog(eventProperty)"
                         [attr.data-cy]="'edit-' + label.toLowerCase()"
                     >

@@ -31,14 +31,14 @@
     margin-top: -1px;
     min-height: 40px;
     max-height: 40px;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
     padding: 10px 12px;
 }
 
 .header-collapsed {
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
 }
 
 .bg-highlight {
@@ -52,10 +52,6 @@
 }
 
 .content-box-title {
-    margin-left: 5px;
-    padding-left: 5px;
-    border-left: 3px solid var(--color-primary);
-    font-weight: 400;
     white-space: nowrap;
 }
 

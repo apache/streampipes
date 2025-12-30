@@ -17,11 +17,11 @@
  */
 
 .preview-text {
-    background-color: black;
+    margin: var(--space-2xs);
+    background-color: var(--color-code-bg);
     font:
-        9pt Inconsolata,
+        var(--font-size-xs) Inconsolata,
         monospace;
-    text-shadow: 0 0 5px #c8c8c8;
     color: white;
     padding: 10px;
     max-width: 100%;

@@ -16,27 +16,12 @@
 ~
 -->
 
-<div fxLayout="column" fxFlex="100">
-    <div
-        fxFlex="100"
-        fxLayout="column"
-        class="no-timestamp-error-hint"
-        fxLayoutAlign="start center"
-    >
-        <div
-            fxFlex="100"
-            fxLayout="row"
-            fxLayoutAlign="center start"
-            class="no-timestamp-error-hint-text"
-        >
-            <i class="material-icons">warning</i>&nbsp;
-            <b>Missing Timestamp</b>
-        </div>
-        <div data-cy="no-timestamp-error-hint">
-            <span
-                >The timestamp must be a UNIX timestamp in milliseconds. Edit
-                the timestamp field or add an ingestion timestamp.</span
-            >
-        </div>
-    </div>
-</div>
+<sp-alert-banner
+    type="error"
+    [title]="'Missing timestamp' | translate"
+    [description]="
+        'The timestamp must be a UNIX timestamp in milliseconds. Edit the timestamp field or add an ingestion timestamp.'
+            | translate
+    "
+>
+</sp-alert-banner>

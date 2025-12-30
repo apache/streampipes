@@ -48,7 +48,6 @@ import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/filter-toolbar.component';
 import { EditSchemaTransformationComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-schema-transformation.component';
-import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/components/ep-settings-section/ep-settings-section.component';
 import { SpAdapterOptionsPanelComponent } from './components/adapter-configuration/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -226,7 +225,6 @@ import { NoTimestampErrorHintComponent } from './components/adapter-configuratio
         ConfigureFieldsErrorMessageComponent,
         ConfigureFieldsLoadingMessageComponent,
         ConfigureFieldsHeaderComponent,
-        SpEpSettingsSectionComponent,
         StartAdapterConfigurationComponent,
         SpAdapterDeploymentSettingsComponent,
         SpAdapterDetailsLogsComponent,
