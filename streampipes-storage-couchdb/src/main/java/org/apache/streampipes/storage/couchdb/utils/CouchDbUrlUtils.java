@@ -21,7 +21,12 @@ import org.apache.streampipes.commons.environment.Environment;
 
 import com.google.common.net.UrlEscapers;
 
-
+/**
+ * Utility class for working with CouchDB URLs.
+ * <p>
+ * Provides helper methods to escape URL path segments and to construct
+ * CouchDB database routes from the configured {@link Environment}.
+ */
 
 public final class CouchDbUrlUtils {
 
