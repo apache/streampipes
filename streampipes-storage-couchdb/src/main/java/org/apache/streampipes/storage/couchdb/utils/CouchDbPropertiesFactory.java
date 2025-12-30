@@ -21,6 +21,15 @@ import org.apache.streampipes.commons.environment.Environment;
 
 import org.lightcouch.CouchDbProperties;
 
+/**
+ * Factory class for creating {@link CouchDbProperties} instances based on
+ * CouchDB configuration provided by the {@link Environment}.
+ *
+ * <p>The factory reads protocol, host, port, username and password from the
+ * environment and uses these values to create {@code CouchDbProperties}
+ * for a given database name. It can optionally mark the database to be
+ * created if it does not already exist.</p>
+ */
 
 public class CouchDbPropertiesFactory {
 
