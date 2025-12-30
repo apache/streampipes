@@ -19,8 +19,8 @@
 .options-button {
     cursor: pointer;
     position: absolute;
-    height: 30%;
-    width: 30%;
+    height: 20px;
+    width: 20px;
     border-radius: 20%;
     box-shadow: 0 0 3px var(--color-primary);
     text-align: center;
@@ -29,17 +29,18 @@
 }
 
 .mat-mdc-icon-button.options-icon-button {
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
+    width: 20px;
+    height: 20px;
+    line-height: 1.2;
     border-radius: 0;
     padding: 0;
     color: var(--mat-sys-on-primary);
 }
 
 .options-icon-size {
-    font-size: 20px;
-    line-height: 25px;
+    font-size: 1.08rem;
+    width: inherit;
+    height: inherit;
 }
 
 .customize-button {

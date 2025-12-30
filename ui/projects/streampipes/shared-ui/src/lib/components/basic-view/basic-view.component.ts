@@ -38,6 +38,9 @@ export class SpBasicViewComponent {
     @Input()
     hideNavbar = false;
 
+    @Input()
+    margin = '10px';
+
     constructor(private router: Router) {}
 
     navigateBack() {

@@ -19,7 +19,7 @@
 .pipeline-element-configuration-status {
     position: absolute;
     left: 20px;
-    top: -27px;
+    top: -25px;
     width: 100%;
     height: 100%;
 }
@@ -33,16 +33,16 @@
 }
 
 .pipeline-element-configuration-invalid-icon {
-    font-size: 20pt;
-    color: red;
+    font-size: var(--font-size-lg);
+    color: var(--color-error);
 }
 
 .pipeline-element-configuration-modified-icon {
-    font-size: 20pt;
-    color: #d3c545;
+    font-size: var(--font-size-lg);
+    color: var(--color-warning);
 }
 
 .pipeline-element-configuration-ok-icon {
-    font-size: 20pt;
-    color: #6ab26c;
+    font-size: var(--font-size-lg);
+    color: var(--color-success);
 }

@@ -87,6 +87,8 @@ export class PipelineFeatureCardComponent implements OnInit {
 
     navigateToPipelines(): void {
         this.onClose();
-        this.router.navigate(['pipelines', 'details', this.resourceId]);
+        setTimeout(() => {
+            this.router.navigate(['pipelines', 'details', this.resourceId]);
+        }, 500);
     }
 }

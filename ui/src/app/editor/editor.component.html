@@ -16,7 +16,7 @@
 ~
 -->
 
-<div fxLayout="column" class="page-container">
+<div fxLayout="column" fxFlex="100" class="pipeline-editor-outer">
     @if (!allElementsLoaded) {
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
             <mat-spinner
@@ -26,33 +26,25 @@
             ></mat-spinner>
             <p>{{ 'Preparing pipeline editor...' | translate }}</p>
         </div>
-    }
-    @if (allElementsLoaded) {
-        <div
-            class="fixed-height editor-container-inner"
-            fxLayout="row"
-            fxFlex="100"
-        >
-            <div fxFlex="250px">
-                <div
-                    id="shepherd-test"
-                    style="
-                        padding: 0;
-                        border-bottom: 1px solid #ffffff;
-                        margin-right: 5px;
-                    "
-                >
-                    @if (allElementsLoaded) {
-                        <sp-pipeline-element-icon-stand
-                            [allElements]="allElements"
-                        >
-                        </sp-pipeline-element-icon-stand>
-                    }
-                </div>
-            </div>
+    } @else {
+        <div fxLayout="row" fxFlex="100">
+            <sp-basic-view
+                style="width: 250px"
+                [hideNavbar]="true"
+                margin="10px 0 0 10px"
+            >
+                @if (allElementsLoaded) {
+                    <sp-pipeline-element-icon-stand
+                        id="shepherd-test"
+                        [allElements]="allElements"
+                    >
+                    </sp-pipeline-element-icon-stand>
+                }
+            </sp-basic-view>
             @if (allElementsLoaded && allMetadataLoaded) {
                 <sp-pipeline-assembly
                     fxFlex="100"
+                    class="w-100"
                     style="margin-left: 10px"
                     [rawPipelineModel]="rawPipelineModel"
                     [allElements]="allElements"
