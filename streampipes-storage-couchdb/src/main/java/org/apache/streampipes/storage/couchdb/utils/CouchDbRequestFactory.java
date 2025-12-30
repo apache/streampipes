@@ -21,6 +21,13 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 
+/**
+ * Factory class for creating authenticated HTTP requests to CouchDB.
+ * <p>
+ * This utility centralizes the creation of {@link Request} instances with a
+ * preconfigured Basic Authorization header and connection/socket timeouts.
+ * It uses {@link CouchDbAuthUtils} to obtain the credentials for CouchDB.
+ */
 
 public final class CouchDbRequestFactory {
 
