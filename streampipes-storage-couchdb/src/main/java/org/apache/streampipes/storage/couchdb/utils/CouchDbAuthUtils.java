@@ -22,7 +22,7 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.commons.codec.binary.Base64;
 
 
-public class CouchDbAuthUtils {
+public final class CouchDbAuthUtils {
 
   private final Environment environment;
 
