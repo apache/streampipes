@@ -31,7 +31,7 @@ import org.lightcouch.CouchDbProperties;
  * created if it does not already exist.</p>
  */
 
-public class CouchDbPropertiesFactory {
+public final class CouchDbPropertiesFactory {
 
   private final Environment environment;
 
