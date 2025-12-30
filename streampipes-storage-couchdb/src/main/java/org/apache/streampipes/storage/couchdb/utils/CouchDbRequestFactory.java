@@ -22,7 +22,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 
 
-public class CouchDbRequestFactory {
+public final class CouchDbRequestFactory {
 
   private final CouchDbAuthUtils authUtils;
 
