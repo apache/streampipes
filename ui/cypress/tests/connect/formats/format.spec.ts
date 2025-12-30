@@ -20,6 +20,7 @@ import { FileManagementUtils } from '../../../support/utils/FileManagementUtils'
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
+import { AdapterInput } from '../../../support/model/AdapterInput';
 
 describe('Test adapter formats', () => {
     beforeEach('Setup Test', () => {
@@ -45,9 +46,7 @@ describe('Test adapter formats', () => {
             .setFormat('json')
             .addFormatInput('radio', 'json_options-single_object', '');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -62,9 +61,7 @@ describe('Test adapter formats', () => {
             .setFormat('json')
             .addFormatInput('radio', 'json_options-array', '');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -80,9 +77,7 @@ describe('Test adapter formats', () => {
             .addFormatInput('radio', 'json_options-array_field', '')
             .addFormatInput('input', ConnectBtns.jsonArrayFieldKey(), 'field');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -103,9 +98,7 @@ describe('Test adapter formats', () => {
             .setFormat('json')
             .addFormatInput('radio', 'json_options-geojson', '');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(geoJsonResultEvent);
@@ -119,9 +112,7 @@ describe('Test adapter formats', () => {
             .setFormat('xml')
             .addFormatInput('input', ConnectBtns.xmlTag(), 'event');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -136,9 +127,7 @@ describe('Test adapter formats', () => {
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
             .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -152,9 +141,7 @@ describe('Test adapter formats', () => {
             .setFormat('csv')
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         const expectedNoHeader = {
             key_0: 1667904471000,
@@ -177,9 +164,7 @@ describe('Test adapter formats', () => {
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ',')
             .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -218,4 +203,16 @@ const removeWhitespaceExceptInQuotes = (input: string): string => {
     }
 
     return JSON.parse(result);
+};
+
+const createAdapterUntilEventSchemaConfiguration = (
+    adapterInput: AdapterInput,
+) => {
+    ConnectUtils.goToConnect();
+
+    ConnectUtils.goToNewAdapterPage();
+
+    ConnectUtils.selectAdapter(adapterInput.adapterType);
+
+    ConnectUtils.configureAdapter(adapterInput);
 };

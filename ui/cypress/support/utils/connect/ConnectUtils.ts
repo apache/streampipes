@@ -105,18 +105,6 @@ export class ConnectUtils {
         );
     }
 
-    public static createAdapterUntilEventSchemaConfiguration(
-        adapterInput: AdapterInput,
-    ) {
-        ConnectUtils.goToConnect();
-
-        ConnectUtils.goToNewAdapterPage();
-
-        ConnectUtils.selectAdapter(adapterInput.adapterType);
-
-        ConnectUtils.configureAdapter(adapterInput);
-    }
-
     private static configureSchema(adapterConfiguration: AdapterInput) {
         ConnectBtns.configureSchemaEventPreviewOriginal().should('be.visible');
         ConnectBtns.configureSchemaEventPreviewResult().should('be.visible');

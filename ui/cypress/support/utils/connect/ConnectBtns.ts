@@ -182,24 +182,8 @@ export class ConnectBtns {
             .click();
     }
 
-    public static connectSchemaCorrectionValueInput() {
-        return cy.dataCy('connect-schema-correction-value', { timeout: 10000 });
-    }
-
-    public static connectSchemaCorrectionOperatorInput() {
-        return cy.dataCy('connect-schema-correction-operator', {
-            timeout: 10000,
-        });
-    }
-
     public static timestampStringRegex() {
         return cy.dataCy('connect-timestamp-string-regex', { timeout: 10000 });
-    }
-
-    public static timestampNumberDropdown() {
-        return cy.dataCy('connect-timestamp-number-dropdown', {
-            timeout: 10000,
-        });
     }
 
     public static configureSchemaNextBtn() {
