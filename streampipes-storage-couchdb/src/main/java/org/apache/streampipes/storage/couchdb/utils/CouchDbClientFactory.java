@@ -21,7 +21,20 @@ import org.apache.streampipes.storage.couchdb.serializer.GsonSerializer;
 
 import org.lightcouch.CouchDbClient;
 
-
+/**
+ * Factory class for creating {@link CouchDbClient} instances configured with different
+ * Gson serialization strategies.
+ * <p>
+ * Uses a {@link CouchDbPropertiesFactory} to build the connection properties for the
+ * given database name and then configures the corresponding {@link CouchDbClient}.
+ * The factory provides specialized clients for:
+ * <ul>
+ *   <li>generic Gson serialization ({@link #createGsonClient(String)})</li>
+ *   <li>principal-aware serialization ({@link #createPrincipalClient(String)})</li>
+ *   <li>adapter-specific serialization ({@link #createAdapterClient(String)})</li>
+ *   <li>the default CouchDbClient configuration ({@link #createDefaultClient(String)})</li>
+ * </ul>
+ */
 
 public final class CouchDbClientFactory {
 
