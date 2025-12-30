@@ -30,6 +30,7 @@ describe('Test Truncate data in datalake', () => {
 
     it('Perform Test', () => {
         DataExplorerUtils.goToDatalakeConfiguration();
+        cy.dataCy('datalake-total-count-button').click();
 
         // Check if amount of events is correct
         DataExplorerBtns.datalakeNumberEvents()
@@ -42,6 +43,8 @@ describe('Test Truncate data in datalake', () => {
         DataExplorerBtns.confirmDataLakeTruncateBtn()
             .should('be.visible')
             .click();
+
+        cy.dataCy('datalake-total-count-button').click();
 
         // Check if amount of events is zero. The should('have.text, '0') is required to check for text equality
         DataExplorerBtns.datalakeNumberEvents()
@@ -62,6 +65,7 @@ describe('Delete data in datalake', () => {
 
     it('Perform Test', () => {
         DataExplorerUtils.goToDatalakeConfiguration();
+        cy.dataCy('datalake-total-count-button').click();
 
         // Check if amount of events is correct
         DataExplorerBtns.datalakeNumberEvents()

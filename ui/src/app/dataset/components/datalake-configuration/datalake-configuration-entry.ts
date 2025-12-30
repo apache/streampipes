@@ -21,7 +21,10 @@ import { RetentionConfig } from '../../dialog/data-retention-dialog/model/retent
 export class DataLakeConfigurationEntry {
     public name: string;
     public pipelines: string[] = [];
-    public events = 0;
+    public eventsTotal = 0;
+    public eventsLatest = 0;
+    public eventsTotalLoading = false;
+    public eventsLatestLoading = false;
     public remove = true;
     public elementId: string;
     public retention: RetentionTimeConfig;

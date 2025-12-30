@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,23 +16,19 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.query;
+:host {
+    width: 100%;
+    height: 100%;
+}
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+.dataset-preview-inner {
+    overflow-y: scroll;
+    min-height: 0;
+}
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
-public class DataLakeMeasurementCounterTestImpl extends DataLakeMeasurementCounter {
-  public DataLakeMeasurementCounterTestImpl(
-      List<DataLakeMeasure> allMeasurements, List<String> measurementNames
-  ) {
-    super(allMeasurements, measurementNames, -1);
-  }
-
-  @Override
-  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure) {
-    // Mock implementation for testing
-    return CompletableFuture.completedFuture(1);
-  }
+.meta-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
 }
