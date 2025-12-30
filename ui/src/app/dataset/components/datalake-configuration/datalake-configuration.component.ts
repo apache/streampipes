@@ -51,6 +51,7 @@ import { DeleteExportProviderComponent } from '../../dialog/delete-export-provid
 import { TranslateService } from '@ngx-translate/core';
 import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
+import { LocalStorageService } from '../../../../../projects/streampipes/shared-ui/src/lib/services/local-storage-settings.service';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -82,9 +83,9 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = [
         'name',
         'pipeline',
-        'events',
+        'eventsLatest',
+        'eventsTotal',
         'retention',
-        'retentionlog',
         'actions',
     ];
 
@@ -97,7 +98,9 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
         'test',
     ];
 
-    pageSize = 10;
+    private localStorageService = inject(LocalStorageService);
+
+    pageSize = this.localStorageService.get('paginator-page-size', 10);
     pageIndex = 0;
 
     ngOnInit(): void {
@@ -144,7 +147,8 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
                             const entry = new DataLakeConfigurationEntry();
                             entry.elementId = measurement.elementId;
                             entry.name = measurement.measureName;
-                            entry.events = -1;
+                            entry.eventsLatest = -1;
+                            entry.eventsTotal = -1;
                             if (measurement?.retentionTime != null) {
                                 entry.retention = measurement.retentionTime;
                             }
@@ -327,7 +331,11 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     onPageChange(event: any) {
         this.pageIndex = event.pageIndex;
         this.pageSize = event.pageSize;
-        this.receiveMeasurementSizes(this.pageIndex);
+        //this.receiveMeasurementSizes(this.pageIndex);
+    }
+
+    receiveTotalMeasurementSize(entry: DataLakeConfigurationEntry) {
+        this.queryEntryCounts([entry.name], 'eventsTotal');
     }
 
     receiveMeasurementSizes(pageIndex: number) {
@@ -335,18 +343,41 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
         const end = start + this.pageSize;
         const measurements = this.availableMeasurements
             .slice(start, end)
-            .filter(m => m.events === -1)
+            .filter(m => m.eventsLatest === -1)
             .map(m => m.name);
         if (measurements.length > 0) {
-            this.datalakeRestService
-                .getMeasurementEntryCounts(measurements)
-                .subscribe(res => {
-                    this.availableMeasurements.forEach(m => {
-                        if (res[m.name] !== undefined) {
-                            m.events = res[m.name];
-                        }
-                    });
-                });
+            this.queryEntryCounts(measurements, 'eventsLatest', 7);
         }
+    }
+
+    queryEntryCounts(
+        measurements: string[],
+        targetField: string,
+        daysBack = -1,
+    ): void {
+        this.applyLoadingStatus(measurements, targetField, true);
+        this.datalakeRestService
+            .getMeasurementEntryCounts(measurements, daysBack)
+            .subscribe(res => {
+                this.applyLoadingStatus(measurements, targetField, false);
+                this.availableMeasurements.forEach(m => {
+                    if (res[m.name] !== undefined) {
+                        m[targetField] = res[m.name];
+                    }
+                });
+            });
+    }
+
+    applyLoadingStatus(
+        measurements: string[],
+        targetField: string,
+        status: boolean,
+    ): void {
+        const loadingField = targetField + 'Loading';
+        this.availableMeasurements.forEach(m => {
+            if (measurements.includes(m.name)) {
+                m[loadingField] = status;
+            }
+        });
     }
 }

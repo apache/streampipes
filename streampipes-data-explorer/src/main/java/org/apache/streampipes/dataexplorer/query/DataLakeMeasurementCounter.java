@@ -41,13 +41,16 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
 
   protected final List<DataLakeMeasure> allMeasurements;
   protected final List<String> measurementNames;
+  protected final int daysBack;
 
   public DataLakeMeasurementCounter(
       List<DataLakeMeasure> allMeasurements,
-      List<String> measurementNames
+      List<String> measurementNames,
+      int daysBack
   ) {
     this.allMeasurements = allMeasurements;
     this.measurementNames = measurementNames;
+    this.daysBack = daysBack;
   }
 
   @Override
