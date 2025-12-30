@@ -23,110 +23,93 @@ import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
-describe(
-    'Test File Replay Adapter',
-    {
-        retries: {
-            runMode: 4,
-            openMode: 1,
-        },
-    },
-    () => {
-        beforeEach('Setup Test', () => {
-            cy.initStreamPipesTest();
-        });
+describe('Test File Replay Adapter', () => {
+    beforeEach('Setup Test', () => {
+        cy.initStreamPipesTest();
+    });
 
-        it('Test successful adapter generation for file stream adapter', () => {
-            FileManagementUtils.addFile('fileTest/random.csv');
-            const adapterInput = AdapterBuilder.create('File_Stream')
-                .setName('File Stream Adapter Test')
-                .setTimestampProperty('timestamp')
-                .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
-                .setFormat('csv')
-                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
-                .build();
+    it('Test successful adapter generation for file stream adapter', () => {
+        FileManagementUtils.addFile('fileTest/random.csv');
+        const adapterInput = AdapterBuilder.create('File_Stream')
+            .setName('File Stream Adapter Test')
+            .setTimestampProperty('timestamp')
+            .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
+            .setFormat('csv')
+            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+            .build();
 
-            ConnectUtils.testAdapter(adapterInput);
-            ConnectUtils.deleteAdapter(adapterInput.adapterName);
-        });
+        ConnectUtils.testAdapter(adapterInput);
+        ConnectUtils.deleteAdapter(adapterInput.adapterName);
+    });
 
-        it('File stream adapter should not allow add timestamp option in schema editor', () => {
-            FileManagementUtils.addFile('connect/fileReplay/noTimestamp.csv');
-            const adapterInput = AdapterBuilder.create('File_Stream')
-                .setName('File Stream Adapter Test')
-                .setAutoAddTimestampPropery()
-                .setFormat('csv')
-                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
-                .build();
+    it('File Stream adapter with unix timestamp in seconds', () => {
+        FileManagementUtils.addFile(
+            'connect/fileReplay/timestampInSeconds/input.csv',
+        );
+        const adapterConfiguration =
+            ConnectUtils.setUpPreprocessingRuleTest(false);
 
-            ConnectUtils.testAdapter(adapterInput, true);
-        });
+        ConnectUtils.replaceAdapterScript(
+            'event.timestamp = event.timestamp * 1000;\n return event;\n}',
+        );
 
-        it('File Stream adapter with unix timestamp in seconds', () => {
-            FileManagementUtils.addFile(
-                'connect/fileReplay/timestampInSeconds/input.csv',
-            );
-            const adapterConfiguration =
-                ConnectUtils.setUpPreprocessingRuleTest(false);
+        ConnectBtns.configureSchemaRunScriptBtn().click();
+        cy.wait(1000);
+        ConnectBtns.configureSchemaNextBtn().click();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+        ConnectBtns.configureFieldsNextBtn().click();
 
-            ConnectEventSchemaUtils.finishEventSchemaConfiguration();
-            ConnectUtils.tearDownPreprocessingRuleTest(
-                adapterConfiguration,
-                'cypress/fixtures/connect/fileReplay/timestampInSeconds/expected.csv',
-                false,
-                2000,
-            );
-        });
+        ConnectUtils.tearDownPreprocessingRuleTest(
+            adapterConfiguration,
+            'cypress/fixtures/connect/fileReplay/timestampInSeconds/expected.csv',
+            false,
+            2000,
+        );
+    });
 
-        it('File Stream adapter with unix timestamp in milliseconds', () => {
-            FileManagementUtils.addFile(
-                'connect/fileReplay/timestampInMilliseconds/input.csv',
-            );
-            const adapterConfiguration =
-                ConnectUtils.setUpPreprocessingRuleTest(false);
+    it('File Stream adapter with unix timestamp in milliseconds', () => {
+        FileManagementUtils.addFile(
+            'connect/fileReplay/timestampInMilliseconds/input.csv',
+        );
+        const adapterConfiguration =
+            ConnectUtils.setUpPreprocessingRuleTest(false);
 
-            // Edit timestamp property
-            ConnectEventSchemaUtils.editTimestampPropertyWithNumber(
-                'timestamp',
-                'Milliseconds',
-            );
+        ConnectBtns.configureSchemaRunScriptBtn().click();
+        cy.wait(1000);
+        ConnectBtns.configureSchemaNextBtn().click();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+        ConnectBtns.configureFieldsNextBtn().click();
 
-            ConnectEventSchemaUtils.finishEventSchemaConfiguration();
-            ConnectUtils.tearDownPreprocessingRuleTest(
-                adapterConfiguration,
-                'cypress/fixtures/connect/fileReplay/timestampInMilliseconds/expected.csv',
-                false,
-                2000,
-            );
-        });
+        ConnectUtils.tearDownPreprocessingRuleTest(
+            adapterConfiguration,
+            'cypress/fixtures/connect/fileReplay/timestampInMilliseconds/expected.csv',
+            false,
+            2000,
+        );
+    });
 
-        it('File Stream adapter validate file is shown when editing file static property', () => {
-            // Add a sample file adapter to edit
-            FileManagementUtils.addFile('fileTest/random.csv');
+    it('File Stream adapter validate file is shown when editing file static property', () => {
+        // Add a sample file adapter to edit
+        FileManagementUtils.addFile('fileTest/random.csv');
 
-            const adapterInput = AdapterBuilder.create('File_Stream')
-                .setName('File Stream Adapter Test')
-                .setTimestampProperty('timestamp')
-                .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
-                .setFormat('csv')
-                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
-                .setStartAdapter(false)
-                .build();
+        const adapterInput = AdapterBuilder.create('File_Stream')
+            .setName('File Stream Adapter Test')
+            .setTimestampProperty('timestamp')
+            .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
+            .setFormat('csv')
+            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+            .setStartAdapter(false)
+            .build();
 
-            ConnectUtils.testAdapter(adapterInput);
+        ConnectUtils.testAdapter(adapterInput);
 
-            // click on edit adapter
-            GeneralUtils.openMenuForRow(adapterInput.adapterName);
-            ConnectBtns.editAdapter().click();
+        // click on edit adapter
+        GeneralUtils.openMenuForRow(adapterInput.adapterName);
+        ConnectBtns.editAdapter().click();
 
-            // validate that the file name is set as default
-            cy.dataCy('file-input-file-name').should(
-                'have.value',
-                'random.csv',
-            );
-        });
-    },
-);
+        // validate that the file name is set as default
+        cy.dataCy('file-input-file-name').should('have.value', 'random.csv');
+    });
+});

@@ -84,12 +84,19 @@ export class EditSchemaTransformationComponent implements OnInit {
             this.isTimestampProperty = true;
             this.cachedProperty.semanticType = SemanticType.TIMESTAMP;
             this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
+
+            this.cachedProperty.additionalMetadata.originType = (
+                this.cachedProperty as EventPropertyPrimitive
+            ).runtimeType;
             (this.cachedProperty as EventPropertyPrimitive).runtimeType =
                 DataType.LONG;
         } else {
             this.cachedProperty.semanticType = undefined;
             this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';
             this.isTimestampProperty = false;
+            (this.cachedProperty as EventPropertyPrimitive).runtimeType =
+                this.cachedProperty.additionalMetadata.originType;
+            this.cachedProperty.additionalMetadata.originType = undefined;
         }
         this.timestampSemanticsChanged.emit(this.isTimestampProperty);
     }

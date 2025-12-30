@@ -170,11 +170,6 @@ export class ConnectEventSchemaUtils {
         return cy.dataCy('schema-preview-result-event', { timeout: 10000 });
     }
 
-    public static finishEventSchemaConfiguration() {
-        ConnectEventSchemaUtils.configureFieldsNextBtnEnabled();
-        ConnectBtns.configureFieldsNextBtn().click();
-    }
-
     public static clickEditProperty(propertyName: string) {
         cy.dataCy(`edit-${ConnectEventSchemaUtils.escape(propertyName)}`, {
             timeout: 10000,

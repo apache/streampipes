@@ -58,7 +58,6 @@ export class EditEventPropertyComponent implements OnInit {
     cachedProperty: EventProperty;
 
     isTimestampProperty = false;
-    // TODO required for unit convertion
     isNumericProperty: boolean;
 
     isEventPropertyPrimitive: boolean;
@@ -95,34 +94,12 @@ export class EditEventPropertyComponent implements OnInit {
 
             result.measurementUnit = ep.measurementUnit;
             if (ep.additionalMetadata) {
-                result.additionalMetadata.fromMeasurementUnit =
-                    ep.additionalMetadata.fromMeasurementUnit || undefined;
-                result.additionalMetadata.toMeasurementUnit =
-                    ep.additionalMetadata.toMeasurementUnit || undefined;
-
-                result.additionalMetadata.correctionValue =
-                    ep.additionalMetadata.correctionValue || undefined;
-                result.additionalMetadata.operator =
-                    ep.additionalMetadata.operator || undefined;
-
-                result.additionalMetadata.mode = ep.additionalMetadata.mode;
-                result.additionalMetadata.formatString =
-                    ep.additionalMetadata.formatString;
-                result.additionalMetadata.multiplier =
-                    ep.additionalMetadata.multiplier;
-
-                result.additionalMetadata.regex =
-                    ep.additionalMetadata.regex || undefined;
-                result.additionalMetadata.replaceWith =
-                    ep.additionalMetadata.replaceWith || undefined;
-                result.additionalMetadata.replaceAll =
-                    ep.additionalMetadata.replaceAll || undefined;
+                result.additionalMetadata.originType =
+                    ep.additionalMetadata.originType || undefined;
 
                 result.additionalMetadata.originType =
                     ep.additionalMetadata.originType || undefined;
             }
-
-            (result as any).staticValue = (ep as any).staticValue;
 
             return result;
         } else if (ep instanceof EventPropertyNested) {
@@ -169,25 +146,6 @@ export class EditEventPropertyComponent implements OnInit {
                 this.cachedProperty.additionalMetadata.fromMeasurementUnit;
             this.eventProperty.additionalMetadata.toMeasurementUnit =
                 this.cachedProperty.additionalMetadata.toMeasurementUnit;
-
-            this.eventProperty.additionalMetadata.mode =
-                this.cachedProperty.additionalMetadata.mode;
-            this.eventProperty.additionalMetadata.formatString =
-                this.cachedProperty.additionalMetadata.formatString;
-            this.eventProperty.additionalMetadata.multiplier =
-                this.cachedProperty.additionalMetadata.multiplier;
-
-            this.eventProperty.additionalMetadata.correctionValue =
-                this.cachedProperty.additionalMetadata.correctionValue;
-            this.eventProperty.additionalMetadata.operator =
-                this.cachedProperty.additionalMetadata.operator;
-
-            this.eventProperty.additionalMetadata.regex =
-                this.cachedProperty.additionalMetadata.regex;
-            this.eventProperty.additionalMetadata.replaceWith =
-                this.cachedProperty.additionalMetadata.replaceWith;
-            this.eventProperty.additionalMetadata.replaceAll =
-                this.cachedProperty.additionalMetadata.replaceAll;
 
             this.eventProperty.additionalMetadata.originType =
                 this.cachedProperty.additionalMetadata.originType;
