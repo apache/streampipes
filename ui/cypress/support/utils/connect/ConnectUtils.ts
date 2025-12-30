@@ -55,7 +55,8 @@ export class ConnectUtils {
 
         ConnectUtils.configureDimensionProperties(adapterConfiguration);
 
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectEventSchemaUtils.configureFieldsNextBtnEnabled();
+        ConnectBtns.configureFieldsNextBtn().click();
 
         ConnectUtils.startAdapter(
             adapterConfiguration,
