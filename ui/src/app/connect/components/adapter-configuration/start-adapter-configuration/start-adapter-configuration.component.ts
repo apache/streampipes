@@ -30,6 +30,8 @@ import {
     SpAssetTreeNode,
     RemoveDuplicatesTransformationRuleDescription,
     UserInfo,
+    RemoveDuplicateRule,
+    ReduceEventRateRule,
 } from '@streampipes/platform-services';
 import {
     UntypedFormBuilder,
@@ -57,11 +59,6 @@ import { UserRole } from '../../../../_enums/user-role.enum';
     standalone: false,
 })
 export class StartAdapterConfigurationComponent implements OnInit {
-    static EventRateTransformationRuleId =
-        'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription' as const;
-    static RemoveDuplicatesTransformationRuleId =
-        'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription' as const;
-
     private dialogService = inject(DialogService);
     private shepherdService = inject(ShepherdService);
     private formBuilder = inject(UntypedFormBuilder);
@@ -105,13 +102,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     currentUser: UserInfo;
 
-    // preprocessing rule variables
-    removeDuplicates = false;
-    removeDuplicatesTime: number;
-
-    eventRateReduction = false;
-    eventRateTime: number;
-    eventRateMode = 'none';
+    private cachedDuplicateRule: RemoveDuplicateRule = null;
+    private cachedEventRateRule: ReduceEventRateRule | null;
 
     saveInDataLake = false;
     dataLakeTimestampField: string;
@@ -152,36 +144,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
             this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
         });
         this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
-
-        this.applySelectedEventRateReduction();
-        this.applySelectedRemoveDuplicates();
-    }
-
-    applySelectedEventRateReduction(): void {
-        // TODO create the rule based on the UI input
-        // const eventRateRule =
-        //     this.transformationRuleService.getExistingTransformationRule<EventRateTransformationRuleDescription>(
-        //         this.adapterDescription,
-        //         StartAdapterConfigurationComponent.EventRateTransformationRuleId,
-        //     );
-        // if (eventRateRule !== undefined) {
-        //     this.eventRateReduction = true;
-        //     this.eventRateTime = eventRateRule.aggregationTimeWindow;
-        //     this.eventRateMode = eventRateRule.aggregationType;
-        // }
-    }
-
-    applySelectedRemoveDuplicates(): void {
-        // TODO create the rule based on the UI input
-        // const removeDuplicatesRule =
-        //     this.transformationRuleService.getExistingTransformationRule<RemoveDuplicatesTransformationRuleDescription>(
-        //         this.adapterDescription,
-        //         StartAdapterConfigurationComponent.RemoveDuplicatesTransformationRuleId,
-        //     );
-        // if (removeDuplicatesRule !== undefined) {
-        //     this.removeDuplicates = true;
-        //     this.removeDuplicatesTime = +removeDuplicatesRule.filterTimeWindow;
-        // }
     }
 
     findDefaultTimestamp(selected: boolean) {
@@ -198,7 +160,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     public editAdapter() {
-        this.checkAndApplyStreamRules();
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: this.translateService.instant('Edit adapter'),
@@ -218,8 +179,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     public startAdapter() {
-        this.checkAndApplyStreamRules();
-
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: this.translateService.instant('Adapter generation'),
@@ -251,24 +210,37 @@ export class StartAdapterConfigurationComponent implements OnInit {
         this.originalAssets = updatedAssets;
     }
 
-    private checkAndApplyStreamRules(): void {
-        if (this.removeDuplicates) {
-            const removeDuplicates: RemoveDuplicatesTransformationRuleDescription =
-                new RemoveDuplicatesTransformationRuleDescription();
-            removeDuplicates['@class'] =
-                StartAdapterConfigurationComponent.RemoveDuplicatesTransformationRuleId;
-            removeDuplicates.filterTimeWindow = this
-                .removeDuplicatesTime as any;
-            this.adapterDescription.rules.push(removeDuplicates);
+    onToggleDuplicates(isChecked: boolean): void {
+        const transformationConfig =
+            this.adapterDescription.transformationConfig;
+
+        if (isChecked) {
+            // Restore the cached values if they exist, otherwise set default values
+            transformationConfig.removeDuplicateRule = this
+                .cachedDuplicateRule ?? {
+                filterTimeWindow: '0',
+            };
+        } else {
+            this.cachedDuplicateRule = transformationConfig.removeDuplicateRule;
+            delete transformationConfig.removeDuplicateRule;
         }
-        if (this.eventRateReduction) {
-            const eventRate: EventRateTransformationRuleDescription =
-                new EventRateTransformationRuleDescription();
-            eventRate['@class'] =
-                StartAdapterConfigurationComponent.EventRateTransformationRuleId;
-            eventRate.aggregationTimeWindow = this.eventRateTime;
-            eventRate.aggregationType = this.eventRateMode;
-            this.adapterDescription.rules.push(eventRate);
+    }
+
+    onToggleEventRateReduction(isChecked: boolean): void {
+        const transformationConfig =
+            this.adapterDescription.transformationConfig;
+
+        if (isChecked) {
+            // Restore the cached values if they exist, otherwise set default values
+            this.adapterDescription.transformationConfig.reduceEventRateRule =
+                this.cachedEventRateRule ??
+                ReduceEventRateRule.fromData({
+                    aggregationTimeWindow: 1000,
+                    aggregationType: 'none',
+                });
+        } else {
+            this.cachedEventRateRule = transformationConfig.reduceEventRateRule;
+            delete transformationConfig.reduceEventRateRule;
         }
     }
 

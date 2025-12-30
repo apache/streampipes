@@ -20,12 +20,8 @@ package org.apache.streampipes.model.connect.adapter;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
-import org.apache.streampipes.model.connect.SchemaTransformationConfig;
+import org.apache.streampipes.model.connect.TransformationConfig;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.apache.streampipes.model.deployment.ExtensionDeploymentConfiguration;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -67,7 +63,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
    */
   private String correspondingDataStreamElementId;
 
-  private SchemaTransformationConfig schemaTransformationConfig;
+  private TransformationConfig transformationConfig;
 
   public AdapterDescription() {
     super();
@@ -76,7 +72,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.config = new ArrayList<>();
     this.dataStream = new SpDataStream();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
-    this.schemaTransformationConfig = new SchemaTransformationConfig();
+    this.transformationConfig = new TransformationConfig();
   }
 
   public AdapterDescription(int version) {
@@ -86,7 +82,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.config = new ArrayList<>();
     this.dataStream = new SpDataStream();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
-    this.schemaTransformationConfig = new SchemaTransformationConfig();
+    this.transformationConfig = new TransformationConfig();
     this.setVersion(version);
   }
 
@@ -107,7 +103,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     }
     this.running = other.isRunning();
     this.deploymentConfiguration = other.getDeploymentConfiguration();
-    this.schemaTransformationConfig = other.getSchemaTransformationConfig();
+    this.transformationConfig = other.getTransformationConfig();
   }
 
   public String getRev() {
@@ -144,36 +140,6 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   public void addConfig(StaticProperty sp) {
     this.config.add(sp);
-  }
-
-  public List<TransformationRuleDescription> getValueRules() {
-    var tmp = new ArrayList<TransformationRuleDescription>();
-    rules.forEach(rule -> {
-      if (rule instanceof ValueTransformationRuleDescription && !(rule instanceof AddTimestampRuleDescription)) {
-        tmp.add(rule);
-      }
-    });
-    return tmp;
-  }
-
-  public List<TransformationRuleDescription> getStreamRules() {
-    var tmp = new ArrayList<TransformationRuleDescription>();
-    rules.forEach(rule -> {
-      if (rule instanceof StreamTransformationRuleDescription) {
-        tmp.add(rule);
-      }
-    });
-    return tmp;
-  }
-
-  public List<TransformationRuleDescription> getSchemaRules() {
-    var tmp = new ArrayList<TransformationRuleDescription>();
-    rules.forEach(rule -> {
-      if (rule instanceof SchemaTransformationRuleDescription) {
-        tmp.add(rule);
-      }
-    });
-    return tmp;
   }
 
   public String getIcon() {
@@ -259,11 +225,11 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.deploymentConfiguration = deploymentConfiguration;
   }
 
-  public SchemaTransformationConfig getSchemaTransformationConfig() {
-    return schemaTransformationConfig;
+  public TransformationConfig getTransformationConfig() {
+    return transformationConfig;
   }
 
-  public void setSchemaTransformationConfig(SchemaTransformationConfig schemaTransformationConfig) {
-    this.schemaTransformationConfig = schemaTransformationConfig;
+  public void setTransformationConfig(TransformationConfig transformationConfig) {
+    this.transformationConfig = transformationConfig;
   }
 }

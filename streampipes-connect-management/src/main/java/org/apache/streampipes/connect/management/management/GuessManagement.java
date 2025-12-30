@@ -60,7 +60,7 @@ public class GuessManagement {
   }
 
   public EventSchema guessSchema(AdapterDescription adapterDescription) {
-    var event = adapterDescription.getSchemaTransformationConfig()
+    var event = adapterDescription.getTransformationConfig()
                                   .getOutputs()
                                   .get(0);
     return EventSchemaUtils.guessEventSchema(event);
@@ -99,27 +99,27 @@ public class GuessManagement {
   }
 
   public AdapterDescription transformSampleData(AdapterDescription adapterDescription) throws AdapterException {
-    if (adapterDescription.getSchemaTransformationConfig()
-                          .getScript() == null || adapterDescription.getSchemaTransformationConfig()
+    if (adapterDescription.getTransformationConfig()
+                          .getScript() == null || adapterDescription.getTransformationConfig()
                                                                     .getLanguage() == null) {
-      adapterDescription.getSchemaTransformationConfig()
-                        .setOutputs(adapterDescription.getSchemaTransformationConfig().getInputs());
+      adapterDescription.getTransformationConfig()
+                        .setOutputs(adapterDescription.getTransformationConfig().getInputs());
 
     } else {
 
       try {
 
 
-        var transformationScript = adapterDescription.getSchemaTransformationConfig();
+        var transformationScript = adapterDescription.getTransformationConfig();
         var engine = TransformationEngines.INSTANCE.getTransformationEngine(transformationScript.getLanguage());
         var compiledScript = engine.compile(transformationScript.getScript());
 
-        var samples = adapterDescription.getSchemaTransformationConfig()
+        var samples = adapterDescription.getTransformationConfig()
                                         .getInputs();
         if (!samples.isEmpty()) {
           var result = compiledScript.transform(samples.get(0));
 
-          adapterDescription.getSchemaTransformationConfig()
+          adapterDescription.getTransformationConfig()
                             .setOutputs(List.of(result));
         } else {
           throw new AdapterException("No samples available to transform");

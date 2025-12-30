@@ -48,15 +48,15 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
   )
       throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException, AdapterException {
 
-    if (compactAdapter.schemaTransformationConfig() != null && compactAdapter.schemaTransformationConfig()
-                                                                             .getScript() != null) {
-      adapterDescription.getSchemaTransformationConfig()
-                        .setScript(compactAdapter.schemaTransformationConfig()
+    if (compactAdapter.transformationConfig() != null && compactAdapter.transformationConfig()
+                                                                       .getScript() != null) {
+      adapterDescription.getTransformationConfig()
+                        .setScript(compactAdapter.transformationConfig()
                                                  .getScript());
     }
 
     var sampleData = guessManagement.getSampleData(adapterDescription);
-    adapterDescription.getSchemaTransformationConfig()
+    adapterDescription.getTransformationConfig()
                       .setInputs(sampleData.getSamples());
 
     setDefaultScriptIfNotSet(adapterDescription);
@@ -86,12 +86,12 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
   }
 
   private void setDefaultScriptIfNotSet(AdapterDescription adapterDescription) {
-    if (adapterDescription.getSchemaTransformationConfig()
+    if (adapterDescription.getTransformationConfig()
                           .getScript() == null
-        || adapterDescription.getSchemaTransformationConfig()
+        || adapterDescription.getTransformationConfig()
                              .getScript()
                              .isEmpty()) {
-      adapterDescription.getSchemaTransformationConfig()
+      adapterDescription.getTransformationConfig()
                         .setScript("""
                                    function transform(event) {
                                      return event;
@@ -102,12 +102,12 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
   }
 
   private void setDefaultScriptLanguageIfNotSet(AdapterDescription adapterDescription) {
-    if (adapterDescription.getSchemaTransformationConfig()
+    if (adapterDescription.getTransformationConfig()
                           .getLanguage() == null
-        || adapterDescription.getSchemaTransformationConfig()
+        || adapterDescription.getTransformationConfig()
                              .getLanguage()
                              .isEmpty()) {
-      adapterDescription.getSchemaTransformationConfig()
+      adapterDescription.getTransformationConfig()
                         .setLanguage("javascript");
     }
   }

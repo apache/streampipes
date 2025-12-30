@@ -23,6 +23,7 @@ import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransfo
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
+@Deprecated(since = "0.99.0", forRemoval = true)
 public interface ITransformationRuleVisitor {
 
   void visit(EventRateTransformationRuleDescription rule);

@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-29 11:22:22.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-30 09:52:29.
 
 import { Storable } from './platform-services';
 

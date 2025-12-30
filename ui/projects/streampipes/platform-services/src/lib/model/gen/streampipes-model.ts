@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-29 11:22:19.
+// Generated using typescript-generator version 3.2.1263 on 2025-12-30 09:52:24.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -112,11 +112,8 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'icon': string;
     'rules': TransformationRuleDescriptionUnion[];
     'running': boolean;
-    'schemaRules': TransformationRuleDescriptionUnion[];
-    'schemaTransformationConfig': SchemaTransformationConfig;
     'selectedEndpointUrl': string;
-    'streamRules': TransformationRuleDescriptionUnion[];
-    'valueRules': TransformationRuleDescriptionUnion[];
+    'transformationConfig': TransformationConfig;
 
     static 'fromData'(
         data: AdapterDescription,
@@ -146,20 +143,10 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
         instance.running = data.running;
-        instance.schemaRules = __getCopyArrayFn(
-            TransformationRuleDescription.fromDataUnion,
-        )(data.schemaRules);
-        instance.schemaTransformationConfig =
-            SchemaTransformationConfig.fromData(
-                data.schemaTransformationConfig,
-            );
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
-        instance.streamRules = __getCopyArrayFn(
-            TransformationRuleDescription.fromDataUnion,
-        )(data.streamRules);
-        instance.valueRules = __getCopyArrayFn(
-            TransformationRuleDescription.fromDataUnion,
-        )(data.valueRules);
+        instance.transformationConfig = TransformationConfig.fromData(
+            data.transformationConfig,
+        );
         return instance;
     }
 }
@@ -867,7 +854,7 @@ export class CompactAdapter {
     id: string;
     name: string;
     schema: { [index: string]: CompactEventProperty };
-    schemaTransformationConfig: SchemaTransformationConfig;
+    transformationConfig: TransformationConfig;
 
     static fromData(
         data: CompactAdapter,
@@ -888,10 +875,9 @@ export class CompactAdapter {
         instance.schema = __getCopyObjectFn(CompactEventProperty.fromData)(
             data.schema,
         );
-        instance.schemaTransformationConfig =
-            SchemaTransformationConfig.fromData(
-                data.schemaTransformationConfig,
-            );
+        instance.transformationConfig = TransformationConfig.fromData(
+            data.transformationConfig,
+        );
         return instance;
     }
 }
@@ -3377,6 +3363,24 @@ export class QuantitativeValue extends ValueSpecification {
     }
 }
 
+export class ReduceEventRateRule {
+    aggregationTimeWindow: number;
+    aggregationType: string;
+
+    static fromData(
+        data: ReduceEventRateRule,
+        target?: ReduceEventRateRule,
+    ): ReduceEventRateRule {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ReduceEventRateRule();
+        instance.aggregationTimeWindow = data.aggregationTimeWindow;
+        instance.aggregationType = data.aggregationType;
+        return instance;
+    }
+}
+
 /**
  * @deprecated since 0.99.0, for removal
  */
@@ -3400,6 +3404,22 @@ export class RegexTransformationRuleDescription extends ValueTransformationRuleD
         instance.replaceAll = data.replaceAll;
         instance.replaceWith = data.replaceWith;
         instance.runtimeKey = data.runtimeKey;
+        return instance;
+    }
+}
+
+export class RemoveDuplicateRule {
+    filterTimeWindow: string;
+
+    static fromData(
+        data: RemoveDuplicateRule,
+        target?: RemoveDuplicateRule,
+    ): RemoveDuplicateRule {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RemoveDuplicateRule();
+        instance.filterTimeWindow = data.filterTimeWindow;
         return instance;
     }
 }
@@ -3720,32 +3740,6 @@ export class SampleData {
         instance.samples = __getCopyArrayFn(
             __getCopyObjectFn(__identity<any>()),
         )(data.samples);
-        return instance;
-    }
-}
-
-export class SchemaTransformationConfig {
-    inputs: { [index: string]: any }[];
-    language: string;
-    outputs: { [index: string]: any }[];
-    script: string;
-
-    static fromData(
-        data: SchemaTransformationConfig,
-        target?: SchemaTransformationConfig,
-    ): SchemaTransformationConfig {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new SchemaTransformationConfig();
-        instance.inputs = __getCopyArrayFn(
-            __getCopyObjectFn(__identity<any>()),
-        )(data.inputs);
-        instance.language = data.language;
-        instance.outputs = __getCopyArrayFn(
-            __getCopyObjectFn(__identity<any>()),
-        )(data.outputs);
-        instance.script = data.script;
         return instance;
     }
 }
@@ -4314,6 +4308,40 @@ export class TransformOutputStrategy extends OutputStrategy {
         instance.transformOperations = __getCopyArrayFn(
             TransformOperation.fromData,
         )(data.transformOperations);
+        return instance;
+    }
+}
+
+export class TransformationConfig {
+    inputs: { [index: string]: any }[];
+    language: string;
+    outputs: { [index: string]: any }[];
+    reduceEventRateRule: ReduceEventRateRule;
+    removeDuplicateRule: RemoveDuplicateRule;
+    script: string;
+
+    static fromData(
+        data: TransformationConfig,
+        target?: TransformationConfig,
+    ): TransformationConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new TransformationConfig();
+        instance.inputs = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.inputs);
+        instance.language = data.language;
+        instance.outputs = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.outputs);
+        instance.reduceEventRateRule = ReduceEventRateRule.fromData(
+            data.reduceEventRateRule,
+        );
+        instance.removeDuplicateRule = RemoveDuplicateRule.fromData(
+            data.removeDuplicateRule,
+        );
+        instance.script = data.script;
         return instance;
     }
 }

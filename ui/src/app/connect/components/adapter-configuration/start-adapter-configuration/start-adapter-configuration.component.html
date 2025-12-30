@@ -140,10 +140,15 @@
             "
             optionIcon="cleaning_services"
             dataCy="connect-remove-duplicates-box"
-            [isChecked]="removeDuplicates"
-            (optionSelectedEmitter)="removeDuplicates = $event"
+            [isChecked]="
+                !!adapterDescription?.transformationConfig?.removeDuplicateRule
+            "
+            (optionSelectedEmitter)="onToggleDuplicates($event)"
         >
-            @if (removeDuplicates) {
+            @if (
+                adapterDescription?.transformationConfig?.removeDuplicateRule;
+                as removeDuplicateRule
+            ) {
                 <mat-form-field color="accent" class="mt-10">
                     <input
                         matInput
@@ -152,7 +157,7 @@
                         [placeholder]="
                             'Remove Duplicates Time Window' | translate
                         "
-                        [(ngModel)]="removeDuplicatesTime"
+                        [(ngModel)]="removeDuplicateRule.filterTimeWindow"
                         data-cy="connect-remove-duplicates-input"
                     />
                 </mat-form-field>
@@ -167,28 +172,32 @@
             "
             optionIcon="speed"
             dataCy="connect-reduce-event-rate-box"
-            [isChecked]="eventRateReduction"
-            (optionSelectedEmitter)="eventRateReduction = $event"
+            [isChecked]="
+                !!adapterDescription?.transformationConfig?.reduceEventRateRule
+            "
+            (optionSelectedEmitter)="onToggleEventRateReduction($event)"
         >
-            @if (eventRateReduction) {
+            @if (
+                adapterDescription?.transformationConfig?.reduceEventRateRule;
+                as reduceEventRateRule
+            ) {
                 <mat-form-field color="accent" class="mt-10">
                     <input
                         type="number"
                         matInput
                         id="input-evenRateTime"
                         [ngModelOptions]="{ standalone: true }"
-                        [(ngModel)]="eventRateTime"
+                        [(ngModel)]="reduceEventRateRule.aggregationTimeWindow"
                         [placeholder]="'Time Window (Milliseconds)' | translate"
                         matTooltipPosition="above"
                         data-cy="connect-reduce-event-input"
                     />
                 </mat-form-field>
-            }
-            @if (eventRateReduction) {
+
                 <mat-form-field color="accent">
                     <mat-label>{{ 'Event Aggregation' | translate }}</mat-label>
                     <mat-select
-                        [(ngModel)]="eventRateMode"
+                        [(ngModel)]="reduceEventRateRule.aggregationType"
                         [ngModelOptions]="{ standalone: true }"
                     >
                         <mat-option

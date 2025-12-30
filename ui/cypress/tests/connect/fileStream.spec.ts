@@ -71,12 +71,6 @@ describe(
             const adapterConfiguration =
                 ConnectUtils.setUpPreprocessingRuleTest(false);
 
-            // Edit timestamp property
-            ConnectEventSchemaUtils.editTimestampPropertyWithNumber(
-                'timestamp',
-                'Seconds',
-            );
-
             ConnectEventSchemaUtils.finishEventSchemaConfiguration();
             ConnectUtils.tearDownPreprocessingRuleTest(
                 adapterConfiguration,

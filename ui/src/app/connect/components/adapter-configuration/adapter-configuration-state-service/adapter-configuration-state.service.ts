@@ -97,7 +97,7 @@ export class AdapterConfigurationStateService {
             next: sampleData => {
                 // 1. Mutate the data
                 const updatedAdapter = { ...adapter };
-                updatedAdapter.schemaTransformationConfig.inputs = [
+                updatedAdapter.transformationConfig.inputs = [
                     sampleData.samples[0],
                 ];
 
@@ -109,7 +109,7 @@ export class AdapterConfigurationStateService {
 
                 // 3. Automatically run the script after getting the sample
                 const currentScript =
-                    updatedAdapter.schemaTransformationConfig.script;
+                    updatedAdapter.transformationConfig.script;
                 this.runScript(updatedAdapter, currentScript);
             },
             error: (error: HttpErrorResponse) => {
@@ -131,15 +131,15 @@ export class AdapterConfigurationStateService {
 
         // 2. Update the local adapter object with the latest script from the UI
         const updatedAdapter = { ...adapter };
-        updatedAdapter.schemaTransformationConfig.script = script;
-        updatedAdapter.schemaTransformationConfig.language = 'javascript';
+        updatedAdapter.transformationConfig.script = script;
+        updatedAdapter.transformationConfig.language = 'javascript';
 
         // 3. Execute the API call
         this.restService.sampleTransform(updatedAdapter).subscribe({
             next: response => {
                 // Update the outputs in the adapter object based on server results
-                updatedAdapter.schemaTransformationConfig.outputs =
-                    response.schemaTransformationConfig.outputs;
+                updatedAdapter.transformationConfig.outputs =
+                    response.transformationConfig.outputs;
 
                 this.updateState({
                     adapterDescription: updatedAdapter,

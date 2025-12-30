@@ -56,8 +56,8 @@ export class ConfigureSchemaComponent implements OnInit {
     sampleErrorMessage = computed(() => this.stateService.state().sampleError);
     input = computed(
         () =>
-            this.stateService.state().adapterDescription
-                ?.schemaTransformationConfig?.inputs?.[0] || {},
+            this.stateService.state().adapterDescription?.transformationConfig
+                ?.inputs?.[0] || {},
     );
 
     isRunningScript = computed(() => this.stateService.state().isRunningScript);
@@ -66,8 +66,8 @@ export class ConfigureSchemaComponent implements OnInit {
 
     output = computed(
         () =>
-            this.stateService.state().adapterDescription
-                ?.schemaTransformationConfig?.outputs?.[0] || {},
+            this.stateService.state().adapterDescription?.transformationConfig
+                ?.outputs?.[0] || {},
     );
 
     script = signal(`// returns the same event
@@ -95,12 +95,11 @@ function transform(event) {
 
     private initializeScriptVariable(): void {
         const currentScript =
-            this.adapterDescription.schemaTransformationConfig.script;
+            this.adapterDescription.transformationConfig.script;
         if (currentScript) {
             this.script.set(currentScript);
         } else {
-            this.adapterDescription.schemaTransformationConfig.script =
-                this.script();
+            this.adapterDescription.transformationConfig.script = this.script();
         }
     }
 

@@ -11,6 +11,7 @@
       <env name="SP_KAFKA_HOST" value="localhost" />
       <env name="SP_KAFKA_PORT" value="9094" />
       <env name="SP_PRIORITIZED_PROTOCOL" value="kafka" />
+      <env name="SP_HOST" value="192.168.2.140" />
     </envs>
     <module name="streampipes-extensions-all-iiot" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.extensions.all.iiot.AllExtensionsIIoTInit" />

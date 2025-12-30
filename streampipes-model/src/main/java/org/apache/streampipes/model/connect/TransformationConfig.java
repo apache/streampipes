@@ -22,13 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SchemaTransformationConfig {
+public class TransformationConfig {
   private String language;
   private String script;
   private List<Map<String, Object>> inputs;
   private List<Map<String, Object>> outputs;
 
-  public SchemaTransformationConfig() {
+  private ReduceEventRateRule reduceEventRateRule;
+  private RemoveDuplicateRule removeDuplicateRule;
+
+  public TransformationConfig() {
     this.inputs = new ArrayList<>();
     this.outputs = new ArrayList<>();
   }
@@ -63,5 +66,21 @@ public class SchemaTransformationConfig {
 
   public void setOutputs(List<Map<String, Object>> outputs) {
     this.outputs = outputs;
+  }
+
+  public ReduceEventRateRule getReduceEventRateRule() {
+    return reduceEventRateRule;
+  }
+
+  public void setReduceEventRateRule(ReduceEventRateRule reduceEventRateRule) {
+    this.reduceEventRateRule = reduceEventRateRule;
+  }
+
+  public RemoveDuplicateRule getRemoveDuplicateRule() {
+    return removeDuplicateRule;
+  }
+
+  public void setRemoveDuplicateRule(RemoveDuplicateRule removeDuplicateRule) {
+    this.removeDuplicateRule = removeDuplicateRule;
   }
 }

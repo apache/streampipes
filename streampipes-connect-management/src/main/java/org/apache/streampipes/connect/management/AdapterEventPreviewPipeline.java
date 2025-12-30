@@ -40,7 +40,7 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
     this.pipelineElements = new AdapterPipelineGeneratorBase()
         .makeAdapterPipelineElements(new ArrayList<>(), false, adapterDescription, false);
 
-    this.event = adapterDescription.getSchemaTransformationConfig().getOutputs().get(0);
+    this.event = adapterDescription.getTransformationConfig().getOutputs().get(0);
   }
 
   @Override

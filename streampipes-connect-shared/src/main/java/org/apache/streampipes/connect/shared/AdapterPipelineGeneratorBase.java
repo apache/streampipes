@@ -52,9 +52,9 @@ public class AdapterPipelineGeneratorBase {
 
     if (includeScript) {
       elements.add(new ScriptTransformationPipelineElement(
-          adapterDescription.getSchemaTransformationConfig()
+          adapterDescription.getTransformationConfig()
                             .getLanguage(),
-          adapterDescription.getSchemaTransformationConfig()
+          adapterDescription.getTransformationConfig()
                             .getScript()
       ));
 

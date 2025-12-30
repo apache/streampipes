@@ -21,6 +21,8 @@ package org.apache.streampipes.model.connect.rules.value;
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
+
+@Deprecated(since = "0.99.0", forRemoval = true)
 public class ChangeDatatypeTransformationRuleDescription extends ValueTransformationRuleDescription {
 
   private String runtimeKey;

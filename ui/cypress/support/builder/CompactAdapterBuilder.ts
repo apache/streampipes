@@ -65,15 +65,17 @@ export class CompactAdapterBuilder {
     }
 
     public withScript(script: string) {
-        if (!this.compactAdapter.schemaTransformationConfig) {
-            this.compactAdapter.schemaTransformationConfig = {
+        if (!this.compactAdapter.transformationConfig) {
+            this.compactAdapter.transformationConfig = {
                 inputs: [],
                 language: 'javascript',
                 outputs: [],
                 script: script,
+                reduceEventRateRule: null,
+                removeDuplicateRule: null,
             };
         } else {
-            this.compactAdapter.schemaTransformationConfig.script = script;
+            this.compactAdapter.transformationConfig.script = script;
         }
         return this;
     }

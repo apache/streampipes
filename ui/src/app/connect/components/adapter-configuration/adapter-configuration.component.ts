@@ -57,12 +57,14 @@ export class AdapterConfigurationComponent implements OnInit {
             ? this.translate.instant('Edit adapter: ') + this.displayName
             : this.translate.instant('New adapter: ') + this.displayName;
 
-        if (!this.adapterDescription.schemaTransformationConfig) {
-            this.adapterDescription.schemaTransformationConfig = {
+        if (!this.adapterDescription.transformationConfig) {
+            this.adapterDescription.transformationConfig = {
                 inputs: [],
                 language: 'javascript',
                 outputs: [],
                 script: '',
+                reduceEventRateRule: null,
+                removeDuplicateRule: null,
             };
         }
         if (this.adapterDescription) {
@@ -84,10 +86,7 @@ export class AdapterConfigurationComponent implements OnInit {
         this.goForward();
         this.stateService.updateAdapter(this.adapterDescription);
 
-        if (
-            this.adapterDescription.schemaTransformationConfig.inputs.length ==
-            0
-        ) {
+        if (this.adapterDescription.transformationConfig.inputs.length == 0) {
             this.stateService.getSampleEvent(this.adapterDescription);
         }
     }

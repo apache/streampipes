@@ -51,6 +51,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(ChangeDatatypeTransformationRuleDescription.class),
     @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
 })
+@Deprecated(since = "0.99.0", forRemoval = true)
 public abstract class TransformationRuleDescription {
 
 

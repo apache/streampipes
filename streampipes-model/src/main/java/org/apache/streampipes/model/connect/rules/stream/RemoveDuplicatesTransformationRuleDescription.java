@@ -21,6 +21,7 @@ package org.apache.streampipes.model.connect.rules.stream;
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
+@Deprecated(since = "0.99.0", forRemoval = true)
 public class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
 
   private String filterTimeWindow;

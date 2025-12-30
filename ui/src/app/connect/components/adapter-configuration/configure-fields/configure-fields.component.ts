@@ -77,7 +77,7 @@ export class ConfigureFieldsComponent {
     });
 
     eventPreview = computed(
-        () => this.adapter()?.schemaTransformationConfig?.outputs?.[0] || {},
+        () => this.adapter()?.transformationConfig?.outputs?.[0] || {},
     );
 
     resultPreview = computed(() => this.stateService.state().resultPreview);

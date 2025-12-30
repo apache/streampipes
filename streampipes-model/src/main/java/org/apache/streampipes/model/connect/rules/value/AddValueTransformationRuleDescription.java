@@ -24,6 +24,7 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.XSD;
 
 
+@Deprecated(since = "0.99.0", forRemoval = true)
 public class AddValueTransformationRuleDescription extends ValueTransformationRuleDescription {
 
   private String runtimeKey;

@@ -55,7 +55,7 @@ public class CompactAdapterManagement {
         adapterDescription.getDescription(),
         adapterDescription.getAppId(),
         generator.getConfig(),
-        adapterDescription.getSchemaTransformationConfig(),
+        adapterDescription.getTransformationConfig(),
         generator.getSchema(),
         generator.getCreateOptions()
     );
