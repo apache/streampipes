@@ -21,6 +21,13 @@ import org.apache.streampipes.commons.environment.Environment;
 
 import org.apache.commons.codec.binary.Base64;
 
+/**
+ * Utility class for handling CouchDB authentication.
+ * <p>
+ * Provides helper methods to construct authentication information, including
+ * generation of the value for HTTP Basic Authentication headers based on
+ * CouchDB credentials obtained from the {@link Environment}.
+ */
 
 public final class CouchDbAuthUtils {
 
