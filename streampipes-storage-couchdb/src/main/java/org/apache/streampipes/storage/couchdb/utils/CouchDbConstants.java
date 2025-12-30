@@ -29,5 +29,9 @@ package org.apache.streampipes.storage.couchdb.utils;
 public final class CouchDbConstants {
   public static final String USER_DB_NAME = "users";
   public static final String DATA_LAKE_DB_NAME = "data-lake";
+
+  private CouchDbConstants() {
+    // utility class
+  }
 }
 
