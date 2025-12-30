@@ -23,7 +23,7 @@ import org.lightcouch.CouchDbClient;
 
 
 
-public class CouchDbClientFactory {
+public final class CouchDbClientFactory {
 
   private final CouchDbPropertiesFactory propertiesFactory;
 
