@@ -18,6 +18,14 @@
 
 package org.apache.streampipes.storage.couchdb.utils;
 
+/**
+ * Constants for CouchDB database names used throughout the storage layer.
+ *
+ * <p>This class centralizes database name definitions to avoid duplication
+ * and ensure consistency across CouchDB-related components.
+ */
+
+
 public final class CouchDbConstants {
   public static final String USER_DB_NAME = "users";
   public static final String DATA_LAKE_DB_NAME = "data-lake";
