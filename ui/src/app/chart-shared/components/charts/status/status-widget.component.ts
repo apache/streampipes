@@ -25,7 +25,7 @@ import {
 } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-data-explorer-status-widget',
+    selector: 'sp-chart-status-widget',
     templateUrl: './status-widget.component.html',
     styleUrls: ['./status-widget.component.scss'],
     standalone: false,

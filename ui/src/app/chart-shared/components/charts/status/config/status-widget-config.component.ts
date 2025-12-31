@@ -27,7 +27,7 @@ import { ChartFieldProviderService } from '../../../../services/chart-field-prov
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-data-explorer-status-widget-config',
+    selector: 'sp-chart-status-widget-config',
     templateUrl: './status-widget-config.component.html',
     styleUrls: ['./status-widget-config.component.scss'],
     standalone: false,
