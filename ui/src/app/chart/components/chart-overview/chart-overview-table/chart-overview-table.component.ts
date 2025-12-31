@@ -35,7 +35,7 @@ import { Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 
 @Component({
-    selector: 'sp-data-explorer-overview-table',
+    selector: 'sp-chart-overview-table',
     templateUrl: './chart-overview-table.component.html',
     styleUrls: ['../chart-overview.component.scss'],
     standalone: false,
