@@ -25,7 +25,7 @@ import {
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-data-explorer-image-widget-config',
+    selector: 'sp-chart-image-widget-config',
     templateUrl: './image-widget-config.component.html',
     styleUrls: ['./image-widget-config.component.scss'],
     standalone: false,

@@ -28,7 +28,7 @@ import { ImageWidgetModel } from './model/image-widget.model';
 import { SecurePipe } from '../../../../services/secure.pipe';
 
 @Component({
-    selector: 'sp-data-explorer-image-widget',
+    selector: 'sp-chart-image-widget',
     templateUrl: './image-widget.component.html',
     standalone: false,
 })
