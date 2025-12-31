@@ -27,7 +27,7 @@ import { ChartFieldProviderService } from '../../../../services/chart-field-prov
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-data-explorer-heatmap-widget-config',
+    selector: 'sp-chart-heatmap-widget-config',
     templateUrl: './heatmap-widget-config.component.html',
     standalone: false,
 })
