@@ -28,7 +28,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-    selector: 'sp-data-explorer-traffic-light-widget-config',
+    selector: 'sp-chart-traffic-light-widget-config',
     templateUrl: './traffic-light-widget-config.component.html',
     styleUrls: ['./traffic-light-widget-config.component.scss'],
     standalone: false,

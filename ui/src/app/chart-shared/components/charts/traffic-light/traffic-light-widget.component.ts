@@ -25,7 +25,7 @@ import {
 } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-data-explorer-traffic-light-widget',
+    selector: 'sp-chart-traffic-light-widget',
     templateUrl: './traffic-light-widget.component.html',
     styleUrls: ['./traffic-light-widget.component.scss'],
     standalone: false,
