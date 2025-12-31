@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.iotdb.rpc.IoTDBConnectionException;
-import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.query.DataLakeMeasurementCounter;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
+import org.apache.iotdb.rpc.IoTDBConnectionException;
+import org.apache.iotdb.rpc.StatementExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +35,9 @@ public class DataLakeMeasurementCounterIotDb extends DataLakeMeasurementCounter 
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeMeasurementCounterIotDb.class);
 
   public DataLakeMeasurementCounterIotDb(List<DataLakeMeasure> allMeasurements,
-                                         List<String> measurementNames) {
-    super(allMeasurements, measurementNames);
+                                         List<String> measurementNames,
+                                         int daysBack) {
+    super(allMeasurements, measurementNames, daysBack);
   }
 
   /**

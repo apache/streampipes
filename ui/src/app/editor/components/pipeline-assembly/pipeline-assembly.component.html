@@ -16,8 +16,8 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column">
-    <div class="pipeline-assembly-options page-container-nav">
+<sp-basic-view>
+    <div nav fxFlex="100">
         <sp-pipeline-assembly-options
             fxFlex="100"
             #assemblyOptionsComponent
@@ -33,7 +33,7 @@
         >
         </sp-pipeline-assembly-options>
     </div>
-    <div id="outerAssemblyArea" class="outerAssembly assembly-border">
+    <div id="outerAssemblyArea" class="outerAssembly">
         @if (rawPipelineModel) {
             <sp-pipeline-assembly-drawing-area
                 #drawingAreaComponent
@@ -52,4 +52,4 @@
             </sp-pipeline-assembly-drawing-area>
         }
     </div>
-</div>
+</sp-basic-view>

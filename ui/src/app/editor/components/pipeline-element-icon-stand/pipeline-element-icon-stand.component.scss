@@ -23,13 +23,9 @@
 }
 
 .icon-stand {
-    max-height: calc(100vh - 148px);
+    max-height: calc(100vh - 126px);
     overflow-y: auto;
     margin-top: 5px;
-}
-
-.border {
-    border: 1px solid var(--color-bg-3);
 }
 
 .pe-row {
@@ -83,14 +79,11 @@
 .panel-outer {
     margin-bottom: 10px;
     margin-left: 0;
-    margin-right: 0px;
-    border-right: 1px solid var(--color-bg-3);
-    border-bottom: 1px solid var(--color-bg-3);
-    border-top: 1px solid var(--color-bg-3);
+    margin-right: 0;
 }
 
 .search-field {
-    width: 230px;
+    width: 100%;
 }
 
 .group-outer {
@@ -109,4 +102,8 @@
 
 .sort-option {
     cursor: pointer;
+}
+
+.mw-100 {
+    max-width: 100%;
 }

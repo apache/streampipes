@@ -39,8 +39,9 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   @Override
   public IDataLakeMeasurementCounter getMeasurementCounter(
       List<DataLakeMeasure> allMeasurements,
-      List<String> measurementsToCount) {
-    return new DataLakeMeasurementCounterInflux(allMeasurements, measurementsToCount);
+      List<String> measurementsToCount,
+      int daysBack) {
+    return new DataLakeMeasurementCounterInflux(allMeasurements, measurementsToCount, daysBack);
   }
 
   @Override

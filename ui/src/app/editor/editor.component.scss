@@ -16,6 +16,10 @@
  *
  */
 
+.pipeline-editor-outer {
+    min-height: calc(100vh - 56px);
+}
+
 .text-color {
     color: var(--color-primary);
 }
