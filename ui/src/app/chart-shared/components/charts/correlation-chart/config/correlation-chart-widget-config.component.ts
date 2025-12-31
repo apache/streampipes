@@ -25,7 +25,7 @@ import {
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-data-explorer-correlation-chart-widget-config',
+    selector: 'sp-chart-correlation-chart-widget-config',
     templateUrl: './correlation-chart-widget-config.component.html',
     standalone: false,
 })
