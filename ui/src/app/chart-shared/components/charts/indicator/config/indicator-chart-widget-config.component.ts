@@ -26,7 +26,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
-    selector: 'sp-data-explorer-indicator-chart-widget-config',
+    selector: 'sp-chart-indicator-chart-widget-config',
     templateUrl: './indicator-chart-widget-config.component.html',
     standalone: false,
 })
