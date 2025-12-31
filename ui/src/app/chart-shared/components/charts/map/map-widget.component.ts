@@ -41,7 +41,7 @@ import {
 import { MapLayerProviderService } from '../../../../core-ui/services/map-layer-provider.service';
 
 @Component({
-    selector: 'sp-data-explorer-map-widget',
+    selector: 'sp-chart-map-widget',
     templateUrl: './map-widget.component.html',
     styleUrls: ['./map-widget.component.scss'],
     standalone: false,

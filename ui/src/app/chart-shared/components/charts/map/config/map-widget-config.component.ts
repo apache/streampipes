@@ -25,7 +25,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
-    selector: 'sp-data-explorer-map-widget-config',
+    selector: 'sp-chart-map-widget-config',
     templateUrl: './map-widget-config.component.html',
     standalone: false,
 })
