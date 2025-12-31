@@ -58,7 +58,7 @@ export abstract class AbstractChartViewDirective {
     widgetsVisible = true;
 
     /**
-     * This is the date range (start, end) to view the data and is set in data-explorer.ts
+     * This is the date range (start, end) to view the data and is set in chart.ts
      */
     @Input()
     timeSettings: TimeSettings;
