@@ -27,7 +27,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 
 @Component({
-    selector: 'sp-data-explorer-time-series-chart-widget-config',
+    selector: 'sp-chart-time-series-chart-widget-config',
     templateUrl: './time-series-chart-widget-config.component.html',
     standalone: false,
 })
