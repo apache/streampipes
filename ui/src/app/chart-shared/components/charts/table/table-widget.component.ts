@@ -28,7 +28,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-    selector: 'sp-data-explorer-table-widget',
+    selector: 'sp-chart-table-widget',
     templateUrl: './table-widget.component.html',
     styleUrls: ['./table-widget.component.scss'],
     standalone: false,

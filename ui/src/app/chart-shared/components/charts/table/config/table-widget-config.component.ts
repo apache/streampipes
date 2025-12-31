@@ -24,7 +24,7 @@ import { ChartFieldProviderService } from '../../../../services/chart-field-prov
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-data-explorer-table-widget-config',
+    selector: 'sp-chart-table-widget-config',
     templateUrl: './table-widget-config.component.html',
     styleUrls: ['./table-widget-config.component.scss'],
     standalone: false,
