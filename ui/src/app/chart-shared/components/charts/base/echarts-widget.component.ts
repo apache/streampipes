@@ -31,7 +31,7 @@ import { debounceTime } from 'rxjs/operators';
 import { ResizeEchartsService } from '../../../services/resize-echarts.service';
 
 @Component({
-    selector: 'sp-data-explorer-echarts-widget',
+    selector: 'sp-chart-echarts-widget',
     templateUrl: './echarts-widget.component.html',
     styleUrls: ['./echarts-widget.component.scss'],
     standalone: false,
