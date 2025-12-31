@@ -25,7 +25,7 @@
     "test-cypress-smoke": "npx cypress run --spec 'cypress/tests/**/*.smoke.spec.ts' --config baseUrl=http://localhost:8082",
     "test-cypress-all": "npx cypress run --spec 'cypress/tests/**/*.spec.ts' --config baseUrl=http://localhost:8082",
     "prepare": "cd ../ && husky install ./ui/.husky",
-    "i18n:extract": "ngx-translate-extract --input ./src --input ./projects --output ./deployment/i18n/{en,de}.json -n --clean --format json && node scripts/sort-translations.js deployment/i18n/en.json && node scripts/sort-translations.js deployment/i18n/de.json",
+    "i18n:extract": "ngx-translate-extract --input ./src --input ./projects --output ./deployment/i18n/{en,de}.json -n --clean --format json && echo \"Sorting en translations\" && node scripts/sort-translations.js deployment/i18n/en.json && echo \"Sorting de translations\" && node scripts/sort-translations.js deployment/i18n/de.json",
     "i18n:translate": "node ./deployment/i18n-translate.js"
   },
   "dependencies": {
