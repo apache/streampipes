@@ -29,7 +29,7 @@ export class JsplumbConfigService {
     constructor() {}
 
     getEditorConfig() {
-        return this.makeConfig(this.makeSettings(12, 5, 30, 30, 2, 80));
+        return this.makeConfig(this.makeSettings(8, 3, 15, 15, 2, 80));
     }
 
     getEndpointTypeConfig(): Record<string, EndpointTypeDescriptor> {
@@ -65,25 +65,25 @@ export class JsplumbConfigService {
 
     getConnectorStyleSuccess() {
         return {
-            stroke: '#6ab26c',
-            outlineStroke: '#6ab26c',
-            strokeWidth: 5,
+            stroke: 'var(--color-success)',
+            outlineStroke: 'var(--color-success)',
+            strokeWidth: 3,
         };
     }
 
     getConnectorStyleError() {
         return {
-            stroke: '#b74e4e',
-            outlineStroke: '#b74e4e',
-            strokeWidth: 5,
+            stroke: 'var(--color-error)',
+            outlineStroke: 'var(--color-error)',
+            strokeWidth: 3,
         };
     }
 
     getConnectorStyleWarning() {
         return {
-            outlineStroke: '#d3c545',
-            stroke: '#d3c545',
-            strokeWidth: 5,
+            outlineStroke: 'var(--color-warning)',
+            stroke: 'var(--color-warning)',
+            strokeWidth: 3,
         };
     }
 
@@ -157,7 +157,7 @@ export class JsplumbConfigService {
             connector: this.getDefaultConnector(settings),
             source: true,
             maxConnections: -1,
-            anchor: 'Right',
+            anchor: [1, 0.5, 1, 0, 2, 0],
             connectorOverlays: [this.defaultConnectorOverlay(settings)],
         };
     }

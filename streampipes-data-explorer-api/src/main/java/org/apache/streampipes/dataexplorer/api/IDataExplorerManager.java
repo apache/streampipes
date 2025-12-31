@@ -35,7 +35,8 @@ public interface IDataExplorerManager {
    */
   IDataLakeMeasurementCounter getMeasurementCounter(
       List<DataLakeMeasure> allMeasurements,
-      List<String> measurementsToCount
+      List<String> measurementsToCount,
+      int daysBack
   );
 
   IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement);
