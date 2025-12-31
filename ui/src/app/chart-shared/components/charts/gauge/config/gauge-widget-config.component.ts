@@ -24,7 +24,7 @@ import { GaugeVisConfig, GaugeWidgetModel } from '../model/gauge-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-data-explorer-gauge-widget-config',
+    selector: 'sp-chart-gauge-widget-config',
     templateUrl: './gauge-widget-config.component.html',
     standalone: false,
 })
