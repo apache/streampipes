@@ -32,7 +32,7 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpAssetRoutes } from '../../assets.routes';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
@@ -71,6 +71,7 @@ export class SpAssetOverviewComponent implements OnInit {
         private breadcrumbService: SpBreadcrumbService,
         private dialogService: DialogService,
         private router: Router,
+        private route: ActivatedRoute,
         private idGeneratorService: IdGeneratorService,
         private assetBrowserService: SpAssetBrowserService,
         private currentUserService: CurrentUserService,
@@ -79,6 +80,11 @@ export class SpAssetOverviewComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        console.log('[AssetOverview] ngOnInit');
+        console.log(
+            '[AssetOverview] query params',
+            this.route.snapshot.queryParams,
+        );
         this.hasWritePrivilege = this.currentUserService.hasRole(
             UserPrivilege.PRIVILEGE_WRITE_ASSETS,
         );
@@ -112,10 +118,22 @@ export class SpAssetOverviewComponent implements OnInit {
     }
 
     loadAssets(): void {
+        console.log(
+            '[AssetOverview] loading assets with filter',
+            this.currentFilterIds,
+        );
         this.assetService.getAllAssets().subscribe(result => {
             this.existingAssets = result as SpAssetModel[];
             this.dataSource.sort = this.sort;
             this.dataSource.data = this.existingAssets;
+
+            // Apply filter if one exists after loading assets
+            if (
+                this.currentFilterIds &&
+                this.hasActiveFilter(this.currentFilterIds)
+            ) {
+                this.applyAssetFilters(this.currentFilterIds);
+            }
         });
     }
 
@@ -198,6 +216,10 @@ export class SpAssetOverviewComponent implements OnInit {
                 });
             }
         });
+    }
+
+    private hasActiveFilter(filter: Set<string>): boolean {
+        return filter !== null && filter !== undefined && filter.size > 0;
     }
 
     openPermissionsDialog(asset: SpAssetModel) {
