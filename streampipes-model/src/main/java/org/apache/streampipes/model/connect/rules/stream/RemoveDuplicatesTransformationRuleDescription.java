@@ -30,6 +30,12 @@ public class RemoveDuplicatesTransformationRuleDescription extends StreamTransfo
     super();
   }
 
+
+  public RemoveDuplicatesTransformationRuleDescription(String filterTimeWindow) {
+    super();
+    this.filterTimeWindow = filterTimeWindow;
+  }
+
   public RemoveDuplicatesTransformationRuleDescription(RemoveDuplicatesTransformationRuleDescription other) {
     super(other);
     this.filterTimeWindow = other.getFilterTimeWindow();

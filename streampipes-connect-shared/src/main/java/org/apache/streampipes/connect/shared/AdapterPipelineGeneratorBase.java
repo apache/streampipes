@@ -25,6 +25,8 @@ import org.apache.streampipes.connect.shared.preprocessing.generator.StatelessTr
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -41,14 +43,17 @@ public class AdapterPipelineGeneratorBase {
       AdapterDescription adapterDescription,
       boolean includeScript
   ) {
-    // TODO clean up
 
+    rules.addAll(getReduceEventRateRule(adapterDescription));
+
+    rules.addAll(getRemoveDuplicateRule(adapterDescription));
 
     rules.addAll(getTypeConvertionRules(adapterDescription));
 
     rules.addAll(getUnitConvertionRules(adapterDescription));
 
     var elements = new ArrayList<IAdapterPipelineElement>();
+
 
     if (includeScript) {
       elements.add(new ScriptTransformationPipelineElement(
@@ -115,6 +120,41 @@ public class AdapterPipelineGeneratorBase {
                                return rule;
                              })
                              .collect(Collectors.toList());
+  }
+
+
+  private List<TransformationRuleDescription> getReduceEventRateRule(AdapterDescription adapterDescription) {
+
+    var result = new ArrayList<TransformationRuleDescription>();
+
+    var reduceEventRate = adapterDescription.getTransformationConfig().getReduceEventRateRule();
+
+    if (reduceEventRate != null) {
+      var rule = new EventRateTransformationRuleDescription(
+          reduceEventRate.aggregationTimeWindow(),
+          reduceEventRate.aggregationType()
+      );
+      result.add(rule);
+    }
+
+    return result;
+  }
+
+
+  private List<TransformationRuleDescription> getRemoveDuplicateRule(AdapterDescription adapterDescription) {
+
+    var result = new ArrayList<TransformationRuleDescription>();
+
+    var removeDuplicateRule = adapterDescription.getTransformationConfig().getRemoveDuplicateRule();
+
+    if (removeDuplicateRule != null) {
+      var rule = new RemoveDuplicatesTransformationRuleDescription(
+          removeDuplicateRule.filterTimeWindow()
+      );
+      result.add(rule);
+    }
+
+    return result;
   }
 
 }

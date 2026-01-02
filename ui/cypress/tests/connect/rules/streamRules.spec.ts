@@ -20,13 +20,14 @@ import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 
-describe('Connect aggregation rule transformations', () => {
+describe('Stream Rules Tests', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        FileManagementUtils.addFile('connect/aggregationRules/input.csv');
     });
 
-    it('Perform Test', () => {
+    it('Reduce Event Rate rule transformations', () => {
+        FileManagementUtils.addFile('connect/aggregationRules/input.csv');
+
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(false);
 
@@ -37,7 +38,7 @@ describe('Connect aggregation rule transformations', () => {
         ConnectUtils.finishConfigureFieldsConfiguration();
 
         cy.dataCy('connect-reduce-event-rate-box').children().click();
-        cy.dataCy('connect-reduce-event-input').type('2000');
+        cy.dataCy('connect-reduce-event-input').clear().type('2000');
 
         ConnectUtils.tearDownPreprocessingRuleTest(
             adapterConfiguration,
@@ -45,15 +46,9 @@ describe('Connect aggregation rule transformations', () => {
             false,
         );
     });
-});
 
-describe('Remove duplicates rule transformations', () => {
-    beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
+    it('Remove duplicates rule transformations', () => {
         FileManagementUtils.addFile('connect/removeDuplicateRules/input.csv');
-    });
-
-    it('Perform Test', () => {
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(false);
 
@@ -64,7 +59,7 @@ describe('Remove duplicates rule transformations', () => {
         ConnectUtils.finishConfigureFieldsConfiguration();
 
         cy.dataCy('connect-remove-duplicates-box').children().click();
-        cy.dataCy('connect-remove-duplicates-input').type('10000');
+        cy.dataCy('connect-remove-duplicates-input').clear().type('10000');
 
         ConnectUtils.tearDownPreprocessingRuleTest(
             adapterConfiguration,

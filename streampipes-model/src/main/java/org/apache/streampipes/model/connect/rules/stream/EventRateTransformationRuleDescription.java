@@ -34,6 +34,13 @@ public class EventRateTransformationRuleDescription extends StreamTransformation
 
   }
 
+  public EventRateTransformationRuleDescription(long aggregationTimeWindow,
+                                                String aggregationType) {
+    super();
+    this.aggregationTimeWindow = aggregationTimeWindow;
+    this.aggregationType = aggregationType;
+  }
+
   public EventRateTransformationRuleDescription(EventRateTransformationRuleDescription other) {
     super(other);
     this.aggregationTimeWindow = other.getAggregationTimeWindow();
