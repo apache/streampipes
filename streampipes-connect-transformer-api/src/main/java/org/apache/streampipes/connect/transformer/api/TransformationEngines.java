@@ -18,7 +18,10 @@
 
 package org.apache.streampipes.connect.transformer.api;
 
+import org.apache.streampipes.model.connect.ScriptMetadata;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -29,10 +32,18 @@ public enum TransformationEngines {
   private final Map<String, Supplier<TransformationEngine>> transformationEngines = new HashMap<>();
 
   public void registerEngine(Supplier<TransformationEngine> engineSupplier) {
-    transformationEngines.put(engineSupplier.get().language(), engineSupplier);
+    transformationEngines.put(engineSupplier.get().metadata().language(), engineSupplier);
   }
 
   public TransformationEngine getTransformationEngine(String language) {
     return transformationEngines.get(language).get();
+  }
+
+  public List<ScriptMetadata> getAvailableEngineMetadata() {
+    return transformationEngines
+        .values()
+        .stream()
+        .map(transformationEngineSupplier -> transformationEngineSupplier.get().metadata())
+        .toList();
   }
 }

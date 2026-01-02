@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-30 09:52:24.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-02 11:22:00.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -151,6 +152,9 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class TransformationRuleDescription {
     '@class':
         | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription'
@@ -224,6 +228,9 @@ export class TransformationRuleDescription {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class ValueTransformationRuleDescription extends TransformationRuleDescription {
     '@class':
         | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription'
@@ -295,6 +302,9 @@ export class AddTimestampRuleDescription extends ValueTransformationRuleDescript
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class AddValueTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription';
     'datatype': string;
@@ -757,6 +767,9 @@ export class Certificate implements Storable {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class ChangeDatatypeTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription';
     'originalDatatypeXsd': string;
@@ -1800,6 +1813,9 @@ export class EventPropertyPrimitive extends EventProperty {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class StreamTransformationRuleDescription extends TransformationRuleDescription {
     '@class':
         | 'org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription'
@@ -1835,6 +1851,9 @@ export class StreamTransformationRuleDescription extends TransformationRuleDescr
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class EventRateTransformationRuleDescription extends StreamTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription';
     'aggregationTimeWindow': number;
@@ -3424,6 +3443,9 @@ export class RemoveDuplicateRule {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
     'filterTimeWindow': string;
@@ -3740,6 +3762,26 @@ export class SampleData {
         instance.samples = __getCopyArrayFn(
             __getCopyObjectFn(__identity<any>()),
         )(data.samples);
+        return instance;
+    }
+}
+
+export class ScriptMetadata {
+    language: string;
+    name: string;
+    template: string;
+
+    static fromData(
+        data: ScriptMetadata,
+        target?: ScriptMetadata,
+    ): ScriptMetadata {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ScriptMetadata();
+        instance.language = data.language;
+        instance.name = data.name;
+        instance.template = data.template;
         return instance;
     }
 }
@@ -4376,6 +4418,9 @@ export class TreeInputNode {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class UnitTransformRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription';
     'fromUnitRessourceURL': string;

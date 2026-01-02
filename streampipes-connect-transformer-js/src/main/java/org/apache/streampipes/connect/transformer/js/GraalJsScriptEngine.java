@@ -22,6 +22,7 @@ import org.apache.streampipes.connect.transformer.api.ScriptTransformer;
 import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
+import org.apache.streampipes.model.connect.ScriptMetadata;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
@@ -34,8 +35,17 @@ import java.util.Optional;
 public class GraalJsScriptEngine implements TransformationEngine {
 
   @Override
-  public String language() {
-    return "javascript";
+  public ScriptMetadata metadata() {
+    return new ScriptMetadata(
+        "javascript",
+        "JavaScript",
+        """
+            // returns the same event
+            function transform(event) {
+              return event;
+            }
+            """
+    );
   }
 
   @Override
@@ -83,7 +93,7 @@ public class GraalJsScriptEngine implements TransformationEngine {
       throws ScriptExecutionException {
     try {
       Value result = transformFunction.execute(input);
-      return PolyglotResultConverter.ensureMap(result, language());
+      return PolyglotResultConverter.ensureMap(result, metadata().language());
     } catch (PolyglotException e) {
       throw new ScriptExecutionException("Graal JS script execution failed", e);
     }

@@ -18,11 +18,11 @@
 
 .preview-text {
     margin: var(--space-2xs);
-    background-color: var(--color-code-bg);
+    background-color: var(--color-bg-0);
     font:
         var(--font-size-xs) Inconsolata,
         monospace;
-    color: white;
+    color: var(--color-default-text);
     padding: 10px;
     max-width: 100%;
     max-height: 300px;

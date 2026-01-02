@@ -27,7 +27,11 @@ import {
     signal,
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { AdapterDescription } from '@streampipes/platform-services';
+import {
+    AdapterDescription,
+    ConnectScriptLanguagesService,
+    ScriptMetadata,
+} from '@streampipes/platform-services';
 import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
 
 @Component({
@@ -38,6 +42,7 @@ import { AdapterConfigurationStateService } from '../adapter-configuration-state
 })
 export class ConfigureSchemaComponent implements OnInit {
     private stateService = inject(AdapterConfigurationStateService);
+    private scriptLanguagesService = inject(ConnectScriptLanguagesService);
 
     @Input()
     adapterDescription: AdapterDescription;
@@ -50,6 +55,8 @@ export class ConfigureSchemaComponent implements OnInit {
 
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+
+    availableScripts: ScriptMetadata[] = [];
 
     isSampleLoading = computed(() => this.stateService.state().isGettingSample);
 
@@ -70,10 +77,9 @@ export class ConfigureSchemaComponent implements OnInit {
                 ?.outputs?.[0] || {},
     );
 
-    script = signal(`// returns the same event
-function transform(event) {
-  return event;
-}`);
+    script = signal(undefined);
+    initialScript = signal<{ meta: ScriptMetadata; script: string }>(undefined);
+    selectedScriptMetadata = signal(undefined);
 
     editorOptions = {
         mode: 'javascript',
@@ -94,17 +100,52 @@ function transform(event) {
     }
 
     private initializeScriptVariable(): void {
-        const currentScript =
-            this.adapterDescription.transformationConfig.script;
-        if (currentScript) {
-            this.script.set(currentScript);
-        } else {
-            this.adapterDescription.transformationConfig.script = this.script();
-        }
+        this.scriptLanguagesService
+            .getAll(this.adapterDescription)
+            .subscribe(res => {
+                this.availableScripts = res;
+                const currentScript =
+                    this.adapterDescription.transformationConfig.script;
+                let meta: ScriptMetadata;
+                if (currentScript) {
+                    this.script.set(currentScript);
+                    meta = this.availableScripts.find(
+                        s =>
+                            s.language ===
+                            this.adapterDescription.transformationConfig
+                                .language,
+                    );
+                    this.initialScript.set({ meta, script: currentScript });
+                } else {
+                    meta = this.availableScripts.find(
+                        s => s.language === 'javascript',
+                    );
+                    this.adapterDescription.transformationConfig.script =
+                        meta.template;
+                    this.adapterDescription.transformationConfig.language =
+                        meta.language;
+                    this.script.set(meta.template);
+                }
+                this.selectedScriptMetadata.set(meta);
+            });
     }
 
     onCodeChange(newCode: string) {
         this.script.set(newCode);
+    }
+
+    onLanguageChange(newLanguage: ScriptMetadata) {
+        this.selectedScriptMetadata.set(newLanguage);
+        this.script.set(newLanguage.template);
+    }
+
+    resetScript(): void {
+        if (this.initialScript() !== undefined) {
+            this.script.set(this.initialScript().script);
+            this.selectedScriptMetadata.set(this.initialScript().meta);
+        } else {
+            this.script.set(this.selectedScriptMetadata().template);
+        }
     }
 
     getSampleEvent(): void {
@@ -112,7 +153,11 @@ function transform(event) {
     }
 
     runScript(): void {
-        this.stateService.runScript(this.adapterDescription, this.script());
+        this.stateService.runScript(
+            this.adapterDescription,
+            this.script(),
+            this.selectedScriptMetadata().language,
+        );
     }
 
     public cancel() {

@@ -88,13 +88,15 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
       serviceDef.setServiceId(serviceId);
       DeclarersSingleton.getInstance().populate(networkingConfig.getHost(), networkingConfig.getPort(), serviceDef);
       SpRateLimiter.INSTANCE.createRateLimiter();
-      startExtensionsService(this.getClass(), serviceDef, networkingConfig);
-      ServiceLoadDataReportGenerator.getInstance().initialize();
 
-     registerTransformationEngines(List.of(
+      registerTransformationEngines(List.of(
           GroovyScriptEngine::new,
           GraalJsScriptEngine::new
       ));
+
+      startExtensionsService(this.getClass(), serviceDef, networkingConfig);
+      ServiceLoadDataReportGenerator.getInstance().initialize();
+
     } catch (UnknownHostException e) {
       LOG.error(
           "Could not auto-resolve host address - "
@@ -129,6 +131,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         networkingConfig.getHost(),
         networkingConfig.getPort(),
         getServiceTags(extensions),
+        TransformationEngines.INSTANCE.getAvailableEngineMetadata(),
         getHealthCheckPath(),
         extensions);
 
