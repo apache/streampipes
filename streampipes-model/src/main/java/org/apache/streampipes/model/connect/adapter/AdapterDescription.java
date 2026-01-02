@@ -44,6 +44,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   private List<StaticProperty> config;
 
+  @Deprecated(since = "0.99.0", forRemoval = true)
   private List<TransformationRuleDescription> rules;
 
   private long createdAt;
