@@ -18,11 +18,9 @@
 
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {
-    ConnectTransformationScriptTemplate,
-    PlatformServicesCommons,
-} from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
+import { PlatformServicesCommons } from './commons.service';
+import { ConnectTransformationScriptTemplate } from '../model/gen/streampipes-model';
 
 @Injectable({
     providedIn: 'root',

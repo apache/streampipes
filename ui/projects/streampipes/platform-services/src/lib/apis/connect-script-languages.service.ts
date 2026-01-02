@@ -18,12 +18,12 @@
 
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import {
     AdapterDescription,
-    PlatformServicesCommons,
     ScriptMetadata,
-} from '@streampipes/platform-services';
-import { Observable } from 'rxjs';
+} from '../model/gen/streampipes-model';
+import { PlatformServicesCommons } from './commons.service';
 
 @Injectable({
     providedIn: 'root',
