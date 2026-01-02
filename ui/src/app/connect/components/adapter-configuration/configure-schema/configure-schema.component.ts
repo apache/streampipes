@@ -30,9 +30,15 @@ import { MatStepper } from '@angular/material/stepper';
 import {
     AdapterDescription,
     ConnectScriptLanguagesService,
+    ConnectTransformationScriptTemplate,
     ScriptMetadata,
 } from '@streampipes/platform-services';
 import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
+import { CreateAdapterTransformationTemplateDialogComponent } from '../../../dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
+import { SelectAdapterTransformationTemplateDialogComponent } from '../../../dialog/select-adapter-transformation-template-dialog/select-adapter-transformation-template-dialog.component';
 
 @Component({
     selector: 'sp-configure-schema',
@@ -43,6 +49,8 @@ import { AdapterConfigurationStateService } from '../adapter-configuration-state
 export class ConfigureSchemaComponent implements OnInit {
     private stateService = inject(AdapterConfigurationStateService);
     private scriptLanguagesService = inject(ConnectScriptLanguagesService);
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
 
     @Input()
     adapterDescription: AdapterDescription;
@@ -157,6 +165,53 @@ export class ConfigureSchemaComponent implements OnInit {
             this.adapterDescription,
             this.script(),
             this.selectedScriptMetadata().language,
+        );
+    }
+
+    openSelectScriptTemplateDialog(): void {
+        const dialogRef = this.dialogService.open(
+            SelectAdapterTransformationTemplateDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant(
+                    'Select transformation template',
+                ),
+                width: '50vw',
+                data: {},
+            },
+        );
+
+        dialogRef.afterClosed().subscribe(template => {
+            if (template !== undefined) {
+                this.applyTemplate(template);
+            }
+        });
+    }
+
+    applyTemplate(template: ConnectTransformationScriptTemplate): void {
+        const meta = this.availableScripts.find(
+            s => s.language === template.language,
+        );
+        if (meta !== undefined) {
+            this.script.set(template.code);
+            this.selectedScriptMetadata.set(meta);
+        }
+    }
+
+    openCreateScriptTemplateDialog(): void {
+        this.dialogService.open(
+            CreateAdapterTransformationTemplateDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant(
+                    'Create transformation template',
+                ),
+                width: '50vw',
+                data: {
+                    script: this.script(),
+                    language: this.selectedScriptMetadata().language,
+                },
+            },
         );
     }
 

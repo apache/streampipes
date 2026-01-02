@@ -104,6 +104,8 @@ import { ConfigureFieldsLoadingMessageComponent } from './components/adapter-con
 import { ConfigureFieldsHeaderComponent } from './components/adapter-configuration/configure-fields/configure-fields-header/configure-fields-header.component';
 import { EventPropertyRowComponent } from './components/adapter-configuration/configure-fields/event-property-row/event-property-row.component';
 import { NoTimestampErrorHintComponent } from './components/adapter-configuration/configure-fields/no-timestamp-error-hint/no-timestamp-error-hint.component';
+import { CreateAdapterTransformationTemplateDialogComponent } from './dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
+import { SelectAdapterTransformationTemplateDialogComponent } from './dialog/select-adapter-transformation-template-dialog/select-adapter-transformation-template-dialog.component';
 
 @NgModule({
     imports: [
@@ -244,6 +246,8 @@ import { NoTimestampErrorHintComponent } from './components/adapter-configuratio
         ConfigureSchemaComponent,
         EventPropertyRowComponent,
         NoTimestampErrorHintComponent,
+        CreateAdapterTransformationTemplateDialogComponent,
+        SelectAdapterTransformationTemplateDialogComponent,
     ],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

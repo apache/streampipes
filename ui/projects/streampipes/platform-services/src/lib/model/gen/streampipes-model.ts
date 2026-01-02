@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-01-02 11:22:00.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-02 16:02:16.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1026,6 +1026,34 @@ export class ConfigItem {
         instance.password = data.password;
         instance.value = data.value;
         instance.valueType = data.valueType;
+        return instance;
+    }
+}
+
+export class ConnectTransformationScriptTemplate implements Storable {
+    appDocType: string;
+    code: string;
+    description: string;
+    elementId: string;
+    language: string;
+    name: string;
+    rev: string;
+
+    static fromData(
+        data: ConnectTransformationScriptTemplate,
+        target?: ConnectTransformationScriptTemplate,
+    ): ConnectTransformationScriptTemplate {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ConnectTransformationScriptTemplate();
+        instance.appDocType = data.appDocType;
+        instance.code = data.code;
+        instance.description = data.description;
+        instance.elementId = data.elementId;
+        instance.language = data.language;
+        instance.name = data.name;
+        instance.rev = data.rev;
         return instance;
     }
 }
@@ -4104,6 +4132,7 @@ export class SpServiceRegistration implements Storable {
     scheme: string;
     serviceUrl: string;
     status: SpServiceStatus;
+    supportedScriptLanguages: ScriptMetadata[];
     svcGroup: string;
     svcId: string;
     svcType: string;
@@ -4131,6 +4160,9 @@ export class SpServiceRegistration implements Storable {
         instance.scheme = data.scheme;
         instance.serviceUrl = data.serviceUrl;
         instance.status = data.status;
+        instance.supportedScriptLanguages = __getCopyArrayFn(
+            ScriptMetadata.fromData,
+        )(data.supportedScriptLanguages);
         instance.svcGroup = data.svcGroup;
         instance.svcId = data.svcId;
         instance.svcType = data.svcType;

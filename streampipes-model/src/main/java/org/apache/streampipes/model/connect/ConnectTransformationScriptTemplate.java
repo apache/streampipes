@@ -19,11 +19,13 @@
 package org.apache.streampipes.model.connect;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
+@TsModel
 public class ConnectTransformationScriptTemplate implements Storable {
 
   public static final String APP_DOC_TYPE = GenericDocTypes.DOC_TRANSFORMATION_SCRIPT_TEMPLATE;

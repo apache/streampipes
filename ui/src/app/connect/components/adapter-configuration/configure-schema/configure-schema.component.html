@@ -60,6 +60,14 @@
                 <button
                     mat-button
                     data-cy="reset-script"
+                    (click)="openSelectScriptTemplateDialog()"
+                >
+                    <mat-icon>settings_backup_restore</mat-icon>
+                    <span>Use template</span>
+                </button>
+                <button
+                    mat-button
+                    data-cy="reset-script"
                     (click)="resetScript()"
                 >
                     <mat-icon>settings_backup_restore</mat-icon>
@@ -91,7 +99,7 @@
                     mat-flat-button
                     matTooltip="Run script"
                     data-cy="add-script-template-button"
-                    (click)="runScript()"
+                    (click)="openCreateScriptTemplateDialog()"
                 >
                     <mat-icon>play_circle_filled</mat-icon>
                     <span>Create script template</span>
