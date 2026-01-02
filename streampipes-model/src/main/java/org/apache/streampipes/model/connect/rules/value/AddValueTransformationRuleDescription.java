@@ -41,6 +41,12 @@ public class AddValueTransformationRuleDescription extends ValueTransformationRu
     super();
   }
 
+  public AddValueTransformationRuleDescription(String runtimeKey, String staticValue) {
+    this.runtimeKey = runtimeKey;
+    this.staticValue = staticValue;
+  }
+
+
   public AddValueTransformationRuleDescription(AddValueTransformationRuleDescription other) {
     super(other);
     this.runtimeKey = other.getRuntimeKey();

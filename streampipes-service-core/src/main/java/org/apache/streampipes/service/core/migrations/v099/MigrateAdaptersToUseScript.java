@@ -67,6 +67,9 @@ import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransfo
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.IAdapterStorage;
@@ -76,9 +79,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class MigrateAdaptersToUseScript implements Migration {
 
@@ -94,7 +101,8 @@ public class MigrateAdaptersToUseScript implements Migration {
   // Use a default constructor if the migration framework requires it,
   // but point it to the singleton here.
   public MigrateAdaptersToUseScript() {
-    this(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage());
+    this(StorageDispatcher.INSTANCE.getNoSqlStore()
+                                   .getAdapterInstanceStorage());
   }
 
   @Override
@@ -103,34 +111,40 @@ public class MigrateAdaptersToUseScript implements Migration {
     List<AdapterDescription> adapters = adapterStorage.findAll();
     return adapters != null
         && adapters.stream()
-                   .filter(adapter -> adapter != null)
-                   .anyMatch(this::hasRules);
+                   .anyMatch(adapter -> adapter.getTransformationConfig() == null);
   }
 
   private boolean hasRules(AdapterDescription adapter) {
-    return adapter.getRules() != null && !adapter.getRules().isEmpty();
+    return adapter.getRules() != null && !adapter.getRules()
+                                                 .isEmpty();
   }
 
   @Override
   public void executeMigration() throws IOException {
-    adapterStorage.findAll().forEach(this::migrateAndUpdateAdapter);
+    adapterStorage.findAll()
+                  .forEach(this::migrateAndUpdateAdapter);
   }
 
   private void migrateAndUpdateAdapter(AdapterDescription adapterDescription) {
     LOG.info("Migrating adapter to script preprosessing: {}", adapterDescription.getName());
 
-    migrateAdapterRules(adapterDescription);
+    migrateAdapter(adapterDescription);
     updateAdapter(adapterDescription);
   }
 
-  private void migrateAdapterRules(AdapterDescription adapter) {
+  private void migrateAdapter(AdapterDescription adapter) {
+
+    removeAdditionalMetadata(adapter);
+
     // migration logic for a single adapter
     var config = initializeTransformationConfig();
     var scriptLines = new ArrayList<String>();
 
     // Sort rules by priority to maintain execution order
-    List<TransformationRuleDescription> sortedRules = adapter.getRules().stream()
-                                                             .sorted(Comparator.comparingInt(TransformationRuleDescription::getRulePriority))
+    List<TransformationRuleDescription> sortedRules = adapter.getRules()
+                                                             .stream()
+                                                             .sorted(Comparator.comparingInt(
+                                                                 TransformationRuleDescription::getRulePriority))
                                                              .toList();
 
     for (var rule : sortedRules) {
@@ -144,10 +158,24 @@ public class MigrateAdaptersToUseScript implements Migration {
     adapter.setRules(new ArrayList<>());
   }
 
-  private void processRule(TransformationRuleDescription rule,
-                           AdapterDescription adapter,
-                           TransformationConfig config,
-                           List<String> scriptLines) {
+  private void removeAdditionalMetadata(AdapterDescription adapter) {
+    if (adapter.getDataStream() != null && adapter.getDataStream()
+                                                  .getEventSchema() != null) {
+      adapter.getDataStream()
+             .getEventSchema()
+             .getEventProperties()
+             .forEach(prop -> {
+               prop.setAdditionalMetadata(new HashMap<>());
+             });
+    }
+  }
+
+  private void processRule(
+      TransformationRuleDescription rule,
+      AdapterDescription adapter,
+      TransformationConfig config,
+      List<String> scriptLines
+  ) {
 
     if (rule instanceof RenameRuleDescription) {
       handleRenameRule((RenameRuleDescription) rule, scriptLines);
@@ -167,6 +195,14 @@ public class MigrateAdaptersToUseScript implements Migration {
     } else if (rule instanceof RemoveDuplicatesTransformationRuleDescription) {
       config.setRemoveDuplicateRule(mapDuplicates((RemoveDuplicatesTransformationRuleDescription) rule));
 
+    } else if (rule instanceof CorrectionValueTransformationRuleDescription) {
+      handleCorrectionValueRule((CorrectionValueTransformationRuleDescription) rule, scriptLines);
+
+    } else if (rule instanceof RegexTransformationRuleDescription) {
+      handleRegexRule((RegexTransformationRuleDescription) rule, scriptLines);
+
+    } else if (rule instanceof TimestampTranfsformationRuleDescription) {
+      handleTimestampTransformationRule((TimestampTranfsformationRuleDescription) rule, scriptLines);
     } else if (rule instanceof ChangeDatatypeTransformationRuleDescription) {
       handleDatatypePlaceholder((ChangeDatatypeTransformationRuleDescription) rule, adapter, scriptLines);
 
@@ -177,38 +213,87 @@ public class MigrateAdaptersToUseScript implements Migration {
       scriptLines.add("// Move rule detected: Not supported in script migration");
 
     } else {
-      scriptLines.add(String.format("// Unhandled rule type: %s", rule.getClass().getSimpleName()));
+      scriptLines.add(String.format("// Unhandled rule type: %s",
+                                    rule.getClass()
+                                        .getSimpleName()
+      ));
     }
   }
 
-  private void handleRenameRule(RenameRuleDescription r, List<String> scriptLines) {
-    scriptLines.add(String.format("event['%s'] = event['%s'];", r.getNewRuntimeKey(), r.getOldRuntimeKey()));
-    scriptLines.add(String.format("delete event['%s'];", r.getOldRuntimeKey()));
+  private void handleRenameRule(RenameRuleDescription rule, List<String> scriptLines) {
+    scriptLines.add(String.format("event['%s'] = event['%s'];", rule.getNewRuntimeKey(), rule.getOldRuntimeKey()));
+    scriptLines.add(String.format("delete event['%s'];", rule.getOldRuntimeKey()));
   }
 
-  private void handleDeleteRule(DeleteRuleDescription r, List<String> scriptLines) {
-    scriptLines.add(String.format("delete event['%s'];", r.getRuntimeKey()));
+  private void handleDeleteRule(DeleteRuleDescription rule, List<String> scriptLines) {
+    scriptLines.add(String.format("delete event['%s'];", rule.getRuntimeKey()));
   }
 
-  private void handleAddTimestampRule(AddTimestampRuleDescription r, List<String> scriptLines) {
-    scriptLines.add(String.format("event['%s'] = Date.now();", r.getRuntimeKey()));
+  private void handleAddTimestampRule(AddTimestampRuleDescription rule, List<String> scriptLines) {
+    scriptLines.add(String.format("event['%s'] = Date.now();", rule.getRuntimeKey()));
   }
 
-  private void handleAddValueRule(AddValueTransformationRuleDescription r, List<String> scriptLines) {
-    scriptLines.add(String.format("event['%s'] = '%s';", r.getRuntimeKey(), r.getStaticValue()));
+  private void handleAddValueRule(AddValueTransformationRuleDescription rule, List<String> scriptLines) {
+    scriptLines.add(String.format("event['%s'] = '%s';", rule.getRuntimeKey(), rule.getStaticValue()));
   }
 
-  private void handleDatatypePlaceholder(ChangeDatatypeTransformationRuleDescription r,
-                                         AdapterDescription adapter,
-                                         List<String> scriptLines) {
+  private void handleCorrectionValueRule(CorrectionValueTransformationRuleDescription rule, List<String> scriptLines) {
+    var operator = "+";
+    switch (rule.getOperator()) {
+      case "MULTIPLY":
+        operator = "*";
+        break;
+      case "ADD":
+        operator = "+";
+        break;
+      case "SUBTRACT":
+        operator = "-";
+        break;
+      case "DIVIDE":
+        operator = "/";
+        break;
+    }
+
+    var symbols = new DecimalFormatSymbols(Locale.US);
+    var df = new DecimalFormat("0.###", symbols);
+    var formattedValue = df.format(rule.getCorrectionValue());
+
+
+    scriptLines.add(String.format("event['%s'] = Number(event['%s']) %s %s;",
+        rule.getRuntimeKey(), rule.getRuntimeKey(), operator, formattedValue));
+  }
+
+  private void handleRegexRule(RegexTransformationRuleDescription rule, List<String> scriptLines) {
+    scriptLines.add(String.format("event['%s'] = String(event['%s']).replace(new RegExp('%s', 'g'), '%s');",
+                                  rule.getRuntimeKey(), rule.getRuntimeKey(), rule.getRegex(), rule.getReplaceWith()));
+  }
+
+  private void handleTimestampTransformationRule(TimestampTranfsformationRuleDescription rule, List<String> scriptLines) {
+    if ("timeUnit".equals(rule.getMode())) {
+      scriptLines.add(String.format("event['%s'] = Number(event['%s']) * %d;",
+                                    rule.getRuntimeKey(), rule.getRuntimeKey(), rule.getMultiplier()));
+    } else if ("formatString".equals(rule.getMode())) {
+      scriptLines.add(String.format("if (event['%s']) { event['%s'] = new Date(event['%s']).getTime(); }",
+                                    rule.getRuntimeKey(), rule.getRuntimeKey(), rule.getRuntimeKey()));
+      scriptLines.add(String.format("// Target format hint: %s", rule.getFormatString()));
+    }
+  }
+
+  private void handleDatatypePlaceholder(
+      ChangeDatatypeTransformationRuleDescription rule,
+      AdapterDescription adapter,
+      List<String> scriptLines
+  ) {
 //    scriptLines.add(String.format("// TODO: Check datatype for %s", r.getRuntimeName()));
     // TODO
 //    updatePropertyMetadata(adapter, r.getRuntimeName());
   }
 
-  private void handleUnitPlaceholder(UnitTransformRuleDescription r,
-                                     AdapterDescription adapter,
-                                     List<String> scriptLines) {
+  private void handleUnitPlaceholder(
+      UnitTransformRuleDescription rule,
+      AdapterDescription adapter,
+      List<String> scriptLines
+  ) {
 //    scriptLines.add(String.format("// TODO: Check unit conversion for %s", r.getRuntimeName()));
     // TODO
 //    updatePropertyMetadata(adapter, r.getRuntimeName());
@@ -228,7 +313,9 @@ public class MigrateAdaptersToUseScript implements Migration {
     if (scriptLines.isEmpty()) {
       sb.append("  // No transformations defined\n");
     } else {
-      scriptLines.forEach(line -> sb.append("  ").append(line).append("\n"));
+      scriptLines.forEach(line -> sb.append("  ")
+                                    .append(line)
+                                    .append("\n"));
     }
     sb.append("  return event;\n");
     sb.append("}");
