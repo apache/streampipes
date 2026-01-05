@@ -16,13 +16,18 @@
  *
  */
 
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Router } from '@angular/router';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { AdapterConfigurationStateService } from './adapter-configuration-state-service/adapter-configuration-state.service';
 
@@ -32,8 +37,7 @@ import { AdapterConfigurationStateService } from './adapter-configuration-state-
     styleUrls: ['./adapter-configuration.component.scss'],
     standalone: false,
 })
-export class AdapterConfigurationComponent implements OnInit {
-    private dialogService = inject(DialogService);
+export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     private shepherdService = inject(ShepherdService);
     private router = inject(Router);
     private translate = inject(TranslateService);
@@ -81,6 +85,10 @@ export class AdapterConfigurationComponent implements OnInit {
         this.router.navigate(['connect']).then();
     }
 
+    ngOnDestroy() {
+        this.stateService.reset();
+    }
+
     nextAdapterSettings() {
         this.shepherdService.trigger('specific-settings-next-button');
         this.goForward();
@@ -120,16 +128,5 @@ export class AdapterConfigurationComponent implements OnInit {
 
     @ViewChild('stepper') set stepperComponent(stepperComponent: MatStepper) {
         this.myStepper = stepperComponent;
-    }
-
-    openDocumentation() {
-        this.dialogService.open(SpAdapterDocumentationDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Documentation',
-            width: '50vw',
-            data: {
-                appId: this.adapterDescription.appId,
-            },
-        });
     }
 }

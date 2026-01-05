@@ -34,15 +34,9 @@
             [panelTitle]="'Basic Settings' | translate"
             outerMargin="20px 0px"
         >
-            <div
-                header
-                fxFlex="100"
-                fxLayout="row"
-                fxLayoutAlign="end center"
-                class="pr-5"
-            >
-                @if (availableTemplates && availableTemplates.length > 0) {
-                    <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+            <div header fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+                <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+                    @if (availableTemplates && availableTemplates.length > 0) {
                         <div class="form-field-small">
                             <mat-form-field color="accent" appearance="outline">
                                 <mat-label>Use template</mat-label>
@@ -63,8 +57,16 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                    </div>
-                }
+                    }
+                    <button
+                        mat-button
+                        (click)="openDocumentation()"
+                        [matTooltip]="'Show documentation' | translate"
+                    >
+                        <mat-icon>menu_book</mat-icon>
+                        <span>{{ 'Documentation' | translate }}</span>
+                    </button>
+                </div>
             </div>
             <sp-configuration-group
                 [configurationGroup]="specificAdapterForm"

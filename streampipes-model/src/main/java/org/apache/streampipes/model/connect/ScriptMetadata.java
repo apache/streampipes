@@ -16,27 +16,12 @@
  *
  */
 
-package org.apache.streampipes.connect.transformer.api;
+package org.apache.streampipes.model.connect;
 
-import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
-import org.apache.streampipes.model.connect.ScriptMetadata;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
-/**
- * Compiles code templates into reusable transformers.
- */
-public interface TransformationEngine {
-
-  /**
-   * Identifier of the underlying scripting language.
-   */
-  ScriptMetadata metadata();
-
-  /**
-   * Compile the user-provided script into an executable transformer.
-   *
-   * @param script code template that reads from {@code input} and returns a map
-   * @return compiled transformer ready for repeated execution
-   * @throws ScriptCompilationException when the script cannot be compiled
-   */
-  ScriptTransformer compile(String script) throws ScriptCompilationException;
+@TsModel
+public record ScriptMetadata(String language,
+                             String name,
+                             String template) {
 }

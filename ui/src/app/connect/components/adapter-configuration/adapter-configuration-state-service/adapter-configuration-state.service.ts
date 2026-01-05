@@ -110,7 +110,11 @@ export class AdapterConfigurationStateService {
                 // 3. Automatically run the script after getting the sample
                 const currentScript =
                     updatedAdapter.transformationConfig.script;
-                this.runScript(updatedAdapter, currentScript);
+                this.runScript(
+                    updatedAdapter,
+                    currentScript,
+                    updatedAdapter.transformationConfig.language,
+                );
             },
             error: (error: HttpErrorResponse) => {
                 // Update state with error AND metadata (error/idle)
@@ -122,7 +126,11 @@ export class AdapterConfigurationStateService {
         });
     }
 
-    public runScript(adapter: AdapterDescription, script: string): void {
+    public runScript(
+        adapter: AdapterDescription,
+        script: string,
+        language: string,
+    ): void {
         // 1. Prepare state for loading
         this.updateState({
             isRunningScript: true,
@@ -132,7 +140,7 @@ export class AdapterConfigurationStateService {
         // 2. Update the local adapter object with the latest script from the UI
         const updatedAdapter = { ...adapter };
         updatedAdapter.transformationConfig.script = script;
-        updatedAdapter.transformationConfig.language = 'javascript';
+        updatedAdapter.transformationConfig.language = language;
 
         // 3. Execute the API call
         this.restService.sampleTransform(updatedAdapter).subscribe({

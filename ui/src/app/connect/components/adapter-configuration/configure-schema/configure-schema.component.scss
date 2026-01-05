@@ -15,6 +15,17 @@
  * limitations under the License.
  *
  */
+
+:host {
+    --mat-standard-button-toggle-selected-state-text-color: var(--color-bg-1);
+    --mat-standard-button-toggle-selected-state-background-color: var(
+        --color-primary
+    );
+    --mat-standard-button-toggle-text-color: var(--color-default-text);
+    --mat-standard-button-toggle-background-color: var(--color-bg-0);
+    --mat-standard-button-toggle-height: 20px;
+}
+
 .stepper-button {
     margin-left: 10px;
 }
@@ -30,10 +41,10 @@
 
 .preview-text {
     margin: var(--space-2xs);
-    background-color: var(--color-code-bg);
+    background-color: var(--color-bg-0);
     font:
         var(--font-size-xs) Inconsolata,
         monospace;
-    color: white;
+    color: var(--color-default-text);
     padding: 10px;
 }

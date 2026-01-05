@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEndpointGenerator {
 
@@ -88,7 +87,7 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
                                            Set<SpServiceTag> customServiceTags) {
     return SpServiceDiscovery.getServiceDiscovery()
         .getServiceEndpoints(DefaultSpServiceTypes.EXT, true,
-                             getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags));
+                             ExtensionsServiceEndpointUtils.getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags));
   }
 
   private String getServiceURL(String appId, SpServiceUrlProvider spServiceUrlProvider,
@@ -105,12 +104,5 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
 
   public static boolean filtersSupported(SpServiceRegistration service, String tag) {
     return new HashSet<>(service.getTags()).stream().anyMatch(t -> t.asString().equals(tag));
-  }
-
-  private List<String> getDesiredServiceTags(String appId, SpServiceUrlProvider serviceUrlProvider,
-                                             Set<SpServiceTag> customServiceTags) {
-    return Stream
-        .concat(Stream.of(serviceUrlProvider.getServiceTag(appId)), customServiceTags.stream())
-        .map(SpServiceTag::asString).toList();
   }
 }

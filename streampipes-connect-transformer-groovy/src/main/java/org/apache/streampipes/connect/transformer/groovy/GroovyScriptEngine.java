@@ -23,6 +23,7 @@ import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 import org.apache.streampipes.connect.transformer.api.utils.TransformationEngineConversionUtils;
+import org.apache.streampipes.model.connect.ScriptMetadata;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
@@ -35,8 +36,12 @@ import java.util.Map;
 public class GroovyScriptEngine implements TransformationEngine {
 
   @Override
-  public String language() {
-    return "groovy";
+  public ScriptMetadata metadata() {
+    return new ScriptMetadata(
+        "groovy",
+    "Groovy",
+    ""
+    );
   }
 
   @Override
@@ -61,7 +66,7 @@ public class GroovyScriptEngine implements TransformationEngine {
       binding.setVariable("input", input);
       Script scriptInstance = InvokerHelper.createScript(scriptClass, binding);
       Object result = scriptInstance.run();
-      return TransformationEngineConversionUtils.ensureMap(result, language());
+      return TransformationEngineConversionUtils.ensureMap(result, metadata().language());
     } catch (Exception e) {
       throw new ScriptExecutionException("Groovy template execution failed", e);
     }

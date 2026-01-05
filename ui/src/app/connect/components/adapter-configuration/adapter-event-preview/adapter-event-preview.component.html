@@ -16,19 +16,25 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100">
-    <div fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
-        <div fxLayoutAlign="start center" class="error-text mt-10">
-            &nbsp;{{
-                'There was an error while guessing the schema of your configured data stream'
-                    | translate
-            }}:
-        </div>
+<section class="jv">
+    <div class="jv__content" [class.is-empty]="!hasValue()">
+        @if (hasValue) {
+            <ng-container [ngSwitch]="mode">
+                <pre
+                    *ngSwitchCase="'raw'"
+                    class="raw"
+                ><code [attr.data-cy]="dataCy">{{ prettyJson() }}</code></pre>
+
+                <div *ngSwitchCase="'tree'" class="tree">
+                    <sp-adapter-event-preview-node
+                        [keyLabel]="rootLabel"
+                        [value]="value"
+                        [expanded]="true"
+                        [maxStringLength]="maxStringLength"
+                        [sortKeys]="sortKeys"
+                    />
+                </div>
+            </ng-container>
+        }
     </div>
-    <div fxLayout="row" fxLayoutAlign="center center" class="mt-10 w-100">
-        <sp-exception-message
-            [message]="errorMessage"
-            class="w-100"
-        ></sp-exception-message>
-    </div>
-</div>
+</section>

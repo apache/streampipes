@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,27 +16,12 @@
  *
  */
 
-package org.apache.streampipes.connect.transformer.api;
-
-import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
-import org.apache.streampipes.model.connect.ScriptMetadata;
-
-/**
- * Compiles code templates into reusable transformers.
- */
-public interface TransformationEngine {
-
-  /**
-   * Identifier of the underlying scripting language.
-   */
-  ScriptMetadata metadata();
-
-  /**
-   * Compile the user-provided script into an executable transformer.
-   *
-   * @param script code template that reads from {@code input} and returns a map
-   * @return compiled transformer ready for repeated execution
-   * @throws ScriptCompilationException when the script cannot be compiled
-   */
-  ScriptTransformer compile(String script) throws ScriptCompilationException;
+.code-input {
+    margin: var(--space-2xs);
+    background-color: var(--color-code-bg);
+    font:
+        var(--font-size-xs) Inconsolata,
+        monospace;
+    color: var(--color-bg-1);
+    padding: 10px;
 }
