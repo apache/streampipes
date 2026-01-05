@@ -115,6 +115,10 @@ export class DataExplorerBtns {
         return cy.dataCy('edit-' + widgetName);
     }
 
+    public static viewWidget(widgetName: string) {
+        return cy.dataCy('show-data-view-' + widgetName);
+    }
+
     public static moreOptionsBtn(widgetName) {
         return cy.dataCy('more-options-' + widgetName);
     }

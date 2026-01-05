@@ -25,6 +25,7 @@ import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 import { DataSetUtils } from '../../support/utils/DataSetUtils';
 import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
+import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
 describe('Test Dataset Permissions', () => {
     const datasetName = 'Persist simulator';
@@ -32,6 +33,7 @@ describe('Test Dataset Permissions', () => {
     let datasetAdmin1: User;
     let datasetAdmin2: User;
     let chartAdmin1: User;
+    let chartUser1: User;
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
@@ -55,6 +57,11 @@ describe('Test Dataset Permissions', () => {
         chartAdmin1 = UserUtils.createUser(
             'chartAdmin1',
             UserRole.ROLE_DATA_EXPLORER_ADMIN,
+        );
+
+        chartUser1 = UserUtils.createUser(
+            'chartUser1',
+            UserRole.ROLE_DATA_EXPLORER_USER,
         );
     });
 
@@ -91,6 +98,41 @@ describe('Test Dataset Permissions', () => {
         UserUtils.switchUser(chartAdmin1);
 
         assertDatasetAvailabilityInCharts(true);
+
+        DataExplorerUtils.goToDatalake();
+
+        PermissionUtils.authorizeUser(
+            'test',
+            'chartUser1@streampipes.apache.org',
+        );
+
+        DataExplorerBtns.confirmSave().click();
+
+        UserUtils.switchUser(chartUser1);
+
+        DataExplorerUtils.checkAmountOfCharts(1);
+
+        GeneralUtils.openMenuForRow('test');
+
+        DataExplorerBtns.viewWidget('test').click();
+
+        cy.get('sp-alert-banner[type="error"]').should('exist');
+
+        UserUtils.switchUser(datasetAdmin1);
+
+        DatasetUtils.authorizeUserOnDataset(
+            'simulator',
+            'chartUser1@streampipes.apache.org',
+        );
+        UserUtils.switchUser(chartUser1);
+
+        DataExplorerUtils.checkAmountOfCharts(1);
+
+        GeneralUtils.openMenuForRow('test');
+
+        DataExplorerBtns.viewWidget('test').click();
+
+        cy.get('sp-alert-banner[type="error"]').should('not.exist');
     });
 
     /**it('Data only shown in dashboard if permissions were configured', () => {

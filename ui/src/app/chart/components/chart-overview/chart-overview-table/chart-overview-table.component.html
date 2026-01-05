@@ -95,7 +95,17 @@
             </ng-container>
 
             <ng-template spTableActions let-element>
-                <button mat-menu-item (click)="openDataView(element, false)">
+                <button
+                    mat-menu-item
+                    [attr.data-cy]="
+                        'show-data-view-' +
+                        element.baseAppearanceConfig.widgetTitle.replaceAll(
+                            ' ',
+                            ''
+                        )
+                    "
+                    (click)="openDataView(element, false)"
+                >
                     <mat-icon>visibility</mat-icon>
                     <span>{{ 'Show' | translate }}</span>
                 </button>
