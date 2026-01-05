@@ -49,10 +49,10 @@ public class CreateDatasetPermissionMigration implements Migration {
   @Override
   public void executeMigration() throws IOException {
     dataLakeStorage.findAll().forEach(measure -> {
-      var existingPermission = permissionStorage.getObjectPermissions(List.of(measure.getElementId()));
+      var existingPermission = permissionStorage.getObjectPermissions(List.of(measure.getMeasureName()));
       if (existingPermission.isEmpty()) {
         permissionResourceManager.createDefault(
-            measure.getElementId(),
+            measure.getMeasureName(),
             DataLakeMeasure.class,
             null,
             true
