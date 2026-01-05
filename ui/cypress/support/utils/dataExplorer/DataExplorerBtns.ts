@@ -36,6 +36,14 @@ export class DataExplorerBtns {
         return cy.dataCy('save-dashboard-btn');
     }
 
+    public static discardDashboard() {
+        return cy
+            .get('button')
+            .find('i.material-icons')
+            .contains('undo')
+            .parent();
+    }
+
     public static saveChartsToAssetBtn() {
         return cy
             .dataCy('add-to-Asset-data-view-btn', { timeout: 10000 })

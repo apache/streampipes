@@ -71,9 +71,9 @@ describe('Test Dataset Permissions', () => {
         );
     });
 
-    /**it('Dataset is not shared with other users', () => {
-        UserUtils.switchUser(datasetAdmin1);
-        ConnectUtils.addMachineDataSimulator('simulator', true);
+    it('Dataset is not shared with other users', () => {
+        generateDataset();
+
         assertDatasetIsVisibleAndEditableCanChangePermissions(
             UserUtils.adminUser,
         );
@@ -86,8 +86,7 @@ describe('Test Dataset Permissions', () => {
     });
 
     it('Datasets only usable in charts if permissions were configured', () => {
-        UserUtils.switchUser(datasetAdmin1);
-        ConnectUtils.addMachineDataSimulator('simulator', true);
+        generateDataset();
 
         UserUtils.switchUser(chartAdmin1);
 
@@ -116,7 +115,7 @@ describe('Test Dataset Permissions', () => {
 
         DataExplorerBtns.viewWidget('test').click();
 
-        cy.get('sp-alert-banner[type="error"]').should('exist');
+        assertAlertBanner(true);
 
         authUserOnDataset('chartUser1@streampipes.apache.org');
 
@@ -128,12 +127,12 @@ describe('Test Dataset Permissions', () => {
 
         DataExplorerBtns.viewWidget('test').click();
 
-        cy.get('sp-alert-banner[type="error"]').should('not.exist');
-    });*/
+        assertAlertBanner(false);
+    });
 
     it('Data only shown in dashboard if permissions were configured', () => {
-        UserUtils.switchUser(datasetAdmin1);
-        ConnectUtils.addMachineDataSimulator('simulator', true);
+        generateDataset();
+
         authUserOnDataset('chartAdmin1@streampipes.apache.org');
 
         UserUtils.switchUser(chartAdmin1);
@@ -147,29 +146,19 @@ describe('Test Dataset Permissions', () => {
 
         UserUtils.switchUser(dashboardAdmin1);
 
-        DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.createNewDashboard('TestDB');
-        DataExplorerUtils.editDashboard('TestDB');
-        DataExplorerUtils.addDataViewToDashboard('test', true);
+        generateDashboard('TestDB');
 
-        cy.get('sp-alert-banner[type="error"]').should('exist');
+        assertAlertBanner(true);
 
-        cy.get('button')
-            .find('i.material-icons') // Find the <i> element with the 'material-icons' class
-            .contains('undo') // Make sure it contains the 'undo' icon
-            .parent() // Get the parent button of the icon
-            .click();
+        DataExplorerBtns.discardDashboard().click();
 
         authUserOnDataset('dashboardAdmin1@streampipes.apache.org');
 
         UserUtils.switchUser(dashboardAdmin1);
 
-        DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.createNewDashboard('TestDB2');
-        DataExplorerUtils.editDashboard('TestDB2');
-        DataExplorerUtils.addDataViewToDashboard('test', true);
+        generateDashboard('TestDB2');
 
-        cy.get('sp-alert-banner[type="error"]').should('not.exist');
+        assertAlertBanner(false);
     });
     function assertDatasetAvailabilityInCharts(available: boolean) {
         DataExplorerUtils.goToDatalake();
@@ -186,6 +175,18 @@ describe('Test Dataset Permissions', () => {
             DataExplorerUtils.saveDataViewConfiguration();
         }
     }
+
+    function generateDataset() {
+        UserUtils.switchUser(datasetAdmin1);
+        ConnectUtils.addMachineDataSimulator('simulator', true);
+    }
+
+    function generateDashboard(name: string) {
+        DataExplorerUtils.goToDashboard();
+        DataExplorerUtils.createNewDashboard(name);
+        DataExplorerUtils.editDashboard(name);
+        DataExplorerUtils.addDataViewToDashboard('test', true);
+    }
     function assertDatasetIsVisibleAndEditableCanChangePermissions(user: User) {
         UserUtils.switchUser(user);
         DatasetUtils.goToDatasets();
@@ -197,6 +198,14 @@ describe('Test Dataset Permissions', () => {
         UserUtils.switchUser(user);
         DatasetUtils.goToDatasets();
         DatasetUtils.checkAmountOfDatasets(0);
+    }
+
+    function assertAlertBanner(exists: boolean) {
+        if (exists) {
+            cy.get('sp-alert-banner[type="error"]').should('exist');
+        } else {
+            cy.get('sp-alert-banner[type="error"]').should('not.exist');
+        }
     }
 
     function authUserOnDataset(email: string) {
