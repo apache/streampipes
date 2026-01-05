@@ -16,6 +16,7 @@
  *
  */
 
+import { PermissionUtils } from '../user/PermissionUtils';
 import { DatasetBtns } from './DatasetBtns';
 
 export class DatasetUtils {
@@ -34,5 +35,10 @@ export class DatasetUtils {
         } else {
             DatasetBtns.datasetTable().should('have.length', amount);
         }
+    }
+
+    public static authorizeUserOnDataset(datasetname: string, email: string) {
+        DatasetUtils.goToDatasets();
+        PermissionUtils.authorizeUser(datasetname, email);
     }
 }

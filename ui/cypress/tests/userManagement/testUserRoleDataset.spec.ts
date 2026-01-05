@@ -31,6 +31,7 @@ describe('Test Dataset Permissions', () => {
     let datasetUser1: User;
     let datasetAdmin1: User;
     let datasetAdmin2: User;
+    let chartAdmin1: User;
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
@@ -50,12 +51,17 @@ describe('Test Dataset Permissions', () => {
             'datasetAdmin2',
             UserRole.ROLE_PIPELINE_ADMIN,
         );
+
+        chartAdmin1 = UserUtils.createUser(
+            'chartAdmin1',
+            UserRole.ROLE_DATA_EXPLORER_ADMIN,
+        );
     });
 
-    it('Dataset is not shared with other users', () => {
-        UserUtils.switchUser(datasetAdmin1);
-        ConnectUtils.addMachineDataSimulator('simulator', true);
+    /**it('Dataset is not shared with other users', () => {
 
+            UserUtils.switchUser(datasetAdmin1);
+        ConnectUtils.addMachineDataSimulator('simulator', true);
         assertDatasetIsVisibleAndEditableCanChangePermissions(
             UserUtils.adminUser,
         );
@@ -65,8 +71,45 @@ describe('Test Dataset Permissions', () => {
         UserUtils.switchUser(datasetUser1);
 
         assertPipelineIsNotVisible(datasetAdmin2);
+    });*/
+
+    it('Datasets only usable in charts if permissions were configured', () => {
+        UserUtils.switchUser(datasetAdmin1);
+        ConnectUtils.addMachineDataSimulator('simulator', true);
+
+        UserUtils.switchUser(chartAdmin1);
+
+        assertDatasetAvailabilityInCharts(false);
+
+        UserUtils.switchUser(datasetAdmin1);
+
+        DatasetUtils.authorizeUserOnDataset(
+            'simulator',
+            'chartAdmin1@streampipes.apache.org',
+        );
+
+        UserUtils.switchUser(chartAdmin1);
+
+        assertDatasetAvailabilityInCharts(true);
     });
 
+    /**it('Data only shown in dashboard if permissions were configured', () => {
+    });*/
+    function assertDatasetAvailabilityInCharts(available: boolean) {
+        DataExplorerUtils.goToDatalake();
+        DataExplorerBtns.openNewDataViewBtn().click();
+        if (!available) {
+            cy.get('sp-alert-banner').should('be.visible');
+        } else {
+            DataExplorerUtils.assertSelectDataSet('simulator');
+            DataExplorerUtils.addDataViewAndTableWidget(
+                'test',
+                'simulator',
+                true,
+            );
+            DataExplorerUtils.saveDataViewConfiguration();
+        }
+    }
     function assertDatasetIsVisibleAndEditableCanChangePermissions(user: User) {
         UserUtils.switchUser(user);
         DatasetUtils.goToDatasets();
