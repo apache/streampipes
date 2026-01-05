@@ -23,7 +23,6 @@ import { User } from '../../support/model/User';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
-import { DataSetUtils } from '../../support/utils/DataSetUtils';
 import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
@@ -117,6 +116,8 @@ describe('Test Dataset Permissions', () => {
 
         assertAlertBanner(true);
 
+        assertDatasetIsNotVisible(chartUser1);
+
         authUserOnDataset('chartUser1@streampipes.apache.org');
 
         UserUtils.switchUser(chartUser1);
@@ -151,6 +152,8 @@ describe('Test Dataset Permissions', () => {
         assertAlertBanner(true);
 
         DataExplorerBtns.discardDashboard().click();
+
+        assertDatasetIsNotVisible(dashboardAdmin1);
 
         authUserOnDataset('dashboardAdmin1@streampipes.apache.org');
 
