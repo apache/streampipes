@@ -22,7 +22,6 @@ package org.apache.streampipes.export.resolver;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
@@ -54,7 +53,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
 
   @Override
   public AdapterDescription readDocument(String serializedDoc) throws JsonProcessingException {
-    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, AdapterDescription.class);
+    return this.spMapper.readValue(serializedDoc, AdapterDescription.class);
   }
 
   @Override

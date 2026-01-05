@@ -163,13 +163,15 @@ export class GeneralConfigurationComponent implements OnInit {
             this.parentForm.addControl(
                 'showDocumentationLinkOnStartScreen',
                 new UntypedFormControl(
-                    this.generalConfig.linkSettings.showDocumentationLinkOnStartScreen,
+                    this.generalConfig.linkSettings
+                        .showDocumentationLinkOnStartScreen,
                 ),
             );
             this.parentForm.addControl(
                 'showDocumentationLinkInProfileMenu',
                 new UntypedFormControl(
-                    this.generalConfig.linkSettings.showDocumentationLinkInProfileMenu,
+                    this.generalConfig.linkSettings
+                        .showDocumentationLinkInProfileMenu,
                 ),
             );
             this.parentForm.addControl(
@@ -187,7 +189,8 @@ export class GeneralConfigurationComponent implements OnInit {
             this.parentForm.addControl(
                 'showApiDocumentationLinkOnStartScreen',
                 new UntypedFormControl(
-                    this.generalConfig.linkSettings.showApiDocumentationLinkOnStartScreen,
+                    this.generalConfig.linkSettings
+                        .showApiDocumentationLinkOnStartScreen,
                 ),
             );
 
@@ -227,7 +230,7 @@ export class GeneralConfigurationComponent implements OnInit {
         const toUserRole = (r: string | number) =>
             typeof r === 'number'
                 ? r
-                : UserRole[r as keyof typeof UserRole] ?? r;
+                : (UserRole[r as keyof typeof UserRole] ?? r);
 
         this.generalConfig = {
             ...this.generalConfig,

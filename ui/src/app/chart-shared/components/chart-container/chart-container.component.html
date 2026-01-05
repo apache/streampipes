@@ -21,7 +21,7 @@
     [ngStyle]="{
         background: configuredWidget.baseAppearanceConfig.backgroundColor,
         color: configuredWidget.baseAppearanceConfig.textColor,
-        height: '100%'
+        height: '100%',
     }"
     [attr.data-cy]="
         'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle
@@ -43,8 +43,9 @@
                                     configuredWidget.baseAppearanceConfig
                                         .widgetTitle
                             }}
-                            @if (editMode) {
+                            @if (!dataViewMode && editMode) {
                                 <button
+                                    class="ml-xs"
                                     mat-icon-button
                                     (click)="startEditingName()"
                                 >

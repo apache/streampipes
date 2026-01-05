@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,23 +16,19 @@
  *
  */
 
-package org.apache.streampipes.export.utils;
+:host {
+    width: 100%;
+    height: 100%;
+}
 
-import org.apache.streampipes.serializers.json.JacksonSerializer;
+.dataset-preview-inner {
+    overflow-y: scroll;
+    min-height: 0;
+}
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class SerializationUtils {
-
-  public static ObjectMapper getSpObjectMapper() {
-    return JacksonSerializer.getObjectMapper();
-  }
-
-  public static ObjectMapper getDefaultObjectMapper() {
-    var mapper = new ObjectMapper();
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-    return mapper;
-  }
+.meta-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
 }

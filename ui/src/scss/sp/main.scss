@@ -454,22 +454,9 @@ md-content {
     padding: 5px;
 }
 
-.editorIconStandOptions {
-    color: black;
-    background: var(--color-bg-1);
-    border-bottom: 1px solid var(--color-bg-3);
-    padding: 0px;
-    width: 100%;
-}
-
 .outer-assembly-preview {
     position: relative;
     overflow: auto;
-    box-shadow:
-        0 1px 3px 0 rgba(0, 0, 0, 0.2),
-        0 1px 1px 0 rgba(0, 0, 0, 0.14),
-        0 2px 1px -1px rgba(0, 0, 0, 0.12);
-    border: 1px solid var(--color-bg-2);
     display: flex;
     flex: 1 1 0;
     max-width: 100%;
@@ -520,9 +507,9 @@ md-content {
 }
 
 .connectable-editor {
-    height: 90px !important;
-    width: 90px !important;
-    line-height: 90px;
+    height: 70px !important;
+    width: 70px !important;
+    line-height: 70px;
 }
 
 .connectable-element {
@@ -686,7 +673,7 @@ textarea {
 }
 
 .element-text-icon {
-    font-size: 20px;
+    font-size: var(--font-size-lg);
 }
 
 .element-text-icon-small {

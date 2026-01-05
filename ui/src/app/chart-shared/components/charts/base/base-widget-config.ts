@@ -31,9 +31,9 @@ import { Subscription } from 'rxjs';
 
 @Directive()
 export abstract class BaseWidgetConfig<
-        T extends DataExplorerWidgetModel,
-        V extends DataExplorerVisConfig,
-    >
+    T extends DataExplorerWidgetModel,
+    V extends DataExplorerVisConfig,
+>
     implements OnInit, OnDestroy
 {
     @Input() currentlyConfiguredWidget: T;

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
@@ -40,7 +39,7 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
 
   @Override
   public SpDataStream readDocument(String serializedDoc) throws JsonProcessingException {
-    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, SpDataStream.class);
+    return this.defaultMapper.readValue(serializedDoc, SpDataStream.class);
   }
 
   @Override

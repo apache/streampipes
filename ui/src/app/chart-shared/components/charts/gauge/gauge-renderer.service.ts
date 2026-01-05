@@ -33,9 +33,7 @@ import { EchartsBasicOptionsGeneratorService } from '../../../echarts-renderer/e
 import { SpFieldUpdateService } from '../../../services/field-update.service';
 
 @Injectable({ providedIn: 'root' })
-export class SpGaugeRendererService
-    implements SpEchartsRenderer<GaugeWidgetModel>
-{
+export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetModel> {
     protected fieldUpdateService = inject(SpFieldUpdateService);
     protected echartsBaseOptionsGenerator = inject(
         EchartsBasicOptionsGeneratorService,

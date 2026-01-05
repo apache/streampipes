@@ -149,13 +149,10 @@ export class PipelineElementIconStandComponent
                 stack: '.draggable-pipeline-element',
                 start(el, ui) {
                     ui.helper.appendTo('#content');
-                    $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
+                    $('#outerAssemblyArea').css('border', '2px dashed #39b54a');
                 },
                 stop(el, ui) {
-                    $('#outerAssemblyArea').css(
-                        'border',
-                        '1px solid var(--color-bg-3)',
-                    );
+                    $('#outerAssemblyArea').css('border', '0');
                 },
             });
         });

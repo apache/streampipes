@@ -18,46 +18,30 @@
 <div
     fxFlex="100"
     fxLayout="column"
-    class="border"
-    style="width: 250px"
     [attr.data-cy]="'sp-pipeline-element-selection'"
 >
-    <div class="editorIconStandOptions page-container-nav" style="padding: 0px">
-        <div
-            fxFlex="100"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            style="padding-left: 5px"
-        >
-            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
-                <div class="form-field-small">
-                    <mat-form-field
-                        color="accent"
-                        class="search-field"
-                        appearance="outline"
+    <div class="page-container-nav" style="padding: 0px">
+        <div class="form-field-small mw-100 p-sm">
+            <mat-form-field color="accent" class="w-100" appearance="outline">
+                <input
+                    matInput
+                    type="text"
+                    (keyup)="makeDraggable()"
+                    [placeholder]="'Find element' | translate"
+                    [(ngModel)]="elementFilter"
+                />
+                <mat-icon matPrefix color="accent">search</mat-icon>
+                @if (elementFilter) {
+                    <button
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Find element"
+                        (click)="clearInput()"
                     >
-                        <input
-                            matInput
-                            type="text"
-                            (keyup)="makeDraggable()"
-                            [placeholder]="'Find element' | translate"
-                            [(ngModel)]="elementFilter"
-                        />
-                        <mat-icon matPrefix color="accent">search</mat-icon>
-                        @if (elementFilter) {
-                            <button
-                                matSuffix
-                                mat-icon-button
-                                aria-label="Find element"
-                                (click)="clearInput()"
-                            >
-                                <mat-icon>close</mat-icon>
-                            </button>
-                        }
-                    </mat-form-field>
-                </div>
-                <span fxFlex></span>
-            </div>
+                        <mat-icon>close</mat-icon>
+                    </button>
+                }
+            </mat-form-field>
         </div>
     </div>
     @if (allElements) {

@@ -19,11 +19,15 @@
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Map;
 
 public class TestJsonItemGenerator extends TestItemGenerator {
 
@@ -31,7 +35,9 @@ public class TestJsonItemGenerator extends TestItemGenerator {
 
   @Test
   public void testJsonWriter() {
-    var writer = new JsonItemGenerator(new ObjectMapper());
+    var writer = new JsonItemGenerator(JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    )));
 
     String result = writer.createItem(row, columns);
 

@@ -69,13 +69,15 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Retrieve measurement counts", description = "Retrieves the entry counts for the specified measurements from the data lake.")
   @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Integer>> getEntryCountsOfMeasurments(
-      @Parameter(description = "A list of measurement names to return the count.") @RequestParam(value = "measurementNames") List<String> measurementNames) {
+      @Parameter(description = "A list of measurement names to return the count.") @RequestParam(value = "measurementNames") List<String> measurementNames,
+      @Parameter(description = "The number of days from today where the count should start") @RequestParam(value = "daysBack", defaultValue = "-1") int daysBack) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
     var result = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getMeasurementCounter(
             allMeasurements,
-            measurementNames)
+            measurementNames,
+            daysBack)
         .countMeasurementSizes();
     return ok(result);
   }

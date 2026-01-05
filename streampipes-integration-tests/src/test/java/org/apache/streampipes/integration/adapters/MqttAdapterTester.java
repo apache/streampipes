@@ -115,13 +115,14 @@ public class MqttAdapterTester extends AdapterTesterBase {
 
   @Override
   public void close() {
-    if (mosquittoContainer != null) {
-      mosquittoContainer.stop();
-    }
+
     try {
       stopAdapter();
     } catch (AdapterException e) {
       throw new RuntimeException(e);
+    }
+    if (mosquittoContainer != null) {
+      mosquittoContainer.stop();
     }
   }
 }

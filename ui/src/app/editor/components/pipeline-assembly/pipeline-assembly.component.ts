@@ -38,6 +38,7 @@ import { Router } from '@angular/router';
 import { PipelineAssemblyDrawingAreaComponent } from './pipeline-assembly-drawing-area/pipeline-assembly-drawing-area.component';
 import { PipelineAssemblyOptionsComponent } from './pipeline-assembly-options/pipeline-assembly-options.component';
 import { JsplumbService } from '../../services/jsplumb.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-assembly',
@@ -80,6 +81,7 @@ export class PipelineAssemblyComponent implements AfterViewInit {
         private dialogService: DialogService,
         private router: Router,
         private jsplumbService: JsplumbService,
+        private translateService: TranslateService,
     ) {}
 
     ngAfterViewInit() {
@@ -126,7 +128,7 @@ export class PipelineAssemblyComponent implements AfterViewInit {
         const dialogRef = this.dialogService.open(SavePipelineComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             disableClose: true,
-            title: 'Save pipeline',
+            title: this.translateService.instant('Save pipeline'),
             width: '40vw',
             data: {
                 pipeline: pipeline,

@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -92,39 +93,41 @@ public class PipelineHealthCheck implements Runnable {
         List<InvocableStreamPipesEntity> graphs = RunningPipelineElementStorage.runningProcessorsAndSinks
             .get(pipeline.getPipelineId());
 
-        graphs.forEach(graph -> {
-          String instanceId = extractInstanceId(graph);
-          if (allRunningInstances.stream()
-              .noneMatch(runningInstanceId -> runningInstanceId.equals(instanceId))) {
-            if (shouldRetry(instanceId)) {
-              String endpointUrl = graph.getSelectedEndpointUrl();
-              shouldUpdatePipeline.set(true);
-              boolean success;
-              try {
-                endpointUrl = findEndpointUrl(graph);
-                success = new InvokeHttpRequest()
-                    .execute(graph, endpointUrl, pipeline.getPipelineId()).isSuccess();
-              } catch (NoServiceEndpointsAvailableException e) {
-                success = false;
-              }
-              if (!success) {
-                failedInstances.add(instanceId);
-                addFailedAttemptNotification(pipelineNotifications, graph);
-                increaseFailedAttempt(instanceId);
-                LOG.info("Could not restore pipeline element {} of pipeline {} ({}/{})",
-                    graph.getName(), pipeline.getName(), failedRestartAttempts.get(instanceId),
-                    MAX_FAILED_ATTEMPTS);
-              } else {
-                recoveredInstances.add(instanceId);
-                addSuccessfulRestoreNotification(pipelineNotifications, graph);
-                resetFailedAttempts(instanceId);
-                graph.setSelectedEndpointUrl(endpointUrl);
-                LOG.info("Successfully restored pipeline element {} of pipeline {}",
-                    graph.getName(), pipeline.getName());
+        if (Objects.nonNull(graphs)) {
+          graphs.forEach(graph -> {
+            String instanceId = extractInstanceId(graph);
+            if (allRunningInstances.stream()
+                .noneMatch(runningInstanceId -> runningInstanceId.equals(instanceId))) {
+              if (shouldRetry(instanceId)) {
+                String endpointUrl = graph.getSelectedEndpointUrl();
+                shouldUpdatePipeline.set(true);
+                boolean success;
+                try {
+                  endpointUrl = findEndpointUrl(graph);
+                  success = new InvokeHttpRequest()
+                      .execute(graph, endpointUrl, pipeline.getPipelineId()).isSuccess();
+                } catch (NoServiceEndpointsAvailableException e) {
+                  success = false;
+                }
+                if (!success) {
+                  failedInstances.add(instanceId);
+                  addFailedAttemptNotification(pipelineNotifications, graph);
+                  increaseFailedAttempt(instanceId);
+                  LOG.info("Could not restore pipeline element {} of pipeline {} ({}/{})",
+                      graph.getName(), pipeline.getName(), failedRestartAttempts.get(instanceId),
+                      MAX_FAILED_ATTEMPTS);
+                } else {
+                  recoveredInstances.add(instanceId);
+                  addSuccessfulRestoreNotification(pipelineNotifications, graph);
+                  resetFailedAttempts(instanceId);
+                  graph.setSelectedEndpointUrl(endpointUrl);
+                  LOG.info("Successfully restored pipeline element {} of pipeline {}",
+                      graph.getName(), pipeline.getName());
+                }
               }
             }
-          }
-        });
+          });
+        }
         if (shouldUpdatePipeline.get()) {
           var currentPipeline = getPipeline(pipeline.getPipelineId());
           if (!failedInstances.isEmpty()) {

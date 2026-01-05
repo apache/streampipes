@@ -25,9 +25,7 @@ import { EscapeNumberFilterService } from '../escape-number-filter.service';
         './filter-selection-panel-row-value-autocomplete.component.html',
     standalone: false,
 })
-export class FilterSelectionPanelRowValueAutocompleteComponent
-    implements OnInit
-{
+export class FilterSelectionPanelRowValueAutocompleteComponent implements OnInit {
     @Input()
     public filter: SelectedFilter;
 
