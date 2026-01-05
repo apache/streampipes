@@ -33,7 +33,11 @@ import {
     SpAssetModel,
 } from '@streampipes/platform-services';
 import { SpManageAssetLinksDialogComponent } from '../../../../../dialog/manage-asset-links/manage-asset-links-dialog.component';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    DialogService,
+    PanelType,
+    SpAssetBrowserService,
+} from '@streampipes/shared-ui';
 import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { AssetLinkTableComponent } from '../../../view-asset/view-asset-links/asset-link-table/asset-link-table.component';
@@ -66,6 +70,7 @@ export class AssetDetailsLinksComponent implements OnInit {
         private genericStorageService: GenericStorageService,
         private dialogService: DialogService,
         private translateService: TranslateService,
+        private assetBrowserService: SpAssetBrowserService,
     ) {}
 
     ngOnInit(): void {
@@ -97,6 +102,7 @@ export class AssetDetailsLinksComponent implements OnInit {
             if (assetLinks) {
                 this.asset.assetLinks = assetLinks;
                 this.assetLinkTable?.refreshData();
+                this.assetBrowserService.loadAssetData();
             }
         });
     }
@@ -129,6 +135,7 @@ export class AssetDetailsLinksComponent implements OnInit {
                 this.asset.assetLinks.push(storedLink);
                 this.asset.assetLinks = [...this.asset.assetLinks];
                 this.assetLinkTable?.refreshData();
+                this.assetBrowserService.loadAssetData();
             }
         });
     }

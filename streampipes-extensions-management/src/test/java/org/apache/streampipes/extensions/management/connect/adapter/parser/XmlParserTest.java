@@ -72,6 +72,7 @@ public class XmlParserTest extends ParserTest {
     assertEquals(expected.getEventSchema(), result.getEventSchema());
 
     var previewJson = result.getEventPreview().get(0).toString();
+    previewJson = previewJson.replaceAll("[\\s\\n\\r]+", "");
     assertTrue(previewJson.contains("\"k1\":\"v1\""));
     assertTrue(previewJson.contains("\"k2\":1.0"));
   }
@@ -89,6 +90,7 @@ public class XmlParserTest extends ParserTest {
     assertEquals(expected.getEventSchema(), result.getEventSchema());
 
     var previewJson = result.getEventPreview().get(0).toString();
+    previewJson = previewJson.replaceAll("[\\s\\n\\r]+", "");
     assertTrue(previewJson.contains("\"k1\":\"v1\""));
     assertTrue(previewJson.contains("\"k2\":1.0"));
   }

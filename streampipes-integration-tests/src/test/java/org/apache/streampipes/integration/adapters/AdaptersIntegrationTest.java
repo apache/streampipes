@@ -35,19 +35,18 @@ public class AdaptersIntegrationTest {
 
   @Test
   @Order(2)
-
-  public void testMqttTLSAdapter() throws Exception {
-
-    try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
-      mqttAdapterTLSTester.run();
+  public void testPulsarAdapter() throws Exception {
+    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
+      pulsarAdapterTester.run();
     }
   }
 
   @Test
   @Order(3)
-  public void testPulsarAdapter() throws Exception {
-    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
-      pulsarAdapterTester.run();
+  public void testMqttTLSAdapter() throws Exception {
+
+    try (MqttAdapterTLSTester mqttAdapterTLSTester = new MqttAdapterTLSTester()) {
+      mqttAdapterTLSTester.run();
     }
   }
 

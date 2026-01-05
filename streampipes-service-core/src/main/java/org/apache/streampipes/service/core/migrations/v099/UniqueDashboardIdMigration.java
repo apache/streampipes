@@ -44,7 +44,9 @@ public class UniqueDashboardIdMigration implements Migration {
         .stream()
         .anyMatch(d -> d.getWidgets()
             .stream()
-            .anyMatch(w -> Objects.nonNull(w.getId()) && w.getId().startsWith(Prefix)));
+            .anyMatch(w ->
+                Objects.nonNull(w.getId())
+                    && (w.getId().startsWith(Prefix) || Objects.isNull(w.getDataViewElementId()))));
   }
 
   @Override
@@ -53,11 +55,9 @@ public class UniqueDashboardIdMigration implements Migration {
 
     allDashboards.forEach(d -> {
       d.getWidgets().forEach(w -> {
-        if (Objects.nonNull(w.getId()) && w.getId().startsWith(Prefix)) {
+        if (Objects.nonNull(w.getId()) && (w.getId().startsWith(Prefix) || Objects.isNull(w.getDataViewElementId()))) {
           w.setDataViewElementId(w.getId());
-          var uniqueDashboardWidgetId = Objects.nonNull(w.getId())
-              ? w.getId()
-              : RandomStringUtils.randomAlphanumeric(16);
+          var uniqueDashboardWidgetId = RandomStringUtils.randomAlphanumeric(16);
           w.setId(uniqueDashboardWidgetId);
           w.setWidgetId(null);
         }

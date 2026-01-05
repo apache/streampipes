@@ -22,11 +22,14 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 public abstract class JsonParser {
 
@@ -34,7 +37,9 @@ public abstract class JsonParser {
   protected final ParserUtils parserUtils;
 
   public JsonParser() {
-    this.mapper = new ObjectMapper();
+    this.mapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+    ));
     this.parserUtils = new ParserUtils();
   }
 

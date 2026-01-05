@@ -21,23 +21,13 @@ import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.api.config.IStreamPipesClientConfig;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class StreamPipesClientConfig implements IStreamPipesClientConfig {
 
   private final ClientConnectionUrlResolver connectionConfig;
-  private final ObjectMapper serializer;
 
   public StreamPipesClientConfig(ClientConnectionUrlResolver connectionConfig) {
     this.connectionConfig = connectionConfig;
-    this.serializer = JacksonSerializer.getObjectMapper();
-  }
-
-  @Override
-  public ObjectMapper getSerializer() {
-    return serializer;
   }
 
   @Override

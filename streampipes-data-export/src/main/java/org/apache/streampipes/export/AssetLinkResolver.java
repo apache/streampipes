@@ -26,13 +26,15 @@ import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
-import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +52,10 @@ public class AssetLinkResolver {
 
   public AssetLinkResolver(String assetId) {
     this.assetId = assetId;
-    this.mapper = SerializationUtils.getDefaultObjectMapper();
+    this.mapper = JacksonSerializer.getObjectMapper(Map.of(
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
+      SerializationFeature.INDENT_OUTPUT, false 
+    ));
   }
 
   public AssetExportConfiguration resolveResources() {

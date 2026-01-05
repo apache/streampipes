@@ -16,16 +16,18 @@
   ~
   -->
 
-<button
-    type="button"
-    class="link-chip"
-    [style.--link-color]="currentLinkType.linkColor"
-    (click)="openPreview(); $event.stopPropagation()"
-    [attr.aria-label]="assetLink.linkLabel"
->
-    <i class="material-icons link-icon">{{ currentLinkType.linkIcon }}</i>
+@if (currentLinkType) {
+    <button
+        type="button"
+        class="link-chip"
+        [style.--link-color]="currentLinkType.linkColor"
+        (click)="openPreview(); $event.stopPropagation()"
+        [attr.aria-label]="assetLink.linkLabel"
+    >
+        <i class="material-icons link-icon">{{ currentLinkType.linkIcon }}</i>
 
-    <span class="chip-expander">
-        <span class="link-label">{{ assetLink.linkLabel }}</span>
-    </span>
-</button>
+        <span class="chip-expander">
+            <span class="link-label">{{ assetLink.linkLabel }}</span>
+        </span>
+    </button>
+}

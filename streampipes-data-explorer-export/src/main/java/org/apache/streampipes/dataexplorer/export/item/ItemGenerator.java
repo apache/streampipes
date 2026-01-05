@@ -38,9 +38,6 @@ public abstract class ItemGenerator {
 
     for (int i = 0; i < row.size(); i++) {
       Object value = row.get(i);
-      if (i == 0) {
-        value = getTimestampValue((Double) row.get(i));
-      }
       joiner.add(makeItemString(columns.get(i), value));
     }
 
@@ -51,9 +48,5 @@ public abstract class ItemGenerator {
                                            Object value);
 
   protected abstract String finalizeItem(String item);
-
-  private long getTimestampValue(Double value) {
-    return value.longValue();
-  }
 
 }

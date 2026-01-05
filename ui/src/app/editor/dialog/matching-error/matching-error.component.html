@@ -18,52 +18,41 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div>
-            <h4>{{ 'These elements can't be connected.' | translate }}</h4>
-            <h4>
+        <div fxLayout="column">
+            <h5>{{ "These elements can't be connected." | translate }}</h5>
+            <span class="text-md">
                 {{
                     'The input data stream does not satisfy the requirements
         specified by the data processor.' | translate
                 }}
-            </h4>
-            <button
-                mat-button
-                (click)="toggleStatusDetailsVisible()"
-                type="button"
-                class="md-accent"
-            >
-                @if (!statusDetailsVisible) {
-                    <div>
-                        {{ 'Show Details' | translate }}
-                    </div>
-                }
-                @if (statusDetailsVisible) {
-                    <div>
-                        {{ 'Hide Details' | translate }}
-                    </div>
-                }
-            </button>
-            @if (statusDetailsVisible) {
-                <div>
-                    @for (entry of notifications; track entry) {
+            </span>
+            <div>
+                <button
+                    mat-flat-button
+                    (click)="toggleStatusDetailsVisible()"
+                    type="button"
+                    class="mt-md mat-basic"
+                >
+                    @if (!statusDetailsVisible) {
                         <div>
-                            <div
-                                fxFlex="100"
-                                class="md-whiteframe-z1"
-                                style="margin-bottom: 10px"
-                            >
-                                <div
-                                    fxFlex
-                                    fxLayout="column"
-                                    class="md-padding"
-                                >
-                                    <div fxFlex="column">
-                                        {{ entry.title }}<br />
-                                        {{ entry.description }}
-                                    </div>
-                                </div>
-                            </div>
+                            {{ 'Show Details' | translate }}
                         </div>
+                    }
+                    @if (statusDetailsVisible) {
+                        <div>
+                            {{ 'Hide Details' | translate }}
+                        </div>
+                    }
+                </button>
+            </div>
+            @if (statusDetailsVisible) {
+                <div class="mt-md" fxLayout="column">
+                    @for (entry of notifications; track entry) {
+                        <sp-alert-banner
+                            type="warning"
+                            [title]="entry.title"
+                            [description]="entry.description"
+                        ></sp-alert-banner>
                     }
                 </div>
             }

@@ -52,7 +52,6 @@ public class TestRawFieldSerializer {
     rawNestedField.put("List", rawListField);
 
     var json = rawFieldSerializer.serialize(rawNestedField);
-
     assertEquals(rawNestedField, rawFieldSerializer.deserialize(json));
   }
 

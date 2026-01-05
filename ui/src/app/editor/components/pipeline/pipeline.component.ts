@@ -151,8 +151,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
     ): Record<string, string> {
         return {
             position: 'absolute',
-            width: '90px',
-            height: '90px',
+            width: '70px',
+            height: '70px',
             left: pipelineElementConfig.settings.position.x + 'px',
             top: pipelineElementConfig.settings.position.y + 'px',
         };

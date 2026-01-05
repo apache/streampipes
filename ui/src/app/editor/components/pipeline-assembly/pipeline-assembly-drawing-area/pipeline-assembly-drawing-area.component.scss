@@ -44,8 +44,24 @@
     width: 4000px;
     z-index: 0;
     margin: -1px;
+    --dot-minor: light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.18));
+    --dot-major: light-dark(rgba(0, 0, 0, 0.38), rgba(255, 255, 255, 0.34));
 
-    background-color: var(--color-bg-1);
-    background-image: var(--canvas-color);
-    background-size: 15px 15px;
+    background-color: var(--color-bg-0, var(--bg));
+    background-image: radial-gradient(
+            circle at 8px 8px,
+            var(--dot-minor) 1px,
+            transparent 1px
+        ),
+        radial-gradient(
+            circle at 40px 40px,
+            var(--dot-major) 1px,
+            transparent 1px
+        );
+    background-size:
+        16px 16px,
+        80px 80px;
+    background-position:
+        0 0,
+        0 0;
 }
