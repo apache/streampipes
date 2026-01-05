@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, computed, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, Input } from '@angular/core';
 
 export type Mode = 'tree' | 'raw';
 

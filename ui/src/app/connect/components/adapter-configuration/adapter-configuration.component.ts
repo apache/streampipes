@@ -28,8 +28,6 @@ import { MatStepper } from '@angular/material/stepper';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Router } from '@angular/router';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { AdapterConfigurationStateService } from './adapter-configuration-state-service/adapter-configuration-state.service';
 
@@ -40,7 +38,6 @@ import { AdapterConfigurationStateService } from './adapter-configuration-state-
     standalone: false,
 })
 export class AdapterConfigurationComponent implements OnInit, OnDestroy {
-    private dialogService = inject(DialogService);
     private shepherdService = inject(ShepherdService);
     private router = inject(Router);
     private translate = inject(TranslateService);
