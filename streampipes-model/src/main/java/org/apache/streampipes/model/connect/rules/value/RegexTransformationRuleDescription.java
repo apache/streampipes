@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
-import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 @Deprecated(since = "0.99.0", forRemoval = true)
@@ -30,10 +29,6 @@ public class RegexTransformationRuleDescription extends ValueTransformationRuleD
   private boolean replaceAll;
 
   public RegexTransformationRuleDescription() {
-  }
-
-  @Override
-  public void accept(ITransformationRuleVisitor visitor) {
   }
 
   @Override

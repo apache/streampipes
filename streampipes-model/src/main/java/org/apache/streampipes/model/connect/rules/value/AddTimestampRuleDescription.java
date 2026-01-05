@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
-import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 import org.apache.streampipes.model.schema.PropertyScope;
 
@@ -56,10 +55,6 @@ public class AddTimestampRuleDescription extends ValueTransformationRuleDescript
 
   public void setPropertyScope(PropertyScope propertyScope) {
     this.propertyScope = propertyScope;
-  }
-
-  @Override
-  public void accept(ITransformationRuleVisitor visitor) {
   }
 
   @Override

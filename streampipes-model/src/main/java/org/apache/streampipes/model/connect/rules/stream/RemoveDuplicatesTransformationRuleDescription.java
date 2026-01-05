@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.rules.stream;
 
-import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 @Deprecated(since = "0.99.0", forRemoval = true)
@@ -47,11 +46,6 @@ public class RemoveDuplicatesTransformationRuleDescription extends StreamTransfo
 
   public void setFilterTimeWindow(String filterTimeWindow) {
     this.filterTimeWindow = filterTimeWindow;
-  }
-
-  @Override
-  public void accept(ITransformationRuleVisitor visitor) {
-    visitor.visit(this);
   }
 
   @Override

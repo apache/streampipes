@@ -27,7 +27,7 @@ public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
 
   public AdapterPipeline generatePipeline(AdapterDescription adapterDescription) {
 
-    var pipelineElements = makeAdapterPipelineElements(adapterDescription.getRules(), true, adapterDescription, true);
+    var pipelineElements = makeAdapterPipelineElements(true, adapterDescription, true);
 
     if (hasValidGrounding(adapterDescription)) {
       return new AdapterPipeline(

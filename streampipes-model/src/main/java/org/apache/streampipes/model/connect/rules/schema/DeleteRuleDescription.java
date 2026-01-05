@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.rules.schema;
 
-import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 @Deprecated(since = "0.99.0", forRemoval = true)
@@ -47,10 +46,6 @@ public class DeleteRuleDescription extends SchemaTransformationRuleDescription {
 
   public void setRuntimeKey(String runtimeKey) {
     this.runtimeKey = runtimeKey;
-  }
-
-  @Override
-  public void accept(ITransformationRuleVisitor visitor) {
   }
 
   @Override
