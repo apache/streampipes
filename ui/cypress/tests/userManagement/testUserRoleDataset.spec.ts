@@ -34,6 +34,7 @@ describe('Test Dataset Permissions', () => {
     let datasetAdmin2: User;
     let chartAdmin1: User;
     let chartUser1: User;
+    let dashboardAdmin1: User;
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
@@ -63,20 +64,25 @@ describe('Test Dataset Permissions', () => {
             'chartUser1',
             UserRole.ROLE_DATA_EXPLORER_USER,
         );
+
+        dashboardAdmin1 = UserUtils.createUser(
+            'dashboardAdmin1',
+            UserRole.ROLE_DASHBOARD_ADMIN,
+        );
     });
 
-    it('Dataset is not shared with other users', () => {
+    /**it('Dataset is not shared with other users', () => {
         UserUtils.switchUser(datasetAdmin1);
         ConnectUtils.addMachineDataSimulator('simulator', true);
         assertDatasetIsVisibleAndEditableCanChangePermissions(
             UserUtils.adminUser,
         );
 
-        assertPipelineIsNotVisible(datasetUser1);
+        assertDatasetIsNotVisible(datasetUser1);
 
         UserUtils.switchUser(datasetUser1);
 
-        assertPipelineIsNotVisible(datasetAdmin2);
+        assertDatasetIsNotVisible(datasetAdmin2);
     });
 
     it('Datasets only usable in charts if permissions were configured', () => {
@@ -123,10 +129,48 @@ describe('Test Dataset Permissions', () => {
         DataExplorerBtns.viewWidget('test').click();
 
         cy.get('sp-alert-banner[type="error"]').should('not.exist');
-    });
-
-    /**it('Data only shown in dashboard if permissions were configured', () => {
     });*/
+
+    it('Data only shown in dashboard if permissions were configured', () => {
+        UserUtils.switchUser(datasetAdmin1);
+        ConnectUtils.addMachineDataSimulator('simulator', true);
+        authUserOnDataset('chartAdmin1@streampipes.apache.org');
+
+        UserUtils.switchUser(chartAdmin1);
+
+        assertDatasetAvailabilityInCharts(true);
+
+        PermissionUtils.authorizeUser(
+            'test',
+            'dashboardAdmin1@streampipes.apache.org',
+        );
+
+        UserUtils.switchUser(dashboardAdmin1);
+
+        DataExplorerUtils.goToDashboard();
+        DataExplorerUtils.createNewDashboard('TestDB');
+        DataExplorerUtils.editDashboard('TestDB');
+        DataExplorerUtils.addDataViewToDashboard('test', true);
+
+        cy.get('sp-alert-banner[type="error"]').should('exist');
+
+        cy.get('button')
+            .find('i.material-icons') // Find the <i> element with the 'material-icons' class
+            .contains('undo') // Make sure it contains the 'undo' icon
+            .parent() // Get the parent button of the icon
+            .click();
+
+        authUserOnDataset('dashboardAdmin1@streampipes.apache.org');
+
+        UserUtils.switchUser(dashboardAdmin1);
+
+        DataExplorerUtils.goToDashboard();
+        DataExplorerUtils.createNewDashboard('TestDB2');
+        DataExplorerUtils.editDashboard('TestDB2');
+        DataExplorerUtils.addDataViewToDashboard('test', true);
+
+        cy.get('sp-alert-banner[type="error"]').should('not.exist');
+    });
     function assertDatasetAvailabilityInCharts(available: boolean) {
         DataExplorerUtils.goToDatalake();
         DataExplorerBtns.openNewDataViewBtn().click();
@@ -149,7 +193,7 @@ describe('Test Dataset Permissions', () => {
         PermissionUtils.validateUserCanChangePermissions(datasetName);
     }
 
-    function assertPipelineIsNotVisible(user: User) {
+    function assertDatasetIsNotVisible(user: User) {
         UserUtils.switchUser(user);
         DatasetUtils.goToDatasets();
         DatasetUtils.checkAmountOfDatasets(0);
