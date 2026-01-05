@@ -16,25 +16,12 @@
 ~
 -->
 
-<sp-basic-view [padding]="true" [showBackLink]="false">
-    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-        <button
-            mat-icon-button
-            color="accent"
-            (click)="openDocumentation()"
-            [matTooltip]="'Show documentation' | translate"
-        >
-            <i class="material-icons">menu_book</i>
-        </button>
-        <button
-            mat-icon-button
-            color="accent"
-            (click)="navigateToAdapterCatalog()"
-            [matTooltip]="'Cancel' | translate"
-        >
-            <i class="material-icons">close</i>
-        </button>
-    </div>
+<sp-basic-view
+    [padding]="true"
+    [showBackLink]="true"
+    [backLinkTarget]="['connect']"
+>
+    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center"></div>
     @let adapterConfigurationState = state();
     @if (adapterConfigurationState) {
         @if (adapterConfigurationState.adapterDescription) {

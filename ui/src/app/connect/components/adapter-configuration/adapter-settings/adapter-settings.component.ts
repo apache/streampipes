@@ -32,6 +32,8 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
 import { MatStepper } from '@angular/material/stepper';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 
 @Component({
     selector: 'sp-adapter-settings',
@@ -45,6 +47,7 @@ export class AdapterSettingsComponent implements OnInit {
         PipelineElementTemplateService,
     );
     private adapterTemplateService = inject(AdapterTemplateService);
+    private dialogService = inject(DialogService);
 
     /**
      * Adapter description the selected format is added to
@@ -138,5 +141,16 @@ export class AdapterSettingsComponent implements OnInit {
     afterTemplateReceived(adapterDescription: any) {
         this.adapterDescription = adapterDescription;
         this.updateAdapterDescriptionEmitter.emit(this.adapterDescription);
+    }
+
+    openDocumentation() {
+        this.dialogService.open(SpAdapterDocumentationDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Documentation',
+            width: '50vw',
+            data: {
+                appId: this.adapterDescription.appId,
+            },
+        });
     }
 }
