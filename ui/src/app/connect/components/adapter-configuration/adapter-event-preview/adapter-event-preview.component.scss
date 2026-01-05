@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -17,34 +17,35 @@
  */
 
 :host {
-    --mat-standard-button-toggle-selected-state-text-color: var(--color-bg-1);
-    --mat-standard-button-toggle-selected-state-background-color: var(
-        --color-primary
-    );
-    --mat-standard-button-toggle-text-color: var(--color-default-text);
-    --mat-standard-button-toggle-background-color: var(--color-bg-0);
-    --mat-standard-button-toggle-height: 20px;
+    display: block;
 }
 
-.stepper-button {
-    margin-left: 10px;
+.jv {
+    overflow: clip;
 }
 
-.code-editor-outer {
-    margin: var(--space-2xs);
+.jv__content {
+    padding: 10px 12px 14px 12px;
+    background: var(--color-bg-0);
 }
 
-.code-editor {
-    width: 100%;
-    height: 220px;
+.raw {
+    margin: 0;
+    padding: 12px;
+    background: var(--color-bg-0);
+    color: var(--text);
+    overflow: auto;
+    font-family:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        'Liberation Mono', 'Courier New', monospace;
+    font-size: var(--font-size-xs);
+    line-height: 1.5;
+    max-height: 520px;
 }
 
-.preview-text {
-    margin: var(--space-2xs);
-    background-color: var(--color-bg-0);
-    font:
-        var(--font-size-xs) Inconsolata,
-        monospace;
-    color: var(--color-default-text);
+.tree {
+    background: var(--color-bg-0);
     padding: 10px;
+    max-height: 520px;
+    overflow: auto;
 }

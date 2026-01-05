@@ -106,6 +106,8 @@ import { EventPropertyRowComponent } from './components/adapter-configuration/co
 import { NoTimestampErrorHintComponent } from './components/adapter-configuration/configure-fields/no-timestamp-error-hint/no-timestamp-error-hint.component';
 import { CreateAdapterTransformationTemplateDialogComponent } from './dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
 import { SelectAdapterTransformationTemplateDialogComponent } from './dialog/select-adapter-transformation-template-dialog/select-adapter-transformation-template-dialog.component';
+import { AdapterEventPreviewComponent } from './components/adapter-configuration/adapter-event-preview/adapter-event-preview.component';
+import { AdapterEventPreviewNodeComponent } from './components/adapter-configuration/adapter-event-preview/adapter-event-preview-node/adapter-event-preview-node.component';
 
 @NgModule({
     imports: [
@@ -248,6 +250,8 @@ import { SelectAdapterTransformationTemplateDialogComponent } from './dialog/sel
         NoTimestampErrorHintComponent,
         CreateAdapterTransformationTemplateDialogComponent,
         SelectAdapterTransformationTemplateDialogComponent,
+        AdapterEventPreviewComponent,
+        AdapterEventPreviewNodeComponent,
     ],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

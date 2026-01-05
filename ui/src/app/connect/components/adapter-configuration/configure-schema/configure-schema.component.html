@@ -25,7 +25,7 @@
                 header
                 fxLayoutAlign="end center"
                 fxFlex="100"
-                fxLayoutGap="10px"
+                fxLayoutGap="5px"
             >
                 @if (selectedScriptMetadata() !== undefined) {
                     <button
@@ -62,8 +62,8 @@
                     data-cy="reset-script"
                     (click)="openSelectScriptTemplateDialog()"
                 >
-                    <mat-icon>settings_backup_restore</mat-icon>
-                    <span>Use template</span>
+                    <mat-icon>article</mat-icon>
+                    <span>{{ 'Use template' | translate }}</span>
                 </button>
                 <button
                     mat-button
@@ -71,7 +71,7 @@
                     (click)="resetScript()"
                 >
                     <mat-icon>settings_backup_restore</mat-icon>
-                    <span>Reset script</span>
+                    <span>{{ 'Reset script' | translate }}</span>
                 </button>
             </div>
             <div class="code-editor-outer">
@@ -124,6 +124,17 @@
                         <mat-icon>refresh</mat-icon>
                         <span>{{ 'Get new sample' | translate }}</span>
                     </button>
+                    <mat-button-toggle-group
+                        [(ngModel)]="sourceViewMode"
+                        [hideSingleSelectionIndicator]="true"
+                    >
+                        <mat-button-toggle value="tree">{{
+                            'Tree' | translate
+                        }}</mat-button-toggle>
+                        <mat-button-toggle value="raw">{{
+                            'Raw' | translate
+                        }}</mat-button-toggle>
+                    </mat-button-toggle-group>
                 </div>
                 @if (isSampleLoading()) {
                     <div class="sp-dialog-content">
@@ -145,11 +156,11 @@
                             [showDetails]="true"
                         ></sp-exception-message>
                     } @else {
-                        <pre
-                            [innerHTML]="input() | jsonpretty"
-                            class="preview-text"
-                            data-cy="configure-schema-event-preview-original"
-                        ></pre>
+                        <sp-adapter-event-preview
+                            dataCy="configure-schema-event-preview-original"
+                            [mode]="sourceViewMode"
+                            [value]="input()"
+                        ></sp-adapter-event-preview>
                     }
                 }
             </sp-basic-inner-panel>
@@ -163,8 +174,21 @@
                 fxFlex="100"
                 data-cy="connect-schema-update-preview"
             >
+                <div header fxFlex="100" fxLayoutAlign="end center">
+                    <mat-button-toggle-group
+                        [(ngModel)]="resultViewMode"
+                        [hideSingleSelectionIndicator]="true"
+                    >
+                        <mat-button-toggle value="tree">{{
+                            'Tree' | translate
+                        }}</mat-button-toggle>
+                        <mat-button-toggle value="raw">{{
+                            'Raw' | translate
+                        }}</mat-button-toggle>
+                    </mat-button-toggle-group>
+                </div>
                 @if (isRunningScript()) {
-                    <div class="sp-dialog-content">
+                    <div class="m-lg">
                         <div
                             fxFlex="100"
                             fxLayoutAlign="center center"
@@ -183,11 +207,11 @@
                             [showDetails]="true"
                         ></sp-exception-message>
                     } @else {
-                        <pre
-                            [innerHTML]="output() | jsonpretty"
-                            class="preview-text"
-                            data-cy="configure-schema-event-preview-result"
-                        ></pre>
+                        <sp-adapter-event-preview
+                            dataCy="configure-schema-event-preview-result"
+                            [mode]="resultViewMode"
+                            [value]="output()"
+                        ></sp-adapter-event-preview>
                     }
                 }
             </sp-basic-inner-panel>

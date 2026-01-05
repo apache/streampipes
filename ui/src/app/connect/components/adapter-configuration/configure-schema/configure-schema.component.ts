@@ -39,6 +39,7 @@ import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-d
 import { CreateAdapterTransformationTemplateDialogComponent } from '../../../dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectAdapterTransformationTemplateDialogComponent } from '../../../dialog/select-adapter-transformation-template-dialog/select-adapter-transformation-template-dialog.component';
+import { Mode } from '../adapter-event-preview/adapter-event-preview.component';
 
 @Component({
     selector: 'sp-configure-schema',
@@ -65,6 +66,8 @@ export class ConfigureSchemaComponent implements OnInit {
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
     availableScripts: ScriptMetadata[] = [];
+    resultViewMode: Mode = 'raw';
+    sourceViewMode: Mode = 'raw';
 
     isSampleLoading = computed(() => this.stateService.state().isGettingSample);
 
