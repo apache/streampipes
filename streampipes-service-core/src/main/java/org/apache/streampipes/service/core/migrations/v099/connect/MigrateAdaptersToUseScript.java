@@ -56,7 +56,7 @@ public class MigrateAdaptersToUseScript implements Migration {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrateAdaptersToUseScript.class);
 
-  private IAdapterStorage adapterStorage;
+  private final IAdapterStorage adapterStorage;
 
   // Constructor-based Injection
   public MigrateAdaptersToUseScript(IAdapterStorage adapterStorage) {
@@ -77,11 +77,6 @@ public class MigrateAdaptersToUseScript implements Migration {
     return adapters != null
         && adapters.stream()
                    .anyMatch(adapter -> adapter.getTransformationConfig() == null);
-  }
-
-  private boolean hasRules(AdapterDescription adapter) {
-    return adapter.getRules() != null && !adapter.getRules()
-                                                 .isEmpty();
   }
 
   @Override
@@ -108,7 +103,6 @@ public class MigrateAdaptersToUseScript implements Migration {
 
     // migration logic for a single adapter
     var config = initializeTransformationConfig();
-    var scriptLines = new ArrayList<String>();
 
     var scriptBuilder = TransformationScriptBuilder.create();
 
@@ -120,7 +114,7 @@ public class MigrateAdaptersToUseScript implements Migration {
                                                              .toList();
 
     for (var rule : sortedRules) {
-      new AdapterRuleConverter().processRule(rule, adapter, config, scriptLines);
+      new AdapterRuleConverter().processRule(rule, adapter, config, scriptBuilder);
     }
 
     config.setScript(scriptBuilder.build());
@@ -136,27 +130,10 @@ public class MigrateAdaptersToUseScript implements Migration {
       adapter.getDataStream()
              .getEventSchema()
              .getEventProperties()
-             .forEach(prop -> {
-               prop.setAdditionalMetadata(new HashMap<>());
-             });
+             .forEach(prop -> prop.setAdditionalMetadata(new HashMap<>()));
     }
   }
 
-  // TODO
-//  private String assembleFinalScript(List<String> scriptLines) {
-//    var sb = new StringBuilder();
-//    sb.append("function transform(event) {\n");
-//    if (scriptLines.isEmpty()) {
-//      sb.append("  // No transformations defined\n");
-//    } else {
-//      scriptLines.forEach(line -> sb.append("  ")
-//                                    .append(line)
-//                                    .append("\n"));
-//    }
-//    sb.append("  return event;\n");
-//    sb.append("}");
-//    return sb.toString();
-//  }
 
   private TransformationConfig initializeTransformationConfig() {
     var config = new TransformationConfig();

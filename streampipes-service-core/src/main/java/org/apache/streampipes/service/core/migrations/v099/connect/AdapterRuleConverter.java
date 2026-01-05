@@ -42,7 +42,6 @@ import org.apache.streampipes.model.schema.EventSchema;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -52,69 +51,68 @@ public class AdapterRuleConverter {
       TransformationRuleDescription rule,
       AdapterDescription adapter,
       TransformationConfig config,
-      List<String> scriptLines
+      TransformationScriptBuilder scriptBuilder
   ) {
 
     if (rule instanceof RenameRuleDescription) {
-      handleRenameRule((RenameRuleDescription) rule, scriptLines);
+      handleRenameRule((RenameRuleDescription) rule, scriptBuilder);
 
     } else if (rule instanceof DeleteRuleDescription) {
-      handleDeleteRule((DeleteRuleDescription) rule, scriptLines);
+      handleDeleteRule((DeleteRuleDescription) rule, scriptBuilder);
 
     } else if (rule instanceof AddTimestampRuleDescription) {
-      handleAddTimestampRule((AddTimestampRuleDescription) rule, scriptLines);
+      handleAddTimestampRule((AddTimestampRuleDescription) rule, scriptBuilder);
 
     } else if (rule instanceof AddValueTransformationRuleDescription) {
-      handleAddValueRule((AddValueTransformationRuleDescription) rule, scriptLines);
+      handleAddValueRule((AddValueTransformationRuleDescription) rule, scriptBuilder);
 
     } else if (rule instanceof EventRateTransformationRuleDescription) {
       config.setReduceEventRateRule(mapEventRate((EventRateTransformationRuleDescription) rule));
+
     } else if (rule instanceof RemoveDuplicatesTransformationRuleDescription) {
       config.setRemoveDuplicateRule(mapDuplicates((RemoveDuplicatesTransformationRuleDescription) rule));
 
     } else if (rule instanceof CorrectionValueTransformationRuleDescription) {
-      handleCorrectionValueRule((CorrectionValueTransformationRuleDescription) rule, scriptLines);
+      handleCorrectionValueRule((CorrectionValueTransformationRuleDescription) rule, scriptBuilder);
 
     } else if (rule instanceof RegexTransformationRuleDescription) {
-      handleRegexRule((RegexTransformationRuleDescription) rule, scriptLines);
+      handleRegexRule((RegexTransformationRuleDescription) rule, scriptBuilder);
 
     } else if (rule instanceof TimestampTranfsformationRuleDescription) {
-      handleTimestampTransformationRule((TimestampTranfsformationRuleDescription) rule, scriptLines);
+      handleTimestampTransformationRule((TimestampTranfsformationRuleDescription) rule, scriptBuilder);
+
     } else if (rule instanceof ChangeDatatypeTransformationRuleDescription) {
-      handleDatatype((ChangeDatatypeTransformationRuleDescription) rule, adapter, scriptLines);
+      handleDatatype((ChangeDatatypeTransformationRuleDescription) rule, adapter, scriptBuilder);
 
     } else if (rule instanceof UnitTransformRuleDescription) {
-      handleUnit((UnitTransformRuleDescription) rule, adapter, scriptLines);
+      handleUnit((UnitTransformRuleDescription) rule, adapter, scriptBuilder);
 
     } else if (rule instanceof MoveRuleDescription) {
-      scriptLines.add("// Move rule detected: Not supported in script migration");
+      scriptBuilder.appendLine("// Move rule detected: Not supported in script migration");
 
     } else {
-      scriptLines.add(String.format("// Unhandled rule type: %s",
-                                    rule.getClass()
-                                        .getSimpleName()
-      ));
+      scriptBuilder.appendLine(String.format("// Unhandled rule type: %s", rule.getClass().getSimpleName()));
     }
   }
 
-  private void handleRenameRule(RenameRuleDescription rule, List<String> scriptLines) {
-    scriptLines.add(String.format("event['%s'] = event['%s'];", rule.getNewRuntimeKey(), rule.getOldRuntimeKey()));
-    scriptLines.add(String.format("delete event['%s'];", rule.getOldRuntimeKey()));
+  private void handleRenameRule(RenameRuleDescription rule, TransformationScriptBuilder scriptBuilder) {
+    scriptBuilder.appendLine(String.format("event['%s'] = event['%s'];", rule.getNewRuntimeKey(), rule.getOldRuntimeKey()));
+    scriptBuilder.appendLine(String.format("delete event['%s'];", rule.getOldRuntimeKey()));
   }
 
-  private void handleDeleteRule(DeleteRuleDescription rule, List<String> scriptLines) {
-    scriptLines.add(String.format("delete event['%s'];", rule.getRuntimeKey()));
+  private void handleDeleteRule(DeleteRuleDescription rule, TransformationScriptBuilder scriptBuilder) {
+    scriptBuilder.appendLine(String.format("delete event['%s'];", rule.getRuntimeKey()));
   }
 
-  private void handleAddTimestampRule(AddTimestampRuleDescription rule, List<String> scriptLines) {
-    scriptLines.add(String.format("event['%s'] = Date.now();", rule.getRuntimeKey()));
+  private void handleAddTimestampRule(AddTimestampRuleDescription rule, TransformationScriptBuilder scriptBuilder) {
+    scriptBuilder.appendLine(String.format("event['%s'] = Date.now();", rule.getRuntimeKey()));
   }
 
-  private void handleAddValueRule(AddValueTransformationRuleDescription rule, List<String> scriptLines) {
-    scriptLines.add(String.format("event['%s'] = '%s';", rule.getRuntimeKey(), rule.getStaticValue()));
+  private void handleAddValueRule(AddValueTransformationRuleDescription rule, TransformationScriptBuilder scriptBuilder) {
+    scriptBuilder.appendLine(String.format("event['%s'] = '%s';", rule.getRuntimeKey(), rule.getStaticValue()));
   }
 
-  private void handleCorrectionValueRule(CorrectionValueTransformationRuleDescription rule, List<String> scriptLines) {
+  private void handleCorrectionValueRule(CorrectionValueTransformationRuleDescription rule, TransformationScriptBuilder scriptBuilder) {
     var operator = "+";
     switch (rule.getOperator()) {
       case "MULTIPLY":
@@ -135,49 +133,46 @@ public class AdapterRuleConverter {
     var df = new DecimalFormat("0.###", symbols);
     var formattedValue = df.format(rule.getCorrectionValue());
 
-
-    scriptLines.add(String.format("event['%s'] = Number(event['%s']) %s %s;",
-                                  rule.getRuntimeKey(), rule.getRuntimeKey(), operator, formattedValue));
+    scriptBuilder.appendLine(String.format("event['%s'] = Number(event['%s']) %s %s;",
+        rule.getRuntimeKey(), rule.getRuntimeKey(), operator, formattedValue));
   }
 
-  private void handleRegexRule(RegexTransformationRuleDescription rule, List<String> scriptLines) {
-    scriptLines.add(String.format("event['%s'] = String(event['%s']).replace(new RegExp('%s', 'g'), '%s');",
-                                  rule.getRuntimeKey(), rule.getRuntimeKey(), rule.getRegex(), rule.getReplaceWith()));
+  private void handleRegexRule(RegexTransformationRuleDescription rule, TransformationScriptBuilder scriptBuilder) {
+    scriptBuilder.appendLine(String.format("event['%s'] = String(event['%s']).replace(new RegExp('%s', 'g'), '%s');",
+        rule.getRuntimeKey(), rule.getRuntimeKey(), rule.getRegex(), rule.getReplaceWith()));
   }
 
-  private void handleTimestampTransformationRule(TimestampTranfsformationRuleDescription rule, List<String> scriptLines) {
+  private void handleTimestampTransformationRule(TimestampTranfsformationRuleDescription rule, TransformationScriptBuilder scriptBuilder) {
     if ("timeUnit".equals(rule.getMode())) {
-      scriptLines.add(String.format("event['%s'] = Number(event['%s']) * %d;",
-                                    rule.getRuntimeKey(), rule.getRuntimeKey(), rule.getMultiplier()));
+      scriptBuilder.appendLine(String.format("event['%s'] = Number(event['%s']) * %d;",
+          rule.getRuntimeKey(), rule.getRuntimeKey(), rule.getMultiplier()));
     } else if ("formatString".equals(rule.getMode())) {
-      scriptLines.add(String.format("if (event['%s']) { event['%s'] = new Date(event['%s']).getTime(); }",
-                                    rule.getRuntimeKey(), rule.getRuntimeKey(), rule.getRuntimeKey()));
-      scriptLines.add(String.format("// Target format hint: %s", rule.getFormatString()));
+      scriptBuilder.appendLine(String.format("if (event['%s']) { event['%s'] = new Date(event['%s']).getTime(); }",
+          rule.getRuntimeKey(), rule.getRuntimeKey(), rule.getRuntimeKey()));
+      scriptBuilder.appendLine(String.format("// Target format hint: %s", rule.getFormatString()));
     }
   }
 
   private void handleDatatype(
       ChangeDatatypeTransformationRuleDescription rule,
       AdapterDescription adapter,
-      List<String> scriptLines
+      TransformationScriptBuilder scriptBuilder
   ) {
-
     findPrimitiveProperty(adapter, rule.getRuntimeKey()).ifPresent(property -> {
       // Update metadata and type
       property.getAdditionalMetadata().put("originType", rule.getOriginalDatatypeXsd());
       property.setRuntimeType(rule.getTargetDatatypeXsd());
 
       // Document the change in the script for the user
-      scriptLines.add(String.format("// Datatype for '%s' migrated to %s",
-                                    rule.getRuntimeKey(), rule.getTargetDatatypeXsd()));
+      scriptBuilder.appendLine(String.format("// Datatype for '%s' migrated to %s",
+          rule.getRuntimeKey(), rule.getTargetDatatypeXsd()));
     });
-
   }
 
   private void handleUnit(
       UnitTransformRuleDescription rule,
       AdapterDescription adapter,
-      List<String> scriptLines
+      TransformationScriptBuilder scriptBuilder
   ) {
     findPrimitiveProperty(adapter, rule.getRuntimeKey()).ifPresent(property -> {
       property.getAdditionalMetadata().put("fromMeasurementUnit", rule.getFromUnitRessourceURL());
@@ -187,14 +182,14 @@ public class AdapterRuleConverter {
 
   private Optional<EventPropertyPrimitive> findPrimitiveProperty(AdapterDescription adapter, String runtimeKey) {
     return Optional.ofNullable(adapter.getDataStream())
-                   .map(SpDataStream::getEventSchema)
-                   .map(EventSchema::getEventProperties)
-                   .orElse(Collections.emptyList())
-                   .stream()
-                   .filter(ep -> ep.getRuntimeName().equals(runtimeKey))
-                   .filter(EventPropertyPrimitive.class::isInstance)
-                   .map(EventPropertyPrimitive.class::cast)
-                   .findFirst();
+        .map(SpDataStream::getEventSchema)
+        .map(EventSchema::getEventProperties)
+        .orElse(Collections.emptyList())
+        .stream()
+        .filter(ep -> ep.getRuntimeName().equals(runtimeKey))
+        .filter(EventPropertyPrimitive.class::isInstance)
+        .map(EventPropertyPrimitive.class::cast)
+        .findFirst();
   }
 
   private ReduceEventRateRule mapEventRate(EventRateTransformationRuleDescription rule) {
