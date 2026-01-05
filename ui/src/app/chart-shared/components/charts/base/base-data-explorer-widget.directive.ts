@@ -54,8 +54,8 @@ import { WidgetSize } from '../../../models/dataset.model';
 
 @Directive()
 export abstract class BaseDataExplorerWidgetDirective<
-        T extends DataExplorerWidgetModel,
-    >
+    T extends DataExplorerWidgetModel,
+>
     implements BaseWidgetData<T>, OnInit
 {
     private static TOO_MUCH_DATA_PARAMETER = 10000;

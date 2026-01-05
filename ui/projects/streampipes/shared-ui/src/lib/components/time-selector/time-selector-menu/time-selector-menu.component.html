@@ -37,7 +37,7 @@
                                             quickSelection.timeSelectionId ===
                                                 timeSettings?.timeSelectionId &&
                                             timeSettings?.timeSelectionId !==
-                                                'custom'
+                                                'custom',
                                     }"
                                     [attr.data-cy]="
                                         'time-selector-quick-' +
@@ -64,7 +64,7 @@
                         (timeSettingsEmitter)="
                             timeSettingsEmitter.emit({
                                 supportsLiveRefresh: false,
-                                timeSettings: $event
+                                timeSettings: $event,
                             })
                         "
                         [enableTimePicker]="enableTimePicker"

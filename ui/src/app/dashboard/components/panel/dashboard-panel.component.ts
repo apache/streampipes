@@ -251,8 +251,7 @@ export class DashboardPanelComponent
                     this.dashboard.dashboardGeneralSettings
                         .globalTimeEnabled === undefined
                 ) {
-                    this.dashboard.dashboardGeneralSettings.globalTimeEnabled =
-                        true;
+                    this.dashboard.dashboardGeneralSettings.globalTimeEnabled = true;
                 }
                 if (!this.dashboard.dashboardTimeSettings.startTime) {
                     this.dashboard.dashboardTimeSettings =

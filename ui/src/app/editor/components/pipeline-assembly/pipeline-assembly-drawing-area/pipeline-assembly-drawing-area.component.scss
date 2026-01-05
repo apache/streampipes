@@ -48,7 +48,8 @@
     --dot-major: light-dark(rgba(0, 0, 0, 0.38), rgba(255, 255, 255, 0.34));
 
     background-color: var(--color-bg-0, var(--bg));
-    background-image: radial-gradient(
+    background-image:
+        radial-gradient(
             circle at 8px 8px,
             var(--dot-minor) 1px,
             transparent 1px

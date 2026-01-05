@@ -38,12 +38,12 @@ import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class BaseRuntimeResolvableInput<
-        T extends
-            | RuntimeResolvableAnyStaticProperty
-            | RuntimeResolvableGroupStaticProperty
-            | RuntimeResolvableOneOfStaticProperty
-            | RuntimeResolvableTreeInputStaticProperty,
-    >
+    T extends
+        | RuntimeResolvableAnyStaticProperty
+        | RuntimeResolvableGroupStaticProperty
+        | RuntimeResolvableOneOfStaticProperty
+        | RuntimeResolvableTreeInputStaticProperty,
+>
     extends AbstractStaticPropertyRenderer<T>
     implements OnChanges
 {
