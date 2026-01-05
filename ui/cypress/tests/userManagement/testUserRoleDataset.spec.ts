@@ -65,9 +65,8 @@ describe('Test Dataset Permissions', () => {
         );
     });
 
-    /**it('Dataset is not shared with other users', () => {
-
-            UserUtils.switchUser(datasetAdmin1);
+    it('Dataset is not shared with other users', () => {
+        UserUtils.switchUser(datasetAdmin1);
         ConnectUtils.addMachineDataSimulator('simulator', true);
         assertDatasetIsVisibleAndEditableCanChangePermissions(
             UserUtils.adminUser,
@@ -78,7 +77,7 @@ describe('Test Dataset Permissions', () => {
         UserUtils.switchUser(datasetUser1);
 
         assertPipelineIsNotVisible(datasetAdmin2);
-    });*/
+    });
 
     it('Datasets only usable in charts if permissions were configured', () => {
         UserUtils.switchUser(datasetAdmin1);
@@ -88,12 +87,7 @@ describe('Test Dataset Permissions', () => {
 
         assertDatasetAvailabilityInCharts(false);
 
-        UserUtils.switchUser(datasetAdmin1);
-
-        DatasetUtils.authorizeUserOnDataset(
-            'simulator',
-            'chartAdmin1@streampipes.apache.org',
-        );
+        authUserOnDataset('chartAdmin1@streampipes.apache.org');
 
         UserUtils.switchUser(chartAdmin1);
 
@@ -118,12 +112,8 @@ describe('Test Dataset Permissions', () => {
 
         cy.get('sp-alert-banner[type="error"]').should('exist');
 
-        UserUtils.switchUser(datasetAdmin1);
+        authUserOnDataset('chartUser1@streampipes.apache.org');
 
-        DatasetUtils.authorizeUserOnDataset(
-            'simulator',
-            'chartUser1@streampipes.apache.org',
-        );
         UserUtils.switchUser(chartUser1);
 
         DataExplorerUtils.checkAmountOfCharts(1);
@@ -163,5 +153,11 @@ describe('Test Dataset Permissions', () => {
         UserUtils.switchUser(user);
         DatasetUtils.goToDatasets();
         DatasetUtils.checkAmountOfDatasets(0);
+    }
+
+    function authUserOnDataset(email: string) {
+        UserUtils.switchUser(datasetAdmin1);
+
+        DatasetUtils.authorizeUserOnDataset('simulator', email);
     }
 });
