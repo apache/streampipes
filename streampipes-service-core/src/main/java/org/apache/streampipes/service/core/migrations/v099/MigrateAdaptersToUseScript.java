@@ -54,6 +54,7 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.ReduceEventRateRule;
 import org.apache.streampipes.model.connect.RemoveDuplicateRule;
 import org.apache.streampipes.model.connect.TransformationConfig;
@@ -71,6 +72,8 @@ import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransform
 import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -82,10 +85,12 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class MigrateAdaptersToUseScript implements Migration {
 
@@ -191,7 +196,6 @@ public class MigrateAdaptersToUseScript implements Migration {
 
     } else if (rule instanceof EventRateTransformationRuleDescription) {
       config.setReduceEventRateRule(mapEventRate((EventRateTransformationRuleDescription) rule));
-
     } else if (rule instanceof RemoveDuplicatesTransformationRuleDescription) {
       config.setRemoveDuplicateRule(mapDuplicates((RemoveDuplicatesTransformationRuleDescription) rule));
 
@@ -204,10 +208,10 @@ public class MigrateAdaptersToUseScript implements Migration {
     } else if (rule instanceof TimestampTranfsformationRuleDescription) {
       handleTimestampTransformationRule((TimestampTranfsformationRuleDescription) rule, scriptLines);
     } else if (rule instanceof ChangeDatatypeTransformationRuleDescription) {
-      handleDatatypePlaceholder((ChangeDatatypeTransformationRuleDescription) rule, adapter, scriptLines);
+      handleDatatype((ChangeDatatypeTransformationRuleDescription) rule, adapter, scriptLines);
 
     } else if (rule instanceof UnitTransformRuleDescription) {
-      handleUnitPlaceholder((UnitTransformRuleDescription) rule, adapter, scriptLines);
+      handleUnit((UnitTransformRuleDescription) rule, adapter, scriptLines);
 
     } else if (rule instanceof MoveRuleDescription) {
       scriptLines.add("// Move rule detected: Not supported in script migration");
@@ -279,24 +283,45 @@ public class MigrateAdaptersToUseScript implements Migration {
     }
   }
 
-  private void handleDatatypePlaceholder(
+  private void handleDatatype(
       ChangeDatatypeTransformationRuleDescription rule,
       AdapterDescription adapter,
       List<String> scriptLines
   ) {
-//    scriptLines.add(String.format("// TODO: Check datatype for %s", r.getRuntimeName()));
-    // TODO
-//    updatePropertyMetadata(adapter, r.getRuntimeName());
+
+    findPrimitiveProperty(adapter, rule.getRuntimeKey()).ifPresent(property -> {
+      // Update metadata and type
+      property.getAdditionalMetadata().put("originType", rule.getOriginalDatatypeXsd());
+      property.setRuntimeType(rule.getTargetDatatypeXsd());
+
+      // Document the change in the script for the user
+      scriptLines.add(String.format("// Datatype for '%s' migrated to %s",
+                                    rule.getRuntimeKey(), rule.getTargetDatatypeXsd()));
+    });
+
   }
 
-  private void handleUnitPlaceholder(
+  private void handleUnit(
       UnitTransformRuleDescription rule,
       AdapterDescription adapter,
       List<String> scriptLines
   ) {
-//    scriptLines.add(String.format("// TODO: Check unit conversion for %s", r.getRuntimeName()));
-    // TODO
-//    updatePropertyMetadata(adapter, r.getRuntimeName());
+    findPrimitiveProperty(adapter, rule.getRuntimeKey()).ifPresent(property -> {
+      property.getAdditionalMetadata().put("fromMeasurementUnit", rule.getFromUnitRessourceURL());
+      property.getAdditionalMetadata().put("toMeasurementUnit", rule.getToUnitRessourceURL());
+    });
+  }
+
+  private Optional<EventPropertyPrimitive> findPrimitiveProperty(AdapterDescription adapter, String runtimeKey) {
+    return Optional.ofNullable(adapter.getDataStream())
+                   .map(SpDataStream::getEventSchema)
+                   .map(EventSchema::getEventProperties)
+                   .orElse(Collections.emptyList())
+                   .stream()
+                   .filter(ep -> ep.getRuntimeName().equals(runtimeKey))
+                   .filter(EventPropertyPrimitive.class::isInstance)
+                   .map(EventPropertyPrimitive.class::cast)
+                   .findFirst();
   }
 
   private ReduceEventRateRule mapEventRate(EventRateTransformationRuleDescription rule) {

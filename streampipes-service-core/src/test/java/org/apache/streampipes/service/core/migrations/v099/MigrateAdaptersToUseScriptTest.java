@@ -23,11 +23,15 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.storage.api.IAdapterStorage;
@@ -36,6 +40,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -137,7 +142,7 @@ class MigrateAdaptersToUseScriptTest {
 
   @Test
   void executeMigration_TransformsAddTimestampRule() throws IOException {
-    AdapterDescription adapter = createBaseAdapter(new AddTimestampRuleDescription("timestamp"));
+    var adapter = createBaseAdapter(new AddTimestampRuleDescription("timestamp"));
 
     when(mockStorage.findAll()).thenReturn(List.of(adapter));
     migration.executeMigration();
@@ -148,7 +153,7 @@ class MigrateAdaptersToUseScriptTest {
 
   @Test
   void executeMigration_TransformsAddValueRule() throws IOException {
-    AdapterDescription adapter = createBaseAdapter(new AddValueTransformationRuleDescription("key", "static-val"));
+    var adapter = createBaseAdapter(new AddValueTransformationRuleDescription("key", "static-val"));
 
     when(mockStorage.findAll()).thenReturn(List.of(adapter));
     migration.executeMigration();
@@ -164,7 +169,7 @@ class MigrateAdaptersToUseScriptTest {
     rule.setOperator("MULTIPLY");
     rule.setCorrectionValue(1.8);
 
-    AdapterDescription adapter = createBaseAdapter(rule);
+    var adapter = createBaseAdapter(rule);
     when(mockStorage.findAll()).thenReturn(List.of(adapter));
 
     migration.executeMigration();
@@ -180,7 +185,7 @@ class MigrateAdaptersToUseScriptTest {
     rule.setRegex("ID-");
     rule.setReplaceWith("");
 
-    AdapterDescription adapter = createBaseAdapter(rule);
+    var adapter = createBaseAdapter(rule);
     when(mockStorage.findAll()).thenReturn(List.of(adapter));
 
     migration.executeMigration();
@@ -197,7 +202,7 @@ class MigrateAdaptersToUseScriptTest {
     rule.setMode("formatString");
     rule.setFormatString("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-    AdapterDescription adapter = createBaseAdapter(rule);
+    var adapter = createBaseAdapter(rule);
     when(mockStorage.findAll()).thenReturn(List.of(adapter));
 
     // Act
@@ -217,7 +222,7 @@ class MigrateAdaptersToUseScriptTest {
     rule.setMode("timeUnit");
     rule.setMultiplier(1000L);
 
-    AdapterDescription adapter = createBaseAdapter(rule);
+    var adapter = createBaseAdapter(rule);
     when(mockStorage.findAll()).thenReturn(List.of(adapter));
 
     // Act
@@ -226,6 +231,141 @@ class MigrateAdaptersToUseScriptTest {
     // Assert
     String script = adapter.getTransformationConfig().getScript();
     assertTrue(script.contains("event['timestamp_sec'] = Number(event['timestamp_sec']) * 1000;"));
+  }
+
+  @Test
+  void executeMigration_ShouldCorrectyMapEventRateRule() throws IOException {
+    // Arrange
+    var aggregationType = "mean";
+    var timeWindow = 10;
+
+    EventRateTransformationRuleDescription legacyRule = new EventRateTransformationRuleDescription();
+    legacyRule.setAggregationType(aggregationType);
+    legacyRule.setAggregationTimeWindow(timeWindow);
+
+    var adapter = createBaseAdapter(legacyRule);
+    when(mockStorage.findAll()).thenReturn(List.of(adapter));
+
+    // Act
+    migration.executeMigration();
+
+    // Assert
+    var resultConfig = adapter.getTransformationConfig();
+
+    assertNotNull(resultConfig, "TransformationConfig should be initialized");
+    assertNotNull(resultConfig.getReduceEventRateRule(), "ReduceEventRateRule should be mapped");
+
+    // Verify specific fields are preserved
+    assertEquals(aggregationType, resultConfig.getReduceEventRateRule().aggregationType(),
+                 "Aggregation type should match legacy config");
+    assertEquals(timeWindow, resultConfig.getReduceEventRateRule().aggregationTimeWindow(),
+                 "Time window should match legacy config");
+
+    // Ensure the script still contains the standard boilerplate even if this rule is stateful
+    assertTrue(resultConfig.getScript().contains("function transform(event)"),
+               "Script should still be generated as a container");
+  }
+
+  @Test
+  void executeMigration_ShouldCorrectlyMapRemoveDuplicatesRule() throws IOException {
+    // Arrange
+    String filterTimeWindow = "500";
+
+    RemoveDuplicatesTransformationRuleDescription legacyRule =
+        new RemoveDuplicatesTransformationRuleDescription();
+    legacyRule.setFilterTimeWindow(filterTimeWindow);
+
+    var adapter = createBaseAdapter(legacyRule);
+    when(mockStorage.findAll()).thenReturn(List.of(adapter));
+
+    // Act
+    migration.executeMigration();
+
+    // Assert
+    var resultConfig = adapter.getTransformationConfig();
+
+    assertNotNull(resultConfig, "TransformationConfig should be created");
+    assertNotNull(resultConfig.getRemoveDuplicateRule(), "RemoveDuplicateRule should be mapped");
+
+    // Verify the specific configuration value
+    assertEquals(filterTimeWindow, resultConfig.getRemoveDuplicateRule().filterTimeWindow(),
+                 "The filter time window should be correctly migrated from the legacy rule");
+
+    // Verify that the legacy rules list is cleared
+    assertTrue(adapter.getRules().isEmpty(), "The legacy rules list must be cleared after migration");
+
+    // Verify storage interaction
+    verify(mockStorage).updateElement(adapter);
+  }
+
+  @Test
+  void executeMigration_ShouldCorrectlyMapDataTypeRule() throws IOException {
+    String eventPropertyKey = "sampleKey";
+    String originDataType = "DOUBLE";
+    String targetDataType = "INTEGER";
+
+    var property = new EventPropertyPrimitive();
+    property.setRuntimeName(eventPropertyKey);
+    property.setRuntimeType(originDataType);
+
+    var legacyRule =
+        new ChangeDatatypeTransformationRuleDescription(eventPropertyKey, targetDataType);
+
+    var adapter = createBaseAdapter(legacyRule);
+    adapter.getDataStream().getEventSchema().setEventProperties(List.of(property));
+    when(mockStorage.findAll()).thenReturn(List.of(adapter));
+
+    // Act
+    migration.executeMigration();
+
+    // Assert
+    assertEquals(1, adapter.getDataStream().getEventSchema().getEventProperties().size());
+
+    var propertyAfterMigration =
+        (EventPropertyPrimitive) adapter.getDataStream().getEventSchema().getEventProperties().get(0);
+    assertEquals(targetDataType, propertyAfterMigration.getRuntimeType(),
+                 "The event property runtime type should be updated to the target data type");
+
+    // Verify storage interaction
+    verify(mockStorage).updateElement(adapter);
+  }
+
+  @Test
+  void executeMigration_ShouldCorrectlyMapUnitTransformationRule() throws IOException, URISyntaxException {
+    // Arrange
+    String eventPropertyKey = "temperature";
+    String oldUnit = "http://qudt.org/vocab/unit/DEG_F";
+    String newUnit = "http://qudt.org/vocab/unit/DEG_C";
+
+    var property = new EventPropertyPrimitive();
+    property.setRuntimeName(eventPropertyKey);
+
+    // Legacy rule to change unit
+    var legacyRule = new UnitTransformRuleDescription(eventPropertyKey, oldUnit, newUnit);
+
+    var adapter = createBaseAdapter(legacyRule);
+    adapter.getDataStream().getEventSchema().setEventProperties(List.of(property));
+
+    when(mockStorage.findAll()).thenReturn(List.of(adapter));
+
+    // Act
+    migration.executeMigration();
+
+    // Assert
+    // 1. Verify Schema Metadata Update
+    var propertyAfterMigration = (EventPropertyPrimitive) adapter.getDataStream()
+                                                                 .getEventSchema()
+                                                                 .getEventProperties()
+                                                                 .get(0);
+
+    assertTrue(propertyAfterMigration.getAdditionalMetadata().containsKey("fromMeasurementUnit"));
+    assertTrue(propertyAfterMigration.getAdditionalMetadata().containsKey("toMeasurementUnit"));
+
+    assertEquals(oldUnit, propertyAfterMigration.getAdditionalMetadata().get("fromMeasurementUnit").toString());
+    assertEquals(newUnit, propertyAfterMigration.getAdditionalMetadata().get("toMeasurementUnit").toString());
+
+    // 3. Verify Persistence
+    verify(mockStorage).updateElement(adapter);
   }
 
   private AdapterDescription createBaseAdapter(TransformationRuleDescription rule) {
