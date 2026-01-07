@@ -50,7 +50,7 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATASET_VALUE);
   }
 
-  public boolean checkPermission(String measurementName,
+  public boolean checkPermissionByName(String measurementName,
       String permission) {
 
     var spPermissionEvaluator = new SpPermissionEvaluator();

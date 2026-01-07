@@ -107,7 +107,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}")
-  @PreAuthorize("this.hasWriteAuthority() and this.checkPermission(#measurementID, 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionByName(#measurementID, 'WRITE')")
   @Operation(summary = "Remove data from a single measurement series with given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
@@ -128,7 +128,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}/drop")
-  @PreAuthorize("this.hasWriteAuthority() and this.checkPermission(#measurementID, 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionByName(#measurementID, 'WRITE')")
   @Operation(summary = "Drop a single measurement series with given id from Data Lake and "
       + "remove related event property", tags = {
           "Data Lake" }, responses = {
@@ -166,7 +166,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
-   @PreAuthorize("this.hasReadAuthority() and this.checkPermission(#measurementId, 'READ')")
+   @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measurementId, 'READ')")
   public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
       @RequestParam("fields") String fields) {
     Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measurementId, fields);
@@ -174,7 +174,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @GetMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and this.checkPermission(#measurementID, 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measurementID, 'READ')")
   @Operation(summary = "Get data from a single measurement series by a given id", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
       @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class))) })
@@ -226,7 +226,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and this.checkPermission(#measurementID, 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measurementID, 'READ')")
   @Operation(summary = "Download data from a single measurement series by a given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
