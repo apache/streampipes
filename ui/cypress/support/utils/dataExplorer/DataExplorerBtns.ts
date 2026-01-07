@@ -37,11 +37,7 @@ export class DataExplorerBtns {
     }
 
     public static discardDashboard() {
-        return cy
-            .get('button')
-            .find('i.material-icons')
-            .contains('undo')
-            .parent();
+        return cy.dataCy('discard-dashboard-btn');
     }
 
     public static saveChartsToAssetBtn() {
