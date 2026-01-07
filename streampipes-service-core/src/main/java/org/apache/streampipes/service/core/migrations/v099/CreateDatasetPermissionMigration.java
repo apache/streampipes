@@ -18,8 +18,11 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
+import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.CRUDStorage;
@@ -28,6 +31,8 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class CreateDatasetPermissionMigration implements Migration {
 
@@ -35,6 +40,11 @@ public class CreateDatasetPermissionMigration implements Migration {
   private final CRUDStorage<Pipeline> pipelineStorage;
   private final IPermissionStorage permissionStorage;
   private final PermissionResourceManager permissionResourceManager;
+
+  private static final String DATALAKE_APP_ID =
+        "org.apache.streampipes.sinks.internal.jvm.datalake";
+
+  private static final String DB_MEASUREMENT = "db_measurement";
 
 
 
@@ -67,13 +77,37 @@ public class CreateDatasetPermissionMigration implements Migration {
     });
   }
 
-  private String findAssociatedPipelineOwner(DataLakeMeasure measure){
-    var pipeline = pipelineStorage.getElementById("persist-" + measure.getMeasureName());
-    if (pipeline == null) {
-        return null;
-    }
-    return pipeline.getCreatedByUser();
-  }
+  private String findAssociatedPipelineOwner(DataLakeMeasure measure) {
+    return pipelineStorage.findAll().stream()
+        .filter(pipeline -> pipeline.getActions().stream()
+            .anyMatch(action -> action instanceof DataSinkInvocation 
+              && DATALAKE_APP_ID.equals(((DataSinkInvocation) action).getAppId())))
+        .map(pipeline -> {
+            return pipeline.getActions().stream()
+                .filter(action -> action instanceof DataSinkInvocation)
+                .map(action -> (DataSinkInvocation) action)
+                .filter(ds -> DATALAKE_APP_ID.equals(ds.getAppId()))
+                .map(this::extractMeasurement)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst()
+                .map(measurement -> pipeline.getCreatedByUser())
+                .orElse(null);
+        })
+        .filter(Objects::nonNull)
+        .findFirst()
+        .orElse(null);
+}
+
+private Optional<String> extractMeasurement(DataSinkInvocation datasink) {
+    return datasink.getStaticProperties().stream()
+        .filter(sp -> DB_MEASUREMENT.equals(sp.getInternalName()))
+        .filter(FreeTextStaticProperty.class::isInstance)
+        .map(FreeTextStaticProperty.class::cast)
+        .map(FreeTextStaticProperty::getValue)
+        .filter(value -> !value.isBlank())
+        .findFirst();
+}
 
   @Override
   public String getDescription() {
