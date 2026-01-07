@@ -52,7 +52,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<DataLakeMeasure> addDataLake(@RequestBody DataLakeMeasure dataLakeMeasure) {
-    DataLakeMeasure result = this.dataLakeMeasureManagement.createOrUpdateMeasurement(dataLakeMeasure);
+    DataLakeMeasure result = this.dataLakeMeasureManagement.createOrUpdateMeasurement(dataLakeMeasure,getAuthenticatedUserSid());
     return ok(result);
   }
 

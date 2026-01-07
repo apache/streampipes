@@ -20,51 +20,27 @@ package org.apache.streampipes.manager.permission;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import java.util.Optional;
-
 public class DataLakePermissionManager {
 
-private static final String DATALAKE_APP_ID =
-        "org.apache.streampipes.sinks.internal.jvm.datalake";
-private static final String DB_MEASUREMENT = "db_measurement";
-
-  public void makeAndPersistPermission(Pipeline pipeline,
-                                   String ownerSid) {
-  pipeline.getActions().stream()
-      .filter(DataSinkInvocation.class::isInstance)
-      .map(DataSinkInvocation.class::cast)
-      .filter(ds -> DATALAKE_APP_ID.equals(ds.getAppId()))
-      .forEach(ds ->
-          extractMeasurement(ds).ifPresent(measurement -> {
-              Permission p = createDataLakePermission(measurement, ownerSid);
-              getPermissionStorage().persist(p);
-          })
-      );}
-  
-  private Optional<String> extractMeasurement(DataSinkInvocation datasink) {
-    return datasink.getStaticProperties().stream()
-        .filter(sp -> DB_MEASUREMENT.equals(sp.getInternalName()))
-        .filter(FreeTextStaticProperty.class::isInstance)
-        .map(FreeTextStaticProperty.class::cast)
-        .map(FreeTextStaticProperty::getValue)
-        .filter(value -> !value.isBlank())
-        .findFirst();
-}
-
-private Permission createDataLakePermission(String measurement, String principalSid) {
+  private Permission createDataLakePermission(String measurement, String principalSid) {
     return PermissionBuilder
         .create(measurement, DataLakeMeasure.class, principalSid)
         .build();
-}
+  }
 
   private static IPermissionStorage getPermissionStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore()
-                                     .getPermissionStorage();
+        .getPermissionStorage();
+  }
+
+  public void makeAndPersistDataLakePermission(String measurement,
+      String ownerSid) {
+
+    Permission p = createDataLakePermission(measurement, ownerSid);
+    getPermissionStorage().persist(p);
+
   }
 }

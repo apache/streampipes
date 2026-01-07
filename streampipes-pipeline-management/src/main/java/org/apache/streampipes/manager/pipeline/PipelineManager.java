@@ -20,7 +20,6 @@ package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
-import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.manager.permission.PermissionManager;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -83,8 +82,6 @@ public class PipelineManager {
 
     Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
     getPermissionStorage().persist(permission);
-    
-    new DataLakePermissionManager().makeAndPersistPermission(pipeline, principalSid);
 
     return pipelineId;
   }
