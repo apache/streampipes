@@ -83,7 +83,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   }
 
   @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and this.checkDatasetPermission(#elementId, 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and this.checkPermissionById(#elementId, 'READ')")
   public ResponseEntity<?> getDataLakeMeasure(@PathVariable("id") String elementId) {
     var measure = this.dataLakeMeasureManagement.getById(elementId);
     if (Objects.nonNull(measure)) {
@@ -105,7 +105,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   }
 
   @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-   @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(#elementId, 'WRITE')")
+   @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionById(#elementId, 'WRITE')")
   public ResponseEntity<?> updateDataLakeMeasure(
       @PathVariable("id") String elementId,
       @RequestBody DataLakeMeasure measure) {
@@ -121,7 +121,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   }
 
   @DeleteMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-   @PreAuthorize("this.hasWriteAuthority() and this.checkDatasetPermission(#elementId, 'READ')")
+   @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionById(#elementId, 'READ')")
   public ResponseEntity<?> deleteDataLakeMeasure(@PathVariable("id") String elementId) {
     try {
       this.dataLakeMeasureManagement.deleteMeasurement(elementId);

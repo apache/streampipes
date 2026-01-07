@@ -62,7 +62,7 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
         permission);
   }
 
-  public boolean checkDatasetPermission(String measurementId,
+  public boolean checkPermissionById(String measurementId,
       String permission) {
     var spPermissionEvaluator = new SpPermissionEvaluator();
     var authentication = SecurityContextHolder.getContext()
