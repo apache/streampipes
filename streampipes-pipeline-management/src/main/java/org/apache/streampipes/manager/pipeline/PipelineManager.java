@@ -84,7 +84,7 @@ public class PipelineManager {
     Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
     getPermissionStorage().persist(permission);
     
-    new DataLakePermissionManager().makeAndPersistPermission(pipeline, principalSid);
+    new DataLakePermissionManager().makeAndPersistPermission(pipeline,principalSid);
 
     return pipelineId;
   }
