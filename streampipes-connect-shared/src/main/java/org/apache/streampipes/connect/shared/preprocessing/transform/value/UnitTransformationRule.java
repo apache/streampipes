@@ -46,7 +46,8 @@ public class UnitTransformationRule extends SupportsNestedTransformationRule {
   }
 
   public UnitTransformationRule(List<String> keys,
-                                String fromUnitRessourceURL, String toUnitRessourceURL) {
+                                String fromUnitRessourceURL,
+                                String toUnitRessourceURL) {
     this.unitTypeFrom = UnitProvider.INSTANCE.getUnit(fromUnitRessourceURL);
     this.unitTypeTo = UnitProvider.INSTANCE.getUnit(toUnitRessourceURL);
     this.eventKey = keys;

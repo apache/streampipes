@@ -76,7 +76,8 @@ public class MigrateAdaptersToUseScript implements Migration {
     List<AdapterDescription> adapters = adapterStorage.findAll();
     return adapters != null
         && adapters.stream()
-                   .anyMatch(adapter -> adapter.getTransformationConfig() == null);
+                   .anyMatch(adapter -> adapter.getTransformationConfig() == null
+                   || adapter.getTransformationConfig().getScript() == null);
   }
 
   @Override

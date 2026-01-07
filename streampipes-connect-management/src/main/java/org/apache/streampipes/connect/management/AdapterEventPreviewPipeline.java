@@ -25,7 +25,6 @@ import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +37,7 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
 
 
     this.pipelineElements = new AdapterPipelineGeneratorBase()
-        .makeAdapterPipelineElements(new ArrayList<>(), false, adapterDescription, false);
+        .makeAdapterPipelineElements(false, adapterDescription, false);
 
     this.event = adapterDescription.getTransformationConfig().getOutputs().get(0);
   }

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
-import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 
@@ -66,11 +65,6 @@ public class ChangeDatatypeTransformationRuleDescription extends ValueTransforma
 
   public void setTargetDatatypeXsd(String targetDatatypeXsd) {
     this.targetDatatypeXsd = targetDatatypeXsd;
-  }
-
-  @Override
-  public void accept(ITransformationRuleVisitor visitor) {
-    visitor.visit(this);
   }
 
   @Override

@@ -20,15 +20,13 @@ package org.apache.streampipes.connect.shared;
 
 import org.apache.streampipes.connect.shared.preprocessing.elements.AdapterTransformationPipelineElement;
 import org.apache.streampipes.connect.shared.preprocessing.elements.ScriptTransformationPipelineElement;
-import org.apache.streampipes.connect.shared.preprocessing.generator.StatefulTransformationRuleGeneratorVisitor;
-import org.apache.streampipes.connect.shared.preprocessing.generator.StatelessTransformationRuleGeneratorVisitor;
+import org.apache.streampipes.connect.shared.preprocessing.transform.stream.EventRateTransformationRule;
+import org.apache.streampipes.connect.shared.preprocessing.transform.stream.RemoveDuplicatesTransformationRule;
+import org.apache.streampipes.connect.shared.preprocessing.transform.value.DatatypeTransformationRule;
+import org.apache.streampipes.connect.shared.preprocessing.transform.value.UnitTransformationRule;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.extensions.api.connect.TransformationRule;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.util.ArrayList;
@@ -38,22 +36,20 @@ import java.util.stream.Collectors;
 public class AdapterPipelineGeneratorBase {
 
   public List<IAdapterPipelineElement> makeAdapterPipelineElements(
-      List<TransformationRuleDescription> rules,
       boolean includeStateful,
       AdapterDescription adapterDescription,
       boolean includeScript
   ) {
-
-    rules.addAll(getReduceEventRateRule(adapterDescription));
-
-    rules.addAll(getRemoveDuplicateRule(adapterDescription));
-
-    rules.addAll(getTypeConvertionRules(adapterDescription));
-
-    rules.addAll(getUnitConvertionRules(adapterDescription));
-
     var elements = new ArrayList<IAdapterPipelineElement>();
 
+    List<TransformationRule> transformationRules = new ArrayList<>();
+    if (includeStateful) {
+      transformationRules.addAll(getReduceEventTransformationRule(adapterDescription));
+      transformationRules.addAll(getRemoveDuplicateRule(adapterDescription));
+    }
+    transformationRules.addAll(getTypeConvertionRules(adapterDescription));
+    transformationRules.addAll(getUnitConvertionRules(adapterDescription));
+    elements.add(new AdapterTransformationPipelineElement(transformationRules));
 
     if (includeScript) {
       elements.add(new ScriptTransformationPipelineElement(
@@ -62,39 +58,27 @@ public class AdapterPipelineGeneratorBase {
           adapterDescription.getTransformationConfig()
                             .getScript()
       ));
-
     }
 
-
-    elements.add(new AdapterTransformationPipelineElement(
-                     rules,
-                     new StatelessTransformationRuleGeneratorVisitor()
-                 )
-    );
-    if (includeStateful) {
-      elements.add(new AdapterTransformationPipelineElement(
-                       rules,
-                       new StatefulTransformationRuleGeneratorVisitor()
-                   )
-      );
-    }
     return elements;
   }
 
-  private List<TransformationRuleDescription> getTypeConvertionRules(AdapterDescription adapterDescription) {
+  private List<TransformationRule> getTypeConvertionRules(AdapterDescription adapterDescription) {
     return adapterDescription.getEventSchema()
                              .getEventProperties()
                              .stream()
                              .filter(ep -> ep.getAdditionalMetadata()
                                              .containsKey("originType"))
-                             .map(ep -> new ChangeDatatypeTransformationRuleDescription(
+                             .map(ep -> new DatatypeTransformationRule(
                                  ep.getRuntimeName(),
                                  ((EventPropertyPrimitive) ep).getRuntimeType()
                              ))
                              .collect(Collectors.toList());
   }
 
-  private List<TransformationRuleDescription> getUnitConvertionRules(AdapterDescription adapterDescription) {
+
+
+  private List<TransformationRule> getUnitConvertionRules(AdapterDescription adapterDescription) {
     return adapterDescription.getEventSchema()
                              .getEventProperties()
                              .stream()
@@ -112,8 +96,8 @@ public class AdapterPipelineGeneratorBase {
                                                    .toString();
 
                                var rule =
-                                   new UnitTransformRuleDescription(
-                                       ep.getRuntimeName(),
+                                   new UnitTransformationRule(
+                                       List.of(ep.getRuntimeName()),
                                        fromUnit,
                                        toUnit
                                    );
@@ -122,15 +106,15 @@ public class AdapterPipelineGeneratorBase {
                              .collect(Collectors.toList());
   }
 
+  private List<TransformationRule> getReduceEventTransformationRule(AdapterDescription adapterDescription) {
 
-  private List<TransformationRuleDescription> getReduceEventRateRule(AdapterDescription adapterDescription) {
+    var result = new ArrayList<TransformationRule>();
 
-    var result = new ArrayList<TransformationRuleDescription>();
-
-    var reduceEventRate = adapterDescription.getTransformationConfig().getReduceEventRateRule();
+    var reduceEventRate = adapterDescription.getTransformationConfig()
+                                            .getReduceEventRateRule();
 
     if (reduceEventRate != null) {
-      var rule = new EventRateTransformationRuleDescription(
+      var rule = new EventRateTransformationRule(
           reduceEventRate.aggregationTimeWindow(),
           reduceEventRate.aggregationType()
       );
@@ -140,15 +124,14 @@ public class AdapterPipelineGeneratorBase {
     return result;
   }
 
+  private List<TransformationRule> getRemoveDuplicateRule(AdapterDescription adapterDescription) {
 
-  private List<TransformationRuleDescription> getRemoveDuplicateRule(AdapterDescription adapterDescription) {
-
-    var result = new ArrayList<TransformationRuleDescription>();
-
-    var removeDuplicateRule = adapterDescription.getTransformationConfig().getRemoveDuplicateRule();
+    var result = new ArrayList<TransformationRule>();
+    var removeDuplicateRule = adapterDescription.getTransformationConfig()
+                                                .getRemoveDuplicateRule();
 
     if (removeDuplicateRule != null) {
-      var rule = new RemoveDuplicatesTransformationRuleDescription(
+      var rule = new RemoveDuplicatesTransformationRule(
           removeDuplicateRule.filterTimeWindow()
       );
       result.add(rule);
