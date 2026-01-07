@@ -68,8 +68,7 @@ public class CreateDatasetPermissionMigration implements Migration {
   }
 
   private String findAssociatedPipelineOwner(DataLakeMeasure measure){
-    var pipelines = pipelineStorage.findAll()
-    var pipeline = pipelineStorage.getElementById("presist-" + measure.getMeasureName());
+    var pipeline = pipelineStorage.getElementById("persist-" + measure.getMeasureName());
     if (pipeline == null) {
         return null;
     }
