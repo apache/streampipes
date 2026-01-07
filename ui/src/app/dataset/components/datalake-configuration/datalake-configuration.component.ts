@@ -124,7 +124,6 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
         this.writeAccess =
             currentUser.roles.indexOf(UserPrivilege.PRIVILEGE_WRITE_DATASET) >
                 -1 || this.isAdmin;
-        console.log(currentUser);
     }
 
     ngAfterViewInit() {

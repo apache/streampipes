@@ -30,7 +30,6 @@ import java.util.Optional;
 
 public class DataLakePermissionManager {
 
-  //TODO Could also be static
 private static final String DATALAKE_APP_ID =
         "org.apache.streampipes.sinks.internal.jvm.datalake";
 private static final String DB_MEASUREMENT = "db_measurement";

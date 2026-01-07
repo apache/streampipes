@@ -205,9 +205,9 @@ describe('Test Dataset Permissions', () => {
 
     function assertAlertBanner(exists: boolean) {
         if (exists) {
-            cy.get('sp-alert-banner[type="error"]').should('exist');
+            cy.dataCy('sp-alert-banner-error').should('exist');
         } else {
-            cy.get('sp-alert-banner[type="error"]').should('not.exist');
+            cy.dataCy('sp-alert-banner-error').should('not.exist');
         }
     }
 
