@@ -63,6 +63,33 @@
                                 </textarea>
                             </mat-form-field>
                         </sp-form-field>
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Field runtime name' | translate"
+                            [description]="
+                                'Identifies the field in the underlying runtime format'
+                                    | translate
+                            "
+                        >
+                            <div
+                                [attr.id]="
+                                    'input-runtime-name-' + cachedProperty.label
+                                "
+                                fxFlex="100"
+                            >
+                                <mat-form-field class="w-100" color="accent">
+                                    <input
+                                        matInput
+                                        placeholder="RuntimeName"
+                                        name="runtimename"
+                                        id="runtimename"
+                                        data-cy="connect-edit-field-runtime-name"
+                                        disabled="true"
+                                        [(ngModel)]="cachedProperty.runtimeName"
+                                    />
+                                </mat-form-field>
+                            </div>
+                        </sp-form-field>
                     </sp-split-section>
 
                     <sp-edit-schema-transformation
@@ -72,9 +99,6 @@
                         [isListProperty]="isEventPropertyList"
                         [isPrimitiveProperty]="isEventPropertyPrimitive"
                         (dataTypeChanged)="handleDataTypeChange()"
-                        (timestampSemanticsChanged)="
-                            handleTimestampChange($event)
-                        "
                     >
                     </sp-edit-schema-transformation>
 

@@ -51,7 +51,6 @@ export class EditSchemaTransformationComponent implements OnInit {
     @Input() isPrimitiveProperty: boolean;
 
     @Output() dataTypeChanged = new EventEmitter<void>();
-    @Output() timestampSemanticsChanged = new EventEmitter<boolean>();
 
     domainPropertyControl = new UntypedFormControl();
     semanticTypes: Observable<string[]>;
@@ -75,36 +74,11 @@ export class EditSchemaTransformationComponent implements OnInit {
                     : [];
             }),
         );
+        if (this.isTimestampProperty) {
+            this.domainPropertyControl.disable({ emitEvent: false });
+        }
 
         this.adapterIsInEditMode = this.router.url.includes('connect/edit');
-    }
-
-    editTimestampDomainProperty(checked: boolean) {
-        if (checked) {
-            this.isTimestampProperty = true;
-            this.cachedProperty.semanticType = SemanticType.TIMESTAMP;
-            this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
-
-            this.cachedProperty.additionalMetadata.originType = (
-                this.cachedProperty as EventPropertyPrimitive
-            ).runtimeType;
-            (this.cachedProperty as EventPropertyPrimitive).runtimeType =
-                DataType.LONG;
-        } else {
-            this.cachedProperty.semanticType = undefined;
-            this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';
-            this.isTimestampProperty = false;
-            (this.cachedProperty as EventPropertyPrimitive).runtimeType =
-                this.cachedProperty.additionalMetadata.originType;
-            this.cachedProperty.additionalMetadata.originType = undefined;
-        }
-        this.timestampSemanticsChanged.emit(this.isTimestampProperty);
-    }
-
-    triggerTutorialStep(): void {
-        if (this.cachedProperty.runtimeName === 'temp') {
-            this.shepherdService.trigger('adapter-runtime-name-changed');
-        }
     }
 
     asEventPropertyPrimitive(ep: EventProperty): EventPropertyPrimitive {

@@ -159,8 +159,4 @@ export class EditEventPropertyComponent implements OnInit {
             (this.cachedProperty as EventPropertyPrimitive).runtimeType,
         );
     }
-
-    handleTimestampChange(isTimestamp: boolean) {
-        this.isTimestampProperty = isTimestamp;
-    }
 }

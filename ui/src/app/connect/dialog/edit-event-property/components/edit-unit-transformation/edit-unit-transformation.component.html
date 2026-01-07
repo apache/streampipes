@@ -16,8 +16,8 @@
 ~
 -->
 
-<sp-split-section [title]="'Unit Transformation' | translate" [level]="3">
-    @if (isPrimitiveProperty && !isTimestampProperty && isNumericProperty) {
+@if (isPrimitiveProperty && !isTimestampProperty && isNumericProperty) {
+    <sp-split-section [title]="'Unit Transformation' | translate" [level]="3">
         <sp-form-field
             [level]="3"
             [label]="'Unit conversion' | translate"
@@ -111,5 +111,5 @@
                 </div>
             </div>
         </sp-form-field>
-    }
-</sp-split-section>
+    </sp-split-section>
+}

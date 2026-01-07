@@ -34,7 +34,9 @@ export class EditDataTypeComponent implements OnInit {
     originalType: string;
 
     ngOnInit(): void {
-        this.originalType = this.eventProperty.runtimeType;
+        this.originalType =
+            this.eventProperty.additionalMetadata['originType'] ||
+            this.eventProperty.runtimeType;
     }
 
     runtimeDataTypes: { label: string; url: string }[] = [

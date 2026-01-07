@@ -17,31 +17,40 @@
 -->
 
 <sp-split-section [title]="'Schema' | translate" [level]="3">
-    <sp-form-field
-        [level]="3"
-        [label]="'Field runtime name' | translate"
-        [description]="
-            'Identifies the field in the underlying runtime format' | translate
-        "
-    >
-        <div
-            attr.id="input-runtime-name-{{ cachedProperty.label }}"
-            fxFlex="100"
+    @if (!isTimestampProperty && !isNestedProperty) {
+        <sp-form-field
+            [level]="3"
+            [label]="'Data type' | translate"
+            [description]="'The data type of the field values' | translate"
         >
-            <mat-form-field class="w-100" color="accent">
-                <input
-                    matInput
-                    placeholder="RuntimeName"
-                    name="runtimename"
-                    id="runtimename"
-                    data-cy="connect-edit-field-runtime-name"
-                    disabled="true"
-                    (blur)="triggerTutorialStep()"
-                    [(ngModel)]="cachedProperty.runtimeName"
-                />
-            </mat-form-field>
-        </div>
-    </sp-form-field>
+            <sp-edit-data-type
+                [eventProperty]="asEventPropertyPrimitive(cachedProperty)"
+                (dataTypeChanged)="dataTypeChanged.emit()"
+            >
+            </sp-edit-data-type>
+        </sp-form-field>
+        @if (adapterIsInEditMode) {
+            <sp-alert-banner
+                type="warning"
+                [title]="'Caution when changing data types' | translate"
+                [description]="
+                    'Changing the data type can result in pipelines no longer\n' +
+                        '                        writing the data correctly to the data lake.'
+                        | translate
+                "
+            >
+                <div class="text-sm">
+                    To resolve this problem, you can:
+                    <br />
+                    - Rename the property.
+                    <br />
+                    - Truncate the old data.
+                    <br />
+                    - Write the data to a new measurement.
+                </div>
+            </sp-alert-banner>
+        }
+    }
 
     @if (isPrimitiveProperty) {
         <sp-form-field
@@ -51,17 +60,6 @@
                 'Identifies field semantics, e.g., oil temperature' | translate
             "
         >
-            <div fxFlex="100" fxLayout="column" style="margin-bottom: 5px">
-                <mat-checkbox
-                    name="timestampCheckbox"
-                    (change)="editTimestampDomainProperty($event.checked)"
-                    [checked]="isTimestampProperty"
-                    color="accent"
-                    data-cy="sp-mark-as-timestamp"
-                >
-                    Mark as timestamp
-                </mat-checkbox>
-            </div>
             <div fxFlex="100" fxLayout="column">
                 <mat-form-field class="w-100" color="accent" fxFlex="100">
                     <input
@@ -70,7 +68,6 @@
                         data-cy="semantic-type"
                         [(ngModel)]="cachedProperty.semanticType"
                         [matAutocomplete]="st"
-                        [disabled]="isTimestampProperty"
                         [matAutocompleteDisabled]="isTimestampProperty"
                         [formControl]="domainPropertyControl"
                     />
@@ -93,37 +90,6 @@
                     </mat-autocomplete>
                 </mat-form-field>
             </div>
-        </sp-form-field>
-    }
-
-    @if (!isTimestampProperty && !isNestedProperty) {
-        <sp-form-field
-            [level]="3"
-            [label]="'Data type' | translate"
-            [description]="'The data type of the field values' | translate"
-        >
-            @if (adapterIsInEditMode) {
-                <div class="warning-message">
-                    <p data-cy="warning-change-data-type" class="text-center">
-                        Changing the data type can result in pipelines no longer
-                        writing the data correctly to the data lake.
-                        <br />
-                        <br />
-                        To resolve this problem, you can:
-                        <br />
-                        - Rename the property.
-                        <br />
-                        - Truncate the old data.
-                        <br />
-                        - Write the data to a new measurement.
-                    </p>
-                </div>
-            }
-            <sp-edit-data-type
-                [eventProperty]="asEventPropertyPrimitive(cachedProperty)"
-                (dataTypeChanged)="dataTypeChanged.emit()"
-            >
-            </sp-edit-data-type>
         </sp-form-field>
     }
 </sp-split-section>

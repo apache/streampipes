@@ -108,6 +108,7 @@ import { CreateAdapterTransformationTemplateDialogComponent } from './dialog/cre
 import { SelectAdapterTransformationTemplateDialogComponent } from './dialog/select-adapter-transformation-template-dialog/select-adapter-transformation-template-dialog.component';
 import { AdapterEventPreviewComponent } from './components/adapter-configuration/adapter-event-preview/adapter-event-preview.component';
 import { AdapterEventPreviewNodeComponent } from './components/adapter-configuration/adapter-event-preview/adapter-event-preview-node/adapter-event-preview-node.component';
+import { EventPropertyScopeComponent } from './components/adapter-configuration/configure-fields/event-property-row/event-property-scope/event-property-scope.component';
 
 @NgModule({
     imports: [
@@ -252,6 +253,7 @@ import { AdapterEventPreviewNodeComponent } from './components/adapter-configura
         SelectAdapterTransformationTemplateDialogComponent,
         AdapterEventPreviewComponent,
         AdapterEventPreviewNodeComponent,
+        EventPropertyScopeComponent,
     ],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

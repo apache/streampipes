@@ -53,6 +53,7 @@ export class EventPropertyRowComponent implements OnInit {
     @Input() eventSchema: EventSchema = new EventSchema();
     @Input() originalEventSchema: EventSchema;
     @Input() fieldStatusInfo: Record<string, FieldStatusInfo>;
+    @Input() level = 0;
 
     @Output() eventPropertyChange = new EventEmitter<void>();
 
@@ -61,9 +62,9 @@ export class EventPropertyRowComponent implements OnInit {
     isPrimitive = false;
     isNested = false;
     isList = false;
+    isNumber = false;
 
     timestampProperty = false;
-    showFieldStatus = false;
 
     runtimeType: string;
     originalRuntimeType: string;
@@ -75,7 +76,12 @@ export class EventPropertyRowComponent implements OnInit {
         this.isPrimitive = this.isEventPropertyPrimitive(this.eventProperty);
         this.isList = this.isEventPropertyList(this.eventProperty);
         this.isNested = this.isEventPropertyNested(this.eventProperty);
-        this.timestampProperty = this.isTimestampProperty(this.eventProperty);
+        this.timestampProperty = this.isTimestampProperty();
+        this.isNumber =
+            this.isPrimitive &&
+            DataType.isNumberType(
+                (this.eventProperty as EventPropertyPrimitive).runtimeType,
+            );
 
         this.setRuntimeTypeAndOriginRuntimeType();
 
@@ -94,9 +100,6 @@ export class EventPropertyRowComponent implements OnInit {
 
     private applyDisplayedProperties(ep: EventProperty) {
         this.originalRuntimeName = ep.runtimeName;
-        this.showFieldStatus =
-            this.fieldStatusInfo &&
-            this.fieldStatusInfo[this.originalRuntimeName] !== undefined;
         if (this.isPrimitive) {
             this.setRuntimeTypeAndOriginRuntimeType();
         }
@@ -111,6 +114,11 @@ export class EventPropertyRowComponent implements OnInit {
         this.runtimeType = this.parseType(
             (this.eventProperty as EventPropertyPrimitive).runtimeType,
         );
+    }
+
+    handleScopeChange(): void {
+        this.setRuntimeTypeAndOriginRuntimeType();
+        this.eventPropertyChange.emit();
     }
 
     private parseType(runtimeType: string) {
@@ -147,13 +155,11 @@ export class EventPropertyRowComponent implements OnInit {
         return 'Property';
     }
 
-    isTimestampProperty(node) {
-        if (node.semanticType !== undefined && SemanticType.isTimestamp(node)) {
-            node.runtimeType = DataType.LONG;
-            return true;
-        } else {
-            return false;
-        }
+    isTimestampProperty() {
+        return (
+            this.eventProperty.semanticType !== undefined &&
+            SemanticType.isTimestamp(this.eventProperty)
+        );
     }
 
     public openEditDialog(eventProperty: EventProperty): void {
@@ -169,9 +175,7 @@ export class EventPropertyRowComponent implements OnInit {
         this.shepherdService.trigger('adapter-edit-field-clicked');
 
         dialogRef.afterClosed().subscribe(_ => {
-            this.timestampProperty = this.isTimestampProperty(
-                this.eventProperty,
-            );
+            this.timestampProperty = this.isTimestampProperty();
             this.label = this.getLabel(this.eventProperty);
             this.checkAndDisplayProperties();
             this.eventPropertyChange.emit();

@@ -50,23 +50,15 @@
             fxFlex="100"
             fxLayoutGap="20px"
         >
-            @if (timestampProperty) {
-                <div
-                    class="timestamp-property"
-                    fxLayoutAlign="end center"
+            @if (isPrimitive && isNumber && isTimestampProperty()) {
+                <mat-icon
+                    [matTooltip]="'marked as timestamp' | translate"
+                    [style.color]="'var(--color-success)'"
                     fxLayout="row"
+                    fxLayoutAlign="start center"
                 >
-                    @if (timestampProperty) {
-                        <mat-icon
-                            class="timestamp-icon"
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                        >
-                            access_time
-                        </mat-icon>
-                    }
-                    <span style="margin-left: -5px">marked as timestamp</span>
-                </div>
+                    access_time
+                </mat-icon>
             }
             <div fxLayoutAlign="end center" class="runtime-type-info-outer">
                 @if (runtimeType) {
@@ -97,51 +89,16 @@
                     </div>
                 }
             </div>
-
-            <div fxLayoutAlign="end center" class="status-outer">
-                @if (showFieldStatus) {
-                    <span
-                        [ngClass]="
-                            'status status-' +
-                            fieldStatusInfo[
-                                originalRuntimeName
-                            ].fieldStatus.toLowerCase()
-                        "
-                        [matTooltip]="
-                            fieldStatusInfo[originalRuntimeName].additionalInfo
-                        "
-                        >{{
-                            fieldStatusInfo[originalRuntimeName].fieldStatus
-                        }}</span
-                    >
-                }
-            </div>
             @if (isPrimitive) {
                 <div fxLayoutAlign="center center">
-                    <mat-form-field
-                        class="form-field-small no-subscrip-wrapper"
-                        appearance="outline"
-                        color="accent"
+                    <sp-event-property-scope
+                        [eventProperty]="eventProperty"
+                        [isNumber]="isNumber"
+                        [label]="label"
+                        [runtimeType]="runtimeType"
+                        (scopeChanged)="handleScopeChange()"
                     >
-                        <mat-select
-                            [(ngModel)]="eventProperty.propertyScope"
-                            panelClass="small-select"
-                            class="small-select"
-                            [attr.data-cy]="'property-scope-' + label"
-                        >
-                            <mat-option value="MEASUREMENT_PROPERTY"
-                                >{{ 'Measurement' | translate }}
-                            </mat-option>
-                            @if (runtimeType !== 'FLOAT') {
-                                <mat-option value="DIMENSION_PROPERTY"
-                                    >{{ 'Dimension' | translate }}
-                                </mat-option>
-                            }
-                            <mat-option value="HEADER_PROPERTY"
-                                >{{ 'Header' | translate }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    </sp-event-property-scope>
                 </div>
             }
 
@@ -153,9 +110,7 @@
                         (click)="openEditDialog(eventProperty)"
                         [attr.data-cy]="'edit-' + label.toLowerCase()"
                     >
-                        <mat-icon>edit</mat-icon>&nbsp;{{
-                            'Edit field' | translate
-                        }}
+                        <mat-icon>edit</mat-icon>&nbsp;{{ 'Edit' | translate }}
                     </button>
                 </div>
             }
