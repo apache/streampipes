@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
-import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
