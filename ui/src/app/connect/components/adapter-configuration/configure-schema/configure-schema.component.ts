@@ -35,7 +35,6 @@ import {
 } from '@streampipes/platform-services';
 import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { CreateAdapterTransformationTemplateDialogComponent } from '../../../dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectAdapterTransformationTemplateDialogComponent } from '../../../dialog/select-adapter-transformation-template-dialog/select-adapter-transformation-template-dialog.component';
@@ -91,6 +90,20 @@ export class ConfigureSchemaComponent implements OnInit {
     script = signal(undefined);
     initialScript = signal<{ meta: ScriptMetadata; script: string }>(undefined);
     selectedScriptMetadata = signal(undefined);
+
+    isNextDisabled = computed(() => {
+        const state = this.stateService.state();
+        const hasInputEvents =
+            !!state.adapterDescription?.transformationConfig?.inputs?.length;
+
+        return (
+            state.isGettingSample ||
+            state.isRunningScript ||
+            !!state.sampleError ||
+            !!state.scriptError ||
+            !hasInputEvents
+        );
+    });
 
     editorOptions = {
         mode: 'javascript',

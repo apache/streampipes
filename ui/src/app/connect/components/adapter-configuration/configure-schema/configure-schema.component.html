@@ -234,6 +234,7 @@
             data-cy="configure-schema-next-button"
             color="accent"
             mat-flat-button
+            [disabled]="isNextDisabled()"
             (click)="next()"
         >
             {{ 'Next' | translate }}
