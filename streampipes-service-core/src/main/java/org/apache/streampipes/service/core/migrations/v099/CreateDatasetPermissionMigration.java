@@ -19,6 +19,7 @@
 package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.CRUDStorage;
@@ -31,12 +32,15 @@ import java.util.List;
 public class CreateDatasetPermissionMigration implements Migration {
 
   private final CRUDStorage<DataLakeMeasure> dataLakeStorage;
+  private final CRUDStorage<Pipeline> pipelineStorage;
   private final IPermissionStorage permissionStorage;
   private final PermissionResourceManager permissionResourceManager;
 
 
+
   public CreateDatasetPermissionMigration() {
     this.dataLakeStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
+    this.pipelineStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
     this.permissionStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
     this.permissionResourceManager = new PermissionResourceManager();
   }
@@ -50,15 +54,25 @@ public class CreateDatasetPermissionMigration implements Migration {
   public void executeMigration() throws IOException {
     dataLakeStorage.findAll().forEach(measure -> {
       var existingPermission = permissionStorage.getObjectPermissions(List.of(measure.getMeasureName()));
+
       if (existingPermission.isEmpty()) {
+
         permissionResourceManager.createDefault(
             measure.getMeasureName(),
             DataLakeMeasure.class,
-            null,
+            findAssociatedPipelineOwner(measure),
             true
         );
       }
     });
+  }
+
+  private String findAssociatedPipelineOwner(DataLakeMeasure measure){
+    var pipeline = pipelineStorage.getElementById(measure.getPipelineId());
+    if (pipeline == null) {
+        return null;
+    }
+    return pipeline.getCreatedByUser();
   }
 
   @Override
