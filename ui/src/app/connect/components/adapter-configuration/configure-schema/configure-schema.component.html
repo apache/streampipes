@@ -27,7 +27,7 @@
                 fxFlex="100"
                 fxLayoutGap="5px"
             >
-                @if (selectedScriptMetadata() !== undefined) {
+                @if (selectedScriptMetadata()) {
                     <button
                         mat-button
                         [matMenuTriggerFor]="langMenu"
@@ -39,7 +39,7 @@
 
                     <mat-menu #langMenu="matMenu">
                         @for (
-                            script of availableScripts;
+                            script of availableScripts();
                             track script.language
                         ) {
                             <button
@@ -125,7 +125,7 @@
                         <span>{{ 'Get new sample' | translate }}</span>
                     </button>
                     <mat-button-toggle-group
-                        [(ngModel)]="sourceViewMode"
+                        [(value)]="sourceViewMode"
                         [hideSingleSelectionIndicator]="true"
                     >
                         <mat-button-toggle value="tree">{{
@@ -158,7 +158,7 @@
                     } @else {
                         <sp-adapter-event-preview
                             dataCy="configure-schema-event-preview-original"
-                            [mode]="sourceViewMode"
+                            [mode]="sourceViewMode()"
                             [value]="input()"
                         ></sp-adapter-event-preview>
                     }
@@ -176,7 +176,7 @@
             >
                 <div header fxFlex="100" fxLayoutAlign="end center">
                     <mat-button-toggle-group
-                        [(ngModel)]="resultViewMode"
+                        [(value)]="resultViewMode"
                         [hideSingleSelectionIndicator]="true"
                     >
                         <mat-button-toggle value="tree">{{
@@ -209,7 +209,7 @@
                     } @else {
                         <sp-adapter-event-preview
                             dataCy="configure-schema-event-preview-result"
-                            [mode]="resultViewMode"
+                            [mode]="resultViewMode()"
                             [value]="output()"
                         ></sp-adapter-event-preview>
                     }

@@ -19,20 +19,33 @@
 import { inject, Injectable, signal } from '@angular/core';
 import {
     AdapterDescription,
+    ConnectScriptLanguagesService,
     EventSchema,
+    ScriptMetadata,
     SpLogMessage,
 } from '@streampipes/platform-services';
 import { AdapterConfigurationState } from './AdapterConfigurationState';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RestService } from '../../../services/rest.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AdapterConfigurationStateService {
     private restService = inject(RestService);
+    private scriptLanguagesService = inject(ConnectScriptLanguagesService);
 
     private initialState: AdapterConfigurationState = {
+        availableScriptMetadata: null,
+        loadingAvailableScriptsError: null,
+        isLoadingAvailableScripts: false,
+
+        selectedScriptMetadata: null,
+
+        currentScript: '',
+        initialScript: null,
+
         adapterDescription: null,
         isGettingSample: false,
         sampleError: null,
@@ -73,6 +86,91 @@ export class AdapterConfigurationStateService {
         });
     }
 
+    public loadAndInitializeScript(
+        adapterDescription: AdapterDescription,
+    ): void {
+        this.loadAvailableScripts(adapterDescription).subscribe({
+            next: scriptMetadata => {
+                this.updateState({
+                    availableScriptMetadata: scriptMetadata,
+                    isLoadingAvailableScripts: false,
+                });
+                this.initializeScriptState(adapterDescription);
+            },
+            error: err => {
+                this.updateState({
+                    loadingAvailableScriptsError: err.message,
+                    isLoadingAvailableScripts: false,
+                });
+            },
+        });
+    }
+
+    private loadAvailableScripts(
+        adapter: AdapterDescription,
+    ): Observable<ScriptMetadata[]> {
+        this.updateState({ isLoadingAvailableScripts: true });
+        return this.scriptLanguagesService.getAll(adapter);
+    }
+
+    private initializeScriptState(adapter: AdapterDescription) {
+        const scripts = this.state().availableScriptMetadata;
+
+        if (!scripts || scripts.length === 0) return;
+
+        const existingScript = adapter.transformationConfig?.script;
+        const existingLang = adapter.transformationConfig?.language;
+
+        let activeScript: string;
+        let activeScriptMetadata: ScriptMetadata;
+
+        // Determination Logic
+        if (existingScript) {
+            // EDIT MODE
+            activeScript = existingScript;
+            activeScriptMetadata =
+                scripts.find(s => s.language === existingLang) ||
+                scripts.find(s => s.language === 'javascript') ||
+                scripts[0];
+        } else {
+            // CREATE MODE
+            activeScriptMetadata =
+                scripts.find(s => s.language === 'javascript') || scripts[0];
+            activeScript = activeScriptMetadata.template;
+        }
+
+        // Single atomic state update
+        this.updateState({
+            selectedScriptMetadata: activeScriptMetadata,
+            currentScript: activeScript,
+            initialScript: {
+                scriptMetadata: activeScriptMetadata,
+                script: activeScript,
+            },
+        });
+    }
+
+    resetScriptToInitial(): void {
+        const initial = this.state().initialScript;
+
+        if (initial) {
+            this.updateState({
+                currentScript: initial.script,
+                selectedScriptMetadata: initial.scriptMetadata,
+            });
+        }
+    }
+
+    public updateCurrentScript(script: string): void {
+        this.updateState({ currentScript: script });
+    }
+
+    public setSelectScriptMetadata(scriptMetadata: ScriptMetadata): void {
+        this.updateState({
+            selectedScriptMetadata: scriptMetadata,
+        });
+    }
+
     private cloneAdapter(adapter: AdapterDescription): AdapterDescription {
         return {
             ...adapter,
@@ -108,13 +206,7 @@ export class AdapterConfigurationStateService {
                 });
 
                 // 3. Automatically run the script after getting the sample
-                const currentScript =
-                    updatedAdapter.transformationConfig.script;
-                this.runScript(
-                    updatedAdapter,
-                    currentScript,
-                    updatedAdapter.transformationConfig.language,
-                );
+                this.runScript(updatedAdapter);
             },
             error: (error: HttpErrorResponse) => {
                 // Update state with error AND metadata (error/idle)
@@ -126,11 +218,7 @@ export class AdapterConfigurationStateService {
         });
     }
 
-    public runScript(
-        adapter: AdapterDescription,
-        script: string,
-        language: string,
-    ): void {
+    public runScript(adapter: AdapterDescription): void {
         // 1. Prepare state for loading
         this.updateState({
             isRunningScript: true,
@@ -139,8 +227,9 @@ export class AdapterConfigurationStateService {
 
         // 2. Update the local adapter object with the latest script from the UI
         const updatedAdapter = { ...adapter };
-        updatedAdapter.transformationConfig.script = script;
-        updatedAdapter.transformationConfig.language = language;
+        updatedAdapter.transformationConfig.script = this.state().currentScript;
+        updatedAdapter.transformationConfig.language =
+            this.state().selectedScriptMetadata.language;
 
         // 3. Execute the API call
         this.restService.sampleTransform(updatedAdapter).subscribe({

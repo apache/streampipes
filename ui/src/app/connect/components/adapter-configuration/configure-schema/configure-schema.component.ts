@@ -48,7 +48,6 @@ import { Mode } from '../adapter-event-preview/adapter-event-preview.component';
 })
 export class ConfigureSchemaComponent implements OnInit {
     private stateService = inject(AdapterConfigurationStateService);
-    private scriptLanguagesService = inject(ConnectScriptLanguagesService);
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
 
@@ -64,9 +63,17 @@ export class ConfigureSchemaComponent implements OnInit {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    availableScripts: ScriptMetadata[] = [];
-    resultViewMode: Mode = 'raw';
-    sourceViewMode: Mode = 'raw';
+    availableScripts = computed(
+        () => this.stateService.state().availableScriptMetadata,
+    );
+    selectedScriptMetadata = computed(
+        () => this.stateService.state().selectedScriptMetadata,
+    );
+
+    resultViewMode = signal<Mode>('raw');
+    sourceViewMode = signal<Mode>('raw');
+
+    script = computed(() => this.stateService.state().currentScript);
 
     isSampleLoading = computed(() => this.stateService.state().isGettingSample);
 
@@ -86,10 +93,6 @@ export class ConfigureSchemaComponent implements OnInit {
             this.stateService.state().adapterDescription?.transformationConfig
                 ?.outputs?.[0] || {},
     );
-
-    script = signal(undefined);
-    initialScript = signal<{ meta: ScriptMetadata; script: string }>(undefined);
-    selectedScriptMetadata = signal(undefined);
 
     isNextDisabled = computed(() => {
         const state = this.stateService.state();
@@ -120,56 +123,23 @@ export class ConfigureSchemaComponent implements OnInit {
     };
 
     ngOnInit(): void {
-        this.initializeScriptVariable();
-    }
-
-    private initializeScriptVariable(): void {
-        this.scriptLanguagesService
-            .getAll(this.adapterDescription)
-            .subscribe(res => {
-                this.availableScripts = res;
-                const currentScript =
-                    this.adapterDescription.transformationConfig.script;
-                let meta: ScriptMetadata;
-                if (currentScript) {
-                    this.script.set(currentScript);
-                    meta = this.availableScripts.find(
-                        s =>
-                            s.language ===
-                            this.adapterDescription.transformationConfig
-                                .language,
-                    );
-                    this.initialScript.set({ meta, script: currentScript });
-                } else {
-                    meta = this.availableScripts.find(
-                        s => s.language === 'javascript',
-                    );
-                    this.adapterDescription.transformationConfig.script =
-                        meta.template;
-                    this.adapterDescription.transformationConfig.language =
-                        meta.language;
-                    this.script.set(meta.template);
-                }
-                this.selectedScriptMetadata.set(meta);
-            });
+        this.stateService.loadAndInitializeScript(this.adapterDescription);
     }
 
     onCodeChange(newCode: string) {
-        this.script.set(newCode);
+        this.stateService.updateCurrentScript(newCode);
     }
 
     onLanguageChange(newLanguage: ScriptMetadata) {
-        this.selectedScriptMetadata.set(newLanguage);
-        this.script.set(newLanguage.template);
+        this.stateService.updateState({
+            selectedScriptMetadata: newLanguage,
+            currentScript: newLanguage.template, // Or keep existing if logic allows
+        });
     }
 
     resetScript(): void {
-        if (this.initialScript() !== undefined) {
-            this.script.set(this.initialScript().script);
-            this.selectedScriptMetadata.set(this.initialScript().meta);
-        } else {
-            this.script.set(this.selectedScriptMetadata().template);
-        }
+        this.stateService.resetScriptToInitial();
+        this.runScript();
     }
 
     getSampleEvent(): void {
@@ -177,11 +147,7 @@ export class ConfigureSchemaComponent implements OnInit {
     }
 
     runScript(): void {
-        this.stateService.runScript(
-            this.adapterDescription,
-            this.script(),
-            this.selectedScriptMetadata().language,
-        );
+        this.stateService.runScript(this.adapterDescription);
     }
 
     openSelectScriptTemplateDialog(): void {
@@ -205,12 +171,11 @@ export class ConfigureSchemaComponent implements OnInit {
     }
 
     applyTemplate(template: ConnectTransformationScriptTemplate): void {
-        const meta = this.availableScripts.find(
+        const meta = this.availableScripts().find(
             s => s.language === template.language,
         );
         if (meta !== undefined) {
-            this.script.set(template.code);
-            this.selectedScriptMetadata.set(meta);
+            this.stateService.setSelectScriptMetadata(meta);
         }
     }
 

@@ -36,10 +36,22 @@
 
 import {
     AdapterDescription,
+    ScriptMetadata,
     SpLogMessage,
 } from '@streampipes/platform-services';
 
 export class AdapterConfigurationState {
+    // script infos
+    availableScriptMetadata: ScriptMetadata[];
+    loadingAvailableScriptsError: SpLogMessage | null;
+    isLoadingAvailableScripts: boolean;
+
+    selectedScriptMetadata: ScriptMetadata | null;
+
+    currentScript: string;
+    // Is used to remember initial scritp for reset of changes
+    initialScript: { scriptMetadata: ScriptMetadata; script: string } | null;
+
     // configure schema
     adapterDescription: AdapterDescription;
     isGettingSample: boolean;
