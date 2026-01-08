@@ -70,6 +70,10 @@ export class ConfigureSchemaComponent implements OnInit {
         () => this.stateService.state().selectedScriptMetadata,
     );
 
+    loadingAvailableScriptsError = computed(
+        () => this.stateService.state().loadingAvailableScriptsError,
+    );
+
     resultViewMode = signal<Mode>('raw');
     sourceViewMode = signal<Mode>('raw');
 
@@ -207,4 +211,6 @@ export class ConfigureSchemaComponent implements OnInit {
     public goBack() {
         this.goBackEmitter.emit();
     }
+
+    protected readonly Error = Error;
 }

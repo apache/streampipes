@@ -97,9 +97,9 @@ export class AdapterConfigurationStateService {
                 });
                 this.initializeScriptState(adapterDescription);
             },
-            error: err => {
+            error: (error: HttpErrorResponse) => {
                 this.updateState({
-                    loadingAvailableScriptsError: err.message,
+                    loadingAvailableScriptsError: error.error as SpLogMessage,
                     isLoadingAvailableScripts: false,
                 });
             },
@@ -119,27 +119,23 @@ export class AdapterConfigurationStateService {
         if (!scripts || scripts.length === 0) return;
 
         const existingScript = adapter.transformationConfig?.script;
-        const existingLang = adapter.transformationConfig?.language;
+        const existingLanguage = adapter.transformationConfig?.language;
 
         let activeScript: string;
         let activeScriptMetadata: ScriptMetadata;
 
-        // Determination Logic
         if (existingScript) {
-            // EDIT MODE
             activeScript = existingScript;
             activeScriptMetadata =
-                scripts.find(s => s.language === existingLang) ||
+                scripts.find(s => s.language === existingLanguage) ||
                 scripts.find(s => s.language === 'javascript') ||
                 scripts[0];
         } else {
-            // CREATE MODE
             activeScriptMetadata =
                 scripts.find(s => s.language === 'javascript') || scripts[0];
             activeScript = activeScriptMetadata.template;
         }
 
-        // Single atomic state update
         this.updateState({
             selectedScriptMetadata: activeScriptMetadata,
             currentScript: activeScript,

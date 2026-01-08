@@ -21,6 +21,14 @@
             [panelTitle]="'Transformation' | translate"
             outerMargin="20px 0px"
         >
+            @if (loadingAvailableScriptsError()) {
+                <sp-alert-banner
+                    type="error"
+                    [title]="'Error loading available script languages'"
+                    [description]="loadingAvailableScriptsError().cause"
+                >
+                </sp-alert-banner>
+            }
             <div
                 header
                 fxLayoutAlign="end center"
