@@ -105,6 +105,10 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
         } else {
             this.stateService.updateEventPreview(this.adapterDescription);
         }
+
+        if (this.stateService.state().transformationConfigurationChanged) {
+            this.stateService.openTransformationConfigurationChangedDialog();
+        }
         this.goForward();
     }
 

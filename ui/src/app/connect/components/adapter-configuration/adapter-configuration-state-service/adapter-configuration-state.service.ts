@@ -28,11 +28,16 @@ import { AdapterConfigurationState } from './AdapterConfigurationState';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RestService } from '../../../services/rest.service';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from '@streampipes/shared-ui';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AdapterConfigurationStateService {
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
     private restService = inject(RestService);
     private scriptLanguagesService = inject(ConnectScriptLanguagesService);
 
@@ -281,6 +286,43 @@ export class AdapterConfigurationStateService {
                     scriptError: error.error as SpLogMessage,
                 });
             },
+        });
+    }
+
+    public openTransformationConfigurationChangedDialog(): void {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            disableClose: true,
+            hasBackdrop: true,
+            data: {
+                title: this.translateService.instant(
+                    'Event Transformation Configuration has changed',
+                ),
+                subtitle: this.translateService.instant(
+                    'You changed the transformation for the events, therefore it might be necessary to reload the fields.' +
+                        'Please only change nothing if you are certain that your changes do not affect the event schema.',
+                ),
+                cancelTitle: this.translateService.instant('Nothing changed'),
+                okTitle: this.translateService.instant('Refresh Fields'),
+                confirmAndCancel: true,
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.getEventSchema(this.state().adapterDescription);
+            } else {
+                this.acknowledgeNoSchemaRefresh();
+            }
+        });
+    }
+
+    private acknowledgeNoSchemaRefresh() {
+        this.updateState({
+            adapterDescription: this.state().adapterDescription,
+            transformationConfigurationChanged: false,
+            transformationConfigurationString: JSON.stringify(
+                this.state().adapterDescription.config,
+            ),
         });
     }
 

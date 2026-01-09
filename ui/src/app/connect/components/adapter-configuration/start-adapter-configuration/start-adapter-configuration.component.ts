@@ -25,10 +25,8 @@ import {
 } from '@angular/core';
 import {
     AdapterDescription,
-    EventRateTransformationRuleDescription,
     EventSchema,
     SpAssetTreeNode,
-    RemoveDuplicatesTransformationRuleDescription,
     UserInfo,
     RemoveDuplicateRule,
     ReduceEventRateRule,
