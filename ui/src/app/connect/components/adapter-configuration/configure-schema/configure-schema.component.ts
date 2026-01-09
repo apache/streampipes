@@ -19,6 +19,7 @@
 import {
     Component,
     computed,
+    effect,
     EventEmitter,
     inject,
     Input,
@@ -34,11 +35,16 @@ import {
     ScriptMetadata,
 } from '@streampipes/platform-services';
 import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    ConfirmDialogComponent,
+    DialogService,
+    PanelType,
+} from '@streampipes/shared-ui';
 import { CreateAdapterTransformationTemplateDialogComponent } from '../../../dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectAdapterTransformationTemplateDialogComponent } from '../../../dialog/select-adapter-transformation-template-dialog/select-adapter-transformation-template-dialog.component';
 import { Mode } from '../adapter-event-preview/adapter-event-preview.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'sp-configure-schema',
@@ -48,6 +54,7 @@ import { Mode } from '../adapter-event-preview/adapter-event-preview.component';
 })
 export class ConfigureSchemaComponent implements OnInit {
     private stateService = inject(AdapterConfigurationStateService);
+    private dialog = inject(MatDialog);
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
 
@@ -117,6 +124,14 @@ export class ConfigureSchemaComponent implements OnInit {
         );
     });
 
+    constructor() {
+        effect(() => {
+            if (this.isConfigurationChanged()) {
+                this.openAdapterConfigurationChangedDialog();
+            }
+        });
+    }
+
     editorOptions = {
         mode: 'javascript',
         autoRefresh: true,
@@ -157,6 +172,43 @@ export class ConfigureSchemaComponent implements OnInit {
 
     runScript(): void {
         this.stateService.runScript(this.adapterDescription);
+    }
+
+    openAdapterConfigurationChangedDialog(): void {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            disableClose: true,
+            hasBackdrop: true,
+            data: {
+                title: this.translateService.instant(
+                    'Adapter configuration has changed',
+                ),
+                subtitle: this.translateService.instant(
+                    'Your recent changes might have altered the data format. Reloading the sample ensures you are writing scripts for ' +
+                        'the most current data. Check your transformation rules after the refresh to ensure everything still aligns.',
+                ),
+                cancelTitle: this.translateService.instant('Nothing changed'),
+                okTitle: this.translateService.instant('Reload Sample'),
+                confirmAndCancel: true,
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.getSampleEvent();
+            } else {
+                this.confirmChangesDoNotEffectSchema();
+            }
+        });
+    }
+
+    private confirmChangesDoNotEffectSchema() {
+        this.stateService.updateState({
+            adapterDescription: this.adapterDescription,
+            adapterSettingsChanged: false,
+            adapterSettingsString: JSON.stringify(
+                this.adapterDescription.config,
+            ),
+        });
     }
 
     openSelectScriptTemplateDialog(): void {

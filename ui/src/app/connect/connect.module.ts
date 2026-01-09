@@ -109,7 +109,6 @@ import { SelectAdapterTransformationTemplateDialogComponent } from './dialog/sel
 import { AdapterEventPreviewComponent } from './components/adapter-configuration/adapter-event-preview/adapter-event-preview.component';
 import { AdapterEventPreviewNodeComponent } from './components/adapter-configuration/adapter-event-preview/adapter-event-preview-node/adapter-event-preview-node.component';
 import { EventPropertyScopeComponent } from './components/adapter-configuration/configure-fields/event-property-row/event-property-scope/event-property-scope.component';
-import { ConfigurationChangedWarningComponent } from './components/adapter-configuration/configure-schema/configuration-changed-warning/configuration-changed-warning.component';
 import { FieldsChangedWarningComponent } from './components/adapter-configuration/configure-fields/fields-changed-warning/fields-changed-warning.component';
 
 @NgModule({
@@ -256,7 +255,6 @@ import { FieldsChangedWarningComponent } from './components/adapter-configuratio
         AdapterEventPreviewComponent,
         AdapterEventPreviewNodeComponent,
         EventPropertyScopeComponent,
-        ConfigurationChangedWarningComponent,
         FieldsChangedWarningComponent,
     ],
     providers: [TimestampPipe],
