@@ -170,10 +170,6 @@ export class ConnectBtns {
         return cy.dataCy('sp-save-edit-property', { timeout: 10000 });
     }
 
-    public static markAsTimestampBtn() {
-        return cy.dataCy('sp-mark-as-timestamp').children();
-    }
-
     public static setTimestampConverter(option: 'Number' | 'String') {
         cy.dataCy('connect-timestamp-converter')
             .click()

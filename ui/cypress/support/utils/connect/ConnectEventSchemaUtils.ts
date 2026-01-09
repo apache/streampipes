@@ -22,35 +22,30 @@ import { PropertyDataTypeChange } from '../../model/PropertyDataTypeChange';
 
 export class ConnectEventSchemaUtils {
     public static markPropertyAsMeasurement(propertyName: string) {
-        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
-            .click()
-            .get('.mdc-list-item__primary-text')
-            .contains('Measurement')
-            .click();
+        this.selectPropertyScopeDropdown(propertyName, 'Measurement');
     }
 
     public static markPropertyAsDimension(propertyName: string) {
-        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
-            .click()
-            .get('.mdc-list-item__primary-text')
-            .contains('Dimension')
-            .click();
+        this.selectPropertyScopeDropdown(propertyName, 'Dimension');
     }
 
     public static markPropertyAsTimestamp(propertyName: string) {
-        // Mark property as timestamp
         this.configureFieldsNextBtnDisabled();
-        // Edit timestamp
 
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-
-        // Mark as timestamp
-        ConnectBtns.markAsTimestampBtn().click();
-
-        // Close
-        ConnectBtns.saveEditProperty().click();
+        this.selectPropertyScopeDropdown(propertyName, 'Timestamp');
 
         this.configureFieldsNextBtnEnabled();
+    }
+
+    private static selectPropertyScopeDropdown(
+        propertyName: string,
+        propertyScope: string,
+    ) {
+        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
+            .click()
+            .get('.mdc-list-item__primary-text')
+            .contains(propertyScope)
+            .click();
     }
 
     public static addTimestampProperty() {
@@ -65,28 +60,6 @@ export class ConnectEventSchemaUtils {
             .type(
                 '  event.timestamp = new Date().getTime();{enter}return event;{enter}}',
             );
-    }
-
-    public static editTimestampPropertyWithRegex(
-        propertyName: string,
-        timestampRegex: string,
-    ) {
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-
-        ConnectBtns.markAsTimestampBtn().click();
-        ConnectBtns.setTimestampConverter('String');
-
-        ConnectBtns.timestampStringRegex().type(timestampRegex);
-
-        ConnectBtns.saveEditProperty().click();
-
-        // The following code validates that the regex is persisted by reopening the edit dialog again
-        cy.dataCy('edit-' + propertyName.toLowerCase(), {
-            timeout: 10000,
-        }).click({ force: true });
-        ConnectBtns.timestampStringRegex().should('have.value', timestampRegex);
-
-        ConnectBtns.saveEditProperty().click();
     }
 
     public static unitTransformation(
