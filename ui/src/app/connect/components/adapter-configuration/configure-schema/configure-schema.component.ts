@@ -63,6 +63,10 @@ export class ConfigureSchemaComponent implements OnInit {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
+    isConfigurationChanged = computed(
+        () => this.stateService.state().isConfigurationChanged,
+    );
+
     availableScripts = computed(
         () => this.stateService.state().availableScriptMetadata,
     );
@@ -104,6 +108,7 @@ export class ConfigureSchemaComponent implements OnInit {
             !!state.adapterDescription?.transformationConfig?.inputs?.length;
 
         return (
+            state.isConfigurationChanged ||
             state.isGettingSample ||
             state.isRunningScript ||
             !!state.sampleError ||

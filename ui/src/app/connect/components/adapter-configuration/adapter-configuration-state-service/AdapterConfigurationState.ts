@@ -41,6 +41,10 @@ import {
 } from '@streampipes/platform-services';
 
 export class AdapterConfigurationState {
+    // adapter settings
+    isConfigurationChanged: boolean;
+    adapterSettingsConfigString: string;
+
     // script infos
     availableScriptMetadata: ScriptMetadata[];
     loadingAvailableScriptsError: SpLogMessage | null;
@@ -49,7 +53,7 @@ export class AdapterConfigurationState {
     selectedScriptMetadata: ScriptMetadata | null;
 
     currentScript: string;
-    // Is used to remember initial scritp for reset of changes
+    // Is used to remember initial script for reset of changes
     initialScript: { scriptMetadata: ScriptMetadata; script: string } | null;
 
     // configure schema

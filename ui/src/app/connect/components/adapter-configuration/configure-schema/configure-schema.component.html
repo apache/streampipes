@@ -29,6 +29,13 @@
                 >
                 </sp-alert-banner>
             }
+
+            @if (isConfigurationChanged()) {
+                <sp-configuration-changed-warning
+                    [adapterDescription]="adapterDescription"
+                >
+                </sp-configuration-changed-warning>
+            }
             <div
                 header
                 fxLayoutAlign="end center"
@@ -136,12 +143,12 @@
                         [(value)]="sourceViewMode"
                         [hideSingleSelectionIndicator]="true"
                     >
-                        <mat-button-toggle value="tree">{{
-                            'Tree' | translate
-                        }}</mat-button-toggle>
-                        <mat-button-toggle value="raw">{{
-                            'Raw' | translate
-                        }}</mat-button-toggle>
+                        <mat-button-toggle value="tree"
+                            >{{ 'Tree' | translate }}
+                        </mat-button-toggle>
+                        <mat-button-toggle value="raw"
+                            >{{ 'Raw' | translate }}
+                        </mat-button-toggle>
                     </mat-button-toggle-group>
                 </div>
                 @if (isSampleLoading()) {
@@ -187,12 +194,12 @@
                         [(value)]="resultViewMode"
                         [hideSingleSelectionIndicator]="true"
                     >
-                        <mat-button-toggle value="tree">{{
-                            'Tree' | translate
-                        }}</mat-button-toggle>
-                        <mat-button-toggle value="raw">{{
-                            'Raw' | translate
-                        }}</mat-button-toggle>
+                        <mat-button-toggle value="tree"
+                            >{{ 'Tree' | translate }}
+                        </mat-button-toggle>
+                        <mat-button-toggle value="raw"
+                            >{{ 'Raw' | translate }}
+                        </mat-button-toggle>
                     </mat-button-toggle-group>
                 </div>
                 @if (isRunningScript()) {

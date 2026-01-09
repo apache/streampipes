@@ -34,6 +34,7 @@ import { AdapterTemplateService } from '../../../services/adapter-template.servi
 import { MatStepper } from '@angular/material/stepper';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
+import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
 
 @Component({
     selector: 'sp-adapter-settings',
@@ -48,6 +49,7 @@ export class AdapterSettingsComponent implements OnInit {
     );
     private adapterTemplateService = inject(AdapterTemplateService);
     private dialogService = inject(DialogService);
+    private stateService = inject(AdapterConfigurationStateService);
 
     /**
      * Adapter description the selected format is added to

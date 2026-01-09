@@ -37,6 +37,9 @@ export class AdapterConfigurationStateService {
     private scriptLanguagesService = inject(ConnectScriptLanguagesService);
 
     private initialState: AdapterConfigurationState = {
+        isConfigurationChanged: false,
+        adapterSettingsConfigString: '',
+
         availableScriptMetadata: null,
         loadingAvailableScriptsError: null,
         isLoadingAvailableScripts: false,
@@ -81,9 +84,21 @@ export class AdapterConfigurationStateService {
     public updateAdapter(adapter: AdapterDescription): void {
         // Cloning is required to trigger all computed signals
         const clonedAdapter = this.cloneAdapter(adapter);
+
+        const configChanged = this.checkIfConfigChanged(clonedAdapter);
+
         this.updateState({
             adapterDescription: { ...clonedAdapter },
+            isConfigurationChanged: configChanged,
         });
+    }
+
+    private checkIfConfigChanged(current: AdapterDescription): boolean {
+        const lastSynced = this.state().adapterSettingsConfigString;
+        if (!lastSynced) return false;
+
+        const currentConfigStr = JSON.stringify(current.config);
+        return currentConfigStr !== lastSynced;
     }
 
     public loadAndInitializeScript(
@@ -189,19 +204,20 @@ export class AdapterConfigurationStateService {
 
         this.restService.getSampleEvents(adapter).subscribe({
             next: sampleData => {
-                // 1. Mutate the data
                 const updatedAdapter = { ...adapter };
                 updatedAdapter.transformationConfig.inputs = [
                     sampleData.samples[0],
                 ];
 
-                // 2. Update state with new data AND metadata (success/idle)
                 this.updateState({
                     adapterDescription: updatedAdapter,
                     isGettingSample: false,
+                    isConfigurationChanged: false, // Reset the warning
+                    adapterSettingsConfigString: JSON.stringify(
+                        updatedAdapter.config,
+                    ),
                 });
 
-                // 3. Automatically run the script after getting the sample
                 this.runScript(updatedAdapter);
             },
             error: (error: HttpErrorResponse) => {
