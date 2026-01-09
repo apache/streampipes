@@ -21,25 +21,25 @@ import { AdapterConfigurationStateService } from '../../adapter-configuration-st
 import { AdapterDescription } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-configuration-changed-warning',
+    selector: 'sp-fields-changed-warning',
     standalone: false,
-    templateUrl: './configuration-changed-warning.component.html',
+    templateUrl: './fields-changed-warning.component.html',
 })
-export class ConfigurationChangedWarningComponent {
+export class FieldsChangedWarningComponent {
     private stateService = inject(AdapterConfigurationStateService);
 
     @Input()
     adapterDescription: AdapterDescription;
 
-    refreshSampleEvent() {
-        this.stateService.getSampleEvent(this.adapterDescription);
+    refreshFields() {
+        this.stateService.getEventSchema(this.adapterDescription);
     }
 
     acknowledgeNoChanges() {
         this.stateService.updateState({
             adapterDescription: this.adapterDescription,
-            adapterSettingsChanged: false,
-            adapterSettingsString: JSON.stringify(
+            transformationConfigurationChanged: false,
+            transformationConfigurationString: JSON.stringify(
                 this.adapterDescription.config,
             ),
         });

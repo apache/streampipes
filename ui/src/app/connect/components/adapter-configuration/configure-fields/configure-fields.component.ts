@@ -76,6 +76,10 @@ export class ConfigureFieldsComponent {
         );
     });
 
+    transformationConfigurationChanged = computed(
+        () => this.stateService.state().transformationConfigurationChanged,
+    );
+
     eventPreview = computed(
         () => this.adapter()?.transformationConfig?.outputs?.[0] || {},
     );

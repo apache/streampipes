@@ -64,7 +64,7 @@ export class ConfigureSchemaComponent implements OnInit {
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
     isConfigurationChanged = computed(
-        () => this.stateService.state().isConfigurationChanged,
+        () => this.stateService.state().adapterSettingsChanged,
     );
 
     availableScripts = computed(
@@ -108,7 +108,7 @@ export class ConfigureSchemaComponent implements OnInit {
             !!state.adapterDescription?.transformationConfig?.inputs?.length;
 
         return (
-            state.isConfigurationChanged ||
+            state.adapterSettingsChanged ||
             state.isGettingSample ||
             state.isRunningScript ||
             !!state.sampleError ||
@@ -210,6 +210,14 @@ export class ConfigureSchemaComponent implements OnInit {
     }
 
     public next() {
+        const transformationConfigurationChanged =
+            this.stateService.checkIfTransformationConfigurationChanged(
+                this.adapterDescription,
+            );
+        this.stateService.updateState({
+            transformationConfigurationChanged:
+                transformationConfigurationChanged,
+        });
         this.nextEmitter.emit();
     }
 

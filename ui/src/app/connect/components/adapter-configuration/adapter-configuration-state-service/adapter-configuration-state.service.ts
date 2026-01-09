@@ -37,8 +37,8 @@ export class AdapterConfigurationStateService {
     private scriptLanguagesService = inject(ConnectScriptLanguagesService);
 
     private initialState: AdapterConfigurationState = {
-        isConfigurationChanged: false,
-        adapterSettingsConfigString: '',
+        adapterSettingsChanged: false,
+        adapterSettingsString: '',
 
         availableScriptMetadata: null,
         loadingAvailableScriptsError: null,
@@ -48,6 +48,9 @@ export class AdapterConfigurationStateService {
 
         currentScript: '',
         initialScript: null,
+
+        transformationConfigurationChanged: false,
+        transformationConfigurationString: '',
 
         adapterDescription: null,
         isGettingSample: false,
@@ -85,19 +88,35 @@ export class AdapterConfigurationStateService {
         // Cloning is required to trigger all computed signals
         const clonedAdapter = this.cloneAdapter(adapter);
 
-        const configChanged = this.checkIfConfigChanged(clonedAdapter);
+        const adapterSettingsChanged =
+            this.checkIfAdapterSettingsChanged(clonedAdapter);
+        const transformationConfigurationChanged =
+            this.checkIfTransformationConfigurationChanged(clonedAdapter);
 
         this.updateState({
             adapterDescription: { ...clonedAdapter },
-            isConfigurationChanged: configChanged,
+            adapterSettingsChanged: adapterSettingsChanged,
+            transformationConfigurationChanged:
+                transformationConfigurationChanged,
         });
     }
 
-    private checkIfConfigChanged(current: AdapterDescription): boolean {
-        const lastSynced = this.state().adapterSettingsConfigString;
+    private checkIfAdapterSettingsChanged(
+        current: AdapterDescription,
+    ): boolean {
+        const lastSynced = this.state().adapterSettingsString;
         if (!lastSynced) return false;
 
         const currentConfigStr = JSON.stringify(current.config);
+        return currentConfigStr !== lastSynced;
+    }
+
+    public checkIfTransformationConfigurationChanged(
+        current: AdapterDescription,
+    ): boolean {
+        const lastSynced = this.state().transformationConfigurationString;
+        if (!lastSynced || lastSynced === '') return false;
+        const currentConfigStr = JSON.stringify(current.transformationConfig);
         return currentConfigStr !== lastSynced;
     }
 
@@ -209,13 +228,20 @@ export class AdapterConfigurationStateService {
                     sampleData.samples[0],
                 ];
 
+                const transformationConfigurationChanged =
+                    this.checkIfTransformationConfigurationChanged(
+                        updatedAdapter,
+                    );
+
                 this.updateState({
                     adapterDescription: updatedAdapter,
                     isGettingSample: false,
-                    isConfigurationChanged: false, // Reset the warning
-                    adapterSettingsConfigString: JSON.stringify(
+                    adapterSettingsChanged: false, // Reset the warning
+                    adapterSettingsString: JSON.stringify(
                         updatedAdapter.config,
                     ),
+                    transformationConfigurationChanged:
+                        transformationConfigurationChanged,
                 });
 
                 this.runScript(updatedAdapter);
@@ -281,6 +307,10 @@ export class AdapterConfigurationStateService {
                     adapterDescription: updatedAdapter,
                     isGettingEventSchema: false,
                     autoLoadSchema: false,
+                    transformationConfigurationChanged: false,
+                    transformationConfigurationString: JSON.stringify(
+                        updatedAdapter.transformationConfig,
+                    ),
                 });
 
                 this.updateEventPreview(updatedAdapter);

@@ -18,6 +18,13 @@
 
 <div fxLayout="column" fxLayoutAlign="center" class="mt-20">
     <div fxFlex="90" fxLayout="column">
+        @if (transformationConfigurationChanged()) {
+            <sp-fields-changed-warning
+                [adapterDescription]="adapterDescription"
+            >
+            </sp-fields-changed-warning>
+        }
+
         @if (!isError() && !isLoading() && !timestampPresent()) {
             <sp-no-timestamp-error-hint> </sp-no-timestamp-error-hint>
         }
@@ -104,7 +111,7 @@
         color="accent"
         mat-flat-button
         (click)="next()"
-        [disabled]="!timestampPresent()"
+        [disabled]="!timestampPresent() || transformationConfigurationChanged()"
     >
         {{ 'Next' | translate }}
     </button>

@@ -42,8 +42,8 @@ import {
 
 export class AdapterConfigurationState {
     // adapter settings
-    isConfigurationChanged: boolean;
-    adapterSettingsConfigString: string;
+    adapterSettingsChanged: boolean;
+    adapterSettingsString: string;
 
     // script infos
     availableScriptMetadata: ScriptMetadata[];
@@ -53,6 +53,10 @@ export class AdapterConfigurationState {
     selectedScriptMetadata: ScriptMetadata | null;
 
     currentScript: string;
+
+    transformationConfigurationString: string;
+    transformationConfigurationChanged: boolean;
+
     // Is used to remember initial script for reset of changes
     initialScript: { scriptMetadata: ScriptMetadata; script: string } | null;
 
