@@ -184,7 +184,10 @@ export class ConfigureSchemaComponent implements OnInit {
             s => s.language === template.language,
         );
         if (meta !== undefined) {
-            this.stateService.setSelectScriptMetadata(meta);
+            this.stateService.updateState({
+                selectedScriptMetadata: meta,
+                currentScript: template.code,
+            });
         }
     }
 

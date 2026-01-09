@@ -195,12 +195,6 @@ export class AdapterConfigurationStateService {
         this.updateState({ currentScript: script });
     }
 
-    public setSelectScriptMetadata(scriptMetadata: ScriptMetadata): void {
-        this.updateState({
-            selectedScriptMetadata: scriptMetadata,
-        });
-    }
-
     private cloneAdapter(adapter: AdapterDescription): AdapterDescription {
         return {
             ...adapter,
