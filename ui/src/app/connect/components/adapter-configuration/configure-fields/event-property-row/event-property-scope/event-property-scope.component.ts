@@ -33,7 +33,6 @@ type PropertyScope =
 @Component({
     selector: 'sp-event-property-scope',
     templateUrl: './event-property-scope.component.html',
-    styleUrls: ['./event-property-scope.component.scss'],
     standalone: false,
 })
 export class EventPropertyScopeComponent implements OnInit {
