@@ -23,6 +23,7 @@ import { AppConstants } from '../services/app.constants';
 import {
     CurrentUserService,
     DialogService,
+    LocalStorageService,
     PanelType,
     SpAssetBrowserService,
     SpBreadcrumbService,
@@ -48,7 +49,6 @@ import {
 } from '@streampipes/platform-services';
 import { forkJoin, Subscription, zip } from 'rxjs';
 import { StatusBox } from './models/home.model';
-import { LocalStorageService } from '../../../projects/streampipes/shared-ui/src/lib/services/local-storage-settings.service';
 
 @Component({
     templateUrl: './home.component.html',

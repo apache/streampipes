@@ -113,7 +113,9 @@ export class SpAssetOverviewComponent implements OnInit {
 
     loadAssets(): void {
         this.assetService.getAllAssets().subscribe(result => {
-            this.existingAssets = result as SpAssetModel[];
+            this.existingAssets = (result as SpAssetModel[]).sort((a, b) =>
+                a.assetName.localeCompare(b.assetName),
+            );
             this.dataSource.sort = this.sort;
             this.dataSource.data = this.existingAssets;
         });
