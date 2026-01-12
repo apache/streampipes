@@ -397,6 +397,31 @@ export class ConnectUtils {
             .type(script);
     }
 
+    public static addScriptAsScriptTemplate(
+        templateName: string,
+        script: string,
+    ) {
+        ConnectUtils.replaceAdapterScript(script);
+        ConnectBtns.addScriptTemplateBtn().click();
+
+        ConnectBtns.scriptTemplateName().type(templateName);
+        ConnectBtns.saveScriptTemplateBtn().click();
+    }
+
+    public static useScriptTemplate(templateName: string) {
+        ConnectBtns.useScriptTemplateBtn().click();
+        ConnectBtns.selectScriptTemplateDropDown().click();
+        cy.get('mat-option').contains('span', templateName).click();
+        ConnectBtns.saveSelectScriptTemplateBtn().click();
+    }
+
+    public static deleteScriptTemplate(templateName: string) {
+        ConnectBtns.useScriptTemplateBtn().click();
+        ConnectBtns.selectScriptTemplateDropDown().click();
+        cy.get('mat-option').contains('span', templateName).click();
+        ConnectBtns.deleteScriptTemplateBtn().click();
+    }
+
     public static validateEventsInPreview(
         adapterName: string,
         amountOfProperties: number,

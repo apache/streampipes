@@ -20,7 +20,10 @@
     <div class="sp-dialog-content p-15">
         <sp-form-field [level]="3" [label]="'Template' | translate">
             <mat-form-field>
-                <mat-select [(ngModel)]="selectedTemplate">
+                <mat-select
+                    data-cy="select-script-template"
+                    [(ngModel)]="selectedTemplate"
+                >
                     <mat-select-trigger>
                         {{ selectedTemplate?.name }}
                     </mat-select-trigger>
@@ -92,6 +95,7 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions" fxLayoutGap="10px">
         <button
+            data-cy="save-select-script-template"
             mat-flat-button
             (click)="close(selectedTemplate)"
             [disabled]="selectedTemplate === undefined"
@@ -101,6 +105,18 @@
         </button>
         <button class="mat-basic" mat-flat-button (click)="close()">
             Close
+        </button>
+
+        <span fxFlex></span>
+
+        <button
+            mat-flat-button
+            data-cy="delete-script-template"
+            color="accent"
+            (click)="deleteTemplate()"
+        >
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
         </button>
     </div>
 </div>

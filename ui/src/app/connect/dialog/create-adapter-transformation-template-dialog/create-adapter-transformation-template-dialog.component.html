@@ -20,7 +20,11 @@
     <div class="sp-dialog-content p-15">
         <sp-form-field [level]="3" [label]="'Template name' | translate">
             <mat-form-field>
-                <input matInput [(ngModel)]="templateName" />
+                <input
+                    data-cy="script-template-name"
+                    matInput
+                    [(ngModel)]="templateName"
+                />
             </mat-form-field>
         </sp-form-field>
 
@@ -42,7 +46,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions" fxLayoutGap="10px">
-        <button mat-flat-button (click)="save()">
+        <button mat-flat-button data-cy="save-script-template" (click)="save()">
             <mat-icon>save</mat-icon>
             <span>{{ 'Save' | translate }}</span>
         </button>

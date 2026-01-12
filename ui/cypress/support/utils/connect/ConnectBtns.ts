@@ -206,6 +206,54 @@ export class ConnectBtns {
         });
     }
 
+    public static useScriptTemplateBtn() {
+        return cy.dataCy('use-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static saveSelectScriptTemplateBtn() {
+        return cy.dataCy('save-select-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static selectScriptTemplateDropDown() {
+        return cy.dataCy('select-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static deleteScriptTemplateBtn() {
+        return cy.dataCy('delete-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static addScriptTemplateBtn() {
+        return cy.dataCy('add-script-template-button', {
+            timeout: 10000,
+        });
+    }
+
+    public static scriptTemplateName() {
+        return cy.dataCy('script-template-name', {
+            timeout: 10000,
+        });
+    }
+
+    public static saveScriptTemplateBtn() {
+        return cy.dataCy('save-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static resetScriptBtn() {
+        return cy.dataCy('reset-script', {
+            timeout: 10000,
+        });
+    }
+
     public static configureSchemaEventPreviewOriginal() {
         return cy.dataCy('configure-schema-event-preview-original', {
             timeout: 10000,

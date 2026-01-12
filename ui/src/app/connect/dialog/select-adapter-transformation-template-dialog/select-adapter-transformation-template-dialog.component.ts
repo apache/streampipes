@@ -47,6 +47,14 @@ export class SelectAdapterTransformationTemplateDialogComponent implements OnIni
         });
     }
 
+    deleteTemplate() {
+        this.templateService
+            .delete(this.selectedTemplate.elementId)
+            .subscribe(() => {
+                this.dialogRef.close();
+            });
+    }
+
     close(selectedTemplate = undefined): void {
         this.dialogRef.close(selectedTemplate);
     }
