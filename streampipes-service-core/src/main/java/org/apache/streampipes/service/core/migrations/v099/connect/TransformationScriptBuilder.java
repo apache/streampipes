@@ -21,7 +21,10 @@ package org.apache.streampipes.service.core.migrations.v099.connect;
 public class TransformationScriptBuilder {
   private StringBuilder sb;
 
+  private boolean scriptAcive;
+
   private TransformationScriptBuilder() {
+    scriptAcive = false;
   }
 
   public static TransformationScriptBuilder create() {
@@ -32,8 +35,17 @@ public class TransformationScriptBuilder {
   }
 
   public TransformationScriptBuilder appendLine(String line) {
+    if (!line.startsWith("//")) {
+      scriptAcive = true;
+    }
+
     sb.append("  ").append(line).append("\n");
     return this;
+  }
+
+  // Used to check if any script lines were added
+  public boolean isScriptActive() {
+    return scriptAcive;
   }
 
   public String build() {

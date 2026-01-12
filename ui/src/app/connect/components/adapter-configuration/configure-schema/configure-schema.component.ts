@@ -70,6 +70,8 @@ export class ConfigureSchemaComponent implements OnInit {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
+    scriptActive = computed(() => this.stateService.state().scriptActive);
+
     isConfigurationChanged = computed(
         () => this.stateService.state().adapterSettingsChanged,
     );
@@ -258,6 +260,23 @@ export class ConfigureSchemaComponent implements OnInit {
                 },
             },
         );
+    }
+
+    public toggleScriptActive() {
+        if (this.scriptActive()) {
+            const adapterDescription =
+                this.stateService.state().adapterDescription;
+            adapterDescription.transformationConfig.outputs =
+                adapterDescription.transformationConfig.inputs;
+            this.stateService.updateState({
+                adapterDescription: adapterDescription,
+                scriptActive: !this.scriptActive(),
+            });
+        } else {
+            this.stateService.updateState({
+                scriptActive: !this.scriptActive(),
+            });
+        }
     }
 
     public cancel() {

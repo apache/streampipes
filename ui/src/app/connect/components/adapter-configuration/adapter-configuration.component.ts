@@ -65,6 +65,7 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
             this.adapterDescription.transformationConfig = {
                 inputs: [],
                 language: 'javascript',
+                scriptActive: false,
                 outputs: [],
                 script: '',
                 reduceEventRateRule: null,

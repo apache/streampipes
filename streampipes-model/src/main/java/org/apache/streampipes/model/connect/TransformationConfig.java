@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TransformationConfig {
+  private boolean scriptActive;
   private String language;
   private String script;
   private List<Map<String, Object>> inputs;
@@ -82,5 +83,13 @@ public class TransformationConfig {
 
   public void setRemoveDuplicateRule(RemoveDuplicateRule removeDuplicateRule) {
     this.removeDuplicateRule = removeDuplicateRule;
+  }
+
+  public boolean isScriptActive() {
+    return scriptActive;
+  }
+
+  public void setScriptActive(boolean scriptActive) {
+    this.scriptActive = scriptActive;
   }
 }

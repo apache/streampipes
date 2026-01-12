@@ -47,6 +47,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -97,6 +98,7 @@ class MigrateAdaptersToUseScriptTest {
 
     // Assert
     assertNotNull(adapter.getTransformationConfig());
+    assertFalse(adapter.getTransformationConfig().isScriptActive());
     assertEquals(1, adapter.getDataStream().getEventSchema().getEventProperties().size());
 
     EventPropertyPrimitive updatedProperty = (EventPropertyPrimitive) adapter.getDataStream()
@@ -121,6 +123,7 @@ class MigrateAdaptersToUseScriptTest {
 
     // Assert
     assertNotNull(adapter.getTransformationConfig());
+    assertTrue(adapter.getTransformationConfig().isScriptActive());
     var script = adapter.getTransformationConfig().getScript();
     assertTrue(script.contains("event['new'] = event['old'];"));
     assertTrue(adapter.getRules().isEmpty()); // Ensure old rules are cleared
@@ -136,9 +139,13 @@ class MigrateAdaptersToUseScriptTest {
     when(mockStorage.findAll()).thenReturn(List.of(adapter));
     migration.executeMigration();
 
+
+
     var script = adapter.getTransformationConfig().getScript();
     assertTrue(script.contains("delete event['unwantedField'];"));
     verify(mockStorage).updateElement(adapter);
+
+    assertTrue(adapter.getTransformationConfig().isScriptActive());
   }
 
   @Test
@@ -150,6 +157,7 @@ class MigrateAdaptersToUseScriptTest {
 
     var script = adapter.getTransformationConfig().getScript();
     assertTrue(script.contains("event['timestamp'] = Date.now();"));
+    assertTrue(adapter.getTransformationConfig().isScriptActive());
   }
 
   @Test
@@ -161,6 +169,7 @@ class MigrateAdaptersToUseScriptTest {
 
     var script = adapter.getTransformationConfig().getScript();
     assertTrue(script.contains("event['key'] = 'static-val';"));
+    assertTrue(adapter.getTransformationConfig().isScriptActive());
   }
 
   @Test
@@ -177,6 +186,7 @@ class MigrateAdaptersToUseScriptTest {
 
     var script = adapter.getTransformationConfig().getScript();
     assertTrue(script.contains("event['temperature'] = Number(event['temperature']) * 1.8"));
+    assertTrue(adapter.getTransformationConfig().isScriptActive());
   }
 
   @Test
@@ -193,6 +203,7 @@ class MigrateAdaptersToUseScriptTest {
 
     String script = adapter.getTransformationConfig().getScript();
     assertTrue(script.contains(".replace(new RegExp('ID-', 'g'), '')"));
+    assertTrue(adapter.getTransformationConfig().isScriptActive());
   }
 
   @Test
@@ -213,6 +224,7 @@ class MigrateAdaptersToUseScriptTest {
     String script = adapter.getTransformationConfig().getScript();
     assertTrue(script.contains("new Date(event['timestamp_str']).getTime()"));
     assertTrue(script.contains("// Target format hint: yyyy-MM-dd"));
+    assertTrue(adapter.getTransformationConfig().isScriptActive());
   }
 
   @Test
@@ -232,6 +244,7 @@ class MigrateAdaptersToUseScriptTest {
     // Assert
     String script = adapter.getTransformationConfig().getScript();
     assertTrue(script.contains("event['timestamp_sec'] = Number(event['timestamp_sec']) * 1000;"));
+    assertTrue(adapter.getTransformationConfig().isScriptActive());
   }
 
   @Test
@@ -265,6 +278,7 @@ class MigrateAdaptersToUseScriptTest {
     // Ensure the script still contains the standard boilerplate even if this rule is stateful
     assertTrue(resultConfig.getScript().contains("function transform(event)"),
                "Script should still be generated as a container");
+    assertFalse(adapter.getTransformationConfig().isScriptActive());
   }
 
   @Test
@@ -294,6 +308,7 @@ class MigrateAdaptersToUseScriptTest {
 
     // Verify that the legacy rules list is cleared
     assertTrue(adapter.getRules().isEmpty(), "The legacy rules list must be cleared after migration");
+    assertFalse(adapter.getTransformationConfig().isScriptActive());
 
     // Verify storage interaction
     verify(mockStorage).updateElement(adapter);
@@ -326,6 +341,7 @@ class MigrateAdaptersToUseScriptTest {
         (EventPropertyPrimitive) adapter.getDataStream().getEventSchema().getEventProperties().get(0);
     assertEquals(targetDataType, propertyAfterMigration.getRuntimeType(),
                  "The event property runtime type should be updated to the target data type");
+    assertFalse(adapter.getTransformationConfig().isScriptActive());
 
     // Verify storage interaction
     verify(mockStorage).updateElement(adapter);
@@ -364,6 +380,8 @@ class MigrateAdaptersToUseScriptTest {
 
     assertEquals(oldUnit, propertyAfterMigration.getAdditionalMetadata().get("fromMeasurementUnit").toString());
     assertEquals(newUnit, propertyAfterMigration.getAdditionalMetadata().get("toMeasurementUnit").toString());
+
+    assertFalse(adapter.getTransformationConfig().isScriptActive());
 
     // 3. Verify Persistence
     verify(mockStorage).updateElement(adapter);

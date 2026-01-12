@@ -118,7 +118,9 @@ public class MigrateAdaptersToUseScript implements Migration {
       new AdapterRuleConverter().processRule(rule, adapter, config, scriptBuilder);
     }
 
+    config.setScriptActive(scriptBuilder.isScriptActive());
     config.setScript(scriptBuilder.build());
+
     adapter.setTransformationConfig(config);
 
     // Clear legacy rules after successful migration

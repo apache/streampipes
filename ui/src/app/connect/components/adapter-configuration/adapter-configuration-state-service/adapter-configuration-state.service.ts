@@ -45,6 +45,7 @@ export class AdapterConfigurationStateService {
         adapterSettingsChanged: false,
         adapterSettingsString: '',
 
+        scriptActive: false,
         availableScriptMetadata: null,
         loadingAvailableScriptsError: null,
         isLoadingAvailableScripts: false,
@@ -227,6 +228,14 @@ export class AdapterConfigurationStateService {
                     sampleData.samples[0],
                 ];
 
+                const scriptActive =
+                    updatedAdapter.transformationConfig.scriptActive;
+
+                if (!scriptActive) {
+                    updatedAdapter.transformationConfig.outputs =
+                        updatedAdapter.transformationConfig.inputs;
+                }
+
                 const transformationConfigurationChanged =
                     this.checkIfTransformationConfigurationChanged(
                         updatedAdapter,
@@ -243,7 +252,9 @@ export class AdapterConfigurationStateService {
                         transformationConfigurationChanged,
                 });
 
-                this.runScript(updatedAdapter);
+                if (scriptActive) {
+                    this.runScript(updatedAdapter);
+                }
             },
             error: (error: HttpErrorResponse) => {
                 // Update state with error AND metadata (error/idle)

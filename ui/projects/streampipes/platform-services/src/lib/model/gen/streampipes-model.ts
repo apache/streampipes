@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-01-02 16:02:16.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-12 16:58:38.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -4393,6 +4392,7 @@ export class TransformationConfig {
     reduceEventRateRule: ReduceEventRateRule;
     removeDuplicateRule: RemoveDuplicateRule;
     script: string;
+    scriptActive: boolean;
 
     static fromData(
         data: TransformationConfig,
@@ -4416,6 +4416,7 @@ export class TransformationConfig {
             data.removeDuplicateRule,
         );
         instance.script = data.script;
+        instance.scriptActive = data.scriptActive;
         return instance;
     }
 }
