@@ -75,6 +75,7 @@ describe('Test File Replay Adapter', () => {
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(false);
 
+        cy.wait(1000);
         ConnectBtns.configureSchemaRunScriptBtn().click();
         cy.wait(1000);
         ConnectBtns.configureSchemaNextBtn().click();

@@ -45,7 +45,6 @@ export class AdapterConfigurationStateService {
         adapterSettingsChanged: false,
         adapterSettingsString: '',
 
-        scriptActive: false,
         availableScriptMetadata: null,
         loadingAvailableScriptsError: null,
         isLoadingAvailableScripts: false,

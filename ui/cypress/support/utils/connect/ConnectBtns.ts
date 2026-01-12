@@ -194,6 +194,12 @@ export class ConnectBtns {
         return cy.dataCy('event-property-row', { timeout: 10000 });
     }
 
+    public static scriptActiveToggle() {
+        return cy.dataCy('toggle-script-active', {
+            timeout: 10000,
+        });
+    }
+
     public static configureSchemaScriptEditor() {
         return cy.dataCy('configure-schema-script-editor', {
             timeout: 10000,

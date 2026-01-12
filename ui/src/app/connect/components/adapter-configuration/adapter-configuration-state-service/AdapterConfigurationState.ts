@@ -28,7 +28,6 @@ export class AdapterConfigurationState {
     adapterSettingsString: string;
 
     // script infos
-    scriptActive: boolean;
     availableScriptMetadata: ScriptMetadata[];
     loadingAvailableScriptsError: SpLogMessage | null;
     isLoadingAvailableScripts: boolean;

@@ -30,7 +30,6 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import {
     AdapterDescription,
-    ConnectScriptLanguagesService,
     ConnectTransformationScriptTemplate,
     ScriptMetadata,
 } from '@streampipes/platform-services';
@@ -70,7 +69,11 @@ export class ConfigureSchemaComponent implements OnInit {
     @Output()
     nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    scriptActive = computed(() => this.stateService.state().scriptActive);
+    scriptActive = computed(
+        () =>
+            this.stateService.state().adapterDescription?.transformationConfig
+                .scriptActive,
+    );
 
     isConfigurationChanged = computed(
         () => this.stateService.state().adapterSettingsChanged,
@@ -263,19 +266,17 @@ export class ConfigureSchemaComponent implements OnInit {
     }
 
     public toggleScriptActive() {
+        const adapterDescription = this.stateService.state().adapterDescription;
+
         if (this.scriptActive()) {
-            const adapterDescription =
-                this.stateService.state().adapterDescription;
             adapterDescription.transformationConfig.outputs =
                 adapterDescription.transformationConfig.inputs;
-            this.stateService.updateState({
-                adapterDescription: adapterDescription,
-                scriptActive: !this.scriptActive(),
-            });
+            adapterDescription.transformationConfig.scriptActive = false;
+            this.stateService.updateAdapter(adapterDescription);
         } else {
-            this.stateService.updateState({
-                scriptActive: !this.scriptActive(),
-            });
+            adapterDescription.transformationConfig.scriptActive = true;
+            this.stateService.updateAdapter(adapterDescription);
+            this.stateService.runScript(adapterDescription);
         }
     }
 
