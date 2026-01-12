@@ -149,23 +149,11 @@ export class ConnectEventSchemaUtils {
         }).click();
     }
 
-    public static regexValueInput() {
-        return cy.dataCy('regex-value');
-    }
-
-    public static regexReplaceWithValueInput() {
-        return cy.dataCy('regex-replace-with-value');
-    }
-
-    public static regexReplaceAllCheckbox() {
-        return cy.dataCy('regex-replace-all-value');
-    }
-
     /**
      * Function to escape special characters in a string for use in Cypress
      * selectors
      */
-    public static escape(selector: string): string {
+    private static escape(selector: string): string {
         return selector
             .replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1')
             .toLowerCase();

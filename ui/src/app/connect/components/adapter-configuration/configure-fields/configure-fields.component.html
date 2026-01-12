@@ -95,7 +95,12 @@
     <button class="mat-basic" mat-flat-button (click)="cancel()">
         {{ 'Cancel' | translate }}
     </button>
-    <button class="mat-basic stepper-button" mat-flat-button (click)="goBack()">
+    <button
+        class="mat-basic stepper-button"
+        mat-flat-button
+        data-cy="configure-fields-back-button"
+        (click)="goBack()"
+    >
         {{ 'Back' | translate }}
     </button>
     <button

@@ -27,6 +27,11 @@ import { PipelineUtils } from '../pipeline/PipelineUtils';
 import { GeneralUtils } from '../GeneralUtils';
 
 export class ConnectUtils {
+    public static goToConnect() {
+        cy.visit('#/connect');
+        cy.dataCy('connect-create-new-adapter-button').should('be.visible');
+    }
+
     public static testAdapter(
         adapterConfiguration: AdapterInput,
         adapterStartFails = false,
@@ -106,7 +111,7 @@ export class ConnectUtils {
         );
     }
 
-    private static configureSchema(adapterConfiguration: AdapterInput) {
+    public static configureSchema(adapterConfiguration: AdapterInput) {
         ConnectBtns.configureSchemaEventPreviewOriginal().should('be.visible');
         ConnectBtns.configureSchemaEventPreviewResult().should('be.visible');
 
@@ -117,7 +122,7 @@ export class ConnectUtils {
         ConnectBtns.configureSchemaNextBtn().click();
     }
 
-    private static configureDimensionProperties(
+    public static configureDimensionProperties(
         adapterConfiguration: AdapterInput,
     ) {
         if (adapterConfiguration.dimensionProperties.length > 0) {
@@ -153,17 +158,11 @@ export class ConnectUtils {
         ConnectUtils.testAdapter(builder.build());
     }
 
-    public static goToConnect() {
-        cy.visit('#/connect');
-        cy.dataCy('connect-create-new-adapter-button').should('be.visible');
-    }
-
     public static goToNewAdapterPage() {
         cy.dataCy('connect-create-new-adapter-button').click();
     }
 
     public static selectAdapter(name: string) {
-        // Select adapter
         cy.get('#' + name).click();
     }
 
@@ -325,33 +324,9 @@ export class ConnectUtils {
         this.checkAdapterAndAssociatedPipelinesDeleted();
     }
 
-    // NOTE: this function will leave the adapter and associated pipelines running,
-    // please make sure to clean up after calling this function
-    public static deleteAdapterAndAssociatedPipelinesPermissionDenied() {
-        // Associated pipelines not owned by the user (unless admin) should not be deleted during adapter deletion
-        this.goToConnect();
-        ConnectBtns.openActionsMenu('simulator');
-        ConnectBtns.deleteAdapter().should('have.length', 1);
-        this.clickDelete();
-        ConnectBtns.deleteAdapterAndAssociatedPipelineConfirmation().should(
-            'be.visible',
-        );
-        ConnectBtns.deleteAdapterAndAssociatedPipelineConfirmation().click();
-        cy.dataCy('adapter-deletion-permission-denied', {
-            timeout: 10000,
-        }).should('be.visible');
-        cy.get('.sp-dialog-actions').click();
-        this.checkAdapterNotDeleted();
-    }
-
     public static clickDelete() {
         ConnectBtns.deleteAdapter().click();
         ConnectBtns.deleteAdapterConfirmationButton().click();
-    }
-
-    public static checkAdapterNotDeleted() {
-        this.goToConnect();
-        ConnectBtns.deleteAdapter().should('have.length', 1);
     }
 
     public static checkAdapterAndAssociatedPipelinesDeleted() {

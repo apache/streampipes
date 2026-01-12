@@ -16,36 +16,17 @@
  *
  */
 
-export class UserBtns {
-    public static editUserBtn(name: string) {
-        cy.dataCy(`user-edit-${name}`).click();
+export class SharedBtns {
+    // Confirm dialog
+    public static confirmDialog() {
+        return cy.dataCy('confirm-dialog', { timeout: 10000 });
     }
 
-    public static userRoleCheckbox(role) {
-        return cy.dataCy('role-' + role).children();
+    public static confirmDialogConfirmBtn() {
+        return cy.dataCy('confirm-delete', { timeout: 10000 });
     }
 
-    public static groupCheckbox(group: string) {
-        return cy.dataCy('group-' + group).children();
-    }
-
-    public static saveEditUserBtn() {
-        return cy.dataCy('sp-element-edit-user-save');
-    }
-
-    public static newUserBtn() {
-        return cy.dataCy('add-new-user', { timeout: 10000 });
-    }
-
-    public static activateUserBtn() {
-        return cy.dataCy('new-user-enabled');
-    }
-
-    public static deleteUserBtn(name) {
-        return cy.dataCy('user-delete-btn-' + name);
-    }
-
-    public static serviceDeleteBtn() {
-        return cy.dataCy('service-delete-btn');
+    public static confirmDialogCancelBtn() {
+        return cy.dataCy('cancel-delete', { timeout: 10000 });
     }
 }

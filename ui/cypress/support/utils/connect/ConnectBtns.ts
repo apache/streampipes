@@ -186,6 +186,10 @@ export class ConnectBtns {
         return cy.dataCy('configure-schema-next-button');
     }
 
+    public static configureSchemaBackBtn() {
+        return cy.dataCy('configure-schema-back-button');
+    }
+
     public static eventPropertyRow() {
         return cy.dataCy('event-property-row', { timeout: 10000 });
     }
@@ -216,6 +220,10 @@ export class ConnectBtns {
 
     public static configureFieldsNextBtn() {
         return cy.dataCy('configure-fields-next-button');
+    }
+
+    public static configureFieldsBackBtn() {
+        return cy.dataCy('configure-fields-back-button');
     }
 
     public static semanticTypeInput() {
