@@ -19,6 +19,7 @@
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
+import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 
 describe('Connect value rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -30,6 +31,10 @@ describe('Connect value rule transformations', () => {
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(true);
 
+        ConnectUtils.replaceAdapterScript(
+            'event.timestamp = new Date(event.timestamp).getTime();\n return event;\n}',
+        );
+        ConnectBtns.configureSchemaRunScriptBtn().click();
         cy.wait(1000);
         ConnectUtils.finishEventSchemaConfiguration();
 
