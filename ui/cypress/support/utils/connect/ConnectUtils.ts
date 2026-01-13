@@ -290,7 +290,7 @@ export class ConnectUtils {
     }
 
     public static closeAdapterPreview() {
-        cy.get('button').contains('Close').parent().click();
+        cy.dataCy('close-adapter-started-dialog-button').click();
     }
 
     public static deleteAdapter(adapterName: string) {
@@ -491,11 +491,11 @@ export class ConnectUtils {
 
     public static allAdapterActionsDialog() {
         // Click next
-        cy.get('button').contains('Next').parent().click();
+        cy.dataCy('all-adapters-action-next-button').click();
         // Wait for the adapters to start/stop
         cy.wait(2000);
         // Close dialog
-        cy.get('button').contains('Close').parent().click();
+        cy.dataCy('all-adapters-action-next-button').click();
     }
 
     public static validateAdapterIsRunning() {
