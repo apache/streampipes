@@ -42,6 +42,15 @@ public class AdapterPipelineGeneratorBase {
   ) {
     var elements = new ArrayList<IAdapterPipelineElement>();
 
+    if (includeScript) {
+      elements.add(new ScriptTransformationPipelineElement(
+          adapterDescription.getTransformationConfig()
+                            .getLanguage(),
+          adapterDescription.getTransformationConfig()
+                            .getScript()
+      ));
+    }
+
     List<TransformationRule> transformationRules = new ArrayList<>();
     if (includeStateful) {
       transformationRules.addAll(getReduceEventTransformationRule(adapterDescription));
@@ -51,14 +60,6 @@ public class AdapterPipelineGeneratorBase {
     transformationRules.addAll(getUnitConvertionRules(adapterDescription));
     elements.add(new AdapterTransformationPipelineElement(transformationRules));
 
-    if (includeScript) {
-      elements.add(new ScriptTransformationPipelineElement(
-          adapterDescription.getTransformationConfig()
-                            .getLanguage(),
-          adapterDescription.getTransformationConfig()
-                            .getScript()
-      ));
-    }
 
     return elements;
   }
