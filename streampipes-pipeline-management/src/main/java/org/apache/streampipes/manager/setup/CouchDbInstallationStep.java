@@ -22,6 +22,7 @@ import org.apache.streampipes.manager.setup.design.UserDesignDocument;
 import org.apache.streampipes.manager.setup.tasks.AddAssetManagementViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddDataLakeMeasureViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddDefaultPipelineTemplatesTask;
+import org.apache.streampipes.manager.setup.tasks.AddScriptTemplateViewTask;
 import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -79,6 +80,7 @@ public class CouchDbInstallationStep extends InstallationStep {
     addPipelineView();
     new AddDataLakeMeasureViewTask().execute();
     new AddAssetManagementViewTask().execute();
+    new AddScriptTemplateViewTask().execute();
   }
 
   private void addNotificationView() {
