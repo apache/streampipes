@@ -112,6 +112,7 @@ export class ConnectUtils {
     }
 
     public static configureSchema(adapterConfiguration: AdapterInput) {
+        ConnectBtns.configureSchemaEventPreviewOriginal().should('be.visible');
         ConnectBtns.scriptActiveToggle().click();
 
         ConnectBtns.configureSchemaEventPreviewOriginal().should('be.visible');
