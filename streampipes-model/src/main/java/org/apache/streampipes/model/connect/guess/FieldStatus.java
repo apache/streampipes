@@ -20,6 +20,5 @@ package org.apache.streampipes.model.connect.guess;
 
 public enum FieldStatus {
   GOOD,
-  BAD,
-  ATTENTION
+  BAD
 }

@@ -164,6 +164,7 @@
                         </mat-button-toggle>
                     </mat-button-toggle-group>
                 </div>
+
                 @if (isSampleLoading()) {
                     <div class="sp-dialog-content">
                         <div
@@ -184,6 +185,9 @@
                             [showDetails]="true"
                         ></sp-exception-message>
                     } @else {
+                        <sp-show-field-status-infos
+                            [fieldStatusInfos]="fieldStatusInfos()"
+                        ></sp-show-field-status-infos>
                         <sp-adapter-event-preview
                             dataCy="configure-schema-event-preview-original"
                             [mode]="sourceViewMode()"

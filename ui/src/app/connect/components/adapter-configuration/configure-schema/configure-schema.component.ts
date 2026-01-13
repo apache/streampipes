@@ -98,10 +98,15 @@ export class ConfigureSchemaComponent implements OnInit {
     isSampleLoading = computed(() => this.stateService.state().isGettingSample);
 
     sampleErrorMessage = computed(() => this.stateService.state().sampleError);
+
     input = computed(
         () =>
             this.stateService.state().adapterDescription?.transformationConfig
                 ?.inputs?.[0] || {},
+    );
+
+    fieldStatusInfos = computed(
+        () => this.stateService.state().sampleFieldStatusInfos || {},
     );
 
     isRunningScript = computed(() => this.stateService.state().isRunningScript);

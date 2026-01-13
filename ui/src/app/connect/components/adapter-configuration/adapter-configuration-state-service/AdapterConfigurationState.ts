@@ -18,6 +18,7 @@
 
 import {
     AdapterDescription,
+    FieldStatusInfo,
     ScriptMetadata,
     SpLogMessage,
 } from '@streampipes/platform-services';
@@ -45,7 +46,9 @@ export class AdapterConfigurationState {
     // configure schema
     adapterDescription: AdapterDescription;
     isGettingSample: boolean;
+
     sampleError: SpLogMessage | null;
+    sampleFieldStatusInfos: { [index: string]: FieldStatusInfo } | null;
     isRunningScript: boolean;
     scriptError: SpLogMessage | null;
 

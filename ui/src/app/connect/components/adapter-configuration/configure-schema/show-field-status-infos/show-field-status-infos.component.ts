@@ -16,32 +16,25 @@
  *
  */
 
-package org.apache.streampipes.model.connect.guess;
+import { Component, computed, input } from '@angular/core';
+import { FieldStatusInfo } from '@streampipes/platform-services';
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
+@Component({
+    selector: 'sp-show-field-status-infos',
+    standalone: false,
+    templateUrl: './show-field-status-infos.component.html',
+    styleUrl: './show-field-status-infos.component.scss',
+})
+export class ShowFieldStatusInfosComponent {
+    fieldStatusInfos = input<{ [index: string]: FieldStatusInfo }>({});
 
-import java.util.List;
-import java.util.Map;
+    badFieldStatusInfos = computed(() =>
+        Object.entries(this.fieldStatusInfos()).filter(
+            ([, info]) => info.fieldStatus === 'BAD',
+        ),
+    );
 
-@TsModel
-public class SampleData {
-  // A SampleEvent contains at least one sample
-  private List<Map<String, Object>> samples;
-  private Map<String, FieldStatusInfo> fieldStatusInfos;
-
-  public List<Map<String, Object>> getSamples() {
-    return samples;
-  }
-
-  public void setSamples(List<Map<String, Object>> samples) {
-    this.samples = samples;
-  }
-
-  public Map<String, FieldStatusInfo> getFieldStatusInfos() {
-    return fieldStatusInfos;
-  }
-
-  public void setFieldStatusInfos(Map<String, FieldStatusInfo> fieldStatusInfos) {
-    this.fieldStatusInfos = fieldStatusInfos;
-  }
+    hasBadFieldStatusInfos = computed(
+        () => this.badFieldStatusInfos().length > 0,
+    );
 }

@@ -126,7 +126,7 @@ public class OpcUaSchemaProvider {
             Map.of(),
             fieldStatusInfos,
             null,
-            FieldStatusInfo.bad(additionalInfo, false));
+            FieldStatusInfo.bad(additionalInfo));
       }
     }
   }

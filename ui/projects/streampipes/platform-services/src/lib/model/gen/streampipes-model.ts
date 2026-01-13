@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-01-12 16:58:38.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-13 08:54:16.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -2076,7 +2076,6 @@ export class ExtensionItemInstallationRequest {
 
 export class FieldStatusInfo {
     additionalInfo: string;
-    changesRequired: boolean;
     fieldStatus: FieldStatus;
 
     static fromData(
@@ -2088,7 +2087,6 @@ export class FieldStatusInfo {
         }
         const instance = target || new FieldStatusInfo();
         instance.additionalInfo = data.additionalInfo;
-        instance.changesRequired = data.changesRequired;
         instance.fieldStatus = data.fieldStatus;
         return instance;
     }
@@ -3779,6 +3777,7 @@ export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
 }
 
 export class SampleData {
+    fieldStatusInfos: { [index: string]: FieldStatusInfo };
     samples: { [index: string]: any }[];
 
     static fromData(data: SampleData, target?: SampleData): SampleData {
@@ -3786,6 +3785,9 @@ export class SampleData {
             return data;
         }
         const instance = target || new SampleData();
+        instance.fieldStatusInfos = __getCopyObjectFn(FieldStatusInfo.fromData)(
+            data.fieldStatusInfos,
+        );
         instance.samples = __getCopyArrayFn(
             __getCopyObjectFn(__identity<any>()),
         )(data.samples);
@@ -4603,7 +4605,7 @@ export type EventPropertyUnion =
     | EventPropertyNested
     | EventPropertyPrimitive;
 
-export type FieldStatus = 'GOOD' | 'BAD' | 'ATTENTION';
+export type FieldStatus = 'GOOD' | 'BAD';
 
 export type Isa95Type =
     | 'PROCESS_CELL'

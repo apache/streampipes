@@ -60,6 +60,7 @@ export class AdapterConfigurationStateService {
         adapterDescription: null,
         isGettingSample: false,
         sampleError: null,
+        sampleFieldStatusInfos: null,
         isRunningScript: false,
         scriptError: null,
 
@@ -249,6 +250,7 @@ export class AdapterConfigurationStateService {
                     ),
                     transformationConfigurationChanged:
                         transformationConfigurationChanged,
+                    sampleFieldStatusInfos: sampleData.fieldStatusInfos,
                 });
 
                 if (scriptActive) {
