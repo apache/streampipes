@@ -28,19 +28,27 @@
         class="small-select"
         [attr.data-cy]="'property-scope-' + label"
     >
-        <mat-option value="MEASUREMENT_PROPERTY"
+        <mat-option
+            value="MEASUREMENT_PROPERTY"
+            data-cy="measurement-property-scope-value"
             >{{ 'Measurement' | translate }}
         </mat-option>
         @if (runtimeType !== 'FLOAT' && runtimeType !== 'DOUBLE') {
-            <mat-option value="DIMENSION_PROPERTY"
+            <mat-option
+                value="DIMENSION_PROPERTY"
+                data-cy="dimension-property-scope-value"
                 >{{ 'Dimension' | translate }}
             </mat-option>
         }
-        <mat-option value="HEADER_PROPERTY"
+        <mat-option
+            value="HEADER_PROPERTY"
+            data-cy="header-property-scope-value"
             >{{ 'Header' | translate }}
         </mat-option>
         @if (isNumber) {
-            <mat-option value="TIMESTAMP_PROPERTY"
+            <mat-option
+                value="TIMESTAMP_PROPERTY"
+                data-cy="timestamp-property-scope-value"
                 >{{ 'Timestamp' | translate }}
             </mat-option>
         }

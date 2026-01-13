@@ -22,17 +22,17 @@ import { PropertyDataTypeChange } from '../../model/PropertyDataTypeChange';
 
 export class ConnectEventSchemaUtils {
     public static markPropertyAsMeasurement(propertyName: string) {
-        this.selectPropertyScopeDropdown(propertyName, 'Measurement');
+        this.selectPropertyScopeDropdown(propertyName, 'measurement');
     }
 
     public static markPropertyAsDimension(propertyName: string) {
-        this.selectPropertyScopeDropdown(propertyName, 'Dimension');
+        this.selectPropertyScopeDropdown(propertyName, 'dimension');
     }
 
     public static markPropertyAsTimestamp(propertyName: string) {
         this.configureFieldsNextBtnDisabled();
 
-        this.selectPropertyScopeDropdown(propertyName, 'Timestamp');
+        this.selectPropertyScopeDropdown(propertyName, 'timestamp');
 
         this.configureFieldsNextBtnEnabled();
     }
@@ -41,11 +41,9 @@ export class ConnectEventSchemaUtils {
         propertyName: string,
         propertyScope: string,
     ) {
-        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
-            .click()
-            .get('.mdc-list-item__primary-text')
-            .contains(propertyScope)
-            .click();
+        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 }).click();
+
+        cy.dataCy(propertyScope + '-property-scope-value').click();
     }
 
     public static addTimestampProperty() {
