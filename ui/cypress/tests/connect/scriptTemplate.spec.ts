@@ -38,13 +38,14 @@ describe('Validate Warning Pops For Configuration Changes ', () => {
         ConnectUtils.goToNewAdapterPage();
         ConnectUtils.selectAdapter(adapter.adapterType);
         ConnectUtils.configureAdapter(adapter);
+        ConnectBtns.scriptActiveToggle().click();
     });
 
     it('Perform Test', () => {
         addScriptTemplate(TEMPLATE_NAME);
         validateScriptTemplateIsStored(TEMPLATE_NAME);
         deleteScriptTemplate(TEMPLATE_NAME);
-        validateScriptTemplateIsDeleted(TEMPLATE_NAME);
+        validateScriptTemplateIsDeleted();
     });
 
     const addScriptTemplate = (templateName: string) => {
