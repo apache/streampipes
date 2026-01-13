@@ -18,7 +18,6 @@
 
 import {
     AfterViewInit,
-    ChangeDetectorRef,
     Component,
     inject,
     OnInit,
@@ -39,6 +38,7 @@ import {
     DataDownloadDialogComponent,
     DialogRef,
     DialogService,
+    LocalStorageService,
     PanelType,
     SpBreadcrumbService,
     SpTableComponent,
@@ -51,7 +51,6 @@ import { DeleteExportProviderComponent } from '../../dialog/delete-export-provid
 import { TranslateService } from '@ngx-translate/core';
 import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
-import { LocalStorageService } from '../../../../../projects/streampipes/shared-ui/src/lib/services/local-storage-settings.service';
 
 @Component({
     selector: 'sp-datalake-configuration',
