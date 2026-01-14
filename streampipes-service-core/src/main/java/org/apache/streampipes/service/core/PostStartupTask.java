@@ -20,8 +20,8 @@ package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
-import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
+import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
