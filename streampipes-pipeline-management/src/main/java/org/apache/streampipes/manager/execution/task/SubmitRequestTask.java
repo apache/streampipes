@@ -20,17 +20,13 @@ package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.manager.execution.http.BasePipelineElementSubmitter;
-import org.apache.streampipes.manager.execution.provider.PipelineElementProvider;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
 public class SubmitRequestTask implements PipelineExecutionTask {
 
-  private final PipelineElementProvider elementProvider;
   private final BasePipelineElementSubmitter submitter;
 
-  public SubmitRequestTask(BasePipelineElementSubmitter submitter,
-                           PipelineElementProvider elementProvider) {
-    this.elementProvider = elementProvider;
+  public SubmitRequestTask(BasePipelineElementSubmitter submitter) {
     this.submitter = submitter;
   }
 
@@ -41,7 +37,7 @@ public class SubmitRequestTask implements PipelineExecutionTask {
 
   @Override
   public void executeTask(Pipeline pipeline, PipelineExecutionInfo executionInfo) {
-    var processorsAndSinks = elementProvider.getProcessorsAndSinks(executionInfo);
+    var processorsAndSinks = executionInfo.getProcessorsAndSinks();
 
     var status = submitter.submit(processorsAndSinks);
 

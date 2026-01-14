@@ -20,8 +20,10 @@ package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
-import org.apache.streampipes.manager.storage.RunningPipelineElementStorage;
+import org.apache.streampipes.manager.util.PipelineElementUtils;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.message.PipelineStatusMessage;
 import org.apache.streampipes.model.message.PipelineStatusMessageType;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -45,13 +47,14 @@ public class AfterInvocationTask implements PipelineExecutionTask {
   public void executeTask(Pipeline pipeline,
                           PipelineExecutionInfo executionInfo) {
     var graphs = executionInfo.getProcessorsAndSinks();
-    storeInvocationGraphs(pipeline.getPipelineId(), graphs);
+    storeInvocationGraphs(pipeline, graphs);
     addPipelineStatus(pipeline);
   }
 
-  private void storeInvocationGraphs(String pipelineId,
-                                     List<InvocableStreamPipesEntity> graphs) {
-    RunningPipelineElementStorage.runningProcessorsAndSinks.put(pipelineId, graphs);
+  private void storeInvocationGraphs(Pipeline pipeline,
+                                     List<InvocableStreamPipesEntity> pipelineElements) {
+    pipeline.setActions(PipelineElementUtils.filterInvocation(pipelineElements, DataSinkInvocation.class));
+    pipeline.setSepas(PipelineElementUtils.filterInvocation(pipelineElements, DataProcessorInvocation.class));
   }
 
   private void addPipelineStatus(Pipeline pipeline) {

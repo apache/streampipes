@@ -16,15 +16,24 @@
  *
  */
 
-package org.apache.streampipes.manager.execution.provider;
+package org.apache.streampipes.manager.util;
 
-import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
 import java.util.List;
 
-public interface PipelineElementProvider {
+public class PipelineElementUtils {
 
-  List<InvocableStreamPipesEntity> getProcessorsAndSinks(PipelineExecutionInfo executionInfo);
+  public static <T extends InvocableStreamPipesEntity> List<T> filterInvocation(
+      List<InvocableStreamPipesEntity> pipelineElements,
+      Class<T> clazz) {
+    if (pipelineElements == null || clazz == null) {
+      return List.of();
+    }
 
+    return pipelineElements.stream()
+        .filter(clazz::isInstance)
+        .map(clazz::cast)
+        .toList();
+  }
 }

@@ -19,9 +19,9 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.connect.management.management.AdapterMigrationManager;
+import org.apache.streampipes.health.monitoring.ServiceRegistrationManager;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
-import org.apache.streampipes.health.monitoring.ServiceRegistrationManager;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;

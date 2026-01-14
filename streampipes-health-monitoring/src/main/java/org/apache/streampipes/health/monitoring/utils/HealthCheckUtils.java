@@ -28,13 +28,13 @@ import java.util.List;
 public class HealthCheckUtils {
 
   public static void addSuccessfulRestoreNotification(List<String> pipelineNotifications,
-                                                InvocableStreamPipesEntity pipelineElement) {
+                                                      InvocableStreamPipesEntity pipelineElement) {
     pipelineNotifications.add(getCurrentDatetime() + "Pipeline element '" + pipelineElement.getName()
         + "' was not available and was successfully restored.");
   }
 
   public static void addFailedAttemptNotification(List<String> pipelineNotifications,
-                                            InvocableStreamPipesEntity pipelineElement) {
+                                                  InvocableStreamPipesEntity pipelineElement) {
     pipelineNotifications.add(getCurrentDatetime() + "Pipeline element '" + pipelineElement.getName()
         + "' was not available and could not be restored.");
   }
@@ -48,4 +48,6 @@ public class HealthCheckUtils {
   public static String extractInstanceId(InvocableStreamPipesEntity pipelineElement) {
     return InstanceIdExtractor.extractId(pipelineElement.getElementId());
   }
+
+
 }

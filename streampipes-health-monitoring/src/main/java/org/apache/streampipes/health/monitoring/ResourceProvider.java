@@ -21,7 +21,6 @@ package org.apache.streampipes.health.monitoring;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.health.monitoring.model.ActiveCoreInstances;
 import org.apache.streampipes.health.monitoring.model.ActiveResources;
-import org.apache.streampipes.manager.storage.RunningPipelineElementStorage;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -37,6 +36,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public record ResourceProvider(IPipelineStorage pipelineStorage,
                                IAdapterStorage adapterInstanceStorage,
@@ -68,8 +68,11 @@ public record ResourceProvider(IPipelineStorage pipelineStorage,
             .stream()
             .flatMap(p -> {
               String pipelineId = p.getPipelineId();
-              return Optional.ofNullable(
-                      RunningPipelineElementStorage.runningProcessorsAndSinks.get(pipelineId)
+              return Optional.of(
+                      Stream.concat(
+                          p.getSepas().stream(),
+                          p.getActions().stream()
+                      ).toList()
                   )
                   .orElseGet(List::of)
                   .stream()
