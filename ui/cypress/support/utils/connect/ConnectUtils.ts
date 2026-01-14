@@ -374,6 +374,7 @@ export class ConnectUtils {
         ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
         ConnectUtils.configureAdapter(adapterConfiguration);
 
+        ConnectBtns.configureSchemaEventPreviewOriginal().should('be.visible');
         ConnectBtns.scriptActiveToggle().click();
 
         return adapterConfiguration;

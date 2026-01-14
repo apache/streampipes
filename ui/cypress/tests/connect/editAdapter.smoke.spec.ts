@@ -81,7 +81,7 @@ describe('Test Edit Adapter', () => {
     });
 
     it('Successfully edit adapter with persistence pipeline', () => {
-        ConnectUtils.addMachineDataSimulator('simulator', true, '1000');
+        ConnectUtils.addMachineDataSimulator('simulator', true, '200');
 
         ConnectUtils.goToConnect();
 
@@ -92,13 +92,16 @@ describe('Test Edit Adapter', () => {
 
         // change data type of density to integer
         ConnectBtns.adapterSettingsNextBtn().click();
-        ConnectBtns.configureSchemaNextBtn().click();
 
-        ConnectEventSchemaUtils.changePropertyDataType(
-            'density',
-            'Integer',
-            true,
+        ConnectUtils.replaceAdapterScript(
+            '  event.density = event.density * 2;\n' +
+                '  return event;\n' +
+                '}',
         );
+        ConnectBtns.configureSchemaRunScriptBtn().click();
+        cy.wait(500);
+
+        ConnectBtns.configureSchemaNextBtn().click();
 
         storeAndStartEditedAdapter();
 
