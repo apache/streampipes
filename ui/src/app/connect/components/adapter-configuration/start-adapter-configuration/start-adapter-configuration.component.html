@@ -23,13 +23,13 @@
     >
         <div fxFlex="100">
             <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
-                <sp-form-field [level]="2" [label]="'Adapter Name' | translate">
+                <sp-form-field [level]="2" [label]="'Name' | translate">
                     <mat-form-field color="accent">
                         <input
                             formControlName="adapterName"
                             matInput
                             id="input-AdapterName"
-                            [placeholder]="'Adapter Name' | translate"
+                            [placeholder]="'Name' | translate"
                             data-cy="sp-adapter-name"
                             required
                             (blur)="triggerTutorialAdapterNameAssigned()"
@@ -79,16 +79,13 @@
                         }
                     </mat-form-field>
                 </sp-form-field>
-                <sp-form-field
-                    [level]="2"
-                    [label]="'Adapter Description' | translate"
-                >
+                <sp-form-field [level]="2" [label]="'Description' | translate">
                     <mat-form-field color="accent">
                         <input
                             matInput
                             id="input-AdapterDescription"
                             [ngModelOptions]="{ standalone: true }"
-                            [placeholder]="'Adapter Description' | translate"
+                            [placeholder]="'Description' | translate"
                             [(ngModel)]="adapterDescription.description"
                         />
                     </mat-form-field>
@@ -157,18 +154,24 @@
                 adapterDescription?.transformationConfig?.removeDuplicateRule;
                 as removeDuplicateRule
             ) {
-                <mat-form-field color="accent" class="mt-10">
-                    <input
-                        matInput
-                        id="input-removeDuplicatesTime"
-                        [ngModelOptions]="{ standalone: true }"
-                        [placeholder]="
-                            'Remove Duplicates Time Window' | translate
-                        "
-                        [(ngModel)]="removeDuplicateRule.filterTimeWindow"
-                        data-cy="connect-remove-duplicates-input"
-                    />
-                </mat-form-field>
+                <sp-form-field
+                    class="mt-md"
+                    [level]="3"
+                    [label]="'Time Window [ms]' | translate"
+                >
+                    <mat-form-field>
+                        <input
+                            matInput
+                            id="input-removeDuplicatesTime"
+                            [ngModelOptions]="{ standalone: true }"
+                            [placeholder]="
+                                'Remove Duplicates Time Window' | translate
+                            "
+                            [(ngModel)]="removeDuplicateRule.filterTimeWindow"
+                            data-cy="connect-remove-duplicates-input"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
             }
         </sp-adapter-options-panel>
 
@@ -189,35 +192,48 @@
                 adapterDescription?.transformationConfig?.reduceEventRateRule;
                 as reduceEventRateRule
             ) {
-                <mat-form-field color="accent" class="mt-10">
-                    <input
-                        type="number"
-                        matInput
-                        id="input-evenRateTime"
-                        [ngModelOptions]="{ standalone: true }"
-                        [(ngModel)]="reduceEventRateRule.aggregationTimeWindow"
-                        [placeholder]="'Time Window (Milliseconds)' | translate"
-                        matTooltipPosition="above"
-                        data-cy="connect-reduce-event-input"
-                    />
-                </mat-form-field>
-
-                <mat-form-field color="accent">
-                    <mat-label>{{ 'Event Aggregation' | translate }}</mat-label>
-                    <mat-select
-                        [(ngModel)]="reduceEventRateRule.aggregationType"
-                        [ngModelOptions]="{ standalone: true }"
-                    >
-                        <mat-option
-                            class="md-elevation-z1"
-                            style="background: white"
-                            matTooltip="Last Event in Time Window"
-                            value="none"
+                <sp-form-field
+                    class="mt-md"
+                    [level]="3"
+                    [label]="'Time Window [ms]' | translate"
+                >
+                    <mat-form-field>
+                        <input
+                            type="number"
+                            matInput
+                            id="input-evenRateTime"
+                            [ngModelOptions]="{ standalone: true }"
+                            [(ngModel)]="
+                                reduceEventRateRule.aggregationTimeWindow
+                            "
+                            [placeholder]="
+                                'Time Window (Milliseconds)' | translate
+                            "
+                            matTooltipPosition="above"
+                            data-cy="connect-reduce-event-input"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Event Aggregation' | translate"
+                >
+                    <mat-form-field>
+                        <mat-select
+                            [(ngModel)]="reduceEventRateRule.aggregationType"
+                            [ngModelOptions]="{ standalone: true }"
                         >
-                            None
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                            <mat-option
+                                class="md-elevation-z1"
+                                style="background: white"
+                                matTooltip="Last Event in Time Window"
+                                value="none"
+                            >
+                                None
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </sp-form-field>
             }
         </sp-adapter-options-panel>
 
@@ -235,30 +251,33 @@
                     (optionSelectedEmitter)="handlePersistOption($event)"
                 >
                     @if (saveInDataLake) {
-                        <mat-form-field color="accent" class="mt-10">
-                            <mat-label>{{
-                                'Select Time Field' | translate
-                            }}</mat-label>
-                            <mat-select
-                                [(ngModel)]="dataLakeTimestampField"
-                                [ngModelOptions]="{ standalone: true }"
-                                data-cy="sp-store-in-datalake-timestamp"
-                            >
-                                @for (
-                                    timestampField of eventSchema.eventProperties
-                                        | timestampFilter;
-                                    track timestampField
-                                ) {
-                                    <mat-option
-                                        class="md-elevation-z1"
-                                        style="background: white"
-                                        [value]="timestampField.runtimeName"
-                                    >
-                                        {{ timestampField.runtimeName }}
-                                    </mat-option>
-                                }
-                            </mat-select>
-                        </mat-form-field>
+                        <sp-form-field
+                            class="mt-md"
+                            [level]="3"
+                            [label]="'Select Time Field' | translate"
+                        >
+                            <mat-form-field color="accent">
+                                <mat-select
+                                    [(ngModel)]="dataLakeTimestampField"
+                                    [ngModelOptions]="{ standalone: true }"
+                                    data-cy="sp-store-in-datalake-timestamp"
+                                >
+                                    @for (
+                                        timestampField of eventSchema.eventProperties
+                                            | timestampFilter;
+                                        track timestampField
+                                    ) {
+                                        <mat-option
+                                            class="md-elevation-z1"
+                                            style="background: white"
+                                            [value]="timestampField.runtimeName"
+                                        >
+                                            {{ timestampField.runtimeName }}
+                                        </mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </sp-form-field>
                     }
                 </sp-adapter-options-panel>
             }

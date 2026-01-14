@@ -132,6 +132,16 @@
                         <span>Create script template</span>
                     </button>
                 </div>
+            } @else {
+                <sp-alert-banner
+                    type="info"
+                    [title]="'Enable transformation' | translate"
+                    [description]="
+                        'Enable script-based editing and add custom scripts which transform the structure or values of your input data.'
+                            | translate
+                    "
+                >
+                </sp-alert-banner>
             }
         </sp-basic-inner-panel>
     </div>
@@ -166,15 +176,14 @@
                 </div>
 
                 @if (isSampleLoading()) {
-                    <div class="sp-dialog-content">
-                        <div
-                            fxFlex="100"
-                            fxLayoutAlign="center center"
-                            fxLayout="column"
-                        >
-                            <mat-spinner [diameter]="25"></mat-spinner>
-                            <h5>{{ 'Loading' | translate }}</h5>
-                        </div>
+                    <div
+                        fxFlex="100"
+                        fxLayoutAlign="center center"
+                        fxLayout="column"
+                        class="m-lg"
+                    >
+                        <mat-spinner [diameter]="25"></mat-spinner>
+                        <h5>{{ 'Loading' | translate }}</h5>
                     </div>
                 } @else {
                     @let error = sampleErrorMessage();
