@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
-import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
 import org.apache.streampipes.connect.management.health.AdapterOperationLock;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -47,7 +46,7 @@ public class WorkerAdministrationManagement {
 
   private final IAdapterStorage adapterDescriptionStorage;
 
-  private final AdapterHealthCheck adapterHealthCheck;
+  //private final AdapterHealthCheck adapterHealthCheck;
 
   public WorkerAdministrationManagement(
       IAdapterStorage adapterStorage,
@@ -55,15 +54,15 @@ public class WorkerAdministrationManagement {
       AdapterResourceManager adapterResourceManager,
       DataStreamResourceManager dataStreamResourceManager
   ) {
-    this.adapterHealthCheck = new AdapterHealthCheck(
-        adapterStorage,
-        new AdapterMasterManagement(
-            adapterStorage,
-            adapterResourceManager,
-            dataStreamResourceManager,
-            adapterMetrics
-        )
-    );
+//    this.adapterHealthCheck = new AdapterHealthCheck(
+//        adapterStorage,
+//        new AdapterMasterManagement(
+//            adapterStorage,
+//            adapterResourceManager,
+//            dataStreamResourceManager,
+//            adapterMetrics
+//        )
+//    );
     this.adapterDescriptionStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
   }
 
@@ -81,11 +80,11 @@ public class WorkerAdministrationManagement {
       } else {
         LOG.info("Max retries for running adapter operations reached, will do unlock which might cause conflicts...");
         AdapterOperationLock.INSTANCE.unlock();
-        this.adapterHealthCheck.checkAndRestoreAdapters();
+        //this.adapterHealthCheck.checkAndRestoreAdapters();
       }
     } else {
       AdapterOperationLock.INSTANCE.lock();
-      this.adapterHealthCheck.checkAndRestoreAdapters();
+      //this.adapterHealthCheck.checkAndRestoreAdapters();
       AdapterOperationLock.INSTANCE.unlock();
     }
   }

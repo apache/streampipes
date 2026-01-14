@@ -73,7 +73,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
    * The influx client always returns a double for timestamp values. This method converts them to long values.
    */
   private void convertTimestampValueToLong(List<Object> row) {
-    if (!row.isEmpty()) {
+    if (!row.isEmpty() && row.get(0) instanceof Number) {
       row.set(0, ((Number) row.get(0)).longValue());
     }
   }

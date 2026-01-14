@@ -19,14 +19,14 @@ package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
-import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
+import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
+import org.apache.streampipes.health.monitoring.ResourceProvider;
+import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
-import org.apache.streampipes.manager.health.PipelineHealthCheck;
-import org.apache.streampipes.manager.health.ServiceHealthCheck;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
@@ -54,6 +54,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -138,14 +139,19 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                              TimeUnit.MILLISECONDS);
 
     scheduleHealthChecks(env.getHealthCheckIntervalInMillis().getValueOrDefault(), List
-        .of(new ServiceHealthCheck(), new PipelineHealthCheck(),
-            new AdapterHealthCheck(
-                StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
-                new AdapterMasterManagement(
-                    StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
-                    new SpResourceManager().manageAdapters(),
-                    new SpResourceManager().manageDataStreams(),
-                    AdapterMetricsManager.INSTANCE.getAdapterMetrics()))));
+        .of(new ServiceHealthCheck(StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage()),
+            new ExtensionHealthCheck(
+                new ResourceProvider(
+                  StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
+                  StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                  new AdapterMasterManagement(
+                      StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                      new SpResourceManager().manageAdapters(),
+                      new SpResourceManager().manageDataStreams(),
+                      AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+                  )
+                )
+            )));
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
     LOG.info("Extensions logs will be fetched every {} milliseconds", logFetchInterval);

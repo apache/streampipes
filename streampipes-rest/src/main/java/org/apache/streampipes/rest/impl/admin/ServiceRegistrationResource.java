@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.manager.health.ServiceRegistrationManager;
+import org.apache.streampipes.health.monitoring.ServiceRegistrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.message.Notifications;

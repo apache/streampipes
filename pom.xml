@@ -1125,6 +1125,7 @@
         <module>streampipes-wrapper-kafka-streams</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
+        <module>streampipes-health-monitoring</module>
     </modules>
 
     <profiles>

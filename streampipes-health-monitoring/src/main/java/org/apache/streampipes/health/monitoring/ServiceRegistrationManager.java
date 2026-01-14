@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.health;
+package org.apache.streampipes.health.monitoring;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
@@ -79,10 +79,6 @@ public class ServiceRegistrationManager {
     storage.deleteElement(serviceRegistration);
     LOG.info("Service {} (id={}) has been removed", serviceRegistration.getSvcGroup(),
              serviceRegistration.getSvcId());
-  }
-
-  public SpServiceStatus getServiceStatus(String serviceId) {
-    return storage.getElementById(serviceId).getStatus();
   }
 
   private void logService(SpServiceRegistration serviceRegistration) {

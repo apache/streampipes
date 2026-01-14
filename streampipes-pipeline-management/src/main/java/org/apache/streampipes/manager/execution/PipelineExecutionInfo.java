@@ -67,7 +67,7 @@ public class PipelineExecutionInfo {
     return processorsAndSinks;
   }
 
-  public void applyPipelineOperationStatus(PipelineOperationStatus status) {
+  public void setPipelineOperationStatus(PipelineOperationStatus status) {
     this.pipelineOperationStatus = status;
   }
 
@@ -80,6 +80,6 @@ public class PipelineExecutionInfo {
   }
 
   public boolean isOperationSuccessful() {
-    return failedServices.size() == 0 && pipelineOperationStatus.isSuccess();
+    return failedServices.isEmpty() && pipelineOperationStatus.isSuccess();
   }
 }

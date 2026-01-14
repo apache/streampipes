@@ -21,7 +21,7 @@ package org.apache.streampipes.service.core;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
-import org.apache.streampipes.manager.health.ServiceHealthCheck;
+import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
@@ -66,7 +66,7 @@ public class PostStartupTask implements Runnable {
 
   @Override
   public void run() {
-    new ServiceHealthCheck().run();
+    new ServiceHealthCheck(StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage()).run();
     performAdapterAssetUpdate();
     startAllPreviouslyStoppedPipelines();
     startAdapters();

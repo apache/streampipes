@@ -16,32 +16,14 @@
  *
  */
 
-package org.apache.streampipes.manager.execution.http;
+package org.apache.streampipes.health.monitoring.model;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.model.pipeline.PipelineElementStatus;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.List;
+import java.util.Map;
 
-public class DetachPipelineElementSubmitter extends BasePipelineElementSubmitter {
-
-  public DetachPipelineElementSubmitter(Pipeline pipeline) {
-    super(pipeline);
-  }
-
-  @Override
-  protected PipelineElementStatus submitElement(InvocableStreamPipesEntity pipelineElement) {
-    return performDetach(pipelineElement);
-  }
-
-  @Override
-  protected void onSuccess() {
-    status.setTitle("Pipeline " + pipelineName + " successfully stopped");
-  }
-
-  @Override
-  protected void onFailure(List<InvocableStreamPipesEntity> processorsAndSinks) {
-    status.setTitle("Could not stop all pipeline elements of pipeline " + pipelineName + ".");
-  }
+public record ActiveCoreInstances(List<AdapterDescription> adapters,
+                                  Map<String, InvocableStreamPipesEntity> elementsPerPipeline) {
 }

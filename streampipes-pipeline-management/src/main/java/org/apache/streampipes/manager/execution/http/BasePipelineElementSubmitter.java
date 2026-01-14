@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.apache.streampipes.model.api.EndpointSelectable;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
@@ -26,14 +26,14 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
 
-public abstract class PipelineElementSubmitter {
+public abstract class BasePipelineElementSubmitter {
 
   protected final String pipelineId;
   protected final String pipelineName;
 
   protected final PipelineOperationStatus status;
 
-  public PipelineElementSubmitter(Pipeline pipeline) {
+  public BasePipelineElementSubmitter(Pipeline pipeline) {
     this.pipelineId = pipeline.getPipelineId();
     this.pipelineName = pipeline.getName();
     this.status = new PipelineOperationStatus(pipelineId, pipelineName);
@@ -41,7 +41,10 @@ public abstract class PipelineElementSubmitter {
 
   public PipelineOperationStatus submit(List<InvocableStreamPipesEntity> processorsAndSinks) {
     // First, try handling all data processors and sinks
-    processorsAndSinks.forEach(g -> status.addPipelineElementStatus(submitElement(g)));
+    processorsAndSinks.forEach(g -> {
+      var response = submitElement(g);
+      status.addPipelineElementStatus(response);
+    });
 
     applySuccess(processorsAndSinks);
     return status;
@@ -60,12 +63,18 @@ public abstract class PipelineElementSubmitter {
     }
   }
 
-  protected PipelineElementStatus performDetach(EndpointSelectable pipelineElement) {
-    String endpointUrl = pipelineElement.getSelectedEndpointUrl() + pipelineElement.getDetachPath();
+  protected String getInvocationUrl(InvocableStreamPipesEntity pipelineElement) {
+    return ExtensionsServiceEndpointUtils
+        .getPipelineElementType(pipelineElement)
+        .getInvocationUrl(pipelineElement.getSelectedEndpointUrl(), pipelineElement.getAppId());
+  }
+
+  protected PipelineElementStatus performDetach(InvocableStreamPipesEntity pipelineElement) {
+    String endpointUrl = getInvocationUrl(pipelineElement) + pipelineElement.getDetachPath();
     return new DetachHttpRequest().execute(pipelineElement, endpointUrl, this.pipelineId);
   }
 
-  protected abstract PipelineElementStatus submitElement(EndpointSelectable pipelineElement);
+  protected abstract PipelineElementStatus submitElement(InvocableStreamPipesEntity pipelineElement);
 
   protected abstract void onSuccess();
 
