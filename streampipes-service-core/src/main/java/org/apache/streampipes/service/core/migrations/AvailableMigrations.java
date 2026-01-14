@@ -34,6 +34,7 @@ import org.apache.streampipes.service.core.migrations.v099.AddAssetManagementVie
 import org.apache.streampipes.service.core.migrations.v099.AddScriptTemplateViewMigration;
 import org.apache.streampipes.service.core.migrations.v099.ComputeCertificateThumbprintMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
+import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
@@ -76,7 +77,8 @@ public class AvailableMigrations {
         new UniqueDashboardIdMigration(),
         new AddScriptTemplateViewMigration(),
         new ComputeCertificateThumbprintMigration(),
-        new MigrateAdaptersToUseScript()
+        new MigrateAdaptersToUseScript(),
+        new ModifyAssetLinkIconMigration()
     );
   }
 }

@@ -115,6 +115,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
                 this.filteredAssets = filter.selectedAssets as SpAssetModel[];
+                if (this.filteredAssets) {
+                    this.sortAssetLinks(this.filteredAssets);
+                }
             });
         const isAdmin = this.hasRole(UserRole.ROLE_ADMIN);
         forkJoin([
@@ -132,6 +135,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             });
             this.locationConfig = res[1];
             this.assets = res[2];
+            this.sortAssetLinks(this.assets);
             res[3].forEach(doc => {
                 this.sites[doc._id] = doc;
             });
@@ -146,6 +150,19 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     hasRole(role: UserRole): boolean {
         return this.currentUser.roles.indexOf(role) > -1;
+    }
+
+    sortAssetLinks(assets: SpAssetModel[]) {
+        assets.forEach(asset => {
+            asset.assetLinks = [...asset.assetLinks].sort((a, b) => {
+                const typeCompare = a.linkType.localeCompare(b.linkType);
+                if (typeCompare !== 0) {
+                    return typeCompare;
+                }
+
+                return a.linkLabel.localeCompare(b.linkLabel);
+            });
+        });
     }
 
     checkForTutorial() {
