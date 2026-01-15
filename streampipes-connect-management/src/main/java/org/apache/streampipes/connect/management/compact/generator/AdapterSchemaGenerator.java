@@ -91,11 +91,12 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
         || adapterDescription.getTransformationConfig()
                              .getScript()
                              .isEmpty()) {
+      adapterDescription.getTransformationConfig().setScriptActive(true);
       adapterDescription.getTransformationConfig()
                         .setScript("""
-                                   function transform(event) {
-                                     return event;
-                                   }
+                                   function transform(event, out, ctx) {
+                                      out.collect(event);
+                                    }
                                    """);
 
     }
