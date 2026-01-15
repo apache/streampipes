@@ -15,14 +15,21 @@
  * limitations under the License.
  *
  */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import {
     AdapterDescription,
-    EventRateTransformationRuleDescription,
     EventSchema,
     SpAssetTreeNode,
-    RemoveDuplicatesTransformationRuleDescription,
     UserInfo,
+    RemoveDuplicateRule,
+    ReduceEventRateRule,
 } from '@streampipes/platform-services';
 import {
     UntypedFormBuilder,
@@ -39,7 +46,6 @@ import {
 } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
-import { TransformationRuleService } from '../../../services/transformation-rule.service';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 import { TranslateService } from '@ngx-translate/core';
 import { UserRole } from '../../../../_enums/user-role.enum';
@@ -51,10 +57,12 @@ import { UserRole } from '../../../../_enums/user-role.enum';
     standalone: false,
 })
 export class StartAdapterConfigurationComponent implements OnInit {
-    static EventRateTransformationRuleId =
-        'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription' as const;
-    static RemoveDuplicatesTransformationRuleId =
-        'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription' as const;
+    private dialogService = inject(DialogService);
+    private shepherdService = inject(ShepherdService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private timestampPipe = inject(TimestampPipe);
+    private translateService = inject(TranslateService);
+    private currentUserService = inject(CurrentUserService);
 
     /**
      * Adapter description the selected format is added to
@@ -68,8 +76,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     /**
      * Cancels the adapter configuration process
      */
-    @Output() removeSelectionEmitter: EventEmitter<boolean> =
-        new EventEmitter();
+    @Output() cancelEmitter: EventEmitter<boolean> = new EventEmitter();
 
     /**
      * Is called when the adapter was created
@@ -93,13 +100,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     currentUser: UserInfo;
 
-    // preprocessing rule variables
-    removeDuplicates = false;
-    removeDuplicatesTime: number;
-
-    eventRateReduction = false;
-    eventRateTime: number;
-    eventRateMode = 'none';
+    private cachedDuplicateRule: RemoveDuplicateRule = null;
+    private cachedEventRateRule: ReduceEventRateRule | null;
 
     saveInDataLake = false;
     dataLakeTimestampField: string;
@@ -114,16 +116,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     isAssetAdmin = false;
     isPipelineAdmin = false;
 
-    constructor(
-        private dialogService: DialogService,
-        private shepherdService: ShepherdService,
-        private _formBuilder: UntypedFormBuilder,
-        private timestampPipe: TimestampPipe,
-        private transformationRuleService: TransformationRuleService,
-        private translateService: TranslateService,
-        private currentUserService: CurrentUserService,
-    ) {}
-
     ngOnInit(): void {
         this.showAsset = this.isEditMode;
         this.currentUser = this.currentUserService.getCurrentUser();
@@ -133,7 +125,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
         this.isPipelineAdmin = this.currentUserService.hasRole(
             UserRole.ROLE_PIPELINE_ADMIN,
         );
-        this.startAdapterForm = this._formBuilder.group({});
+        this.startAdapterForm = this.formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
             new UntypedFormControl(this.adapterDescription.name, [
@@ -150,34 +142,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
             this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
         });
         this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
-
-        this.applySelectedEventRateReduction();
-        this.applySelectedRemoveDuplicates();
-    }
-
-    applySelectedEventRateReduction(): void {
-        const eventRateRule =
-            this.transformationRuleService.getExistingTransformationRule<EventRateTransformationRuleDescription>(
-                this.adapterDescription,
-                StartAdapterConfigurationComponent.EventRateTransformationRuleId,
-            );
-        if (eventRateRule !== undefined) {
-            this.eventRateReduction = true;
-            this.eventRateTime = eventRateRule.aggregationTimeWindow;
-            this.eventRateMode = eventRateRule.aggregationType;
-        }
-    }
-
-    applySelectedRemoveDuplicates(): void {
-        const removeDuplicatesRule =
-            this.transformationRuleService.getExistingTransformationRule<RemoveDuplicatesTransformationRuleDescription>(
-                this.adapterDescription,
-                StartAdapterConfigurationComponent.RemoveDuplicatesTransformationRuleId,
-            );
-        if (removeDuplicatesRule !== undefined) {
-            this.removeDuplicates = true;
-            this.removeDuplicatesTime = +removeDuplicatesRule.filterTimeWindow;
-        }
     }
 
     findDefaultTimestamp(selected: boolean) {
@@ -194,7 +158,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     public editAdapter() {
-        this.checkAndApplyStreamRules();
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: this.translateService.instant('Edit adapter'),
@@ -214,8 +177,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     public startAdapter() {
-        this.checkAndApplyStreamRules();
-
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: this.translateService.instant('Adapter generation'),
@@ -247,29 +208,42 @@ export class StartAdapterConfigurationComponent implements OnInit {
         this.originalAssets = updatedAssets;
     }
 
-    private checkAndApplyStreamRules(): void {
-        if (this.removeDuplicates) {
-            const removeDuplicates: RemoveDuplicatesTransformationRuleDescription =
-                new RemoveDuplicatesTransformationRuleDescription();
-            removeDuplicates['@class'] =
-                StartAdapterConfigurationComponent.RemoveDuplicatesTransformationRuleId;
-            removeDuplicates.filterTimeWindow = this
-                .removeDuplicatesTime as any;
-            this.adapterDescription.rules.push(removeDuplicates);
-        }
-        if (this.eventRateReduction) {
-            const eventRate: EventRateTransformationRuleDescription =
-                new EventRateTransformationRuleDescription();
-            eventRate['@class'] =
-                StartAdapterConfigurationComponent.EventRateTransformationRuleId;
-            eventRate.aggregationTimeWindow = this.eventRateTime;
-            eventRate.aggregationType = this.eventRateMode;
-            this.adapterDescription.rules.push(eventRate);
+    onToggleDuplicates(isChecked: boolean): void {
+        const transformationConfig =
+            this.adapterDescription.transformationConfig;
+
+        if (isChecked) {
+            // Restore the cached values if they exist, otherwise set default values
+            transformationConfig.removeDuplicateRule = this
+                .cachedDuplicateRule ?? {
+                filterTimeWindow: '0',
+            };
+        } else {
+            this.cachedDuplicateRule = transformationConfig.removeDuplicateRule;
+            delete transformationConfig.removeDuplicateRule;
         }
     }
 
-    public removeSelection() {
-        this.removeSelectionEmitter.emit();
+    onToggleEventRateReduction(isChecked: boolean): void {
+        const transformationConfig =
+            this.adapterDescription.transformationConfig;
+
+        if (isChecked) {
+            // Restore the cached values if they exist, otherwise set default values
+            this.adapterDescription.transformationConfig.reduceEventRateRule =
+                this.cachedEventRateRule ??
+                ReduceEventRateRule.fromData({
+                    aggregationTimeWindow: 1000,
+                    aggregationType: 'none',
+                });
+        } else {
+            this.cachedEventRateRule = transformationConfig.reduceEventRateRule;
+            delete transformationConfig.reduceEventRateRule;
+        }
+    }
+
+    public cancel() {
+        this.cancelEmitter.emit();
     }
 
     public goBack() {

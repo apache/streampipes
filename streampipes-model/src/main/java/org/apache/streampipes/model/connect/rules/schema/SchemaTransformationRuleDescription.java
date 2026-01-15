@@ -20,6 +20,7 @@ package org.apache.streampipes.model.connect.rules.schema;
 
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
+@Deprecated(since = "0.99.0", forRemoval = true)
 public abstract class SchemaTransformationRuleDescription extends TransformationRuleDescription {
 
   public SchemaTransformationRuleDescription() {

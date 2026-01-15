@@ -19,29 +19,126 @@
 package org.apache.streampipes.connect.shared;
 
 import org.apache.streampipes.connect.shared.preprocessing.elements.AdapterTransformationPipelineElement;
-import org.apache.streampipes.connect.shared.preprocessing.generator.StatefulTransformationRuleGeneratorVisitor;
-import org.apache.streampipes.connect.shared.preprocessing.generator.StatelessTransformationRuleGeneratorVisitor;
+import org.apache.streampipes.connect.shared.preprocessing.elements.ScriptTransformationPipelineElement;
+import org.apache.streampipes.connect.shared.preprocessing.transform.stream.EventRateTransformationRule;
+import org.apache.streampipes.connect.shared.preprocessing.transform.stream.RemoveDuplicatesTransformationRule;
+import org.apache.streampipes.connect.shared.preprocessing.transform.value.DatatypeTransformationRule;
+import org.apache.streampipes.connect.shared.preprocessing.transform.value.UnitTransformationRule;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.extensions.api.connect.TransformationRule;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdapterPipelineGeneratorBase {
 
-  public List<IAdapterPipelineElement> makeAdapterPipelineElements(List<TransformationRuleDescription> rules,
-                                                                   boolean includeStateful) {
+  public List<IAdapterPipelineElement> makeAdapterPipelineElements(
+      boolean includeStateful,
+      AdapterDescription adapterDescription,
+      boolean includeScript
+  ) {
     var elements = new ArrayList<IAdapterPipelineElement>();
-    elements.add(new AdapterTransformationPipelineElement(
-        rules,
-        new StatelessTransformationRuleGeneratorVisitor())
-    );
-    if (includeStateful) {
-      elements.add(new AdapterTransformationPipelineElement(
-          rules,
-          new StatefulTransformationRuleGeneratorVisitor())
-      );
+
+    if (includeScript) {
+      elements.add(new ScriptTransformationPipelineElement(
+          adapterDescription.getTransformationConfig()
+                            .getLanguage(),
+          adapterDescription.getTransformationConfig()
+                            .getScript()
+      ));
     }
+
+    List<TransformationRule> transformationRules = new ArrayList<>();
+    if (includeStateful) {
+      transformationRules.addAll(getReduceEventTransformationRule(adapterDescription));
+      transformationRules.addAll(getRemoveDuplicateRule(adapterDescription));
+    }
+    transformationRules.addAll(getTypeConvertionRules(adapterDescription));
+    transformationRules.addAll(getUnitConvertionRules(adapterDescription));
+    elements.add(new AdapterTransformationPipelineElement(transformationRules));
+
+
     return elements;
   }
+
+  private List<TransformationRule> getTypeConvertionRules(AdapterDescription adapterDescription) {
+    return adapterDescription.getEventSchema()
+                             .getEventProperties()
+                             .stream()
+                             .filter(ep -> ep.getAdditionalMetadata()
+                                             .containsKey("originType"))
+                             .map(ep -> new DatatypeTransformationRule(
+                                 ep.getRuntimeName(),
+                                 ((EventPropertyPrimitive) ep).getRuntimeType()
+                             ))
+                             .collect(Collectors.toList());
+  }
+
+
+
+  private List<TransformationRule> getUnitConvertionRules(AdapterDescription adapterDescription) {
+    return adapterDescription.getEventSchema()
+                             .getEventProperties()
+                             .stream()
+                             .filter(ep -> (
+                                 ep.getAdditionalMetadata()
+                                   .containsKey("fromMeasurementUnit") && ep.getAdditionalMetadata()
+                                                                            .containsKey("toMeasurementUnit")
+                             ))
+                             .map(ep -> {
+                               String toUnit = ep.getAdditionalMetadata()
+                                                 .get("toMeasurementUnit")
+                                                 .toString();
+                               String fromUnit = ep.getAdditionalMetadata()
+                                                   .get("fromMeasurementUnit")
+                                                   .toString();
+
+                               var rule =
+                                   new UnitTransformationRule(
+                                       List.of(ep.getRuntimeName()),
+                                       fromUnit,
+                                       toUnit
+                                   );
+                               return rule;
+                             })
+                             .collect(Collectors.toList());
+  }
+
+  private List<TransformationRule> getReduceEventTransformationRule(AdapterDescription adapterDescription) {
+
+    var result = new ArrayList<TransformationRule>();
+
+    var reduceEventRate = adapterDescription.getTransformationConfig()
+                                            .getReduceEventRateRule();
+
+    if (reduceEventRate != null) {
+      var rule = new EventRateTransformationRule(
+          reduceEventRate.aggregationTimeWindow(),
+          reduceEventRate.aggregationType()
+      );
+      result.add(rule);
+    }
+
+    return result;
+  }
+
+  private List<TransformationRule> getRemoveDuplicateRule(AdapterDescription adapterDescription) {
+
+    var result = new ArrayList<TransformationRule>();
+    var removeDuplicateRule = adapterDescription.getTransformationConfig()
+                                                .getRemoveDuplicateRule();
+
+    if (removeDuplicateRule != null) {
+      var rule = new RemoveDuplicatesTransformationRule(
+          removeDuplicateRule.filterTimeWindow()
+      );
+      result.add(rule);
+    }
+
+    return result;
+  }
+
 }

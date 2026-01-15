@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
     @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
     @JsonSubTypes.Type(RegexTransformationRuleDescription.class),
 })
+@Deprecated(since = "0.99.0", forRemoval = true)
 public abstract class ValueTransformationRuleDescription extends TransformationRuleDescription {
 
   public ValueTransformationRuleDescription() {

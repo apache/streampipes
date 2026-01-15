@@ -58,7 +58,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   }
 
   @Override
-  public List<String> getServiceEndpoints(String serviceGroup,
+  public List<SpServiceRegistration> getService(String serviceGroup,
                                           boolean restrictToHealthy,
                                           List<String> filterByTags) {
     List<SpServiceRegistration> activeServices = findServices(0);
@@ -68,8 +68,16 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
         .filter(service -> allFiltersSupported(service, filterByTags))
         .filter(service -> !restrictToHealthy
             || service.getStatus() != SpServiceStatus.UNHEALTHY)
-        .map(this::makeServiceUrl)
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<String> getServiceEndpoints(String serviceGroup,
+                                          boolean restrictToHealthy,
+                                          List<String> filterByTags) {
+    var services = getService(serviceGroup, restrictToHealthy, filterByTags);
+
+    return services.stream().map(this::makeServiceUrl).toList();
   }
 
   @Override

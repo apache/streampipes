@@ -18,13 +18,15 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Options;
@@ -37,8 +39,6 @@ import org.apache.avro.io.BinaryDecoder;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.util.Utf8;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,8 +50,6 @@ import java.util.Map;
 
 public class AvroParser implements IParser {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AvroParser.class);
-
   public static final String ID = "org.apache.streampipes.extensions.management.connect.adapter.parser.avro";
   public static final String LABEL = "Avro";
   public static final String DESCRIPTION = "Can be used to read avro records";
@@ -60,14 +58,13 @@ public class AvroParser implements IParser {
   public static final String SCHEMA_REGISTRY = "schemaRegistry";
   public static final String FLATTEN_RECORDS = "flattenRecord";
 
-  private final ParserUtils parserUtils;
   private DatumReader<GenericRecord> datumReader;
   private boolean schemaRegistry;
   private boolean flattenRecord;
 
 
   public AvroParser() {
-    parserUtils = new ParserUtils();
+
   }
 
   public AvroParser(String schemaString, boolean schemaRegistry, boolean flattenRecord) {
@@ -107,10 +104,13 @@ public class AvroParser implements IParser {
 
 
   @Override
-  public GuessSchema getGuessSchema(InputStream inputStream) throws ParseException {
+  public SampleData getSampleData(InputStream inputStream) throws AdapterException {
     GenericRecord avroRecord = getRecord(inputStream);
     var event = toMap(avroRecord);
-    return parserUtils.getGuessSchema(event);
+
+    return SampleDataBuilder.create()
+                            .sample(event)
+                            .build();
   }
 
   @Override

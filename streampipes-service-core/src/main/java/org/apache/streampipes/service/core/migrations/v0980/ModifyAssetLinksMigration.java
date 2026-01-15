@@ -50,7 +50,7 @@ public class ModifyAssetLinksMigration implements Migration {
 
   @Override
   public void executeMigration() throws IOException {
-    var assets = storage.findAll(GenericDocTypes.DOC_ASSET_MANGEMENT);
+    var assets = storage.findAll(GenericDocTypes.DOC_ASSET_MANAGEMENT);
     for (Map<String, Object> asset : assets) {
       updateAssetLink(asset);
       storage.update(asset.get("_id").toString(),JacksonSerializer.getObjectMapper(Map.of(

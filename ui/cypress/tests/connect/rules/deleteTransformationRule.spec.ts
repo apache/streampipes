@@ -17,30 +17,12 @@
  */
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
-import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 
 describe('Connect delete rule transformation', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-    });
-
-    it('Test delete with same prefix', () => {
-        FileManagementUtils.addFile(
-            'connect/deleteTransformationRule/prefixInput.csv',
-        );
-
-        ConnectUtils.setUpPreprocessingRuleTest(false);
-
-        ConnectEventSchemaUtils.deleteProperty('reserved bit');
-        ConnectEventSchemaUtils.deleteProperty('reserved bit_1');
-        ConnectEventSchemaUtils.deleteProperty('reserved bit_2');
-
-        ConnectEventSchemaUtils.schemaPreviewResultEvent().should(
-            'have.text',
-            '{\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01715356080000}',
-        );
     });
 
     it('Test delete nested properties', () => {
@@ -65,53 +47,29 @@ describe('Connect delete rule transformation', () => {
             adapterConfigurationBuilder,
         );
 
-        // Test to delete the child property
-        ConnectEventSchemaUtils.deleteProperty('child');
-
-        // The resulting string contains non-breaking spaces character (\u00A0)
-        ConnectEventSchemaUtils.schemaPreviewResultEvent().should(
-            'have.text',
-            '{\u00A0\u00A0\u00A0\u00A0"parent":\u00A0{\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"child_two":\u00A0"textTwo"\u00A0\u00A0\u00A0\u00A0},\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
+        ConnectUtils.replaceAdapterScript(
+            '  delete event.toRemove;\n' +
+                '  delete event.parent.child_two;\n' +
+                '  return event;\n' +
+                '}',
         );
 
-        ConnectBtns.refreshSchema().click();
+        ConnectBtns.configureSchemaRunScriptBtn().click();
 
-        // Test to delete the parent property
-        ConnectEventSchemaUtils.deleteProperty('parent');
-        ConnectEventSchemaUtils.schemaPreviewResultEvent().should(
-            'have.text',
+        ConnectBtns.configureSchemaEventPreviewResult()
+            .invoke('text')
+            .then(text => {
+                const normalizedText = text.replace(/\u00a0/g, ' ').trim();
 
-            '{\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
-        );
+                const actualJson = JSON.parse(normalizedText);
+                const expectedJson = {
+                    parent: {
+                        child: 'text',
+                    },
+                    timestamp: 1667904471000,
+                };
 
-        ConnectBtns.refreshSchema().click();
-        ConnectEventSchemaUtils.deleteProperty('child');
-        ConnectEventSchemaUtils.deleteProperty('child_two');
-
-        ConnectEventSchemaUtils.schemaPreviewResultEvent().should(
-            'have.text',
-            '{\u00A0\u00A0\u00A0\u00A0"parent":\u00A0{},\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
-        );
-
-        ConnectBtns.refreshSchema().click();
-
-        // Test to delete the parent property
-        ConnectEventSchemaUtils.deleteProperty('parent');
-        ConnectEventSchemaUtils.schemaPreviewResultEvent().should(
-            'have.text',
-
-            '{\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
-        );
-
-        ConnectBtns.refreshSchema().click();
-
-        // Test to delete both child properties
-        ConnectEventSchemaUtils.deleteProperty('child');
-        ConnectEventSchemaUtils.deleteProperty('child_two');
-
-        ConnectEventSchemaUtils.schemaPreviewResultEvent().should(
-            'have.text',
-            '{\u00A0\u00A0\u00A0\u00A0"parent":\u00A0{},\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
-        );
+                expect(actualJson).to.deep.equal(expectedJson);
+            });
     });
 });

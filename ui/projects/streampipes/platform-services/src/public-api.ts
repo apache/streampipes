@@ -29,6 +29,8 @@ export * from './lib/apis/asset-management.service';
 export * from './lib/apis/compact-pipeline.service';
 export * from './lib/apis/certificate.service';
 export * from './lib/apis/chart.service';
+export * from './lib/apis/connect-script-languages.service';
+export * from './lib/apis/connect-script-templates.service';
 export * from './lib/apis/dashboard.service';
 export * from './lib/apis/dashboard-kiosk.service';
 export * from './lib/apis/datalake-rest.service';

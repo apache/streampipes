@@ -20,8 +20,7 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser.json
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -34,16 +33,14 @@ import java.util.Map;
 public abstract class JsonParser {
 
   protected final ObjectMapper mapper;
-  protected final ParserUtils parserUtils;
 
   public JsonParser() {
     this.mapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
     ));
-    this.parserUtils = new ParserUtils();
   }
 
-  public abstract GuessSchema getGuessSchema(InputStream inputStream);
+  public abstract SampleData getSampleData(InputStream inputStream) throws ParseException;
 
   public abstract void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException;
 

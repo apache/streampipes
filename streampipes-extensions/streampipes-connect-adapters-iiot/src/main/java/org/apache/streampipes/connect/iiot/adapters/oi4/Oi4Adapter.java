@@ -36,6 +36,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonP
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -210,7 +211,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
   }
 
   @Override
-  public GuessSchema onSchemaRequested(
+  public SampleData onSampleDataRequested(
       IAdapterParameterExtractor extractor,
       IAdapterGuessSchemaContext adapterGuessSchemaContext
   ) throws AdapterException {
@@ -218,10 +219,9 @@ public class Oi4Adapter implements StreamPipesAdapter {
       this.applyConfiguration(extractor.getStaticPropertyExtractor());
 
       var sampleMessage = getSampleMessage();
-      var guessSchema = guessSchemaFromSampleMessage(sampleMessage);
-      updateTimestampPropertyIfExists(guessSchema);
+      var sampleData = transformToSampleData(sampleMessage);
 
-      return guessSchema;
+      return sampleData;
     } catch (RuntimeException e) {
       throw new AdapterException(e.getMessage(), e);
     }
@@ -256,14 +256,14 @@ public class Oi4Adapter implements StreamPipesAdapter {
     guessSchema.setEventSchema(new EventSchema(eventProperties));
   }
 
-  private GuessSchema guessSchemaFromSampleMessage(byte[] sampleMessage) {
+  private SampleData transformToSampleData(byte[] sampleMessage) {
     try {
       var networkMessage = mapper.readValue(sampleMessage, NetworkMessage.class);
       var payload = extractPayload(networkMessage);
 
       String plainPayload = mapper.writeValueAsString(payload.get(0));
       return new JsonParsers(new JsonObjectParser())
-          .getGuessSchema(convertByte(plainPayload.getBytes(StandardCharsets.UTF_8)));
+          .getSampleData(convertByte(plainPayload.getBytes(StandardCharsets.UTF_8)));
     } catch (IOException e) {
       LOG.error("Error while reading sample message: {}", sampleMessage);
       throw new RuntimeException(e);

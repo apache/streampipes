@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
-import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
+
+@Deprecated(since = "0.99.0", forRemoval = true)
 public class ChangeDatatypeTransformationRuleDescription extends ValueTransformationRuleDescription {
 
   private String runtimeKey;
@@ -28,6 +29,11 @@ public class ChangeDatatypeTransformationRuleDescription extends ValueTransforma
   private String targetDatatypeXsd;
 
   public ChangeDatatypeTransformationRuleDescription() {
+  }
+
+  public ChangeDatatypeTransformationRuleDescription(String runtimeKey, String targetDatatypeXsd) {
+    this.runtimeKey = runtimeKey;
+    this.targetDatatypeXsd = targetDatatypeXsd;
   }
 
   public ChangeDatatypeTransformationRuleDescription(ChangeDatatypeTransformationRuleDescription other) {
@@ -59,11 +65,6 @@ public class ChangeDatatypeTransformationRuleDescription extends ValueTransforma
 
   public void setTargetDatatypeXsd(String targetDatatypeXsd) {
     this.targetDatatypeXsd = targetDatatypeXsd;
-  }
-
-  @Override
-  public void accept(ITransformationRuleVisitor visitor) {
-    visitor.visit(this);
   }
 
   @Override

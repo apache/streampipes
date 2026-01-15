@@ -29,7 +29,7 @@ import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtracto
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -108,8 +108,8 @@ public class RocketMQProtocol implements StreamPipesAdapter {
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                                      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     List<byte[]> nEventsByte = new ArrayList<>(1);
     CountDownLatch latch = new CountDownLatch(1);
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
@@ -144,6 +144,6 @@ public class RocketMQProtocol implements StreamPipesAdapter {
       e.printStackTrace();
     }
 
-    return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(nEventsByte.get(0)));
+    return extractor.selectedParser().getSampleData(new ByteArrayInputStream(nEventsByte.get(0)));
   }
 }

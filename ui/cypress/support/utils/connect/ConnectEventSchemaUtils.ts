@@ -22,134 +22,42 @@ import { PropertyDataTypeChange } from '../../model/PropertyDataTypeChange';
 
 export class ConnectEventSchemaUtils {
     public static markPropertyAsMeasurement(propertyName: string) {
-        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
-            .click()
-            .get('.mdc-list-item__primary-text')
-            .contains('Measurement')
-            .click();
+        this.selectPropertyScopeDropdown(propertyName, 'measurement');
     }
 
     public static markPropertyAsDimension(propertyName: string) {
-        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
-            .click()
-            .get('.mdc-list-item__primary-text')
-            .contains('Dimension')
-            .click();
+        this.selectPropertyScopeDropdown(propertyName, 'dimension');
     }
 
     public static markPropertyAsTimestamp(propertyName: string) {
-        // Mark property as timestamp
-        this.eventSchemaNextBtnDisabled();
-        // Edit timestamp
+        this.configureFieldsNextBtnDisabled();
 
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
+        this.selectPropertyScopeDropdown(propertyName, 'timestamp');
 
-        // Mark as timestamp
-        ConnectBtns.markAsTimestampBtn().click();
+        this.configureFieldsNextBtnEnabled();
+    }
 
-        // Close
-        ConnectBtns.saveEditProperty().click();
+    private static selectPropertyScopeDropdown(
+        propertyName: string,
+        propertyScope: string,
+    ) {
+        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 }).click();
 
-        this.eventSchemaNextBtnEnabled();
+        cy.dataCy(propertyScope + '-property-scope-value').click();
     }
 
     public static addTimestampProperty() {
-        this.eventSchemaNextBtnDisabled();
-        cy.dataCy('connect-schema-add-timestamp-btn', {
-            timeout: 10000,
-        }).click();
-        this.eventSchemaNextBtnEnabled();
+        this.addTimestampFieldToScript();
+        ConnectBtns.configureSchemaRunScriptBtn().click();
+        ConnectBtns.configureSchemaEventPreviewResult().contains('timestamp');
     }
 
-    public static editTimestampPropertyWithRegex(
-        propertyName: string,
-        timestampRegex: string,
-    ) {
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-
-        ConnectBtns.markAsTimestampBtn().click();
-        ConnectBtns.setTimestampConverter('String');
-
-        ConnectBtns.timestampStringRegex().type(timestampRegex);
-
-        ConnectBtns.saveEditProperty().click();
-
-        // The following code validates that the regex is persisted by reopening the edit dialog again
-        cy.dataCy('edit-' + propertyName.toLowerCase(), {
-            timeout: 10000,
-        }).click({ force: true });
-        ConnectBtns.timestampStringRegex().should('have.value', timestampRegex);
-
-        ConnectBtns.saveEditProperty().click();
-    }
-
-    public static editTimestampPropertyWithNumber(
-        propertyName: string,
-        configurationValue: 'Seconds' | 'Milliseconds',
-    ) {
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-        ConnectBtns.markAsTimestampBtn().click();
-
-        ConnectBtns.setTimestampConverter('Number');
-
-        ConnectBtns.timestampNumberDropdown()
-            .click({ force: true })
-            .get('mat-option')
-            .contains(configurationValue)
-            .click();
-
-        ConnectBtns.saveEditProperty().click();
-
-        // Check if the configuration is persisted by reopening the edit dialog
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-
-        ConnectBtns.timestampNumberDropdown().should(
-            'contain',
-            configurationValue,
-        );
-
-        ConnectBtns.saveEditProperty().click();
-    }
-
-    public static numberTransformation(propertyName: string, value: string) {
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-        // cy.wait(1000);
-        ConnectBtns.connectSchemaCorrectionValueInput().type(value);
-        ConnectBtns.connectSchemaCorrectionOperatorInput()
-            .click()
-            .get('mat-option')
-            .contains('Multiply')
-            .click();
-
-        ConnectBtns.saveEditProperty().click();
-        cy.dataCy('edit-' + propertyName.toLowerCase(), {
-            timeout: 10000,
-        }).click({ force: true });
-        ConnectBtns.connectSchemaCorrectionValueInput().should(
-            'have.value',
-            value,
-        );
-        ConnectBtns.saveEditProperty().click();
-    }
-
-    public static renameProperty(
-        fromRuntimeName: string,
-        toRuntimeName: string,
-    ) {
-        ConnectEventSchemaUtils.clickEditProperty(fromRuntimeName);
-        ConnectEventSchemaUtils.setRuntimeName(toRuntimeName);
-        ConnectBtns.saveEditProperty().click();
-    }
-
-    public static setRuntimeName(newRuntimeName: string) {
-        ConnectBtns.runtimeNameInput().clear().type(newRuntimeName);
-    }
-
-    public static validateRuntimeName(expectedRuntimeName: string) {
-        ConnectBtns.runtimeNameInput().should(
-            'have.value',
-            expectedRuntimeName,
-        );
+    private static addTimestampFieldToScript() {
+        ConnectBtns.configureSchemaScriptEditor()
+            .type('{backspace}'.repeat(17)) // 2. Delete the "  return event;\n}" part
+            .type(
+                '  event.timestamp = new Date().getTime();{enter}return event;{enter}}',
+            );
     }
 
     public static unitTransformation(
@@ -167,56 +75,6 @@ export class ConnectEventSchemaUtils {
             .contains(toUnit)
             .click();
         ConnectBtns.saveEditProperty().click();
-    }
-
-    public static addStaticProperty(
-        propertyName: string,
-        propertyValue: string,
-    ) {
-        // Click add a static value to event
-        cy.dataCy('connect-add-static-property', { timeout: 10000 }).click();
-
-        cy.wait(100);
-
-        // Edit new property
-        cy.dataCy('connect-add-field-name', { timeout: 10000 }).type(
-            propertyName,
-        );
-        cy.dataCy('connect-add-field-name-button').click();
-
-        cy.dataCy('edit-' + propertyName.toLowerCase()).click();
-
-        cy.dataCy('connect-edit-field-static-value').clear();
-        cy.dataCy('connect-edit-field-static-value', { timeout: 10000 }).type(
-            propertyValue,
-        );
-
-        ConnectBtns.saveEditProperty().click();
-
-        // validate that static value is persisted
-        ConnectEventSchemaUtils.clickEditProperty(propertyName);
-
-        cy.dataCy('connect-edit-field-static-value', { timeout: 10000 }).should(
-            'have.value',
-            propertyValue,
-        );
-        ConnectBtns.saveEditProperty().click();
-    }
-
-    public static deleteProperty(propertyName: string) {
-        cy.dataCy('"delete-property-' + propertyName + '"', { timeout: 10000 })
-            .children()
-            .click({ force: true });
-        cy.dataCy('connect-schema-delete-properties-btn', {
-            timeout: 10000,
-        }).click({ force: true });
-
-        // The following two commands are required to fix flaky tests
-        // if another solution can be found, it can be removed
-        cy.wait(200);
-        cy.dataCy('connect-schema-update-preview-btn', {
-            timeout: 10000,
-        }).click({ force: true });
     }
 
     public static changePropertyDataTypes(
@@ -271,53 +129,29 @@ export class ConnectEventSchemaUtils {
         }
     }
 
-    public static eventSchemaNextBtnDisabled() {
-        cy.get('#event-schema-next-button').should('be.disabled');
+    public static configureFieldsNextBtnDisabled() {
+        ConnectBtns.configureFieldsNextBtn().should('be.disabled');
     }
 
-    public static eventSchemaNextBtnEnabled() {
-        cy.get('#event-schema-next-button').parent().should('not.be.disabled');
+    public static configureFieldsNextBtnEnabled() {
+        ConnectBtns.configureFieldsNextBtn().parent().should('not.be.disabled');
     }
 
     public static schemaPreviewResultEvent() {
         return cy.dataCy('schema-preview-result-event', { timeout: 10000 });
     }
 
-    public static finishEventSchemaConfiguration() {
-        // Click next
-        cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should(
-            'be.visible',
-        );
-        cy.dataCy('sp-event-schema-next-button').click();
-    }
-
-    public static clickEditProperty(propertyName: string, validation = true) {
+    public static clickEditProperty(propertyName: string) {
         cy.dataCy(`edit-${ConnectEventSchemaUtils.escape(propertyName)}`, {
             timeout: 10000,
         }).click();
-
-        if (validation) {
-            ConnectEventSchemaUtils.validateRuntimeName(propertyName);
-        }
-    }
-
-    public static regexValueInput() {
-        return cy.dataCy('regex-value');
-    }
-
-    public static regexReplaceWithValueInput() {
-        return cy.dataCy('regex-replace-with-value');
-    }
-
-    public static regexReplaceAllCheckbox() {
-        return cy.dataCy('regex-replace-all-value');
     }
 
     /**
      * Function to escape special characters in a string for use in Cypress
      * selectors
      */
-    public static escape(selector: string): string {
+    private static escape(selector: string): string {
         return selector
             .replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1')
             .toLowerCase();

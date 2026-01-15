@@ -31,6 +31,7 @@ describe('Creates a new adapter with a linked asset', () => {
         .setName('Machine Data Simulator Test')
         .addInput('input', 'wait-time-ms', '1000')
         .setStartAdapter(false)
+        .setTimestampProperty('timestamp')
         .build();
 
     beforeEach('Setup Test', () => {
@@ -78,9 +79,10 @@ describe('Creates a new adapter with a linked asset', () => {
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
 
-        // Go over the first two steps
-        ConnectBtns.nextBtn().click();
-        ConnectUtils.finishEventSchemaConfiguration();
+        // Go adapter settings page
+        ConnectBtns.adapterSettingsNextBtn().click();
+        ConnectBtns.configureSchemaNextBtn().click();
+        ConnectBtns.configureFieldsNextBtn().click();
 
         // Rename
         ConnectUtils.renameAdapter('Changed');
@@ -88,7 +90,6 @@ describe('Creates a new adapter with a linked asset', () => {
         // Deselect Asset 2
         ConnectUtils.editAsset([assetName1]);
 
-        // Select Asset 3 //TODO Click on Asset
         ConnectUtils.editAsset([assetName3]);
 
         ConnectBtns.storeEditAdapter().click();

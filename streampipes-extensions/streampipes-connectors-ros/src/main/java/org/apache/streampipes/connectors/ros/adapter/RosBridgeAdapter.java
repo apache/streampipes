@@ -29,11 +29,11 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -133,8 +133,8 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     getConfigurations(extractor.getStaticPropertyExtractor());
 
 
@@ -166,7 +166,10 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
 
     try {
       Map<String, Object> event = mapper.readValue(getNEvents.getEvents().get(0), HashMap.class);
-      return new ParserUtils().getGuessSchema(event);
+      var sampleData = SampleDataBuilder.create()
+          .sample(event)
+          .build();
+      return sampleData;
 
     } catch (JsonProcessingException e) {
       throw new AdapterException("Could not guess event schema for %s".formatted(getNEvents.getEvents().get(0)), e);

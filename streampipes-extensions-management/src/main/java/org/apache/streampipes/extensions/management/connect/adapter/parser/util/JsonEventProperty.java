@@ -34,6 +34,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
+// can be remoeved when geo json parser is removed
 public class JsonEventProperty {
 
   private static final Logger LOG = LoggerFactory.getLogger(JsonEventProperty.class);

@@ -58,6 +58,7 @@ describe('Test InfluxDB Integration', () => {
             .addInput('radio', 'db_authentication-token', '')
             .addInput('input', 'undefined-db_token-0', 'sp-admin')
             .addInput('input', 'pollingInterval', '200')
+            .setTimestampProperty('timestamp')
             .build();
 
         ThirdPartyIntegrationUtils.runTest(sink, adapter);

@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.model.connect.rules.schema;
 
-import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
+@Deprecated(since = "0.99.0", forRemoval = true)
 public class MoveRuleDescription extends SchemaTransformationRuleDescription {
 
   private String oldRuntimeKey;
@@ -57,11 +57,6 @@ public class MoveRuleDescription extends SchemaTransformationRuleDescription {
 
   public void setNewRuntimeKey(String newRuntimeKey) {
     this.newRuntimeKey = newRuntimeKey;
-  }
-
-  @Override
-  public void accept(ITransformationRuleVisitor visitor) {
-    visitor.visit(this);
   }
 
   @Override

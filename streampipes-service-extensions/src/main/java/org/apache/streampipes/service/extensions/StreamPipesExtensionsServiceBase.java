@@ -20,6 +20,10 @@ package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.connect.transformer.api.TransformationEngine;
+import org.apache.streampipes.connect.transformer.api.TransformationEngines;
+import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
+import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
@@ -33,7 +37,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.rest.extensions.WelcomePage;
-import org.apache.streampipes.rest.shared.exception.RestResponseLogMessageExceptionHandler;
+import org.apache.streampipes.rest.shared.exception.SpRestExceptionHandler;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
@@ -55,6 +59,7 @@ import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -63,7 +68,7 @@ import java.util.stream.Collectors;
     WebSecurityConfig.class,
     WelcomePage.class,
     ServiceHealthResource.class,
-    RestResponseLogMessageExceptionHandler.class,
+    SpRestExceptionHandler.class,
     StreamPipesPrometheusConfig.class
 })
 @ComponentScan({"org.apache.streampipes.rest.extensions.*", "org.apache.streampipes.service.base.rest.*"})
@@ -83,13 +88,24 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
       serviceDef.setServiceId(serviceId);
       DeclarersSingleton.getInstance().populate(networkingConfig.getHost(), networkingConfig.getPort(), serviceDef);
       SpRateLimiter.INSTANCE.createRateLimiter();
+
+      registerTransformationEngines(List.of(
+          GroovyScriptEngine::new,
+          GraalJsScriptEngine::new
+      ));
+
       startExtensionsService(this.getClass(), serviceDef, networkingConfig);
       ServiceLoadDataReportGenerator.getInstance().initialize();
+
     } catch (UnknownHostException e) {
       LOG.error(
           "Could not auto-resolve host address - "
               + "please manually provide the hostname using the SP_HOST environment variable");
     }
+  }
+
+  protected void registerTransformationEngines(List<Supplier<TransformationEngine>> transformationEngines) {
+    transformationEngines.forEach(TransformationEngines.INSTANCE::registerEngine);
   }
 
   public void afterServiceRegistered(SpServiceDefinition serviceDef,
@@ -115,6 +131,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         networkingConfig.getHost(),
         networkingConfig.getPort(),
         getServiceTags(extensions),
+        TransformationEngines.INSTANCE.getAvailableEngineMetadata(),
         getHealthCheckPath(),
         extensions);
 

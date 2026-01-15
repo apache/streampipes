@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.connect.rules;
 
+@Deprecated(since = "0.99.0", forRemoval = true)
 public enum TransformationRulePriority {
 
   ADD_TIMESTAMP(100),

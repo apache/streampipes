@@ -29,7 +29,7 @@ import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import {
     DataType,
     EventPropertyPrimitive,
-    EventPropertyUnion,
+    EventProperty,
     SemanticType,
     SemanticTypesRestService,
 } from '@streampipes/platform-services';
@@ -43,15 +43,14 @@ import { Router } from '@angular/router';
 })
 export class EditSchemaTransformationComponent implements OnInit {
     @Input()
-    cachedProperty: EventPropertyUnion;
+    cachedProperty: EventProperty;
 
     @Input() isTimestampProperty: boolean;
     @Input() isNestedProperty: boolean;
     @Input() isListProperty: boolean;
     @Input() isPrimitiveProperty: boolean;
 
-    @Output() dataTypeChanged = new EventEmitter<boolean>();
-    @Output() timestampSemanticsChanged = new EventEmitter<boolean>();
+    @Output() dataTypeChanged = new EventEmitter<void>();
 
     domainPropertyControl = new UntypedFormControl();
     semanticTypes: Observable<string[]>;
@@ -75,28 +74,16 @@ export class EditSchemaTransformationComponent implements OnInit {
                     : [];
             }),
         );
+        if (this.isTimestampProperty) {
+            this.domainPropertyControl.disable({ emitEvent: false });
+        }
 
         this.adapterIsInEditMode = this.router.url.includes('connect/edit');
     }
 
-    editTimestampDomainProperty(checked: boolean) {
-        if (checked) {
-            this.isTimestampProperty = true;
-            this.cachedProperty.semanticType = SemanticType.TIMESTAMP;
-            this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
-            (this.cachedProperty as EventPropertyPrimitive).runtimeType =
-                DataType.LONG;
-        } else {
-            this.cachedProperty.semanticType = undefined;
-            this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';
-            this.isTimestampProperty = false;
-        }
-        this.timestampSemanticsChanged.emit(this.isTimestampProperty);
+    asEventPropertyPrimitive(ep: EventProperty): EventPropertyPrimitive {
+        return ep as EventPropertyPrimitive;
     }
 
-    triggerTutorialStep(): void {
-        if (this.cachedProperty.runtimeName === 'temp') {
-            this.shepherdService.trigger('adapter-runtime-name-changed');
-        }
-    }
+    protected readonly EventPropertyPrimitive = EventPropertyPrimitive;
 }

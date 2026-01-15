@@ -32,7 +32,7 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -133,12 +133,12 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                                      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     var dataInputStream = getDataFromEndpoint();
 
-    return extractor.selectedParser().getGuessSchema(dataInputStream);
+    return extractor.selectedParser().getSampleData(dataInputStream);
   }
 
   @Override

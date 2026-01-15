@@ -26,10 +26,11 @@ import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProv
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
@@ -51,9 +52,9 @@ public class OpcUaSchemaProvider {
    * @throws AdapterException
    * @throws ParseException
    */
-  public GuessSchema getSchema(OpcUaClientProvider clientProvider,
-                               IAdapterParameterExtractor extractor,
-                               IStreamPipesClient streamPipesClient)
+  public SampleData getSampleData(OpcUaClientProvider clientProvider,
+                                   IAdapterParameterExtractor extractor,
+                                   IStreamPipesClient streamPipesClient)
       throws AdapterException, ParseException {
     var builder = GuessSchemaBuilder.create();
     EventSchema eventSchema = new EventSchema();
@@ -88,18 +89,19 @@ public class OpcUaSchemaProvider {
       makeEventPreview(connectedClient.getClient(), selectedNodes, eventPreview, fieldStatusInfos, returnValues);
 
 
+
     } catch (Exception e) {
       throw new AdapterException("Could not guess schema for opc node:  " + e.getMessage(), e);
     } finally {
       clientProvider.releaseClient(opcUaConfig);
     }
 
-    eventSchema.setEventProperties(allProperties);
-    builder.properties(allProperties);
-    builder.fieldStatusInfos(fieldStatusInfos);
-    builder.preview(eventPreview);
+    var sampleData = SampleDataBuilder.create()
+                     .sample(eventPreview)
+                     .build();
 
-    return builder.build();
+
+    return sampleData;
   }
 
   private static void makeEventPreview(
@@ -124,7 +126,7 @@ public class OpcUaSchemaProvider {
             Map.of(),
             fieldStatusInfos,
             null,
-            FieldStatusInfo.bad(additionalInfo, false));
+            FieldStatusInfo.bad(additionalInfo));
       }
     }
   }

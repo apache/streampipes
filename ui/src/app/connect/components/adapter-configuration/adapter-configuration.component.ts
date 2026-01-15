@@ -16,17 +16,20 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+    Component,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
-import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { Router } from '@angular/router';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { AdapterConfigurationStateService } from './adapter-configuration-state-service/adapter-configuration-state.service';
 
 @Component({
     selector: 'sp-adapter-configuration',
@@ -34,63 +37,85 @@ import { TranslateService } from '@ngx-translate/core';
     styleUrls: ['./adapter-configuration.component.scss'],
     standalone: false,
 })
-export class AdapterConfigurationComponent implements OnInit {
+export class AdapterConfigurationComponent implements OnInit, OnDestroy {
+    private shepherdService = inject(ShepherdService);
+    private router = inject(Router);
+    private translate = inject(TranslateService);
+    private stateService = inject(AdapterConfigurationStateService);
+
+    @Input() adapterDescription: AdapterDescription;
+
+    public state = this.stateService.state;
+
     /**
      * Used to display the type of the configured adapter
      */
     @Input() displayName = '';
-    @Input() adapter: AdapterDescription;
     @Input() isEditMode: boolean;
 
     myStepper: MatStepper;
-    parentForm: UntypedFormGroup;
     pageTitle = '';
 
-    private eventSchemaComponent: EventSchemaComponent;
-
-    constructor(
-        private dialogService: DialogService,
-        private transformationRuleService: TransformationRuleService,
-        private shepherdService: ShepherdService,
-        private _formBuilder: UntypedFormBuilder,
-        private router: Router,
-        private translate: TranslateService,
-    ) {}
-
     ngOnInit() {
-        this.parentForm = this._formBuilder.group({});
         this.pageTitle = this.isEditMode
             ? this.translate.instant('Edit adapter: ') + this.displayName
             : this.translate.instant('New adapter: ') + this.displayName;
+
+        if (!this.adapterDescription.transformationConfig) {
+            this.adapterDescription.transformationConfig = {
+                inputs: [],
+                language: 'javascript',
+                scriptActive: false,
+                outputs: [],
+                script: '',
+                reduceEventRateRule: null,
+                removeDuplicateRule: null,
+            };
+        }
+        if (this.adapterDescription) {
+            if (!this.isEditMode) {
+                this.stateService.initializeCreateMode(this.adapterDescription);
+            } else {
+                this.stateService.initializeEditMode(this.adapterDescription);
+            }
+        }
     }
 
-    removeSelection() {
+    navigateToAdapterCatalog() {
+        this.stateService.reset();
         this.router.navigate(['connect']).then();
     }
 
-    clickSpecificSettingsNextButton() {
+    ngOnDestroy() {
+        this.stateService.reset();
+    }
+
+    nextAdapterSettings() {
         this.shepherdService.trigger('specific-settings-next-button');
-        this.eventSchemaComponent.guessSchema();
+        this.goForward();
+        this.stateService.updateAdapter(this.adapterDescription);
+
+        if (this.adapterDescription.transformationConfig.inputs.length == 0) {
+            this.stateService.getSampleEvent(this.adapterDescription);
+        }
+    }
+
+    nextConfigureSchema() {
+        if (this.stateService.state().autoLoadSchema) {
+            this.stateService.getEventSchema(this.adapterDescription);
+        } else {
+            this.stateService.updateEventPreview(this.adapterDescription);
+        }
+
+        if (this.stateService.state().transformationConfigurationChanged) {
+            this.stateService.openTransformationConfigurationChangedDialog();
+        }
         this.goForward();
     }
 
-    clickEventSchemaNextButtonButton() {
-        this.applySchema();
-
+    nextConfigureFields() {
         this.shepherdService.trigger('event-schema-next-button');
         this.goForward();
-    }
-
-    public applySchema() {
-        const originalSchema = this.eventSchemaComponent.getOriginalSchema();
-        const targetSchema = this.eventSchemaComponent.getTargetSchema();
-        this.adapter.dataStream.eventSchema = targetSchema;
-
-        this.adapter.rules =
-            this.transformationRuleService.makeTransformationRuleDescriptions(
-                originalSchema,
-                targetSchema,
-            );
     }
 
     goBack() {
@@ -102,27 +127,11 @@ export class AdapterConfigurationComponent implements OnInit {
     }
 
     public adapterWasStarted() {
+        this.stateService.reset();
         this.router.navigate(['connect']);
-    }
-
-    @ViewChild(EventSchemaComponent) set schemaComponent(
-        eventSchemaComponent: EventSchemaComponent,
-    ) {
-        this.eventSchemaComponent = eventSchemaComponent;
     }
 
     @ViewChild('stepper') set stepperComponent(stepperComponent: MatStepper) {
         this.myStepper = stepperComponent;
-    }
-
-    openDocumentation() {
-        this.dialogService.open(SpAdapterDocumentationDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Documentation',
-            width: '50vw',
-            data: {
-                appId: this.adapter.appId,
-            },
-        });
     }
 }

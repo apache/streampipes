@@ -20,10 +20,8 @@ package org.apache.streampipes.connect.management.compact;
 
 import org.apache.streampipes.connect.management.compact.generator.AdapterBasicsGenerator;
 import org.apache.streampipes.connect.management.compact.generator.AdapterConfigGenerator;
-import org.apache.streampipes.connect.management.compact.generator.AdapterEnrichmentRuleGenerator;
 import org.apache.streampipes.connect.management.compact.generator.AdapterModelGenerator;
 import org.apache.streampipes.connect.management.compact.generator.AdapterSchemaGenerator;
-import org.apache.streampipes.connect.management.compact.generator.AdapterTransformationRuleGenerator;
 import org.apache.streampipes.connect.management.management.GuessManagement;
 
 import java.util.List;
@@ -37,9 +35,7 @@ public class AdapterGenerationSteps {
         new AdapterSchemaGenerator(
             new SchemaMetadataEnricher(),
             new GuessManagement()
-        ),
-        new AdapterEnrichmentRuleGenerator(),
-        new AdapterTransformationRuleGenerator()
+        )
     );
   }
 }

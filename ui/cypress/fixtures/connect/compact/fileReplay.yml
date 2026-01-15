@@ -32,9 +32,6 @@ schema:
         description: ''
         propertyScope: HEADER_PROPERTY
         semanticType: http://schema.org/DateTime
-transform:
-    rename: {}
-    measurementUnit: {}
 createOptions:
     persist: true
     start: true
