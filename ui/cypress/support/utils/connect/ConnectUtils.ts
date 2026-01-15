@@ -398,8 +398,14 @@ export class ConnectUtils {
     }
 
     public static replaceAdapterScript(script: string) {
+        // Ensure that the script is loaded
+        ConnectBtns.configureSchemaScriptEditor().should(
+            'contain.text',
+            'out.collect(event);',
+        );
+
         ConnectBtns.configureSchemaScriptEditor()
-            .type('{backspace}'.repeat(17)) // 2. Delete the "  return event;\n}" part
+            .type('{backspace}'.repeat(22)) // 2. Delete the "  out.collect(event);\n}" part
             .type(script);
     }
 

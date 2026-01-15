@@ -20,23 +20,10 @@ package org.apache.streampipes.connect.transformer.api;
 
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 
-import java.util.Map;
+@FunctionalInterface
+public interface OutputCollector<T> {
 
-/**
- * Transforms an input event map into an output event map.
- * Implementations are language-specific but must adhere to this contract.
- */
-public interface ScriptTransformer {
+  void collect(T event) throws ScriptExecutionException;
 
-  /**
-   * Apply the compiled template to the incoming data.
-   *
-   * @param input input event map keyed by runtime name
-   * @param out output event
-   * @param ctx reserved for later, currently null
-   * @throws ScriptExecutionException Exception when execution fails or returns an invalid result
-   */
-  void transform(Map<String, Object> input,
-                 OutputCollector<Map<String, Object>> out,
-                 Context ctx) throws ScriptExecutionException;
+
 }

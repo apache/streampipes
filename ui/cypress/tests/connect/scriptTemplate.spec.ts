@@ -22,7 +22,7 @@ import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 const TEMPLATE_NAME = 'TestTemplate';
 const SCRIPT_LINE = "event.b = 'b';";
 const SCRIPT = `  ${SCRIPT_LINE}
-return event;
+out.collect(event);
 }`;
 
 describe('Validate Warning Pops For Configuration Changes ', () => {

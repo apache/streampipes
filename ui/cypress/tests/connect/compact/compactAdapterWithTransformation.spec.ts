@@ -30,10 +30,10 @@ describe('Add Compact Adapters', () => {
         const newPropertyName = 'temperature_renamed';
         const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
             .withScript(
-                'function transform(event) {\n' +
+                'function transform(event, out, ctx) {\n' +
                     '  event.temperature_renamed = event.temperature \n' +
                     '  delete event.temperature \n' +
-                    '  return event;\n' +
+                    '  out.collect(event);\n' +
                     '}',
             )
             .setStart()

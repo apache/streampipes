@@ -22,11 +22,12 @@ import org.apache.streampipes.connect.transformer.api.ScriptTransformer;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
-import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-public class ScriptTransformationPipelineElement implements IAdapterPipelineElement {
+public class ScriptTransformationPipelineElement {
   ScriptTransformer scriptTransformer;
 
   public ScriptTransformationPipelineElement(String language, String transformationScript) {
@@ -38,11 +39,11 @@ public class ScriptTransformationPipelineElement implements IAdapterPipelineElem
     }
   }
 
-
-  @Override
-  public Map<String, Object> process(Map<String, Object> event) {
+  public List<Map<String, Object>> process(Map<String, Object> event) {
     try {
-      return scriptTransformer.transform(event);
+      List<Map<String, Object>> out = new ArrayList<>();
+      scriptTransformer.transform(event, out::add, null);
+      return out;
     } catch (ScriptExecutionException e) {
       throw new RuntimeException(e);
     }

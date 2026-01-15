@@ -276,7 +276,7 @@ class MigrateAdaptersToUseScriptTest {
                  "Time window should match legacy config");
 
     // Ensure the script still contains the standard boilerplate even if this rule is stateful
-    assertTrue(resultConfig.getScript().contains("function transform(event)"),
+    assertTrue(resultConfig.getScript().contains("function transform(event, out, ctx)"),
                "Script should still be generated as a container");
     assertFalse(adapter.getTransformationConfig().isScriptActive());
   }

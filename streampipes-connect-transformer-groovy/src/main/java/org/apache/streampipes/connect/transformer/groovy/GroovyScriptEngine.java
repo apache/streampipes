@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.connect.transformer.groovy;
 
+import org.apache.streampipes.connect.transformer.api.Context;
+import org.apache.streampipes.connect.transformer.api.OutputCollector;
 import org.apache.streampipes.connect.transformer.api.ScriptTransformer;
 import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
@@ -40,7 +42,7 @@ public class GroovyScriptEngine implements TransformationEngine {
     return new ScriptMetadata(
         "groovy",
     "Groovy",
-    ""
+    "out.collect(input)"
     );
   }
 
@@ -56,17 +58,21 @@ public class GroovyScriptEngine implements TransformationEngine {
 
     Class<? extends Script> scriptClass = script.getClass();
 
-    return input -> execute(scriptClass, input);
+    return (input, out, ctx) -> execute(scriptClass, input, out, ctx);
   }
 
-  private Map<String, Object> execute(Class<? extends Script> scriptClass, Map<String, Object> input)
+  private void execute(Class<? extends Script> scriptClass,
+                       Map<String, Object> input,
+                       OutputCollector<Map<String, Object>> out,
+                       Context ctx)
       throws ScriptExecutionException {
     try {
       Binding binding = new Binding();
       binding.setVariable("input", input);
+      binding.setVariable("out", TransformationEngineConversionUtils.convertingCollector(out, metadata().language()));
+      binding.setVariable("ctx", ctx);
       Script scriptInstance = InvokerHelper.createScript(scriptClass, binding);
-      Object result = scriptInstance.run();
-      return TransformationEngineConversionUtils.ensureMap(result, metadata().language());
+      scriptInstance.run();
     } catch (Exception e) {
       throw new ScriptExecutionException("Groovy template execution failed", e);
     }
