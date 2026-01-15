@@ -65,7 +65,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
     if (existingMeasure.isEmpty()) {
       setSchemaVersionAndStoreMeasurement(measure);
-      new DataLakePermissionManager().makeAndPersistDataLakePermission(measure.getMeasureName(), principalSid);
+      new DataLakePermissionManager().makeAndPersistDataLakePermission(measure.getElementId(), principalSid);
 
 
     } else {

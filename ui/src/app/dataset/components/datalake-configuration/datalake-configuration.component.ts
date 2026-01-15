@@ -32,6 +32,7 @@ import {
     ExportProviderService,
     RetentionLog,
     UserService,
+    DataLakeMeasure,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -361,22 +362,19 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
             this.queryEntryCounts(measurements, 'eventsLatest', 7);
         }
     }
-    showPermissionsDialog(measurementName: string) {
-        const dialogRef = this.dialogService.open(
-            ObjectPermissionDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: this.translate.instant('Manage permissions'),
-                width: '50vw',
-                data: {
-                    objectInstanceId: measurementName,
-                    headerTitle:
-                        this.translate.instant(
-                            'Manage permissions for dataset ',
-                        ) + measurementName,
-                },
+    showPermissionsDialog(element: DataLakeMeasure) {
+        this.dialogService.open(ObjectPermissionDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Manage permissions'),
+            width: '50vw',
+            data: {
+                objectInstanceId: element.elementId,
+                headerTitle:
+                    this.translateService.instant(
+                        'Manage permissions for dataset ',
+                    ) + element.measureName,
             },
-        );
+        });
     }
 
     queryEntryCounts(

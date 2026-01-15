@@ -68,7 +68,7 @@ public class AuthConstants {
 
   public static final String HAS_READ_DATASET_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_DATASET_VALUE + Q + BE2;
-  public static final String HAS_DATASET_PIPELINE_PRIVILEGE =
+  public static final String HAS_WRITE_DATASET_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_DATASET_VALUE + Q + BE2;
 
   public static final String HAS_READ_PIPELINE_ELEMENT_PRIVILEGE =

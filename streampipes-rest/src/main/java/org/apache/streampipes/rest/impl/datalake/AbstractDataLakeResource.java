@@ -22,12 +22,18 @@ import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
+import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Objects;
 
 public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
 
   final IDataExplorerSchemaManagement dataLakeMeasureManagement;
+  private final IDataLakeMeasureStorage dataLakeMeasureStorage =
+      StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
 
   
 
@@ -50,27 +56,25 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATASET_VALUE);
   }
 
+  /**
+   * required by Spring expression, do not delete if IDE shows this as unused
+   * @param measurementName the name of the data lake measure
+   * @param permission read or write privilege
+   * @return true if user has permission, false if not or measure does not exist
+   */
   public boolean checkPermissionByName(String measurementName,
-      String permission) {
+                                       String permission) {
 
-    var spPermissionEvaluator = new SpPermissionEvaluator();
-    var authentication = SecurityContextHolder.getContext()
-        .getAuthentication();
-    return spPermissionEvaluator.hasPermission(
-        authentication,
-        measurementName,
-        permission);
+    var measure = dataLakeMeasureStorage.getByMeasureName(measurementName);
+    if (Objects.nonNull(measure)) {
+      var spPermissionEvaluator = new SpPermissionEvaluator();
+      var authentication = SecurityContextHolder.getContext()
+          .getAuthentication();
+      return spPermissionEvaluator.hasPermission(
+          authentication,
+          measure.getElementId(),
+          permission);
+    }
+    return false;
   }
-
-  public boolean checkPermissionById(String measurementId,
-      String permission) {
-    var spPermissionEvaluator = new SpPermissionEvaluator();
-    var authentication = SecurityContextHolder.getContext()
-        .getAuthentication();
-    return spPermissionEvaluator.hasPermission(
-        authentication,
-        this.dataLakeMeasureManagement.getById(measurementId).getMeasureName(),
-        permission);
-  }
-
 }

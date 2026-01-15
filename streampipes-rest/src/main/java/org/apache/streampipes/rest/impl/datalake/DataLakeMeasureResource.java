@@ -67,8 +67,8 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   @Operation(summary = "Retrieve measurement counts", description = "Retrieves the entry counts for the specified measurements from the data lake.")
   @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
-  @PostFilter("hasPermission(filterObject.key, 'READ')")
-  public Map<String, Integer> getEntryCountsOfMeasurments(
+  @PostFilter("this.checkPermissionByName(filterObject.key, 'READ')")
+  public Map<String, Integer> getEntryCountsOfMeasurements(
       @Parameter(description = "A list of measurement names to return the count.") @RequestParam(value = "measurementNames") List<String> measurementNames,
       @Parameter(description = "The number of days from today where the count should start") @RequestParam(value = "daysBack", defaultValue = "-1") int daysBack) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
@@ -83,7 +83,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   }
 
   @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and this.checkPermissionById(#elementId, 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
   public ResponseEntity<?> getDataLakeMeasure(@PathVariable("id") String elementId) {
     var measure = this.dataLakeMeasureManagement.getById(elementId);
     if (Objects.nonNull(measure)) {
@@ -105,7 +105,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   }
 
   @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-   @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionById(#elementId, 'WRITE')")
+   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<?> updateDataLakeMeasure(
       @PathVariable("id") String elementId,
       @RequestBody DataLakeMeasure measure) {
@@ -121,7 +121,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   }
 
   @DeleteMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-   @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionById(#elementId, 'READ')")
+   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'READ')")
   public ResponseEntity<?> deleteDataLakeMeasure(@PathVariable("id") String elementId) {
     try {
       this.dataLakeMeasureManagement.deleteMeasurement(elementId);
