@@ -16,21 +16,10 @@
  *
  */
 
-package org.apache.streampipes.manager.execution.provider;
+package org.apache.streampipes.model.health;
 
-import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import java.util.Set;
 
-import java.util.List;
-
-/**
- * Provides pipeline elements from the pipeline of interest (for start actions)
- */
-
-public class CurrentPipelineElementProvider implements PipelineElementProvider {
-  @Override
-  public List<InvocableStreamPipesEntity> getProcessorsAndSinks(PipelineExecutionInfo executionInfo) {
-    return executionInfo.getProcessorsAndSinks();
-  }
-
+public record ExtensionInstanceHealth(Set<String> runningAdapterInstanceIds,
+                                      Set<String> runningPipelineElementInstanceIds) {
 }

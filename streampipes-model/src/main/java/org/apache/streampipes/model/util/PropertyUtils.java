@@ -30,10 +30,6 @@ import java.util.Map;
 
 public class PropertyUtils {
 
-  public static Map<String, Object> getRuntimeFormat(EventProperty eventProperty) {
-    return getUntypedRuntimeFormat(eventProperty);
-  }
-
   public static Map<String, Object> getUntypedRuntimeFormat(EventProperty ep) {
     if (ep instanceof EventPropertyPrimitive) {
       Map<String, Object> result = new HashMap<>();

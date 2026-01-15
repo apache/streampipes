@@ -16,15 +16,14 @@
  *
  */
 
-package org.apache.streampipes.manager.execution.provider;
+package org.apache.streampipes.health.monitoring.model;
 
-import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.List;
+import java.util.Map;
 
-public interface PipelineElementProvider {
-
-  List<InvocableStreamPipesEntity> getProcessorsAndSinks(PipelineExecutionInfo executionInfo);
-
+public record ActiveCoreInstances(List<AdapterDescription> adapters,
+                                  Map<String, InvocableStreamPipesEntity> elementsPerPipeline) {
 }

@@ -19,18 +19,13 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
-import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
-import org.apache.streampipes.connect.management.health.AdapterOperationLock;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
-import org.apache.streampipes.resource.management.AdapterResourceManager;
-import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
-import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
@@ -38,61 +33,30 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class WorkerAdministrationManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(WorkerAdministrationManagement.class);
-  private static final int MAX_RETRIES = 7;
 
   private final IAdapterStorage adapterDescriptionStorage;
-
-  private final AdapterHealthCheck adapterHealthCheck;
+  private final IPermissionStorage permissionStorage;
+  private final PermissionResourceManager permissionResourceManager;
+  private final UserResourceManager userResourceManager;
 
   public WorkerAdministrationManagement(
-      IAdapterStorage adapterStorage,
-      AdapterMetrics adapterMetrics,
-      AdapterResourceManager adapterResourceManager,
-      DataStreamResourceManager dataStreamResourceManager
-  ) {
-    this.adapterHealthCheck = new AdapterHealthCheck(
-        adapterStorage,
-        new AdapterMasterManagement(
-            adapterStorage,
-            adapterResourceManager,
-            dataStreamResourceManager,
-            adapterMetrics
-        )
-    );
-    this.adapterDescriptionStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
-  }
-
-  public void checkAndRestore(int retryCount) {
-    if (AdapterOperationLock.INSTANCE.isLocked()) {
-      LOG.info("Adapter operation already in progress, {}/{}", (retryCount + 1), MAX_RETRIES);
-      if (retryCount <= MAX_RETRIES) {
-        try {
-          TimeUnit.MILLISECONDS.sleep(3000);
-          retryCount++;
-          checkAndRestore(retryCount);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      } else {
-        LOG.info("Max retries for running adapter operations reached, will do unlock which might cause conflicts...");
-        AdapterOperationLock.INSTANCE.unlock();
-        this.adapterHealthCheck.checkAndRestoreAdapters();
-      }
-    } else {
-      AdapterOperationLock.INSTANCE.lock();
-      this.adapterHealthCheck.checkAndRestoreAdapters();
-      AdapterOperationLock.INSTANCE.unlock();
-    }
+      IAdapterStorage adapterDescriptionStorage,
+      IPermissionStorage permissionStorage,
+      UserResourceManager userResourceManager,
+      PermissionResourceManager permissionResourceManager) {
+    this.adapterDescriptionStorage = adapterDescriptionStorage;
+    this.userResourceManager = userResourceManager;
+    this.permissionStorage = permissionStorage;
+    this.permissionResourceManager = permissionResourceManager;
   }
 
   public void performAdapterMigrations(List<SpServiceTag> tags) {
-    var installedAdapters = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage().findAll();
-    var adminSid = new SpResourceManager().manageUsers().getAdminUser().getPrincipalId();
+    var installedAdapters = adapterDescriptionStorage.findAll();
+    var adminSid = userResourceManager.getAdminUser().getPrincipalId();
     installedAdapters.stream()
         .filter(adapter -> tags.stream().anyMatch(tag -> tag.getValue().equals(adapter.getAppId())))
         .forEach(adapter -> {
@@ -107,13 +71,11 @@ public class WorkerAdministrationManagement {
                   e);
             }
           }
-          var permissionStorage = CouchDbStorageManager.INSTANCE.getPermissionStorage();
           var elementId = adapter.getElementId();
           var permissions = permissionStorage.getUserPermissionsForObject(elementId);
           if (permissions.isEmpty()) {
             LOG.info("Adding default permission for adapter {}", adapter.getAppId());
-            new PermissionResourceManager()
-                .createDefault(elementId, AdapterDescription.class, adminSid, true);
+            permissionResourceManager.createDefault(elementId, AdapterDescription.class, adminSid, true);
           }
         });
   }

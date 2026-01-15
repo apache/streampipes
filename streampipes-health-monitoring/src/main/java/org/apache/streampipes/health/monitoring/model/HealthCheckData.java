@@ -16,16 +16,15 @@
  *
  */
 
-package org.apache.streampipes.manager.storage;
+package org.apache.streampipes.health.monitoring.model;
 
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.health.monitoring.ResourceProvider;
+import org.apache.streampipes.model.health.ExtensionInstanceHealth;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class RunningPipelineElementStorage {
-
-  public static Map<String, List<InvocableStreamPipesEntity>> runningProcessorsAndSinks = new HashMap<>();
-
+public record HealthCheckData(ResourceProvider resourceProvider,
+                              ActiveResources activeResources,
+                              Map<String, ActiveCoreInstances> activeCoreInstances,
+                              Map<String, ExtensionInstanceHealth> activeExtensionInstances) {
 }

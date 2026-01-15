@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public enum RunningInstances {
   INSTANCE;
@@ -63,6 +65,14 @@ public enum RunningInstances {
 
   public Integer getRunningInstancesCount() {
     return runningInstances.size();
+  }
+
+  public Set<String> getRunningInstanceIds() {
+    return runningInstances
+        .entrySet()
+        .stream()
+        .map((entry -> entry.getValue().getDescription().getElementId()))
+        .collect(Collectors.toSet());
   }
 
   public List<String> getRunningInstanceIdsForElement(String appId) {

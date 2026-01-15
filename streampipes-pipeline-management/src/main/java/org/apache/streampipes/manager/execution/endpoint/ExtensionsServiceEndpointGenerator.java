@@ -43,20 +43,23 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
 
   public ExtensionsServiceEndpointGenerator() {}
 
-  public String getEndpointResourceUrl(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  public String getEndpointResourceUrl(String appId,
+                                       SpServiceUrlProvider spServiceUrlProvider,
                                        Set<SpServiceTag> customServiceTags)
       throws NoServiceEndpointsAvailableException {
     return spServiceUrlProvider
         .getInvocationUrl(selectService(appId, spServiceUrlProvider, customServiceTags), appId);
   }
 
-  public String getEndpointBaseUrl(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  public String getEndpointBaseUrl(String appId,
+                                   SpServiceUrlProvider spServiceUrlProvider,
                                    Set<SpServiceTag> customServiceTags)
       throws NoServiceEndpointsAvailableException {
     return selectService(appId, spServiceUrlProvider, customServiceTags);
   }
 
-  private String selectService(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  private String selectService(String appId,
+                               SpServiceUrlProvider spServiceUrlProvider,
                                Set<SpServiceTag> customServiceTags)
       throws NoServiceEndpointsAvailableException {
     Environment env = Environments.getEnvironment();
@@ -83,7 +86,8 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
         "Could not find any matching service endpoints - are all software components running?");
   }
 
-  private List<String> getServiceEndpoints(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  private List<String> getServiceEndpoints(String appId,
+                                           SpServiceUrlProvider spServiceUrlProvider,
                                            Set<SpServiceTag> customServiceTags) {
     return SpServiceDiscovery.getServiceDiscovery()
         .getServiceEndpoints(DefaultSpServiceTypes.EXT, true,

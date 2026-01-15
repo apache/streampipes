@@ -16,27 +16,24 @@
  *
  */
 
-package org.apache.streampipes.manager.execution.provider;
+package org.apache.streampipes.manager.util;
 
-import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
-import org.apache.streampipes.manager.storage.RunningPipelineElementStorage;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Provides pipeline elements from the cache (for stop actions)
- */
+public class PipelineElementUtils {
 
-public class StoredPipelineElementProvider implements PipelineElementProvider {
-  @Override
-  public List<InvocableStreamPipesEntity> getProcessorsAndSinks(PipelineExecutionInfo executionInfo) {
-    if (RunningPipelineElementStorage.runningProcessorsAndSinks.containsKey(executionInfo.getPipelineId())) {
-      return RunningPipelineElementStorage.runningProcessorsAndSinks.get(executionInfo.getPipelineId());
-    } else {
-      return new ArrayList<>();
+  public static <T extends InvocableStreamPipesEntity> List<T> filterInvocation(
+      List<InvocableStreamPipesEntity> pipelineElements,
+      Class<T> clazz) {
+    if (pipelineElements == null || clazz == null) {
+      return List.of();
     }
-  }
 
+    return pipelineElements.stream()
+        .filter(clazz::isInstance)
+        .map(clazz::cast)
+        .toList();
+  }
 }

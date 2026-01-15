@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
@@ -30,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
-public class InvokePipelineElementSubmitter extends PipelineElementSubmitter {
+public class InvokePipelineElementSubmitter extends BasePipelineElementSubmitter {
 
   private static final Logger LOG = LoggerFactory.getLogger(InvokePipelineElementSubmitter.class);
 
@@ -39,9 +38,9 @@ public class InvokePipelineElementSubmitter extends PipelineElementSubmitter {
   }
 
   @Override
-  protected PipelineElementStatus submitElement(EndpointSelectable pipelineElement) {
-    String endpointUrl = pipelineElement.getSelectedEndpointUrl();
-    return new InvokeHttpRequest().execute(pipelineElement, endpointUrl, this.pipelineId);
+  protected PipelineElementStatus submitElement(InvocableStreamPipesEntity pipelineElement) {
+    var invocationUrl = getInvocationUrl(pipelineElement);
+    return new InvokeHttpRequest().execute(pipelineElement, invocationUrl, this.pipelineId);
   }
 
   @Override
