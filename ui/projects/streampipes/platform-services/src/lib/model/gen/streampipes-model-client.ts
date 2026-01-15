@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-19 14:22:26.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-15 16:03:19.
 
-import { Storable } from './platform-services';
+import { Storable } from './streampipes-model';
 
 export class Group implements Storable {
     alternateIds: string[];

@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-12-19 14:22:24.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-15 16:03:01.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -112,10 +113,8 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'icon': string;
     'rules': TransformationRuleDescriptionUnion[];
     'running': boolean;
-    'schemaRules': TransformationRuleDescriptionUnion[];
     'selectedEndpointUrl': string;
-    'streamRules': TransformationRuleDescriptionUnion[];
-    'valueRules': TransformationRuleDescriptionUnion[];
+    'transformationConfig': TransformationConfig;
 
     static 'fromData'(
         data: AdapterDescription,
@@ -145,40 +144,17 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
         instance.running = data.running;
-        instance.schemaRules = __getCopyArrayFn(
-            TransformationRuleDescription.fromDataUnion,
-        )(data.schemaRules);
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
-        instance.streamRules = __getCopyArrayFn(
-            TransformationRuleDescription.fromDataUnion,
-        )(data.streamRules);
-        instance.valueRules = __getCopyArrayFn(
-            TransformationRuleDescription.fromDataUnion,
-        )(data.valueRules);
+        instance.transformationConfig = TransformationConfig.fromData(
+            data.transformationConfig,
+        );
         return instance;
     }
 }
 
-export class AdapterEventPreview {
-    inputData: string;
-    rules: TransformationRuleDescriptionUnion[];
-
-    static fromData(
-        data: AdapterEventPreview,
-        target?: AdapterEventPreview,
-    ): AdapterEventPreview {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new AdapterEventPreview();
-        instance.inputData = data.inputData;
-        instance.rules = __getCopyArrayFn(
-            TransformationRuleDescription.fromDataUnion,
-        )(data.rules);
-        return instance;
-    }
-}
-
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class TransformationRuleDescription {
     '@class':
         | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription'
@@ -252,6 +228,9 @@ export class TransformationRuleDescription {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class ValueTransformationRuleDescription extends TransformationRuleDescription {
     '@class':
         | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription'
@@ -300,6 +279,9 @@ export class ValueTransformationRuleDescription extends TransformationRuleDescri
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class AddTimestampRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription';
     'propertyScope': PropertyScope;
@@ -320,6 +302,9 @@ export class AddTimestampRuleDescription extends ValueTransformationRuleDescript
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class AddValueTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription';
     'datatype': string;
@@ -782,6 +767,9 @@ export class Certificate implements Storable {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class ChangeDatatypeTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription';
     'originalDatatypeXsd': string;
@@ -876,11 +864,10 @@ export class CompactAdapter {
     configuration: { [index: string]: any }[];
     createOptions: CreateOptions;
     description: string;
-    enrich: EnrichmentConfig;
     id: string;
     name: string;
     schema: { [index: string]: CompactEventProperty };
-    transform: TransformationConfig;
+    transformationConfig: TransformationConfig;
 
     static fromData(
         data: CompactAdapter,
@@ -896,18 +883,20 @@ export class CompactAdapter {
         )(data.configuration);
         instance.createOptions = CreateOptions.fromData(data.createOptions);
         instance.description = data.description;
-        instance.enrich = EnrichmentConfig.fromData(data.enrich);
         instance.id = data.id;
         instance.name = data.name;
         instance.schema = __getCopyObjectFn(CompactEventProperty.fromData)(
             data.schema,
         );
-        instance.transform = TransformationConfig.fromData(data.transform);
+        instance.transformationConfig = TransformationConfig.fromData(
+            data.transformationConfig,
+        );
         return instance;
     }
 }
 
 export class CompactEventProperty {
+    additionalMetadata: { [index: string]: any };
     description: string;
     label: string;
     propertyScope: string;
@@ -921,6 +910,9 @@ export class CompactEventProperty {
             return data;
         }
         const instance = target || new CompactEventProperty();
+        instance.additionalMetadata = __getCopyObjectFn(__identity<any>())(
+            data.additionalMetadata,
+        );
         instance.description = data.description;
         instance.label = data.label;
         instance.propertyScope = data.propertyScope;
@@ -1038,6 +1030,34 @@ export class ConfigItem {
     }
 }
 
+export class ConnectTransformationScriptTemplate implements Storable {
+    appDocType: string;
+    code: string;
+    description: string;
+    elementId: string;
+    language: string;
+    name: string;
+    rev: string;
+
+    static fromData(
+        data: ConnectTransformationScriptTemplate,
+        target?: ConnectTransformationScriptTemplate,
+    ): ConnectTransformationScriptTemplate {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ConnectTransformationScriptTemplate();
+        instance.appDocType = data.appDocType;
+        instance.code = data.code;
+        instance.description = data.description;
+        instance.elementId = data.elementId;
+        instance.language = data.language;
+        instance.name = data.name;
+        instance.rev = data.rev;
+        return instance;
+    }
+}
+
 export class MessagesInfo {
     groupId: string;
     topicName: string;
@@ -1076,6 +1096,9 @@ export class ConsumedMessagesInfo extends MessagesInfo {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class CorrectionValueTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription';
     'correctionValue': number;
@@ -1531,6 +1554,9 @@ export class DataSinkType {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class SchemaTransformationRuleDescription extends TransformationRuleDescription {
     '@class':
         | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
@@ -1551,6 +1577,9 @@ export class SchemaTransformationRuleDescription extends TransformationRuleDescr
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class DeleteRuleDescription extends SchemaTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription';
     'runtimeKey': string;
@@ -1594,22 +1623,6 @@ export interface EndpointSelectable {
     detachPath: string;
     name: string;
     selectedEndpointUrl: string;
-}
-
-export class EnrichmentConfig {
-    timestamp: string;
-
-    static fromData(
-        data: EnrichmentConfig,
-        target?: EnrichmentConfig,
-    ): EnrichmentConfig {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new EnrichmentConfig();
-        instance.timestamp = data.timestamp;
-        return instance;
-    }
 }
 
 export class ValueSpecification {
@@ -1828,6 +1841,9 @@ export class EventPropertyPrimitive extends EventProperty {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class StreamTransformationRuleDescription extends TransformationRuleDescription {
     '@class':
         | 'org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription'
@@ -1863,6 +1879,9 @@ export class StreamTransformationRuleDescription extends TransformationRuleDescr
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class EventRateTransformationRuleDescription extends StreamTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription';
     'aggregationTimeWindow': number;
@@ -2058,7 +2077,6 @@ export class ExtensionItemInstallationRequest {
 
 export class FieldStatusInfo {
     additionalInfo: string;
-    changesRequired: boolean;
     fieldStatus: FieldStatus;
 
     static fromData(
@@ -2070,7 +2088,6 @@ export class FieldStatusInfo {
         }
         const instance = target || new FieldStatusInfo();
         instance.additionalInfo = data.additionalInfo;
-        instance.changesRequired = data.changesRequired;
         instance.fieldStatus = data.fieldStatus;
         return instance;
     }
@@ -2620,6 +2637,9 @@ export class MessagingSettings {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class MoveRuleDescription extends SchemaTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
     'newRuntimeKey': string;
@@ -3388,6 +3408,27 @@ export class QuantitativeValue extends ValueSpecification {
     }
 }
 
+export class ReduceEventRateRule {
+    aggregationTimeWindow: number;
+    aggregationType: string;
+
+    static fromData(
+        data: ReduceEventRateRule,
+        target?: ReduceEventRateRule,
+    ): ReduceEventRateRule {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ReduceEventRateRule();
+        instance.aggregationTimeWindow = data.aggregationTimeWindow;
+        instance.aggregationType = data.aggregationType;
+        return instance;
+    }
+}
+
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class RegexTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription';
     'regex': string;
@@ -3412,6 +3453,25 @@ export class RegexTransformationRuleDescription extends ValueTransformationRuleD
     }
 }
 
+export class RemoveDuplicateRule {
+    filterTimeWindow: string;
+
+    static fromData(
+        data: RemoveDuplicateRule,
+        target?: RemoveDuplicateRule,
+    ): RemoveDuplicateRule {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RemoveDuplicateRule();
+        instance.filterTimeWindow = data.filterTimeWindow;
+        return instance;
+    }
+}
+
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
     'filterTimeWindow': string;
@@ -3431,6 +3491,9 @@ export class RemoveDuplicatesTransformationRuleDescription extends StreamTransfo
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class RenameRuleDescription extends SchemaTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription';
     'newRuntimeKey': string;
@@ -3710,6 +3773,45 @@ export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
         instance.selectedNodesInternalNames = __getCopyArrayFn(
             __identity<string>(),
         )(data.selectedNodesInternalNames);
+        return instance;
+    }
+}
+
+export class SampleData {
+    fieldStatusInfos: { [index: string]: FieldStatusInfo };
+    samples: { [index: string]: any }[];
+
+    static fromData(data: SampleData, target?: SampleData): SampleData {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SampleData();
+        instance.fieldStatusInfos = __getCopyObjectFn(FieldStatusInfo.fromData)(
+            data.fieldStatusInfos,
+        );
+        instance.samples = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.samples);
+        return instance;
+    }
+}
+
+export class ScriptMetadata {
+    language: string;
+    name: string;
+    template: string;
+
+    static fromData(
+        data: ScriptMetadata,
+        target?: ScriptMetadata,
+    ): ScriptMetadata {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ScriptMetadata();
+        instance.language = data.language;
+        instance.name = data.name;
+        instance.template = data.template;
         return instance;
     }
 }
@@ -4032,6 +4134,7 @@ export class SpServiceRegistration implements Storable {
     scheme: string;
     serviceUrl: string;
     status: SpServiceStatus;
+    supportedScriptLanguages: ScriptMetadata[];
     svcGroup: string;
     svcId: string;
     svcType: string;
@@ -4059,6 +4162,9 @@ export class SpServiceRegistration implements Storable {
         instance.scheme = data.scheme;
         instance.serviceUrl = data.serviceUrl;
         instance.status = data.status;
+        instance.supportedScriptLanguages = __getCopyArrayFn(
+            ScriptMetadata.fromData,
+        )(data.supportedScriptLanguages);
         instance.svcGroup = data.svcGroup;
         instance.svcId = data.svcId;
         instance.svcType = data.svcType;
@@ -4212,6 +4318,9 @@ export class SuccessMessage extends Message {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class TimestampTranfsformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription';
     'formatString': string;
@@ -4280,8 +4389,13 @@ export class TransformOutputStrategy extends OutputStrategy {
 }
 
 export class TransformationConfig {
-    measurementUnit: { [index: string]: string };
-    rename: { [index: string]: string };
+    inputs: { [index: string]: any }[];
+    language: string;
+    outputs: { [index: string]: any }[];
+    reduceEventRateRule: ReduceEventRateRule;
+    removeDuplicateRule: RemoveDuplicateRule;
+    script: string;
+    scriptActive: boolean;
 
     static fromData(
         data: TransformationConfig,
@@ -4291,10 +4405,21 @@ export class TransformationConfig {
             return data;
         }
         const instance = target || new TransformationConfig();
-        instance.measurementUnit = __getCopyObjectFn(__identity<string>())(
-            data.measurementUnit,
+        instance.inputs = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.inputs);
+        instance.language = data.language;
+        instance.outputs = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.outputs);
+        instance.reduceEventRateRule = ReduceEventRateRule.fromData(
+            data.reduceEventRateRule,
         );
-        instance.rename = __getCopyObjectFn(__identity<string>())(data.rename);
+        instance.removeDuplicateRule = RemoveDuplicateRule.fromData(
+            data.removeDuplicateRule,
+        );
+        instance.script = data.script;
+        instance.scriptActive = data.scriptActive;
         return instance;
     }
 }
@@ -4329,6 +4454,9 @@ export class TreeInputNode {
     }
 }
 
+/**
+ * @deprecated since 0.99.0, for removal
+ */
 export class UnitTransformRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription';
     'fromUnitRessourceURL': string;
@@ -4478,7 +4606,7 @@ export type EventPropertyUnion =
     | EventPropertyNested
     | EventPropertyPrimitive;
 
-export type FieldStatus = 'GOOD' | 'BAD' | 'ATTENTION';
+export type FieldStatus = 'GOOD' | 'BAD';
 
 export type Isa95Type =
     | 'PROCESS_CELL'
