@@ -159,7 +159,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   @Operation(summary = "Get a list of all measurement series", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class)))) })
    @PreAuthorize("this.hasReadAuthority()")
-     @PostFilter("hasPermission(filterObject.measureName, 'READ')")
+     @PostFilter("hasPermission(filterObject.elementId, 'READ')")
       public  List<DataLakeMeasure> getAll() {
     List<DataLakeMeasure> allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
     return allMeasurements;

@@ -37,7 +37,7 @@ public class DataLakePermissionManager {
   }
 
   public void makeAndPersistDataLakePermission(String measurement,
-      String ownerSid) {
+                                               String ownerSid) {
 
     Permission p = createDataLakePermission(measurement, ownerSid);
     getPermissionStorage().persist(p);

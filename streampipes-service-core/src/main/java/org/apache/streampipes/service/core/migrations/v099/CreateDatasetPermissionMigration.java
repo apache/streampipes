@@ -41,10 +41,9 @@ public class CreateDatasetPermissionMigration implements Migration {
   private final PermissionResourceManager permissionResourceManager;
 
   private static final String DATALAKE_APP_ID =
-        "org.apache.streampipes.sinks.internal.jvm.datalake";
+      "org.apache.streampipes.sinks.internal.jvm.datalake";
 
   private static final String DB_MEASUREMENT = "db_measurement";
-
 
 
   public CreateDatasetPermissionMigration() {
@@ -62,12 +61,12 @@ public class CreateDatasetPermissionMigration implements Migration {
   @Override
   public void executeMigration() throws IOException {
     dataLakeStorage.findAll().forEach(measure -> {
-      var existingPermission = permissionStorage.getObjectPermissions(List.of(measure.getElementId()));
+      var existingPermission = permissionStorage.getUserPermissionsForObject(measure.getElementId());
 
       if (existingPermission.isEmpty()) {
 
         permissionResourceManager.createDefault(
-            measure.getMeasureName(),
+            measure.getElementId(),
             DataLakeMeasure.class,
             findAssociatedPipelineOwner(measure),
             true
@@ -77,28 +76,33 @@ public class CreateDatasetPermissionMigration implements Migration {
   }
 
   private String findAssociatedPipelineOwner(DataLakeMeasure measure) {
+    String measureName = measure.getMeasureName();
+
     return pipelineStorage.findAll().stream()
-        .filter(pipeline -> pipeline.getActions().stream()
-            .anyMatch(action -> action instanceof DataSinkInvocation 
-              && DATALAKE_APP_ID.equals(((DataSinkInvocation) action).getAppId())))
-        .map(pipeline -> {
-            return pipeline.getActions().stream()
-                .filter(action -> action instanceof DataSinkInvocation)
-                .map(action -> (DataSinkInvocation) action)
-                .filter(ds -> DATALAKE_APP_ID.equals(ds.getAppId()))
+        .filter(pipeline -> pipeline.getActions() != null)
+        .filter(pipeline ->
+            pipeline.getActions().stream()
+                .filter(Objects::nonNull)
+                .filter(action -> DATALAKE_APP_ID.equals(action.getAppId()))
                 .map(this::extractMeasurement)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .findFirst()
-                .map(measurement -> pipeline.getCreatedByUser())
-                .orElse(null);
-        })
+                .flatMap(Optional::stream)
+                .anyMatch(measureName::equals)
+        )
+        .map(pipeline -> getPipelineOwner(pipeline.getPipelineId()))
         .filter(Objects::nonNull)
         .findFirst()
         .orElse(null);
-}
+  }
 
-private Optional<String> extractMeasurement(DataSinkInvocation datasink) {
+  private String getPipelineOwner(String pipelineId) {
+    var permission = permissionStorage.getUserPermissionsForObject(pipelineId);
+    if (!permission.isEmpty()) {
+      return permission.get(0).getOwnerSid();
+    }
+    return null;
+  }
+
+  private Optional<String> extractMeasurement(DataSinkInvocation datasink) {
     return datasink.getStaticProperties().stream()
         .filter(sp -> DB_MEASUREMENT.equals(sp.getInternalName()))
         .filter(FreeTextStaticProperty.class::isInstance)
@@ -106,7 +110,7 @@ private Optional<String> extractMeasurement(DataSinkInvocation datasink) {
         .map(FreeTextStaticProperty::getValue)
         .filter(value -> !value.isBlank())
         .findFirst();
-}
+  }
 
   @Override
   public String getDescription() {
