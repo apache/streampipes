@@ -27,22 +27,20 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchema
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
-import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.EventSchemaProvider;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.ContinuousPlcRequestReader;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.OneTimePlcRequestReader;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.PlcRequestProvider;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
 import org.apache.streampipes.extensions.connectors.plc.adapter.s7.config.ConfigurationParser;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.CodeLanguage;
@@ -54,7 +52,6 @@ import org.apache.plc4x.java.api.PlcConnectionManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Plc4xS7Adapter implements StreamPipesAdapter {
@@ -82,15 +79,15 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
   public static final String PLC_NODE_INPUT_COLLECTION_ALTERNATIVE = "plc_node_input_collection_alternative";
 
   public static final String CODE_TEMPLATE = """
-      // This code block can be used to manually specify the addresses of the PLC registers.
-      // The syntax is based on the PLC4X syntax, see [1].
-      // Address Pattern:
-      // propertyName=%{Memory-Area}{start-address}:{Data-Type}[{array-size}]
-
-      temperature=%I0.0:INT
-
-      // [1] https://plc4x.apache.org/users/protocols/s7.html
-      """;
+                                             // This code block can be used to manually specify the addresses of the PLC registers.
+                                             // The syntax is based on the PLC4X syntax, see [1].
+                                             // Address Pattern:
+                                             // propertyName=%{Memory-Area}{start-address}:{Data-Type}[{array-size}]
+                                             
+                                             temperature=%I0.0:INT
+                                             
+                                             // [1] https://plc4x.apache.org/users/protocols/s7.html
+                                             """;
 
   private final PlcConnectionManager connectionManager;
   private final PlcRequestProvider requestProvider;
@@ -111,44 +108,78 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create(ID, 1, () -> new Plc4xS7Adapter(connectionManager))
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredTextParameter(Labels.withId(PLC_IP))
-        .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
-        .requiredAlternatives(
-            Labels.withId(PLC_NODE_INPUT_ALTERNATIVES),
-            Alternatives.from(Labels.withId(PLC_NODE_INPUT_COLLECTION_ALTERNATIVE),
-                StaticProperties.collection(Labels.withId(PLC_NODES),
-                    StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-                    StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
-                    StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-                        Options.from("Bool", "Byte", "Int", "Word", "Real", "Char", "String", "Date", "Time of day",
-                            "Date and Time"))),
-                true),
-            Alternatives.from(Labels.withId(PLC_NODE_INPUT_CODE_BLOCK_ALTIVE),
-                StaticProperties.codeStaticProperty(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE)))
-        .buildConfiguration();
+                                      .withLocales(Locales.EN)
+                                      .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+                                      .requiredTextParameter(Labels.withId(PLC_IP))
+                                      .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
+                                      .requiredAlternatives(
+                                          Labels.withId(PLC_NODE_INPUT_ALTERNATIVES),
+                                          Alternatives.from(
+                                              Labels.withId(PLC_NODE_INPUT_COLLECTION_ALTERNATIVE),
+                                              StaticProperties.collection(
+                                                  Labels.withId(PLC_NODES),
+                                                  StaticProperties.stringFreeTextProperty(Labels.withId(
+                                                      PLC_NODE_RUNTIME_NAME)),
+                                                  StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
+                                                  StaticProperties.singleValueSelection(
+                                                      Labels.withId(PLC_NODE_TYPE),
+                                                      Options.from(
+                                                          "Bool",
+                                                          "Byte",
+                                                          "Int",
+                                                          "Word",
+                                                          "Real",
+                                                          "Char",
+                                                          "String",
+                                                          "Date",
+                                                          "Time of day",
+                                                          "Date and Time"
+                                                      )
+                                                  )
+                                              ),
+                                              true
+                                          ),
+                                          Alternatives.from(
+                                              Labels.withId(PLC_NODE_INPUT_CODE_BLOCK_ALTIVE),
+                                              StaticProperties.codeStaticProperty(
+                                                  Labels.withId(PLC_CODE_BLOCK),
+                                                  CodeLanguage.None,
+                                                  CODE_TEMPLATE
+                                              )
+                                          )
+                                      )
+                                      .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
+  public void onAdapterStarted(
+      IAdapterParameterExtractor extractor,
+      IEventCollector collector,
+      IAdapterRuntimeContext adapterRuntimeContext
+  ) {
     var settings = getConfigurations(extractor.getStaticPropertyExtractor());
     var plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
     this.pullAdapterScheduler = new PullAdapterScheduler();
-    this.pullAdapterScheduler.schedule(plcRequestReader, extractor.getAdapterDescription().getElementId());
+    this.pullAdapterScheduler.schedule(
+        plcRequestReader,
+        extractor.getAdapterDescription()
+                 .getElementId()
+    );
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
+  public void onAdapterStopped(
+      IAdapterParameterExtractor extractor,
+      IAdapterRuntimeContext adapterRuntimeContext
+  ) {
     this.pullAdapterScheduler.shutdown();
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public SampleData onSampleDataRequested(
+      IAdapterParameterExtractor extractor,
+      IAdapterGuessSchemaContext adapterGuessSchemaContext
+  ) throws AdapterException {
     try {
       var settings = getConfigurations(extractor.getStaticPropertyExtractor());
 
@@ -158,14 +189,13 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
         );
       }
 
-      GuessSchemaBuilder builder = GuessSchemaBuilder.create();
-      List<EventProperty> allProperties = new EventSchemaProvider().makeSchema(settings.nodes());
       var event = new OneTimePlcRequestReader(connectionManager, settings, requestProvider).readPlcDataSynchronized();
 
-      builder.properties(allProperties);
-      builder.preview(event);
+      var sampleData = SampleDataBuilder.create()
+                                        .sample(event)
+                                        .build();
 
-      return builder.build();
+      return sampleData;
     } catch (Exception e) {
       throw new AdapterException(e.getMessage(), e);
     }
@@ -209,7 +239,8 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
 
       result.put(
           memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME),
-          getNodeAddress(memberExtractor));
+          getNodeAddress(memberExtractor)
+      );
 
     }
 
@@ -226,8 +257,9 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
     return "%s:%s".formatted(
         memberExtractor.textParameter(PLC_NODE_NAME),
         memberExtractor.selectedSingleValue(PLC_NODE_TYPE, String.class)
-            .toUpperCase()
-            .replaceAll(" ", "_"));
+                       .toUpperCase()
+                       .replaceAll(" ", "_")
+    );
   }
 
 }

@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserActivationToken;
+import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
@@ -90,4 +91,6 @@ public interface INoSqlStorage {
   CRUDStorage<Certificate> getCertificateStorage();
 
   CRUDStorage<SpAssetModel> getAssetStorage();
+
+  CRUDStorage<ConnectTransformationScriptTemplate> getTransformationScriptTemplateStorage();
 }

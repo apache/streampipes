@@ -29,7 +29,7 @@
     }
     <div class="migration-infos">
         @for (updateInfo of adapterPipelineUpdateInfos; track updateInfo) {
-            <div>
+            <div data-cy="sp-connect-adapter-edit-warning">
                 @if (updateInfo.canAutoMigrate) {
                     <div fxLayoutAlign="start center">
                         <i class="material-icons">check</i>&nbsp;{{
@@ -42,11 +42,7 @@
                 }
                 @if (!updateInfo.canAutoMigrate) {
                     <div fxLayoutAlign="start center">
-                        <i
-                            class="material-icons"
-                            data-cy="sp-connect-adapter-edit-warning"
-                            >warning</i
-                        >
+                        <i class="material-icons">warning</i>
                         &nbsp;{{ 'Pipeline' | translate }}&nbsp;<b>{{
                             updateInfo.pipelineName
                         }}</b

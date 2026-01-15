@@ -16,14 +16,15 @@
 ~
 -->
 
-<div class="general-options-panel" fxLayout="column">
-    <span class="general-options-header">Unit Transformation</span>
-
-    @if (isPrimitiveProperty && !isTimestampProperty && isNumericProperty) {
-        <sp-ep-settings-section
-            sectionTitle="Unit conversion"
-            sectionDescription="Converts the field value from the given measurement unit to the provided target unit"
-            fxFlex="100"
+@if (isPrimitiveProperty && !isTimestampProperty && isNumericProperty) {
+    <sp-split-section [title]="'Unit Transformation' | translate" [level]="3">
+        <sp-form-field
+            [level]="3"
+            [label]="'Unit conversion' | translate"
+            [description]="
+                'Converts the field value from the given measurement unit to the provided target unit'
+                    | translate
+            "
         >
             <div fxLayout="row">
                 <div class="w-100" fxLayoutAlign="start center" fxFlex="45">
@@ -109,6 +110,6 @@
                     }
                 </div>
             </div>
-        </sp-ep-settings-section>
-    }
-</div>
+        </sp-form-field>
+    </sp-split-section>
+}

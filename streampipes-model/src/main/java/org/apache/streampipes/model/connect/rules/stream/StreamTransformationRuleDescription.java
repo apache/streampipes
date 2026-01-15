@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
     @JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
     @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),
 })
+@Deprecated(since = "0.99.0", forRemoval = true)
 public abstract class StreamTransformationRuleDescription extends TransformationRuleDescription {
 
   public StreamTransformationRuleDescription() {

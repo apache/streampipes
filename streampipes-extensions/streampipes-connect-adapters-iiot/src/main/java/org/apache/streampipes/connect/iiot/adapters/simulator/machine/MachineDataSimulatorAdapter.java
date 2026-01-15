@@ -25,7 +25,7 @@ import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -76,12 +76,12 @@ public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
     this.machineDataSimulator.setRunning(false);
   }
 
-
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                                          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     var ex = extractor.getStaticPropertyExtractor();
     var selectedSimulatorOption = ex.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
-    return MachineDataSimulatorUtils.getSimulator(selectedSimulatorOption).getSchema();
+
+    return MachineDataSimulatorUtils.getSimulator(selectedSimulatorOption).getSampleData();
   }
 }

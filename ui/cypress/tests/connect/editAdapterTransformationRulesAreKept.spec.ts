@@ -19,6 +19,7 @@
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
+import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 
 describe('Test Adapter Transformation Rules are properly stored', () => {
     beforeEach('Setup Test', () => {
@@ -29,6 +30,7 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         // Set up new adapter
         const builder = AdapterBuilder.create('Machine_Data_Simulator')
             .setName('Machine_Data_Simulator')
+            .setTimestampProperty('timestamp')
             .addInput('input', 'wait-time-ms', '1000');
         const configuration = builder.build();
         ConnectUtils.goToConnect();
@@ -36,12 +38,17 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         ConnectUtils.selectAdapter(configuration.adapterType);
         ConnectBtns.adapterSettingsNextBtn().click();
 
-        ConnectBtns.schemaNextBtn().click();
-        cy.dataCy('sp-adapter-name').type('Test Adapter');
+        cy.wait(1000);
+        ConnectBtns.configureSchemaNextBtn().click();
+
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+
+        ConnectBtns.configureFieldsNextBtn().click();
+        ConnectBtns.adapterNameInput().type('Test Adapter');
         ConnectBtns.connectRemoveDuplicateBox().click();
-        cy.dataCy('connect-remove-duplicates-input').type('10000');
+        cy.dataCy('connect-remove-duplicates-input').clear().type('10000');
         ConnectBtns.connectReduceEventRate().click();
-        cy.dataCy('connect-reduce-event-input').type('20000');
+        cy.dataCy('connect-reduce-event-input').clear().type('20000');
         ConnectBtns.adapterSettingsStartAdapter().click();
         ConnectUtils.closeAdapterPreview();
 
@@ -50,7 +57,9 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
         ConnectBtns.adapterSettingsNextBtn().click();
-        ConnectBtns.schemaNextBtn().click();
+        ConnectBtns.configureSchemaNextBtn().click();
+
+        ConnectBtns.configureFieldsNextBtn().click();
 
         ConnectBtns.connectRemoveDuplicateBox()
             .find('input')

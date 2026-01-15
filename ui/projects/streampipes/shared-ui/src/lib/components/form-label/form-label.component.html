@@ -17,6 +17,8 @@
   -->
 
 <div
+    [fxLayout]="level === 3 ? 'row' : 'column'"
+    [fxLayoutAlign]="level === 3 ? 'start center' : 'start start'"
     class="label-title"
     [class.text-lg]="level === 1"
     [class.text-md]="level === 2"
@@ -27,13 +29,20 @@
 >
     {{ label }}
     @if (description) {
-        <div
-            class="label-description"
-            [class.text-md]="level === 1"
-            [class.text-sm]="level === 2"
-            [class.text-xs]="level === 3"
-        >
-            {{ description }}
-        </div>
+        @if (level !== 3) {
+            <div
+                class="label-description"
+                [class.text-md]="level === 1"
+                [class.text-sm]="level === 2"
+            >
+                {{ description }}
+            </div>
+        } @else {
+            <div class="text-xs ml-2xs">
+                <i class="material-icons text-md" [matTooltip]="description"
+                    >help</i
+                >
+            </div>
+        }
     }
 </div>

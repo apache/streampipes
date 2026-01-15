@@ -31,11 +31,14 @@ import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissio
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinksMigration;
 import org.apache.streampipes.service.core.migrations.v099.AddAssetManagementViewMigration;
+import org.apache.streampipes.service.core.migrations.v099.AddScriptTemplateViewMigration;
 import org.apache.streampipes.service.core.migrations.v099.ComputeCertificateThumbprintMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
+import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
+import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
 import org.apache.streampipes.service.core.migrations.v970.AddDataLakePipelineTemplateMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddLinkSettingsMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddRolesToUserDbMigration;
@@ -72,7 +75,10 @@ public class AvailableMigrations {
         new CreateAssetPermissionMigration(),
         new RemoveObsoletePrivilegesMigration(),
         new UniqueDashboardIdMigration(),
-        new ComputeCertificateThumbprintMigration()
+        new AddScriptTemplateViewMigration(),
+        new ComputeCertificateThumbprintMigration(),
+        new MigrateAdaptersToUseScript(),
+        new ModifyAssetLinkIconMigration()
     );
   }
 }

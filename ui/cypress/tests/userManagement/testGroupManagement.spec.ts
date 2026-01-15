@@ -27,6 +27,7 @@ import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
 import { ConfigurationBtns } from '../../support/utils/configuration/ConfigurationBtns';
 import { UserBtns } from '../../support/utils/user/UserBtns';
+import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 
 describe('Test Group Management for Pipelines', () => {
     beforeEach('Setup Test', () => {
@@ -121,6 +122,6 @@ describe('Test Group Management for Pipelines', () => {
 
         // Delete group
         UserBtns.serviceDeleteBtn().eq(1).click();
-        UserBtns.confirmDeleteBtn().click();
+        SharedBtns.confirmDialogConfirmBtn().click();
     });
 });

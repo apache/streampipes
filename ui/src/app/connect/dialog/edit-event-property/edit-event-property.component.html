@@ -21,15 +21,16 @@
         <div fxFlex="100" fxLayout="column">
             <form #propertyForm="ngForm" fxLayout="column">
                 <div fxLayout="column" fxLayoutAlign="start" fxFlex="100">
-                    <div
-                        class="general-options-panel"
-                        fxLayout="column"
-                        fxFlex="100"
+                    <sp-split-section
+                        [level]="3"
+                        [title]="'Basics' | translate"
                     >
-                        <span class="general-options-header">Basics</span>
-                        <sp-ep-settings-section
-                            sectionTitle="Field label"
-                            sectionDescription="A label for better readability"
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Field label' | translate"
+                            [description]="
+                                'A label for better readability' | translate
+                            "
                         >
                             <mat-form-field class="w-100" color="accent">
                                 <input
@@ -40,10 +41,14 @@
                                     [(ngModel)]="cachedProperty.label"
                                 />
                             </mat-form-field>
-                        </sp-ep-settings-section>
-                        <sp-ep-settings-section
-                            sectionTitle="Field description"
-                            sectionDescription="A description for better readability"
+                        </sp-form-field>
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Field description' | translate"
+                            [description]="
+                                'A description for better readability'
+                                    | translate
+                            "
                         >
                             <mat-form-field class="full-width" color="accent">
                                 <textarea
@@ -57,8 +62,35 @@
                                 >
                                 </textarea>
                             </mat-form-field>
-                        </sp-ep-settings-section>
-                    </div>
+                        </sp-form-field>
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Field runtime name' | translate"
+                            [description]="
+                                'Identifies the field in the underlying runtime format'
+                                    | translate
+                            "
+                        >
+                            <div
+                                [attr.id]="
+                                    'input-runtime-name-' + cachedProperty.label
+                                "
+                                fxFlex="100"
+                            >
+                                <mat-form-field class="w-100" color="accent">
+                                    <input
+                                        matInput
+                                        placeholder="RuntimeName"
+                                        name="runtimename"
+                                        id="runtimename"
+                                        data-cy="connect-edit-field-runtime-name"
+                                        disabled="true"
+                                        [(ngModel)]="cachedProperty.runtimeName"
+                                    />
+                                </mat-form-field>
+                            </div>
+                        </sp-form-field>
+                    </sp-split-section>
 
                     <sp-edit-schema-transformation
                         [cachedProperty]="cachedProperty"
@@ -66,36 +98,17 @@
                         [isNestedProperty]="isEventPropertyNested"
                         [isListProperty]="isEventPropertyList"
                         [isPrimitiveProperty]="isEventPropertyPrimitive"
-                        (dataTypeChanged)="handleDataTypeChange($event)"
-                        (timestampSemanticsChanged)="
-                            handleTimestampChange($event)
-                        "
-                        #schemaTransformationComponent
+                        (dataTypeChanged)="handleDataTypeChange()"
                     >
                     </sp-edit-schema-transformation>
-
-                    @if (isEventPropertyPrimitive) {
-                        <sp-edit-value-transformation
-                            [cachedProperty]="cachedProperty"
-                            [isTimestampProperty]="isTimestampProperty"
-                            [isNumericProperty]="isNumericProperty"
-                            [isNestedProperty]="isEventPropertyNested"
-                            [isListProperty]="isEventPropertyList"
-                            [isPrimitiveProperty]="isEventPropertyPrimitive"
-                            [isStringProperty]="isStringProperty"
-                            #valueTransformationComponent
-                        >
-                        </sp-edit-value-transformation>
-                    }
 
                     @if (!isTimestampProperty && isEventPropertyPrimitive) {
                         <sp-edit-unit-transformation
                             [cachedProperty]="cachedProperty"
-                            [originalProperty]="originalProperty"
+                            [originalProperty]="eventProperty"
                             [isTimestampProperty]="isTimestampProperty"
                             [isNumericProperty]="isNumericProperty"
                             [isPrimitiveProperty]="isEventPropertyPrimitive"
-                            #unitTransformationComponent
                         >
                         </sp-edit-unit-transformation>
                     }

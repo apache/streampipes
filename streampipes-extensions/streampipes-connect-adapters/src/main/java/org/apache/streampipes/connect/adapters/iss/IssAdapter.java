@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.adapters.iss;
 
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.adapters.iss.model.IssModel;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
@@ -29,13 +30,11 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
-import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.vocabulary.Geo;
 
 import com.google.gson.Gson;
 import org.apache.http.client.fluent.Request;
@@ -46,9 +45,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import static org.apache.streampipes.sdk.helpers.EpProperties.doubleEp;
-import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 public class IssAdapter implements StreamPipesAdapter, IPullAdapter {
 
@@ -125,17 +121,17 @@ public class IssAdapter implements StreamPipesAdapter, IPullAdapter {
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) {
-    return GuessSchemaBuilder.create()
-        .property(timestampProperty(Timestamp))
-        .property(doubleEp(Labels.from(
-                Latitude, "Latitude",
-                "The latitude value of the current ISS location"),
-            Latitude, Geo.LAT))
-        .property(doubleEp(Labels.from(Longitude, "Longitude",
-                "The longitude value of the current ISS location"),
-            Longitude, Geo.LNG))
-        .build();
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                                 IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    try {
+      Map<String, Object> sampleEvent = getNextPosition();
+      return SampleDataBuilder.create()
+                              .sample(sampleEvent)
+                              .build();
+    } catch (IOException e) {
+      throw new AdapterException(e.getMessage());
+    }
+
+
   }
 }

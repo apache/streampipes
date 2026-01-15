@@ -21,6 +21,7 @@ import { UserBuilder } from '../builder/UserBuilder';
 import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserBtns } from './user/UserBtns';
 import { ConfigurationBtns } from './configuration/ConfigurationBtns';
+import { SharedBtns } from './shared/SharedBtns';
 
 export class UserUtils {
     public static adminUser = UserBuilder.create('admin@streampipes.apache.org')
@@ -116,7 +117,7 @@ export class UserUtils {
         this.goToUserConfiguration();
 
         UserBtns.deleteUserBtn(user.name).click();
-        UserBtns.confirmDeleteBtn().click();
+        SharedBtns.confirmDialogConfirmBtn().click();
     }
 
     public static createGroup(name: string, ...roles: UserRole[]) {

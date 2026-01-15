@@ -19,6 +19,7 @@ package org.apache.streampipes.manager.execution.endpoint;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -26,7 +27,10 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class ExtensionsServiceEndpointUtils {
 
@@ -49,6 +53,13 @@ public class ExtensionsServiceEndpointUtils {
     } catch (NoSuchElementException e) {
       return SpServiceUrlProvider.DATA_SINK;
     }
+  }
+
+  public static List<String> getDesiredServiceTags(String appId, SpServiceUrlProvider serviceUrlProvider,
+                                            Set<SpServiceTag> customServiceTags) {
+    return Stream
+        .concat(Stream.of(serviceUrlProvider.getServiceTag(appId)), customServiceTags.stream())
+        .map(SpServiceTag::asString).toList();
   }
 
   private static boolean isDataProcessor(NamedStreamPipesEntity entity) {

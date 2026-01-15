@@ -23,68 +23,73 @@
     >
         <div fxFlex="100">
             <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
-                <mat-form-field color="accent">
-                    <input
-                        formControlName="adapterName"
-                        matInput
-                        id="input-AdapterName"
-                        [placeholder]="'Adapter Name' | translate"
-                        data-cy="sp-adapter-name"
-                        required
-                        (blur)="triggerTutorialAdapterNameAssigned()"
-                    />
-                    @if (
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('invalidName')
-                    ) {
-                        <mat-error>
-                            Name can only contain letters, numbers, special
-                            characters (including umlauts), punctuation,
-                            symbols, and spaces.
-                        </mat-error>
-                    }
-                    @if (
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('leadingOrTrailingWhitespace')
-                    ) {
-                        <mat-error>
-                            Name cannot start or end with a space.
-                        </mat-error>
-                    }
-                    @if (
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('required') ||
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('whiteSpaceOnly')
-                    ) {
-                        <mat-error> Adapter name is required. </mat-error>
-                    }
-                    @if (
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('minlength') ||
-                        startAdapterForm
-                            .get('adapterName')
-                            .hasError('maxlength')
-                    ) {
-                        <mat-error>
-                            Adapter name must have between 3 and 40 characters.
-                        </mat-error>
-                    }
-                </mat-form-field>
-                <mat-form-field color="accent">
-                    <input
-                        matInput
-                        id="input-AdapterDescription"
-                        [ngModelOptions]="{ standalone: true }"
-                        [placeholder]="'Adapter Description' | translate"
-                        [(ngModel)]="adapterDescription.description"
-                    />
-                </mat-form-field>
+                <sp-form-field [level]="2" [label]="'Name' | translate">
+                    <mat-form-field color="accent">
+                        <input
+                            formControlName="adapterName"
+                            matInput
+                            id="input-AdapterName"
+                            [placeholder]="'Name' | translate"
+                            data-cy="sp-adapter-name"
+                            required
+                            (blur)="triggerTutorialAdapterNameAssigned()"
+                        />
+                        @if (
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('invalidName')
+                        ) {
+                            <mat-error>
+                                Name can only contain letters, numbers, special
+                                characters (including umlauts), punctuation,
+                                symbols, and spaces.
+                            </mat-error>
+                        }
+                        @if (
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('leadingOrTrailingWhitespace')
+                        ) {
+                            <mat-error>
+                                Name cannot start or end with a space.
+                            </mat-error>
+                        }
+                        @if (
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('required') ||
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('whiteSpaceOnly')
+                        ) {
+                            <mat-error> Adapter name is required. </mat-error>
+                        }
+                        @if (
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('minlength') ||
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('maxlength')
+                        ) {
+                            <mat-error>
+                                Adapter name must have between 3 and 40
+                                characters.
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </sp-form-field>
+                <sp-form-field [level]="2" [label]="'Description' | translate">
+                    <mat-form-field color="accent">
+                        <input
+                            matInput
+                            id="input-AdapterDescription"
+                            [ngModelOptions]="{ standalone: true }"
+                            [placeholder]="'Description' | translate"
+                            [(ngModel)]="adapterDescription.description"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
             </div>
         </div>
     </sp-basic-inner-panel>
@@ -140,22 +145,33 @@
             "
             optionIcon="cleaning_services"
             dataCy="connect-remove-duplicates-box"
-            [isChecked]="removeDuplicates"
-            (optionSelectedEmitter)="removeDuplicates = $event"
+            [isChecked]="
+                !!adapterDescription?.transformationConfig?.removeDuplicateRule
+            "
+            (optionSelectedEmitter)="onToggleDuplicates($event)"
         >
-            @if (removeDuplicates) {
-                <mat-form-field color="accent" class="mt-10">
-                    <input
-                        matInput
-                        id="input-removeDuplicatesTime"
-                        [ngModelOptions]="{ standalone: true }"
-                        [placeholder]="
-                            'Remove Duplicates Time Window' | translate
-                        "
-                        [(ngModel)]="removeDuplicatesTime"
-                        data-cy="connect-remove-duplicates-input"
-                    />
-                </mat-form-field>
+            @if (
+                adapterDescription?.transformationConfig?.removeDuplicateRule;
+                as removeDuplicateRule
+            ) {
+                <sp-form-field
+                    class="mt-md"
+                    [level]="3"
+                    [label]="'Time Window [ms]' | translate"
+                >
+                    <mat-form-field>
+                        <input
+                            matInput
+                            id="input-removeDuplicatesTime"
+                            [ngModelOptions]="{ standalone: true }"
+                            [placeholder]="
+                                'Remove Duplicates Time Window' | translate
+                            "
+                            [(ngModel)]="removeDuplicateRule.filterTimeWindow"
+                            data-cy="connect-remove-duplicates-input"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
             }
         </sp-adapter-options-panel>
 
@@ -167,40 +183,57 @@
             "
             optionIcon="speed"
             dataCy="connect-reduce-event-rate-box"
-            [isChecked]="eventRateReduction"
-            (optionSelectedEmitter)="eventRateReduction = $event"
+            [isChecked]="
+                !!adapterDescription?.transformationConfig?.reduceEventRateRule
+            "
+            (optionSelectedEmitter)="onToggleEventRateReduction($event)"
         >
-            @if (eventRateReduction) {
-                <mat-form-field color="accent" class="mt-10">
-                    <input
-                        type="number"
-                        matInput
-                        id="input-evenRateTime"
-                        [ngModelOptions]="{ standalone: true }"
-                        [(ngModel)]="eventRateTime"
-                        [placeholder]="'Time Window (Milliseconds)' | translate"
-                        matTooltipPosition="above"
-                        data-cy="connect-reduce-event-input"
-                    />
-                </mat-form-field>
-            }
-            @if (eventRateReduction) {
-                <mat-form-field color="accent">
-                    <mat-label>{{ 'Event Aggregation' | translate }}</mat-label>
-                    <mat-select
-                        [(ngModel)]="eventRateMode"
-                        [ngModelOptions]="{ standalone: true }"
-                    >
-                        <mat-option
-                            class="md-elevation-z1"
-                            style="background: white"
-                            matTooltip="Last Event in Time Window"
-                            value="none"
+            @if (
+                adapterDescription?.transformationConfig?.reduceEventRateRule;
+                as reduceEventRateRule
+            ) {
+                <sp-form-field
+                    class="mt-md"
+                    [level]="3"
+                    [label]="'Time Window [ms]' | translate"
+                >
+                    <mat-form-field>
+                        <input
+                            type="number"
+                            matInput
+                            id="input-evenRateTime"
+                            [ngModelOptions]="{ standalone: true }"
+                            [(ngModel)]="
+                                reduceEventRateRule.aggregationTimeWindow
+                            "
+                            [placeholder]="
+                                'Time Window (Milliseconds)' | translate
+                            "
+                            matTooltipPosition="above"
+                            data-cy="connect-reduce-event-input"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Event Aggregation' | translate"
+                >
+                    <mat-form-field>
+                        <mat-select
+                            [(ngModel)]="reduceEventRateRule.aggregationType"
+                            [ngModelOptions]="{ standalone: true }"
                         >
-                            None
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                            <mat-option
+                                class="md-elevation-z1"
+                                style="background: white"
+                                matTooltip="Last Event in Time Window"
+                                value="none"
+                            >
+                                None
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </sp-form-field>
             }
         </sp-adapter-options-panel>
 
@@ -218,30 +251,33 @@
                     (optionSelectedEmitter)="handlePersistOption($event)"
                 >
                     @if (saveInDataLake) {
-                        <mat-form-field color="accent" class="mt-10">
-                            <mat-label>{{
-                                'Select Time Field' | translate
-                            }}</mat-label>
-                            <mat-select
-                                [(ngModel)]="dataLakeTimestampField"
-                                [ngModelOptions]="{ standalone: true }"
-                                data-cy="sp-store-in-datalake-timestamp"
-                            >
-                                @for (
-                                    timestampField of eventSchema.eventProperties
-                                        | timestampFilter;
-                                    track timestampField
-                                ) {
-                                    <mat-option
-                                        class="md-elevation-z1"
-                                        style="background: white"
-                                        [value]="timestampField.runtimeName"
-                                    >
-                                        {{ timestampField.runtimeName }}
-                                    </mat-option>
-                                }
-                            </mat-select>
-                        </mat-form-field>
+                        <sp-form-field
+                            class="mt-md"
+                            [level]="3"
+                            [label]="'Select Time Field' | translate"
+                        >
+                            <mat-form-field color="accent">
+                                <mat-select
+                                    [(ngModel)]="dataLakeTimestampField"
+                                    [ngModelOptions]="{ standalone: true }"
+                                    data-cy="sp-store-in-datalake-timestamp"
+                                >
+                                    @for (
+                                        timestampField of eventSchema.eventProperties
+                                            | timestampFilter;
+                                        track timestampField
+                                    ) {
+                                        <mat-option
+                                            class="md-elevation-z1"
+                                            style="background: white"
+                                            [value]="timestampField.runtimeName"
+                                        >
+                                            {{ timestampField.runtimeName }}
+                                        </mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </sp-form-field>
                     }
                 </sp-adapter-options-panel>
             }
@@ -268,7 +304,7 @@
     </div>
 
     <div fxLayoutAlign="end" style="margin-top: 10px">
-        <button class="mat-basic" mat-flat-button (click)="removeSelection()">
+        <button class="mat-basic" mat-flat-button (click)="cancel()">
             {{ 'Cancel' | translate }}
         </button>
         <button

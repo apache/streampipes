@@ -1,0 +1,77 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="node">
+    <button
+        *ngIf="isExpandable()"
+        type="button"
+        class="tw"
+        (click)="toggle()"
+        [attr.aria-expanded]="open()"
+        title="Toggle"
+    >
+        <span class="chev" [class.open]="open()">▸</span>
+    </button>
+
+    <span class="tw tw--spacer" *ngIf="!isExpandable()"></span>
+
+    <span class="k" *ngIf="keyLabel !== null">{{ keyLabel }}</span>
+    <span class="colon" *ngIf="keyLabel !== null">:</span>
+
+    <ng-container *ngIf="isExpandable(); else leaf">
+        <span class="t">{{ typeLabel() }}</span>
+
+        <div class="children" *ngIf="open()">
+            <ng-container *ngIf="isArray(); else objectBranch">
+                <ng-container
+                    *ngFor="
+                        let item of arrayItems();
+                        let i = index;
+                        trackBy: trackByIndex
+                    "
+                >
+                    <sp-adapter-event-preview-node
+                        [keyLabel]="i"
+                        [value]="item"
+                        [expanded]="false"
+                        [maxStringLength]="maxStringLength"
+                        [sortKeys]="sortKeys"
+                    />
+                </ng-container>
+            </ng-container>
+
+            <ng-template #objectBranch>
+                <ng-container
+                    *ngFor="let kv of objectEntries(); trackBy: trackByKey"
+                >
+                    <sp-adapter-event-preview-node
+                        [keyLabel]="kv[0]"
+                        [value]="kv[1]"
+                        [expanded]="false"
+                        [maxStringLength]="maxStringLength"
+                        [sortKeys]="sortKeys"
+                    />
+                </ng-container>
+            </ng-template>
+        </div>
+    </ng-container>
+
+    <ng-template #leaf>
+        <span class="v" [class]="valueClass()">{{ leafText() }}</span>
+    </ng-template>
+</div>

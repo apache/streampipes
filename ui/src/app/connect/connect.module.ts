@@ -25,7 +25,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AdapterConfigurationComponent } from './components/adapter-configuration/adapter-configuration.component';
-import { EventSchemaComponent } from './components/adapter-configuration/schema-editor/event-schema/event-schema.component';
 
 import { MatInputModule } from '@angular/material/input';
 import { AdapterStartedDialog } from './dialog/adapter-started/adapter-started-dialog.component';
@@ -36,20 +35,12 @@ import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
 import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { TreeModule } from '@ali-hm/angular-tree-component';
 import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
-import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
 import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
-import { EventPropertyRowComponent } from './components/adapter-configuration/schema-editor/event-property-row/event-property-row.component';
-import { EventSchemaPreviewComponent } from './components/adapter-configuration/schema-editor/event-schema-preview/event-schema-preview.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 
-import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
-import { ErrorMessageComponent } from './components/adapter-configuration/schema-editor/error-message/error-message.component';
-import { LoadingMessageComponent } from './components/adapter-configuration/schema-editor/loading-message/loading-message.component';
-import { SchemaEditorHeaderComponent } from './components/adapter-configuration/schema-editor/schema-editor-header/schema-editor-header.component';
 import { StartAdapterConfigurationComponent } from './components/adapter-configuration/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
@@ -57,14 +48,11 @@ import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/filter-toolbar.component';
 import { EditSchemaTransformationComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-schema-transformation.component';
-import { EditValueTransformationComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-value-transformation.component';
-import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/components/ep-settings-section/ep-settings-section.component';
 import { SpAdapterOptionsPanelComponent } from './components/adapter-configuration/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CreateAdapterComponent } from './components/create-adapter/create-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
-import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/schema-editor/event-schema-error-hints/event-schema-error-hints.component';
 import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
 import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
 import { CanNotEditAdapterDialog } from './dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
@@ -101,13 +89,27 @@ import { AdapterStatusLightComponent } from './components/existing-adapters/adap
 import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
 import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { AdapterDetailsDataComponent } from './components/adapter-details/adapter-details-data/adapter-details-data.component';
-import { EditRegexTransformationComponent } from './dialog/edit-event-property/components/edit-regex-transformation/edit-regex-transformation.component';
 import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapter-code-panel.component';
 import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ConfigurationGroupComponent } from './components/adapter-configuration/adapter-settings/configuration-group/configuration-group.component';
+import { ConfigureSchemaComponent } from './components/adapter-configuration/configure-schema/configure-schema.component';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { ConfigureFieldsComponent } from './components/adapter-configuration/configure-fields/configure-fields.component';
+import { ConfigureFieldsPreviewComponent } from './components/adapter-configuration/configure-fields/configure-fields-preview/configure-fields-preview.component';
+import { ConfigureFieldsErrorMessageComponent } from './components/adapter-configuration/configure-fields/error-message/configure-fields-error-message.component';
+import { ConfigureFieldsLoadingMessageComponent } from './components/adapter-configuration/configure-fields/configure-fields-loading-message/configure-fields-loading-message.component';
+import { ConfigureFieldsHeaderComponent } from './components/adapter-configuration/configure-fields/configure-fields-header/configure-fields-header.component';
+import { EventPropertyRowComponent } from './components/adapter-configuration/configure-fields/event-property-row/event-property-row.component';
+import { NoTimestampErrorHintComponent } from './components/adapter-configuration/configure-fields/no-timestamp-error-hint/no-timestamp-error-hint.component';
+import { CreateAdapterTransformationTemplateDialogComponent } from './dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
+import { SelectAdapterTransformationTemplateDialogComponent } from './dialog/select-adapter-transformation-template-dialog/select-adapter-transformation-template-dialog.component';
+import { AdapterEventPreviewComponent } from './components/adapter-configuration/adapter-event-preview/adapter-event-preview.component';
+import { AdapterEventPreviewNodeComponent } from './components/adapter-configuration/adapter-event-preview/adapter-event-preview-node/adapter-event-preview-node.component';
+import { EventPropertyScopeComponent } from './components/adapter-configuration/configure-fields/event-property-row/event-property-scope/event-property-scope.component';
+import { ShowFieldStatusInfosComponent } from './components/adapter-configuration/configure-schema/show-field-status-infos/show-field-status-infos.component';
 
 @NgModule({
     imports: [
@@ -131,6 +133,7 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
         MatProgressBarModule,
         MatButtonToggleModule,
         CoreUiModule,
+        CodemirrorModule,
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
@@ -148,7 +151,6 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
         MatSliderModule,
         MatSnackBarModule,
         PlatformServicesModule,
-        TreeModule,
         TranslateModule.forChild(),
         RouterModule.forChild([
             {
@@ -202,7 +204,7 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
         SharedUiModule,
         TranslatePipe,
     ],
-    exports: [ErrorMessageComponent],
+    exports: [ConfigureFieldsErrorMessageComponent],
     declarations: [
         AdapterCodePanelComponent,
         AdapterConfigurationComponent,
@@ -214,27 +216,21 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
         AdapterSettingsComponent,
         AdapterCatalogComponent,
         DeleteAdapterDialogComponent,
-        EventSchemaComponent,
+        ConfigureFieldsComponent,
         EditEventPropertyComponent,
-        EditRegexTransformationComponent,
-        EventPropertyRowComponent,
         EditUnitTransformationComponent,
         EditSchemaTransformationComponent,
-        EditValueTransformationComponent,
-        EditTimestampPropertyComponent,
         EditDataTypeComponent,
-        EventSchemaPreviewComponent,
+        ConfigureFieldsPreviewComponent,
         ExistingAdaptersComponent,
         AdapterFilterPipe,
         AdapterConfigurationComponent,
         TimestampPipe,
-        EditCorrectionValueComponent,
         AdapterConfigurationComponent,
         ConfigurationGroupComponent,
-        ErrorMessageComponent,
-        LoadingMessageComponent,
-        SchemaEditorHeaderComponent,
-        SpEpSettingsSectionComponent,
+        ConfigureFieldsErrorMessageComponent,
+        ConfigureFieldsLoadingMessageComponent,
+        ConfigureFieldsHeaderComponent,
         StartAdapterConfigurationComponent,
         SpAdapterDeploymentSettingsComponent,
         SpAdapterDetailsLogsComponent,
@@ -249,9 +245,17 @@ import { ConfigurationGroupComponent } from './components/adapter-configuration/
         SpConnectFilterToolbarComponent,
         CreateAdapterComponent,
         EditAdapterComponent,
-        EventSchemaErrorHintsComponent,
         CanNotEditAdapterDialog,
         AllAdapterActionsComponent,
+        ConfigureSchemaComponent,
+        EventPropertyRowComponent,
+        NoTimestampErrorHintComponent,
+        CreateAdapterTransformationTemplateDialogComponent,
+        SelectAdapterTransformationTemplateDialogComponent,
+        AdapterEventPreviewComponent,
+        AdapterEventPreviewNodeComponent,
+        EventPropertyScopeComponent,
+        ShowFieldStatusInfosComponent,
     ],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -19,16 +19,18 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.shared.DatatypeUtils;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.Tuple2;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 
@@ -62,13 +64,12 @@ public class CsvParser implements IParser {
 
   public static final String DESCRIPTION = "Can be used to read CSV";
 
-  private final ParserUtils parserUtils;
 
   private boolean header;
   private char delimiter;
 
   public CsvParser() {
-    parserUtils = new ParserUtils();
+
   }
 
   public CsvParser(boolean header, char delimiter) {
@@ -81,10 +82,12 @@ public class CsvParser implements IParser {
   public IParser fromDescription(List<StaticProperty> config) {
     var extractor = StaticPropertyExtractor.from(config);
 
-    char delimiter = extractor.singleValueParameter(DELIMITER, String.class).charAt(0);
+    char delimiter = extractor.singleValueParameter(DELIMITER, String.class)
+                              .charAt(0);
 
-    boolean header = extractor.selectedMultiValues(HEADER, String.class).stream()
-        .anyMatch("Header"::equals);
+    boolean header = extractor.selectedMultiValues(HEADER, String.class)
+                              .stream()
+                              .anyMatch("Header"::equals);
 
     return new CsvParser(header, delimiter);
   }
@@ -93,23 +96,31 @@ public class CsvParser implements IParser {
   @Override
   public ParserDescription declareDescription() {
     return ParserDescriptionBuilder.create(ID, LABEL, DESCRIPTION)
-        .requiredTextParameter(Labels.from(DELIMITER, "Delimiter",
-            "The delimiter of the CSV file(s). Mostly either , or ;"))
-        .requiredMultiValueSelection(Labels.from(HEADER, "Header",
-                "Does the CSV file include a header or not"),
-            List.of(new Option("Header", "Header")))
-        .build();
+                                   .requiredTextParameter(Labels.from(
+                                       DELIMITER, "Delimiter",
+                                       "The delimiter of the CSV file(s). Mostly either , or ;"
+                                   ))
+                                   .requiredMultiValueSelection(
+                                       Labels.from(
+                                           HEADER, "Header",
+                                           "Does the CSV file include a header or not"
+                                       ),
+                                       List.of(new Option("Header", "Header"))
+                                   )
+                                   .build();
   }
 
   @Override
-  public GuessSchema getGuessSchema(InputStream inputStream) throws ParseException {
+  public SampleData getSampleData(InputStream inputStream) throws AdapterException {
     var csvReader = getCsvReader(inputStream);
 
     var headerAndSample = getHeaderAndFirstSample(csvReader);
 
     var event = toMap(headerAndSample.k, headerAndSample.v, true);
 
-    return parserUtils.getGuessSchema(event);
+    return SampleDataBuilder.create()
+                            .sample(event)
+                            .build();
   }
 
 
@@ -188,8 +199,8 @@ public class CsvParser implements IParser {
       // create headers if not available in data
       if (!header) {
         headers = IntStream.range(0, sample.length)
-            .mapToObj(i -> "key_" + i)
-            .toArray(String[]::new);
+                           .mapToObj(i -> "key_" + i)
+                           .toArray(String[]::new);
       }
 
     } catch (IOException | CsvValidationException e) {

@@ -41,4 +41,11 @@ public class WorkerPaths {
     return WorkerMainPath + "/guess/schema";
   }
 
+  // TODO naming
+  public static String getSamplePath() {
+    return WorkerMainPath + "/guess/sample";
+  }
+
+
+
 }

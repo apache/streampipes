@@ -56,16 +56,20 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.configureAdapter(newUserConfiguration);
 
         // Update event schema
+        ConnectBtns.getNewSampleBtn().click();
         ConnectUtils.finishEventSchemaConfiguration();
 
-        cy.dataCy('sp-adapter-name').clear().type(newAdapterName);
+        cy.wait(1000);
+        ConnectBtns.refreshSchemaBtn().click();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+        ConnectUtils.finishConfigureFieldsConfiguration();
+
+        ConnectBtns.adapterNameInput().clear().type(newAdapterName);
 
         // This wait is required to ensure that there is no couch db update conflict
         ConnectBtns.storeEditAdapter().click();
 
-        cy.dataCy('sp-connect-adapter-success-added', {
-            timeout: 60000,
-        }).should('be.visible');
+        ConnectBtns.connectAdapterAddedSuccessfully().should('be.visible');
 
         ConnectUtils.closeAdapterPreview();
 
@@ -77,7 +81,7 @@ describe('Test Edit Adapter', () => {
     });
 
     it('Successfully edit adapter with persistence pipeline', () => {
-        ConnectUtils.addMachineDataSimulator('simulator', true, '1000');
+        ConnectUtils.addMachineDataSimulator('simulator', true, '200');
 
         ConnectUtils.goToConnect();
 
@@ -87,15 +91,19 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.editAdapter().click();
 
         // change data type of density to integer
-        ConnectBtns.nextBtn().click();
-        ConnectEventSchemaUtils.changePropertyDataType(
-            'density',
-            'Integer',
-            true,
-        );
-        ConnectEventSchemaUtils.renameProperty('density', 'density2');
+        ConnectBtns.adapterSettingsNextBtn().click();
 
-        ConnectUtils.storeAndStartEditedAdapter();
+        ConnectUtils.replaceAdapterScript(
+            '  event.density = event.density * 2;\n' +
+                '  return event;\n' +
+                '}',
+        );
+        ConnectBtns.configureSchemaRunScriptBtn().click();
+        cy.wait(500);
+
+        ConnectBtns.configureSchemaNextBtn().click();
+
+        storeAndStartEditedAdapter();
 
         // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
         DataExplorerUtils.goToDatalakeConfiguration();
@@ -118,4 +126,12 @@ describe('Test Edit Adapter', () => {
             expect(newValue).not.equal(initialValue);
         });
     });
+
+    const storeAndStartEditedAdapter = () => {
+        ConnectUtils.finishConfigureFieldsConfiguration();
+        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.updateAndMigratePipelines().click();
+        ConnectUtils.closeAdapterPreview();
+        ConnectBtns.startAdapter().click();
+    };
 });

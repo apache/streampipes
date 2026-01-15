@@ -1,0 +1,57 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
+        <sp-form-field [level]="3" [label]="'Template name' | translate">
+            <mat-form-field>
+                <input
+                    data-cy="script-template-name"
+                    matInput
+                    [(ngModel)]="templateName"
+                />
+            </mat-form-field>
+        </sp-form-field>
+
+        <sp-form-field [level]="3" [label]="'Template description' | translate">
+            <mat-form-field>
+                <input matInput [(ngModel)]="templateDescription" />
+            </mat-form-field>
+        </sp-form-field>
+
+        <sp-form-field [level]="3" [label]="'Script' | translate">
+            <textarea
+                matInput
+                [(ngModel)]="script"
+                class="code-input"
+                rows="15"
+            >
+            </textarea>
+        </sp-form-field>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions" fxLayoutGap="10px">
+        <button mat-flat-button data-cy="save-script-template" (click)="save()">
+            <mat-icon>save</mat-icon>
+            <span>{{ 'Save' | translate }}</span>
+        </button>
+        <button class="mat-basic" mat-flat-button (click)="close()">
+            Close
+        </button>
+    </div>
+</div>
