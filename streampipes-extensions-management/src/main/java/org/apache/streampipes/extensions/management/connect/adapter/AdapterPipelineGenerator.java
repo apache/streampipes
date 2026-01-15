@@ -26,18 +26,16 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
 
   public AdapterPipeline generatePipeline(AdapterDescription adapterDescription) {
-
-    var includeScript = adapterDescription.getTransformationConfig().isScriptActive();
-
-    var pipelineElements = makeAdapterPipelineElements(true, adapterDescription, includeScript);
+    var pipelineElements = makeAdapterPipelineElements(true, adapterDescription);
 
     if (hasValidGrounding(adapterDescription)) {
       return new AdapterPipeline(
           pipelineElements,
+          adapterDescription.getTransformationConfig(),
           getAdapterSink(adapterDescription),
           adapterDescription.getEventSchema());
     } else {
-      return new AdapterPipeline(pipelineElements, adapterDescription.getEventSchema());
+      return new AdapterPipeline(pipelineElements, adapterDescription.getTransformationConfig(), adapterDescription.getEventSchema());
     }
   }
 

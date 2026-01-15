@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.transformer.js;
 
+import org.apache.streampipes.connect.transformer.api.OutputCollector;
 import org.apache.streampipes.connect.transformer.api.ScriptTransformer;
 import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
@@ -41,8 +42,8 @@ public class GraalJsScriptEngine implements TransformationEngine {
         "JavaScript",
         """
             // returns the same event
-            function transform(event) {
-              return event;
+            function transform(event, out, ctx) {
+              out.collect(event);
             }
             """
     );
@@ -61,7 +62,7 @@ public class GraalJsScriptEngine implements TransformationEngine {
 
     Value transformFunction = resolveFunction(context, compiled);
 
-    return input -> execute(transformFunction, input);
+    return (input, out, ctx) -> execute(transformFunction, input, out, ctx);
   }
 
   private Context createContext() {
@@ -89,11 +90,14 @@ public class GraalJsScriptEngine implements TransformationEngine {
         null);
   }
 
-  private Map<String, Object> execute(Value transformFunction, Map<String, Object> input)
+  private void execute(Value transformFunction,
+                       Map<String, Object> input,
+                       OutputCollector<Map<String, Object>> out,
+                       org.apache.streampipes.connect.transformer.api.Context ctx)
       throws ScriptExecutionException {
     try {
-      Value result = transformFunction.execute(input);
-      return PolyglotResultConverter.ensureMap(result, metadata().language());
+      transformFunction.execute(input, PolyglotResultConverter.convertingCollector(out, metadata().language()), ctx);
+      //return PolyglotResultConverter.ensureMap(result, metadata().language());
     } catch (PolyglotException e) {
       throw new ScriptExecutionException("Graal JS script execution failed", e);
     }
