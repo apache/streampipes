@@ -97,7 +97,6 @@ public class GraalJsScriptEngine implements TransformationEngine {
       throws ScriptExecutionException {
     try {
       transformFunction.execute(input, PolyglotResultConverter.convertingCollector(out, metadata().language()), ctx);
-      //return PolyglotResultConverter.ensureMap(result, metadata().language());
     } catch (PolyglotException e) {
       throw new ScriptExecutionException("Graal JS script execution failed", e);
     }

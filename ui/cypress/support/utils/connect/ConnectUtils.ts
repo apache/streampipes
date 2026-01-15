@@ -399,7 +399,7 @@ export class ConnectUtils {
 
     public static replaceAdapterScript(script: string) {
         ConnectBtns.configureSchemaScriptEditor()
-            .type('{backspace}'.repeat(17)) // 2. Delete the "  return event;\n}" part
+            .type('{backspace}'.repeat(22)) // 2. Delete the "  out.collect(event);\n}" part
             .type(script);
     }
 

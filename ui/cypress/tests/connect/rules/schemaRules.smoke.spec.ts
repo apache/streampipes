@@ -35,7 +35,7 @@ describe('Connect schema rule transformations', () => {
         ConnectUtils.replaceAdapterScript(
             "  event['dot'] = event ['contains.dot'];\n" +
                 "  delete event['contains.dot'];\n" +
-                '  return event;\n' +
+                '  out.collect(event);\n' +
                 '}',
         );
 
