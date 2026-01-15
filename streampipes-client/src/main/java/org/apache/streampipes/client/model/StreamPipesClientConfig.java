@@ -25,9 +25,7 @@ import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class StreamPipesClientConfig implements IStreamPipesClientConfig {
