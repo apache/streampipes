@@ -22,10 +22,10 @@ import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
-import { DashboardUtils } from '../../support/utils/DashboardUtils';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
+import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 
 describe('Test Edit Adapter and Pipeline', () => {
     beforeEach('Setup Test', () => {
@@ -66,8 +66,13 @@ describe('Test Edit Adapter and Pipeline', () => {
 
         ConnectUtils.configureAdapter(newUserConfiguration);
 
-        // Update event schema
+        ConnectBtns.getNewSampleBtn().click();
         ConnectUtils.finishEventSchemaConfiguration();
+        cy.wait(1000);
+        ConnectBtns.refreshSchemaBtn().click();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+        ConnectUtils.finishConfigureFieldsConfiguration();
+        // Update event schema
         ConnectBtns.storeEditAdapter().click();
 
         // Check for warning message

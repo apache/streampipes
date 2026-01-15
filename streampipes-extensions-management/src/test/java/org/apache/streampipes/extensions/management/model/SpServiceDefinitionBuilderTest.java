@@ -27,7 +27,7 @@ import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtracto
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
@@ -98,10 +98,13 @@ public class SpServiceDefinitionBuilderTest {
     }
 
     @Override
-    public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                         IAdapterGuessSchemaContext adapterGuessSchemaContext) {
+    public SampleData onSampleDataRequested(
+        IAdapterParameterExtractor extractor,
+        IAdapterGuessSchemaContext adapterGuessSchemaContext
+    ) {
       return null;
     }
+
   }
 
   private static class TestMigration implements IAdapterMigrator {

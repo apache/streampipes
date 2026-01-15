@@ -18,17 +18,11 @@
 
 package org.apache.streampipes.connect.management.compact.generator;
 
-import org.apache.streampipes.connect.shared.preprocessing.convert.ToOriginalSchemaConverter;
 import org.apache.streampipes.manager.template.CompactConfigGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactEventProperty;
 import org.apache.streampipes.model.connect.adapter.compact.CreateOptions;
-import org.apache.streampipes.model.connect.adapter.compact.EnrichmentConfig;
-import org.apache.streampipes.model.connect.adapter.compact.TransformationConfig;
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
+import org.apache.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,44 +47,16 @@ public class CompactAdapterGenerator {
 
   public Map<String, CompactEventProperty> getSchema() {
     var map = new HashMap<String, CompactEventProperty>();
-    var originalProperties = new ToOriginalSchemaConverter(
-        adapterDescription.getEventSchema().getEventProperties()
-    ).getTransformedProperties();
-    originalProperties
+    var properties = new Cloner().properties(adapterDescription.getEventSchema().getEventProperties());
+    properties
         .forEach(ep -> map.put(ep.getRuntimeName(), new CompactEventProperty(
             ep.getLabel(),
             ep.getDescription(),
             ep.getPropertyScope(),
-            ep.getSemanticType()
+            ep.getSemanticType(),
+            ep.getAdditionalMetadata()
         )));
     return map;
-  }
-
-  public EnrichmentConfig getEnrichmentConfig() {
-    if (hasTimestampEnrichmentRule()) {
-      return new EnrichmentConfig(AdapterEnrichmentRuleGenerator.TIMESTAMP_FIELD);
-    } else {
-      return null;
-    }
-  }
-
-  public TransformationConfig getTransformationConfig() {
-    var renameRules = new HashMap<String, String>();
-    var unitTransformRules = new HashMap<String, String>();
-    if (hasTransformationRule()) {
-      if (hasRule(RenameRuleDescription.class)) {
-        var rules = getRules(RenameRuleDescription.class);
-        rules.forEach(rule -> {
-          renameRules.put(rule.getOldRuntimeKey(), rule.getNewRuntimeKey());
-        });
-      } else if (hasRule(UnitTransformRuleDescription.class)) {
-        var rules = getRules(UnitTransformRuleDescription.class);
-        rules.forEach(rule -> {
-          unitTransformRules.put(rule.getRuntimeKey(), rule.getToUnitRessourceURL());
-        });
-      }
-    }
-    return new TransformationConfig(renameRules, unitTransformRules);
   }
 
   public CreateOptions getCreateOptions() {
@@ -98,26 +64,5 @@ public class CompactAdapterGenerator {
         true,
         true
     );
-  }
-
-  private boolean hasTimestampEnrichmentRule() {
-    return hasRule(AddTimestampRuleDescription.class);
-  }
-
-  private boolean hasTransformationRule() {
-    return adapterDescription.getRules().stream()
-        .anyMatch(r -> hasRule(RenameRuleDescription.class) || hasRule(UnitTransformRuleDescription.class));
-  }
-
-  private boolean hasRule(Class<? extends TransformationRuleDescription> rule) {
-    return adapterDescription.getRules().stream().anyMatch(r -> r.getClass().equals(rule));
-  }
-
-  private <T extends TransformationRuleDescription> List<T> getRules(Class<T> rule) {
-    return adapterDescription.getRules()
-        .stream()
-        .filter(rule::isInstance)
-        .map(rule::cast)
-        .toList();
   }
 }

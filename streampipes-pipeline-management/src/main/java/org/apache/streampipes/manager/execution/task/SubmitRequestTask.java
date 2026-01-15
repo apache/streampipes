@@ -19,32 +19,28 @@
 package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
-import org.apache.streampipes.manager.execution.http.PipelineElementSubmitter;
-import org.apache.streampipes.manager.execution.provider.PipelineElementProvider;
+import org.apache.streampipes.manager.execution.http.BasePipelineElementSubmitter;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
 public class SubmitRequestTask implements PipelineExecutionTask {
 
-  private final PipelineElementProvider elementProvider;
-  private final PipelineElementSubmitter submitter;
+  private final BasePipelineElementSubmitter submitter;
 
-  public SubmitRequestTask(PipelineElementSubmitter submitter,
-                           PipelineElementProvider elementProvider) {
-    this.elementProvider = elementProvider;
+  public SubmitRequestTask(BasePipelineElementSubmitter submitter) {
     this.submitter = submitter;
   }
 
   @Override
   public boolean shouldExecute(PipelineExecutionInfo executionInfo) {
-    return executionInfo.getFailedServices().size() == 0;
+    return executionInfo.getFailedServices().isEmpty();
   }
 
   @Override
   public void executeTask(Pipeline pipeline, PipelineExecutionInfo executionInfo) {
-    var processorsAndSinks = elementProvider.getProcessorsAndSinks(executionInfo);
+    var processorsAndSinks = executionInfo.getProcessorsAndSinks();
 
     var status = submitter.submit(processorsAndSinks);
 
-    executionInfo.applyPipelineOperationStatus(status);
+    executionInfo.setPipelineOperationStatus(status);
   }
 }

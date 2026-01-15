@@ -19,6 +19,8 @@
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
+import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
+import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 
 describe('Connect schema rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -30,14 +32,17 @@ describe('Connect schema rule transformations', () => {
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(true);
 
-        // Add static value to event
-        ConnectEventSchemaUtils.addStaticProperty('staticPropertyName', 'id1');
+        ConnectUtils.replaceAdapterScript(
+            "  event['dot'] = event ['contains.dot'];\n" +
+                "  delete event['contains.dot'];\n" +
+                '  return event;\n' +
+                '}',
+        );
 
-        // Delete one property
-        ConnectEventSchemaUtils.deleteProperty('density');
+        ConnectBtns.configureSchemaRunScriptBtn().click();
 
-        // Rename property with special char
-        ConnectEventSchemaUtils.renameProperty('contains.dot', 'dot');
+        cy.wait(1000);
+        ConnectUtils.finishEventSchemaConfiguration();
 
         // Set data type to integer
         ConnectEventSchemaUtils.changePropertyDataType(
@@ -48,10 +53,12 @@ describe('Connect schema rule transformations', () => {
         // Add a timestamp property
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
 
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectUtils.finishConfigureFieldsConfiguration();
 
-        ConnectUtils.tearDownPreprocessingRuleTest(
-            adapterConfiguration,
+        ConnectUtils.startAdapter(adapterConfiguration, true);
+
+        DataExplorerUtils.checkResults(
+            'Adapter to test rules',
             'cypress/fixtures/connect/schemaRules/expected.csv',
             true,
         );

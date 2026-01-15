@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine.event;
 
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 
 import java.util.Map;
 
@@ -27,5 +28,7 @@ public interface EventSimulator {
   Map<String, Object> buildEvent(int simulationPhase, int sensorIndex, long timestamp);
 
   GuessSchema getSchema();
+
+  SampleData getSampleData();
 
 }

@@ -1,0 +1,75 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.timestamp-property {
+    border-radius: 10px;
+    background: var(--color-processor);
+    padding: 0px 10px;
+    font-size: 12px;
+    color: #ffffff;
+}
+
+.timestamp-icon {
+    font-size: 12px;
+}
+
+.runtime-info {
+    border-radius: 5px;
+    color: var(--color-default-text);
+    font-size: 10pt;
+    text-align: center;
+}
+
+.runtime-type-info {
+    border-radius: 5px;
+    color: var(--color-default-text);
+    font-size: 10pt;
+    width: 70px;
+    border: 1px solid var(--color-bg-3);
+    text-align: center;
+}
+
+.runtime-type-info-outer {
+    padding: 3px;
+    border-radius: 5px;
+    width: 170px;
+    text-align: center;
+}
+
+.static-value-info-outer {
+    width: 20px;
+}
+
+.static-value-info {
+    background: var(--color-default-text);
+    color: var(--color-bg-0);
+    padding: 3px;
+    border-radius: 5px;
+}
+
+.nested-properties {
+    margin-top: 8px;
+    padding-left: 24px;
+    border-left: 2px solid rgba(0, 0, 0, 0.04);
+
+    > sp-event-property-row {
+        display: block;
+        width: 100%;
+        padding: 6px 0;
+    }
+}

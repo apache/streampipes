@@ -27,6 +27,7 @@ import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { differenceInMonths } from 'date-fns';
 import { GeneralUtils } from '../GeneralUtils';
 import { DataExplorerBtns } from './DataExplorerBtns';
+import { SharedBtns } from '../shared/SharedBtns';
 
 export class DataExplorerUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
@@ -340,7 +341,7 @@ export class DataExplorerUtils {
             force: true,
         });
         if (confirmSave) {
-            DataExplorerBtns.confirmSave().click();
+            SharedBtns.confirmDialogConfirmBtn().click();
         }
     }
 
@@ -378,25 +379,25 @@ export class DataExplorerUtils {
     public static deleteDashboard(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
         DataExplorerBtns.deleteDashboardBtn(dashboardName).click();
-        DataExplorerBtns.confirmDelete().click();
+        SharedBtns.confirmDialogConfirmBtn().click();
     }
 
     public static deleteDataView(dataViewName: string) {
         GeneralUtils.openMenuForRow(dataViewName);
         DataExplorerBtns.deleteDataViewBtn(dataViewName).click();
-        DataExplorerBtns.confirmDelete().click();
+        SharedBtns.confirmDialogConfirmBtn().click();
     }
 
     public static cancelDeleteDashboard(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
         DataExplorerBtns.deleteDashboardBtn(dashboardName).click();
-        DataExplorerBtns.cancelDelete().click();
+        SharedBtns.confirmDialogCancelBtn().click();
     }
 
     public static cancelDeleteDataView(dataViewName: string) {
         GeneralUtils.openMenuForRow(dataViewName);
         DataExplorerBtns.deleteDataViewBtn(dataViewName).click();
-        DataExplorerBtns.cancelDelete().click();
+        SharedBtns.confirmDialogCancelBtn().click();
     }
 
     public static editWidget(widgetName: string) {

@@ -30,21 +30,18 @@ import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtracto
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.PlcConnectionManager;
@@ -145,28 +142,6 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
 
 
   /**
-   * Transforms chosen data type to StreamPipes supported data type
-   *
-   * @param plcType
-   * @return
-   */
-  private Datatypes getStreamPipesDataType(String plcType) throws AdapterException {
-
-    String type = plcType.substring(plcType.lastIndexOf(":") + 1);
-
-    switch (type) {
-      case "DISCRETEINPUT":
-      case "COIL":
-        return Datatypes.Boolean;
-      case "INPUTREGISTER":
-      case "HOLDINGREGISTER":
-        return Datatypes.Integer;
-      default:
-        throw new AdapterException("Datatype " + plcType + " is not supported");
-    }
-  }
-
-  /**
    * This method is executed when the adapter is started. A connection to the PLC is initialized
    *
    * @throws AdapterException
@@ -180,7 +155,8 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
       this.plcConnection = connectionManager.getConnection(
           "modbus-tcp:tcp://" + this.ip + ":" + this.port + "?unit-identifier=" + this.slaveID);
 
-      if (!this.plcConnection.getMetadata().isReadSupported()) {
+      if (!this.plcConnection.getMetadata()
+                             .isReadSupported()) {
         throw new AdapterException("The Modbus device on IP: " + this.ip + " does not support reading data");
       }
     } catch (PlcConnectionException pce) {
@@ -193,20 +169,34 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
    */
   @Override
   public void pullData() {
+    var event = getEvent();
+
+    collector.collect(event);
+  }
+
+  private Map<String, Object> getEvent() {
 
     // create PLC read request
     PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
     for (Map<String, String> node : this.nodes) {
 
       switch (node.get(PLC_NODE_TYPE)) {
-        case "Coil" ->
-            builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-        case "HoldingRegister" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
-            "holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-        case "DiscreteInput" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
-            "discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-        case "InputRegister" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
-            "input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+        case "Coil" -> builder.addTagAddress(
+            node.get(PLC_NODE_RUNTIME_NAME),
+            "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS))
+        );
+        case "HoldingRegister" -> builder.addTagAddress(
+            node.get(PLC_NODE_RUNTIME_NAME),
+            "holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS))
+        );
+        case "DiscreteInput" -> builder.addTagAddress(
+            node.get(PLC_NODE_RUNTIME_NAME),
+            "discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS))
+        );
+        case "InputRegister" -> builder.addTagAddress(
+            node.get(PLC_NODE_RUNTIME_NAME),
+            "input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS))
+        );
       }
     }
     PlcReadRequest readRequest = builder.build();
@@ -215,7 +205,8 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
     PlcReadResponse response = null;
 
     try {
-      response = readRequest.execute().get();
+      response = readRequest.execute()
+                            .get();
     } catch (InterruptedException | ExecutionException ie) {
       ie.printStackTrace();
     }
@@ -242,12 +233,11 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
         }
       } else {
         LOG.error("Error[" + node.get(PLC_NODE_RUNTIME_NAME) + "]: "
-                  + response.getResponseCode(node.get(PLC_NODE_RUNTIME_NAME)));
+                      + response.getResponseCode(node.get(PLC_NODE_RUNTIME_NAME)));
       }
     }
 
-    // publish the final event
-    collector.collect(event);
+    return event;
   }
 
   /**
@@ -269,25 +259,36 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create(ID, 1, () -> new Plc4xModbusAdapter(connectionManager))
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredTextParameter(Labels.withId(PLC_IP)).requiredIntegerParameter(Labels.withId(PLC_PORT))
-        .requiredTextParameter(Labels.withId(PLC_NODE_ID)).requiredCollection(Labels.withId(PLC_NODES),
-            StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-            StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
-            StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-                Options.from("DiscreteInput", "Coil", "InputRegister", "HoldingRegister")))
-        .buildConfiguration();
+                                      .withLocales(Locales.EN)
+                                      .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+                                      .requiredTextParameter(Labels.withId(PLC_IP))
+                                      .requiredIntegerParameter(Labels.withId(PLC_PORT))
+                                      .requiredTextParameter(Labels.withId(PLC_NODE_ID))
+                                      .requiredCollection(
+                                          Labels.withId(PLC_NODES),
+                                          StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
+                                          StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
+                                          StaticProperties.singleValueSelection(
+                                              Labels.withId(PLC_NODE_TYPE),
+                                              Options.from("DiscreteInput", "Coil", "InputRegister", "HoldingRegister")
+                                          )
+                                      )
+                                      .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(
+      IAdapterParameterExtractor extractor,
+      IEventCollector collector,
+      IAdapterRuntimeContext adapterRuntimeContext
+  ) throws AdapterException {
     before(extractor.getStaticPropertyExtractor());
     this.collector = collector;
     this.pullAdapterScheduler = new PullAdapterScheduler();
-    this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
+    this.pullAdapterScheduler.schedule(this,
+                                       extractor.getAdapterDescription()
+                                                .getElementId()
+    );
 
   }
 
@@ -296,30 +297,16 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
     this.pullAdapterScheduler.shutdown();
   }
 
-  /**
-   * Takes the user input and creates the event schema. The event schema describes the properties of the event stream.
-   */
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    getConfigurations(extractor.getStaticPropertyExtractor());
+  public SampleData onSampleDataRequested(
+      IAdapterParameterExtractor extractor,
+      IAdapterGuessSchemaContext adapterGuessSchemaContext
+  ) {
 
-    GuessSchema guessSchema = new GuessSchema();
-
-    EventSchema eventSchema = new EventSchema();
-    List<EventProperty> allProperties = new ArrayList<>();
-
-    for (Map<String, String> node : this.nodes) {
-      Datatypes datatype = getStreamPipesDataType(node.get(PLC_NODE_TYPE).toUpperCase());
-
-      allProperties.add(PrimitivePropertyBuilder.create(datatype, node.get(PLC_NODE_RUNTIME_NAME))
-          .label(node.get(PLC_NODE_RUNTIME_NAME))
-          .description("FieldAddress: " + node.get(PLC_NODE_TYPE) + " " + String.valueOf(node.get(PLC_NODE_ADDRESS)))
-          .build());
-    }
-
-    eventSchema.setEventProperties(allProperties);
-    guessSchema.setEventSchema(eventSchema);
-    return guessSchema;
+    var event = getEvent();
+    return SampleDataBuilder.create()
+                            .sample(event)
+                            .build();
   }
+
 }

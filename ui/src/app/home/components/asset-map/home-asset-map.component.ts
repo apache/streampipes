@@ -111,7 +111,9 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
 
     refreshMarkersAndView(): void {
         this.markersGroup.clearLayers();
-        const assetsWithSite = this.assets.filter(a => a.assetSite !== null);
+        const assetsWithSite = this.assets.filter(
+            a => a.assetSite !== null && a.assetSite.location !== null,
+        );
 
         assetsWithSite.forEach(asset => {
             const site = this.sites[asset.assetSite.siteId];

@@ -68,10 +68,6 @@ public class PipelineStorageService {
     SecretProvider.getEncryptionService().apply(graphs);
   }
 
-  private void encryptSecrets(Pipeline pipeline) {
-    SecretProvider.getEncryptionService().apply(pipeline);
-  }
-
   private <T> List<T> filter(List<InvocableStreamPipesEntity> graphs, Class<T> clazz) {
     return graphs
         .stream()

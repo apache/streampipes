@@ -19,24 +19,24 @@
 import { Injectable } from '@angular/core';
 import {
     EventPropertyNested,
-    EventPropertyUnion,
+    EventProperty,
 } from '@streampipes/platform-services';
 
 @Injectable({ providedIn: 'root' })
 export class EventPropertyUtilsService {
     findPropertyByElementId(
-        properties: EventPropertyUnion[],
+        properties: EventProperty[],
         elementId: string,
     ): any {
         return this.findProperty(properties, elementId, ep => ep.elementId);
     }
 
     private findProperty(
-        properties: EventPropertyUnion[],
+        properties: EventProperty[],
         searchValue: string,
-        propertyFn: (val1: EventPropertyUnion) => string,
+        propertyFn: (val1: EventProperty) => string,
     ) {
-        let result: EventPropertyUnion | undefined;
+        let result: EventProperty | undefined;
 
         for (const property of properties) {
             if (propertyFn(property) === searchValue) {

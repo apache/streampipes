@@ -27,16 +27,12 @@ import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-
-import static org.apache.streampipes.sdk.helpers.EpProperties.imageProperty;
-import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 public class ImageStreamAdapter implements StreamPipesAdapter {
 
@@ -69,11 +65,11 @@ public class ImageStreamAdapter implements StreamPipesAdapter {
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) {
-    return GuessSchemaBuilder.create()
-        .property(timestampProperty(ImageZipUtils.TIMESTAMP))
-        .property(imageProperty(ImageZipUtils.IMAGE))
-        .build();
+  public SampleData onSampleDataRequested(
+      IAdapterParameterExtractor extractor,
+      IAdapterGuessSchemaContext adapterGuessSchemaContext
+  ) throws AdapterException {
+    return null;
   }
+
 }

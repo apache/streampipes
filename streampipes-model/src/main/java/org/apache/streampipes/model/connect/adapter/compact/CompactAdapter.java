@@ -36,6 +36,7 @@
 
 package org.apache.streampipes.model.connect.adapter.compact;
 
+import org.apache.streampipes.model.connect.TransformationConfig;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.List;
@@ -48,8 +49,7 @@ public record CompactAdapter(
     String description,
     String appId,
     List<Map<String, Object>> configuration,
+    TransformationConfig transformationConfig,
     Map<String, CompactEventProperty> schema,
-    EnrichmentConfig enrich,
-    TransformationConfig transform,
     CreateOptions createOptions
 ) {}

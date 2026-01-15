@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEndpointGenerator {
 
@@ -44,20 +43,23 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
 
   public ExtensionsServiceEndpointGenerator() {}
 
-  public String getEndpointResourceUrl(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  public String getEndpointResourceUrl(String appId,
+                                       SpServiceUrlProvider spServiceUrlProvider,
                                        Set<SpServiceTag> customServiceTags)
       throws NoServiceEndpointsAvailableException {
     return spServiceUrlProvider
         .getInvocationUrl(selectService(appId, spServiceUrlProvider, customServiceTags), appId);
   }
 
-  public String getEndpointBaseUrl(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  public String getEndpointBaseUrl(String appId,
+                                   SpServiceUrlProvider spServiceUrlProvider,
                                    Set<SpServiceTag> customServiceTags)
       throws NoServiceEndpointsAvailableException {
     return selectService(appId, spServiceUrlProvider, customServiceTags);
   }
 
-  private String selectService(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  private String selectService(String appId,
+                               SpServiceUrlProvider spServiceUrlProvider,
                                Set<SpServiceTag> customServiceTags)
       throws NoServiceEndpointsAvailableException {
     Environment env = Environments.getEnvironment();
@@ -84,11 +86,12 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
         "Could not find any matching service endpoints - are all software components running?");
   }
 
-  private List<String> getServiceEndpoints(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  private List<String> getServiceEndpoints(String appId,
+                                           SpServiceUrlProvider spServiceUrlProvider,
                                            Set<SpServiceTag> customServiceTags) {
     return SpServiceDiscovery.getServiceDiscovery()
         .getServiceEndpoints(DefaultSpServiceTypes.EXT, true,
-                             getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags));
+                             ExtensionsServiceEndpointUtils.getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags));
   }
 
   private String getServiceURL(String appId, SpServiceUrlProvider spServiceUrlProvider,
@@ -105,12 +108,5 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
 
   public static boolean filtersSupported(SpServiceRegistration service, String tag) {
     return new HashSet<>(service.getTags()).stream().anyMatch(t -> t.asString().equals(tag));
-  }
-
-  private List<String> getDesiredServiceTags(String appId, SpServiceUrlProvider serviceUrlProvider,
-                                             Set<SpServiceTag> customServiceTags) {
-    return Stream
-        .concat(Stream.of(serviceUrlProvider.getServiceTag(appId)), customServiceTags.stream())
-        .map(SpServiceTag::asString).toList();
   }
 }

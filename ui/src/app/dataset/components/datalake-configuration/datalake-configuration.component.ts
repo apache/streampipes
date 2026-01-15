@@ -18,7 +18,6 @@
 
 import {
     AfterViewInit,
-    ChangeDetectorRef,
     Component,
     inject,
     OnInit,
@@ -42,6 +41,7 @@ import {
     DialogRef,
     DialogService,
     ObjectPermissionDialogComponent,
+    LocalStorageService,
     PanelType,
     SpBreadcrumbService,
     SpTableComponent,
@@ -56,7 +56,6 @@ import { ExportProviderConnectionTestComponent } from '../../dialog/export-provi
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 import { UserRole } from 'src/app/_enums/user-role.enum';
 import { UserPrivilege } from 'src/app/_enums/user-privilege.enum';
-import { LocalStorageService } from '../../../../../projects/streampipes/shared-ui/src/lib/services/local-storage-settings.service';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -77,7 +76,6 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
     private currentUserService = inject(CurrentUserService);
-    private translate = inject(TranslateService);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);

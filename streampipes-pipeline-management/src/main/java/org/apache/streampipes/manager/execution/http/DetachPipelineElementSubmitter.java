@@ -18,21 +18,20 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 
 import java.util.List;
 
-public class DetachPipelineElementSubmitter extends PipelineElementSubmitter {
+public class DetachPipelineElementSubmitter extends BasePipelineElementSubmitter {
 
   public DetachPipelineElementSubmitter(Pipeline pipeline) {
     super(pipeline);
   }
 
   @Override
-  protected PipelineElementStatus submitElement(EndpointSelectable pipelineElement) {
+  protected PipelineElementStatus submitElement(InvocableStreamPipesEntity pipelineElement) {
     return performDetach(pipelineElement);
   }
 

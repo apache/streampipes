@@ -35,7 +35,6 @@ public class ExtensionServiceExecutions {
         .socketTimeout(10000);
   }
 
-
   private static String getServiceAdminSid() {
     return new SpResourceManager().manageUsers().getServiceAdmin().getPrincipalId();
   }

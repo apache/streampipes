@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.extensions.api.connect;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
 import java.io.InputStream;
@@ -30,7 +31,7 @@ public interface IParser {
 
   ParserDescription declareDescription();
 
-  GuessSchema getGuessSchema(InputStream inputStream) throws ParseException;
+  SampleData getSampleData(InputStream inputStream) throws AdapterException;
 
   void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException;
 

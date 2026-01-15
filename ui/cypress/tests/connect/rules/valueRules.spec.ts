@@ -19,6 +19,7 @@
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
+import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 
 describe('Connect value rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -28,16 +29,14 @@ describe('Connect value rule transformations', () => {
 
     it('Perform Test', () => {
         const adapterConfiguration =
-            ConnectUtils.setUpPreprocessingRuleTest(false);
+            ConnectUtils.setUpPreprocessingRuleTest(true);
 
-        // Edit timestamp property
-        ConnectEventSchemaUtils.editTimestampPropertyWithRegex(
-            'timestamp',
-            "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+        ConnectUtils.replaceAdapterScript(
+            'event.timestamp = new Date(event.timestamp).getTime();\n return event;\n}',
         );
-
-        // Number transformation
-        ConnectEventSchemaUtils.numberTransformation('value', '10');
+        ConnectBtns.configureSchemaRunScriptBtn().click();
+        cy.wait(1000);
+        ConnectUtils.finishEventSchemaConfiguration();
 
         // Unit transformation
         ConnectEventSchemaUtils.unitTransformation(
@@ -46,12 +45,13 @@ describe('Connect value rule transformations', () => {
             'Degree Fahrenheit',
         );
 
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+        ConnectUtils.finishConfigureFieldsConfiguration();
 
         ConnectUtils.tearDownPreprocessingRuleTest(
             adapterConfiguration,
             'cypress/fixtures/connect/valueRules/expected.csv',
-            false,
+            true,
             2000,
         );
     });

@@ -19,15 +19,19 @@
 package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
+import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
+import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
+import org.apache.streampipes.health.monitoring.PostStartupRecovery;
+import org.apache.streampipes.health.monitoring.ResourceProvider;
+import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
-import org.apache.streampipes.manager.health.ServiceHealthCheck;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -51,40 +55,56 @@ public class PostStartupTask implements Runnable {
   private final Map<String, Integer> failedPipelines = new HashMap<>();
   private final ScheduledExecutorService executorService;
   private final WorkerAdministrationManagement workerAdministrationManagement;
+  private final PostStartupRecovery postStartupRecovery;
+
+  private final INoSqlStorage storage = StorageDispatcher.INSTANCE.getNoSqlStore();
 
   public PostStartupTask(IPipelineStorage pipelineStorage) {
     this.pipelineStorage = pipelineStorage;
     this.executorService = Executors.newSingleThreadScheduledExecutor();
+    var resourceManager = new SpResourceManager();
     this.workerAdministrationManagement = new WorkerAdministrationManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getAdapterInstanceStorage(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-        new SpResourceManager().manageAdapters(),
-        new SpResourceManager().manageDataStreams()
+        storage.getAdapterDescriptionStorage(),
+        storage.getPermissionStorage(),
+        resourceManager.manageUsers(),
+        resourceManager.managePermissions());
+    this.postStartupRecovery = new PostStartupRecovery(
+        new ExtensionHealthCheck(
+            new ResourceProvider(
+                StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
+                StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                new AdapterMasterManagement(
+                    StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                    new SpResourceManager().manageAdapters(),
+                    new SpResourceManager().manageDataStreams(),
+                    AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+                )
+            )
+        )
     );
   }
 
   @Override
   public void run() {
-    new ServiceHealthCheck().run();
+    new ServiceHealthCheck(storage.getExtensionsServiceStorage()).run();
     performAdapterAssetUpdate();
     startAllPreviouslyStoppedPipelines();
-    startAdapters();
+    runHealthCheckOnce();
   }
 
   private void performAdapterAssetUpdate() {
-    var installedAppIds = CouchDbStorageManager.INSTANCE.getExtensionsServiceStorage()
-                                                        .findAll()
-                                                        .stream()
-                                                        .flatMap(config -> config.getTags()
-                                                                                 .stream())
-                                                        .filter(tag -> tag.getPrefix() == SpServiceTagPrefix.ADAPTER)
-                                                        .toList();
+    var installedAppIds = storage.getExtensionsServiceStorage()
+        .findAll()
+        .stream()
+        .flatMap(config -> config.getTags()
+            .stream())
+        .filter(tag -> tag.getPrefix() == SpServiceTagPrefix.ADAPTER)
+        .toList();
     workerAdministrationManagement.performAdapterMigrations(installedAppIds);
   }
 
-  private void startAdapters() {
-    workerAdministrationManagement.checkAndRestore(0);
+  private void runHealthCheckOnce() {
+    postStartupRecovery.checkAndRestore(0);
   }
 
   private void startAllPreviouslyStoppedPipelines() {
@@ -165,9 +185,6 @@ public class PostStartupTask implements Runnable {
   }
 
   private IPipelineStorage getPipelineStorage() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getPipelineStorageAPI();
+    return storage.getPipelineStorageAPI();
   }
 }

@@ -24,9 +24,6 @@ export class DataExplorerBtns {
     public static saveDataViewButton() {
         return cy.dataCy('save-data-view-btn', { timeout: 10000 });
     }
-    public static confirmSave() {
-        return cy.dataCy('confirm-delete', { timeout: 10000 });
-    }
 
     public static saveDataViewBtn() {
         return cy.dataCy('save-data-view');
@@ -57,14 +54,6 @@ export class DataExplorerBtns {
         return cy.dataCy('delete-data-view-' + dataViewName, {
             timeout: 10000,
         });
-    }
-
-    public static confirmDelete() {
-        return cy.dataCy('confirm-delete', { timeout: 10000 });
-    }
-
-    public static cancelDelete() {
-        return cy.dataCy('cancel-delete', { timeout: 10000 });
     }
 
     public static saveDashboardConfigurationBtn() {
@@ -106,11 +95,13 @@ export class DataExplorerBtns {
     public static chartAssetCheckboxBtn() {
         return cy.dataCy('add-to-Asset-data-view-btn');
     }
+
     public static confirmAssetSelectionBtn() {
         return cy
             .dataCy('asset-dialog-confirm-delete', { timeout: 10000 })
             .click();
     }
+
     public static editDataViewButton(dataViewName: string) {
         return cy.dataCy('edit-data-view-' + dataViewName.replaceAll(' ', ''));
     }
@@ -150,6 +141,7 @@ export class DataExplorerBtns {
     public static confirmDataLakeTruncateBtn() {
         return cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 });
     }
+
     public static confirmDataLakeDeleteBtn() {
         return cy.dataCy('confirm-delete-data-btn', { timeout: 10000 });
     }

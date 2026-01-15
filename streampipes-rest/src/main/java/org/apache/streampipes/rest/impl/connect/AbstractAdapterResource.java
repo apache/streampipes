@@ -30,6 +30,10 @@ public class AbstractAdapterResource<T> extends AbstractAuthGuardedRestResource 
     this.managementService = managementServiceSupplier.get();
   }
 
+  // no management service provided
+  public AbstractAdapterResource() {
+  }
+
   /**
    * required by Spring expression
    */

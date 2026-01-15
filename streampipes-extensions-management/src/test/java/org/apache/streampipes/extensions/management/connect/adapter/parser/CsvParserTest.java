@@ -18,119 +18,18 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
-import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
-import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.junit.jupiter.api.Test;
 
-
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class CsvParserTest extends ParserTest {
-
-  protected GuessSchema sampleExpected = GuessSchemaBuilder.create()
-      .property(PrimitivePropertyBuilder
-          .create(Datatypes.String, K1)
-          .description("")
-          .scope(PropertyScope.MEASUREMENT_PROPERTY)
-          .build())
-      .property(PrimitivePropertyBuilder
-          .create(Datatypes.Float, K2)
-          .scope(PropertyScope.MEASUREMENT_PROPERTY)
-          .description("")
-          .build())
-      .sample(K1, "v1")
-      .sample(K2, 2.0f)
-      .build();
-
-  @Test
-  public void getGuessSchemaWithHeaderAndComma() {
-    var parser = new CsvParser(true, ',');
-
-    var event = toStream("k1,k2\nv1,2");
-
-    var result = parser.getGuessSchema(event);
-
-    assertEquals(sampleExpected.getEventSchema(), result.getEventSchema());
-    assertEquals(sampleExpected.getFieldStatusInfo(), result.getFieldStatusInfo());
-
-    String preview = result.getEventPreview().get(0).toString();
-    preview = preview.replaceAll("[\\s\\n\\r]+", "");
-    assertTrue(preview.equals("{\"k2\":2.0,\"k1\":\"v1\"}") || preview.equals("{\"k1\":\"v1\",\"k2\":2.0}"));
-  }
-
-  @Test
-  public void getGuessSchemaWithHeaderAndSemicolon() {
-    var parser = new CsvParser(true, ';');
-
-    var event = toStream("k1;k2\nv1;2");
-
-    var result = parser.getGuessSchema(event);
-
-    assertEquals(sampleExpected.getEventSchema(), result.getEventSchema());
-    assertEquals(sampleExpected.getFieldStatusInfo(), result.getFieldStatusInfo());
-
-    String preview = result.getEventPreview().get(0).toString();
-     preview = preview.replaceAll("[\\s\\n\\r]+", "");
-    assertTrue(preview.equals("{\"k2\":2.0,\"k1\":\"v1\"}") || preview.equals("{\"k1\":\"v1\",\"k2\":2.0}"));
-  }
-
-  @Test
-  public void getGuessSchemaWithoutHeader() {
-    var expected = GuessSchemaBuilder.create()
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.Float, "key_1")
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .description("")
-            .build())
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.String, "key_0")
-            .description("")
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .sample("key_1", 2.0f)
-        .sample("key_0", "v1")
-        .build();
-
-    var parser = new CsvParser(false, ',');
-
-    InputStream event = toStream("v1,2");
-
-    var result = parser.getGuessSchema(event);
-
-    assertEquals(expected, result);
-  }
-
-  @Test
-  public void getGuessSchemaParseException() {
-    var parser = new CsvParser(true, ';');
-
-    InputStream event = toStream("k1;k2\nv1");
-
-    assertThrows(ParseException.class, () -> parser.getGuessSchema(event));
-  }
-
-  @Test
-  public void getGuessSchemaNoValuesParseException() {
-    var parser = new CsvParser(true, ';');
-    InputStream event = toStream("k1;k2");
-
-    assertThrows(ParseException.class, () -> parser.getGuessSchema(event));
-  }
 
   @Test
   public void parseOneEvent() {

@@ -42,6 +42,10 @@ export class ConnectBtns {
         return cy.dataCy('start-adapter');
     }
 
+    public static adapterNameInput() {
+        return cy.dataCy('sp-adapter-name');
+    }
+
     public static adapterOperationInProgressSpinner() {
         return cy.dataCy('adapter-operation-in-progress-spinner', {
             timeout: 10000,
@@ -78,6 +82,19 @@ export class ConnectBtns {
 
     public static connectNewAdapterCancel() {
         return cy.dataCy('connect-new-adapter-cancel');
+    }
+
+    public static getNewSampleBtn() {
+        return cy.dataCy('connect-get-new-sample-button');
+    }
+    public static refreshSchemaBtn() {
+        return cy.dataCy('connect-refresh-schema-button', { timeout: 10000 });
+    }
+
+    public static connectAdapterAddedSuccessfully() {
+        return cy.dataCy('sp-connect-adapter-success-added', {
+            timeout: 60000,
+        });
     }
 
     // =====================  Adapter settings btns  ==========================
@@ -153,10 +170,6 @@ export class ConnectBtns {
         return cy.dataCy('sp-save-edit-property', { timeout: 10000 });
     }
 
-    public static markAsTimestampBtn() {
-        return cy.dataCy('sp-mark-as-timestamp').children();
-    }
-
     public static setTimestampConverter(option: 'Number' | 'String') {
         cy.dataCy('connect-timestamp-converter')
             .click()
@@ -165,34 +178,106 @@ export class ConnectBtns {
             .click();
     }
 
-    public static connectSchemaCorrectionValueInput() {
-        return cy.dataCy('connect-schema-correction-value', { timeout: 10000 });
-    }
-
-    public static connectSchemaCorrectionOperatorInput() {
-        return cy.dataCy('connect-schema-correction-operator', {
-            timeout: 10000,
-        });
-    }
-
     public static timestampStringRegex() {
         return cy.dataCy('connect-timestamp-string-regex', { timeout: 10000 });
     }
 
-    public static timestampNumberDropdown() {
-        return cy.dataCy('connect-timestamp-number-dropdown', {
+    public static configureSchemaNextBtn() {
+        return cy.dataCy('configure-schema-next-button');
+    }
+
+    public static configureSchemaBackBtn() {
+        return cy.dataCy('configure-schema-back-button');
+    }
+
+    public static eventPropertyRow() {
+        return cy.dataCy('event-property-row', { timeout: 10000 });
+    }
+
+    public static scriptActiveToggle() {
+        return cy.dataCy('toggle-script-active', {
             timeout: 10000,
         });
     }
 
-    public static runtimeNameInput() {
-        return cy.dataCy('connect-edit-field-runtime-name', {
+    public static configureSchemaScriptEditor() {
+        return cy.dataCy('configure-schema-script-editor', {
             timeout: 10000,
         });
     }
 
-    public static schemaNextBtn() {
-        return cy.dataCy('sp-event-schema-next-button');
+    public static configureSchemaRunScriptBtn() {
+        return cy.dataCy('configure-schema-run-script-button', {
+            timeout: 10000,
+        });
+    }
+
+    public static useScriptTemplateBtn() {
+        return cy.dataCy('use-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static saveSelectScriptTemplateBtn() {
+        return cy.dataCy('save-select-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static selectScriptTemplateDropDown() {
+        return cy.dataCy('select-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static deleteScriptTemplateBtn() {
+        return cy.dataCy('delete-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static addScriptTemplateBtn() {
+        return cy.dataCy('add-script-template-button', {
+            timeout: 10000,
+        });
+    }
+
+    public static scriptTemplateName() {
+        return cy.dataCy('script-template-name', {
+            timeout: 10000,
+        });
+    }
+
+    public static saveScriptTemplateBtn() {
+        return cy.dataCy('save-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static resetScriptBtn() {
+        return cy.dataCy('reset-script', {
+            timeout: 10000,
+        });
+    }
+
+    public static configureSchemaEventPreviewOriginal() {
+        return cy.dataCy('configure-schema-event-preview-original', {
+            timeout: 10000,
+        });
+    }
+
+    public static configureSchemaEventPreviewResult() {
+        return cy.dataCy('configure-schema-event-preview-result', {
+            timeout: 10000,
+        });
+    }
+
+    public static configureFieldsNextBtn() {
+        return cy.dataCy('configure-fields-next-button');
+    }
+
+    public static configureFieldsBackBtn() {
+        return cy.dataCy('configure-fields-back-button');
     }
 
     public static semanticTypeInput() {

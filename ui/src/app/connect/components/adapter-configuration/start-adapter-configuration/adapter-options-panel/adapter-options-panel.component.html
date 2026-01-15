@@ -21,7 +21,7 @@
         <div fxFlex fxLayout="column" fxLayoutAlign="center start">
             <div
                 fxFlex="100"
-                class="title w-100"
+                class="w-100"
                 fxLayout="row"
                 fxLayoutAlign="start start"
                 fxLayoutGap="15px"
@@ -37,11 +37,9 @@
                     </mat-checkbox>
                 </div>
                 <div fxFlex fxLayout="column" class="w-100">
-                    <div>{{ optionTitle }}</div>
-                    <mat-hint class="description"
-                        >{{ optionDescription }}
-                    </mat-hint>
-                    <ng-content class="w-100 mt-10"></ng-content>
+                    <div class="text-md font-emphasized">{{ optionTitle }}</div>
+                    <span class="text-sm">{{ optionDescription }} </span>
+                    <ng-content class="w-100 mt-md"></ng-content>
                 </div>
             </div>
         </div>

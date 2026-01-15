@@ -19,10 +19,12 @@
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine.event;
 
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.sdk.builder.NestedPropertyBuilder;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.utils.Datatypes;
@@ -114,6 +116,13 @@ public class DiagnosticSimulator implements EventSimulator {
 
     event.put(STATUS, status);
     return event;
+  }
+
+  @Override
+  public SampleData getSampleData() {
+    return SampleDataBuilder.create()
+                            .sample(buildEvent(0, 0, System.currentTimeMillis()))
+                            .build();
   }
 
   @Override

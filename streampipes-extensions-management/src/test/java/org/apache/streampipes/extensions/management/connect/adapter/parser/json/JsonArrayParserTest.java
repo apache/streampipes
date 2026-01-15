@@ -18,13 +18,8 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
-import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserTest;
-import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
-import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,8 +27,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,34 +37,6 @@ public class JsonArrayParserTest extends ParserTest {
   JsonArrayParser parser = new JsonArrayParser();
 
   InputStream event = toStream("[{\"k1\": \"v1\", \"k2\": 2},{\"k1\": \"v2\", \"k2\": 3}]");
-
-  @Test
-  public void getGuessSchema() {
-
-    var expected = GuessSchemaBuilder.create()
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.String, K1)
-            .description("")
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.Float, K2)
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .description("")
-            .build())
-        .sample(K1, "v1")
-        .sample(K2, 2)
-        .build();
-
-    var result = parser.getGuessSchema(event);
-
-    assertEquals(expected, result);
-  }
-
-  @Test
-  public void getGuessSchemaEmptyArray() {
-    assertThrows(ParseException.class, () -> parser.getGuessSchema(toStream("[]")));
-  }
 
   @Test
   public void parse() {

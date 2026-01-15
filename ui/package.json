@@ -29,7 +29,6 @@
     "i18n:translate": "node ./deployment/i18n-translate.js"
   },
   "dependencies": {
-    "@ali-hm/angular-tree-component": "^19.2.5",
     "@angular/animations": "^19.2.13",
     "@angular/cdk": "^19.2.17",
     "@angular/common": "^19.2.13",
@@ -69,7 +68,7 @@
     "leaflet": "1.9.3",
     "lodash.clonedeep": "^4.5.0",
     "marked": "^15.0.12",
-    "material-icons": "^1.13.1",
+    "material-icons": "^1.13.14",
     "maplibre-gl": "^5.14.0",
     "ngx-color-picker": "^19.0.0",
     "ngx-echarts": "^19.0.0",

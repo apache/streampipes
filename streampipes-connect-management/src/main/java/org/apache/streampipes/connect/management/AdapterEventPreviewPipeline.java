@@ -22,32 +22,24 @@ package org.apache.streampipes.connect.management;
 import org.apache.streampipes.connect.shared.AdapterPipelineGeneratorBase;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
-import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class AdapterEventPreviewPipeline implements IAdapterPipeline {
 
   private final List<IAdapterPipelineElement> pipelineElements;
-  private final String event;
+  private final Map<String, Object> event;
 
-  private ObjectMapper objectMapper;
+  public AdapterEventPreviewPipeline(AdapterDescription adapterDescription) {
 
-  public AdapterEventPreviewPipeline(AdapterEventPreview previewRequest) {
-    this.objectMapper = JacksonSerializer.getObjectMapper(Map.of(
-      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
-    ));
+
     this.pipelineElements = new AdapterPipelineGeneratorBase()
-        .makeAdapterPipelineElements(previewRequest.getRules(), false);
-    this.event = previewRequest.getInputData();
+        .makeAdapterPipelineElements(false, adapterDescription, false);
+
+    this.event = adapterDescription.getTransformationConfig().getOutputs().get(0);
   }
 
   @Override
@@ -56,6 +48,7 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
       event = pe.process(event);
     }
   }
+
 
   @Override
   public List<IAdapterPipelineElement> getPipelineElements() {
@@ -77,11 +70,10 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
     return null;
   }
 
-  public String makePreview() throws JsonProcessingException {
-    var ev = objectMapper.readValue(event, HashMap.class);
-    this.process(ev);
+  public Map<String, Object> makePreview() {
+    this.process(this.event);
 
-    return this.objectMapper.writeValueAsString(ev);
+    return this.event;
   }
 
   @Override

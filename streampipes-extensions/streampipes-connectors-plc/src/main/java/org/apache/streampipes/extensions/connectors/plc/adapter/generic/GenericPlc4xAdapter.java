@@ -36,16 +36,15 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connecti
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.PlcRequestProvider;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionExtractor;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 
 import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriver;
 import org.apache.plc4x.java.api.metadata.Option;
 import org.apache.plc4x.java.api.metadata.OptionMetadata;
-import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 
 import java.util.List;
 import java.util.function.Function;
@@ -95,22 +94,21 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     try {
       var settings = new Plc4xConnectionExtractor(
           extractor.getStaticPropertyExtractor(),
           driver.getProtocolCode()
       ).makeSettings();
-      var schemaBuilder = GuessSchemaBuilder.create();
-      var allProperties = schemaProvider.makeSchema(settings.nodes());
 
       var event = new OneTimePlcRequestReader(connectionManager, settings, requestProvider).readPlcDataSynchronized();
 
-      schemaBuilder.properties(allProperties);
-      schemaBuilder.preview(event);
+      var sampleData = SampleDataBuilder.create()
+                           .sample(event)
+                               .build();
 
-      return schemaBuilder.build();
+      return sampleData;
     } catch (Exception e) {
       throw new AdapterException("Could not read plc", e);
     }

@@ -1,0 +1,61 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+import {
+    AdapterDescription,
+    FieldStatusInfo,
+    ScriptMetadata,
+    SpLogMessage,
+} from '@streampipes/platform-services';
+
+export class AdapterConfigurationState {
+    // adapter settings
+    adapterSettingsChanged: boolean;
+    adapterSettingsString: string;
+
+    // script infos
+    availableScriptMetadata: ScriptMetadata[];
+    loadingAvailableScriptsError: SpLogMessage | null;
+    isLoadingAvailableScripts: boolean;
+
+    selectedScriptMetadata: ScriptMetadata | null;
+
+    currentScript: string;
+
+    transformationConfigurationString: string;
+    transformationConfigurationChanged: boolean;
+
+    // Is used to remember initial script for reset of changes
+    initialScript: { scriptMetadata: ScriptMetadata; script: string } | null;
+
+    // configure schema
+    adapterDescription: AdapterDescription;
+    isGettingSample: boolean;
+
+    sampleError: SpLogMessage | null;
+    sampleFieldStatusInfos: { [index: string]: FieldStatusInfo } | null;
+    isRunningScript: boolean;
+    scriptError: SpLogMessage | null;
+
+    // configure fields
+    autoLoadSchema: boolean;
+    isGettingEventSchema: boolean;
+    getEventSchemaError: SpLogMessage | null;
+    isPreviewLoading: boolean;
+    resultPreview: Record<string, any> | null;
+}

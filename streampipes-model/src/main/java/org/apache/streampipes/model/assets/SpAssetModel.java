@@ -28,7 +28,7 @@ import com.google.gson.annotations.SerializedName;
 @TsModel
 public class SpAssetModel extends SpAsset implements Storable {
 
-  public static final String APP_DOC_TYPE = GenericDocTypes.DOC_ASSET_MANGEMENT;
+  public static final String APP_DOC_TYPE = GenericDocTypes.DOC_ASSET_MANAGEMENT;
 
   private final String appDocType = APP_DOC_TYPE;
 

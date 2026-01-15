@@ -1,0 +1,58 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+<div fxFlex="100" fxLayout="column">
+    @if (hasBadFieldStatusInfos()) {
+        <div class="fs-alert fs-alert-header">
+            <div class="fs-alert-icon">
+                <mat-icon>error</mat-icon>
+            </div>
+            <div class="fs-alert-content" fxLayout="column" fxFlex="100">
+                <div class="fs-alert-title">
+                    Problems reading the following nodes
+                </div>
+                <div class="fs-alert-description">
+                    Please change the adapter configuration to fix them.
+                </div>
+            </div>
+        </div>
+        <div fxFlex="100" fxLayout="column" fxLayoutGap="8px">
+            @for (entry of badFieldStatusInfos(); track entry[0]) {
+                @let runtimeName = entry[0];
+                @let info = entry[1];
+
+                <div class="fs-alert">
+                    <div
+                        class="fs-alert-content"
+                        fxLayout="column"
+                        fxFlex="100"
+                    >
+                        <div class="fs-alert-title">{{ runtimeName }}</div>
+
+                        @if (info.additionalInfo) {
+                            <div class="fs-alert-description">
+                                <span class="fs-additional">{{
+                                    info.additionalInfo
+                                }}</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

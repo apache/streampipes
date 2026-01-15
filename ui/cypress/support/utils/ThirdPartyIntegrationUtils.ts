@@ -26,13 +26,7 @@ import { AdapterBuilder } from '../builder/AdapterBuilder';
 export class ThirdPartyIntegrationUtils {
     public static runTest(sink: PipelineElementInput, adapter: AdapterInput) {
         const simulatorAdapterName = 'simulator';
-
-        const machineAdapter = AdapterBuilder.create('Machine_Data_Simulator')
-            .setName(simulatorAdapterName)
-            .addInput('input', 'wait-time-ms', '1000')
-            .build();
-
-        ConnectUtils.testAdapter(machineAdapter);
+        ConnectUtils.addMachineDataSimulator(simulatorAdapterName);
 
         const pipelineInput = PipelineBuilder.create('Pipeline Test')
             .addSource(simulatorAdapterName)

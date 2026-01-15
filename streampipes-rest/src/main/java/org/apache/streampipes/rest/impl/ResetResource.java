@@ -61,6 +61,12 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
       getNoSqlStorage().getUserGroupStorage().deleteElementById(group.getElementId());
     }
 
+    // Delete all connect script templates
+    var allScriptTemplates = getNoSqlStorage().getTransformationScriptTemplateStorage().findAll();
+    for (var template : allScriptTemplates) {
+      getNoSqlStorage().getTransformationScriptTemplateStorage().deleteElementById(template.getElementId());
+    }
+
     var message = Notifications.success("Reset of system successfully performed");
     return ok(message);
   }

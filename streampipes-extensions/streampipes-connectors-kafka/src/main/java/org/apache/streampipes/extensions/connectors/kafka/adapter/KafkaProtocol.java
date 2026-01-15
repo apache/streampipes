@@ -37,7 +37,7 @@ import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConf
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
@@ -208,8 +208,8 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                                      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
 
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     List<byte[]> nEventsByte = new ArrayList<>();
@@ -237,7 +237,7 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
         if (nEventsByte.size() >= requiredEvents) {
           resultEventsByte = nEventsByte.subList(0, requiredEvents);
           LOG.info("Retrieved {} events from topic {}", resultEventsByte.size(), config.getTopic());
-          return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(resultEventsByte.get(0)));
+          return extractor.selectedParser().getSampleData(new ByteArrayInputStream(resultEventsByte.get(0)));
         }
       }
 

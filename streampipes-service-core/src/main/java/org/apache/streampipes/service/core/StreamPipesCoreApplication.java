@@ -19,14 +19,18 @@ package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
-import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.transformer.api.TransformationEngine;
+import org.apache.streampipes.connect.transformer.api.TransformationEngines;
+import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
+import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
+import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
+import org.apache.streampipes.health.monitoring.ResourceProvider;
+import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
-import org.apache.streampipes.manager.health.PipelineHealthCheck;
-import org.apache.streampipes.manager.health.ServiceHealthCheck;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
@@ -67,6 +71,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 @Configuration
 @EnableAutoConfiguration
@@ -90,18 +95,29 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
     application.initialize(() -> List.of(new SpNatsProtocolFactory(), new SpKafkaProtocolFactory(),
                                          new SpMqttProtocolFactory(), new SpJmsProtocolFactory(),
-                                         new SpPulsarProtocolFactory()));
+                                         new SpPulsarProtocolFactory()),
+        List.of(
+            GroovyScriptEngine::new,
+            GraalJsScriptEngine::new
+        )
+    );
   }
 
-  public void initialize(SupportedProtocols supportedProtocols) {
+  public void initialize(SupportedProtocols supportedProtocols,
+                         List<Supplier<TransformationEngine>> transformationEngines) {
     try {
       registerProtocols(supportedProtocols);
+      registerTransformationEngines(transformationEngines);
       BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(8030);
       startStreamPipesService(StreamPipesCoreApplication.class, networkingConfig);
     } catch (UnknownHostException e) {
       LOG.error("Could not auto-resolve host address - please manually provide the hostname"
           + " using the `SP_HOST` environment variable");
     }
+  }
+
+  protected void registerTransformationEngines(List<Supplier<TransformationEngine>> transformationEngines) {
+    transformationEngines.forEach(TransformationEngines.INSTANCE::registerEngine);
   }
 
   protected void registerProtocols(SupportedProtocols protocols) {
@@ -138,14 +154,19 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                              TimeUnit.MILLISECONDS);
 
     scheduleHealthChecks(env.getHealthCheckIntervalInMillis().getValueOrDefault(), List
-        .of(new ServiceHealthCheck(), new PipelineHealthCheck(),
-            new AdapterHealthCheck(
-                StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
-                new AdapterMasterManagement(
-                    StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
-                    new SpResourceManager().manageAdapters(),
-                    new SpResourceManager().manageDataStreams(),
-                    AdapterMetricsManager.INSTANCE.getAdapterMetrics()))));
+        .of(new ServiceHealthCheck(StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage()),
+            new ExtensionHealthCheck(
+                new ResourceProvider(
+                  StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
+                  StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                  new AdapterMasterManagement(
+                      StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                      new SpResourceManager().manageAdapters(),
+                      new SpResourceManager().manageDataStreams(),
+                      AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+                  )
+                )
+            )));
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
     LOG.info("Extensions logs will be fetched every {} milliseconds", logFetchInterval);
