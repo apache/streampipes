@@ -21,22 +21,22 @@ package org.apache.streampipes.service.core.migrations.v099.connect;
 public class TransformationScriptBuilder {
   private StringBuilder sb;
 
-  private boolean scriptAcive;
+  private boolean scriptActive;
 
   private TransformationScriptBuilder() {
-    scriptAcive = false;
+    scriptActive = false;
   }
 
   public static TransformationScriptBuilder create() {
     TransformationScriptBuilder builder = new TransformationScriptBuilder();
     builder.sb = new StringBuilder();
-    builder.sb.append("function transform(event) {\n");
+    builder.sb.append("function transform(event, out, ctx) {\n");
     return builder;
   }
 
   public TransformationScriptBuilder appendLine(String line) {
     if (!line.startsWith("//")) {
-      scriptAcive = true;
+      scriptActive = true;
     }
 
     sb.append("  ").append(line).append("\n");
@@ -45,11 +45,11 @@ public class TransformationScriptBuilder {
 
   // Used to check if any script lines were added
   public boolean isScriptActive() {
-    return scriptAcive;
+    return scriptActive;
   }
 
   public String build() {
-    sb.append("  return event;\n");
+    sb.append("  out.collect(event);\n");
     sb.append("}");
     return sb.toString();
   }

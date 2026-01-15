@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.transformer.api.utils;
 
+import org.apache.streampipes.connect.transformer.api.OutputCollector;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 
 import java.util.HashMap;
@@ -43,5 +44,16 @@ public class TransformationEngineConversionUtils {
     Map<String, Object> result = new HashMap<>();
     rawMap.forEach((k, v) -> result.put(String.valueOf(k), v));
     return result;
+  }
+
+  public static OutputCollector<Object> convertingCollector(OutputCollector<Map<String, Object>> delegate,
+                                                            String language) {
+    return eventObj -> {
+      Map<String, Object> map = ensureMap(
+          eventObj,
+          language
+      );
+      delegate.collect(map);
+    };
   }
 }

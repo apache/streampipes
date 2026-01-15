@@ -76,7 +76,9 @@ export class CompactAdapterUtils {
         )
             .setName('Test')
             .withScript(
-                'function transform(event) {\n' + '  return event;\n' + '}',
+                'function transform(event, out, ctx) {\n' +
+                    '  out.collect(event);\n' +
+                    '}\n',
             )
             .addConfiguration('wait-time-ms', '1000')
             .addConfiguration('selected-simulator-option', 'flowrate');

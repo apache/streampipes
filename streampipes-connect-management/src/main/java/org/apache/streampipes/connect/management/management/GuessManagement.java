@@ -45,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -108,8 +109,6 @@ public class GuessManagement {
     } else {
 
       try {
-
-
         var transformationScript = adapterDescription.getTransformationConfig();
         var engine = TransformationEngines.INSTANCE.getTransformationEngine(transformationScript.getLanguage());
         var compiledScript = engine.compile(transformationScript.getScript());
@@ -117,10 +116,11 @@ public class GuessManagement {
         var samples = adapterDescription.getTransformationConfig()
                                         .getInputs();
         if (!samples.isEmpty()) {
-          var result = compiledScript.transform(samples.get(0));
+          List<Map<String, Object>> results = new ArrayList<>();
+          compiledScript.transform(samples.get(0), results::add, null);
 
           adapterDescription.getTransformationConfig()
-                            .setOutputs(List.of(result));
+                            .setOutputs(results);
         } else {
           throw new AdapterException("No samples available to transform");
         }
