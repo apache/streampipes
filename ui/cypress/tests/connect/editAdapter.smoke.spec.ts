@@ -99,7 +99,7 @@ describe('Test Edit Adapter', () => {
                 '}',
         );
         ConnectBtns.configureSchemaRunScriptBtn().click();
-        cy.wait(500);
+        cy.wait(1000);
 
         ConnectBtns.configureSchemaNextBtn().click();
 
