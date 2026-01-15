@@ -44,7 +44,7 @@ public class ExtensionHealthCheck implements Runnable {
 
       var activeExtensionInstances = new HashMap<String, ExtensionInstanceHealth>();
       activeCoreInstances.keySet().forEach(k -> {
-        activeExtensionInstances.put(k, new PipelineElementEndpointHealthCheck(k).checkRunningInstances());
+        activeExtensionInstances.put(k, new ExtensionInstanceAvailabilityCheck(k).checkRunningInstances());
       });
 
       var healthCheckData = new HealthCheckData(resourceProvider, activeResources, activeCoreInstances, activeExtensionInstances);

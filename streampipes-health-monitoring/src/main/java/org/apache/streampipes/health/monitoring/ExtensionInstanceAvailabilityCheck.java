@@ -30,14 +30,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
-public class PipelineElementEndpointHealthCheck {
+public class ExtensionInstanceAvailabilityCheck {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineElementEndpointHealthCheck.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ExtensionInstanceAvailabilityCheck.class);
   private static final String InstancePath = "/health";
 
   private final String serviceBaseUrl;
 
-  public PipelineElementEndpointHealthCheck(String serviceBaseUrl) {
+  public ExtensionInstanceAvailabilityCheck(String serviceBaseUrl) {
     this.serviceBaseUrl = serviceBaseUrl;
   }
 
