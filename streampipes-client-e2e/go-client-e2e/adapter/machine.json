@@ -220,7 +220,7 @@
   "correspondingDataStreamElementId" : "sp:spdatastream:wMyUZS",
   "schemaTransformationConfig" : {
     "language" : "javascript",
-    "script" : "// returns the same event\nfunction transform(event) {\n  return event;\n}",
+    "script" : "function transform(event, out, ctx) {\n  out.collect(event);\n}\n",
     "inputs" : [ {
       "mass_flow" : 0.0620350632211194,
       "density" : 46.62523604047736,

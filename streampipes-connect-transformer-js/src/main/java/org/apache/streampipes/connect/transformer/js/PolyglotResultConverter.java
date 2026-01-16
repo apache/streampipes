@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.transformer.js;
 
+import org.apache.streampipes.connect.transformer.api.OutputCollector;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 import org.apache.streampipes.connect.transformer.api.utils.TransformationEngineConversionUtils;
 
@@ -68,5 +69,20 @@ public class PolyglotResultConverter {
 
     throw new ScriptExecutionException(
         "Template in " + language + " returned a non-object value: " + value.toString());
+  }
+
+  public static OutputCollector<Object> convertingCollector(OutputCollector<Map<String, Object>> delegate, String language) {
+    return obj -> {
+      Map<String,Object> map;
+      if (obj instanceof Map<?, ?> m) {
+        //noinspection unchecked
+        map = (Map<String,Object>) m;
+      } else if (obj instanceof Value v) {
+        map = PolyglotResultConverter.ensureMap(v, language);
+      } else {
+        throw new IllegalArgumentException("Collected event must be an object/map");
+      }
+      delegate.collect(map);
+    };
   }
 }

@@ -50,7 +50,7 @@ describe('Connect delete rule transformation', () => {
         ConnectUtils.replaceAdapterScript(
             '  delete event.toRemove;\n' +
                 '  delete event.parent.child_two;\n' +
-                '  return event;\n' +
+                '  out.collect(event);\n' +
                 '}',
         );
 

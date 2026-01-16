@@ -19,7 +19,6 @@
 package org.apache.streampipes.connect.shared;
 
 import org.apache.streampipes.connect.shared.preprocessing.elements.AdapterTransformationPipelineElement;
-import org.apache.streampipes.connect.shared.preprocessing.elements.ScriptTransformationPipelineElement;
 import org.apache.streampipes.connect.shared.preprocessing.transform.stream.EventRateTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.stream.RemoveDuplicatesTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.DatatypeTransformationRule;
@@ -37,19 +36,9 @@ public class AdapterPipelineGeneratorBase {
 
   public List<IAdapterPipelineElement> makeAdapterPipelineElements(
       boolean includeStateful,
-      AdapterDescription adapterDescription,
-      boolean includeScript
+      AdapterDescription adapterDescription
   ) {
     var elements = new ArrayList<IAdapterPipelineElement>();
-
-    if (includeScript) {
-      elements.add(new ScriptTransformationPipelineElement(
-          adapterDescription.getTransformationConfig()
-                            .getLanguage(),
-          adapterDescription.getTransformationConfig()
-                            .getScript()
-      ));
-    }
 
     List<TransformationRule> transformationRules = new ArrayList<>();
     if (includeStateful) {

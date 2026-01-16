@@ -95,11 +95,11 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.replaceAdapterScript(
             '  event.density = event.density * 2;\n' +
-                '  return event;\n' +
+                '  out.collect(event);\n' +
                 '}',
         );
         ConnectBtns.configureSchemaRunScriptBtn().click();
-        cy.wait(500);
+        cy.wait(1000);
 
         ConnectBtns.configureSchemaNextBtn().click();
 
