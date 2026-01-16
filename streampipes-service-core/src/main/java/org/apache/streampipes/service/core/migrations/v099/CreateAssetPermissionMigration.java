@@ -26,7 +26,6 @@ import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
-import java.util.List;
 
 public class CreateAssetPermissionMigration implements Migration {
 
