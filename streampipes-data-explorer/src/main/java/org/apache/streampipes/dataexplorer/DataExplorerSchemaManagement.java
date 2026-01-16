@@ -25,7 +25,6 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.api.IPermissionStorage;
 
 import java.util.ArrayList;
 import java.util.List;
