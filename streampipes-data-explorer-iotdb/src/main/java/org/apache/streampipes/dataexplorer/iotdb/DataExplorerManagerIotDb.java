@@ -28,6 +28,7 @@ import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.iotdb.sanitize.DataLakeMeasurementSanitizerIotDb;
+import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -54,7 +55,11 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
   public IDataExplorerSchemaManagement getSchemaManagement() {
     return new DataExplorerSchemaManagement(StorageDispatcher.INSTANCE
                                                              .getNoSqlStore()
-                                                             .getDataLakeStorage());
+                                                             .getDataLakeStorage(),
+        new DataLakePermissionManager(
+            StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage()
+        )
+    );
   }
 
   @Override

@@ -29,6 +29,7 @@ import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.influx.sanitize.DataLakeMeasurementSanitizerInflux;
+import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -55,7 +56,11 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   public IDataExplorerSchemaManagement getSchemaManagement() {
     return new DataExplorerSchemaManagement(StorageDispatcher.INSTANCE
         .getNoSqlStore()
-        .getDataLakeStorage());
+        .getDataLakeStorage(),
+        new DataLakePermissionManager(
+            StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage()
+        )
+    );
   }
 
   @Override

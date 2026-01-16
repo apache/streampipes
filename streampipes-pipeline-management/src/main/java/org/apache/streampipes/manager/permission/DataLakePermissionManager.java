@@ -25,22 +25,23 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class DataLakePermissionManager {
 
+  private final IPermissionStorage permissionStorage;
+
+  public DataLakePermissionManager(IPermissionStorage permissionStorage) {
+    this.permissionStorage = permissionStorage;
+  }
+
   private Permission createDataLakePermission(String measurement, String principalSid) {
     return PermissionBuilder
         .create(measurement, DataLakeMeasure.class, principalSid)
         .build();
   }
 
-  private static IPermissionStorage getPermissionStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore()
-        .getPermissionStorage();
-  }
-
   public void makeAndPersistDataLakePermission(String measurement,
                                                String ownerSid) {
 
     Permission p = createDataLakePermission(measurement, ownerSid);
-    getPermissionStorage().persist(p);
+    permissionStorage.persist(p);
 
   }
 }

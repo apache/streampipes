@@ -25,6 +25,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IPermissionStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,12 @@ import java.util.stream.Stream;
 public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
 
   CRUDStorage<DataLakeMeasure> dataLakeStorage;
+  private final DataLakePermissionManager permissionManager;
 
-  public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage) {
+  public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
+                                      DataLakePermissionManager permissionManager) {
     this.dataLakeStorage = dataLakeStorage;
+    this.permissionManager = permissionManager;
   }
 
   @Override
@@ -68,8 +72,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
     if (existingMeasure.isEmpty()) {
       measure.setElementId(UUID.randomUUID().toString());
       setSchemaVersionAndStoreMeasurement(measure);
-      new DataLakePermissionManager().makeAndPersistDataLakePermission(measure.getElementId(), principalSid);
-
+      permissionManager.makeAndPersistDataLakePermission(measure.getElementId(), principalSid);
 
     } else {
       handleExistingMeasurement(measure, existingMeasure.get());
