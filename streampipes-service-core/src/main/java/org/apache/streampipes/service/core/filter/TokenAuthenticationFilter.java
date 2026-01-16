@@ -21,7 +21,6 @@ package org.apache.streampipes.service.core.filter;
 import org.apache.streampipes.commons.constants.HttpConstants;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.IUserStorage;
