@@ -45,7 +45,7 @@ public class DataLakeScheduler implements SchedulingConfigurer {
     public void cleanupMeasurements() {
         LOG.info("Retention CRON Job triggered.");
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
-        LOG.info("GET ALL Measurements");
+        LOG.debug("GET ALL Measurements");
         for (DataLakeMeasure dataLakeMeasure : allMeasurements) {
             try {
                 dataLakeExportManager.cleanupSingleMeasurement(dataLakeMeasure);
