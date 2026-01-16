@@ -21,7 +21,6 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.IPermissionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class DataLakePermissionManager {
 
