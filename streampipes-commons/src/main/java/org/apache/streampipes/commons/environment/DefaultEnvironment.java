@@ -596,4 +596,15 @@ public class DefaultEnvironment implements Environment {
   public IntEnvironmentVariable getDatalakeRetentionLogLength() {
     return new IntEnvironmentVariable(Envs.SP_RETENTION_LOG_LENGTH);
   }
+
+  @Override
+  public StringEnvironmentVariable getCertificateExpiryCron() {
+    return new StringEnvironmentVariable(Envs.SP_CERTIFICATE_EXPIRY_CRON);
+  }
+
+  @Override
+  public StringEnvironmentVariable getCertificateExpiryEmailDays() {
+    return new StringEnvironmentVariable(Envs.SP_CERTIFICATE_EXPIRY_EMAIL_DAYS);
+  }
+
 }

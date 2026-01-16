@@ -232,6 +232,10 @@ public interface Environment {
 
   BooleanEnvironmentVariable getLoadManagerEnable();
 
+  // Certificate expiration email reminder
+  StringEnvironmentVariable getCertificateExpiryCron();
+  StringEnvironmentVariable getCertificateExpiryEmailDays();
+
   //SpRateLimiter
   LongEnvironmentVariable getRateLimiterDefaultWarmupPeriod();
   IntEnvironmentVariable getRateLimiterSchedulerInitialDelaySeconds();
