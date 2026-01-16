@@ -130,7 +130,7 @@ public class AdapterRuleConverter {
     }
 
     var symbols = new DecimalFormatSymbols(Locale.US);
-    var df = new DecimalFormat("0.###", symbols);
+    var df = new DecimalFormat("0.########################", symbols);
     var formattedValue = df.format(rule.getCorrectionValue());
 
     scriptBuilder.appendLine(String.format("event['%s'] = Number(event['%s']) %s %s;",
