@@ -21,15 +21,12 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.json.GeoJsonParser;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonArrayKeyParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonArrayParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
@@ -53,22 +50,13 @@ public class JsonParsers implements IParser {
   public static final String KEY_JSON_OPTIONS = "json_options";
 
   public static final String KEY_OBJECT = "object";
-  public static final String LABEL_OBJECT = "Single Object";
+  public static final String LABEL_OBJECT = "Object";
   public static final String DESCRIPTION_OBJECT = "Each event is a single json object (e.g. {'value': 1})";
 
   public static final String KEY_ARRAY = "array";
   public static final String LABEL_ARRAY = "Array";
   public static final String DESCRIPTION_ARRAY =
       "Each event consists of only one array of json objects, e.g. [{'value': 1}, {'value': 2}]";
-
-  public static final String KEY_ARRAY_FIELD = "arrayField";
-  public static final String LABEL_ARRAY_FIELD = "Array Field";
-  public static final String DESCRIPTION_ARRAY_FIELD =
-      "Use one property of the json object that is an array, e.g. {'arrayKey': [{'value': 1}, {'value': 2}]}";
-
-  public static final String KEY_GEO_JSON = "geojson";
-  public static final String LABEL_GEO_JSON = "GeoJSON";
-  public static final String DESCRIPTION_GEO_JSON = "Reads GeoJson";
 
   private JsonParser selectedParser;
 
@@ -92,13 +80,6 @@ public class JsonParsers implements IParser {
       case KEY_ARRAY -> {
         return new JsonParsers(new JsonArrayParser());
       }
-      case KEY_ARRAY_FIELD -> {
-        var key = extractor.singleValueParameter("key", String.class);
-        return new JsonParsers(new JsonArrayKeyParser(key));
-      }
-      case KEY_GEO_JSON -> {
-        return new JsonParsers(new GeoJsonParser());
-      }
     }
 
     LOG.warn("No parser was found. Json object parser is used as a default");
@@ -111,12 +92,7 @@ public class JsonParsers implements IParser {
         .requiredAlternatives(
             Labels.from(KEY_JSON_OPTIONS, "", ""),
             Alternatives.from(Labels.from(KEY_OBJECT, LABEL_OBJECT, DESCRIPTION_OBJECT), true),
-            Alternatives.from(Labels.from(KEY_ARRAY, LABEL_ARRAY, DESCRIPTION_ARRAY)),
-            Alternatives.from(Labels.from(KEY_ARRAY_FIELD, LABEL_ARRAY_FIELD, DESCRIPTION_ARRAY_FIELD),
-                StaticProperties.group(Labels.from("arrayFieldConfig", "Delimiter", ""),
-                    StaticProperties.stringFreeTextProperty(
-                        Labels.from("key", "Key", "Key of the array within the Json object")))),
-            Alternatives.from(Labels.from(KEY_GEO_JSON, LABEL_GEO_JSON, DESCRIPTION_GEO_JSON)))
+            Alternatives.from(Labels.from(KEY_ARRAY, LABEL_ARRAY, DESCRIPTION_ARRAY)))
         .build();
   }
 
