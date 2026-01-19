@@ -42,7 +42,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.HttpClient; org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -249,13 +249,13 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   /**
    * Sends a payload to a webhook using the provided HTTP client, payload, and webhook URL.
    *
-   * @param httpClient The HTTP client used to send the payload.
+   * @param mockedClient The HTTP client used to send the payload.
    * @param payload    The payload to be sent to the webhook.
    * @param webhookUrl The URL of the webhook to which the payload will be sent.
    * @throws SpRuntimeException If an I/O error occurs while sending the payload to the webhook or
    *                            the payload sent is not accepted by the API.
    */
-  protected void sendPayloadToWebhook(CloseableHttpClient httpClient, String payload, String webhookUrl) {
+  protected void sendPayloadToWebhook(CloseableHttpClient mockedClient, String payload, String webhookUrl) {
 
     for (int attempt = 1; ; attempt++) {
       HttpPost request = new HttpPost(webhookUrl);
@@ -265,7 +265,7 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
         throw new SpRuntimeException("Interrupted while sending MS Teams webhook");
       }
 
-      try (CloseableHttpResponse response = httpClient.execute(request)) {
+      try (CloseableHttpResponse response = mockedClient.execute(request)) {
         int status = response.getStatusLine().getStatusCode();
         if (status >= 200 && status < 300) {
           return;
