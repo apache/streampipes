@@ -22,7 +22,6 @@ package org.apache.streampipes.service.core.migrations;
 import org.apache.streampipes.service.core.migrations.v070.CreateAssetLinkTypeMigration;
 import org.apache.streampipes.service.core.migrations.v070.CreateFileAssetTypeMigration;
 import org.apache.streampipes.service.core.migrations.v090.UpdateUsernameViewMigration;
-import org.apache.streampipes.service.core.migrations.v093.AdapterMigration;
 import org.apache.streampipes.service.core.migrations.v093.StoreEmailTemplatesMigration;
 import org.apache.streampipes.service.core.migrations.v095.MergeFilenamesAndRenameDuplicatesMigration;
 import org.apache.streampipes.service.core.migrations.v0980.AddDataLakeMeasureViewMigration;
@@ -56,7 +55,6 @@ public class AvailableMigrations {
         new CreateAssetLinkTypeMigration(),
         new CreateFileAssetTypeMigration(),
         new UpdateUsernameViewMigration(),
-        new AdapterMigration(),
         new StoreEmailTemplatesMigration(),
         new MergeFilenamesAndRenameDuplicatesMigration(),
         new AddLinkSettingsMigration(),

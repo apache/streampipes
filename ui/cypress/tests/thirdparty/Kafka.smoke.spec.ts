@@ -54,7 +54,7 @@ describe('Test Kafka Integration', () => {
             .addProtocolInput('click', 'sp-reload', '')
             .addProtocolInput('radio', topicName, '')
             .setFormat('json')
-            .addFormatInput('radio', 'json_options-single_object', '')
+            .addFormatInput('radio', 'json_options-object', '')
             .build();
 
         ThirdPartyIntegrationUtils.runTest(sink, adapter);

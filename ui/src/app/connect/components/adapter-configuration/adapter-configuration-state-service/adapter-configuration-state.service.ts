@@ -68,7 +68,7 @@ export class AdapterConfigurationStateService {
         isGettingEventSchema: false,
         getEventSchemaError: null,
         isPreviewLoading: false,
-        resultPreview: {},
+        resultPreview: null,
     };
 
     private _state = signal<AdapterConfigurationState>(this.initialState);
