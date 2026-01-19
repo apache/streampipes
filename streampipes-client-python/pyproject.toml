@@ -66,12 +66,12 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 autoflake = "2.3.0"
-black = "25.11.0"
+black = "26.1.0"
 blacken-docs = "1.20.0"
 flake8 = "7.3.0"
 interrogate = { version = "1.7.0", extras = ["png"] }
 isort = "7.0.0"
-mypy = "1.17.0"
+mypy = "1.19.1"
 ruff = "0.14.8"
 pre-commit = "4.3.0"
 pytest = "9.0.1"
@@ -93,6 +93,7 @@ mkdocs-material = "9.3.2"
 mkdocstrings = { version = "0.25.0", extras = ["python"] }
 numpydoc = "1.9.0"
 pytkdocs = { version = "0.16.1", extras = ["numpy-style"] }
+setuptools = "80.9.0"
 
 [tool.poetry.group.stubs]
 optional = true
