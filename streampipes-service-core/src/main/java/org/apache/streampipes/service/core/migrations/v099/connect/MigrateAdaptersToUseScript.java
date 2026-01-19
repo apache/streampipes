@@ -21,6 +21,11 @@ package org.apache.streampipes.service.core.migrations.v099.connect;
 import org.apache.streampipes.model.connect.TransformationConfig;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -33,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class MigrateAdaptersToUseScript implements Migration {
 
@@ -59,7 +66,8 @@ public class MigrateAdaptersToUseScript implements Migration {
     return adapters != null
         && adapters.stream()
                    .anyMatch(adapter -> adapter.getTransformationConfig() == null
-                   || adapter.getTransformationConfig().getScript() == null);
+                       || adapter.getTransformationConfig()
+                                 .getScript() == null);
   }
 
   @Override
@@ -75,16 +83,14 @@ public class MigrateAdaptersToUseScript implements Migration {
 
   private void migrateAndUpdateAdapter(AdapterDescription adapterDescription) {
     LOG.info("Migrating adapter to script preprosessing: {}", adapterDescription.getName());
+    var jsonKeyOption = removeDeprecatedParserConfig(adapterDescription);
 
-    migrateAdapterToUseTransformationScript(adapterDescription);
-
-    // Remove ArrayField Connfig & Geo Json
-
+    migrateAdapterToUseTransformationScript(adapterDescription, jsonKeyOption);
 
     updateAdapter(adapterDescription);
   }
 
-  private void migrateAdapterToUseTransformationScript(AdapterDescription adapter) {
+  private void migrateAdapterToUseTransformationScript(AdapterDescription adapter, String arrayFieldKey) {
 
     removeAdditionalMetadata(adapter);
 
@@ -105,7 +111,16 @@ public class MigrateAdaptersToUseScript implements Migration {
     }
 
     config.setScriptActive(scriptBuilder.isScriptActive());
-    config.setScript(scriptBuilder.build());
+
+    var script = scriptBuilder.build();
+
+    var finalScript = TransformationScriptBuilder.wrapWithArrayFieldLoopIfNeeded(script, arrayFieldKey);
+
+    if (!script.equals(finalScript)) {
+      config.setScriptActive(true);
+    }
+
+    config.setScript(finalScript);
 
     adapter.setTransformationConfig(config);
 
@@ -124,6 +139,8 @@ public class MigrateAdaptersToUseScript implements Migration {
   }
 
 
+
+
   private TransformationConfig initializeTransformationConfig() {
     var config = new TransformationConfig();
     config.setLanguage("javascript");
@@ -131,6 +148,95 @@ public class MigrateAdaptersToUseScript implements Migration {
     config.setOutputs(new ArrayList<>());
     return config;
   }
+
+  /**
+   * Removes deprecated parser configuration options from the adapter's "format" -> "Json" configuration.
+   * <p>
+   * Behavior:
+   * - If config / format / Json option is missing: returns null
+   * - Renames the "object" alternative label to "Object"
+   * - Removes the "geojson" alternative
+   * - If the selected "arrayField" alternative exists and has a non-null value: returns that value
+   * - Always removes the "arrayField" alternative from the alternatives list
+   */
+  private String removeDeprecatedParserConfig(AdapterDescription adapter) {
+    if (adapter == null || adapter.getConfig() == null || adapter.getConfig()
+                                                                 .isEmpty()) {
+      return null;
+    }
+
+    var formatOption = findFormatOption(adapter);
+    if (formatOption.isEmpty()) {
+      return null;
+    }
+
+    var jsonAlternative = findJsonAlternative(formatOption.get());
+    if (jsonAlternative.isEmpty()) {
+      return null;
+    }
+
+    var alternatives = extractJsonAlternatives(jsonAlternative.get());
+
+    renameObjectLabel(alternatives);
+    removeByInternalName(alternatives, "geojson");
+
+    var arrayFieldValue = extractSelectedArrayFieldValue(alternatives);
+    removeByInternalName(alternatives, "arrayField");
+
+    // Keep original behavior (may throw if empty)
+    return arrayFieldValue.get();
+  }
+
+  private Optional<StaticPropertyAlternatives> findFormatOption(AdapterDescription adapter) {
+    return adapter.getConfig()
+                  .stream()
+                  .filter(c -> "format".equals(c.getInternalName()))
+                  .map(StaticPropertyAlternatives.class::cast)
+                  .findFirst();
+  }
+
+  private Optional<StaticPropertyAlternative> findJsonAlternative(StaticPropertyAlternatives formatOption) {
+    return formatOption.getAlternatives()
+                       .stream()
+                       .filter(a -> "Json".equals(a.getInternalName()))
+                       .findFirst();
+  }
+
+  private List<StaticPropertyAlternative> extractJsonAlternatives(StaticPropertyAlternative jsonAlternative) {
+    StaticPropertyGroup group = (StaticPropertyGroup) jsonAlternative.getStaticProperty();
+
+    // Preserve original behavior: assume index 0 exists and is StaticPropertyAlternatives
+    StaticProperty first = group.getStaticProperties()
+                                .get(0);
+
+    // System.out.println(abc); was noisy and not part of functional behavior; removed on purpose.
+    return ((StaticPropertyAlternatives) first).getAlternatives();
+  }
+
+  private void renameObjectLabel(List<StaticPropertyAlternative> alternatives) {
+    alternatives.stream()
+                .filter(a -> "object".equals(a.getInternalName()))
+                .forEach(a -> a.setLabel("Object"));
+  }
+
+  private Optional<String> extractSelectedArrayFieldValue(List<StaticPropertyAlternative> alternatives) {
+    return alternatives.stream()
+                       .filter(a -> "arrayField".equals(a.getInternalName()) && a.getSelected())
+                       .map(a -> {
+                         StaticPropertyGroup group = (StaticPropertyGroup) a.getStaticProperty();
+                         StaticProperty keyProperty = group.getStaticProperties()
+                                                           .get(0);
+                         return ((FreeTextStaticProperty) keyProperty).getValue();
+                       })
+                       .filter(Objects::nonNull)
+                       .findFirst();
+  }
+
+  private void removeByInternalName(List<StaticPropertyAlternative> alternatives, String internalName) {
+    // Avoid ConcurrentModification: original used stream().toList() then remove; removeIf is clearer.
+    alternatives.removeIf(a -> internalName.equals(a.getInternalName()));
+  }
+
 
   private void updateAdapter(AdapterDescription adapterDescription) {
     adapterStorage.updateElement(adapterDescription);

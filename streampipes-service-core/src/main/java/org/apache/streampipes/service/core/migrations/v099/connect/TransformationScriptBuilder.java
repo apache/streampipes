@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.service.core.migrations.v099.connect;
 
+import java.util.stream.Collectors;
+
 public class TransformationScriptBuilder {
   private StringBuilder sb;
 
@@ -53,4 +55,57 @@ public class TransformationScriptBuilder {
     sb.append("}");
     return sb.toString();
   }
+
+
+  /**
+   * Put the script body into a loop if the adapter used the old array field key.
+   * This executes the script for each item in the array field, emitting one event per item.
+   * Is only executed if the selected format was json array key.
+   */
+  public static String wrapWithArrayFieldLoopIfNeeded(String scriptBody, String arrayFieldKey) {
+    if (arrayFieldKey == null || arrayFieldKey.isBlank()) {
+      return scriptBody;
+    }
+
+    var escapedKey = escapeJsString(arrayFieldKey);
+
+    var removedFirstAndLastLine = scriptBody.lines()
+                            .skip(1)
+                            .limit(Math.max(0, scriptBody.lines().count() - 3))
+                            .collect(Collectors.joining("\n"));
+
+    return """
+      // Migration wrapper:
+      // If event['%s'] is an array, emit one event per entry (fan-out). Otherwise process the event normally.
+      function transform(event, out, ctx) {
+        const items = event['%s'];
+        if (Array.isArray(items)) {
+          for (const item of items) {
+            const child = process(item);
+            out.collect(child);
+          }
+          return;
+        }
+      }
+
+      function process(event) {
+      %s
+        return event;
+      }
+      """.formatted(escapedKey, escapedKey, indent(removedFirstAndLastLine));
+  }
+
+
+  private static String escapeJsString(String s) {
+    return s.replace("\\", "\\\\").replace("'", "\\'");
+  }
+
+  private static String indent(String text) {
+    String pad = " ".repeat(2);
+    return text.lines()
+               .map(line -> pad + line)
+               .reduce((a, b) -> a + "\n" + b)
+               .orElse("");
+  }
+
 }
