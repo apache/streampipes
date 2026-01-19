@@ -272,6 +272,12 @@ export class ConnectBtns {
         });
     }
 
+    public static configureFieldsEventPreviewResult() {
+        return cy.dataCy('configure-fields-event-preview-result', {
+            timeout: 10000,
+        });
+    }
+
     public static configureFieldsNextBtn() {
         return cy.dataCy('configure-fields-next-button');
     }
@@ -296,10 +302,6 @@ export class ConnectBtns {
 
     public static csvHeader() {
         return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-header-1';
-    }
-
-    public static jsonArrayFieldKey() {
-        return 'undefined-arrayFieldConfig-2-key-0';
     }
 
     public static xmlTag() {

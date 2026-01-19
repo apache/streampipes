@@ -44,7 +44,7 @@ describe('Test adapter formats', () => {
 
         template
             .setFormat('json')
-            .addFormatInput('radio', 'json_options-single_object', '');
+            .addFormatInput('radio', 'json_options-object', '');
 
         createAdapterUntilEventSchemaConfiguration(template.build());
 
@@ -74,34 +74,17 @@ describe('Test adapter formats', () => {
 
         template
             .setFormat('json')
-            .addFormatInput('radio', 'json_options-array_field', '')
-            .addFormatInput('input', ConnectBtns.jsonArrayFieldKey(), 'field');
+            .addFormatInput('radio', 'json_options-object', '')
+            .setScript(
+                '  for (const item of event.field) {\n' +
+                    '    out.collect(item);\n' +
+                    '  }\n',
+            );
 
         createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
-    });
-
-    it('Test geo json format', () => {
-        // Set up test
-        const geoJsonResultEvent = {
-            latitude: 10.1,
-            longitude: 125.6,
-            timestamp: 1667904471000,
-            v1: 4.1,
-        };
-        FileManagementUtils.addFile(baseDir + 'geoJson.json');
-        const template = makeAdapterInputTemplate();
-
-        template
-            .setFormat('json')
-            .addFormatInput('radio', 'json_options-geojson', '');
-
-        createAdapterUntilEventSchemaConfiguration(template.build());
-
-        // Validate result
-        validateResult(geoJsonResultEvent);
     });
 
     it('Test xml format', () => {
@@ -179,8 +162,7 @@ const makeAdapterInputTemplate = (): AdapterBuilder => {
 };
 
 const validateResult = expected => {
-    //ConnectBtns.formatSelectionNextBtn().click();
-    ConnectBtns.configureSchemaEventPreviewOriginal().then(value => {
+    ConnectBtns.configureFieldsEventPreviewResult().then(value => {
         const jsonResult = removeWhitespaceExceptInQuotes(value.text());
         expect(jsonResult).to.deep.equal(expected);
     });
@@ -215,4 +197,13 @@ const createAdapterUntilEventSchemaConfiguration = (
     ConnectUtils.selectAdapter(adapterInput.adapterType);
 
     ConnectUtils.configureAdapter(adapterInput);
+
+    if (adapterInput.script) {
+        ConnectBtns.scriptActiveToggle().click();
+        ConnectUtils.replaceAdapterScript(adapterInput.script);
+        ConnectBtns.configureSchemaRunScriptBtn().click();
+        cy.wait(1000);
+    }
+
+    ConnectBtns.configureSchemaNextBtn().click();
 };

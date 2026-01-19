@@ -35,4 +35,6 @@ export class AdapterInput {
     formatConfiguration: UserInput[];
 
     dataTypeChanges: PropertyDataTypeChange[] = [];
+
+    script: string;
 }
