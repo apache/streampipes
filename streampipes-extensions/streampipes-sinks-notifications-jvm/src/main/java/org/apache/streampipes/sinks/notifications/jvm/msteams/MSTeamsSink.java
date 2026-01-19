@@ -40,18 +40,20 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.Header;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.Map;
 
 public class MSTeamsSink extends StreamPipesNotificationSink {
@@ -70,12 +72,15 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   public static final String KEY_PROXY_GROUP = "proxyConfigurationGroup";
   public static final String KEY_PROXY_URL = "proxyUrl";
   protected static final String SIMPLE_MESSAGE_TEMPLATE = "{\"text\": \"%s\"}";
+  private static final int MAX_RETRIES = 5;
+  private static final int HTTP_TOO_MANY_REQUESTS = 429;
+  private static final Duration BASE_BACKOFF = Duration.ofSeconds(1);
 
   private String messageContent;
   private boolean isSimpleMessageMode;
   private String webhookUrl;
   private ObjectMapper objectMapper;
-  private HttpClient httpClient;
+  private CloseableHttpClient httpClient;
 
   public MSTeamsSink() {
     super();
@@ -194,8 +199,12 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
 
   @Override
   public void onPipelineStopped() {
-    // nothing to do
-  }
+    try {
+        this.httpClient.close();
+    } catch (IOException e) {
+        throw new SpRuntimeException("Error when closing MSTeams client: %s".formatted(e.getMessage()));
+    }
+   }
 
   /**
    * Creates a JSON string intended for the MS Teams Webhook URL based on the provided plain message content.
@@ -246,24 +255,53 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
    * @throws SpRuntimeException If an I/O error occurs while sending the payload to the webhook or
    *                            the payload sent is not accepted by the API.
    */
-  protected void sendPayloadToWebhook(HttpClient httpClient, String payload, String webhookUrl) {
-    try {
-      var contentEntity = new StringEntity(payload);
-      contentEntity.setContentType(ContentType.APPLICATION_JSON.toString());
+  protected void sendPayloadToWebhook(CloseableHttpClient httpClient, String payload, String webhookUrl) {
 
-      var postRequest = new HttpPost(webhookUrl);
-      postRequest.setEntity(contentEntity);
+    for (int attempt = 1; ; attempt++) {
+      HttpPost request = new HttpPost(webhookUrl);
+      request.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
 
-      var result = httpClient.execute(postRequest);
-      if (result.getStatusLine()
-          .getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
-        throw new SpRuntimeException(
-            "The provided message payload was not accepted by the MS Teams API: %s"
-                .formatted(payload)
-        );
+      if (Thread.currentThread().isInterrupted()) {
+        throw new SpRuntimeException("Interrupted while sending MS Teams webhook");
       }
-    } catch (IOException e) {
-      throw new SpRuntimeException("Sending notification to MS Teams failed.", e);
+
+      try (CloseableHttpResponse response = httpClient.execute(request)) {
+        int status = response.getStatusLine().getStatusCode();
+        if (status >= 200 && status < 300) {
+          return;
+        }
+
+        if (status != HTTP_TOO_MANY_REQUESTS && (status < 500 || status >= 600)) {
+          throw new SpRuntimeException("MS Teams webhook rejected request (status=%d)".formatted(status));
+        }
+
+        if (attempt > MAX_RETRIES) {
+          throw new SpRuntimeException("MS Teams webhook failed after %d attempts (status=%d)"
+            .formatted(attempt - 1, status));
+        }
+
+        long backoffMs = BASE_BACKOFF.toMillis() << Math.min(attempt, 6);
+
+        Header retryAfter = response.getFirstHeader("Retry-After");
+        if (retryAfter != null) {
+        try {
+            backoffMs = Long.parseLong(retryAfter.getValue()) * 1000;
+          } catch (NumberFormatException ignored) {}
+        }
+
+        Thread.sleep(backoffMs);
+      } catch (IOException | InterruptedException e) {
+        if (attempt > MAX_RETRIES) {
+          throw new SpRuntimeException("I/O error sending MS Teams webhook", e);
+        }
+
+        try {
+          Thread.sleep(BASE_BACKOFF.toMillis() << Math.min(attempt, 6));
+        } catch (InterruptedException ie) {
+          Thread.currentThread().interrupt();
+          throw new SpRuntimeException("Interrupted while retrying MS Teams webhook", ie);
+        }
+      }
     }
   }
 
