@@ -104,7 +104,8 @@ describe('Test Dataset Permissions', () => {
             'chartUser1@streampipes.apache.org',
         );
 
-        DataExplorerBtns.confirmSave().click();
+        // I am not quite sure why this is needed, but without it the test fails
+        cy.dataCy('confirm-delete', { timeout: 10000 }).click();
 
         UserUtils.switchUser(chartUser1);
 
@@ -163,6 +164,7 @@ describe('Test Dataset Permissions', () => {
 
         assertAlertBanner(false);
     });
+
     function assertDatasetAvailabilityInCharts(available: boolean) {
         DataExplorerUtils.goToDatalake();
         DataExplorerBtns.openNewDataViewBtn().click();
