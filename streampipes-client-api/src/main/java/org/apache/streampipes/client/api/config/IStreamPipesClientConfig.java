@@ -20,9 +20,17 @@ package org.apache.streampipes.client.api.config;
 
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 
+import org.apache.http.Header;
+
+import java.util.Set;
+
 public interface IStreamPipesClientConfig {
 
   void addTransportProtocol(SpProtocolDefinitionFactory<?> protocolDefinitionFactory);
+
+  void addCustomHeader(String name, String value);
+
+  Set<Header> getCustomHeaders();
 
   ClientConnectionUrlResolver getConnectionConfig();
 }

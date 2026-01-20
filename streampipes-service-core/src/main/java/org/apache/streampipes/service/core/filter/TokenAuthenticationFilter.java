@@ -19,6 +19,7 @@
 package org.apache.streampipes.service.core.filter;
 
 import org.apache.streampipes.commons.constants.HttpConstants;
+import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
@@ -54,6 +55,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
@@ -137,8 +139,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   private void applySuccessfulAuth(HttpServletRequest request,
                                    String username) {
     Principal user = userStorage.getUser(username);
-    PrincipalUserDetails<?> userDetails = user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) :
-        new ServiceAccountDetails((ServiceAccount) user);
+    PrincipalUserDetails<?> userDetails = makeDetails(user);
+    var onBehalfOfHeader = request.getHeader(HttpConstants.X_ON_BEHALF_OF);
+    if (isAdminUser(userDetails) && onBehalfOfHeader != null) {
+      var onBehalfOf = userStorage.getUserById(onBehalfOfHeader);
+      if (onBehalfOf != null) {
+        userDetails = makeDetails(onBehalfOf);
+      }
+    }
     UsernamePasswordAuthenticationToken authentication =
         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -146,6 +154,17 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
 
+  private PrincipalUserDetails<?> makeDetails(Principal user) {
+    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) :
+        new ServiceAccountDetails((ServiceAccount) user);
+  }
+
+  private boolean isAdminUser(PrincipalUserDetails<?> userDetails) {
+    return userDetails.getAuthorities().stream()
+        .anyMatch(a ->
+            Objects.equals(a.getAuthority(), DefaultRole.Constants.ROLE_ADMIN_VALUE)
+        );
+  }
 
   private String getJwtFromRequest(HttpServletRequest request) {
     String bearerToken = request.getHeader(HttpConstants.AUTHORIZATION);

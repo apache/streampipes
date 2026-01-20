@@ -20,25 +20,26 @@
     <ng-container matColumnDef="filename">
         <th mat-header-cell *matHeaderCellDef>{{ 'Filename' | translate }}</th>
         <td mat-cell *matCellDef="let fileMetadata">
-            <h4>{{ fileMetadata.filename }}</h4>
+            <span>{{ fileMetadata.filename }}</span>
         </td>
     </ng-container>
     <ng-container matColumnDef="filetype">
         <th mat-header-cell *matHeaderCellDef>{{ 'Filetype' | translate }}</th>
         <td mat-cell *matCellDef="let fileMetadata">
-            <span
-                class="filetype-container"
-                [style.background-color]="getFileColor(fileMetadata.filetype)"
-                >{{ fileMetadata.filetype }}</span
+            <sp-label
+                [color]="getFileColor(fileMetadata.filetype)"
+                size="medium"
+                [labelText]="fileMetadata.filetype"
             >
+            </sp-label>
         </td>
     </ng-container>
     <ng-container matColumnDef="uploaded">
         <th mat-header-cell *matHeaderCellDef>{{ 'Uploaded' | translate }}</th>
         <td mat-cell *matCellDef="let fileMetadata">
-            <h5>
+            <span>
                 {{ fileMetadata.createdAt | date: 'dd.MM.yyyy HH:mm' }}
-            </h5>
+            </span>
         </td>
     </ng-container>
 

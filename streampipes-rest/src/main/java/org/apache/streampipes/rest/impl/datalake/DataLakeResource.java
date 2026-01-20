@@ -20,7 +20,6 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.export.DataLakeExportManager;
@@ -31,7 +30,6 @@ import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
@@ -48,6 +46,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,30 +88,26 @@ import static org.apache.streampipes.model.datalake.param.SupportedRestQueryPara
 
 @RestController
 @RequestMapping("/api/v4/datalake")
-public class DataLakeResource extends AbstractRestResource {
+public class DataLakeResource extends AbstractDataLakeResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
-  private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
   private static DataLakeExportManager dataLakeExportManager = new DataLakeExportManager();
 
   public DataLakeResource() {
-    this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
-        .getDataExplorerManager()
-        .getSchemaManagement();
+    super();
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getQueryManagement(this.dataExplorerSchemaManagement);
+        .getQueryManagement(this.dataLakeMeasureManagement);
   }
 
   public DataLakeResource(IDataExplorerQueryManagement dataExplorerQueryManagement) {
+    super();
     this.dataExplorerQueryManagement = dataExplorerQueryManagement;
-    this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
-        .getDataExplorerManager()
-        .getSchemaManagement();
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}")
+  @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionByName(#measurementID, 'WRITE')")
   @Operation(summary = "Remove data from a single measurement series with given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
@@ -133,6 +128,7 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}/drop")
+  @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionByName(#measurementID, 'WRITE')")
   @Operation(summary = "Drop a single measurement series with given id from Data Lake and "
       + "remove related event property", tags = {
           "Data Lake" }, responses = {
@@ -144,7 +140,7 @@ public class DataLakeResource extends AbstractRestResource {
     boolean isSuccessDataLake = this.dataExplorerQueryManagement.deleteData(measurementID);
 
     if (isSuccessDataLake) {
-      boolean isSuccessEventProperty = this.dataExplorerSchemaManagement.deleteMeasurementByName(measurementID);
+      boolean isSuccessEventProperty = this.dataLakeMeasureManagement.deleteMeasurementByName(measurementID);
       if (isSuccessEventProperty) {
         return ok();
       } else {
@@ -158,16 +154,19 @@ public class DataLakeResource extends AbstractRestResource {
           .body("Measurement series with given id not found.");
     }
   }
-
+  
   @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class)))) })
-  public ResponseEntity<List<DataLakeMeasure>> getAll() {
-    List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
-    return ok(allMeasurements);
+   @PreAuthorize("this.hasReadAuthority()")
+     @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+      public  List<DataLakeMeasure> getAll() {
+    List<DataLakeMeasure> allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
+    return allMeasurements;
   }
 
   @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
+   @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measurementId, 'READ')")
   public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
       @RequestParam("fields") String fields) {
     Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measurementId, fields);
@@ -175,6 +174,7 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @GetMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measurementID, 'READ')")
   @Operation(summary = "Get data from a single measurement series by a given id", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
       @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class))) })
@@ -215,6 +215,7 @@ public class DataLakeResource extends AbstractRestResource {
 
   @PostMapping(path = "/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<SpQueryResult>> getData(@RequestBody List<Map<String, String>> queryParams) {
+    //TODO
     var results = queryParams
         .stream()
         .map(qp -> new ProvidedRestQueryParams(qp.get("measureName"), qp))
@@ -225,6 +226,7 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measurementID, 'READ')")
   @Operation(summary = "Download data from a single measurement series by a given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
@@ -279,6 +281,7 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @PostMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
   @Operation(summary = "Store a measurement series to a data lake with the given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "400", description = "Can't store the given data to this data lake"),
@@ -298,6 +301,7 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @DeleteMapping(path = "/measurements")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   @Operation(summary = "Remove all stored measurement series from Data Lake", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "200", description = "All measurement series successfully removed") })
   public ResponseEntity<?> removeAll() {
@@ -317,10 +321,10 @@ public class DataLakeResource extends AbstractRestResource {
   public ResponseEntity<?> setDataLakeRetention(
       @PathVariable String elementId,
       @RequestBody RetentionTimeConfig retention) {
-    var measure = this.dataExplorerSchemaManagement.getById(elementId);
+    var measure = this.dataLakeMeasureManagement.getById(elementId);
     measure.setRetentionTime(retention);
     try {
-      this.dataExplorerSchemaManagement.updateMeasurement(measure);
+      this.dataLakeMeasureManagement.updateMeasurement(measure);
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
     }
@@ -329,11 +333,12 @@ public class DataLakeResource extends AbstractRestResource {
   }
 
   @DeleteMapping(path = "/{elementId}/cleanup")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId) {
-    var measure = this.dataExplorerSchemaManagement.getById(elementId);
+    var measure = this.dataLakeMeasureManagement.getById(elementId);
     measure.deleteRetentionTime();
     try {
-      this.dataExplorerSchemaManagement.updateMeasurement(measure);
+      this.dataLakeMeasureManagement.updateMeasurement(measure);
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
     }
@@ -348,7 +353,7 @@ public class DataLakeResource extends AbstractRestResource {
       @PathVariable String elementId) {
 
     try {
-      var measure = this.dataExplorerSchemaManagement.getById(elementId);
+      var measure = this.dataLakeMeasureManagement.getById(elementId);
       dataLakeExportManager.cleanupSingleMeasurement(measure);
       return ok();
 

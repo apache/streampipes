@@ -126,8 +126,11 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
       measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
 
+    var userSid = parameters.getModel().getCorrespondingUser();
+    var client = runtimeContext.getStreamPipesClient().onBehalfOf(userSid);
+
     measure = new DataExplorerDispatcher().getDataExplorerManager()
-                                          .getMeasurementSanitizer(runtimeContext.getStreamPipesClient(), measure)
+                                          .getMeasurementSanitizer(client, measure)
                                           .sanitizeAndRegister();
 
     this.timeSeriesStore = new TimeSeriesStore(

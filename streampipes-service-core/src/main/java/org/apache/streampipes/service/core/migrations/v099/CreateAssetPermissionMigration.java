@@ -26,7 +26,6 @@ import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
-import java.util.List;
 
 public class CreateAssetPermissionMigration implements Migration {
 
@@ -49,7 +48,7 @@ public class CreateAssetPermissionMigration implements Migration {
   @Override
   public void executeMigration() throws IOException {
     assetStorage.findAll().forEach(assetModel -> {
-      var existingPermission = permissionStorage.getObjectPermissions(List.of(assetModel.getElementId()));
+      var existingPermission = permissionStorage.getUserPermissionsForObject(assetModel.getElementId());
       if (existingPermission.isEmpty()) {
         permissionResourceManager.createDefault(
             assetModel.getElementId(),

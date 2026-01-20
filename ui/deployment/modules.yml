@@ -37,7 +37,7 @@ spDatasets:
     title: 'Datasets'
     description: 'Manage datasets'
     icon: 'dataset'
-    privileges: '[UserRole.ROLE_ADMIN]'
+    privileges: '[UserPrivilege.PRIVILEGE_READ_DATASET, UserPrivilege.PRIVILEGE_WRITE_DATASET]'
     pageNames: 'PageName.DATASETS'
     showStatusBox: false
     category: 'management'

@@ -33,6 +33,10 @@ export class DataExplorerBtns {
         return cy.dataCy('save-dashboard-btn');
     }
 
+    public static discardDashboard() {
+        return cy.dataCy('discard-dashboard-btn');
+    }
+
     public static saveChartsToAssetBtn() {
         return cy
             .dataCy('add-to-Asset-data-view-btn', { timeout: 10000 })
@@ -104,6 +108,10 @@ export class DataExplorerBtns {
 
     public static editWidget(widgetName: string) {
         return cy.dataCy('edit-' + widgetName);
+    }
+
+    public static viewWidget(widgetName: string) {
+        return cy.dataCy('show-data-view-' + widgetName);
     }
 
     public static moreOptionsBtn(widgetName) {

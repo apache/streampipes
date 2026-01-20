@@ -20,6 +20,7 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
+import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -28,6 +29,7 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,9 +37,12 @@ import java.util.stream.Stream;
 public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
 
   CRUDStorage<DataLakeMeasure> dataLakeStorage;
+  private final DataLakePermissionManager permissionManager;
 
-  public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage) {
+  public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
+                                      DataLakePermissionManager permissionManager) {
     this.dataLakeStorage = dataLakeStorage;
+    this.permissionManager = permissionManager;
   }
 
   @Override
@@ -56,14 +61,18 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * according to the update strategy defined by the measurement.
    */
   @Override
-  public DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure) {
+  public DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure,
+                                                   String principalSid) {
 
     setDefaultUpdateStrategyIfNoneProvided(measure);
 
     var existingMeasure = getExistingMeasureByName(measure.getMeasureName());
 
     if (existingMeasure.isEmpty()) {
+      measure.setElementId(UUID.randomUUID().toString());
       setSchemaVersionAndStoreMeasurement(measure);
+      permissionManager.makeAndPersistDataLakePermission(measure.getElementId(), principalSid);
+
     } else {
       handleExistingMeasurement(measure, existingMeasure.get());
     }
