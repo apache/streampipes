@@ -61,4 +61,6 @@ public interface IStreamPipesClient extends Serializable {
   IFileApi fileApi();
   
   IDataLakeResourceApi dataLakeResourceApi();
+
+  IStreamPipesClient onBehalfOf(String userSid);
 }

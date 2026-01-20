@@ -442,6 +442,13 @@ export class DataExplorerUtils {
             .click();
     }
 
+    public static assertSelectDataSet(dataSet: string) {
+        cy.dataCy('data-explorer-select-data-set')
+            .click()
+            .get('mat-option')
+            .should('contain.text', dataSet);
+    }
+
     /**
      * Checks if in the widget configuration the filters are set or not
      * @param amountOfFilter the amount of filters that should be set. 0 if no filter should be visible

@@ -31,13 +31,17 @@ import {
     ExportProviderSettings,
     ExportProviderService,
     RetentionLog,
+    UserService,
+    DataLakeMeasure,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {
+    CurrentUserService,
     DataDownloadDialogComponent,
     DialogRef,
     DialogService,
+    ObjectPermissionDialogComponent,
     LocalStorageService,
     PanelType,
     SpBreadcrumbService,
@@ -51,6 +55,8 @@ import { DeleteExportProviderComponent } from '../../dialog/delete-export-provid
 import { TranslateService } from '@ngx-translate/core';
 import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
+import { UserRole } from 'src/app/_enums/user-role.enum';
+import { UserPrivilege } from 'src/app/_enums/user-privilege.enum';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -70,6 +76,7 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
+    private currentUserService = inject(CurrentUserService);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
@@ -101,6 +108,8 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
 
     pageSize = this.localStorageService.get('paginator-page-size', 10);
     pageIndex = 0;
+    isAdmin = false;
+    writeAccess = false;
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb([
@@ -109,6 +118,11 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
         ]);
         this.loadAvailableMeasurements();
         this.loadAvailableExportProvider();
+        const currentUser = this.currentUserService.getCurrentUser();
+        this.isAdmin = currentUser.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+        this.writeAccess =
+            currentUser.roles.indexOf(UserPrivilege.PRIVILEGE_WRITE_DATASET) >
+                -1 || this.isAdmin;
     }
 
     ngAfterViewInit() {
@@ -347,6 +361,20 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
         if (measurements.length > 0) {
             this.queryEntryCounts(measurements, 'eventsLatest', 7);
         }
+    }
+    showPermissionsDialog(element: DataLakeMeasure) {
+        this.dialogService.open(ObjectPermissionDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Manage permissions'),
+            width: '50vw',
+            data: {
+                objectInstanceId: element.elementId,
+                headerTitle:
+                    this.translateService.instant(
+                        'Manage permissions for dataset ',
+                    ) + element.measureName,
+            },
+        });
     }
 
     queryEntryCounts(

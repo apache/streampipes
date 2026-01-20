@@ -39,6 +39,7 @@ import org.apache.streampipes.client.api.credentials.CredentialsProvider;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.model.StreamPipesClientConnectionConfig;
 import org.apache.streampipes.client.paths.ApiPath;
+import org.apache.streampipes.commons.constants.HttpConstants;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.mail.SpEmail;
 
@@ -47,7 +48,7 @@ public class StreamPipesClient implements
 
   private static final Integer SP_DEFAULT_PORT = 80;
 
-  private StreamPipesClientConfig config;
+  private final StreamPipesClientConfig config;
 
   private StreamPipesClient(ClientConnectionUrlResolver connectionConfig) {
     this.config = new StreamPipesClientConfig(connectionConfig);
@@ -230,5 +231,12 @@ public class StreamPipesClient implements
     @Override
   public DataLakeResourceApi dataLakeResourceApi () {
     return new DataLakeResourceApi (config);
+  }
+
+  @Override
+  public IStreamPipesClient onBehalfOf(String userSid) {
+    var scoped = new StreamPipesClient(config.getConnectionConfig());
+    scoped.config.addCustomHeader(HttpConstants.X_ON_BEHALF_OF, userSid);
+    return scoped;
   }
 }

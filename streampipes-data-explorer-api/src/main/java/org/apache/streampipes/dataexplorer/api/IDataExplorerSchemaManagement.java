@@ -31,7 +31,7 @@ public interface IDataExplorerSchemaManagement {
 
   Optional<DataLakeMeasure> getExistingMeasureByName(String measureName);
 
-  DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure);
+  DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure,String principalSid);
 
   void deleteMeasurement(String elementId);
 

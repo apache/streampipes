@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-01-13 08:54:20.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-15 16:03:19.
 
-import { Storable } from './platform-services';
+import { Storable } from './streampipes-model';
 
 export class Group implements Storable {
     alternateIds: string[];
@@ -309,6 +310,8 @@ export type DefaultPrivilege =
     | 'PRIVILEGE_WRITE_ADAPTER'
     | 'PRIVILEGE_READ_PIPELINE_ELEMENT'
     | 'PRIVILEGE_WRITE_PIPELINE_ELEMENT'
+    | 'PRIVILEGE_READ_DATASET'
+    | 'PRIVILEGE_WRITE_DATASET'
     | 'PRIVILEGE_READ_DASHBOARD'
     | 'PRIVILEGE_WRITE_DASHBOARD'
     | 'PRIVILEGE_READ_DATA_EXPLORER_VIEW'

@@ -26,6 +26,7 @@ public class HttpConstants {
   public static final String APPLICATION_JSON_TYPE = "application/json";
   public static final String X_API_USER = "X-API-USER";
   public static final String X_API_KEY = "X-API-KEY";
+  public static final String X_ON_BEHALF_OF = "X-On-Behalf-Of";
   public static final String BASIC = "Basic ";
 
 }

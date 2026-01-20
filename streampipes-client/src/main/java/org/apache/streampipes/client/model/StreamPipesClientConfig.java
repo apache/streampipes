@@ -22,17 +22,35 @@ import org.apache.streampipes.client.api.config.IStreamPipesClientConfig;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;
 
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class StreamPipesClientConfig implements IStreamPipesClientConfig {
 
   private final ClientConnectionUrlResolver connectionConfig;
+  private final Set<Header> customHeaders;
 
   public StreamPipesClientConfig(ClientConnectionUrlResolver connectionConfig) {
     this.connectionConfig = connectionConfig;
+    this.customHeaders = new HashSet<>();
   }
 
   @Override
   public void addTransportProtocol(SpProtocolDefinitionFactory<?> protocolDefinitionFactory) {
     SpProtocolManager.INSTANCE.register(protocolDefinitionFactory);
+  }
+
+  @Override
+  public void addCustomHeader(String name, String value) {
+    customHeaders.add(new BasicHeader(name, value));
+  }
+
+  @Override
+  public Set<Header> getCustomHeaders() {
+    return customHeaders;
   }
 
   @Override
