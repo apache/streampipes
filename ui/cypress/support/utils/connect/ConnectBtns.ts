@@ -272,6 +272,12 @@ export class ConnectBtns {
         });
     }
 
+    public static configureFieldsEventPreviewResult() {
+        return cy.dataCy('configure-fields-event-preview-result', {
+            timeout: 10000,
+        });
+    }
+
     public static configureFieldsNextBtn() {
         return cy.dataCy('configure-fields-next-button');
     }

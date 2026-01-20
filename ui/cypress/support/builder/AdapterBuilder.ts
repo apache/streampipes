@@ -73,6 +73,11 @@ export class AdapterBuilder {
         return this;
     }
 
+    public setScript(script: string) {
+        this.adapterInput.script = script;
+        return this;
+    }
+
     public addTreeNode(treeNode: TreeNodeUserInputBuilder) {
         const userInput = new UserInput();
         userInput.type = 'tree';

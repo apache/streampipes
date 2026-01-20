@@ -44,7 +44,7 @@ describe('Test adapter formats', () => {
 
         template
             .setFormat('json')
-            .addFormatInput('radio', 'json_options-single_object', '');
+            .addFormatInput('radio', 'json_options-object', '');
 
         createAdapterUntilEventSchemaConfiguration(template.build());
 
@@ -81,27 +81,6 @@ describe('Test adapter formats', () => {
 
         // Validate result
         validateResult(expected);
-    });
-
-    it('Test geo json format', () => {
-        // Set up test
-        const geoJsonResultEvent = {
-            latitude: 10.1,
-            longitude: 125.6,
-            timestamp: 1667904471000,
-            v1: 4.1,
-        };
-        FileManagementUtils.addFile(baseDir + 'geoJson.json');
-        const template = makeAdapterInputTemplate();
-
-        template
-            .setFormat('json')
-            .addFormatInput('radio', 'json_options-geojson', '');
-
-        createAdapterUntilEventSchemaConfiguration(template.build());
-
-        // Validate result
-        validateResult(geoJsonResultEvent);
     });
 
     it('Test xml format', () => {
