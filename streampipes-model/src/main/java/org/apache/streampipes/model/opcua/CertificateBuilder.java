@@ -113,6 +113,10 @@ public final class CertificateBuilder {
     return cert;
   }
 
+  public static CertificateBuilder create() {
+    return new CertificateBuilder();
+  }
+
   public static Certificate fromX509(X509Certificate cert, CertificateState state) {
     Objects.requireNonNull(cert, "cert");
     var b = new CertificateBuilder();

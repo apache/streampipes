@@ -190,6 +190,24 @@ class MigrateAdaptersToUseScriptTest {
   }
 
   @Test
+  void executeMigration_TransformsCorrectionValueRuleWithVerySmallNumber() throws IOException {
+    CorrectionValueTransformationRuleDescription rule = new CorrectionValueTransformationRuleDescription();
+    rule.setRuntimeKey("temperature");
+    rule.setOperator("MULTIPLY");
+    rule.setCorrectionValue(0.000000000000000000001);
+
+    var adapter = createBaseAdapter(rule);
+    when(mockStorage.findAll()).thenReturn(List.of(adapter));
+
+    migration.executeMigration();
+
+    var script = adapter.getTransformationConfig().getScript();
+    assertTrue(script.contains("event['temperature'] = Number(event['temperature']) * 0.000000000000000000001"));
+    assertTrue(adapter.getTransformationConfig().isScriptActive());
+  }
+
+
+  @Test
   void executeMigration_TransformsRegexRule() throws IOException {
     RegexTransformationRuleDescription rule = new RegexTransformationRuleDescription();
     rule.setRuntimeKey("deviceId");
