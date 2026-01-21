@@ -61,7 +61,7 @@ class FileReplayAdapterTest {
 
 
   @Test
-  void processEvent_shouldCollectEventWhenTimestampIsLong() throws AdapterException {
+  void processEvent_shouldCollectEventWhenTimestampIsLong() throws AdapterException, InterruptedException {
     event.put(TIMESTAMP, TIMESTAMP_VALUE);
 
     fileReplayAdapter.processEvent(collector, event);
@@ -70,7 +70,7 @@ class FileReplayAdapterTest {
   }
 
   @Test
-  void processEvent_shouldCollectEventWhenTimestampIsInteger() throws AdapterException {
+  void processEvent_shouldCollectEventWhenTimestampIsInteger() throws AdapterException, InterruptedException {
     event.put(TIMESTAMP, 1622544682);
 
     fileReplayAdapter.processEvent(collector, event);

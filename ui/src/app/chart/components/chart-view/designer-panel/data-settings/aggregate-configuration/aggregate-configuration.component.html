@@ -23,36 +23,40 @@
         fxLayoutAlign="start center"
         class="ml-0 mr-5 form-field-small"
     >
-        <mat-form-field
-            appearance="outline"
-            fxFlex="100"
-            class="w-100"
-            color="accent"
-        >
-            <mat-select
-                [(value)]="queryConfig.aggregationTimeUnit"
+        <sp-form-field [level]="3" [label]="'Unit' | translate" class="w-100">
+            <mat-form-field
+                appearance="outline"
+                fxFlex="100"
                 class="w-100"
-                (selectionChange)="triggerDataRefresh()"
+                color="accent"
             >
-                @for (agg of availableAggregations; track agg) {
-                    <mat-option [value]="agg.value">{{ agg.label }}</mat-option>
-                }
-            </mat-select>
-            <mat-label> {{ 'Unit' | translate }}</mat-label>
-        </mat-form-field>
-        <mat-form-field
-            appearance="outline"
-            fxFlex="100"
-            class="w-100"
-            color="accent"
-        >
-            <input
-                matInput
-                type="number"
-                [(ngModel)]="queryConfig.aggregationValue"
-                (ngModelChange)="triggerDataRefresh()"
-            />
-            <mat-label>{{ 'Value' | translate }}</mat-label>
-        </mat-form-field>
+                <mat-select
+                    [(value)]="queryConfig.aggregationTimeUnit"
+                    class="w-100"
+                    (selectionChange)="triggerDataRefresh()"
+                >
+                    @for (agg of availableAggregations; track agg) {
+                        <mat-option [value]="agg.value">{{
+                            agg.label
+                        }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </sp-form-field>
+        <sp-form-field [level]="3" [label]="'Value' | translate" class="w-100">
+            <mat-form-field
+                appearance="outline"
+                fxFlex="100"
+                class="w-100"
+                color="accent"
+            >
+                <input
+                    matInput
+                    type="number"
+                    [(ngModel)]="queryConfig.aggregationValue"
+                    (ngModelChange)="triggerDataRefresh()"
+                />
+            </mat-form-field>
+        </sp-form-field>
     </div>
 </div>
