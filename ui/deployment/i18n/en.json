@@ -1040,5 +1040,8 @@
   " of ": null,
   " items ": null,
   "Error Details": null,
-  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Clone"
+  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Clone",
+  "Do you really want to delete the dataset {{index}}?": "Do you really want to delete the dataset {{index}}?",
+  "Do you really want to truncate the data in {{index}}?": "Do you really want to truncate the data in {{index}}?",
+  "Delete dataset": null
 }

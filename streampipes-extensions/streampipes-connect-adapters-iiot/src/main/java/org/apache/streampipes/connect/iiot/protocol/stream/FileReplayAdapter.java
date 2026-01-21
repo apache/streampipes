@@ -172,7 +172,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
           TimeUnit.SECONDS
       );
     } else {
-      executor.scheduleAtFixedRate(
+      executor.scheduleWithFixedDelay(
           () -> getFileFromEndpointAndParseFile(extractor, collector, adapterRuntimeContext),
           0,
           1,
@@ -293,6 +293,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
       InputStream inputStream,
       IAdapterRuntimeContext adapterRuntimeContext
   ) {
+
     // The parse method does not throw AdapterExceptions, that's why the logging is handeled within the catch blog here
     parser.parse(inputStream, (event) -> {
       try {
@@ -301,6 +302,8 @@ public class FileReplayAdapter implements StreamPipesAdapter {
         adapterRuntimeContext
             .getLogger()
             .error(e);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
       }
     });
   }
@@ -308,7 +311,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   protected void processEvent(
       IEventCollector collector,
       Map<String, Object> event
-  ) throws AdapterException {
+  ) throws AdapterException, InterruptedException {
 
     long actualEventTimestamp = getTimestampFromEvent(event);
 
@@ -341,7 +344,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     return actualEventTimestamp;
   }
 
-  private void reduceReplaySpeedIfRequired(long actualEventTimestamp) {
+  private void reduceReplaySpeedIfRequired(long actualEventTimestamp) throws InterruptedException {
     long sleepTime;
     if (timestampLastEvent != -1 && actualEventTimestamp != -1) {
       sleepTime = (long) ((actualEventTimestamp - timestampLastEvent) / speedUp);
@@ -350,11 +353,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     }
     // speed up is set to Float.MAX_VALUE when user selected fastest option
     if (sleepTime > 0 && speedUp != Float.MAX_VALUE) {
-      try {
         Thread.sleep(sleepTime);
-      } catch (InterruptedException e) {
-        LOG.info("File stream adapter was stopped, the current replay is interrupted", e);
-      }
     }
   }
 

@@ -100,6 +100,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                         const [firstKey] = Object.keys(responseJson);
                         const json = responseJson[firstKey];
                         this.runtimeDataError = !json;
+                        console.log(this.runtimeDataError);
                         this.runtimeInfo.forEach(r => {
                             const previousValue = r.value;
                             r.value = json[r.runtimeName];

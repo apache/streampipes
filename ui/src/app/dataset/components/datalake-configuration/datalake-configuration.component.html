@@ -281,9 +281,7 @@
                         (click)="openDownloadDialog(element.name)"
                     >
                         <mat-icon>download</mat-icon>
-                        <span>{{
-                            'Download data from index' | translate
-                        }}</span>
+                        <span>{{ 'Download' | translate }}</span>
                     </button>
                     @if (writeAccess) {
                         <button
@@ -292,9 +290,7 @@
                             (click)="cleanDatalakeIndex(element.name)"
                         >
                             <mat-icon>local_fire_department</mat-icon>
-                            <span>{{
-                                'Truncate all data from index' | translate
-                            }}</span>
+                            <span>{{ 'Truncate data' | translate }}</span>
                         </button>
                         <button
                             mat-menu-item
@@ -303,9 +299,7 @@
                             (click)="deleteDatalakeIndex(element.name)"
                         >
                             <mat-icon>delete</mat-icon>
-                            <span>{{
-                                'Remove index from database' | translate
-                            }}</span>
+                            <span>{{ 'Delete dataset' | translate }}</span>
                         </button>
                         <button
                             mat-menu-item

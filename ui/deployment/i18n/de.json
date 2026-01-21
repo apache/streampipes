@@ -826,6 +826,7 @@
   "New Export Provider": "Neuer Exportanbieter",
   "Truncate data": "Daten leeren",
   "Delete data": "Daten löschen",
+  "Delete dataset": "Datensatz löschen",
   "Delete Export Provider": "Exportanbieter löschen",
   "Test Export Provider Connection": "Test der Export-Provider-Verbindung",
   "Set Data Retention": "Speicherrichtlinie bearbeiten",
@@ -1040,5 +1041,7 @@
   " of ": " von ",
   " items ": " Einträge",
   "Error Details": "Fehler-Details",
-  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Kopie"
+  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Kopie",
+  "Do you really want to delete the dataset {{index}}?": "Möchten Sie den Datensatz {{index}} wirklich löschen?",
+  "Do you really want to truncate the data in {{index}}?": "Möchten Sie alle Daten im Datensatz {{index}} wirklich leeren?"
 }

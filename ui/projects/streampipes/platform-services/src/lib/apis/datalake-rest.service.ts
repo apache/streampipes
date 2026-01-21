@@ -197,6 +197,18 @@ export class DatalakeRestService {
         return this.http.request(request);
     }
 
+    store(
+        measureName: string,
+        spQueryResult: SpQueryResult,
+        ignoreSchemaMismatch = true,
+    ): Observable<void> {
+        return this.http.post<void>(
+            `${this.dataLakeUrl}/measurements/${measureName}`,
+            spQueryResult,
+            {},
+        );
+    }
+
     toHttpParams(queryParamObject: any): HttpParams {
         return new HttpParams({ fromObject: queryParamObject });
     }
