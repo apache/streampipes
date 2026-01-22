@@ -113,7 +113,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
           @ApiResponse(responseCode = "400", description = "Measurement series with given id not found") })
   public ResponseEntity<?> deleteData(
-      @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathVariable("measurementName") String measurementName,
+      @Parameter(in = ParameterIn.PATH, description = "the name of the measurement series", required = true) @PathVariable("measurementName") String measurementName,
       @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(value = "startDate", required = false) Long startDate,
       @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(value = "endDate", required = false) Long endDate) {
 
