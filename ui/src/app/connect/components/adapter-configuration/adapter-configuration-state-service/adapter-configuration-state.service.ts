@@ -87,6 +87,10 @@ export class AdapterConfigurationStateService {
         this.updateState({
             adapterDescription: adapter,
             autoLoadSchema: false,
+            adapterSettingsString: JSON.stringify(adapter.config),
+            transformationConfigurationString: JSON.stringify(
+                adapter.transformationConfig,
+            ),
         });
     }
 
@@ -333,7 +337,7 @@ export class AdapterConfigurationStateService {
             adapterDescription: this.state().adapterDescription,
             transformationConfigurationChanged: false,
             transformationConfigurationString: JSON.stringify(
-                this.state().adapterDescription.config,
+                this.state().adapterDescription.transformationConfig,
             ),
         });
     }
