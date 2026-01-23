@@ -31,6 +31,7 @@ import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
+import { EventSchemaDiffService } from '../../../services/event-schema-diff.service';
 
 @Injectable({
     providedIn: 'root',
@@ -40,6 +41,7 @@ export class AdapterConfigurationStateService {
     private translateService = inject(TranslateService);
     private restService = inject(RestService);
     private scriptLanguagesService = inject(ConnectScriptLanguagesService);
+    private eventSchemaDiffService = inject(EventSchemaDiffService);
 
     private initialState: AdapterConfigurationState = {
         adapterSettingsChanged: false,
@@ -350,6 +352,14 @@ export class AdapterConfigurationStateService {
 
         this.restService.getEventSchema(adapter).subscribe({
             next: schema => {
+                const previousEventProperties =
+                    this.state().adapterDescription?.dataStream?.eventSchema
+                        ?.eventProperties;
+                this.eventSchemaDiffService.applyUserConfiguration(
+                    previousEventProperties,
+                    schema.eventProperties,
+                );
+
                 this.sortEventPropertiesAlphabetically(schema);
 
                 const updatedAdapter = { ...adapter };
