@@ -107,7 +107,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @DeleteMapping(path = "/measurements/{measurementName}")
-  @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionByName(#measurementID, 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionByName(#measurementName, 'WRITE')")
   @Operation(summary = "Remove data from a single measurement series with given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
