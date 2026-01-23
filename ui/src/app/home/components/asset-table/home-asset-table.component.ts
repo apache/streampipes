@@ -21,6 +21,7 @@ import {
     inject,
     Input,
     OnChanges,
+    OnInit,
     SimpleChanges,
     ViewChild,
 } from '@angular/core';
@@ -41,7 +42,7 @@ import { Router } from '@angular/router';
     styleUrls: ['./home-asset-table.component.scss'],
     standalone: false,
 })
-export class HomeAssetTableComponent implements OnChanges {
+export class HomeAssetTableComponent implements OnInit, OnChanges {
     @Input()
     locationConfig: LocationConfig;
 
@@ -70,6 +71,19 @@ export class HomeAssetTableComponent implements OnChanges {
 
     private isa95TypeService = inject(Isa95TypeService);
     private router = inject(Router);
+
+    ngOnInit() {
+        this.dataSource.sortingDataAccessor = (assetModel, column) => {
+            if (column === 'assetType') {
+                return assetModel.assetType?.isa95AssetType;
+            } else if (column === 'location') {
+                return this.getSite(assetModel);
+            } else if (column === 'area') {
+                return assetModel.assetSite?.area || '-';
+            }
+            return assetModel[column];
+        };
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         this.dataSource.data = this.assets;
