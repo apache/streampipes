@@ -22,6 +22,8 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
+import { SharedUtils } from '../../support/utils/shared/SharedUtils';
+import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -54,10 +56,14 @@ describe('Test Edit Adapter', () => {
             .build();
 
         ConnectUtils.configureAdapter(newUserConfiguration);
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
 
         // Update event schema
         ConnectBtns.getNewSampleBtn().click();
         ConnectUtils.finishEventSchemaConfiguration();
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
 
         cy.wait(1000);
         ConnectBtns.refreshSchemaBtn().click();
@@ -102,6 +108,9 @@ describe('Test Edit Adapter', () => {
         cy.wait(1000);
 
         ConnectBtns.configureSchemaNextBtn().click();
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
 
         storeAndStartEditedAdapter();
 
