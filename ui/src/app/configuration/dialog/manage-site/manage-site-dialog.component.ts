@@ -79,6 +79,7 @@ export class ManageSiteDialogComponent implements OnInit {
         const { label, location } = formData.value;
         this.clonedSite.label = label;
         this.clonedSite.location = location;
+        this.clonedSite.areas.sort((a, b) => a.localeCompare(b));
 
         const observable = this.createMode
             ? this.genericStorageService.createDocument(

@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    Output,
+    SimpleChanges,
+} from '@angular/core';
 import { AssetSiteDesc, SpAsset } from '@streampipes/platform-services';
 import { MatSelectChange } from '@angular/material/select';
 
@@ -34,6 +41,9 @@ export class AssetDetailsSiteComponent implements OnChanges {
 
     @Input()
     sites: AssetSiteDesc[];
+
+    @Output()
+    reloadSites: EventEmitter<void> = new EventEmitter();
 
     currentSite: AssetSiteDesc;
 

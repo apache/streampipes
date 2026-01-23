@@ -30,13 +30,18 @@
                                 | translate
                         "
                     >
-                        <div form-field-actions>
-                            <button
+                        <div form-field-actions fxLayoutAlign="start center">
+                            <a
                                 mat-flat-button
                                 class="mat-basic"
                                 [routerLink]="['/configuration/labels']"
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 {{ 'Manage Labels' | translate }}
+                            </a>
+                            <button mat-icon-button (click)="loadLabels()">
+                                <mat-icon>refresh</mat-icon>
                             </button>
                         </div>
                         <mat-form-field [disabled]="allLabels.length === 0">

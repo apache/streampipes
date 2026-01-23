@@ -18,9 +18,11 @@
 
 import {
     Component,
+    EventEmitter,
     Input,
     OnChanges,
     OnInit,
+    Output,
     SimpleChanges,
 } from '@angular/core';
 import {
@@ -51,6 +53,9 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
 
     @Input()
     sites: AssetSiteDesc[];
+
+    @Output()
+    reloadSites: EventEmitter<void> = new EventEmitter();
 
     isa95Types: Isa95TypeDesc[] = [];
 
