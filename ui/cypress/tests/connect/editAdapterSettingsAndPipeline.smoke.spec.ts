@@ -26,6 +26,8 @@ import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorer
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
+import { SharedUtils } from '../../support/utils/shared/SharedUtils';
+import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 
 describe('Test Edit Adapter and Pipeline', () => {
     beforeEach('Setup Test', () => {
@@ -65,9 +67,13 @@ describe('Test Edit Adapter and Pipeline', () => {
             .build();
 
         ConnectUtils.configureAdapter(newUserConfiguration);
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
 
         ConnectBtns.getNewSampleBtn().click();
         ConnectUtils.finishEventSchemaConfiguration();
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
         cy.wait(1000);
         ConnectBtns.refreshSchemaBtn().click();
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
