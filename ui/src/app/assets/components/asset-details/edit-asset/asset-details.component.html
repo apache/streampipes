@@ -54,6 +54,7 @@
             @if (asset) {
                 <div fxFlex="100" fxLayout="column" class="p-10">
                     <sp-asset-details-basics
+                        (reloadSites)="reloadSites()"
                         [asset]="selectedAsset"
                         [assetModel]="asset"
                         [sites]="sites"

@@ -63,7 +63,7 @@ spConnect:
     path: './connect/connect.module'
     link: 'connect'
     url: '/connect'
-    title: 'Connectors'
+    title: 'Adapters'
     description: 'StreamPipes Connect lets you easily connect new data sources for a variety of data formats and protocols.'
     icon: 'power'
     privileges: '[UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
@@ -72,7 +72,7 @@ spConnect:
     statusBox:
         link: "['connect']"
         assetLinkTypeId: 'adapter'
-        createLinks: "['connect', 'create']"
+        createLinks: "['connect', 'catalog']"
         title: 'Adapters'
         createTitle: 'New adapter'
         dataFns: '[this.adapterService.getAdapters()]'

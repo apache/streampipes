@@ -31,7 +31,6 @@ import {
     ExportProviderSettings,
     ExportProviderService,
     RetentionLog,
-    UserService,
     DataLakeMeasure,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';

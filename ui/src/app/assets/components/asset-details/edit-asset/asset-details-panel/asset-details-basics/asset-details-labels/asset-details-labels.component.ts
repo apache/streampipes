@@ -67,6 +67,10 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     ) {}
 
     ngOnInit(): void {
+        this.loadLabels();
+    }
+
+    loadLabels(): void {
         this.labelsService.getAllLabels().subscribe(labels => {
             this.allLabels = labels.sort((a, b) =>
                 a.label.localeCompare(b.label),
