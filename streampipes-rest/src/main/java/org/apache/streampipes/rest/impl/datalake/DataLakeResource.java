@@ -106,20 +106,20 @@ public class DataLakeResource extends AbstractDataLakeResource {
     this.dataExplorerQueryManagement = dataExplorerQueryManagement;
   }
 
-  @DeleteMapping(path = "/measurements/{measurementID}")
-  @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionByName(#measurementID, 'WRITE')")
+  @DeleteMapping(path = "/measurements/{measurementName}")
+  @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionByName(#measurementName, 'WRITE')")
   @Operation(summary = "Remove data from a single measurement series with given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
           @ApiResponse(responseCode = "400", description = "Measurement series with given id not found") })
   public ResponseEntity<?> deleteData(
-      @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathVariable("measurementID") String measurementID,
+      @Parameter(in = ParameterIn.PATH, description = "the name of the measurement series", required = true) @PathVariable("measurementName") String measurementName,
       @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(value = "startDate", required = false) Long startDate,
       @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(value = "endDate", required = false) Long endDate) {
 
-    if (this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)) {
+    if (this.dataExplorerQueryManagement.deleteData(measurementName, startDate, endDate)) {
       return ok(Notifications
-          .success("Successfully deleted measure " + measurementID + " between " + startDate + " and " + endDate));
+          .success("Successfully deleted measure " + measurementName + " between " + startDate + " and " + endDate));
     } else {
       return ResponseEntity
           .status(HttpStatus.NOT_FOUND)

@@ -174,6 +174,20 @@ export class DatalakeRestService {
         return this.http.request(request);
     }
 
+    deleteData(
+        measurementName: string,
+        startTime: number,
+        endTime: number,
+    ): Observable<void> {
+        const params = new HttpParams()
+            .set('startDate', startTime.toString())
+            .set('endDate', endTime.toString());
+        return this.http.delete<void>(
+            `${this.dataLakeUrl}/measurements/${measurementName}`,
+            { params },
+        );
+    }
+
     deleteCleanup(index: string) {
         const url = `${this.dataLakeUrl}/${index}/cleanup`;
         return this.http.delete(url);
