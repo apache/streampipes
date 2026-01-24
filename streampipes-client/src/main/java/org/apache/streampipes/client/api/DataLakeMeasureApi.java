@@ -38,6 +38,11 @@ public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
   }
 
   @Override
+  public Optional<DataLakeMeasure> getByDatasetName(String datasetName) {
+    return getSingle(getBaseResourcePath().addToPath("byName").addToPath(datasetName));
+  }
+
+  @Override
   public List<DataLakeMeasure> all() {
     throw new IllegalArgumentException("Not yet implemented");
   }
