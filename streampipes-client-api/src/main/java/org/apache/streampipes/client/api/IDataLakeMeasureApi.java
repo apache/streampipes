@@ -26,6 +26,8 @@ import java.util.Optional;
 public interface IDataLakeMeasureApi extends CRUDApi<String, DataLakeMeasure> {
   Optional<DataLakeMeasure> get(String id);
 
+  Optional<DataLakeMeasure> getByDatasetName(String datasetName);
+
   @Override
   List<DataLakeMeasure> all();
 

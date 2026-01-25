@@ -99,9 +99,9 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   @GetMapping(path = "byName/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
  @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measureName, 'READ')")
   public ResponseEntity<?> getDataLakeMeasureName(@PathVariable("measureName") String measureName) {
-    var measure = this.dataLakeMeasureManagement.getExistingMeasureByName(measureName);
-    if (Objects.nonNull(measure)) {
-      return ok(measure);
+    var measureOpt = this.dataLakeMeasureManagement.getExistingMeasureByName(measureName);
+    if (measureOpt.isPresent()) {
+      return ok(measureOpt.get());
     } else {
       return notFound();
     }
