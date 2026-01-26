@@ -19,11 +19,11 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
-import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 import { SharedUtils } from '../../support/utils/shared/SharedUtils';
 import { SharedBtns } from '../../support/utils/shared/SharedBtns';
+import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -67,7 +67,6 @@ describe('Test Edit Adapter', () => {
 
         cy.wait(1000);
         ConnectBtns.refreshSchemaBtn().click();
-        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectUtils.finishConfigureFieldsConfiguration();
 
         ConnectBtns.adapterNameInput().clear().type(newAdapterName);
