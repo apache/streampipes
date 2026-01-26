@@ -34,7 +34,9 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.Parse
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
+import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
@@ -54,6 +56,10 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
 
   private static final String URL_PROPERTY = "url";
   private static final String INTERVAL_PROPERTY = "interval";
+  private static final String AUTH_MODE = "auth-mode";
+  private static final String AUTH_NONE = "auth-none";
+  private static final String AUTH_BEARER = "auth-bearer";
+  private static final String BEARER_TOKEN = "bearer-token";
 
   private String url;
   private String accessToken;
@@ -71,9 +77,12 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
     this.url = extractor.singleValueParameter(URL_PROPERTY, String.class);
     int interval = extractor.singleValueParameter(INTERVAL_PROPERTY, Integer.class);
     this.pollingSettings = PollingSettings.from(TimeUnit.SECONDS, interval);
-    // TODO change access token to an optional parameter
-//            String accessToken = extractor.singleValue(ACCESS_TOKEN_PROPERTY);
-    this.accessToken = "";
+    String selectedAuthMode = extractor.selectedAlternativeInternalId(AUTH_MODE);
+    if (AUTH_BEARER.equals(selectedAuthMode)) {
+      this.accessToken = extractor.singleValueParameter(BEARER_TOKEN, String.class);
+    } else {
+      this.accessToken = null;
+    }
   }
 
   private InputStream getDataFromEndpoint() throws ParseException {
@@ -83,7 +92,7 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
           .connectTimeout(1000)
           .socketTimeout(100000);
 
-      if (this.accessToken != null && !this.accessToken.equals("")) {
+      if (this.accessToken != null && !this.accessToken.isEmpty()) {
         request.setHeader("Authorization", "Bearer " + this.accessToken);
       }
 
@@ -105,12 +114,18 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, 0, HttpStreamProtocol::new)
+        .create(ID, 1, HttpStreamProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .requiredTextParameter(Labels.withId(URL_PROPERTY))
         .requiredIntegerParameter(Labels.withId(INTERVAL_PROPERTY))
+        .requiredAlternatives(
+            Labels.withId(AUTH_MODE),
+            Alternatives.from(Labels.withId(AUTH_NONE), true),
+            Alternatives.from(
+                Labels.withId(AUTH_BEARER),
+                StaticProperties.stringFreeTextProperty(Labels.withId(BEARER_TOKEN))))
         .buildConfiguration();
   }
 
@@ -128,7 +143,7 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
 
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+                               IAdapterRuntimeContext adapterRuntimeContext) {
     this.pullAdapterScheduler.shutdown();
   }
 

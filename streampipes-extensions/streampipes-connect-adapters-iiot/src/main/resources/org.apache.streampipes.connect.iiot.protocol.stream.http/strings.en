@@ -25,4 +25,15 @@ url.description=Example: http(s)://test-server.com
 interval.title=Interval [sec]
 interval.description=Example: 5 (Polling interval in seconds)
 
+auth-mode.title=Authentication
+auth-mode.description=Select authentication mode
+
+auth-none.title=None
+auth-none.description=No authentication
+
+auth-bearer.title=Bearer token
+auth-bearer.description=Use a bearer token for authentication
+
+bearer-token.title=Bearer token
+bearer-token.description=Paste the bearer token
 
