@@ -25,15 +25,11 @@ url.description=Example: http(s)://test-server.com
 interval.title=Interval [sec]
 interval.description=Example: 5 (Polling interval in seconds)
 
-auth-mode.title=Authentication
-auth-mode.description=Select authentication mode
+header-collection.title=Request Headers
+header-collection.description=Optional custom headers to include with the request.
 
-auth-none.title=None
-auth-none.description=No authentication
+header-key.title=Header Key
+header-key.description=Example: Authorization
 
-auth-bearer.title=Bearer token
-auth-bearer.description=Use a bearer token for authentication
-
-bearer-token.title=Bearer token
-bearer-token.description=Paste the bearer token
-
+header-value.title=Header Value
+header-value.description=Example: Bearer <token>

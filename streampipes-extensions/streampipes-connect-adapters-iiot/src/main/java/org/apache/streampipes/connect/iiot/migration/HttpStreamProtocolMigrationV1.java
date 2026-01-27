@@ -25,16 +25,11 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 
 public class HttpStreamProtocolMigrationV1 implements IAdapterMigrator {
-
-  private static final String AUTH_MODE = "auth-mode";
-  private static final String AUTH_NONE = "auth-none";
-  private static final String AUTH_BEARER = "auth-bearer";
-  private static final String BEARER_TOKEN = "bearer-token";
 
   @Override
   public ModelMigratorConfig config() {
@@ -49,15 +44,42 @@ public class HttpStreamProtocolMigrationV1 implements IAdapterMigrator {
   @Override
   public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
                                                      IStaticPropertyExtractor extractor) throws RuntimeException {
-    element.getConfig().add(
-        StaticProperties.alternatives(
-            Labels.withId(AUTH_MODE),
-            Alternatives.from(Labels.withId(AUTH_NONE), true),
-            Alternatives.from(
-                Labels.withId(AUTH_BEARER),
-                StaticProperties.stringFreeTextProperty(Labels.withId(BEARER_TOKEN)))
+    var headerCollection = makeHeaderCollection();
+    int insertIndex = Math.min(2, element.getConfig().size());
+    element.getConfig().add(insertIndex, headerCollection);
+    return MigrationResult.success(element);
+  }
+
+  private CollectionStaticProperty makeHeaderCollection() {
+    var headerKey = StaticProperties.stringFreeTextProperty(
+        Labels.from(
+            HttpStreamProtocol.HEADER_KEY,
+            "Header Key",
+            "The header name to add to the request."
         )
     );
-    return MigrationResult.success(element);
+    headerKey.setOptional(true);
+    headerKey.setValue("");
+
+    var headerValue = StaticProperties.stringFreeTextProperty(
+        Labels.from(
+            HttpStreamProtocol.HEADER_VALUE,
+            "Header Value",
+            "The header value to add to the request."
+        )
+    );
+    headerValue.setOptional(true);
+    headerValue.setValue("");
+
+    return StaticProperties.collection(
+        Labels.from(
+            HttpStreamProtocol.HEADER_COLLECTION,
+            "Request Headers",
+            "Optional custom headers to be included with the request."
+        ),
+        false,
+        headerKey,
+        headerValue
+    );
   }
 }
