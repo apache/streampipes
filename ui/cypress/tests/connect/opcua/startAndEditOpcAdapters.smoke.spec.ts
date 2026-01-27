@@ -20,7 +20,6 @@ import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { TreeNodeUserInputBuilder } from '../../../support/builder/TreeNodeUserInputBuilder';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 import { TreeStaticPropertyUtils } from '../../../support/utils/userInput/TreeStaticPropertyUtils';
-import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 import { AdapterInput } from '../../../support/model/AdapterInput';
 import { OpcUaUtils } from '../../../support/utils/connect/OpcUaUtils';
 import { GeneralUtils } from '../../../support/utils/GeneralUtils';
@@ -99,7 +98,6 @@ const editAdapterTest = (adapterInput: AdapterInput) => {
     // Same as for new sample, once automated, this can be removed
     cy.wait(1000);
     ConnectBtns.refreshSchemaBtn().click();
-    ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
     ConnectUtils.finishConfigureFieldsConfiguration();
 
     ConnectBtns.storeEditAdapter().click();

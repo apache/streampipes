@@ -29,7 +29,6 @@ import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtracto
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.AdapterConfigurationProvider;
-import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.EventSchemaProvider;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.MetadataOptionGenerator;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.ContinuousPlcRequestReader;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.OneTimePlcRequestReader;
@@ -57,7 +56,6 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
 
   private PullAdapterScheduler pullAdapterScheduler;
   private final PlcRequestProvider requestProvider;
-  private final EventSchemaProvider schemaProvider;
 
   private final PlcDriver driver;
   private final PlcConnectionManager connectionManager;
@@ -65,7 +63,6 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
   public GenericPlc4xAdapter(PlcDriver driver,
                              PlcConnectionManager connectionManager) {
     this.requestProvider = new PlcRequestProvider();
-    this.schemaProvider = new EventSchemaProvider();
     this.driver = driver;
     this.connectionManager = connectionManager;
   }
@@ -104,11 +101,9 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
 
       var event = new OneTimePlcRequestReader(connectionManager, settings, requestProvider).readPlcDataSynchronized();
 
-      var sampleData = SampleDataBuilder.create()
+      return SampleDataBuilder.create()
                            .sample(event)
                                .build();
-
-      return sampleData;
     } catch (Exception e) {
       throw new AdapterException("Could not read plc", e);
     }

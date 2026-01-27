@@ -1,0 +1,134 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+<sp-basic-inner-panel
+    [panelTitle]="'Transformation' | translate"
+    outerMargin="20px 0px"
+>
+    @if (loadingAvailableScriptsError) {
+        <sp-alert-banner
+            type="error"
+            [title]="'Error loading available script languages'"
+            [description]="loadingAvailableScriptsError.cause"
+        >
+        </sp-alert-banner>
+    }
+
+    <div header fxLayoutAlign="end center" fxFlex="100" fxLayoutGap="5px">
+        @if (scriptActive) {
+            @if (selectedScriptMetadata) {
+                <button
+                    mat-button
+                    [matMenuTriggerFor]="langMenu"
+                    aria-label="Select template language"
+                >
+                    {{ selectedScriptMetadata.name | titlecase }}
+                    <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+
+                <mat-menu #langMenu="matMenu">
+                    @for (script of availableScripts; track script.language) {
+                        <button
+                            mat-menu-item
+                            (click)="languageChange.emit(script)"
+                        >
+                            <span>{{ script.name | titlecase }}</span>
+                            @if (
+                                script.language ===
+                                selectedScriptMetadata.language
+                            ) {
+                                <mat-icon class="ms-auto">check</mat-icon>
+                            }
+                        </button>
+                    }
+                </mat-menu>
+            }
+            <button
+                mat-button
+                data-cy="use-script-template"
+                (click)="selectTemplate.emit()"
+            >
+                <mat-icon>article</mat-icon>
+                <span>{{ 'Use template' | translate }}</span>
+            </button>
+            <button
+                mat-button
+                data-cy="reset-script"
+                (click)="resetScript.emit()"
+            >
+                <mat-icon>settings_backup_restore</mat-icon>
+                <span>{{ 'Reset script' | translate }}</span>
+            </button>
+        }
+
+        <mat-slide-toggle
+            data-cy="toggle-script-active"
+            [ngModel]="scriptActive"
+            (ngModelChange)="toggleScriptActive.emit()"
+        >
+            @if (scriptActive) {
+                {{ 'Disable script' | translate }}
+            } @else {
+                {{ 'Enable script' | translate }}
+            }
+        </mat-slide-toggle>
+    </div>
+
+    @if (scriptActive) {
+        <div class="code-editor-outer">
+            <ngx-codemirror
+                class="code-editor"
+                [ngModel]="script"
+                (ngModelChange)="codeChange.emit($event)"
+                [options]="editorOptions"
+                data-cy="configure-schema-script-editor"
+            ></ngx-codemirror>
+        </div>
+        <div fxLayoutGap="10px">
+            <button
+                class="mt-sm"
+                mat-flat-button
+                matTooltip="Run script"
+                data-cy="configure-schema-run-script-button"
+                (click)="runScript.emit()"
+            >
+                <mat-icon>play_circle_filled</mat-icon>
+                <span>Run script</span>
+            </button>
+            <button
+                class="mat-basic mt-sm"
+                mat-flat-button
+                matTooltip="Run script"
+                data-cy="add-script-template-button"
+                (click)="createTemplate.emit()"
+            >
+                <mat-icon>play_circle_filled</mat-icon>
+                <span>Create script template</span>
+            </button>
+        </div>
+    } @else {
+        <sp-alert-banner
+            type="info"
+            [title]="'Enable transformation' | translate"
+            [description]="
+                'Enable script-based editing and add custom scripts which transform the structure or values of your input data.'
+                    | translate
+            "
+        >
+        </sp-alert-banner>
+    }
+</sp-basic-inner-panel>
