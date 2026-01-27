@@ -52,31 +52,19 @@ public class HttpStreamProtocolMigrationV1 implements IAdapterMigrator {
 
   private CollectionStaticProperty makeHeaderCollection() {
     var headerKey = StaticProperties.stringFreeTextProperty(
-        Labels.from(
-            HttpStreamProtocol.HEADER_KEY,
-            "Header Key",
-            "The header name to add to the request."
-        )
+        Labels.withId(HttpStreamProtocol.HEADER_KEY)
     );
     headerKey.setOptional(true);
     headerKey.setValue("");
 
     var headerValue = StaticProperties.stringFreeTextProperty(
-        Labels.from(
-            HttpStreamProtocol.HEADER_VALUE,
-            "Header Value",
-            "The header value to add to the request."
-        )
+        Labels.withId(HttpStreamProtocol.HEADER_VALUE)
     );
     headerValue.setOptional(true);
     headerValue.setValue("");
 
     return StaticProperties.collection(
-        Labels.from(
-            HttpStreamProtocol.HEADER_COLLECTION,
-            "Request Headers",
-            "Optional custom headers to be included with the request."
-        ),
+        Labels.withId(HttpStreamProtocol.HEADER_COLLECTION),
         false,
         headerKey,
         headerValue
