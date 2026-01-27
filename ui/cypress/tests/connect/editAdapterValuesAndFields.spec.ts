@@ -20,6 +20,8 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
+import { SharedUtils } from '../../support/utils/shared/SharedUtils';
+import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 
 describe('Test Edit Adapter', () => {
     const adapterName = 'Test Adapter';
@@ -70,7 +72,7 @@ describe('Test Edit Adapter', () => {
     }
 
     function validateSavedAdapterEdits() {
-        // Edit adapter and check if given values and added property still provided
+        // Edit the adapter and check if given values and added property still provided
         ConnectBtns.openActionsMenu(adapterName);
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
@@ -95,7 +97,7 @@ describe('Test Edit Adapter', () => {
     }
 
     function reconfigureAdapterToUsePressureSensorInsteadOfFlowRate() {
-        // Configure adapter with pressure instead of flowrate
+        // Configure the adapter with pressure instead of flowrate
         ConnectBtns.openActionsMenu(adapterName);
         ConnectBtns.editAdapter().click();
 
@@ -104,7 +106,11 @@ describe('Test Edit Adapter', () => {
             .addInput('radio', 'selected', 'simulator-option-pressure')
             .build();
         ConnectUtils.configureAdapter(adapterInput);
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
         ConnectBtns.configureSchemaNextBtn().click();
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
 
         storeAndCloseAdapterPreview();
     }

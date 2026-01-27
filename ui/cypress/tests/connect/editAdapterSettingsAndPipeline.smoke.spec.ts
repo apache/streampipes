@@ -25,7 +25,6 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
-import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 import { SharedUtils } from '../../support/utils/shared/SharedUtils';
 import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 
@@ -76,7 +75,6 @@ describe('Test Edit Adapter and Pipeline', () => {
         SharedBtns.confirmDialogConfirmBtn().click();
         cy.wait(1000);
         ConnectBtns.refreshSchemaBtn().click();
-        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectUtils.finishConfigureFieldsConfiguration();
         // Update event schema
         ConnectBtns.storeEditAdapter().click();
