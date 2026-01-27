@@ -171,6 +171,14 @@ export class ConfigureSchemaComponent implements OnInit {
         });
     }
 
+    setSourceViewMode(mode: Mode) {
+        this.sourceViewMode.set(mode);
+    }
+
+    setResultViewMode(mode: Mode) {
+        this.resultViewMode.set(mode);
+    }
+
     resetScript(): void {
         this.stateService.resetScriptToInitial();
         this.runScript();

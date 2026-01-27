@@ -110,6 +110,9 @@ import { AdapterEventPreviewComponent } from './components/adapter-configuration
 import { AdapterEventPreviewNodeComponent } from './components/adapter-configuration/adapter-event-preview/adapter-event-preview-node/adapter-event-preview-node.component';
 import { EventPropertyScopeComponent } from './components/adapter-configuration/configure-fields/event-property-row/event-property-scope/event-property-scope.component';
 import { ShowFieldStatusInfosComponent } from './components/adapter-configuration/configure-schema/show-field-status-infos/show-field-status-infos.component';
+import { AdapterScriptEditorComponent } from './components/adapter-configuration/configure-schema/script-editor/adapter-script-editor.component';
+import { AdapterSamplePreviewComponent } from './components/adapter-configuration/configure-schema/sample-preview/adapter-sample-preview.component';
+import { AdapterResultPreviewComponent } from './components/adapter-configuration/configure-schema/result-preview/adapter-result-preview.component';
 
 @NgModule({
     imports: [
@@ -256,6 +259,9 @@ import { ShowFieldStatusInfosComponent } from './components/adapter-configuratio
         AdapterEventPreviewNodeComponent,
         EventPropertyScopeComponent,
         ShowFieldStatusInfosComponent,
+        AdapterScriptEditorComponent,
+        AdapterSamplePreviewComponent,
+        AdapterResultPreviewComponent,
     ],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
