@@ -27,7 +27,7 @@ import {
 import { AdapterConfigurationState } from './AdapterConfigurationState';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RestService } from '../../../services/rest.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
@@ -76,6 +76,8 @@ export class AdapterConfigurationStateService {
     private _state = signal<AdapterConfigurationState>(this.initialState);
 
     public state = this._state.asReadonly();
+
+    private sampleRequestSubscription?: Subscription;
 
     public updateState(newState: Partial<AdapterConfigurationState>): void {
         this._state.update(current => ({ ...current, ...newState }));
@@ -221,56 +223,61 @@ export class AdapterConfigurationStateService {
 
     // New action method focusing on state transitions
     public getSampleEvent(adapter: AdapterDescription): void {
+        this.sampleRequestSubscription?.unsubscribe();
+        this.sampleRequestSubscription = undefined;
+
         this.updateState({
             isGettingSample: true,
             sampleError: null,
             adapterDescription: adapter,
         });
 
-        this.restService.getSampleEvents(adapter).subscribe({
-            next: sampleData => {
-                const updatedAdapter = { ...adapter };
-                updatedAdapter.transformationConfig.inputs = [
-                    sampleData.samples[0],
-                ];
+        this.sampleRequestSubscription = this.restService
+            .getSampleEvents(adapter)
+            .subscribe({
+                next: sampleData => {
+                    const updatedAdapter = { ...adapter };
+                    updatedAdapter.transformationConfig.inputs = [
+                        sampleData.samples[0],
+                    ];
 
-                const scriptActive =
-                    updatedAdapter.transformationConfig.scriptActive;
+                    const scriptActive =
+                        updatedAdapter.transformationConfig.scriptActive;
 
-                if (!scriptActive) {
-                    updatedAdapter.transformationConfig.outputs =
-                        updatedAdapter.transformationConfig.inputs;
-                }
+                    if (!scriptActive) {
+                        updatedAdapter.transformationConfig.outputs =
+                            updatedAdapter.transformationConfig.inputs;
+                    }
 
-                const transformationConfigurationChanged =
-                    this.checkIfTransformationConfigurationChanged(
-                        updatedAdapter,
-                    );
+                    const transformationConfigurationChanged =
+                        this.checkIfTransformationConfigurationChanged(
+                            updatedAdapter,
+                        );
 
-                this.updateState({
-                    adapterDescription: updatedAdapter,
-                    isGettingSample: false,
-                    adapterSettingsChanged: false, // Reset the warning
-                    adapterSettingsString: JSON.stringify(
-                        updatedAdapter.config,
-                    ),
-                    transformationConfigurationChanged:
-                        transformationConfigurationChanged,
-                    sampleFieldStatusInfos: sampleData.fieldStatusInfos,
-                });
+                    this.updateState({
+                        adapterDescription: updatedAdapter,
+                        isGettingSample: false,
+                        adapterSettingsChanged: false, // Reset the warning
+                        adapterSettingsString: JSON.stringify(
+                            updatedAdapter.config,
+                        ),
+                        transformationConfigurationChanged:
+                            transformationConfigurationChanged,
+                        sampleFieldStatusInfos: sampleData.fieldStatusInfos,
+                    });
 
-                if (scriptActive) {
-                    this.runScript(updatedAdapter);
-                }
-            },
-            error: (error: HttpErrorResponse) => {
-                // Update state with error AND metadata (error/idle)
-                this.updateState({
-                    isGettingSample: false,
-                    sampleError: error.error as SpLogMessage, // Assuming error.error is the SpLogMessage
-                });
-            },
-        });
+                    if (scriptActive) {
+                        this.runScript(updatedAdapter);
+                    }
+                },
+                error: (error: HttpErrorResponse) => {
+                    // Update state with error AND metadata (error/idle)
+                    this.updateState({
+                        isGettingSample: false,
+                        sampleError: error.error as SpLogMessage, // Assuming error.error is the SpLogMessage
+                    });
+                },
+            });
     }
 
     public runScript(adapter: AdapterDescription): void {
