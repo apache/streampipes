@@ -30,3 +30,11 @@ Continuously fetched events from an HTTP REST endpoint.
 
 ***
 
+## Configuration
+
+- URL: The HTTP endpoint to poll.
+- Interval: Polling interval in seconds.
+- Request Headers: Optional list of custom headers to include in every request. Each entry contains a Header Key and
+  Header Value (e.g., `Authorization` / `Bearer <token>`).
+
+***

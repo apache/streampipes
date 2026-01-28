@@ -25,4 +25,11 @@ url.description=Example: http(s)://test-server.com
 interval.title=Interval [sec]
 interval.description=Example: 5 (Polling interval in seconds)
 
+header-collection.title=Request Headers
+header-collection.description=Optional custom headers to include with the request.
 
+header-key.title=Header Key
+header-key.description=Example: Authorization
+
+header-value.title=Header Value
+header-value.description=Example: Bearer <token>
