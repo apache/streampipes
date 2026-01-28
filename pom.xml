@@ -153,11 +153,11 @@
         <checkstyle.version>10.17.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
-        <maven.version>3.8.7</maven.version>
+        <maven.version>3.9.12</maven.version>
         <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
         <spotless.version>2.43.0</spotless.version>
 
@@ -1284,7 +1284,7 @@
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>check-at-least-java-17</id>
+                        <id>check-at-least-java-25</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>enforce</goal>
@@ -1292,7 +1292,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>1.17.0</version>
+                                    <version>1.25.0</version>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
@@ -1341,7 +1341,7 @@
                 <configuration>
                     <failOnWarnings>false</failOnWarnings>
                     <failOnError>false</failOnError>
-                    <source>8</source>
+                    <source>25</source>
                 </configuration>
             </plugin>
             <plugin>
