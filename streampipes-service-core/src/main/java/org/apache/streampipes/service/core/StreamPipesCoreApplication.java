@@ -45,7 +45,6 @@ import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
@@ -58,6 +57,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -76,7 +76,7 @@ import java.util.function.Supplier;
 @Configuration
 @EnableAutoConfiguration
 @EnableScheduling
-@Import({OpenApiConfiguration.class, SpPermissionEvaluator.class, StreamPipesPasswordEncoder.class,
+@Import({OpenApiConfiguration.class, StreamPipesPasswordEncoder.class,
     StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class})
 @ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.service.core.oauth2",
     "org.apache.streampipes.service.core.scheduler"})

@@ -34,23 +34,29 @@ import org.apache.streampipes.user.management.service.SpUserDetailsService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
+import org.springframework.security.oauth2.client.endpoint.RestClientAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -62,15 +68,14 @@ import org.springframework.security.oauth2.core.http.converter.OAuth2AccessToken
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
 
   private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
@@ -98,61 +103,50 @@ public class WebSecurityConfig {
   }
 
   @Autowired
-  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+  public void configureGlobal(AuthenticationManagerBuilder auth) {
     auth.userDetailsService(userDetailsService).passwordEncoder(this.passwordEncoder.passwordEncoder());
   }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  MethodSecurityExpressionHandler methodSecurityExpressionHandler(
+      PermissionEvaluator permissionEvaluator
+  ) {
+    var handler = new DefaultMethodSecurityExpressionHandler();
+    handler.setPermissionEvaluator(permissionEvaluator);
+    return handler;
+  }
+
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) {
     http
-        .cors()
-        .and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .csrf().disable()
-        .formLogin().disable()
-        .httpBasic().disable()
-        .exceptionHandling()
-        .authenticationEntryPoint(new UnauthorizedRequestEntryPoint())
-        .and()
-        .authorizeHttpRequests((authz) -> {
-          try {
-            authz
-                .requestMatchers(UnauthenticatedInterfaces
-                    .get()
-                    .stream()
-                    .map(AntPathRequestMatcher::new)
-                    .toList()
-                    .toArray(new AntPathRequestMatcher[0]))
-                .permitAll()
-                .anyRequest()
-                .authenticated();
-
-            if (env.getOAuthEnabled().getValueOrDefault()) {
-              LOG.info("Configuring OAuth authentication from environment variables");
-              authz
-                  .and()
-                  .oauth2Login()
-                  .authorizationEndpoint()
-                  .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
-                  .and()
-                  .redirectionEndpoint()
-                  .and()
-                  .userInfoEndpoint()
-                  .oidcUserService(customOidcUserService)
-                  .userService(customOAuth2UserService)
-                  .and()
-                  .tokenEndpoint()
-                  .accessTokenResponseClient(authorizationCodeTokenResponseClient())
-                  .and()
-                  .successHandler(oAuth2AuthenticationSuccessHandler)
-                  .failureHandler(oAuth2AuthenticationFailureHandler);
-            }
-          } catch (Exception e) {
-            throw new RuntimeException(e);
-          }
-        });
-
+        .cors(Customizer.withDefaults())
+        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .exceptionHandling(eh -> eh.authenticationEntryPoint(new UnauthorizedRequestEntryPoint()))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(UnauthenticatedInterfaces.get().toArray(String[]::new)).permitAll()
+            .anyRequest().authenticated()
+        );
+    if (env.getOAuthEnabled().getValueOrDefault()) {
+      LOG.info("Configuring OAuth authentication from environment variables");
+      http.oauth2Login(oauth -> oauth
+          .authorizationEndpoint(ae -> ae
+              .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
+          )
+          .redirectionEndpoint(Customizer.withDefaults())
+          .userInfoEndpoint(ui -> ui
+              .oidcUserService(customOidcUserService)
+              .userService(customOAuth2UserService)
+          )
+          .tokenEndpoint(te -> te
+              .accessTokenResponseClient(authorizationCodeTokenResponseClient())
+          )
+          .successHandler(oAuth2AuthenticationSuccessHandler)
+          .failureHandler(oAuth2AuthenticationFailureHandler)
+      );
+    }
 
     http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
@@ -248,16 +242,24 @@ public class WebSecurityConfig {
   }
 
   private OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> authorizationCodeTokenResponseClient() {
-    var tokenResponseHttpMessageConverter = new OAuth2AccessTokenResponseHttpMessageConverter();
-    tokenResponseHttpMessageConverter
-        .setAccessTokenResponseConverter(new OAuth2AccessTokenResponseConverterWithDefaults());
-    var restTemplate = new RestTemplate(
-        List.of(new FormHttpMessageConverter(), tokenResponseHttpMessageConverter)
+    var tokenResponseConverter = new OAuth2AccessTokenResponseHttpMessageConverter();
+    tokenResponseConverter.setAccessTokenResponseConverter(
+        new OAuth2AccessTokenResponseConverterWithDefaults()
     );
-    restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
-    var tokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
-    tokenResponseClient.setRestOperations(restTemplate);
-    return tokenResponseClient;
+
+    RestClient restClient = RestClient.builder()
+        .messageConverters(converters -> {
+          converters.clear();
+          converters.add(new FormHttpMessageConverter());
+          converters.add(tokenResponseConverter);
+        })
+        .defaultStatusHandler(new OAuth2ErrorResponseErrorHandler())
+        .build();
+
+    var client = new RestClientAuthorizationCodeTokenResponseClient();
+    client.setRestClient(restClient);
+
+    return client;
 
   }
 

@@ -25,17 +25,17 @@ import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-@Configuration
+@Component
 public class SpPermissionEvaluator implements PermissionEvaluator {
 
   private final IPermissionStorage permissionStorage;
