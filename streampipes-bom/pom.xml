@@ -20,10 +20,13 @@
         <commons-configuration2.version>2.12.0</commons-configuration2.version>
         <commons-csv.version>1.14.1</commons-csv.version>
         <commons-io.version>2.17.0</commons-io.version>
+        <commons-jexl.version>3.4.0</commons-jexl.version>
         <commons-text.version>1.12.0</commons-text.version>
         <ditto-client.version>1.0.0</ditto-client.version>
         <error-prone.version>2.10.0</error-prone.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
+        <graalvm.js.version>25.0.0</graalvm.js.version>
+        <groovy.version>5.0.3</groovy.version>
         <grpc.version>1.76.0</grpc.version>
         <guava.version>33.5.0-jre</guava.version>
         <hadoop.version>3.4.1</hadoop.version>
@@ -118,6 +121,11 @@
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
                 <version>${commons-collections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-jexl3</artifactId>
+                <version>${commons-jexl.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -298,6 +306,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-configuration2</artifactId>
                 <version>${commons-configuration2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>${groovy.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -562,6 +575,17 @@
                 <groupId>org.eclipse.rdf4j</groupId>
                 <artifactId>rdf4j-rio-rdfxml</artifactId>
                 <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.polyglot</groupId>
+                <artifactId>js</artifactId>
+                <version>${graalvm.js.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.polyglot</groupId>
+                <artifactId>polyglot</artifactId>
+                <version>${graalvm.js.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.influxdb</groupId>

@@ -39,6 +39,7 @@
     <url>https://streampipes.apache.org</url>
 
     <properties>
+        <spring-boot.version>4.0.2</spring-boot.version>
         <plc4x.version>0.13.1</plc4x.version>
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.16.1</apache-rat-plugin.version>
@@ -64,7 +65,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>4.0.2</version>
+                <version>${spring-boot.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
