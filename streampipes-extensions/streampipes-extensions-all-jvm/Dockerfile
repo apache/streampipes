@@ -20,7 +20,7 @@ RUN java -Djarmode=layertools -jar application.jar extract
 
 FROM eclipse-temurin:25-jre-alpine
 # needed pkgs processors-image-processing-jvm
-RUN apk update && apk install ttf-dejavu-core && apk install fontconfig
+RUN apk add --no-cache fontconfig ttf-dejavu
 
 COPY --from=builder dependencies/ ./
 COPY --from=builder snapshot-dependencies/ ./
