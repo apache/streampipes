@@ -38,10 +38,12 @@ import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformation
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.vocabulary.XSD;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -61,7 +63,7 @@ public class AdapterRuleConverter {
       handleDeleteRule((DeleteRuleDescription) rule, scriptBuilder);
 
     } else if (rule instanceof AddTimestampRuleDescription) {
-      handleAddTimestampRule((AddTimestampRuleDescription) rule, scriptBuilder);
+      handleAddTimestampRule((AddTimestampRuleDescription) rule, adapter, scriptBuilder);
 
     } else if (rule instanceof AddValueTransformationRuleDescription) {
       handleAddValueRule((AddValueTransformationRuleDescription) rule, scriptBuilder);
@@ -104,8 +106,18 @@ public class AdapterRuleConverter {
     scriptBuilder.appendLine(String.format("delete event['%s'];", rule.getRuntimeKey()));
   }
 
-  private void handleAddTimestampRule(AddTimestampRuleDescription rule, TransformationScriptBuilder scriptBuilder) {
-    scriptBuilder.appendLine(String.format("event['%s'] = Date.now();", rule.getRuntimeKey()));
+  private void handleAddTimestampRule(AddTimestampRuleDescription rule, AdapterDescription adapter, TransformationScriptBuilder scriptBuilder) {
+    // Add timestamp to the script
+    scriptBuilder.appendLine(String.format("event['%s'] = new Date().getTime();", rule.getRuntimeKey()));
+    if (adapter == null || rule.getRuntimeKey() == null || rule.getRuntimeKey().isEmpty()) {
+      return;
+    }
+
+    // add origin type to ensure that timestamp will be transformed to a long
+    findPrimitiveProperty(adapter, rule.getRuntimeKey()).ifPresent(property -> {
+      ensureAdditionalMetadata(property);
+      property.getAdditionalMetadata().put("originType", XSD.FLOAT.toString());
+    });
   }
 
   private void handleAddValueRule(AddValueTransformationRuleDescription rule, TransformationScriptBuilder scriptBuilder) {
@@ -190,6 +202,12 @@ public class AdapterRuleConverter {
         .filter(EventPropertyPrimitive.class::isInstance)
         .map(EventPropertyPrimitive.class::cast)
         .findFirst();
+  }
+
+  private void ensureAdditionalMetadata(EventPropertyPrimitive property) {
+    if (property.getAdditionalMetadata() == null) {
+      property.setAdditionalMetadata(new HashMap<>());
+    }
   }
 
   private ReduceEventRateRule mapEventRate(EventRateTransformationRuleDescription rule) {

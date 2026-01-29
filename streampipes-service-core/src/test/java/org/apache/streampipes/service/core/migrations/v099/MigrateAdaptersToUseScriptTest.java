@@ -36,6 +36,7 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
 import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -151,13 +153,22 @@ class MigrateAdaptersToUseScriptTest {
   @Test
   void executeMigration_TransformsAddTimestampRule() throws IOException {
     var adapter = createBaseAdapter(new AddTimestampRuleDescription("timestamp"));
+    var timestampProperty = new EventPropertyPrimitive();
+    timestampProperty.setRuntimeName("timestamp");
+    timestampProperty.setAdditionalMetadata(new HashMap<>());
+    adapter.getDataStream().getEventSchema().setEventProperties(List.of(timestampProperty));
 
     when(mockStorage.findAll()).thenReturn(List.of(adapter));
     migration.executeMigration();
 
     var script = adapter.getTransformationConfig().getScript();
-    assertTrue(script.contains("event['timestamp'] = Date.now();"));
+    assertTrue(script.contains("event['timestamp'] = new Date().getTime();"));
     assertTrue(adapter.getTransformationConfig().isScriptActive());
+    var updatedProperty = (EventPropertyPrimitive) adapter.getDataStream()
+        .getEventSchema()
+        .getEventProperties()
+        .get(0);
+    assertEquals(XSD.FLOAT.toString(), updatedProperty.getAdditionalMetadata().get("originType"));
   }
 
   @Test
