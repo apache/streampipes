@@ -160,8 +160,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
         }
     );
 
-    Thread thread = new Thread(this.mqttConsumer);
-    thread.start();
+    this.mqttConsumer.start();
 
     LOG.info("Adapter {} started", ID);
     LOG.info("Adapter with id {} started",
@@ -206,7 +205,9 @@ public class Oi4Adapter implements StreamPipesAdapter {
       IAdapterParameterExtractor extractor,
       IAdapterRuntimeContext adapterRuntimeContext
   ) {
-    mqttConsumer.close();
+    if (mqttConsumer != null) {
+      mqttConsumer.stop();
+    }
   }
 
   @Override

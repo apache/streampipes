@@ -78,8 +78,7 @@ public class MqttProtocol implements StreamPipesAdapter {
         new BrokerEventProcessor(extractor.selectedParser(), collector)
     );
 
-    Thread thread = new Thread(this.mqttConsumer);
-    thread.start();
+    this.mqttConsumer.start();
   }
 
   @Override
@@ -87,7 +86,9 @@ public class MqttProtocol implements StreamPipesAdapter {
       IAdapterParameterExtractor extractor,
       IAdapterRuntimeContext adapterRuntimeContext
   ) {
-    this.mqttConsumer.close();
+    if (this.mqttConsumer != null) {
+      this.mqttConsumer.stop();
+    }
   }
 
   @Override
@@ -115,4 +116,3 @@ public class MqttProtocol implements StreamPipesAdapter {
   }
 
 }
-
