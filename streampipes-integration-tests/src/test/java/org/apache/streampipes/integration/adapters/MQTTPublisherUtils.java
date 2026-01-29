@@ -57,9 +57,4 @@ public class MQTTPublisherUtils {
         publisher.connect();
         return publisher;
     }
-
-    public static void closeConnection(MqttPublisher publisher) {
-        publisher.disconnect();
-    }
-
 }
