@@ -28,26 +28,17 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConfig;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConsumer;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttSingleMessageReceiver;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Locales;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class MqttProtocol implements StreamPipesAdapter {
-
-  private static final Logger LOG = LoggerFactory.getLogger(MqttProtocol.class);
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.mqtt";
 
@@ -57,9 +48,6 @@ public class MqttProtocol implements StreamPipesAdapter {
   public MqttProtocol() {
   }
 
-  public void applyConfiguration(IStaticPropertyExtractor extractor) {
-    this.mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
-  }
 
   @Override
   public IAdapterConfiguration declareConfig() {
@@ -69,18 +57,22 @@ public class MqttProtocol implements StreamPipesAdapter {
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAnonymousAccess(),
-            MqttConnectUtils.getUsernameAccess(),  MqttConnectUtils.getClientCertAccess())
+        .requiredAlternatives(
+            MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAnonymousAccess(),
+            MqttConnectUtils.getUsernameAccess(), MqttConnectUtils.getClientCertAccess()
+        )
         .requiredTextParameter(MqttConnectUtils.getTopicLabel())
         .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(
+      IAdapterParameterExtractor extractor,
+      IEventCollector collector,
+      IAdapterRuntimeContext adapterRuntimeContext
+  ) throws AdapterException {
 
-    this.applyConfiguration(extractor.getStaticPropertyExtractor());
+    this.initializeMqttConfig(extractor.getStaticPropertyExtractor());
     this.mqttConsumer = new MqttConsumer(
         this.mqttConfig,
         new BrokerEventProcessor(extractor.selectedParser(), collector)
@@ -91,44 +83,36 @@ public class MqttProtocol implements StreamPipesAdapter {
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(
+      IAdapterParameterExtractor extractor,
+      IAdapterRuntimeContext adapterRuntimeContext
+  ) {
     this.mqttConsumer.close();
   }
 
   @Override
-  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
-                                      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    try {
-      AtomicReference<Throwable> exceptionRef = new AtomicReference<>();
-      this.applyConfiguration(extractor.getStaticPropertyExtractor());
-      List<byte[]> elements = new ArrayList<>();
-      InternalEventProcessor<byte[]> eventProcessor = elements::add;
+  public SampleData onSampleDataRequested(
+      IAdapterParameterExtractor extractor,
+      IAdapterGuessSchemaContext adapterGuessSchemaContext
+  ) throws AdapterException {
 
+    this.initializeMqttConfig(extractor.getStaticPropertyExtractor());
 
-      MqttConsumer consumer = new MqttConsumer(this.mqttConfig, eventProcessor);
+    var payload = getSampleEventAsByte();
 
-      Thread thread = new Thread(consumer);
-      thread.setUncaughtExceptionHandler((t, e) -> exceptionRef.set(e.getCause()));
-      thread.start();
+    return extractor.selectedParser()
+                    .getSampleData(new ByteArrayInputStream(payload));
 
-      while (consumer.getMessageCount() < 1 && exceptionRef.get() == null) {
-        try {
-          TimeUnit.MILLISECONDS.sleep(100);
-        } catch (InterruptedException e) {
-          break;
-        }
-      }
-      consumer.close();
-
-      Throwable threadException = exceptionRef.get();
-      if (threadException != null) {
-        throw new AdapterException(threadException.getMessage(), threadException);
-      }
-
-      return extractor.selectedParser().getSampleData(new ByteArrayInputStream(elements.get(0)));
-    } catch (Exception e) {
-      throw new AdapterException(e.getMessage(), e);
-    }
   }
+
+  private byte[] getSampleEventAsByte() throws AdapterException {
+    var receiver = new MqttSingleMessageReceiver(this.mqttConfig, 10);
+    return receiver.receiveSingleMessage();
+  }
+
+  public void initializeMqttConfig(IStaticPropertyExtractor extractor) {
+    this.mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
+  }
+
 }
+

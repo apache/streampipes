@@ -28,12 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import java.net.URI;
-
-
 public class MqttPublisher extends MqttBase {
 
-  private URI uri;
   private Mqtt3AsyncClient client;
 
   private static final Logger LOG = LoggerFactory.getLogger(MqttPublisher.class);
@@ -89,7 +85,7 @@ public class MqttPublisher extends MqttBase {
           });
     } catch (Exception e) {
       throw new SpRuntimeException("Could not publish to MQTT broker: "
-          + uri.toString() + ", " + e.getMessage(), e);
+          + super.mqttConfig.getUrl() + ", " + e.getMessage(), e);
     }
   }
 
@@ -99,7 +95,7 @@ public class MqttPublisher extends MqttBase {
           .get(); // block until disconnected
     } catch (Exception e) {
       throw new SpRuntimeException("Could not disconnect from MQTT broker: "
-          + uri.toString() + ", " + e.getMessage(), e);
+          + super.mqttConfig.getUrl() + ", " + e.getMessage(), e);
     }
   }
 

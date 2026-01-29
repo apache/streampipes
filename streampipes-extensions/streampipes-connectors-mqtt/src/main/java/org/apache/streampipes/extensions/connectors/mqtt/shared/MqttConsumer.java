@@ -30,23 +30,16 @@ import java.util.concurrent.ExecutionException;
 
 public class MqttConsumer extends MqttBase implements Runnable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MqttConsumer.class);
+
     private final InternalEventProcessor<byte[]> consumer;
     private boolean running;
-    private int maxElementsToReceive = -1;
-    private int messageCount = 0;
 
     private Mqtt3AsyncClient client;
-
-    private static final Logger LOG = LoggerFactory.getLogger(MqttConsumer.class);
 
     public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer) {
         super(mqttConfig);
         this.consumer = consumer;
-    }
-
-    public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer, int maxElementsToReceive) {
-        this(mqttConfig, consumer);
-        this.maxElementsToReceive = maxElementsToReceive;
     }
 
     @Override
@@ -103,13 +96,6 @@ public class MqttConsumer extends MqttBase implements Runnable {
         try {
             byte[] payload = publish.getPayloadAsBytes();
             consumer.onEvent(payload);
-            messageCount++;
-
-            if (maxElementsToReceive != -1 && messageCount >= maxElementsToReceive) {
-                LOG.info("Max elements ({}) received. Stopping consumer.", maxElementsToReceive);
-                this.running = false;
-            }
-
         } catch (Exception e) {
             LOG.error("Error processing MQTT message", e);
         }
@@ -127,9 +113,5 @@ public class MqttConsumer extends MqttBase implements Runnable {
             LOG.error("Error disconnecting from MQTT", e.getCause());
         }
 
-    }
-
-    public Integer getMessageCount() {
-        return messageCount;
     }
 }
