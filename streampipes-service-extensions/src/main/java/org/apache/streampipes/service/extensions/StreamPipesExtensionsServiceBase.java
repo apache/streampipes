@@ -37,8 +37,8 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.rest.extensions.WelcomePage;
-import org.apache.streampipes.rest.shared.serializer.JacksonConfiguration;
 import org.apache.streampipes.rest.shared.exception.SpRestExceptionHandler;
+import org.apache.streampipes.rest.shared.serializer.JacksonConfiguration;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
