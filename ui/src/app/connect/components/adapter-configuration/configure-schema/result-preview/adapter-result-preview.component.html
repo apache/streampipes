@@ -24,7 +24,7 @@
 >
     <div header fxFlex="100" fxLayoutAlign="end center">
         <mat-button-toggle-group
-            [value]="resultViewMode"
+            [value]="resultViewMode()"
             [hideSingleSelectionIndicator]="true"
             (valueChange)="resultViewModeChange.emit($event)"
         >
@@ -36,7 +36,7 @@
             </mat-button-toggle>
         </mat-button-toggle-group>
     </div>
-    @if (isRunningScript) {
+    @if (isRunningScript()) {
         <div class="m-lg">
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <mat-spinner [diameter]="25"></mat-spinner>
@@ -44,17 +44,17 @@
             </div>
         </div>
     } @else {
-        @if (scriptError) {
+        @if (scriptError()) {
             <sp-exception-message
                 class="p-xs"
-                [message]="scriptError"
+                [message]="scriptError()"
                 [showDetails]="true"
             ></sp-exception-message>
         } @else {
             <sp-adapter-event-preview
                 dataCy="configure-schema-event-preview-result"
-                [mode]="resultViewMode"
-                [value]="output"
+                [mode]="resultViewMode()"
+                [value]="output()"
             ></sp-adapter-event-preview>
         }
     }

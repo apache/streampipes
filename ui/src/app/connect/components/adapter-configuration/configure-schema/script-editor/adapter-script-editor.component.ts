@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { ScriptMetadata } from '@streampipes/platform-services';
 
 @Component({
@@ -25,18 +25,18 @@ import { ScriptMetadata } from '@streampipes/platform-services';
     templateUrl: './adapter-script-editor.component.html',
 })
 export class AdapterScriptEditorComponent {
-    @Input() scriptActive = false;
-    @Input() selectedScriptMetadata: ScriptMetadata;
-    @Input() availableScripts: ScriptMetadata[] = [];
-    @Input() loadingAvailableScriptsError: any;
-    @Input() script = '';
-    @Input() editorOptions: any;
+    scriptActive = input(false);
+    selectedScriptMetadata = input<ScriptMetadata>();
+    availableScripts = input<ScriptMetadata[]>([]);
+    loadingAvailableScriptsError = input<any>();
+    script = input('');
+    editorOptions = input<any>();
 
-    @Output() codeChange = new EventEmitter<string>();
-    @Output() languageChange = new EventEmitter<ScriptMetadata>();
-    @Output() selectTemplate = new EventEmitter<void>();
-    @Output() resetScript = new EventEmitter<void>();
-    @Output() toggleScriptActive = new EventEmitter<void>();
-    @Output() runScript = new EventEmitter<void>();
-    @Output() createTemplate = new EventEmitter<void>();
+    codeChange = output<string>();
+    languageChange = output<ScriptMetadata>();
+    selectTemplate = output<void>();
+    resetScript = output<void>();
+    toggleScriptActive = output<void>();
+    runScript = output<void>();
+    createTemplate = output<void>();
 }

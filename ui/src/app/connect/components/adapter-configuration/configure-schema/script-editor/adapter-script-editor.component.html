@@ -19,29 +19,29 @@
     [panelTitle]="'Transformation' | translate"
     outerMargin="20px 0px"
 >
-    @if (loadingAvailableScriptsError) {
+    @if (loadingAvailableScriptsError()) {
         <sp-alert-banner
             type="error"
             [title]="'Error loading available script languages'"
-            [description]="loadingAvailableScriptsError.cause"
+            [description]="loadingAvailableScriptsError().cause"
         >
         </sp-alert-banner>
     }
 
     <div header fxLayoutAlign="end center" fxFlex="100" fxLayoutGap="5px">
-        @if (scriptActive) {
-            @if (selectedScriptMetadata) {
+        @if (scriptActive()) {
+            @if (selectedScriptMetadata()) {
                 <button
                     mat-button
                     [matMenuTriggerFor]="langMenu"
                     aria-label="Select template language"
                 >
-                    {{ selectedScriptMetadata.name | titlecase }}
+                    {{ selectedScriptMetadata().name | titlecase }}
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
 
                 <mat-menu #langMenu="matMenu">
-                    @for (script of availableScripts; track script.language) {
+                    @for (script of availableScripts(); track script.language) {
                         <button
                             mat-menu-item
                             (click)="languageChange.emit(script)"
@@ -49,7 +49,7 @@
                             <span>{{ script.name | titlecase }}</span>
                             @if (
                                 script.language ===
-                                selectedScriptMetadata.language
+                                selectedScriptMetadata().language
                             ) {
                                 <mat-icon class="ms-auto">check</mat-icon>
                             }
@@ -77,10 +77,10 @@
 
         <mat-slide-toggle
             data-cy="toggle-script-active"
-            [ngModel]="scriptActive"
+            [ngModel]="scriptActive()"
             (ngModelChange)="toggleScriptActive.emit()"
         >
-            @if (scriptActive) {
+            @if (scriptActive()) {
                 {{ 'Disable script' | translate }}
             } @else {
                 {{ 'Enable script' | translate }}
@@ -88,13 +88,13 @@
         </mat-slide-toggle>
     </div>
 
-    @if (scriptActive) {
+    @if (scriptActive()) {
         <div class="code-editor-outer">
             <ngx-codemirror
                 class="code-editor"
-                [ngModel]="script"
+                [ngModel]="script()"
                 (ngModelChange)="codeChange.emit($event)"
-                [options]="editorOptions"
+                [options]="editorOptions()"
                 data-cy="configure-schema-script-editor"
             ></ngx-codemirror>
         </div>

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Mode } from '../../adapter-event-preview/adapter-event-preview.component';
 
 @Component({
@@ -25,10 +25,10 @@ import { Mode } from '../../adapter-event-preview/adapter-event-preview.componen
     templateUrl: './adapter-result-preview.component.html',
 })
 export class AdapterResultPreviewComponent {
-    @Input() isRunningScript = false;
-    @Input() scriptError: any;
-    @Input() output: any;
-    @Input() resultViewMode: Mode = 'raw';
+    isRunningScript = input(false);
+    scriptError = input<any>();
+    output = input<any>();
+    resultViewMode = input<Mode>('raw');
 
-    @Output() resultViewModeChange = new EventEmitter<Mode>();
+    resultViewModeChange = output<Mode>();
 }
