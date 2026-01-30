@@ -1,0 +1,62 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
+        <sp-form-field [label]="'Sample event (JSON)' | translate">
+            <mat-form-field class="w-100">
+                <textarea
+                    matInput
+                    [ngModel]="samplePayload()"
+                    (ngModelChange)="samplePayload.set($event)"
+                    class="code-input"
+                    rows="12"
+                ></textarea>
+                @if (isSampleInvalid()) {
+                    <sp-alert-banner
+                        type="error"
+                        [title]="'Invalid JSON' | translate"
+                        [description]="'Sample must be valid JSON.' | translate"
+                    >
+                    </sp-alert-banner>
+                }
+            </mat-form-field>
+        </sp-form-field>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions" fxLayoutGap="10px">
+        <button
+            mat-flat-button
+            color="accent"
+            data-cy="upload-sample-event-submit"
+            (click)="submit()"
+            [disabled]="!isSampleValid()"
+        >
+            <mat-icon>check</mat-icon>
+            <span>{{ 'Use sample' | translate }}</span>
+        </button>
+        <button
+            class="mat-basic"
+            mat-flat-button
+            data-cy="upload-sample-event-cancel"
+            (click)="close()"
+        >
+            {{ 'Cancel' | translate }}
+        </button>
+    </div>
+</div>

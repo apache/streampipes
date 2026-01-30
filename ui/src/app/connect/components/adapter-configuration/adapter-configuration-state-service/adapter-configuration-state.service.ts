@@ -280,6 +280,23 @@ export class AdapterConfigurationStateService {
             });
     }
 
+    public uploadSampleEvent(
+        adapter: AdapterDescription,
+        samplePayload: string,
+    ): void {
+        const trimmed = (samplePayload || '').trim();
+        if (!trimmed) {
+            return;
+        }
+
+        this.sampleRequestSubscription?.unsubscribe();
+        this.sampleRequestSubscription = undefined;
+
+        const parsed = JSON.parse(trimmed);
+        const sample = this.normalizeUploadedSample(parsed);
+        this.applySamplePayload(adapter, sample);
+    }
+
     public runScript(adapter: AdapterDescription): void {
         // 1. Prepare state for loading
         this.updateState({
@@ -411,5 +428,53 @@ export class AdapterConfigurationStateService {
 
     public reset(): void {
         this._state.set({ ...this.initialState });
+    }
+
+    private applySamplePayload(
+        adapter: AdapterDescription,
+        payload: any,
+    ): void {
+        const updatedAdapter = {
+            ...adapter,
+            transformationConfig: { ...adapter.transformationConfig },
+        };
+        updatedAdapter.transformationConfig.inputs = [payload];
+
+        const scriptActive = updatedAdapter.transformationConfig.scriptActive;
+        if (!scriptActive) {
+            updatedAdapter.transformationConfig.outputs =
+                updatedAdapter.transformationConfig.inputs;
+        }
+
+        const transformationConfigurationChanged =
+            this.checkIfTransformationConfigurationChanged(updatedAdapter);
+
+        this.updateState({
+            adapterDescription: updatedAdapter,
+            isGettingSample: false,
+            adapterSettingsChanged: false,
+            adapterSettingsString: JSON.stringify(updatedAdapter.config),
+            transformationConfigurationChanged:
+                transformationConfigurationChanged,
+            sampleFieldStatusInfos: null,
+            sampleError: null,
+        });
+
+        if (scriptActive) {
+            this.runScript(updatedAdapter);
+        }
+    }
+
+    private normalizeUploadedSample(sample: string): string {
+        if (Array.isArray(sample)) {
+            if (sample.length === 0) {
+                throw new Error('Sample array is empty');
+            }
+            return sample[0];
+        }
+        if (sample === null || typeof sample !== 'object') {
+            throw new Error('Sample must be a JSON object');
+        }
+        return sample;
     }
 }

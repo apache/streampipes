@@ -25,9 +25,18 @@
             data-cy="connect-get-new-sample-button"
             mat-button
             (click)="getSample.emit()"
+            [disabled]="isSampleLoading"
         >
             <mat-icon>refresh</mat-icon>
             <span>{{ 'Get new sample' | translate }}</span>
+        </button>
+        <button
+            data-cy="connect-upload-sample-button"
+            mat-button
+            (click)="uploadSample.emit()"
+        >
+            <mat-icon>file_upload</mat-icon>
+            <span>{{ 'Upload sample' | translate }}</span>
         </button>
         <mat-button-toggle-group
             [value]="sourceViewMode"

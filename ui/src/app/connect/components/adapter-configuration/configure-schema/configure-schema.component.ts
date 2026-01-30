@@ -44,6 +44,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SelectAdapterTransformationTemplateDialogComponent } from '../../../dialog/select-adapter-transformation-template-dialog/select-adapter-transformation-template-dialog.component';
 import { Mode } from '../adapter-event-preview/adapter-event-preview.component';
 import { MatDialog } from '@angular/material/dialog';
+import { UploadSampleEventDialogComponent } from '../../../dialog/upload-sample-event-dialog/upload-sample-event-dialog.component';
 
 @Component({
     selector: 'sp-configure-schema',
@@ -186,6 +187,25 @@ export class ConfigureSchemaComponent implements OnInit {
 
     getSampleEvent(): void {
         this.stateService.getSampleEvent(this.adapterDescription);
+    }
+
+    openUploadSampleDialog(): void {
+        const dialogRef = this.dialogService.open(
+            UploadSampleEventDialogComponent,
+            {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant('Upload sample event'),
+                width: '50vw',
+            },
+        );
+        dialogRef.afterClosed().subscribe(samplePayload => {
+            if (samplePayload) {
+                const adapter =
+                    this.stateService.state().adapterDescription ??
+                    this.adapterDescription;
+                this.stateService.uploadSampleEvent(adapter, samplePayload);
+            }
+        });
     }
 
     runScript(): void {

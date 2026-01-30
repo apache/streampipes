@@ -113,6 +113,7 @@ import { ShowFieldStatusInfosComponent } from './components/adapter-configuratio
 import { AdapterScriptEditorComponent } from './components/adapter-configuration/configure-schema/script-editor/adapter-script-editor.component';
 import { AdapterSamplePreviewComponent } from './components/adapter-configuration/configure-schema/sample-preview/adapter-sample-preview.component';
 import { AdapterResultPreviewComponent } from './components/adapter-configuration/configure-schema/result-preview/adapter-result-preview.component';
+import { UploadSampleEventDialogComponent } from './dialog/upload-sample-event-dialog/upload-sample-event-dialog.component';
 
 @NgModule({
     imports: [
@@ -262,6 +263,7 @@ import { AdapterResultPreviewComponent } from './components/adapter-configuratio
         AdapterScriptEditorComponent,
         AdapterSamplePreviewComponent,
         AdapterResultPreviewComponent,
+        UploadSampleEventDialogComponent,
     ],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -33,4 +33,5 @@ export class AdapterSamplePreviewComponent {
 
     @Output() sourceViewModeChange = new EventEmitter<Mode>();
     @Output() getSample = new EventEmitter<void>();
+    @Output() uploadSample = new EventEmitter<void>();
 }
