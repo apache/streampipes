@@ -22,6 +22,7 @@ import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashSet;
@@ -178,6 +179,7 @@ public class SpServiceRegistration implements Storable {
     return scheme;
   }
 
+  @JsonIgnore
   public String getServiceUrl() {
     return getScheme() + "://" + getHost() + ":" + getPort();
   }
