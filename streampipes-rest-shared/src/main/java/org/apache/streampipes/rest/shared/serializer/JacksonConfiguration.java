@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.shared.serializer;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,9 +29,10 @@ public class JacksonConfiguration {
 
   @Bean
   JsonMapperBuilderCustomizer jsonMapperBuilderCustomizer() {
-    return builder -> builder.changeDefaultPropertyInclusion(include -> include.withValueInclusion(JsonInclude.Include.NON_NULL))
+    return builder -> builder
         .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+            DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES,
             DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
         .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
         .findAndAddModules();
