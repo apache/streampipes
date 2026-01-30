@@ -32,13 +32,11 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConfig;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConsumer;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttSingleMessageReceiver;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
-import org.apache.streampipes.messaging.InternalEventProcessor;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
@@ -62,11 +60,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-
-import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 /**
  * Adapter to connect to an Open Industry 4.0 (OI4) compatible device.
@@ -79,8 +73,6 @@ public class Oi4Adapter implements StreamPipesAdapter {
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.oi4";
 
   private static final Logger LOG = LoggerFactory.getLogger(Oi4Adapter.class);
-  private static final long ReceiveSchemaSleepTime = 100;
-  private static final long ReceiveSchemaMaxTimeout = 5000;
 
   // Information about the topic structure can be found at page 57 of the above-mentioned development guide
   // The app id (missing here) needs to be provided by the user
@@ -95,7 +87,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
   public Oi4Adapter() {
     mapper = JacksonSerializer.getObjectMapper(Map.of(
-      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+        DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
     ));
   }
 
@@ -107,7 +99,8 @@ public class Oi4Adapter implements StreamPipesAdapter {
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAnonymousAccess(),
+        .requiredAlternatives(
+            MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAnonymousAccess(),
             MqttConnectUtils.getUsernameAccess(), MqttConnectUtils.getClientCertAccess()
         )
         .requiredAlternatives(
@@ -144,7 +137,10 @@ public class Oi4Adapter implements StreamPipesAdapter {
       IAdapterRuntimeContext adapterRuntimeContext
   ) throws AdapterException {
     LOG.info("Adapter type {} starting", ID);
-    LOG.info("Adapter with id {} starting", extractor.getAdapterDescription().getElementId());
+    LOG.info("Adapter with id {} starting",
+             extractor.getAdapterDescription()
+                      .getElementId()
+    );
 
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
 
@@ -164,11 +160,13 @@ public class Oi4Adapter implements StreamPipesAdapter {
         }
     );
 
-    Thread thread = new Thread(this.mqttConsumer);
-    thread.start();
+    this.mqttConsumer.start();
 
     LOG.info("Adapter {} started", ID);
-    LOG.info("Adapter with id {} started", extractor.getAdapterDescription().getElementId());
+    LOG.info("Adapter with id {} started",
+             extractor.getAdapterDescription()
+                      .getElementId()
+    );
   }
 
   private InputStream convertByte(byte[] event) {
@@ -191,7 +189,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
     } else {
       var selectedSensorsText = extractor.textParameter(OI4AdapterLabels.LABEL_KEY_SENSORS_LIST_INPUT);
       selectedSensors = Arrays.stream(selectedSensorsText.split(","))
-          .toList();
+                              .toList();
     }
 
     if (selectedAlternativeSensorDescription.equals(OI4AdapterLabels.LABEL_KEY_SENSOR_TYPE_ALTERNATIVE)) {
@@ -207,7 +205,9 @@ public class Oi4Adapter implements StreamPipesAdapter {
       IAdapterParameterExtractor extractor,
       IAdapterRuntimeContext adapterRuntimeContext
   ) {
-    mqttConsumer.close();
+    if (mqttConsumer != null) {
+      mqttConsumer.stop();
+    }
   }
 
   @Override
@@ -215,48 +215,12 @@ public class Oi4Adapter implements StreamPipesAdapter {
       IAdapterParameterExtractor extractor,
       IAdapterGuessSchemaContext adapterGuessSchemaContext
   ) throws AdapterException {
-    try {
-      this.applyConfiguration(extractor.getStaticPropertyExtractor());
-
-      var sampleMessage = getSampleMessage();
-      var sampleData = transformToSampleData(sampleMessage);
-
-      return sampleData;
-    } catch (RuntimeException e) {
-      throw new AdapterException(e.getMessage(), e);
-    }
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
+    var sampleMessage = getSampleMessage();
+    return transformToSampleData(sampleMessage);
   }
 
-  /**
-   * Updates the timestamp property in the given GuessSchema if it exists as it is not correctly guessed.
-   * If the timestamp property exists, it is replaced with a proper timestamp property.
-   *
-   * @param guessSchema The GuessSchema to update.
-   */
-  private void updateTimestampPropertyIfExists(GuessSchema guessSchema) {
-    var eventProperties = guessSchema.getEventSchema()
-        .getEventProperties();
-
-    var timestampPropertyOpt = eventProperties.stream()
-        .filter(eventProperty ->
-            eventProperty.getRuntimeName()
-                .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP)
-        )
-        .findFirst();
-
-    var newTimestampProperty = timestampProperty(OI4AdapterLabels.EVENT_KEY_TIMESTAMP);
-
-    // If the timestamp property exists, replace it with the new timestamp property
-    timestampPropertyOpt.ifPresent(prop -> {
-      eventProperties.removeIf(eventProperty -> eventProperty.getRuntimeName()
-          .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP));
-      eventProperties.add(newTimestampProperty);
-    });
-
-    guessSchema.setEventSchema(new EventSchema(eventProperties));
-  }
-
-  private SampleData transformToSampleData(byte[] sampleMessage) {
+  private SampleData transformToSampleData(byte[] sampleMessage) throws AdapterException {
     try {
       var networkMessage = mapper.readValue(sampleMessage, NetworkMessage.class);
       var payload = extractPayload(networkMessage);
@@ -265,68 +229,14 @@ public class Oi4Adapter implements StreamPipesAdapter {
       return new JsonParsers(new JsonObjectParser())
           .getSampleData(convertByte(plainPayload.getBytes(StandardCharsets.UTF_8)));
     } catch (IOException e) {
-      LOG.error("Error while reading sample message: {}", sampleMessage);
-      throw new RuntimeException(e);
+      throw new AdapterException("Error while reading sample message", e);
     }
   }
+
 
   private byte[] getSampleMessage() throws AdapterException {
-    List<byte[]> sampleMessages = new ArrayList<>();
-    long timeElapsed = 0;
-    AtomicReference<Throwable> exceptionRef = new AtomicReference<>();
-    MqttConsumer guessConsumer = getGuessMqttConsumer(sampleMessages);
-
-    var thread = new Thread(guessConsumer);
-    thread.setUncaughtExceptionHandler((t, e) -> exceptionRef.set(e.getCause()));
-    thread.start();
-
-    while (sampleMessages.isEmpty() && exceptionRef.get() == null && timeElapsed < ReceiveSchemaMaxTimeout) {
-      try {
-        TimeUnit.MILLISECONDS.sleep(ReceiveSchemaSleepTime);
-        timeElapsed += ReceiveSchemaSleepTime;
-      } catch (InterruptedException e) {
-        LOG.error("Schema guessing failed during waiting for an incoming event: {}", e.getMessage());
-        break;
-      }
-    }
-    guessConsumer.close();
-
-    Throwable threadException = exceptionRef.get();
-    if (threadException != null) {
-      throw new AdapterException(threadException.getMessage(), threadException);
-    }
-
-    if (!sampleMessages.isEmpty()) {
-      return sampleMessages.get(0);
-    } else {
-      throw new AdapterException("No messages received");
-    }
-  }
-
-  /**
-   * Obtain a specialized MQTT consumer designed to infer the event schema based on provided sampleMessages.
-   *
-   * @param sampleMessages A list of byte arrays representing MQTT message payloads.
-   * @return A customized MqttConsumer instance.
-   */
-  private MqttConsumer getGuessMqttConsumer(List<byte[]> sampleMessages) {
-    // Define a specialized event processor that adds an event to the sampleMessages array
-    // only if it meets certain expectations, as verified by extractPayload.
-    InternalEventProcessor<byte[]> eventProcessor = event -> {
-      InputStream in = convertByte(event);
-      NetworkMessage networkMessage;
-      try {
-        networkMessage = mapper.readValue(in, NetworkMessage.class);
-      } catch (IOException e) {
-        LOG.error("Error during parsing of incoming MQTT event.");
-        throw new RuntimeException(e);
-      }
-      // Attempt to extract payload from the NetworkMessage
-      extractPayload(networkMessage);
-      // If successful, add the event to the sampleMessages array
-      sampleMessages.add(event);
-    };
-    return new MqttConsumer(this.mqttConfig, eventProcessor);
+    var receiver = new MqttSingleMessageReceiver(this.mqttConfig, 10);
+    return receiver.receiveSingleMessage();
   }
 
   private List<Map<String, Object>> extractPayload(NetworkMessage message) throws ParseException {
@@ -343,7 +253,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
         // Verify that the message corresponds to the designated sensor type.
         // This validation relies on the assumption that the source information includes the sensor type.
         if (dataMessage.source()
-            .contains(givenSensorType)) {
+                       .contains(givenSensorType)) {
 
           // an empty list of selected sensors means that we want to collect data from all sensors available
           if (selectedSensors.isEmpty() || selectedSensors.contains(sensorId)) {
@@ -361,10 +271,10 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
   private List<DataSetMessage> findProcessDataInputMessage(NetworkMessage message) {
     return message.messages()
-        .stream()
-        .filter(msg -> msg.filter()
-            .equals(OI4AdapterLabels.MESSAGE_VALUE_FILTER))
-        .toList();
+                  .stream()
+                  .filter(msg -> msg.filter()
+                                    .equals(OI4AdapterLabels.MESSAGE_VALUE_FILTER))
+                  .toList();
   }
 
   private Map<String, Object> extractAndEnrichMessagePayload(DataSetMessage dataSetMessage, String sensorId) {
@@ -388,16 +298,19 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
   private Map<String, Object> replaceSpecialChars(Map<String, Object> originalMap) {
     return originalMap.entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            entry -> entry.getKey().replace("-", ""),
-            Map.Entry::getValue,
-            (oldValue, newValue) -> oldValue)
-        );
+                      .stream()
+                      .collect(Collectors.toMap(
+                                   entry -> entry.getKey()
+                                                 .replace("-", ""),
+                                   Map.Entry::getValue,
+                                   (oldValue, newValue) -> oldValue
+                               )
+                      );
   }
 
   private long parseDate(String timestamp) throws DateTimeParseException {
-    return Instant.parse(timestamp).toEpochMilli();
+    return Instant.parse(timestamp)
+                  .toEpochMilli();
   }
 
   /**
