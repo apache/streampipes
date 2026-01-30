@@ -409,6 +409,17 @@ export class ConnectUtils {
             .type(script);
     }
 
+    public static uploadSampleEvent(samplePayload: string) {
+        ConnectBtns.uploadSampleBtn().click();
+        ConnectBtns.uploadSampleDialogTextarea()
+            .should('be.visible')
+            .clear()
+            .type(samplePayload, { parseSpecialCharSequences: false });
+        ConnectBtns.uploadSampleDialogSubmitBtn()
+            .should('not.be.disabled')
+            .click();
+    }
+
     public static addScriptAsScriptTemplate(
         templateName: string,
         script: string,

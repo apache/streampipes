@@ -26,6 +26,7 @@
                     (ngModelChange)="samplePayload.set($event)"
                     class="code-input"
                     rows="12"
+                    data-cy="upload-sample-event-textarea"
                 ></textarea>
                 @if (isSampleInvalid()) {
                     <sp-alert-banner

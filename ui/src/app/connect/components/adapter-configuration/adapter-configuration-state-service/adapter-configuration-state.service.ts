@@ -454,8 +454,7 @@ export class AdapterConfigurationStateService {
             isGettingSample: false,
             adapterSettingsChanged: false,
             adapterSettingsString: JSON.stringify(updatedAdapter.config),
-            transformationConfigurationChanged:
-                transformationConfigurationChanged,
+            transformationConfigurationChanged,
             sampleFieldStatusInfos: null,
             sampleError: null,
         });
