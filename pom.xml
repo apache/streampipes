@@ -58,7 +58,7 @@
         <ditto-client.version>1.0.0</ditto-client.version>
         <error-prone.version>2.10.0</error-prone.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
-        <graalvm.js.version>25.0.0</graalvm.js.version>
+        <graalvm.js.version>25.0.2</graalvm.js.version>
         <groovy.version>5.0.3</groovy.version>
         <grpc.version>1.76.0</grpc.version>
         <guava.version>33.5.0-jre</guava.version>
@@ -600,6 +600,11 @@
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bcprov-jdk18on.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk18on</artifactId>
                 <version>${bcprov-jdk18on.version}</version>
             </dependency>
             <dependency>
