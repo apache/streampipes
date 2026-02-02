@@ -272,6 +272,24 @@ export class ConnectBtns {
         });
     }
 
+    public static uploadSampleBtn() {
+        return cy.dataCy('connect-upload-sample-button', {
+            timeout: 10000,
+        });
+    }
+
+    public static uploadSampleDialogTextarea() {
+        return cy.dataCy('upload-sample-event-textarea', {
+            timeout: 10000,
+        });
+    }
+
+    public static uploadSampleDialogSubmitBtn() {
+        return cy.dataCy('upload-sample-event-submit', {
+            timeout: 10000,
+        });
+    }
+
     public static configureFieldsEventPreviewResult() {
         return cy.dataCy('configure-fields-event-preview-result', {
             timeout: 10000,

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, computed, Input } from '@angular/core';
+import { Component, computed, Input, signal } from '@angular/core';
 
 export type Mode = 'tree' | 'raw';
 
@@ -27,7 +27,15 @@ export type Mode = 'tree' | 'raw';
     styleUrl: './adapter-event-preview.component.scss',
 })
 export class AdapterEventPreviewComponent {
-    @Input() value: unknown = null;
+    private valueSignal = signal<unknown>(null);
+
+    @Input()
+    set value(val: unknown) {
+        this.valueSignal.set(val);
+    }
+    get value(): unknown {
+        return this.valueSignal();
+    }
 
     /** Optional header title. */
     @Input() title = '';
@@ -46,14 +54,16 @@ export class AdapterEventPreviewComponent {
 
     @Input() dataCy = '';
 
-    hasValue = computed(() => this.value !== null && this.value !== undefined);
+    hasValue = computed(
+        () => this.valueSignal() !== null && this.valueSignal() !== undefined,
+    );
 
     prettyJson = computed(() => {
         try {
-            return JSON.stringify(this.value, null, 2);
+            return JSON.stringify(this.valueSignal(), null, 2);
         } catch {
             // Circular refs or non-serializable input
-            return String(this.value);
+            return String(this.valueSignal());
         }
     });
 }

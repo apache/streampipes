@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Mode } from '../../adapter-event-preview/adapter-event-preview.component';
 
 @Component({
@@ -25,12 +25,13 @@ import { Mode } from '../../adapter-event-preview/adapter-event-preview.componen
     templateUrl: './adapter-sample-preview.component.html',
 })
 export class AdapterSamplePreviewComponent {
-    @Input() isSampleLoading = false;
-    @Input() sampleErrorMessage: any;
-    @Input() fieldStatusInfos: any;
-    @Input() input: any;
-    @Input() sourceViewMode: Mode = 'raw';
+    isSampleLoading = input(false);
+    sampleErrorMessage = input<any>();
+    fieldStatusInfos = input<any>();
+    input = input<any>();
+    sourceViewMode = input<Mode>('raw');
 
-    @Output() sourceViewModeChange = new EventEmitter<Mode>();
-    @Output() getSample = new EventEmitter<void>();
+    sourceViewModeChange = output<Mode>();
+    getSample = output<void>();
+    uploadSample = output<void>();
 }

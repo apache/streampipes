@@ -101,10 +101,14 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     }
 
     nextConfigureSchema() {
+        const adapter =
+            this.stateService.state().adapterDescription ??
+            this.adapterDescription;
+
         if (this.stateService.state().autoLoadSchema) {
-            this.stateService.getEventSchema(this.adapterDescription);
+            this.stateService.getEventSchema(adapter);
         } else {
-            this.stateService.updateEventPreview(this.adapterDescription);
+            this.stateService.updateEventPreview(adapter);
         }
 
         if (this.stateService.state().transformationConfigurationChanged) {
