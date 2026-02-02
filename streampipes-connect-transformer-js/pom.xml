@@ -42,13 +42,11 @@
         <dependency>
             <groupId>org.graalvm.polyglot</groupId>
             <artifactId>js</artifactId>
-            <version>${graalvm.js.version}</version>
             <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.graalvm.polyglot</groupId>
             <artifactId>polyglot</artifactId>
-            <version>${graalvm.js.version}</version>
         </dependency>
     </dependencies>
 

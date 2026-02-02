@@ -22,8 +22,9 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
+
 
 public abstract class ActiveMQConnectionProvider {
 

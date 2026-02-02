@@ -29,18 +29,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
 
   private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
@@ -62,34 +62,26 @@ public class WebSecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
     if (isAnonymousAccess()) {
-      http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-          .and()
-          .csrf().disable()
-          .formLogin().disable()
-          .httpBasic().disable()
-          .authorizeHttpRequests()
-          .requestMatchers(new AntPathRequestMatcher("/**")).permitAll();
+      http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          .csrf(AbstractHttpConfigurer::disable)
+          .formLogin(AbstractHttpConfigurer::disable)
+          .httpBasic(AbstractHttpConfigurer::disable)
+          .authorizeHttpRequests(auth -> auth
+              .requestMatchers("/**").permitAll()
+          );
     } else {
       http
-          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-          .and()
-          .csrf().disable()
-          .formLogin().disable()
-          .httpBasic().disable()
-          .exceptionHandling()
-          .authenticationEntryPoint(new UnauthorizedRequestEntryPoint())
-          .and()
-          .authorizeHttpRequests((authz) -> authz
-              .requestMatchers(UnauthenticatedInterfaces
-                  .get()
-                  .stream()
-                  .map(AntPathRequestMatcher::new)
-                  .toList()
-                  .toArray(new AntPathRequestMatcher[0]))
-              .permitAll()
+          .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          .csrf(AbstractHttpConfigurer::disable)
+          .formLogin(AbstractHttpConfigurer::disable)
+          .httpBasic(AbstractHttpConfigurer::disable)
+          .exceptionHandling(eh -> eh.authenticationEntryPoint(new UnauthorizedRequestEntryPoint()))
+          .authorizeHttpRequests(auth -> auth
+              .requestMatchers(UnauthenticatedInterfaces.get().toArray(String[]::new)).permitAll()
               .anyRequest().authenticated()
-              .and()
-              .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class));
+          )
+          .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
     }
 
     return http.build();
