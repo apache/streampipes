@@ -72,7 +72,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./streampipes-service-core
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:${{ env.MVN_VERSION }}
 
@@ -80,7 +80,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./streampipes-service-core-minimal
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/backend-minimal:${{ env.MVN_VERSION }}
 
@@ -97,7 +97,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./ui
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:${{ env.MVN_VERSION }}
 
@@ -105,7 +105,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./streampipes-extensions/streampipes-extensions-all-jvm
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-jvm:${{ env.MVN_VERSION }}
 
@@ -114,7 +114,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./streampipes-extensions/streampipes-extensions-all-iiot
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-iiot:${{ env.MVN_VERSION }}
 
@@ -122,6 +122,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./streampipes-extensions/streampipes-extensions-iiot-minimal
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-iiot-minimal:${{ env.MVN_VERSION }}
