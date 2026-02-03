@@ -99,14 +99,6 @@ export default {
             },
             {
                 stepId: 'step-11',
-                title: 'Transform events using a script',
-                text: '<p>You can optionally transform incoming events using a custom script. This allows you to modify, enrich, or add fields to the event before it is processed further.</p><p>Click <b>Next</b> to continue.</p>',
-                attachToElement: '[data-cy="connect-event-transform-script"]',
-                attachPosition: 'top',
-                buttons: ['cancel', 'next'],
-            },
-            {
-                stepId: 'step-12',
                 title: 'Go to next step',
                 text: 'Finish the modelling and go to next step to start the adapter. Click <b>next</b> to continue.',
                 attachToElement: '[data-cy="sp-event-schema-next-button"]',
@@ -114,7 +106,7 @@ export default {
                 buttons: ['cancel'],
             },
             {
-                stepId: 'step-13',
+                stepId: 'step-12',
                 title: 'Adapter name',
                 text: 'Change the name of the adapter to <b>Tutorial</b> and click outside the input field to continue.',
                 attachToElement: '[data-cy="sp-adapter-name"]',
@@ -122,7 +114,7 @@ export default {
                 buttons: ['cancel'],
             },
             {
-                stepId: 'step-14',
+                stepId: 'step-13',
                 title: 'Persistence',
                 text: 'Check the <b>Persist</b> option to persist all messages that are produced by this adapter. Only persisted data can be visualized in the dashboard or inspected in the data lake. <br>You can also persist data later by using the pipeline editor. ',
                 attachToElement: '[data-cy="sp-store-in-datalake"]',
@@ -130,7 +122,7 @@ export default {
                 buttons: ['cancel'],
             },
             {
-                stepId: 'step-15',
+                stepId: 'step-14',
                 title: 'Start Adapter',
                 text: "Now it's time to start our adapter! Click <b>Start adapter</b> to deploy the adapter.",
                 attachToElement:
@@ -139,7 +131,7 @@ export default {
                 buttons: ['cancel'],
             },
             {
-                stepId: 'step-16',
+                stepId: 'step-15',
                 title: 'Congratulations',
                 text: '<b></b>Congratulations!</b> You have created your first adapter and finished the tutorial. Go to the pipeline editor to see the new data stream',
                 classes: 'shepherd shepherd-welcome',
@@ -156,13 +148,12 @@ export default {
             { actionId: 'adapter-edit-field-clicked', currentStep: 'step-7' },
             { actionId: 'adapter-runtime-name-changed', currentStep: 'step-8' },
             { actionId: 'adapter-field-changed', currentStep: 'step-9' },
-            { actionId: 'event-transform-script-next', currentStep: 'step-11' },
-            { actionId: 'event-schema-next-button', currentStep: 'step-12' },
-            { actionId: 'adapter-name-assigned', currentStep: 'step-13' },
-            { actionId: 'adapter-persist-selected', currentStep: 'step-14' },
+            { actionId: 'event-schema-next-button', currentStep: 'step-11' },
+            { actionId: 'adapter-name-assigned', currentStep: 'step-12' },
+            { actionId: 'adapter-persist-selected', currentStep: 'step-13' },
             {
                 actionId: 'adapter-settings-adapter-started',
-                currentStep: 'step-15',
+                currentStep: 'step-14',
             },
         ],
     },
