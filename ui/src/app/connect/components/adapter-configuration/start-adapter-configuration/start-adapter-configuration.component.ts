@@ -177,6 +177,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     public startAdapter() {
+        this.shepherdService.trigger('adapter-settings-adapter-started');
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: this.translateService.instant('Adapter generation'),
