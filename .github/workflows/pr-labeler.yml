@@ -16,10 +16,8 @@
 name: "Pull Request Labeler"
 run-name: Pull request labeler for ${{ github.ref_name }}
 
-# NOTE: security risk from this action.
-# DO NOT add actions in here which need a checkout of the repo, and
-# DO NOT use any caching in here.
-on: pull_request_target
+on:
+  pull_request:
 
 jobs:
   label-pr:
