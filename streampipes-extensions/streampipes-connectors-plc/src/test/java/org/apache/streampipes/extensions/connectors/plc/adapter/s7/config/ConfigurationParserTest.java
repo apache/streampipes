@@ -68,13 +68,26 @@ public class ConfigurationParserTest {
     assertEquals("%I0.2:STRING(10)", result.get("v3"));
     assertEquals("%I0.3:STRING(10)[100]", result.get("v4"));
   }
-
+  
   @Test
   public void getNodeInformationFromCodeProperty_NoEntries() {
     var configBlock = "";
     var result = new ConfigurationParser().getNodeInformationFromCodeProperty(configBlock);
 
     assertEquals(0, result.size());
+  }
+  
+  @Test
+  public void getNodeInformationFromCodeProperty_InlineComment() {
+    var configBlock = """
+        temperature=%DB1281:0:REAL // inline comment
+        """;
+
+    var result = new ConfigurationParser().getNodeInformationFromCodeProperty(configBlock);
+
+    assertEquals(1, result.size());
+    assertEquals(Set.of("temperature"), result.keySet());
+    assertEquals("%DB1281:0:REAL", result.get("temperature"));
   }
 
   @Test
