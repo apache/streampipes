@@ -17,7 +17,6 @@
  */
 
 package org.apache.streampipes.processors.transformation.jvm;
-
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
@@ -36,6 +35,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.booloperat
 import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.datetime.DateTimeFromStringProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.fieldrename.FiledRenameProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.fieldrenamermulti.MultiFieldRenameRuntime;
 import org.apache.streampipes.processors.transformation.jvm.processor.hasher.FieldHasherProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.mapper.FieldMapperProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter.MeasurementUnitConverterProcessor;
@@ -65,39 +65,40 @@ public class TransformationExtensionModuleExport implements IExtensionModuleExpo
   }
 
   @Override
-  public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new CountArrayProcessor(),
-        new SplitArrayProcessor(),
-        new CalculateDurationProcessor(),
-        new ChangedValueDetectionProcessor(),
-        new TimestampExtractorProcessor(),
-        new BooleanCounterProcessor(),
-        new BooleanInverterProcessor(),
-        new DateTimeFromStringProcessor(),
-        new BooleanTimekeepingProcessor(),
-        new BooleanTimerProcessor(),
-        new CsvMetadataEnrichmentProcessor(),
-        new FieldHasherProcessor(),
-        new FieldMapperProcessor(),
-        new MeasurementUnitConverterProcessor(),
-        new TaskDurationProcessor(),
-        new TransformToBooleanProcessor(),
-        new StaticMetaDataEnrichmentProcessor(),
-        new StringTimerProcessor(),
-        new SignalEdgeFilterProcessor(),
-        new SwitchOperatorBooleanInputProcessor(),
-        new SwitchOperatorStringInputProcessor(),
-        new SwitchOperatorNumericalInputProcessor(),
-        new BooleanToStateProcessor(),
-        new NumberLabelerProcessor(),
-        new StringToStateProcessor(),
-        new StringCounterProcessor(),
-        new BooleanOperatorProcessor(),
-        new FiledRenameProcessor(),
-        new RoundProcessor()
-        );
-  }
+public List<IStreamPipesPipelineElement<?>> pipelineElements() {
+  return List.of(
+      new CountArrayProcessor(),
+      new SplitArrayProcessor(),
+      new CalculateDurationProcessor(),
+      new ChangedValueDetectionProcessor(),
+      new TimestampExtractorProcessor(),
+      new BooleanCounterProcessor(),
+      new BooleanInverterProcessor(),
+      new DateTimeFromStringProcessor(),
+      new BooleanTimekeepingProcessor(),
+      new BooleanTimerProcessor(),
+      new CsvMetadataEnrichmentProcessor(),
+      new FieldHasherProcessor(),
+      new FieldMapperProcessor(),
+      new MeasurementUnitConverterProcessor(),
+      new TaskDurationProcessor(),
+      new TransformToBooleanProcessor(),
+      new StaticMetaDataEnrichmentProcessor(),
+      new StringTimerProcessor(),
+      new SignalEdgeFilterProcessor(),
+      new SwitchOperatorBooleanInputProcessor(),
+      new SwitchOperatorStringInputProcessor(),
+      new SwitchOperatorNumericalInputProcessor(),
+      new BooleanToStateProcessor(),
+      new NumberLabelerProcessor(),
+      new StringToStateProcessor(),
+      new StringCounterProcessor(),
+      new BooleanOperatorProcessor(),
+      new FiledRenameProcessor(),
+      new MultiFieldRenameRuntime(),
+      new RoundProcessor()
+  );
+}
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
