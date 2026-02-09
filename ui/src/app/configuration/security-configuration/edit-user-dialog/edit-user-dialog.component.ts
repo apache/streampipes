@@ -87,7 +87,7 @@ export class EditUserDialogComponent implements OnInit {
         private router: Router,
         private mailConfigService: MailConfigService,
         private translateService: TranslateService,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.initRoleFilter();
@@ -120,7 +120,7 @@ export class EditUserDialogComponent implements OnInit {
             this.emailChanged =
                 this.clonedUser.username !== this.user.username &&
                 this.user.username ===
-                    this.currentUserService.getCurrentUser().username &&
+                this.currentUserService.getCurrentUser().username &&
                 this.editMode;
 
             if (!this.isExternalProvider) {
@@ -151,8 +151,8 @@ export class EditUserDialogComponent implements OnInit {
             const update$ = this.isUserAccount
                 ? this.userService.updateUser(this.clonedUser as UserAccount)
                 : this.userService.updateService(
-                      this.clonedUser as ServiceAccount,
-                  );
+                    this.clonedUser as ServiceAccount,
+                );
 
             update$.subscribe(() => {
                 if (this.emailChanged) {
@@ -167,8 +167,8 @@ export class EditUserDialogComponent implements OnInit {
             const create$ = this.isUserAccount
                 ? this.userService.createUser(this.clonedUser as UserAccount)
                 : this.userService.createServiceAccount(
-                      this.clonedUser as ServiceAccount,
-                  );
+                    this.clonedUser as ServiceAccount,
+                );
 
             create$.subscribe(saveCallback, errorCallback);
         }
@@ -326,7 +326,7 @@ export class EditUserDialogComponent implements OnInit {
 
     private getUsernameValidators(): ValidatorFn[] {
         if (this.isUserAccount) {
-            return this.user.provider === 'local'
+            return this.user.provider === 'local' && !this.editMode
                 ? [Validators.required, Validators.email]
                 : [Validators.email];
         }
