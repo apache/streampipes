@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
@@ -31,7 +30,7 @@ import java.util.Optional;
 public class DescriptionManagement {
 
   public List<AdapterDescription> getAdapters() {
-    IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
+    IAdapterStorage adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
     return adapterStorage.findAll();
   }
 
@@ -42,7 +41,7 @@ public class DescriptionManagement {
   }
 
   public void deleteAdapterDescription(String id) throws SpRuntimeException {
-    var adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
+    var adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
     var adapter = adapterStorage.getElementById(id);
     if (!isAdapterUsed(adapter)) {
       adapterStorage.deleteElementById(id);

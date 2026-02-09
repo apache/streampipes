@@ -23,7 +23,6 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.slf4j.Logger;
@@ -42,8 +41,8 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
 
   private final CRUDStorage<SpServiceRegistration> serviceStorage;
 
-  public SpServiceDiscoveryCore() {
-    this.serviceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+  public SpServiceDiscoveryCore(CRUDStorage<SpServiceRegistration> serviceStorage) {
+    this.serviceStorage = serviceStorage;
   }
 
   @Override

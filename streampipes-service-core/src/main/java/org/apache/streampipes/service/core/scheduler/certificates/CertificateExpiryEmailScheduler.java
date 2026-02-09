@@ -25,7 +25,7 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,8 +141,7 @@ public class CertificateExpiryEmailScheduler implements SchedulingConfigurer {
   }
 
   private IUserStorage getUserStorageAPI() {
-    return CouchDbStorageManager.INSTANCE
-        .getUserStorageAPI();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
   }
 
 }
