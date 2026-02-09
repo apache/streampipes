@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.connect.rules.schema;
 
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 @Deprecated(since = "0.99.0", forRemoval = true)
@@ -62,6 +63,47 @@ public class MoveRuleDescription extends SchemaTransformationRuleDescription {
   @Override
   public int getRulePriority() {
     return TransformationRulePriority.MOVE.getCode();
+  }
+
+  /**
+   * Accepts a visitor to apply this transformation rule with validation.
+   * Validates that both oldRuntimeKey and newRuntimeKey are set before processing.
+   *
+   * @param visitor The transformation rule visitor
+   * @throws IllegalArgumentException if required properties are not set
+   */
+  public void accept(ITransformationRuleVisitor visitor) {
+    // Validate that required properties are set
+    if (this.oldRuntimeKey == null || this.oldRuntimeKey.isEmpty()) {
+      throw new IllegalArgumentException(
+          "MoveRuleDescription requires oldRuntimeKey to be set"
+      );
+    }
+    if (this.newRuntimeKey == null || this.newRuntimeKey.isEmpty()) {
+      throw new IllegalArgumentException(
+          "MoveRuleDescription requires newRuntimeKey to be set"
+      );
+    }
+    // Call the visitor to process this rule
+    visitor.visit(this);
+  }
+
+  /**
+   * Updates property paths when nested structures change.
+   * This is useful when intermediate structures are moved or renamed.
+   *
+   * @param oldPrefix The old path prefix to search for
+   * @param newPrefix The new path prefix to replace with
+   */
+  public void updatePathsAfterMove(String oldPrefix, String newPrefix) {
+    if (oldPrefix != null && newPrefix != null) {
+      if (this.oldRuntimeKey != null && this.oldRuntimeKey.startsWith(oldPrefix + ".")) {
+        this.oldRuntimeKey = this.oldRuntimeKey.replace(oldPrefix + ".", newPrefix + ".");
+      }
+      if (this.newRuntimeKey != null && this.newRuntimeKey.startsWith(oldPrefix + ".")) {
+        this.newRuntimeKey = this.newRuntimeKey.replace(oldPrefix + ".", newPrefix + ".");
+      }
+    }
   }
 }
 

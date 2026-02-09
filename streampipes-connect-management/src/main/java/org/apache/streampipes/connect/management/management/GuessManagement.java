@@ -60,11 +60,58 @@ public class GuessManagement {
     this.objectMapper = JacksonSerializer.getObjectMapper();
   }
 
-  public EventSchema guessSchema(AdapterDescription adapterDescription) {
-    var event = adapterDescription.getTransformationConfig()
-                                  .getOutputs()
-                                  .get(0);
-    return EventSchemaUtils.guessEventSchema(event);
+  /**
+   * Guesses the event schema from the adapter description's transformation outputs.
+   * Includes proper error handling for transformation rules that may reference missing properties.
+   *
+   * @param adapterDescription The adapter description containing transformation config
+   * @return The inferred event schema
+   * @throws AdapterException if schema guessing fails with detailed error information
+   */
+  public EventSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException {
+    try {
+      var transformationConfig = adapterDescription.getTransformationConfig();
+      
+      if (transformationConfig == null) {
+        throw new AdapterException("Transformation config is null");
+      }
+
+      var outputs = transformationConfig.getOutputs();
+      
+      if (outputs == null || outputs.isEmpty()) {
+        throw new AdapterException("No transformation outputs available to guess schema");
+      }
+
+      var event = outputs.get(0);
+      
+      try {
+        return EventSchemaUtils.guessEventSchema(event);
+      } catch (IllegalArgumentException e) {
+        // This typically happens when a transformation rule references a property that has been moved
+        LOG.error("Could not guess schema - possible issue with transformation rules: {}", e.getMessage());
+        LOG.debug("Transformation rules that might be affected:", e);
+        
+        // Check if there are any schema rules that might be causing issues
+        var schemaRules = transformationConfig.getSchemaTransformationRuleDescription();
+        if (schemaRules != null && !schemaRules.isEmpty()) {
+          LOG.warn("Adapter has {} schema transformation rule(s) that may need validation", schemaRules.size());
+          throw new AdapterException(
+              String.format(
+                  "Could not guess schema due to transformation rule error: %s. "
+                      + "Please ensure all schema transformation rules reference valid properties.",
+                  e.getMessage()
+              ),
+              e
+          );
+        }
+        throw new AdapterException("Could not guess schema: " + e.getMessage(), e);
+      }
+    } catch (AdapterException e) {
+      throw e;
+    } catch (Exception e) {
+      LOG.error("Unexpected error while guessing schema", e);
+      throw new AdapterException("Unexpected error while guessing schema: " + e.getMessage(), e);
+    }
   }
 
   public Map<String, Object> performAdapterEventPreview(AdapterDescription adapterDescription) {
