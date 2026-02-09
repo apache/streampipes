@@ -66,7 +66,6 @@ export class AssetBrowserToolbarComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.assetBrowserService.resetFilters();
         this.assetBrowserData$?.unsubscribe();
     }
 

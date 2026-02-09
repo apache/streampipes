@@ -76,9 +76,10 @@ export class SpAssetOverviewComponent implements OnInit {
         private currentUserService: CurrentUserService,
         private dialog: MatDialog,
         private translateService: TranslateService,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
+        this.assetBrowserService.applyAssetLinkType('');
         this.hasWritePrivilege = this.currentUserService.hasRole(
             UserPrivilege.PRIVILEGE_WRITE_ASSETS,
         );

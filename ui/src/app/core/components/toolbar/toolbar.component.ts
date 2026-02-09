@@ -37,8 +37,7 @@ import { SpAssetBrowserService } from '@streampipes/shared-ui';
 })
 export class ToolbarComponent
     extends BaseNavigationComponent
-    implements OnInit, OnDestroy
-{
+    implements OnInit, OnDestroy {
     @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
     @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
 
@@ -61,7 +60,6 @@ export class ToolbarComponent
     private assetFilterService = inject(SpAssetBrowserService);
 
     ngOnInit(): void {
-        this.assetFilterService.applyAssetLinkType('');
         this.unreadNotificationsSubscription = timer(0, 10000)
             .pipe(exhaustMap(() => this.restApi.getUnreadNotificationsCount()))
             .subscribe(response => {
@@ -132,6 +130,7 @@ export class ToolbarComponent
 
     logout() {
         this.authService.logout();
+        this.assetFilterService.resetFilters();
         this.router.navigate(['login']);
     }
 
