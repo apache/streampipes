@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
@@ -102,7 +103,26 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
       this.allNodes = nodeProvider.getNodes();
 
       if (opcUaAdapterConfig.inPullMode()) {
-        this.pullingIntervalMilliSeconds = opcUaAdapterConfig.getPullIntervalMilliSeconds();
+        var configuredIntervalMs = opcUaAdapterConfig.getPullIntervalMilliSeconds();
+        var effectiveIntervalMs = configuredIntervalMs;
+
+        var minPullInterval = Environments.getEnvironment().getOpcUaMinPullIntervalMs();
+        if (minPullInterval.exists()) {
+          effectiveIntervalMs = Math.max(
+              minPullInterval.getValue(),
+              configuredIntervalMs
+          );
+
+          if (!effectiveIntervalMs.equals(configuredIntervalMs)) {
+            LOG.warn(
+                "OPC-UA pull interval increased from {} ms to {} ms due to environment variable OPCUA_MIN_PULL_INTERVAL_MS",
+                configuredIntervalMs,
+                effectiveIntervalMs
+            );
+          }
+        }
+
+        this.pullingIntervalMilliSeconds = effectiveIntervalMs;
       } else {
         var allNodeIds = this.allNodes.stream()
             .map(node -> node.nodeInfo().getNodeId()).toList();
