@@ -36,12 +36,14 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MqttBase {
 
     protected final MqttConfig mqttConfig;
 
     private static final Logger LOG = LoggerFactory.getLogger(MqttBase.class);
+    private final AtomicBoolean disconnectedLogged = new AtomicBoolean(false);
 
     public MqttBase(MqttConfig mqttConfig) {
         this.mqttConfig = mqttConfig;
@@ -55,6 +57,9 @@ public class MqttBase {
                 .identifier(UUID.randomUUID().toString())
                 .serverHost(brokerUri.getHost())
                 .serverPort(resolvePort(brokerUri))
+                .automaticReconnectWithDefaultConfig()
+                .addConnectedListener(context -> logConnected())
+                .addDisconnectedListener(context -> logDisconnected(context.getCause()))
                 .useMqttVersion3();
 
         if (mqttConfig.getAuthenticated()) {
@@ -69,9 +74,18 @@ public class MqttBase {
             builder.sslConfig(sslContext);
         }
 
-        Mqtt3AsyncClient client = builder.buildAsync();
+        return builder.buildAsync();
+    }
 
-        return client;
+    private void logConnected() {
+        disconnectedLogged.set(false);
+        LOG.info("MQTT connected to broker {} (topic: {})", mqttConfig.getUrl(), mqttConfig.getTopic());
+    }
+
+    private void logDisconnected(Throwable cause) {
+        if (disconnectedLogged.compareAndSet(false, true)) {
+            LOG.warn("MQTT disconnected from broker {} (topic: {})", mqttConfig.getUrl(), mqttConfig.getTopic(), cause);
+        }
     }
 
     private int resolvePort(URI uri) {
