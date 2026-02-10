@@ -74,7 +74,8 @@ export class StaticRuntimeResolvableTreeInputComponent
         if (
             this.staticProperty.nodes.length === 0 &&
             (!this.staticProperty.dependsOn ||
-                this.staticProperty.dependsOn.length === 0)
+                this.staticProperty.dependsOn.length === 0 ||
+                this.adapterId)
         ) {
             this.loadOptionsFromRestApi();
         } else if (this.staticProperty.nodes.length > 0) {
