@@ -353,6 +353,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public IntEnvironmentVariable getOpcUaMinPullIntervalMs() {
+    return new IntEnvironmentVariable(Envs.SP_OPCUA_MIN_PULL_INTERVAL_MS);
+  }
+
+  @Override
   public StringEnvironmentVariable getKeystoreFilename() {
     return new StringEnvironmentVariable(Envs.SP_SECURITY_KEYSTORE_FILENAME);
   }
