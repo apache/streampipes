@@ -71,11 +71,24 @@ public class AdapterConfigurationProvider {
         );
     var protocolMetadata = driverMetadata.getProtocolConfigurationOptionMetadata();
 
-    protocolMetadata.ifPresent(optionMetadata -> adapterBuilder.requiredStaticProperty(
-        new MetadataOptionGenerator().makeMetadata(
-            PROTOCOL_METADATA,
-            optionMetadata
-        )));
+    protocolMetadata.ifPresent(optionMetadata -> {
+      if (driver.getProtocolCode().equals("s7")) {
+        var advancedOptions = optionMetadata.getOptions();
+        var controllerTypeOption = advancedOptions.stream()
+            .filter(option -> option.getKey().equals("controller-type"))
+            .findFirst();
+
+        if (controllerTypeOption.isPresent()) {
+          advancedOptions.remove(controllerTypeOption.get());
+          optionMetadata.getRequiredOptions().add(controllerTypeOption.get());
+        }
+      }
+      adapterBuilder.requiredStaticProperty(
+          new MetadataOptionGenerator().makeMetadata(
+              PROTOCOL_METADATA,
+              optionMetadata
+          ));
+    });
     adapterBuilder
         .requiredCodeblock(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE);
 
