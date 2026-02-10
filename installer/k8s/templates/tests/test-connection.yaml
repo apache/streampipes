@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-test-connection"
+  labels:
+    app: {{ .Values.streampipes.core.appName }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: curl
+      image: curlimages/curl:8.6.0
+      command: ['curl']
+      args: ['http://{{ .Values.streampipes.core.service.name }}:{{ .Values.streampipes.core.service.port }}/streampipes-backend/api/v2/setup/configured']
+  restartPolicy: Never
