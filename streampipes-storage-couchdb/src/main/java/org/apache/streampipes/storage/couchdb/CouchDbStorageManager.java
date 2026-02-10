@@ -51,7 +51,6 @@ import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.AssetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataLakeMeasureStorage;
 import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
@@ -67,14 +66,10 @@ import org.apache.streampipes.storage.couchdb.impl.PipelineCanvasMetadataStorage
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.PrivilegeStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public enum CouchDbStorageManager implements INoSqlStorage {
-
-  INSTANCE;
+public class CouchDbStorageManager implements INoSqlStorage {
 
   @Override
   public IAdapterStorage getAdapterDescriptionStorage() {
@@ -228,12 +223,12 @@ public enum CouchDbStorageManager implements INoSqlStorage {
 
   @Override
   public CRUDStorage<Role> getRoleStorage() {
-    return new RoleStorageImpl();
+    return new DefaultViewCrudStorage<>(Utils::getCouchDbUserClient, Role.class, "users/role");
   }
 
   @Override
   public CRUDStorage<Privilege> getPrivilegeStorage() {
-    return new PrivilegeStorageImpl();
+    return new DefaultViewCrudStorage<>(Utils::getCouchDbUserClient, Privilege.class, "users/privilege");
   }
 
   @Override
@@ -254,8 +249,10 @@ public enum CouchDbStorageManager implements INoSqlStorage {
 
   @Override
   public CRUDStorage<SpAssetModel> getAssetStorage() {
-    return new AssetStorageImpl(
-        () -> Utils.getCouchDbGsonClient("genericstorage")
+    return new DefaultViewCrudStorage<>(
+        () -> Utils.getCouchDbGsonClient("genericstorage"),
+        SpAssetModel.class,
+        "assets/all-assets"
     );
   }
 
@@ -267,6 +264,4 @@ public enum CouchDbStorageManager implements INoSqlStorage {
         "transformation-scripts/all-transformations"
     );
   }
-
-
 }

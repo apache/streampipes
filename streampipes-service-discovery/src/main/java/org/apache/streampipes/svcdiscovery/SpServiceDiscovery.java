@@ -17,12 +17,13 @@
  */
 package org.apache.streampipes.svcdiscovery;
 
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 public class SpServiceDiscovery {
 
   public static ISpServiceDiscovery getServiceDiscovery() {
-    return new SpServiceDiscoveryCore();
+    return new SpServiceDiscoveryCore(StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage());
   }
 
 }

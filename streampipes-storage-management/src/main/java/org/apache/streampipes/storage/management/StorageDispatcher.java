@@ -25,7 +25,7 @@ public enum StorageDispatcher {
   INSTANCE;
 
   public INoSqlStorage getNoSqlStore() {
-    return CouchDbStorageManager.INSTANCE;
+    return new CouchDbStorageManager();
   }
 
 }

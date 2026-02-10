@@ -27,7 +27,7 @@ import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,7 +45,7 @@ public class DataLakeDataWriter {
   }
 
   public void writeData(String measureName, SpQueryResult queryResult) {
-    var measure = CouchDbStorageManager.INSTANCE.getDataLakeStorage().getByMeasureName(measureName);
+    var measure = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage().getByMeasureName(measureName);
     if (measure == null) {
       throw new SpRuntimeException("Measure \"" + measureName + "\" not found");
     }

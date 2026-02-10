@@ -32,7 +32,6 @@ import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 import org.apache.streampipes.user.management.util.TokenUtil;
@@ -78,7 +77,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   public Principal getAdminUser() {
-    return CouchDbStorageManager.INSTANCE
+    return StorageDispatcher.INSTANCE.getNoSqlStore()
         .getUserStorageAPI()
         .getAllUserAccounts()
         .stream()

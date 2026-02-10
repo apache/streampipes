@@ -23,7 +23,7 @@ import org.apache.streampipes.connect.management.compact.generator.CompactAdapte
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
@@ -75,7 +75,7 @@ public class CompactAdapterManagement {
   }
 
   private AdapterDescription findAdapterDescription(String appId) {
-    IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
+    IAdapterStorage adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
     return adapterStorage.findAll()
         .stream()
         .filter(desc -> desc.getAppId()

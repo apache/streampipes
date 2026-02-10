@@ -53,7 +53,7 @@ public class DefaultCrudStorage<T extends Storable> extends AbstractDao<T> imple
   @Override
   public void deleteElement(T element) {
     try {
-      CouchDbStorageManager.INSTANCE.getGenericStorage().deleteAssetLinkToResource(element.getElementId());
+      new CouchDbStorageManager().getGenericStorage().deleteAssetLinkToResource(element.getElementId());
     } catch (IOException e) {
       LOG.error("Asset link for " + element.getElementId() + " could not be deleted.");
     }
