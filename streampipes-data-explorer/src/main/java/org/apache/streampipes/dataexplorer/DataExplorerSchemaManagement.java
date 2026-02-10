@@ -19,7 +19,6 @@
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
@@ -47,7 +46,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public List<DataLakeMeasure> getAllMeasurements() {
-    return DataExplorerUtils.getInfos();
+    return dataLakeStorage.findAll();
   }
 
   @Override

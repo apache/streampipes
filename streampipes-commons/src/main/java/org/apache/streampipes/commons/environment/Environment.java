@@ -172,6 +172,8 @@ public interface Environment {
 
   StringEnvironmentVariable getOpcUaKeystoreAlias();
 
+  IntEnvironmentVariable getOpcUaMinPullIntervalMs();
+
   StringEnvironmentVariable getKeystoreFilename();
 
   StringEnvironmentVariable getKeystorePassword();
