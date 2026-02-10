@@ -16,15 +16,15 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { SpEchartsToolboxService } from '@streampipes/shared-ui';
-import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
+import type { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager.d.ts';
 import { WidgetEchartsAppearanceConfig } from '../models/dataview-dashboard.model';
 
 @Injectable({ providedIn: 'root' })
 export class EchartsBasicOptionsGeneratorService {
-    constructor(private echartsToolboxService: SpEchartsToolboxService) {}
+    private echartsToolboxService = inject(SpEchartsToolboxService);
 
     makeBaseConfig(
         appearanceConfig: WidgetEchartsAppearanceConfig,

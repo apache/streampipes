@@ -15,6 +15,7 @@
 
 dist
 .angular
+.prettierignore
 
 # Ignore csv files required for e2e tests
 cypress/fixtures/**/*.csv
@@ -24,3 +25,4 @@ src/app/app-routing.module.ts
 src/app/app.module.ts
 src/app/core/components/base-navigation.component.ts
 src/app/home/home.service.ts
+deployment/app.module.mst

@@ -19,7 +19,7 @@
 import { ComponentType, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentRef, Injectable, Injector } from '@angular/core';
 import { DialogRef } from './dialog-ref';
-import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
+import { ComponentPortal } from '@angular/cdk/portal';
 import {
     BaseDialogComponentUnion,
     DialogConfig,
@@ -85,10 +85,11 @@ export class DialogService {
         return dialogRef;
     }
 
-    private createInjector<T>(dialogRef: DialogRef<T>) {
-        const injectorMap = new WeakMap();
-        injectorMap.set(DialogRef, dialogRef);
-        return new PortalInjector(this.injector, injectorMap);
+    private createInjector<T>(dialogRef: DialogRef<T>): Injector {
+        return Injector.create({
+            parent: this.injector,
+            providers: [{ provide: DialogRef, useValue: dialogRef }],
+        });
     }
 
     private applyDialogProperties(
