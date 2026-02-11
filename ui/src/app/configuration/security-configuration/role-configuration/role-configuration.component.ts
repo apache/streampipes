@@ -19,22 +19,56 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Role, RoleService } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import {
     ConfirmDialogComponent,
     DialogService,
     PanelType,
+    SpLabelComponent,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { EditRoleDialogComponent } from '../edit-role-dialog/edit-role-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    FlexOrderDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-security-role-config',
     templateUrl: './role-configuration.component.html',
     styleUrls: ['./role-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        SpLabelComponent,
+        FlexOrderDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatTooltip,
+        TranslatePipe,
+    ],
 })
 export class SecurityRoleConfigComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;

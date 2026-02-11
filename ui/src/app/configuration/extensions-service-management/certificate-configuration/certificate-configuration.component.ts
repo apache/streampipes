@@ -22,16 +22,57 @@ import {
     CertificateService,
     CertificateState,
 } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
+import {
+    DialogService,
+    PanelType,
+    SpTableComponent,
+} from '@streampipes/shared-ui';
 import { CertificateDetailsDialogComponent } from '../../../core-ui/certificate-details/certificate-details-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { CertificateLabelComponent } from './certificate-label/certificate-label.component';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-certificate-configuration',
-    standalone: false,
     templateUrl: './certificate-configuration.component.html',
     styleUrls: ['./certificate-configuration.component.scss'],
+    imports: [
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        CertificateLabelComponent,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        LayoutDirective,
+        LayoutGapDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class CertificateConfigurationComponent implements OnInit {
     private certificateService = inject(CertificateService);

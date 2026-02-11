@@ -201,8 +201,6 @@ import { CertificateLabelComponent } from './extensions-service-management/certi
         MatStepperModule,
         TranslateModule.forChild({}),
         QuillEditorComponent,
-    ],
-    declarations: [
         ServiceConfigsComponent,
         ServiceConfigsTextComponent,
         ServiceConfigsPasswordComponent,

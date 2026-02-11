@@ -22,7 +22,6 @@ import { ExtensionItemDescription } from '@streampipes/platform-services';
 @Pipe({
     name: 'pipelineElementInstallationStatusFilter',
     pure: false,
-    standalone: false,
 })
 export class PipelineElementInstallationStatusFilter implements PipeTransform {
     transform(

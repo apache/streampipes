@@ -17,16 +17,47 @@
  */
 
 import { Component, inject } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FilesService } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    MatError,
+    MatFormField,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-file-upload-dialog-component',
     templateUrl: './file-upload-dialog.component.html',
     styleUrls: ['./file-upload-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        SpAlertBannerComponent,
+        FlexDirective,
+        MatFormField,
+        MatInput,
+        MatProgressBar,
+        MatButton,
+        MatSuffix,
+        MatIcon,
+        MatError,
+        LayoutAlignDirective,
+        FormsModule,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class FileUploadDialogComponent {
     private translateService = inject(TranslateService);

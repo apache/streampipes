@@ -20,12 +20,46 @@ import { Component } from '@angular/core';
 import { ServiceAccount } from '@streampipes/platform-services';
 import { AbstractSecurityPrincipalConfig } from '../abstract-security-principal-config';
 import { Observable } from 'rxjs';
+import {
+    FlexDirective,
+    FlexOrderDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpTableComponent } from '@streampipes/shared-ui';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+} from '@angular/material/table';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-security-service-config',
     templateUrl: './security-service-config.component.html',
     styleUrls: ['./security-service-config.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        FlexOrderDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatTooltip,
+        TranslatePipe,
+    ],
 })
 export class SecurityServiceConfigComponent extends AbstractSecurityPrincipalConfig<ServiceAccount> {
     displayedColumns: string[] = ['username', 'edit'];

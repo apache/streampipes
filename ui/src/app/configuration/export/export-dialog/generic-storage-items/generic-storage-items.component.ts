@@ -18,11 +18,35 @@
 
 import { Component, Input } from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { GenericStorageItemComponent } from './generic-storage-item/generic-storage-item.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-generic-storage-items',
     templateUrl: './generic-storage-items.component.html',
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        GenericStorageItemComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        FormsModule,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class GenericStorageItemsComponent {
     @Input()

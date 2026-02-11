@@ -17,7 +17,13 @@
  */
 
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { CurrentUserService, DialogRef } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    DialogRef,
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
 import {
     Group,
     MailConfigService,
@@ -30,28 +36,51 @@ import {
 import {
     AbstractControl,
     FormControl,
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
-    UntypedFormControl,
     UntypedFormGroup,
     ValidationErrors,
     ValidatorFn,
     Validators,
 } from '@angular/forms';
 import { UserRole } from '../../../_enums/user-role.enum';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'sp-edit-user-dialog',
     templateUrl: './edit-user-dialog.component.html',
     styleUrls: ['./edit-user-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SpAlertBannerComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        SplitSectionComponent,
+        MatError,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatCheckbox,
+        MatDivider,
+        MatButton,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class EditUserDialogComponent implements OnInit {
     @Input()

@@ -19,12 +19,15 @@
 import { Component } from '@angular/core';
 import { ConfigurationService } from '../../shared/configuration.service';
 import * as FileSaver from 'file-saver';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-authentication-configuration',
     templateUrl: './authentication-configuration.component.html',
     styleUrls: ['./authentication-configuration.component.scss'],
-    standalone: false,
+    imports: [FlexDirective, LayoutDirective, MatButton, TranslatePipe],
 })
 export class SecurityAuthenticationConfigurationComponent {
     constructor(private configurationService: ConfigurationService) {}

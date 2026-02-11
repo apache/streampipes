@@ -18,6 +18,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
@@ -35,15 +37,66 @@ import { AvailableRolesService } from '../../services/available-roles.service';
 import { UserRole } from '../../_enums/user-role.enum';
 import { AppConstants } from '../../services/app.constants';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
-import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SpBasicNavTabsComponent,
+    SpBreadcrumbService,
+    SplitSectionComponent,
+    SpNavigationItem,
+} from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { map } from 'rxjs/operators';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import {
+    MatButtonToggle,
+    MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { SpConfigurationLinkSettingsComponent } from './link-settings/link-settings.component';
+import { UserAcknowledgmentComponent } from './user-acknowledgement/user-acknowledgment.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-general-configuration',
     templateUrl: './general-configuration.component.html',
     styleUrls: ['./general-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        SplitSectionComponent,
+        SpAlertBannerComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        LayoutGapDirective,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        MatCheckbox,
+        MatSelect,
+        MatOption,
+        SpConfigurationLinkSettingsComponent,
+        UserAcknowledgmentComponent,
+        MatButton,
+        MatIcon,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class GeneralConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

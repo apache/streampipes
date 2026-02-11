@@ -19,12 +19,27 @@
 import { Component, Input } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { SpServiceRegistration } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-extensions-service-details-dialog',
     templateUrl: './extensions-service-details-dialog.component.html',
     styleUrls: ['./extensions-service-details-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        FlexDirective,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class SpExtensionsServiceDetailsDialogComponent {
     @Input()

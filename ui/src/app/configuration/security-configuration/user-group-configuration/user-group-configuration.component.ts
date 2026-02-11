@@ -18,21 +18,54 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Group, UserGroupService } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import {
     ConfirmDialogComponent,
     DialogService,
     PanelType,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { EditGroupDialogComponent } from '../edit-group-dialog/edit-group-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    FlexOrderDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-security-user-group-config',
     templateUrl: './user-group-configuration.component.html',
     styleUrls: ['./user-group-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        FlexOrderDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatTooltip,
+        TranslatePipe,
+    ],
 })
 export class SecurityUserGroupConfigComponent implements OnInit {
     dataSource: MatTableDataSource<Group>;

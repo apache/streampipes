@@ -18,6 +18,8 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
@@ -29,12 +31,38 @@ import {
 } from '@streampipes/platform-services';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-location-features-configuration',
     templateUrl: './location-features-configuration.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        SplitSectionComponent,
+        FormsModule,
+        FlexDirective,
+        ReactiveFormsModule,
+        MatCheckbox,
+        FormFieldComponent,
+        MatRadioGroup,
+        MatRadioButton,
+        MatFormField,
+        MatInput,
+        MatButton,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class LocationFeaturesConfigurationComponent
     implements OnInit, OnDestroy

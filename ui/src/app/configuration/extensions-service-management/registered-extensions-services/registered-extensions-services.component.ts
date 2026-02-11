@@ -18,18 +18,56 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef,
+    MatTable,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { SpServiceRegistration } from '@streampipes/platform-services';
 import { ConfigurationService } from '../../shared/configuration.service';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpExtensionsServiceDetailsDialogComponent } from '../../dialog/extensions-service-details/extensions-service-details-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-registered-extensions-services',
     templateUrl: './registered-extensions-services.component.html',
     styleUrls: ['./registered-extensions-services.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        LayoutAlignDirective,
+        MatCellDef,
+        MatCell,
+        MatIcon,
+        MatIconButton,
+        MatTooltip,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        TranslatePipe,
+    ],
 })
 export class SpRegisteredExtensionsServiceComponent {
     displayedColumns: string[] = ['status', 'name', 'group', 'action'];

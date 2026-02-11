@@ -16,8 +16,10 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
@@ -26,13 +28,54 @@ import {
 import { EmailConfig, MailConfigService } from '@streampipes/platform-services';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
-import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
-import { TranslateService } from '@ngx-translate/core';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SpBasicNavTabsComponent,
+    SpBreadcrumbService,
+    SplitSectionComponent,
+    SpNavigationItem,
+} from '@streampipes/shared-ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SpEmailTemplateConfigurationComponent } from './email-template-configuration/email-template-configuration.component';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-email-configuration',
     templateUrl: './email-configuration.component.html',
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        SplitSectionComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatRadioGroup,
+        MatRadioButton,
+        MatCheckbox,
+        MatLabel,
+        MatButton,
+        MatProgressSpinner,
+        SpAlertBannerComponent,
+        SpEmailTemplateConfigurationComponent,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class EmailConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

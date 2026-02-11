@@ -19,11 +19,15 @@
 import { Component, Input } from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sp-service-configs-number',
     templateUrl: './service-configs-number.component.html',
-    standalone: false,
+    imports: [MatFormField, FlexDirective, MatInput, FormsModule],
 })
 export class ServiceConfigsNumberComponent {
     @Input() configuration: ConfigItem;
