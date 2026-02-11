@@ -23,8 +23,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { ApidocsComponent } from './apidocs.component';
 
 @NgModule({
-    imports: [CommonModule, FlexLayoutModule, CoreUiModule],
-    declarations: [ApidocsComponent],
+    imports: [CommonModule, FlexLayoutModule, CoreUiModule, ApidocsComponent],
     providers: [],
     exports: [ApidocsComponent],
 })

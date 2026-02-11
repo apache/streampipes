@@ -161,10 +161,6 @@ fs.writeFileSync(
     ),
 );
 fs.writeFileSync(
-    'src/app/app-overview/apps.ts',
-    fs.readFileSync('deployment/apps.ts'),
-);
-fs.writeFileSync(
     'src/app/services/app.constants.ts',
     fs.readFileSync('deployment/app-constants.ts', 'utf8'),
 );
