@@ -74,6 +74,14 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
   private static final String SPEED_UP_FACTOR_GROUP = "speed-up-factor-group";
 
+  private static final String TIMESTAMP_MODE = "timestampMode";
+  private static final String TIMESTAMP_IN_FILE = "timestampFromFile";
+  private static final String PROCESSING_TIME = "processingTime";
+  private static final String FILE_NAME_TIMESTAMP = "fileNameTimestamp";
+
+  private static final String TIMESTAMP_REGEX = "timestampRegex";
+  private static final String TIMESTAMP_FORMAT = "timestampFormat";
+
 
   private ScheduledExecutorService executor;
   private boolean replaceTimestamp;
@@ -84,6 +92,11 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   private String timestampSourceFieldName;
 
   private float speedUp;
+
+  private String timestampMode;
+  private String timestampRegex;
+  private String timestampFormat;
+  private long resolvedFileTimestamp = -1;
 
   private long timestampLastEvent = -1;
 
@@ -123,6 +136,15 @@ public class FileReplayAdapter implements StreamPipesAdapter {
                 )
             )
         )
+        .requiredAlternatives(
+            Labels.withId(TIMESTAMP_MODE),
+            Alternatives.from(Labels.withId(TIMESTAMP_IN_FILE), true),
+            Alternatives.from(Labels.withId(PROCESSING_TIME)),
+            Alternatives.from(Labels.withId(FILE_NAME_TIMESTAMP),
+                StaticProperties.stringFreeTextProperty(Labels.withId(TIMESTAMP_REGEX), "(.*)"),
+                StaticProperties.stringFreeTextProperty(Labels.withId(TIMESTAMP_FORMAT))
+            )
+        )
         .buildConfiguration();
   }
 
@@ -134,6 +156,19 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   ) throws AdapterException {
 
     throwExceptionWhenAddTimestampRuleIsSelected(extractor);
+
+    // Extract Timestamp Mode
+    try {
+      this.timestampMode = extractor.getStaticPropertyExtractor().selectedAlternativeInternalId(TIMESTAMP_MODE);
+    } catch (Exception e) {
+      // Fallback for existing adapters or if configuration is missing
+      this.timestampMode = TIMESTAMP_IN_FILE;
+    }
+
+    if (FILE_NAME_TIMESTAMP.equals(this.timestampMode)) {
+      this.timestampRegex = extractor.getStaticPropertyExtractor().singleValueParameter(TIMESTAMP_REGEX, String.class);
+      this.timestampFormat = extractor.getStaticPropertyExtractor().singleValueParameter(TIMESTAMP_FORMAT, String.class);
+    }
 
     boolean replayOnce = extractUserInputsAndReturnValueOfReplayOnce(extractor);
 
@@ -313,9 +348,28 @@ public class FileReplayAdapter implements StreamPipesAdapter {
       Map<String, Object> event
   ) throws AdapterException, InterruptedException {
 
-    long actualEventTimestamp = getTimestampFromEvent(event);
+    long actualEventTimestamp = -1;
 
-    reduceReplaySpeedIfRequired(actualEventTimestamp);
+    switch (timestampMode) {
+      case TIMESTAMP_IN_FILE:
+        actualEventTimestamp = getTimestampFromEvent(event);
+        reduceReplaySpeedIfRequired(actualEventTimestamp);
+        break;
+      case PROCESSING_TIME:
+        actualEventTimestamp = System.currentTimeMillis();
+        event.put(timestampSourceFieldName, actualEventTimestamp);
+        break;
+      case FILE_NAME_TIMESTAMP:
+        actualEventTimestamp = resolvedFileTimestamp;
+        event.put(timestampSourceFieldName, actualEventTimestamp);
+        // We do NOT reduce replay speed here as per requirements, strictly deterministic
+        break;
+      default:
+        // Default to TIMESTAMP_IN_FILE behavior
+        actualEventTimestamp = getTimestampFromEvent(event);
+        reduceReplaySpeedIfRequired(actualEventTimestamp);
+    }
+
 
     // This must be the last step, because the original timestamp must be used to simulate the replay frequency
     // of the original file
@@ -383,10 +437,36 @@ public class FileReplayAdapter implements StreamPipesAdapter {
         .getStaticPropertyExtractor()
         .selectedFilename(FILE_PATH);
 
+    if (FILE_NAME_TIMESTAMP.equals(this.timestampMode)) {
+      resolveFileTimestamp(selectedFileName);
+    }
+
     try {
       return FileProtocolUtils.getFileInputStream(selectedFileName);
     } catch (IOException e) {
       throw new AdapterException("Could not find file: " + selectedFileName, e);
+    }
+  }
+
+  protected void resolveFileTimestamp(String fileName) throws AdapterException {
+    try {
+      java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(timestampRegex);
+      java.util.regex.Matcher matcher = pattern.matcher(fileName);
+
+      if (matcher.find()) {
+        String timestampStr = matcher.group(1);
+        if (timestampFormat != null && !timestampFormat.isEmpty()) {
+           java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern(timestampFormat);
+           java.time.LocalDateTime dateTime = java.time.LocalDateTime.parse(timestampStr, formatter);
+           this.resolvedFileTimestamp = dateTime.toInstant(java.time.ZoneOffset.UTC).toEpochMilli();
+        } else {
+           this.resolvedFileTimestamp = Long.parseLong(timestampStr);
+        }
+      } else {
+        throw new AdapterException("Could not extract timestamp from filename: " + fileName + " using regex: " + timestampRegex);
+      }
+    } catch (Exception e) {
+       throw new AdapterException("Error resolving timestamp from filename: " + e.getMessage(), e);
     }
   }
 
@@ -402,6 +482,26 @@ public class FileReplayAdapter implements StreamPipesAdapter {
       TimestampTranfsformationRuleDescription timestampTranfsformationRuleDescription
   ) {
     this.timestampTranfsformationRuleDescription = timestampTranfsformationRuleDescription;
+  }
+
+  protected void setTimestampMode(String timestampMode) {
+    this.timestampMode = timestampMode;
+  }
+
+  protected void setResolvedFileTimestamp(long resolvedFileTimestamp) {
+    this.resolvedFileTimestamp = resolvedFileTimestamp;
+  }
+
+  protected long getResolvedFileTimestamp() {
+    return resolvedFileTimestamp;
+  }
+
+  protected void setTimestampRegex(String timestampRegex) {
+    this.timestampRegex = timestampRegex;
+  }
+
+  protected void setTimestampFormat(String timestampFormat) {
+    this.timestampFormat = timestampFormat;
   }
 
   /**

@@ -26,11 +26,14 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -55,10 +58,10 @@ class FileReplayAdapterTest {
     when(extractor.getAdapterDescription()).thenReturn(adapterDescription);
     fileReplayAdapter = new FileReplayAdapter();
     fileReplayAdapter.setTimestampSourceFieldName(TIMESTAMP);
+    // Set default mode for backward compatibility tests
+    fileReplayAdapter.setTimestampMode("timestampFromFile");
     event = new HashMap<>();
   }
-
-
 
   @Test
   void processEvent_shouldCollectEventWhenTimestampIsLong() throws AdapterException, InterruptedException {
@@ -102,4 +105,67 @@ class FileReplayAdapterTest {
     assertEquals(TIMESTAMP_VALUE, actualEventTimestamp);
   }
 
+  @Test
+  void processEvent_shouldUseSystemTimeWhenModeIsProcessingTime() throws AdapterException, InterruptedException {
+    fileReplayAdapter.setTimestampMode("processingTime");
+    // No timestamp in event
+    event.remove(TIMESTAMP);
+
+    long before = System.currentTimeMillis();
+    fileReplayAdapter.processEvent(collector, event);
+    long after = System.currentTimeMillis();
+
+    assertTrue(event.containsKey(TIMESTAMP));
+    long eventTimestamp = (long) event.get(TIMESTAMP);
+    assertTrue(eventTimestamp >= before && eventTimestamp <= after);
+    verify(collector, times(1)).collect(event);
+  }
+
+  @Test
+  void processEvent_shouldUseResolvedTimestampWhenModeIsFileNameTimestamp() throws AdapterException, InterruptedException {
+    fileReplayAdapter.setTimestampMode("fileNameTimestamp");
+    long fileTimestamp = 1000000L;
+    fileReplayAdapter.setResolvedFileTimestamp(fileTimestamp);
+    // No timestamp in event
+    event.remove(TIMESTAMP);
+
+    fileReplayAdapter.processEvent(collector, event);
+
+    assertTrue(event.containsKey(TIMESTAMP));
+    assertEquals(fileTimestamp, event.get(TIMESTAMP));
+    verify(collector, times(1)).collect(event);
+  }
+
+  @Test
+  void resolveFileTimestamp_shouldExtractTimestampFromEpochString() throws AdapterException {
+    fileReplayAdapter.setTimestampMode("fileNameTimestamp");
+    fileReplayAdapter.setTimestampRegex("data_(\\d+)\\.csv");
+
+    String fileName = "data_1622544682000.csv";
+    fileReplayAdapter.resolveFileTimestamp(fileName);
+
+    assertEquals(1622544682000L, fileReplayAdapter.getResolvedFileTimestamp());
+  }
+
+  @Test
+  void resolveFileTimestamp_shouldExtractTimestampFromDateString() throws AdapterException {
+    fileReplayAdapter.setTimestampMode("fileNameTimestamp");
+    fileReplayAdapter.setTimestampRegex("data_(.*)\\.csv");
+    fileReplayAdapter.setTimestampFormat("yyyyMMdd");
+
+    String fileName = "data_20210601.csv";
+    fileReplayAdapter.resolveFileTimestamp(fileName);
+
+    long expected = LocalDateTime.of(2021, 6, 1, 0, 0).toInstant(ZoneOffset.UTC).toEpochMilli();
+    assertEquals(expected, fileReplayAdapter.getResolvedFileTimestamp());
+  }
+
+  @Test
+  void resolveFileTimestamp_shouldThrowIfRegexDoesNotMatch() {
+    fileReplayAdapter.setTimestampMode("fileNameTimestamp");
+    fileReplayAdapter.setTimestampRegex("data_(\\d+)\\.csv");
+
+    String fileName = "wrong_format.csv";
+    assertThrows(AdapterException.class, () -> fileReplayAdapter.resolveFileTimestamp(fileName));
+  }
 }
