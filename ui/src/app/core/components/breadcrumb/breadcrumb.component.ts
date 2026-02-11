@@ -20,12 +20,27 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { SpBreadcrumbItem, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-breadcrumb',
     templateUrl: './breadcrumb.component.html',
     styleUrls: ['./breadcrumb.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        NgClass,
+        ClassDirective,
+        MatIcon,
+    ],
 })
 export class SpBreadcrumbComponent implements OnInit, OnDestroy {
     currentNavItems: SpBreadcrumbItem[] = [];

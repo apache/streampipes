@@ -22,12 +22,25 @@ import { AppConstants } from '../../../services/app.constants';
 import { AuthService } from '../../../services/auth.service';
 import { UserAccount, UserInfo } from '@streampipes/platform-services';
 import { ProfileService } from '../../../profile/profile.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-welcome-tour',
     templateUrl: './welcome-tour.component.html',
     styleUrls: ['./welcome-tour.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatDivider,
+    ],
 })
 export class WelcomeTourComponent implements OnInit {
     @Input()

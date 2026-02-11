@@ -24,7 +24,6 @@ import { FeatureCardService } from '@streampipes/shared-ui';
     selector: 'sp-asset-map-link-chip',
     templateUrl: './asset-link-chip.component.html',
     styleUrls: ['./asset-link-chip.component.scss'],
-    standalone: false,
 })
 export class AssetLinkChipComponent implements OnInit {
     @Input()

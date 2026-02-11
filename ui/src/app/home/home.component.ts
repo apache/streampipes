@@ -25,8 +25,10 @@ import {
     DialogService,
     LocalStorageService,
     PanelType,
+    SpAlertBannerComponent,
     SpAssetBrowserService,
     SpBreadcrumbService,
+    SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { UserRole } from '../_enums/user-role.enum';
 import { MissingElementsForTutorialComponent } from '../editor/dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
@@ -49,11 +51,42 @@ import {
 } from '@streampipes/platform-services';
 import { forkJoin, Subscription, zip } from 'rxjs';
 import { StatusBox } from './models/home.model';
+import {
+    FlexDirective,
+    FlexFillDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { WelcomeComponent } from './components/welcome/welcome.component';
+import { StatusComponent } from './components/status.component';
+import {
+    MatButtonToggle,
+    MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { HomeAssetMapComponent } from './components/asset-map/home-asset-map.component';
+import { HomeAssetTableComponent } from './components/asset-table/home-asset-table.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        WelcomeComponent,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        StatusComponent,
+        FlexFillDirective,
+        SplitSectionComponent,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        FlexDirective,
+        HomeAssetMapComponent,
+        SpAlertBannerComponent,
+        HomeAssetTableComponent,
+        TranslatePipe,
+    ],
 })
 export class HomeComponent implements OnInit, OnDestroy {
     serviceLinks = [];

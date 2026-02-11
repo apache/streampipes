@@ -31,6 +31,11 @@ import {
     SpAssetModel,
 } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
+import { SpLabelComponent } from '@streampipes/shared-ui';
+import { AssetLinkChipComponent } from './asset-link-chip/asset-link-chip.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export type PopupAction = 'details' | 'pipelines' | 'dashboards';
 
@@ -38,7 +43,13 @@ export type PopupAction = 'details' | 'pipelines' | 'dashboards';
     selector: 'sp-asset-map-popup',
     templateUrl: './asset-map-popup.component.html',
     styleUrls: ['./asset-map-popup.component.scss'],
-    standalone: false,
+    imports: [
+        SpLabelComponent,
+        AssetLinkChipComponent,
+        MatButton,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class AssetMapPopupComponent implements OnInit {
     @Input()

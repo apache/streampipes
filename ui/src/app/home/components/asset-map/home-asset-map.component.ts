@@ -51,12 +51,15 @@ import {
     AssetMapPopupComponent,
     PopupAction,
 } from './asset-map-popup/asset-map-popup.component';
+import { LeafletDirective, LeafletLayerDirective } from '@bluehalo/ngx-leaflet';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-home-asset-map',
     templateUrl: './home-asset-map.component.html',
     styleUrls: ['./home-asset-map.component.scss'],
-    standalone: false,
+    imports: [LeafletDirective, NgStyle, StyleDirective, LeafletLayerDirective],
 })
 export class HomeAssetMapComponent implements OnInit, OnChanges {
     @Input()

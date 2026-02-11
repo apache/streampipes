@@ -62,8 +62,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         ReactiveFormsModule,
         SharedUiModule,
         TranslatePipe,
-    ],
-    declarations: [
         SpBreadcrumbComponent,
         StreampipesComponent,
         IconbarComponent,

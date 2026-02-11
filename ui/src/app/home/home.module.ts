@@ -41,16 +41,8 @@ import { AssetMapPopupComponent } from './components/asset-map/asset-map-popup/a
 import { AssetLinkChipComponent } from './components/asset-map/asset-map-popup/asset-link-chip/asset-link-chip.component';
 import { FormsModule } from '@angular/forms';
 import { HomeAssetTableComponent } from './components/asset-table/home-asset-table.component';
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatTableModule,
-} from '@angular/material/table';
-import { MatMenuItem } from '@angular/material/menu';
-import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 import { AssetTableLinkPreviewComponent } from './components/asset-table/asset-table-link-preview/asset-table-link-preview.component';
 
 @NgModule({
@@ -82,8 +74,6 @@ import { AssetTableLinkPreviewComponent } from './components/asset-table/asset-t
         FormsModule,
         MatSortModule,
         MatTableModule,
-    ],
-    declarations: [
         HomeComponent,
         StatusComponent,
         WelcomeTourComponent,
