@@ -40,18 +40,38 @@ import {
     PanelType,
 } from '@streampipes/shared-ui';
 import { CreateAdapterTransformationTemplateDialogComponent } from '../../../dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SelectAdapterTransformationTemplateDialogComponent } from '../../../dialog/select-adapter-transformation-template-dialog/select-adapter-transformation-template-dialog.component';
 import { Mode } from '../adapter-event-preview/adapter-event-preview.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadSampleEventDialogComponent } from '../../../dialog/upload-sample-event-dialog/upload-sample-event-dialog.component';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { AdapterScriptEditorComponent } from './script-editor/adapter-script-editor.component';
+import { AdapterSamplePreviewComponent } from './sample-preview/adapter-sample-preview.component';
+import { AdapterResultPreviewComponent } from './result-preview/adapter-result-preview.component';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-configure-schema',
-    standalone: false,
     templateUrl: './configure-schema.component.html',
     styleUrl: './configure-schema.component.scss',
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        AdapterScriptEditorComponent,
+        LayoutGapDirective,
+        AdapterSamplePreviewComponent,
+        AdapterResultPreviewComponent,
+        LayoutAlignDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class ConfigureSchemaComponent implements OnInit {
     private stateService = inject(AdapterConfigurationStateService);

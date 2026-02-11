@@ -18,12 +18,18 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PipelineUpdateInfo } from '@streampipes/platform-services';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-started-update-migration',
     templateUrl: './adapter-started-update-migration.component.html',
     styleUrls: ['./adapter-started-update-migration.component.scss'],
-    standalone: false,
+    imports: [LayoutDirective, LayoutAlignDirective, MatButton, TranslatePipe],
 })
 export class SpAdapterStartedUpdateMigrationComponent {
     @Input()

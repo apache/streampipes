@@ -17,19 +17,30 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormGroup,
+} from '@angular/forms';
 import {
     ExtensionDeploymentConfiguration,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../../model/ConfigurationInfo';
 import { StaticPropertyUtilService } from '../../../../../core-ui/static-properties/static-property-util.service';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { StaticPropertyComponent } from '../../../../../core-ui/static-properties/static-property.component';
 
 @Component({
     selector: 'sp-configuration-group',
     templateUrl: './configuration-group.component.html',
     styleUrls: ['./configuration-group.component.scss'],
-    standalone: false,
+    imports: [
+        FormsModule,
+        FlexDirective,
+        ReactiveFormsModule,
+        StaticPropertyComponent,
+    ],
 })
 export class ConfigurationGroupComponent implements OnInit {
     @Input() configurationGroup: UntypedFormGroup;

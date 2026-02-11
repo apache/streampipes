@@ -23,11 +23,21 @@ import {
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { PipelineElementTemplateConfigComponent } from '../../../core-ui/pipeline-element-template-config/pipeline-element-template-config.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-adapter-template-dialog',
     templateUrl: './adapter-template-dialog.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        PipelineElementTemplateConfigComponent,
+        MatDivider,
+        MatButton,
+    ],
 })
 export class SpAdapterTemplateDialogComponent implements OnInit {
     @Input()

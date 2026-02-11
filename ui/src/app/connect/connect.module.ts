@@ -92,8 +92,7 @@ import { AdapterDetailsDataComponent } from './components/adapter-details/adapte
 import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapter-code-panel.component';
 import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
 import { MatTreeModule } from '@angular/material/tree';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { ConfigurationGroupComponent } from './components/adapter-configuration/adapter-settings/configuration-group/configuration-group.component';
 import { ConfigureSchemaComponent } from './components/adapter-configuration/configure-schema/configure-schema.component';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
@@ -207,9 +206,6 @@ import { UploadSampleEventDialogComponent } from './dialog/upload-sample-event-d
         ]),
         SharedUiModule,
         TranslatePipe,
-    ],
-    exports: [ConfigureFieldsErrorMessageComponent],
-    declarations: [
         AdapterCodePanelComponent,
         AdapterConfigurationComponent,
         AdapterCatalogItemComponent,
@@ -265,6 +261,7 @@ import { UploadSampleEventDialogComponent } from './dialog/upload-sample-event-d
         AdapterResultPreviewComponent,
         UploadSampleEventDialogComponent,
     ],
+    exports: [ConfigureFieldsErrorMessageComponent],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

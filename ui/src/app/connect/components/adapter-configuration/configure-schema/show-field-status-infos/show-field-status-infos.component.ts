@@ -18,12 +18,18 @@
 
 import { Component, computed, input } from '@angular/core';
 import { FieldStatusInfo } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-show-field-status-infos',
-    standalone: false,
     templateUrl: './show-field-status-infos.component.html',
     styleUrl: './show-field-status-infos.component.scss',
+    imports: [FlexDirective, LayoutDirective, MatIcon, LayoutGapDirective],
 })
 export class ShowFieldStatusInfosComponent {
     fieldStatusInfos = input<{ [index: string]: FieldStatusInfo }>({});

@@ -25,12 +25,13 @@ import {
 } from '@streampipes/platform-services';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../connect.routes';
+import { AdapterConfigurationComponent } from '../adapter-configuration/adapter-configuration.component';
 
 @Component({
     selector: 'sp-edit-adapter',
     templateUrl: './edit-adapter.component.html',
     styleUrls: ['./edit-adapter.component.scss'],
-    standalone: false,
+    imports: [AdapterConfigurationComponent],
 })
 export class EditAdapterComponent implements OnInit {
     private adapterService = inject(AdapterService);

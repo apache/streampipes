@@ -21,15 +21,40 @@ import {
     AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    SpBasicHeaderTitleComponent,
+    SpBasicViewComponent,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { SpConnectRoutes } from '../../connect.routes';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpConnectFilterToolbarComponent } from '../filter-toolbar/filter-toolbar.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AdapterCatalogItemComponent } from './adapter-description/adapter-catalog-item.component';
+import { TranslatePipe } from '@ngx-translate/core';
+import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 
 @Component({
     selector: 'sp-adapter-catalog',
     templateUrl: './adapter-catalog.component.html',
     styleUrls: ['./adapter-catalog.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        SpConnectFilterToolbarComponent,
+        SpBasicHeaderTitleComponent,
+        MatProgressSpinner,
+        AdapterCatalogItemComponent,
+        TranslatePipe,
+        AdapterFilterPipe,
+    ],
 })
 export class AdapterCatalogComponent implements OnInit {
     private dataMarketplaceService = inject(AdapterService);

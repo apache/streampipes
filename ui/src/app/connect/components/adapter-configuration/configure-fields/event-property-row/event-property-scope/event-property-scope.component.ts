@@ -29,8 +29,14 @@ import {
     EventPropertyPrimitive,
     SemanticType,
 } from '@streampipes/platform-services';
-import { MatSelectChange } from '@angular/material/select';
+import {
+    MatOption,
+    MatSelect,
+    MatSelectChange,
+} from '@angular/material/select';
 import { ShepherdService } from '../../../../../../services/tour/shepherd.service';
+import { MatFormField } from '@angular/material/form-field';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type PropertyScope =
     | 'TIMESTAMP_PROPERTY'
@@ -41,7 +47,7 @@ type PropertyScope =
 @Component({
     selector: 'sp-event-property-scope',
     templateUrl: './event-property-scope.component.html',
-    standalone: false,
+    imports: [MatFormField, MatSelect, MatOption, TranslatePipe],
 })
 export class EventPropertyScopeComponent implements OnInit {
     private shepherdService = inject(ShepherdService);

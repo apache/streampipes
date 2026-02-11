@@ -18,12 +18,30 @@
 
 import { Component, EventEmitter, Output } from '@angular/core';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatFormField, MatPrefix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-connect-filter-toolbar',
     templateUrl: './filter-toolbar.component.html',
     styleUrls: ['./filter-toolbar.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatFormField,
+        MatInput,
+        MatIcon,
+        MatPrefix,
+        TranslatePipe,
+    ],
 })
 export class SpConnectFilterToolbarComponent {
     @Output()

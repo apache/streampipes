@@ -32,14 +32,46 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
 import { MatStepper } from '@angular/material/stepper';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    DialogService,
+    PanelType,
+    SpBasicInnerPanelComponent,
+} from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpAdapterDeploymentSettingsComponent } from './adapter-deployment-settings/adapter-deployment-settings.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { ConfigurationGroupComponent } from './configuration-group/configuration-group.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-settings',
     templateUrl: './adapter-settings.component.html',
     styleUrls: ['./adapter-settings.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SpBasicInnerPanelComponent,
+        SpAdapterDeploymentSettingsComponent,
+        LayoutAlignDirective,
+        MatFormField,
+        MatLabel,
+        MatSelect,
+        MatOption,
+        MatButton,
+        MatTooltip,
+        MatIcon,
+        ConfigurationGroupComponent,
+        TranslatePipe,
+    ],
 })
 export class AdapterSettingsComponent implements OnInit {
     private _formBuilder = inject(UntypedFormBuilder);
