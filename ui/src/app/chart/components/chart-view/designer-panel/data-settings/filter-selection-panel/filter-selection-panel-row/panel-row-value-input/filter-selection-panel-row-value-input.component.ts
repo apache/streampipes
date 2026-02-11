@@ -18,11 +18,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectedFilter } from '@streampipes/platform-services';
 import { EscapeNumberFilterService } from '../escape-number-filter.service';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-filter-selection-panel-row-value-input',
     templateUrl: './filter-selection-panel-row-value-input.component.html',
-    standalone: false,
+    imports: [MatFormField, MatInput, FormsModule, TranslatePipe],
 })
 export class FilterSelectionPanelRowValueInputComponent implements OnInit {
     @Input()

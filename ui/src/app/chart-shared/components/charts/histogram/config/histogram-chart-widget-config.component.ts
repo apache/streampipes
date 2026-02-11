@@ -23,11 +23,32 @@ import {
     HistogramChartWidgetModel,
 } from '../model/histogram-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-histogram-widget-config',
     templateUrl: './histogram-chart-widget-config.component.html',
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SplitSectionComponent,
+        SelectSinglePropertyConfigComponent,
+        MatCheckbox,
+        FormsModule,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        TranslatePipe,
+    ],
 })
 export class SpHistogramChartWidgetConfigComponent extends BaseWidgetConfig<
     HistogramChartWidgetModel,

@@ -17,7 +17,14 @@
  */
 
 import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import {
     ChartService,
     DataExplorerWidgetModel,
@@ -26,19 +33,50 @@ import {
     ConfirmDialogComponent,
     DateFormatService,
     SpAssetBrowserService,
+    SpBasicHeaderTitleComponent,
+    SpTableActionsDirective,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { ChartSharedService } from '../../../../chart-shared/services/chart-shared.service';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
 import { Subscription } from 'rxjs';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-data-explorer-overview-table',
     templateUrl: './chart-overview-table.component.html',
     styleUrls: ['../chart-overview.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SpBasicHeaderTitleComponent,
+        LayoutAlignDirective,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        LayoutGapDirective,
+        SpTableActionsDirective,
+        MatMenuItem,
+        MatIcon,
+        MatTooltip,
+        TranslatePipe,
+    ],
 })
 export class ChartOverviewTableComponent implements OnInit {
     @Input()

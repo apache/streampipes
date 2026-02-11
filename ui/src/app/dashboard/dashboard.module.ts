@@ -136,8 +136,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
                 ],
             },
         ]),
-    ],
-    declarations: [
         DashboardOverviewComponent,
         DashboardPanelComponent,
         DashboardToolbarComponent,

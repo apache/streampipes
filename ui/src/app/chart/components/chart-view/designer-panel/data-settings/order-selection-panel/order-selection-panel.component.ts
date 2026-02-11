@@ -19,12 +19,22 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SourceConfig } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-order-selection-panel',
     templateUrl: './order-selection-panel.component.html',
     styleUrls: ['./order-selection-panel.component.scss'],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        MatRadioGroup,
+        FormsModule,
+        MatRadioButton,
+        TranslatePipe,
+    ],
 })
 export class OrderSelectionPanelComponent implements OnInit {
     @Input() sourceConfig: SourceConfig;

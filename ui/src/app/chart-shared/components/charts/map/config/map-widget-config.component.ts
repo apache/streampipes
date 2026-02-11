@@ -22,12 +22,43 @@ import { ChartConfigurationService } from '../../../../services/chart-configurat
 import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { MapVisConfig, MapWidgetModel } from '../model/map-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import {
+    DefaultFlexDirective,
+    DefaultLayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { SelectMultiplePropertiesConfigComponent } from '../../../chart-config/select-multiple-properties-config/select-multiple-properties-config.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-map-widget-config',
     templateUrl: './map-widget-config.component.html',
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        DefaultLayoutDirective,
+        SplitSectionComponent,
+        FormFieldComponent,
+        SelectSinglePropertyConfigComponent,
+        DefaultFlexDirective,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatCheckbox,
+        MatSelect,
+        MatOption,
+        SelectMultiplePropertiesConfigComponent,
+        TranslatePipe,
+    ],
 })
 export class MapWidgetConfigComponent extends BaseWidgetConfig<
     MapWidgetModel,

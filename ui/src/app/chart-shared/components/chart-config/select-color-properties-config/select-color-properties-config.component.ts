@@ -20,12 +20,23 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TimeSeriesChartWidgetModel } from '../../charts/time-series-chart/model/time-series-chart-widget.model';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { MatButton } from '@angular/material/button';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { SpTimeseriesItemConfigComponent } from './time-series-item-config/time-series-item-config.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-select-color-properties-config',
     templateUrl: './select-color-properties-config.component.html',
     styleUrls: ['./select-color-properties-config.component.scss'],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        MatButton,
+        LayoutDirective,
+        SpTimeseriesItemConfigComponent,
+        TranslatePipe,
+    ],
 })
 export class SelectColorPropertiesConfigComponent implements OnInit {
     @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> =

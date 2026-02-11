@@ -53,8 +53,8 @@ import { DashboardKioskComponent } from './components/kiosk/dashboard-kiosk.comp
         DefaultFlexDirective,
         DefaultLayoutDirective,
         DefaultLayoutAlignDirective,
+        DashboardKioskComponent,
     ],
-    declarations: [DashboardKioskComponent],
     providers: [],
     exports: [],
 })

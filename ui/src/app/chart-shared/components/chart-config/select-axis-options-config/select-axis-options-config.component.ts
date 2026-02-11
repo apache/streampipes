@@ -25,12 +25,27 @@ import {
     SimpleChanges,
 } from '@angular/core';
 import { AxisConfig } from '../../../models/dataview-dashboard.model';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { FormFieldComponent } from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-select-axis-options-config',
     templateUrl: './select-axis-options-config.component.html',
     styleUrls: ['./select-axis-options-config.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        MatCheckbox,
+        FormsModule,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        TranslatePipe,
+    ],
 })
 export class SpSelectAxisOptionsConfigComponent implements OnChanges {
     @Input() title: string;

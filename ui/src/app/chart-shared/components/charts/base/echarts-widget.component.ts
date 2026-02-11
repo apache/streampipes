@@ -29,12 +29,25 @@ import { EChartsOption } from 'echarts';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ResizeEchartsService } from '../../../services/resize-echarts.service';
+import { NoDataInDateRangeComponent } from './no-data/no-data-in-date-range.component';
+import { TooMuchDataComponent } from './too-much-data/too-much-data.component';
+import { SpInvalidConfigurationComponent } from './invalid-configuration/invalid-configuration.component';
+import { NgxEchartsDirective } from 'ngx-echarts';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-data-explorer-echarts-widget',
     templateUrl: './echarts-widget.component.html',
     styleUrls: ['./echarts-widget.component.scss'],
-    standalone: false,
+    imports: [
+        NoDataInDateRangeComponent,
+        TooMuchDataComponent,
+        SpInvalidConfigurationComponent,
+        NgxEchartsDirective,
+        NgStyle,
+        StyleDirective,
+    ],
 })
 export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     extends BaseDataExplorerWidgetDirective<T>

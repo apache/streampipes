@@ -23,12 +23,32 @@ import {
     SourceConfig,
 } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-field-selection',
     templateUrl: './field-selection.component.html',
     styleUrls: ['./field-selection.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatCheckbox,
+        FormsModule,
+        FlexDirective,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        TranslatePipe,
+    ],
 })
 export class FieldSelectionComponent implements OnInit {
     @Input() field: FieldConfig;

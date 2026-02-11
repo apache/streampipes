@@ -33,7 +33,6 @@ import {
 } from '@angular/core';
 import {
     ClientDashboardItem,
-    DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     ExtendedTimeSettings,
@@ -42,7 +41,7 @@ import {
     TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { interval, Subject, Subscription } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { ChartRegistry } from '../../registry/chart-registry.service';
 import { ChartDirective } from './chart.directive';
@@ -52,6 +51,8 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import {
     CurrentUserService,
     NameChangeService,
+    SpExceptionMessageComponent,
+    SpLabelComponent,
     TimeRangeSelectorMenuComponent,
     TimeSelectionService,
     TimeSelectorLabel,
@@ -61,14 +62,47 @@ import {
     BaseWidgetData,
     ObservableGenerator,
 } from '../../models/dataview-dashboard.model';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { ResizeService } from '../../services/resize.service';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-container',
     templateUrl: './chart-container.component.html',
     styleUrls: ['./chart-container.component.scss'],
-    standalone: false,
+    imports: [
+        NgStyle,
+        StyleDirective,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatIcon,
+        FormsModule,
+        MatProgressSpinner,
+        SpLabelComponent,
+        MatMenuTrigger,
+        MatTooltip,
+        MatMenu,
+        MatMenuItem,
+        TimeRangeSelectorMenuComponent,
+        MatButton,
+        ChartDirective,
+        SpExceptionMessageComponent,
+        TranslatePipe,
+    ],
 })
 export class ChartContainerComponent
     implements OnInit, OnDestroy, OnChanges, AfterViewInit

@@ -156,8 +156,6 @@ import { AssetDialogComponent } from './dialog/asset-dialog.component';
         ]),
         ChartSharedModule,
         ColorPickerDirective,
-    ],
-    declarations: [
         AggregateConfigurationComponent,
         ChartOverviewComponent,
         ChartDesignerPanelComponent,

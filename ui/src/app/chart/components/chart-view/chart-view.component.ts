@@ -45,6 +45,8 @@ import {
     CurrentUserService,
     DialogService,
     PanelType,
+    SidebarResizeComponent,
+    SpBasicViewComponent,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
@@ -54,19 +56,45 @@ import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/datavi
 import { Observable, of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../chart-shared/services/resize-echarts.service';
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { ChartFieldProviderService } from '../../../chart-shared/services/chart-field-provider.service';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { ChartViewToolbarComponent } from './toolbar/chart-view-toolbar.component';
+import {
+    MatDrawer,
+    MatDrawerContainer,
+    MatDrawerContent,
+} from '@angular/material/sidenav';
+import { ChartDesignerPanelComponent } from './designer-panel/chart-designer-panel.component';
+import { ChartContainerComponent } from '../../../chart-shared/components/chart-container/chart-container.component';
 
 @Component({
     selector: 'sp-chart-data-view',
     templateUrl: './chart-view.component.html',
     styleUrls: ['./chart-view.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        ChartViewToolbarComponent,
+        MatDrawerContainer,
+        MatDrawer,
+        SidebarResizeComponent,
+        ChartDesignerPanelComponent,
+        MatDrawerContent,
+        ChartContainerComponent,
+        TranslatePipe,
+    ],
 })
 export class ChartViewComponent
     implements OnInit, OnDestroy, SupportsUnsavedChangeDialog

@@ -17,12 +17,14 @@
  */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SelectedFilter } from '@streampipes/platform-services';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
     selector: 'sp-filter-selection-panel-row-operation-selection',
     templateUrl:
         './filter-selection-panel-row-operation-selection.component.html',
-    standalone: false,
+    imports: [MatFormField, MatSelect, MatOption],
 })
 export class FilterSelectionPanelRowOperationSelectionComponent {
     @Input()

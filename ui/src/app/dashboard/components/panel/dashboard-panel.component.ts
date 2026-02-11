@@ -40,6 +40,7 @@ import { DashboardSlideViewComponent } from '../../../dashboard-shared/component
 import {
     ConfirmDialogComponent,
     CurrentUserService,
+    SpBasicViewComponent,
     SpBreadcrumbService,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
@@ -49,15 +50,40 @@ import { SpDashboardRoutes } from '../../dashboard.routes';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 import { ChartDetectChangesService } from '../../../chart/services/chart-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/dataview-dashboard.model';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
+import { DashboardToolbarComponent } from './dashboard-toolbar/dashboard-toolbar.component';
+import {
+    MatDrawer,
+    MatDrawerContainer,
+    MatDrawerContent,
+} from '@angular/material/sidenav';
+import { ChartSelectionPanelComponent } from './chart-selection-panel/chart-selection-panel.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
     styleUrls: ['./dashboard-panel.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        DashboardToolbarComponent,
+        MatDrawerContainer,
+        MatDrawer,
+        ChartSelectionPanelComponent,
+        MatDrawerContent,
+        DashboardGridViewComponent,
+        DashboardSlideViewComponent,
+        TranslatePipe,
+    ],
 })
 export class DashboardPanelComponent
     implements OnInit, OnDestroy, SupportsUnsavedChangeDialog

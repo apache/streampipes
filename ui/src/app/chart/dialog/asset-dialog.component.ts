@@ -18,12 +18,33 @@
 
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { SpAssetTreeNode } from '@streampipes/platform-services';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    AssetLinkConfigurationComponent,
+    DialogRef,
+} from '@streampipes/shared-ui';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-asset-dialog',
     templateUrl: './asset-dialog.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        MatCheckbox,
+        FormsModule,
+        AssetLinkConfigurationComponent,
+        MatDivider,
+        LayoutAlignDirective,
+        MatButton,
+    ],
 })
 export class AssetDialogComponent implements OnInit {
     @Input() selectedAssets: SpAssetTreeNode[];

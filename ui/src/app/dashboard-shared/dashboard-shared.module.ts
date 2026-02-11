@@ -104,8 +104,9 @@ import { GridstackModule } from 'gridstack/dist/angular';
         ChartSharedModule,
         GridstackModule,
         TranslateModule.forChild(),
+        DashboardGridViewComponent,
+        DashboardSlideViewComponent,
     ],
-    declarations: [DashboardGridViewComponent, DashboardSlideViewComponent],
     providers: [],
     exports: [DashboardGridViewComponent, DashboardSlideViewComponent],
 })

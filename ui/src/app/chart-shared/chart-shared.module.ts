@@ -144,8 +144,6 @@ import { ColorMappingOptionsConfigComponent } from './components/chart-config/co
         SharedUiModule,
         TranslateModule.forChild(),
         NgxEchartsModule.forChild(),
-    ],
-    declarations: [
         ChartContainerComponent,
         CorrelationWidgetConfigComponent,
         GaugeWidgetConfigComponent,

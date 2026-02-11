@@ -22,12 +22,30 @@ import { ChartConfigurationService } from '../../../../services/chart-configurat
 import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
 import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import { SelectMultiplePropertiesConfigComponent } from '../../../chart-config/select-multiple-properties-config/select-multiple-properties-config.component';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-table-widget-config',
     templateUrl: './table-widget-config.component.html',
     styleUrls: ['./table-widget-config.component.scss'],
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SelectMultiplePropertiesConfigComponent,
+        SplitSectionComponent,
+        MatFormField,
+        FlexDirective,
+        MatLabel,
+        MatInput,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class TableWidgetConfigComponent extends BaseWidgetConfig<
     TableWidgetModel,

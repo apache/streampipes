@@ -38,8 +38,9 @@ import { SharedUiModule } from '@streampipes/shared-ui';
         FormsModule,
         PlatformServicesModule,
         SharedUiModule,
+        NotificationsComponent,
+        NotificationItemComponent,
     ],
-    declarations: [NotificationsComponent, NotificationItemComponent],
     providers: [],
     exports: [NotificationsComponent],
 })
