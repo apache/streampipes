@@ -41,7 +41,7 @@ import {
 import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AssetLinkTableComponent } from '../../../view-asset/view-asset-links/asset-link-table/asset-link-table.component';
-import { SplitSectionComponent } from '../../../../../../../../projects/streampipes/shared-ui/src/lib/components/split-section/split-section.component';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
 import {
     FlexDirective,
     LayoutDirective,

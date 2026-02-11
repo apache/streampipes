@@ -23,10 +23,7 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from '@streampipes/shared-ui';
 
-@Pipe({
-    name: 'secure',
-    standalone: false,
-})
+@Pipe({ name: 'secure' })
 export class SecurePipe implements PipeTransform {
     constructor(
         private http: HttpClient,

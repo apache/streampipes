@@ -34,7 +34,7 @@ import {
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { SpLabelComponent } from '../../../../../../../projects/streampipes/shared-ui/src/lib/components/sp-label/sp-label.component';
+import { SpLabelComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-view-asset-labels',

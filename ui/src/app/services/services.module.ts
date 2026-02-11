@@ -21,8 +21,7 @@ import { AppConstants } from './app.constants';
 import { SecurePipe } from './secure.pipe';
 
 @NgModule({
-    imports: [],
-    declarations: [SecurePipe],
+    imports: [SecurePipe],
     providers: [AppConstants, SecurePipe],
     exports: [SecurePipe],
 })

@@ -25,7 +25,7 @@ import {
     SimpleChanges,
 } from '@angular/core';
 import { TimeSeriesAppearanceConfig } from '../../../models/dataview-dashboard.model';
-import { SplitSectionComponent } from '../../../../../../projects/streampipes/shared-ui/src/lib/components/split-section/split-section.component';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
 import {
     FlexDirective,
     LayoutAlignDirective,
