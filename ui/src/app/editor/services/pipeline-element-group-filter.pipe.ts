@@ -19,10 +19,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { PeCategory, PipelineElementUnion } from '../model/editor.model';
 
-@Pipe({
-    name: 'pipelineElementGroup',
-    standalone: false,
-})
+@Pipe({ name: 'pipelineElementGroup' })
 export class PipelineElementGroupFilterPipe implements PipeTransform {
     transform(
         pipelineElements: PipelineElementUnion[],

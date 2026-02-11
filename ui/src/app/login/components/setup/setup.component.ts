@@ -21,12 +21,38 @@ import { RestApi } from '../../../services/rest-api.service';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../../../services/app.constants';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-setup',
     templateUrl: './setup.component.html',
     styleUrls: ['./setup.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        FormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatCheckbox,
+        MatIcon,
+        MatProgressSpinner,
+        MatDivider,
+        MatButton,
+    ],
 })
 export class SetupComponent {
     @ViewChild('scroll') private scrollContainer: ElementRef;

@@ -44,12 +44,29 @@ import {
     PipelineCanvasMetadata,
 } from '@streampipes/platform-services';
 import { AddTemplateDialogComponent } from '../../../dialog/add-template-dialog/add-template-dialog.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-assembly-options',
     templateUrl: './pipeline-assembly-options.component.html',
     styleUrls: ['./pipeline-assembly-options.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatTooltip,
+        MatIconButton,
+        PipelineAssemblyOptionsPipelineCacheComponent,
+        TranslatePipe,
+    ],
 })
 export class PipelineAssemblyOptionsComponent {
     @Input()

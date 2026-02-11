@@ -129,8 +129,6 @@ import { AssetLinkTableAdditionalDataComponent } from './components/asset-detail
         MatSortModule,
         TranslatePipe,
         MatMenuModule,
-    ],
-    declarations: [
         AssetDetailsBasicsComponent,
         AssetDetailsLabelsComponent,
         AssetDetailsLinksComponent,

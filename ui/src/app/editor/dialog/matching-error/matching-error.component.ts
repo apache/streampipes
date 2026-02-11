@@ -17,13 +17,23 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { Notification } from '@streampipes/platform-services';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-matching-error',
     templateUrl: './matching-error.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        MatButton,
+        SpAlertBannerComponent,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class MatchingErrorComponent {
     @Input()

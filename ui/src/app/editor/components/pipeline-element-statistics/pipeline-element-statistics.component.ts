@@ -24,12 +24,25 @@ import {
     PipelineElementUnion,
 } from '../../model/editor.model';
 import { PipelineElementTypeUtils } from '../../utils/editor.utils';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { PipelineElementStatisticsBadgeComponent } from './pipeline-element-statistics-badge/pipeline-element-statistics-badge.component';
+import { KeyValuePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-pipeline-element-statistics',
     templateUrl: './pipeline-element-statistics.component.html',
     styleUrls: ['./pipeline-element-statistics.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        PipelineElementStatisticsBadgeComponent,
+        KeyValuePipe,
+    ],
 })
 export class PipelineElementStatisticsComponent implements OnInit {
     @Input()

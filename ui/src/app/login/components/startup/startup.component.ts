@@ -20,12 +20,23 @@ import { AuthService } from '../../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppConstants } from '../../../services/app.constants';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
     selector: 'sp-startup',
     templateUrl: './startup.component.html',
     styleUrls: ['./startup.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatProgressBar,
+    ],
 })
 export class StartupComponent implements OnInit {
     progress = 0;

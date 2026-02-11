@@ -48,8 +48,9 @@ import { SharedUiModule } from '@streampipes/shared-ui';
         FormsModule,
         MatDividerModule,
         SharedUiModule,
+        InfoComponent,
+        VersionsComponent,
     ],
-    declarations: [InfoComponent, VersionsComponent],
     providers: [],
 })
 export class InfoModule {}

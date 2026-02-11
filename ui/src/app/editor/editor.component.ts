@@ -35,12 +35,31 @@ import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
 import { catchError, map } from 'rxjs/operators';
 import { EditorService } from './services/editor.service';
 import { JsplumbService } from './services/jsplumb.service';
+import {
+    DefaultFlexDirective,
+    DefaultLayoutAlignDirective,
+    DefaultLayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SpBasicViewComponent } from '../../../projects/streampipes/shared-ui/src/lib/components/basic-view/basic-view.component';
+import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
+import { PipelineAssemblyComponent } from './components/pipeline-assembly/pipeline-assembly.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-editor',
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
-    standalone: false,
+    imports: [
+        DefaultLayoutDirective,
+        DefaultFlexDirective,
+        DefaultLayoutAlignDirective,
+        MatProgressSpinner,
+        SpBasicViewComponent,
+        PipelineElementIconStandComponent,
+        PipelineAssemblyComponent,
+        TranslatePipe,
+    ],
 })
 export class EditorComponent implements OnInit {
     allElements: PipelineElementUnion[] = [];

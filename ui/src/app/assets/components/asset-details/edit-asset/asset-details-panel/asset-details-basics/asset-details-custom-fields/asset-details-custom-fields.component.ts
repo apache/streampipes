@@ -18,6 +18,19 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { SpAsset } from '@streampipes/platform-services';
+import { FormFieldComponent } from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface CustomField {
     key: string;
@@ -27,7 +40,20 @@ export interface CustomField {
 @Component({
     selector: 'sp-asset-details-custom-fields',
     templateUrl: './asset-details-custom-fields.component.html',
-    standalone: false,
+    imports: [
+        FormFieldComponent,
+        LayoutDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatIconButton,
+        MatIcon,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class AssetDetailsCustomFieldsComponent implements OnInit {
     @Input()

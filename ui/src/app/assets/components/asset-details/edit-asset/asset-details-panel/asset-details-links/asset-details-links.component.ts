@@ -39,13 +39,28 @@ import {
     SpAssetBrowserService,
 } from '@streampipes/shared-ui';
 import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AssetLinkTableComponent } from '../../../view-asset/view-asset-links/asset-link-table/asset-link-table.component';
+import { SplitSectionComponent } from '../../../../../../../../projects/streampipes/shared-ui/src/lib/components/split-section/split-section.component';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-asset-details-links',
     templateUrl: './asset-details-links.component.html',
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        LayoutGapDirective,
+        MatButton,
+        LayoutDirective,
+        FlexDirective,
+        AssetLinkTableComponent,
+        TranslatePipe,
+    ],
 })
 export class AssetDetailsLinksComponent implements OnInit {
     @Input()

@@ -25,12 +25,55 @@ import {
 import { EditorService } from '../../services/editor.service';
 import { zip } from 'rxjs';
 import { Router } from '@angular/router';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    MatFormField,
+    MatPrefix,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { NgClass, NgStyle } from '@angular/common';
+import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { PipelineElementIconStandRowComponent } from './pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component';
+import { TranslatePipe } from '@ngx-translate/core';
+import { PipelineElementGroupFilterPipe } from '../../services/pipeline-element-group-filter.pipe';
+import { PipelineElementNameFilterPipe } from '../../services/pipeline-element-name-filter.pipe';
+import { PipelineElementTypeFilterPipe } from '../../services/pipeline-element-type-filter.pipe';
 
 @Component({
     selector: 'sp-pipeline-element-icon-stand',
     templateUrl: './pipeline-element-icon-stand.component.html',
     styleUrls: ['./pipeline-element-icon-stand.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatIcon,
+        MatPrefix,
+        MatIconButton,
+        MatSuffix,
+        LayoutAlignDirective,
+        NgStyle,
+        StyleDirective,
+        MatTooltip,
+        NgClass,
+        ClassDirective,
+        PipelineElementIconStandRowComponent,
+        TranslatePipe,
+        PipelineElementGroupFilterPipe,
+        PipelineElementNameFilterPipe,
+        PipelineElementTypeFilterPipe,
+    ],
 })
 export class PipelineElementIconStandComponent
     implements OnInit, AfterViewInit

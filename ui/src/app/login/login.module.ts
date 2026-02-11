@@ -64,8 +64,6 @@ import { SharedUiModule } from '@streampipes/shared-ui';
         PlatformServicesModule,
         TranslatePipe,
         SharedUiModule,
-    ],
-    declarations: [
         ActivateAccountComponent,
         AuthBoxComponent,
         LoginComponent,

@@ -19,10 +19,7 @@
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import { AssetLink } from '@streampipes/platform-services';
 
-@Pipe({
-    name: 'assetTypeFilter',
-    standalone: false,
-})
+@Pipe({ name: 'assetTypeFilter' })
 @Injectable({ providedIn: 'root' })
 export class AssetTypeFilterPipe implements PipeTransform {
     transform(assetLinks: AssetLink[], assetLinkType: string): AssetLink[] {

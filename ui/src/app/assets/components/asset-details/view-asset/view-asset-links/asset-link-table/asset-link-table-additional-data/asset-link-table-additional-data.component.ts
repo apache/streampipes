@@ -27,11 +27,13 @@ import { AssetLink, Certificate } from '@streampipes/platform-services';
 import { CertificateDetailsDialogComponent } from '../../../../../../../core-ui/certificate-details/certificate-details-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-asset-link-table-additional-data',
     templateUrl: './asset-link-table-additional-data.component.html',
-    standalone: false,
+    imports: [MatIconButton, MatIcon],
 })
 export class AssetLinkTableAdditionalDataComponent implements OnChanges {
     @Input()

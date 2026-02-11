@@ -124,8 +124,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         SharedUiModule,
         TranslatePipe,
         SharedUiModule,
-    ],
-    declarations: [
         AddTemplateDialogComponent,
         CompatibleElementsComponent,
         CustomizeComponent,

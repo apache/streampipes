@@ -22,12 +22,25 @@ import { forkJoin } from 'rxjs';
 import { PipelinePositioningService } from '../../../../services/pipeline-positioning.service';
 import { EditorService } from '../../../../services/editor.service';
 import { PipelineCanvasMetadata } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-assembly-options-pipeline-cache',
     templateUrl: './pipeline-assembly-options-pipeline-cache.component.html',
     styleUrls: ['./pipeline-assembly-options-pipeline-cache.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatProgressSpinner,
+        TranslatePipe,
+    ],
 })
 export class PipelineAssemblyOptionsPipelineCacheComponent {
     pipelineCached = false;
