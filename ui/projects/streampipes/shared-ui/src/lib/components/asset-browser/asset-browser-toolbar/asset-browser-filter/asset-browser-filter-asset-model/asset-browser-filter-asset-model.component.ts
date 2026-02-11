@@ -19,12 +19,24 @@
 import { Component, Input } from '@angular/core';
 import { Isa95TypeDesc, SpAsset } from '@streampipes/platform-services';
 import { AssetFilter } from '../../../asset-browser.model';
+import { AssetBrowserFilterOuterComponent } from '../asset-browser-filter-outer/asset-browser-filter-outer.component';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-browser-filter-asset-model',
     templateUrl: 'asset-browser-filter-asset-model.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
-    standalone: false,
+    imports: [
+        AssetBrowserFilterOuterComponent,
+        MatFormField,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        TranslatePipe,
+    ],
 })
 export class AssetBrowserFilterAssetModelComponent {
     @Input()

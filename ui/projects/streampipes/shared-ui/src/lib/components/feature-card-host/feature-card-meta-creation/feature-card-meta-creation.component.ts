@@ -17,11 +17,26 @@
  */
 
 import { Component, Input } from '@angular/core';
+import { FeatureCardMetaSectionComponent } from '../feature-card-meta-section/feature-card-meta-section.component';
+import {
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIcon } from '@angular/material/icon';
+import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-feature-card-meta-creation',
     templateUrl: './feature-card-meta-creation.component.html',
-    standalone: false,
+    imports: [
+        FeatureCardMetaSectionComponent,
+        LayoutDirective,
+        LayoutGapDirective,
+        MatIcon,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class FeatureCardMetaCreationComponent {
     @Input()

@@ -19,10 +19,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { EventPropertyUnion } from '@streampipes/platform-services';
 
-@Pipe({
-    name: 'displayRecommendedPipe',
-    standalone: false,
-})
+@Pipe({ name: 'displayRecommendedPipe' })
 export class DisplayRecommendedPipe implements PipeTransform {
     transform(
         properties: EventPropertyUnion[],

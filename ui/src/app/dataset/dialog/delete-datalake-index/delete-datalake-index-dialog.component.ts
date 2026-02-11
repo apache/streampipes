@@ -19,12 +19,28 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DatalakeRestService } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-delete-datalake-index-dialog',
     templateUrl: './delete-datalake-index-dialog.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatProgressSpinner,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class DeleteDatalakeIndexComponent implements OnInit {
     @Input()

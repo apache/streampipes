@@ -16,56 +16,18 @@
 ~
 -->
 
-@if (!staticProperty.horizontalRendering) {
-    <div fxLayout="column">
-        @for (
-            property of staticProperty.staticProperties;
-            track property;
-            let i = $index
-        ) {
-            <sp-app-static-property
-                [adapterId]="adapterId"
-                [deploymentConfiguration]="deploymentConfiguration"
-                [parentForm]="parentForm"
-                [staticProperties]="staticProperties"
-                [fieldName]="fieldName + '-' + property.internalName + '-' + i"
-                [showBorder]="false"
-                [eventSchemas]="eventSchemas"
-                [staticProperty]="property"
-                [displayRecommended]="displayRecommended"
-                (completedConfigurationsEmitter)="
-                    handleConfigurationUpdate($event)
-                "
-                class="test fullWidth"
-            >
-            </sp-app-static-property>
+<div [fxLayout]="staticProperty.horizontalRendering ? 'row' : 'column'">
+    @for (
+        property of staticProperty.staticProperties;
+        track property;
+        let i = $index
+    ) {
+        @if (i > 0 && staticProperty.horizontalRendering) {
+            <span style="margin-left: 10px"></span>
         }
-    </div>
-}
-
-@if (staticProperty.horizontalRendering) {
-    <div fxLayout="row" fxLayoutAlign="space-between center">
-        @for (
-            property of staticProperty.staticProperties;
-            track property;
-            let i = $index
-        ) {
-            @if (i > 0) {
-                <span style="margin-left: 10px"></span>
-            }
-            <sp-app-static-property
-                [adapterId]="adapterId"
-                [deploymentConfiguration]="deploymentConfiguration"
-                [parentForm]="parentForm"
-                [staticProperties]="staticProperties"
-                [showBorder]="false"
-                [fieldName]="fieldName + '-' + property.internalName + '-' + i"
-                [eventSchemas]="eventSchemas"
-                [staticProperty]="property"
-                [displayRecommended]="displayRecommended"
-                class="test fullWidth"
-            >
-            </sp-app-static-property>
-        }
-    </div>
-}
+        <ng-container
+            [ngTemplateOutlet]="renderStaticProperty"
+            [ngTemplateOutletContext]="ctxFor(property, i)"
+        />
+    }
+</div>

@@ -160,8 +160,6 @@ import { CertificateDetailsDialogComponent } from './certificate-details/certifi
         TranslateModule.forChild(),
         LeafletModule,
         TextFieldModule,
-    ],
-    declarations: [
         ConfigurationCodePanelComponent,
         DisplayRecommendedPipe,
         PipelineElementTemplateConfigComponent,

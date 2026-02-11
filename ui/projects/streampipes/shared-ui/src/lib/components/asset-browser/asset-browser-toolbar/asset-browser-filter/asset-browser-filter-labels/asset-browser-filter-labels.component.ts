@@ -19,12 +19,26 @@
 import { Component, Input } from '@angular/core';
 import { SpLabel } from '@streampipes/platform-services';
 import { AssetFilter } from '../../../asset-browser.model';
+import { AssetBrowserFilterOuterComponent } from '../asset-browser-filter-outer/asset-browser-filter-outer.component';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { SpLabelComponent } from '../../../../sp-label/sp-label.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-browser-filter-labels',
     templateUrl: 'asset-browser-filter-labels.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
-    standalone: false,
+    imports: [
+        AssetBrowserFilterOuterComponent,
+        MatFormField,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        SpLabelComponent,
+        TranslatePipe,
+    ],
 })
 export class AssetBrowserFilterLabelsComponent {
     @Input()

@@ -18,12 +18,33 @@
 
 import { Component, Input } from '@angular/core';
 import { SpDataStream } from '@streampipes/platform-services';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import {
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatIcon } from '@angular/material/icon';
+import { InputSchemaPropertyComponent } from './input-schema-property/input-schema-property.component';
+import { TranslatePipe } from '@ngx-translate/core';
+import { SortByRuntimeNamePipe } from '../../pipes/sort-by-runtime-name.pipe';
 
 @Component({
     selector: 'sp-input-schema-panel',
     templateUrl: './input-schema-panel.component.html',
     styleUrls: ['./input-schema-panel.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        MatIcon,
+        InputSchemaPropertyComponent,
+        TranslatePipe,
+        SortByRuntimeNamePipe,
+    ],
 })
 export class InputSchemaPanelComponent {
     @Input()

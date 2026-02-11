@@ -18,11 +18,26 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DashboardLiveSettings } from '@streampipes/platform-services';
+import { DefaultLayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-refresh-interval-settings-component',
     templateUrl: './refresh-interval-settings.component.html',
-    standalone: false,
+    imports: [
+        DefaultLayoutDirective,
+        MatButton,
+        MatMenuTrigger,
+        MatTooltip,
+        MatIcon,
+        MatMenu,
+        MatMenuItem,
+        TranslatePipe,
+    ],
 })
 export class DataExplorerRefreshIntervalSettingsComponent implements OnInit {
     @Input() liveSettings: DashboardLiveSettings;

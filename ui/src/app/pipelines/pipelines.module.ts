@@ -39,7 +39,6 @@ import { PipelineDetailsModule } from '../pipeline-details/pipeline-details.modu
 import { RouterModule } from '@angular/router';
 import { EditorComponent } from '../editor/editor.component';
 import { SpPipelineDetailsComponent } from '../pipeline-details/pipeline-details.component';
-import { PipelineLogsDialogComponent } from '../pipeline-details/dialogs/pipeline-logs/pipeline-logs-dialog.component';
 import { FunctionsOverviewComponent } from './components/functions-overview/functions-overview.component';
 import { SpFunctionsMetricsComponent } from './components/functions-overview/functions-metrics/functions-metrics.component';
 import { SpFunctionsLogsComponent } from './components/functions-overview/functions-logs/functions-logs.component';
@@ -102,8 +101,6 @@ import { MatMenuItem } from '@angular/material/menu';
             },
         ]),
         MatMenuItem,
-    ],
-    declarations: [
         DeletePipelineDialogComponent,
         FunctionsOverviewComponent,
         PipelinesComponent,

@@ -19,9 +19,11 @@
 import {
     Component,
     EventEmitter,
+    Input,
     OnChanges,
     OnInit,
     Output,
+    TemplateRef,
 } from '@angular/core';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-input';
@@ -30,16 +32,33 @@ import {
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import {
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
+import { GroupRenderCtx } from '../static-group/static-group.component';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
     selector: 'sp-app-static-runtime-resolvable-group',
     templateUrl: './static-runtime-resolvable-group.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        MatButton,
+        TranslatePipe,
+        LayoutGapDirective,
+        NgTemplateOutlet,
+    ],
 })
 export class StaticRuntimeResolvableGroupComponent
     extends BaseRuntimeResolvableInput<RuntimeResolvableGroupStaticProperty>
     implements OnInit, OnChanges
 {
+    @Input({ required: true })
+    renderStaticProperty!: TemplateRef<GroupRenderCtx>;
+
     constructor(runtimeResolvableService: RuntimeResolvableService) {
         super(runtimeResolvableService);
     }
@@ -54,6 +73,14 @@ export class StaticRuntimeResolvableGroupComponent
             this.loadOptionsFromRestApi();
         }
         this.applyCompletedConfiguration(true);
+    }
+
+    ctxFor(groupElement: StaticPropertyUnion, index: number): GroupRenderCtx {
+        return {
+            child: groupElement!,
+            index,
+            onCompleted: ev => this.handleConfigurationUpdate(ev),
+        };
     }
 
     afterErrorReceived() {}

@@ -17,12 +17,25 @@
  */
 
 import { Component, Input } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { KeyValuePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-static-tree-input-node-details',
     templateUrl: './static-tree-input-node-details.component.html',
     styleUrl: '../static-runtime-resolvable-tree-input.component.scss',
-    standalone: false,
+    imports: [
+        LayoutAlignDirective,
+        LayoutDirective,
+        FlexDirective,
+        KeyValuePipe,
+        TranslatePipe,
+    ],
 })
 export class StaticTreeInputNodeDetailsComponent {
     @Input()

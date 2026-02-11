@@ -16,12 +16,35 @@
  *
  */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {
+    MatButtonToggle,
+    MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-static-tree-input-button-menu',
     templateUrl: './static-tree-input-button-menu.component.html',
     styleUrl: './static-tree-input-button-menu.component.scss',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatProgressSpinner,
+        FlexDirective,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        TranslatePipe,
+    ],
 })
 export class StaticTreeInputButtonMenuComponent {
     @Input()

@@ -32,12 +32,14 @@ import { Subscription } from 'rxjs';
 import { HttpDownloadProgressEvent, HttpEventType } from '@angular/common/http';
 import { RuntimeInfo } from './pipeline-element-runtime-info.model';
 import { PipelineElementSchemaService } from '../../services/pipeline-element-schema.service';
+import { LivePreviewTableComponent } from './live-preview-table/live-preview-table.component';
+import { LivePreviewErrorComponent } from './live-preview-error/live-preview-error.component';
 
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
     templateUrl: './pipeline-element-runtime-info.component.html',
     styleUrls: ['./pipeline-element-runtime-info.component.scss'],
-    standalone: false,
+    imports: [LivePreviewTableComponent, LivePreviewErrorComponent],
 })
 export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     @Input()

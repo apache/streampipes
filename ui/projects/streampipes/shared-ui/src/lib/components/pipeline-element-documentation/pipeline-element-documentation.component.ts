@@ -19,12 +19,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PipelineElementService } from '@streampipes/platform-services';
 import { Lexer, Parser } from 'marked';
+import { MarkdownComponent } from 'ngx-markdown';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-element-documentation',
     templateUrl: './pipeline-element-documentation.component.html',
     styleUrls: ['./pipeline-element-documentation.component.scss'],
-    standalone: false,
+    imports: [MarkdownComponent, NgClass, ClassDirective, TranslatePipe],
 })
 export class PipelineElementDocumentationComponent implements OnInit {
     @Input()

@@ -30,25 +30,47 @@ import {
 } from '@angular/core';
 import {
     DashboardLiveSettings,
+    ExtendedTimeSettings,
     QuickTimeSelection,
     TimeSelectionConstants,
     TimeSettings,
     TimeString,
-    ExtendedTimeSettings,
 } from '@streampipes/platform-services';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { TimeRangeSelectorMenuComponent } from './time-selector-menu/time-selector-menu.component';
 import { TimeSelectorLabel } from './time-selector.model';
 import { differenceInMilliseconds, isSameDay } from 'date-fns';
 import { DataExplorerRefreshIntervalSettingsComponent } from './refresh-interval-settings/refresh-interval-settings.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-time-range-selector',
     templateUrl: 'time-range-selector.component.html',
     styleUrls: ['./time-range-selector.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatButton,
+        MatMenuTrigger,
+        MatTooltip,
+        MatMenu,
+        TimeRangeSelectorMenuComponent,
+        MatIcon,
+        DataExplorerRefreshIntervalSettingsComponent,
+        TranslatePipe,
+    ],
 })
 export class TimeRangeSelectorComponent
     implements OnInit, OnChanges, AfterViewInit

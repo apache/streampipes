@@ -19,12 +19,31 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractFunctionDetailsDirective } from '../abstract-function-details.directive';
 import { SpMetricsEntry } from '@streampipes/platform-services';
+import { SpBasicNavTabsComponent } from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { CoreUiModule } from '../../../../core-ui/core-ui.module';
+import { KeyValuePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-functions-metrics',
     templateUrl: './functions-metrics.component.html',
     styleUrls: [],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        CoreUiModule,
+        KeyValuePipe,
+    ],
 })
 export class SpFunctionsMetricsComponent
     extends AbstractFunctionDetailsDirective

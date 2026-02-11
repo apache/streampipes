@@ -17,14 +17,12 @@
  */
 
 import { Component, inject, Input, OnInit } from '@angular/core';
+import { FlexFillDirective } from '@ngbracket/ngx-layout';
 import {
-    DefaultFlexDirective,
-    DefaultLayoutAlignDirective,
-    DefaultLayoutDirective,
-    DefaultLayoutGapDirective,
-    FlexFillDirective,
-} from '@ngbracket/ngx-layout';
-import { SharedUiModule } from '@streampipes/shared-ui';
+    FeatureCardHeaderComponent,
+    FeatureCardMetaSectionComponent,
+    SpLabelComponent,
+} from '@streampipes/shared-ui';
 import { DashboardSharedModule } from '../../../dashboard-shared/dashboard-shared.module';
 import {
     AssetConstants,
@@ -38,22 +36,30 @@ import { forkJoin } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-dataset-feature-card',
     templateUrl: './dataset-feature-card.component.html',
     styleUrls: ['./dataset-feature-card.component.scss'],
     imports: [
-        SharedUiModule,
         FlexFillDirective,
         DashboardSharedModule,
-        DefaultFlexDirective,
-        DefaultLayoutDirective,
+        FlexDirective,
+        LayoutDirective,
         TranslatePipe,
-        DefaultLayoutAlignDirective,
-        DefaultLayoutGapDirective,
+        LayoutAlignDirective,
+        LayoutGapDirective,
         MatIcon,
         DatePipe,
+        FeatureCardHeaderComponent,
+        FeatureCardMetaSectionComponent,
+        SpLabelComponent,
     ],
 })
 export class DatasetFeatureCardComponent implements OnInit {

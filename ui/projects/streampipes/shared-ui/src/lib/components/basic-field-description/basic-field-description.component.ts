@@ -17,12 +17,23 @@
  */
 
 import { Component, Input } from '@angular/core';
+import {
+    DefaultFlexDirective,
+    DefaultLayoutAlignDirective,
+    DefaultLayoutDirective,
+    DefaultLayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-basic-field-description',
     templateUrl: './basic-field-description.component.html',
     styleUrls: ['./basic-field-description.component.scss'],
-    standalone: false,
+    imports: [
+        DefaultFlexDirective,
+        DefaultLayoutDirective,
+        DefaultLayoutGapDirective,
+        DefaultLayoutAlignDirective,
+    ],
 })
 export class SpBasicFieldDescriptionComponent {
     @Input()

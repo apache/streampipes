@@ -18,14 +18,18 @@
 
 import { Component, Input } from '@angular/core';
 
-import { RetentionTimeConfig } from '@streampipes/platform-services';
-import { DataExplorerDataConfig } from '@streampipes/platform-services';
+import {
+    DataExplorerDataConfig,
+    RetentionTimeConfig,
+} from '@streampipes/platform-services';
+import { SelectDataRetentionComponent } from './select-data-retention/select-data-retention.component';
+import { SelectRetentionActionComponent } from './select-retention-action/select-retention-action.component';
 
 @Component({
     selector: 'sp-select-data',
     templateUrl: './select-data.component.html',
     styleUrls: ['./select-data.component.scss'],
-    standalone: false,
+    imports: [SelectDataRetentionComponent, SelectRetentionActionComponent],
 })
 export class SelectDataComponent {
     /**

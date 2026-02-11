@@ -16,19 +16,29 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {
     DataExplorerDataConfig,
-    DateRange,
     RetentionTimeConfig,
 } from '@streampipes/platform-services';
-import { DataRetentionConfig } from '../../../model/data-retention-config.model';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-select-retention-action',
     templateUrl: './select-retention-action.component.html',
     styleUrls: ['./select-retention-action.component.scss'],
-    standalone: false,
+    imports: [
+        MatRadioGroup,
+        LayoutDirective,
+        FormsModule,
+        MatRadioButton,
+        TranslatePipe,
+        SplitSectionComponent,
+    ],
 })
 export class SelectRetentionActionComponent {
     @Input() dataExplorerDataConfig: DataExplorerDataConfig;

@@ -17,17 +17,35 @@
  */
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
 import { DialogRef } from '../base-dialog/dialog-ref';
 import { ExportConfig } from './model/export-config.model';
 import { DataDownloadDialogModel } from './model/data-download-dialog.model';
 import { DataExportService } from './services/data-export.service';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { SelectDataComponent } from './components/select-data/select-data.component';
+import { SelectFormatComponent } from './components/select-format/select-format.component';
+import { DownloadComponent } from './components/download/download.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-download-dialog',
     templateUrl: 'data-download-dialog.component.html',
     styleUrls: ['./data-download-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        MatStepper,
+        MatStep,
+        SelectDataComponent,
+        MatStepLabel,
+        SelectFormatComponent,
+        DownloadComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class DataDownloadDialogComponent implements OnInit {
     @Input() dataDownloadDialogModel: DataDownloadDialogModel;

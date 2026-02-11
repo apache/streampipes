@@ -23,13 +23,33 @@ import {
 } from '@streampipes/platform-services';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { PipelineAction } from '../../model/pipeline-model';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
+import { CoreUiModule } from '../../../core-ui/core-ui.module';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-pipeline-status-dialog',
     templateUrl: './pipeline-status-dialog.component.html',
     styleUrls: ['./pipeline-status-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatProgressSpinner,
+        MatIcon,
+        CoreUiModule,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class PipelineStatusDialogComponent implements OnInit {
     operationInProgress = true;

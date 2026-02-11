@@ -23,27 +23,44 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef,
+    MatTable,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
     ChartService,
-    DatalakeRestService,
-    ExportProviderSettings,
-    ExportProviderService,
-    RetentionLog,
     DataLakeMeasure,
+    DatalakeRestService,
+    ExportProviderService,
+    ExportProviderSettings,
+    RetentionLog,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
     CurrentUserService,
     DataDownloadDialogComponent,
     DialogRef,
     DialogService,
-    ObjectPermissionDialogComponent,
     LocalStorageService,
+    ObjectPermissionDialogComponent,
     PanelType,
+    SpAlertBannerComponent,
+    SpBasicHeaderTitleComponent,
+    SpBasicViewComponent,
     SpBreadcrumbService,
+    SpLabelComponent,
+    SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
 import { DeleteDatalakeIndexComponent } from '../../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
@@ -51,17 +68,67 @@ import { SpConfigurationRoutes } from '../../../configuration/configuration.rout
 import { DataRetentionDialogComponent } from '../../dialog/data-retention-dialog/data-retention-dialog.component';
 import { ExportProviderComponent } from '../../dialog/export-provider-dialog/export-provider-dialog.component';
 import { DeleteExportProviderComponent } from '../../dialog/delete-export-provider/delete-export-provider-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { UserRole } from '../../../_enums/user-role.enum';
+import {
+    FlexDirective,
+    FlexOrderDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { DatePipe, DecimalPipe, NgIf, NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { MatMenuItem } from '@angular/material/menu';
 
 @Component({
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
     styleUrls: ['./datalake-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        LayoutGapDirective,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        MatProgressSpinner,
+        FlexOrderDirective,
+        NgStyle,
+        StyleDirective,
+        MatMenuItem,
+        MatButton,
+        MatTable,
+        NgIf,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        DecimalPipe,
+        DatePipe,
+        TranslatePipe,
+        SpLabelComponent,
+        SpTableComponent,
+        SpBasicHeaderTitleComponent,
+        SpBasicViewComponent,
+        SpAlertBannerComponent,
+        SpTableActionsDirective,
+    ],
 })
 export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     paginator: MatPaginator;

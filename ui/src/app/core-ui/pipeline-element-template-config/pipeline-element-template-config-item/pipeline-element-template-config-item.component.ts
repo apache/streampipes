@@ -19,11 +19,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { StaticPropertyUnion } from '@streampipes/platform-services';
 import { PipelineElementTemplateGenerator } from '../pipeline-element-template-generator';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-element-template-config-item',
     templateUrl: './pipeline-element-template-config-item.component.html',
-    standalone: false,
+    imports: [LayoutDirective, MatCheckbox, TranslatePipe],
 })
 export class PipelineElementTemplateConfigItemComponent implements OnInit {
     @Input()

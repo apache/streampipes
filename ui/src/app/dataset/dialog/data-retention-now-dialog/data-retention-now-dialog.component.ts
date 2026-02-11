@@ -17,18 +17,30 @@
  */
 
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
-import {
-    DatalakeRestService,
-    ExportProviderService,
-} from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { DialogRef, SpExceptionDetailsComponent } from '@streampipes/shared-ui';
+import { DatalakeRestService } from '@streampipes/platform-services';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-data-retention-now-dialog',
     templateUrl: './data-retention-now-dialog.component.html',
-    standalone: false,
+    imports: [
+        LayoutAlignDirective,
+        LayoutDirective,
+        MatProgressSpinner,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+        SpExceptionDetailsComponent,
+    ],
 })
 export class DataRetentionNowDialogComponent implements OnInit {
     @Input()

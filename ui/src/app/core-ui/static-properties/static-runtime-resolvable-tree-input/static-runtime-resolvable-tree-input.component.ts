@@ -24,15 +24,41 @@ import {
     TreeInputNode,
 } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
-import { UntypedFormControl } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormControl,
+} from '@angular/forms';
 import { StaticTreeInputServiceService } from './static-tree-input-service.service';
 import { StaticTreeInputBrowseNodesComponent } from './static-tree-input-browse-nodes/static-tree-input-browse-nodes.component';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { StaticTreeInputButtonMenuComponent } from './static-tree-input-button-menu/static-tree-input-button-menu.component';
+import { SpExceptionMessageComponent } from '@streampipes/shared-ui';
+import { StaticTreeInputNodeDetailsComponent } from './static-tree-input-node-details/static-tree-input-node-details.component';
+import { StaticTreeInputSelectedNodesComponent } from './static-tree-input-selected-nodes/static-tree-input-selected-nodes.component';
+import { StaticTreeInputTextEditorComponent } from './static-tree-input-text-editor/static-tree-input-text-editor.component';
 
 @Component({
     selector: 'sp-static-runtime-resolvable-tree-input',
     templateUrl: './static-runtime-resolvable-tree-input.component.html',
     styleUrls: ['./static-runtime-resolvable-tree-input.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        StaticTreeInputButtonMenuComponent,
+        SpExceptionMessageComponent,
+        LayoutGapDirective,
+        StaticTreeInputBrowseNodesComponent,
+        StaticTreeInputNodeDetailsComponent,
+        StaticTreeInputSelectedNodesComponent,
+        StaticTreeInputTextEditorComponent,
+    ],
 })
 export class StaticRuntimeResolvableTreeInputComponent
     extends BaseRuntimeResolvableInput<RuntimeResolvableTreeInputStaticProperty>

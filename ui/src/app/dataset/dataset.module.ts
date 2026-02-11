@@ -50,7 +50,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { DataRetentionNowDialogComponent } from './dialog/data-retention-now-dialog/data-retention-now-dialog.component';
 import { DataRetentionLogDialogComponent } from './dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 import { ExportProviderConnectionTestComponent } from './dialog/export-provider-connection-test/export-provider-connection-test.component';
-import { DatasetFeatureCardComponent } from './components/dataset-feature-card/dataset-feature-card.component';
 
 @NgModule({
     imports: [
@@ -86,8 +85,6 @@ import { DatasetFeatureCardComponent } from './components/dataset-feature-card/d
         MatPaginatorModule,
         MatInputModule,
         MatMenuModule,
-    ],
-    declarations: [
         DeleteDatalakeIndexComponent,
         DataRetentionNowDialogComponent,
         DataRetentionLogDialogComponent,
@@ -102,7 +99,6 @@ import { DatasetFeatureCardComponent } from './components/dataset-feature-card/d
         DeleteExportProviderComponent,
     ],
     providers: [],
-
     exports: [],
 })
 export class DatasetModule {
