@@ -37,12 +37,14 @@ import {
 import { JsplumbService } from '../../../editor/services/jsplumb.service';
 import { JsplumbBridge } from '../../../editor/services/jsplumb-bridge.service';
 import { PipelineAssemblyDrawingAreaComponent } from '../../../editor/components/pipeline-assembly/pipeline-assembly-drawing-area/pipeline-assembly-drawing-area.component';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { EditorModule } from '../../../editor/editor.module';
 
 @Component({
     selector: 'sp-pipeline-preview',
     templateUrl: './pipeline-preview.component.html',
     styleUrls: ['./pipeline-preview.component.scss'],
-    standalone: false,
+    imports: [FlexDirective, EditorModule],
 })
 export class PipelinePreviewComponent implements OnInit, AfterViewInit {
     @Input()

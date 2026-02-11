@@ -58,8 +58,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         RouterLink,
         MatSelectModule,
         TranslatePipe,
-    ],
-    declarations: [
         ChangeEmailDialogComponent,
         ChangePasswordDialogComponent,
         GeneralProfileSettingsComponent,

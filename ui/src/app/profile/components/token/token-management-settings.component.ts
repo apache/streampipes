@@ -19,14 +19,75 @@
 import { Component, OnInit } from '@angular/core';
 import { BasicProfileSettings } from '../basic-profile-settings';
 import { RawUserApiToken, UserApiToken } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
-import { FormControl, Validators } from '@angular/forms';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef,
+    MatTable,
+    MatTableDataSource,
+} from '@angular/material/table';
+import {
+    FormControl,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators,
+} from '@angular/forms';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { MatDivider } from '@angular/material/divider';
+import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-token-management-settings',
     templateUrl: './token-management-settings.component.html',
     styleUrls: ['./token-management-settings.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        ReactiveFormsModule,
+        MatError,
+        MatButton,
+        SpAlertBannerComponent,
+        CdkCopyToClipboard,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatDivider,
+        RouterLink,
+        TranslatePipe,
+    ],
 })
 export class TokenManagementSettingsComponent
     extends BasicProfileSettings

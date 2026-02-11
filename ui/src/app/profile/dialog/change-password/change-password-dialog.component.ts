@@ -20,6 +20,8 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AbstractControl,
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
@@ -28,17 +30,33 @@ import {
     Validators,
 } from '@angular/forms';
 import {
-    UserAccount,
     ChangePasswordRequest,
+    UserAccount,
     UserService,
 } from '@streampipes/platform-services';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-change-password-dialog',
     templateUrl: './change-password-dialog.component.html',
     styleUrls: ['./change-password-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatError,
+        MatButton,
+        MatDivider,
+    ],
 })
 export class ChangePasswordDialogComponent implements OnInit {
     @Input()

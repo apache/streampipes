@@ -66,8 +66,6 @@ import { TranslateModule } from '@ngx-translate/core';
         MatDivider,
         ClipboardModule,
         TranslateModule.forChild(),
-    ],
-    declarations: [
         PipelineActionsComponent,
         PipelineCodeDialogComponent,
         PipelineElementsRowComponent,

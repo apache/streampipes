@@ -22,12 +22,27 @@ import {
     PipelineService,
     PipelineStatusMessage,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-status',
     templateUrl: './pipeline-status.component.html',
     styleUrls: ['./pipeline-status.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class PipelineStatusComponent implements OnInit {
     pipelineStatus: PipelineStatusMessage[];
