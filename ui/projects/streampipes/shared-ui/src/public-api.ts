@@ -16,8 +16,6 @@
  *
  */
 
-export * from './lib/shared-ui.module';
-
 export * from './lib/dialog/base-dialog/base-dialog.model';
 export * from './lib/dialog/base-dialog/base-dialog.service';
 export * from './lib/dialog/base-dialog/dialog-ref';

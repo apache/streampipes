@@ -27,7 +27,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
-import { CoreUiModule } from '../../../../core-ui/core-ui.module';
+import { SpSimpleLogsComponent } from '../../../../core-ui/monitoring/simple-logs/simple-logs.component';
 
 @Component({
     selector: 'sp-functions-logs',
@@ -40,7 +40,7 @@ import { CoreUiModule } from '../../../../core-ui/core-ui.module';
         LayoutAlignDirective,
         MatIconButton,
         MatTooltip,
-        CoreUiModule,
+        SpSimpleLogsComponent,
     ],
 })
 export class SpFunctionsLogsComponent

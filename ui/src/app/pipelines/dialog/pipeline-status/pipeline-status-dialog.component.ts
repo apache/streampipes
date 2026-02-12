@@ -31,9 +31,9 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
-import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
+import { PipelineStartedStatusComponent } from '../../../core-ui/pipeline/pipeline-started-status/pipeline-started-status.component';
 
 @Component({
     selector: 'sp-pipeline-status-dialog',
@@ -45,10 +45,10 @@ import { MatButton } from '@angular/material/button';
         FlexDirective,
         MatProgressSpinner,
         MatIcon,
-        CoreUiModule,
         MatDivider,
         MatButton,
         TranslatePipe,
+        PipelineStartedStatusComponent,
     ],
 })
 export class PipelineStatusDialogComponent implements OnInit {

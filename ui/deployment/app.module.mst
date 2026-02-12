@@ -27,25 +27,13 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { CoreModule } from './core/core.module';
-import { LoginModule } from './login/login.module';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { InfoModule } from './info/info.module';
-import {ProfileModule} from './profile/profile.module';
-import { PipelineDetailsModule } from './pipeline-details/pipeline-details.module';
-import { NotificationCountService } from './services/notification-count-service';
-import { AuthService } from './services/auth.service';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
 
-import { NotificationModule } from './notifications/notifications.module';
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { ServicesModule } from './services/services.module';
-import { ApidocsModule } from './apidocs/apidocs.module';
 import { HttpInterceptorProvider } from './http-interceptor';
-import { AvailableRolesService } from './services/available-roles.service';
 
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
@@ -54,12 +42,16 @@ import { HistogramTransform } from './core-ui/echarts-transform/histogram.transf
 import { RoundValuesTransform} from './core-ui/echarts-transform/round-values.transform';
 import { MapTransform } from './core-ui/echarts-transform/map.transform';
 import { MarkdownModule } from 'ngx-markdown';
-import { DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel } from '@angular/material/datepicker';
+import { DefaultMatCalendarRangeStrategy, MatDatepickerModule, MatRangeDateSelectionModel } from '@angular/material/datepicker';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import {
     PaginatorService,
     SortByRuntimeNamePipe
 } from '@streampipes/shared-ui';
+import { SafeCss } from './editor/utils/style-sanitizer';
+import { SecurePipe } from './services/secure.pipe';
+import { ShortenPipe } from './core/pipes/shorten.pipe';
+import { DisplayRecommendedPipe } from './core-ui/static-properties/filter/display-recommended.pipe';
 
 import * as echarts from 'echarts';
 import * as transform from 'echarts-simple-transform';
@@ -78,23 +70,15 @@ import * as $ from 'jquery';
         AppComponent
     ],
     imports: [
-        ApidocsModule,
         AppRoutingModule,
         BrowserModule,
         BrowserAnimationsModule,
-        CoreModule,
         MatGridListModule,
         MatIconModule,
         FlexLayoutModule,
         HttpClientModule,
         FormsModule,
-        LoginModule,
         LoadingBarHttpClientModule,
-        InfoModule,
-        NotificationModule,
-        PipelineDetailsModule,
-        ServicesModule,
-        ProfileModule,
         MarkdownModule.forRoot(),
         TranslateModule.forRoot({
             loader: provideTranslateHttpLoader({prefix:"./assets/i18n/", suffix:".json"})
@@ -104,15 +88,17 @@ import * as $ from 'jquery';
         }),
     ],
     providers: [
-        AuthService,
-        AvailableRolesService,
-        NotificationCountService,
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline', subscriptSizing: 'dynamic' }},
         { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorProvider, multi: true },
         { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
         DefaultMatCalendarRangeStrategy,
         MatRangeDateSelectionModel,
+        SafeCss,
+        SecurePipe,
         SortByRuntimeNamePipe,
+        ShortenPipe,
+        MatDatepickerModule,
+        DisplayRecommendedPipe,
         {
             provide: MatPaginatorIntl,
             useClass: PaginatorService, // Use the custom paginator service

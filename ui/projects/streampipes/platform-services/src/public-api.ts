@@ -20,8 +20,6 @@
  * Public API Surface of platform-services
  */
 
-export * from './lib/platform-services.module';
-
 export * from './lib/apis/commons.service';
 export * from './lib/apis/adapter.service';
 export * from './lib/apis/adapter-monitoring.service';

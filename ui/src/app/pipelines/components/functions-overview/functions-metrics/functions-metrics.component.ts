@@ -27,8 +27,8 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
-import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 import { KeyValuePipe } from '@angular/common';
+import { SpSimpleMetricsComponent } from '../../../../core-ui/monitoring/simple-metrics/simple-metrics.component';
 
 @Component({
     selector: 'sp-functions-metrics',
@@ -41,8 +41,8 @@ import { KeyValuePipe } from '@angular/common';
         LayoutAlignDirective,
         MatIconButton,
         MatTooltip,
-        CoreUiModule,
         KeyValuePipe,
+        SpSimpleMetricsComponent,
     ],
 })
 export class SpFunctionsMetricsComponent

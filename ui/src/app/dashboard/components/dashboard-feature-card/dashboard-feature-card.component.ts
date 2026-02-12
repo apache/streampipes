@@ -17,7 +17,6 @@
  */
 
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { PipelineDetailsModule } from '../../../pipeline-details/pipeline-details.module';
 import {
     FlexDirective,
     FlexFillDirective,
@@ -41,22 +40,21 @@ import {
 } from '@streampipes/platform-services';
 import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
-import { DashboardSharedModule } from '../../../dashboard-shared/dashboard-shared.module';
 import { Router } from '@angular/router';
+import { DashboardGridViewComponent } from '../../../dashboard-shared/components/chart-view/grid-view/dashboard-grid-view.component';
 
 @Component({
     selector: 'sp-dashboard-feature-card',
     templateUrl: './dashboard-feature-card.component.html',
     styleUrls: ['./dashboard-feature-card.component.scss'],
     imports: [
-        PipelineDetailsModule,
         FlexFillDirective,
         MatDivider,
-        DashboardSharedModule,
         LayoutDirective,
         FeatureCardHeaderComponent,
         FeatureCardMetaCreationComponent,
         FlexDirective,
+        DashboardGridViewComponent,
     ],
 })
 export class DashboardFeatureCardComponent implements OnInit {

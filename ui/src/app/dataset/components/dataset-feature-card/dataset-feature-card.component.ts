@@ -23,7 +23,6 @@ import {
     FeatureCardMetaSectionComponent,
     SpLabelComponent,
 } from '@streampipes/shared-ui';
-import { DashboardSharedModule } from '../../../dashboard-shared/dashboard-shared.module';
 import {
     AssetConstants,
     AssetLinkType,
@@ -49,7 +48,6 @@ import {
     styleUrls: ['./dataset-feature-card.component.scss'],
     imports: [
         FlexFillDirective,
-        DashboardSharedModule,
         FlexDirective,
         LayoutDirective,
         TranslatePipe,

@@ -32,13 +32,17 @@ import {
     GridstackItemComponent,
     nodesCB,
 } from 'gridstack/dist/angular';
-import { ChartSharedModule } from '../../../../chart-shared/chart-shared.module';
+import { ChartContainerComponent } from '../../../../chart-shared/components/chart-container/chart-container.component';
 
 @Component({
     selector: 'sp-dashboard-grid-view',
     templateUrl: './dashboard-grid-view.component.html',
     styleUrls: ['./dashboard-grid-view.component.scss'],
-    imports: [GridstackComponent, GridstackItemComponent, ChartSharedModule],
+    imports: [
+        GridstackComponent,
+        GridstackItemComponent,
+        ChartContainerComponent,
+    ],
 })
 export class DashboardGridViewComponent
     extends AbstractChartViewDirective

@@ -30,7 +30,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { NgClass } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
-import { ChartSharedModule } from '../../../../chart-shared/chart-shared.module';
+import { ChartContainerComponent } from '../../../../chart-shared/components/chart-container/chart-container.component';
 
 @Component({
     selector: 'sp-dashboard-slide-view',
@@ -42,7 +42,7 @@ import { ChartSharedModule } from '../../../../chart-shared/chart-shared.module'
         LayoutAlignDirective,
         NgClass,
         ClassDirective,
-        ChartSharedModule,
+        ChartContainerComponent,
     ],
 })
 export class DashboardSlideViewComponent
