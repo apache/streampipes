@@ -30,8 +30,8 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
-import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
+import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
@@ -189,7 +189,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPasswordRecoveryTokenStorage();
   }
 
-  private CRUDStorage<UserActivationToken> getUserActivationTokenStorage() {
+  private IUserActivationTokenStorage getUserActivationTokenStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getUserActivationTokenStorage();
   }
 

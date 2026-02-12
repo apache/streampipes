@@ -20,7 +20,6 @@ package org.apache.streampipes.storage.couchdb;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
-import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
@@ -47,6 +46,7 @@ import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
@@ -70,6 +70,7 @@ import org.apache.streampipes.storage.couchdb.impl.PipelineCanvasMetadataStorage
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.UserActivationTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
@@ -180,12 +181,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<UserActivationToken> getUserActivationTokenStorage() {
-    return new DefaultViewCrudStorage<>(
-        Utils::getCouchDbUserClient,
-        UserActivationToken.class,
-        "users/user-activation"
-    );
+  public IUserActivationTokenStorage getUserActivationTokenStorage() {
+    return new UserActivationTokenStorageImpl();
   }
 
   @Override
