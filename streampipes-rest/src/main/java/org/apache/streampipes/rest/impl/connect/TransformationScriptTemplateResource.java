@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
@@ -39,7 +39,7 @@ import java.util.List;
 @RequestMapping("/api/v2/connect/master/script-templates")
 public class TransformationScriptTemplateResource extends AbstractAuthGuardedRestResource {
 
-  private final CRUDStorage<ConnectTransformationScriptTemplate> templateStorage = StorageDispatcher
+  private final ITransformationScriptTemplateStorage templateStorage = StorageDispatcher
       .INSTANCE.getNoSqlStore().getTransformationScriptTemplateStorage();
 
   @GetMapping(

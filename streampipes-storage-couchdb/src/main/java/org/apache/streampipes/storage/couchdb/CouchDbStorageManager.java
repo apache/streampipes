@@ -46,6 +46,7 @@ import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.api.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.IRoleStorage;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
@@ -77,6 +78,7 @@ import org.apache.streampipes.storage.couchdb.impl.PipelineElementTemplateStorag
 import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PrivilegeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.RoleStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.TransformationScriptTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserActivationTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
@@ -233,11 +235,7 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<ConnectTransformationScriptTemplate> getTransformationScriptTemplateStorage() {
-    return new DefaultViewCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("genericstorage"),
-        ConnectTransformationScriptTemplate.class,
-        "transformation-scripts/all-transformations"
-    );
+  public ITransformationScriptTemplateStorage getTransformationScriptTemplateStorage() {
+    return new TransformationScriptTemplateStorageImpl();
   }
 }
