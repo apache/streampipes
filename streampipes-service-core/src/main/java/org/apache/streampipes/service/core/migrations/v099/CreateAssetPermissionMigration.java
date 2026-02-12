@@ -21,7 +21,7 @@ package org.apache.streampipes.service.core.migrations.v099;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IAssetStorage;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -29,7 +29,7 @@ import java.io.IOException;
 
 public class CreateAssetPermissionMigration implements Migration {
 
-  private final CRUDStorage<SpAssetModel> assetStorage;
+  private final IAssetStorage assetStorage;
   private final IPermissionStorage permissionStorage;
   private final PermissionResourceManager permissionResourceManager;
 

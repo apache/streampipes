@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.storage.couchdb;
 
-import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IAssetStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.ICertificateStorage;
 import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
@@ -51,6 +51,7 @@ import org.apache.streampipes.storage.api.IUserGroupStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AssetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CertificateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CompactPipelineTemplateStorageImpl;
@@ -227,12 +228,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<SpAssetModel> getAssetStorage() {
-    return new DefaultViewCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("genericstorage"),
-        SpAssetModel.class,
-        "assets/all-assets"
-    );
+  public IAssetStorage getAssetStorage() {
+    return new AssetStorageImpl();
   }
 
   @Override

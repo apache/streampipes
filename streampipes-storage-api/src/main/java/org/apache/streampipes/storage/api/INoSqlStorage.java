@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 
 public interface INoSqlStorage {
@@ -78,7 +77,7 @@ public interface INoSqlStorage {
 
   ICertificateStorage getCertificateStorage();
 
-  CRUDStorage<SpAssetModel> getAssetStorage();
+  IAssetStorage getAssetStorage();
 
   CRUDStorage<ConnectTransformationScriptTemplate> getTransformationScriptTemplateStorage();
 }

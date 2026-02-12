@@ -21,7 +21,7 @@ package org.apache.streampipes.service.core.migrations.v099;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IAssetStorage;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -38,7 +38,7 @@ public class RemoveDuplicatedAssetPermissions implements Migration {
   private final IPermissionStorage permissionStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
 
-  private final CRUDStorage<SpAssetModel> assetStorage =
+  private final IAssetStorage assetStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
 
   @Override
