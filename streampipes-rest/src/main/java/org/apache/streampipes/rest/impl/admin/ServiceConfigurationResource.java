@@ -23,7 +23,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IExtensionsServiceConfigurationStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,7 +44,7 @@ import java.util.List;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceConfigurationResource extends AbstractAuthGuardedRestResource {
 
-  private final CRUDStorage<SpServiceConfiguration> extensionsServicesConfigStorage =
+  private final IExtensionsServiceConfigurationStorage extensionsServicesConfigStorage =
       getNoSqlStorage().getExtensionsServiceConfigurationStorage();
 
 

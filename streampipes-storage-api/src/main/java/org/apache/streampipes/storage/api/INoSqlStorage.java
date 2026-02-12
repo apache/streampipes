@@ -21,7 +21,6 @@ import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
-import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 
@@ -71,7 +70,7 @@ public interface INoSqlStorage {
 
   IExtensionsServiceStorage getExtensionsServiceStorage();
 
-  CRUDStorage<SpServiceConfiguration> getExtensionsServiceConfigurationStorage();
+  IExtensionsServiceConfigurationStorage getExtensionsServiceConfigurationStorage();
 
   ISpCoreConfigurationStorage getSpCoreConfigurationStorage();
 
