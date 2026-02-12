@@ -18,7 +18,6 @@
 package org.apache.streampipes.storage.couchdb;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
-import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserActivationToken;
@@ -41,6 +40,7 @@ import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.api.IImageStorage;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.INotificationStorage;
+import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
@@ -64,6 +64,7 @@ import org.apache.streampipes.storage.couchdb.impl.GenericStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ImageStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.NotificationStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.PasswordRecoveryTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PermissionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineCanvasMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementDescriptionStorageImpl;
@@ -174,12 +175,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<PasswordRecoveryToken> getPasswordRecoveryTokenStorage() {
-    return new DefaultViewCrudStorage<>(
-        Utils::getCouchDbUserClient,
-        PasswordRecoveryToken.class,
-        "users/password-recovery"
-    );
+  public IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
+    return new PasswordRecoveryTokenStorageImpl();
   }
 
   @Override

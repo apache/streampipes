@@ -31,6 +31,7 @@ import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
 import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
@@ -184,7 +185,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     getPasswordRecoveryTokenStorage().persist(PasswordRecoveryToken.create(recoveryCode, username));
   }
 
-  private CRUDStorage<PasswordRecoveryToken> getPasswordRecoveryTokenStorage() {
+  private IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPasswordRecoveryTokenStorage();
   }
 

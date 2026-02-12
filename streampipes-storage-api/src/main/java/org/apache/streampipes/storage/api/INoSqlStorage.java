@@ -18,7 +18,6 @@
 package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
-import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserActivationToken;
@@ -68,7 +67,7 @@ public interface INoSqlStorage {
 
   IDataStreamStorage getDataStreamStorage();
 
-  CRUDStorage<PasswordRecoveryToken> getPasswordRecoveryTokenStorage();
+  IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage();
 
   CRUDStorage<UserActivationToken> getUserActivationTokenStorage();
 
