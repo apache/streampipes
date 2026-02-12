@@ -30,10 +30,10 @@ import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
+import org.apache.streampipes.storage.api.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,7 +61,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrationResource.class);
 
-  private final CRUDStorage<SpServiceRegistration> extensionsServiceStorage =
+  private final IExtensionsServiceStorage extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
   private final IAdapterStorage adapterDescriptionStorage = getNoSqlStorage().getAdapterDescriptionStorage();
   private final IAdapterStorage adapterStorage = getNoSqlStorage().getAdapterInstanceStorage();

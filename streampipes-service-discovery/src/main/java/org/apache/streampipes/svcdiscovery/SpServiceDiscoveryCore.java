@@ -22,7 +22,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IExtensionsServiceStorage;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.slf4j.Logger;
@@ -39,9 +39,9 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   private static final Logger LOG = LoggerFactory.getLogger(SpServiceDiscoveryCore.class);
   private static final int MAX_RETRIES = 3;
 
-  private final CRUDStorage<SpServiceRegistration> serviceStorage;
+  private final IExtensionsServiceStorage serviceStorage;
 
-  public SpServiceDiscoveryCore(CRUDStorage<SpServiceRegistration> serviceStorage) {
+  public SpServiceDiscoveryCore(IExtensionsServiceStorage serviceStorage) {
     this.serviceStorage = serviceStorage;
   }
 

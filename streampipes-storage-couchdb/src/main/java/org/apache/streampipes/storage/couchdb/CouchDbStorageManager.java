@@ -23,7 +23,6 @@ import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.storage.api.CRUDStorage;
@@ -34,6 +33,7 @@ import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.api.IDataStreamStorage;
+import org.apache.streampipes.storage.api.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.api.IImageStorage;
@@ -60,6 +60,7 @@ import org.apache.streampipes.storage.couchdb.impl.DataSinkStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataStreamStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.impl.DefaultViewCrudStorage;
+import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.GenericStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ImageStorageImpl;
@@ -186,11 +187,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<SpServiceRegistration> getExtensionsServiceStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("extensions-services"),
-        SpServiceRegistration.class
-    );
+  public IExtensionsServiceStorage getExtensionsServiceStorage() {
+    return new ExtensionsServiceStorageImpl();
   }
 
   @Override
