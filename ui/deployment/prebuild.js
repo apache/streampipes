@@ -128,9 +128,9 @@ for (let module of config.modules) {
 
 // Create necessary JavaScript-Files from Template and move to respective Directory
 fs.writeFileSync(
-    'src/app/app.module.ts',
+    'src/app/app.routes.ts',
     mustache.render(
-        fs.readFileSync('deployment/app.module.mst', 'utf8').toString(),
+        fs.readFileSync('deployment/app.routes.mst', 'utf8').toString(),
         modulesActive,
     ),
 );
@@ -138,13 +138,6 @@ fs.writeFileSync(
     'src/app/home/home.service.ts',
     mustache.render(
         fs.readFileSync('deployment/home.service.mst', 'utf8').toString(),
-        modulesActive,
-    ),
-);
-fs.writeFileSync(
-    'src/app/app-routing.module.ts',
-    mustache.render(
-        fs.readFileSync('deployment/app-routing.module.mst', 'utf8').toString(),
         modulesActive,
     ),
 );

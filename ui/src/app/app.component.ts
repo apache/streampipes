@@ -22,12 +22,13 @@ import { slideInAnimation } from './animation';
 import { Title } from '@angular/platform-browser';
 import { AppConstants } from './services/app.constants';
 import { TranslateService } from '@ngx-translate/core';
+import { LoadingBarModule } from '@ngx-loading-bar/core';
 
 @Component({
     selector: 'sp-app-root',
     templateUrl: './app.component.html',
     animations: [slideInAnimation],
-    standalone: false,
+    imports: [LoadingBarModule, RouterOutlet],
 })
 export class AppComponent implements OnInit {
     constructor(
