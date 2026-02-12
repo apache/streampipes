@@ -103,7 +103,7 @@ import { ObjectPermissionDialogComponent } from './dialog/object-permission-dial
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
-import { PaginatorService } from './components/sp-table/sp-paginator/sp-paginator.component';
+import { PaginatorService } from './components/sp-table/sp-paginator/sp-paginator.service';
 import { SpAlertBannerComponent } from './components/alert-banner/alert-banner.component';
 import { FormFieldComponent } from './components/form-field/form-field.component';
 import { FormLabelComponent } from './components/form-label/form-label.component';

@@ -54,6 +54,12 @@ import { HistogramTransform } from './core-ui/echarts-transform/histogram.transf
 import { RoundValuesTransform} from './core-ui/echarts-transform/round-values.transform';
 import { MapTransform } from './core-ui/echarts-transform/map.transform';
 import { MarkdownModule } from 'ngx-markdown';
+import { DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel } from '@angular/material/datepicker';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import {
+    PaginatorService,
+    SortByRuntimeNamePipe
+} from '@streampipes/shared-ui';
 
 import * as echarts from 'echarts';
 import * as transform from 'echarts-simple-transform';
@@ -104,6 +110,13 @@ import * as $ from 'jquery';
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline', subscriptSizing: 'dynamic' }},
         { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorProvider, multi: true },
         { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
+        DefaultMatCalendarRangeStrategy,
+        MatRangeDateSelectionModel,
+        SortByRuntimeNamePipe,
+        {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService, // Use the custom paginator service
+        },
     ],
     bootstrap: [AppComponent]
 })
