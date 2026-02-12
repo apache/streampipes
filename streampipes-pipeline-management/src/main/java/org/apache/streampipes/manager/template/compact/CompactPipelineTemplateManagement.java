@@ -25,7 +25,7 @@ import org.apache.streampipes.model.pipeline.PipelineModificationResult;
 import org.apache.streampipes.model.pipeline.compact.CompactPipelineElement;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.model.template.PipelineTemplateGenerationRequest;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
 import java.util.List;
@@ -39,9 +39,9 @@ import static org.apache.streampipes.manager.pipeline.compact.generation.Invocab
 public class CompactPipelineTemplateManagement {
 
   private final IPipelineElementDescriptionStorage storage;
-  private final CRUDStorage<CompactPipelineTemplate> templateStorage;
+  private final ICompactPipelineTemplateStorage templateStorage;
 
-  public CompactPipelineTemplateManagement(CRUDStorage<CompactPipelineTemplate> templateStorage,
+  public CompactPipelineTemplateManagement(ICompactPipelineTemplateStorage templateStorage,
                                            IPipelineElementDescriptionStorage descriptionStorage) {
     this.templateStorage = templateStorage;
     this.storage = descriptionStorage;

@@ -15,22 +15,19 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.storage.couchdb.impl;
 
-package org.apache.streampipes.manager.setup.tasks;
-
-import org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate;
+import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class AddDefaultPipelineTemplatesTask implements InstallationTask {
+public class CompactPipelineTemplateStorageImpl extends DefaultCrudStorage<CompactPipelineTemplate>
+    implements ICompactPipelineTemplateStorage {
 
-  ICompactPipelineTemplateStorage storage;
-
-  public AddDefaultPipelineTemplatesTask(ICompactPipelineTemplateStorage storage) {
-    this.storage = storage;
-  }
-
-  @Override
-  public void execute() {
-    storage.persist(new PersistDataLakePipelineTemplate().getTemplate());
+  public CompactPipelineTemplateStorageImpl() {
+    super(
+        () -> Utils.getCouchDbGsonClient("pipeline-templates"),
+        CompactPipelineTemplate.class
+    );
   }
 }

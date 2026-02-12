@@ -21,9 +21,9 @@ import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.opcua.Certificate;
-import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.IDataExplorerDashboardStorage;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
@@ -52,6 +52,7 @@ import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.CompactPipelineTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataLakeMeasureStorage;
 import org.apache.streampipes.storage.couchdb.impl.DataExplorerDashboardStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataExplorerWidgetStorageImpl;
@@ -215,11 +216,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<CompactPipelineTemplate> getPipelineTemplateStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("pipeline-templates"),
-        CompactPipelineTemplate.class
-    );
+  public ICompactPipelineTemplateStorage getPipelineTemplateStorage() {
+    return new CompactPipelineTemplateStorageImpl();
   }
 
   @Override

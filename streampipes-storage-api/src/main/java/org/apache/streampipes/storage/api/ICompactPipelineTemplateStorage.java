@@ -15,22 +15,9 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.storage.api;
 
-package org.apache.streampipes.manager.setup.tasks;
+import org.apache.streampipes.model.template.CompactPipelineTemplate;
 
-import org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate;
-import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
-
-public class AddDefaultPipelineTemplatesTask implements InstallationTask {
-
-  ICompactPipelineTemplateStorage storage;
-
-  public AddDefaultPipelineTemplatesTask(ICompactPipelineTemplateStorage storage) {
-    this.storage = storage;
-  }
-
-  @Override
-  public void execute() {
-    storage.persist(new PersistDataLakePipelineTemplate().getTemplate());
-  }
+public interface ICompactPipelineTemplateStorage extends CRUDStorage<CompactPipelineTemplate> {
 }

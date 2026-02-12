@@ -24,7 +24,7 @@ import org.apache.streampipes.model.template.PipelineTemplateGenerationRequest;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
@@ -46,7 +46,7 @@ import java.util.Map;
 @RequestMapping("/api/v2/pipeline-templates")
 public class PipelineTemplate extends AbstractAuthGuardedRestResource {
 
-  private final CRUDStorage<CompactPipelineTemplate> storage;
+  private final ICompactPipelineTemplateStorage storage;
   private final CompactPipelineTemplateManagement templateManagement;
 
   public PipelineTemplate() {
