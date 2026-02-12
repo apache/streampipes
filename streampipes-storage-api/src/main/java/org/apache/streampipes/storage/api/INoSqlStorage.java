@@ -23,7 +23,6 @@ import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
-import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -52,7 +51,7 @@ public interface INoSqlStorage {
 
   IFileMetadataStorage getFileMetadataStorage();
 
-  CRUDStorage<DashboardModel> getDataExplorerDashboardStorage();
+  IDataExplorerDashboardStorage getDataExplorerDashboardStorage();
 
   CRUDStorage<DataExplorerWidgetModel> getDataExplorerWidgetStorage();
 

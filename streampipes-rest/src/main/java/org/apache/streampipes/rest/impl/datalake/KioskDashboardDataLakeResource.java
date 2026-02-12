@@ -29,6 +29,7 @@ import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IDataExplorerDashboardStorage;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -50,7 +51,7 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
 
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
-  private final CRUDStorage<DashboardModel> dashboardStorage =
+  private final IDataExplorerDashboardStorage dashboardStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage();
   private final CRUDStorage<DataExplorerWidgetModel> dataExplorerWidgetStorage;
   private final IPermissionStorage permissionStorage;
@@ -127,4 +128,3 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     return !perms.isEmpty() && perms.get(0).isReadAnonymous();
   }
 }
-
