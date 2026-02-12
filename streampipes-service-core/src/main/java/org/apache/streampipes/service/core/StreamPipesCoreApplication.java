@@ -51,7 +51,7 @@ import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.couchdb.impl.UserStorage;
+import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 

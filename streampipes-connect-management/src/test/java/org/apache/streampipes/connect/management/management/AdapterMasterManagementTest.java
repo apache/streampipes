@@ -22,7 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
-import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
