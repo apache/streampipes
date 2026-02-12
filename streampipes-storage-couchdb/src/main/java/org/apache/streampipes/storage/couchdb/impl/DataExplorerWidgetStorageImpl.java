@@ -15,31 +15,19 @@
  * limitations under the License.
  *
  */
-
-package org.apache.streampipes.resource.management;
+package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataExplorerWidgetModel> {
+public class DataExplorerWidgetStorageImpl extends DefaultCrudStorage<DataExplorerWidgetModel>
+    implements IDataExplorerWidgetStorage {
 
-  private final DataExplorerResourceManager dashboardManager;
-
-  public DataExplorerWidgetResourceManager(DataExplorerResourceManager dashboardManager,
-      IDataExplorerWidgetStorage db) {
-    super(db, DataExplorerWidgetModel.class);
-    this.dashboardManager = dashboardManager;
-  }
-
-  @Override
-  public void delete(String elementId) {
-    deleteDataViewsFromDashboard(elementId);
-    super.delete(elementId);
-  }
-
-  private void deleteDataViewsFromDashboard(String widgetElementId) {
-    dashboardManager.findAll().stream()
-        .filter(dashboard -> dashboard.getWidgets().removeIf(w -> w.getDataViewElementId().equals(widgetElementId)))
-        .forEach(dashboardManager::update);
+  public DataExplorerWidgetStorageImpl() {
+    super(
+        () -> Utils.getCouchDbGsonClient("dataexplorerwidget"),
+        DataExplorerWidgetModel.class
+    );
   }
 }

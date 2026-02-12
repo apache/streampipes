@@ -23,8 +23,8 @@ import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IDataExplorerDashboardStorage;
+import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -45,7 +45,7 @@ public class DataExplorerDataViewMigration implements Migration {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataExplorerDataViewMigration.class);
 
-  private final CRUDStorage<DataExplorerWidgetModel> dataViewStorage;
+  private final IDataExplorerWidgetStorage dataViewStorage;
   private final IDataExplorerDashboardStorage dataExplorerDashboardStorage;
   private final PermissionResourceManager permissionResourceManager;
 
