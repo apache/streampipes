@@ -28,7 +28,6 @@ import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.storage.api.CRUDStorage;
@@ -37,6 +36,7 @@ import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.api.IDataStreamStorage;
+import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.api.IImageStorage;
 import org.apache.streampipes.storage.api.INoSqlStorage;
@@ -59,6 +59,7 @@ import org.apache.streampipes.storage.couchdb.impl.DataStreamStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.impl.DefaultViewCrudStorage;
 import org.apache.streampipes.storage.couchdb.impl.GenericStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ImageStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.NotificationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PermissionStorageImpl;
@@ -121,11 +122,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<FileMetadata> getFileMetadataStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("filemetadata"),
-        FileMetadata.class
-    );
+  public IFileMetadataStorage getFileMetadataStorage() {
+    return new FileMetadataStorageImpl();
   }
 
   @Override

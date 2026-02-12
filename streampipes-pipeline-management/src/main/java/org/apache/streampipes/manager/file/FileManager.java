@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.file;
 import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.sdk.helpers.Filetypes;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.io.input.BOMInputStream;
@@ -34,11 +34,11 @@ import java.util.stream.Collectors;
 
 public class FileManager {
 
-  private final CRUDStorage<FileMetadata> fileMetadataStorage;
+  private final IFileMetadataStorage fileMetadataStorage;
   private final FileHandler fileHandler;
   private final FileHasher fileHasher;
 
-  public FileManager(CRUDStorage<FileMetadata> fileMetadataStorage,
+  public FileManager(IFileMetadataStorage fileMetadataStorage,
                      FileHandler fileHandler,
                      FileHasher fileHasher) {
     this.fileMetadataStorage = fileMetadataStorage;
