@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 

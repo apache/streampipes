@@ -30,11 +30,11 @@ import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.api.IDataProcessorStorage;
-import org.apache.streampipes.storage.api.IDataSinkStorage;
-import org.apache.streampipes.storage.api.IExtensionsServiceStorage;
-import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

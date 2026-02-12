@@ -20,7 +20,7 @@ package org.apache.streampipes.service.core.migrations.v970;
 
 import org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;

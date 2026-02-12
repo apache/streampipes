@@ -25,7 +25,7 @@ import org.apache.streampipes.model.connect.adapter.compact.CreateOptions;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineModificationResult;
 import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import java.util.UUID;
 

@@ -29,7 +29,7 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
-import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.vocabulary.SO;
 
 import java.util.List;

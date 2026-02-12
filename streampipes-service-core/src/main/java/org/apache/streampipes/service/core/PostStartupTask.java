@@ -30,8 +30,8 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.api.INoSqlStorage;
-import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.core.INoSqlStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;

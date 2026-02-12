@@ -25,8 +25,8 @@ import org.apache.streampipes.model.pipeline.PipelineModificationResult;
 import org.apache.streampipes.model.pipeline.compact.CompactPipelineElement;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.model.template.PipelineTemplateGenerationRequest;
-import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import java.util.List;
 import java.util.Map;

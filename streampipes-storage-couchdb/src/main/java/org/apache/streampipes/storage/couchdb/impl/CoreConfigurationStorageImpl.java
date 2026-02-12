@@ -19,7 +19,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
-import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 

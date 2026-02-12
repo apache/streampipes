@@ -19,7 +19,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.google.gson.JsonObject;

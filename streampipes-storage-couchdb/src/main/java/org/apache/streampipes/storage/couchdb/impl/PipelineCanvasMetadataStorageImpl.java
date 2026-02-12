@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.canvas.PipelineCanvasMetadata;
-import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineCanvasMetadataStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 

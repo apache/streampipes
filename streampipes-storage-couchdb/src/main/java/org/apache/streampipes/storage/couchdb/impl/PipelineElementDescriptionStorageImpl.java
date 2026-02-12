@@ -21,11 +21,11 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.api.IDataProcessorStorage;
-import org.apache.streampipes.storage.api.IDataSinkStorage;
-import org.apache.streampipes.storage.api.IDataStreamStorage;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import java.util.List;
 

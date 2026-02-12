@@ -33,7 +33,7 @@ import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.UserResourceManager;
-import org.apache.streampipes.storage.api.IGenericStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;

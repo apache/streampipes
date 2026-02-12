@@ -28,7 +28,7 @@ import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
 import org.springframework.http.MediaType;

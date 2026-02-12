@@ -23,7 +23,7 @@ import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.resource.management.CrudResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.IAssetStorage;
+import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.HttpStatus;

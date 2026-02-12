@@ -20,7 +20,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.storage.api.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;

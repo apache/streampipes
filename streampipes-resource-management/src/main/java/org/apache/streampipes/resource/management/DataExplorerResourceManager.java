@@ -20,8 +20,8 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.dashboard.CompositeDashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
-import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;

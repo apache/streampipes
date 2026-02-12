@@ -19,7 +19,7 @@
 package org.apache.streampipes.manager.setup.tasks;
 
 import org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate;
-import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 
 public class AddDefaultPipelineTemplatesTask implements InstallationTask {
 

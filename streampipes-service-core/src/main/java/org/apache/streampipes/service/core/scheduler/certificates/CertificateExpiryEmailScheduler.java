@@ -24,7 +24,7 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.model.opcua.Certificate;
-import org.apache.streampipes.storage.api.IUserStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;

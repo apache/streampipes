@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.storage.api.IImageStorage;
+import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import org.lightcouch.CouchDbClient;

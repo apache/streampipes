@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class DataExplorerWidgetStorageImpl extends DefaultCrudStorage<DataExplorerWidgetModel>

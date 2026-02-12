@@ -20,7 +20,7 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.file.GenericStorageAttachment;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.IGenericStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 

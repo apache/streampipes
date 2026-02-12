@@ -21,7 +21,7 @@ import org.apache.streampipes.model.canvas.PipelineCanvasMetadata;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineCanvasMetadataStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

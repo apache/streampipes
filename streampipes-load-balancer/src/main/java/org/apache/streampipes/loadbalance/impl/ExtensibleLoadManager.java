@@ -23,7 +23,7 @@ import org.apache.streampipes.loadbalance.PipelineMigrator;
 import org.apache.streampipes.loadbalance.unit.ResourceUnitStatsScanner;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
-import org.apache.streampipes.storage.api.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;

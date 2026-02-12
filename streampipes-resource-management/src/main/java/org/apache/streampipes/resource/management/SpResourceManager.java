@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 public class SpResourceManager {
 

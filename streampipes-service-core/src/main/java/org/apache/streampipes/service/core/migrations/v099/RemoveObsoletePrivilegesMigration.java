@@ -20,7 +20,7 @@ package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.IPrivilegeStorage;
+import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;

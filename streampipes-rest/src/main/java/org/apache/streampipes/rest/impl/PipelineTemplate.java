@@ -24,7 +24,7 @@ import org.apache.streampipes.model.template.PipelineTemplateGenerationRequest;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
-import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;

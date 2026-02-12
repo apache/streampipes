@@ -19,7 +19,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.shared.api.Storable;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 

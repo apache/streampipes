@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
-import org.apache.streampipes.storage.api.IAssetStorage;
+import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class AssetStorageImpl extends DefaultViewCrudStorage<SpAssetModel> implements IAssetStorage {

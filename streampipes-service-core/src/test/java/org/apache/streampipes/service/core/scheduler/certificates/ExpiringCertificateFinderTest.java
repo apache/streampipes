@@ -21,7 +21,7 @@ package org.apache.streampipes.service.core.scheduler.certificates;
 
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.opcua.CertificateBuilder;
-import org.apache.streampipes.storage.api.ICertificateStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

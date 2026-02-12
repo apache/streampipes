@@ -29,7 +29,7 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 

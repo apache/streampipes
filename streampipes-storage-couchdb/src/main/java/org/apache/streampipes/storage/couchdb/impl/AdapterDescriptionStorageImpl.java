@@ -19,7 +19,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;

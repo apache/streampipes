@@ -24,8 +24,8 @@ import org.apache.streampipes.health.monitoring.model.ActiveResources;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import java.util.AbstractMap;
 import java.util.HashMap;

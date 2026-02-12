@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.storage.api.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class ExtensionsServiceStorageImpl extends DefaultCrudStorage<SpServiceRegistration>

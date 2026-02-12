@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.opcua.Certificate;
-import org.apache.streampipes.storage.api.ICertificateStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class CertificateStorageImpl extends DefaultCrudStorage<Certificate> implements ICertificateStorage {

@@ -22,7 +22,7 @@ import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
-import org.apache.streampipes.storage.api.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;

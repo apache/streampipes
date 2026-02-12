@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.storage.api.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;

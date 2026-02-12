@@ -24,7 +24,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

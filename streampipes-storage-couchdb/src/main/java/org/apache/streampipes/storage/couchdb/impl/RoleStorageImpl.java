@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.client.user.Role;
-import org.apache.streampipes.storage.api.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class RoleStorageImpl extends DefaultViewCrudStorage<Role> implements IRoleStorage {

@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
-import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class CompactPipelineTemplateStorageImpl extends DefaultCrudStorage<CompactPipelineTemplate>

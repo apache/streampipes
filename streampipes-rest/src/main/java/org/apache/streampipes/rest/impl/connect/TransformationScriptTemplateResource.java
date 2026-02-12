@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.api.ITransformationScriptTemplateStorage;
+import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;

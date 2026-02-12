@@ -38,7 +38,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
-import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;

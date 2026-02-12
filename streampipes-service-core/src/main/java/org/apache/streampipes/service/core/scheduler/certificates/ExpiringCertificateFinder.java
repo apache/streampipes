@@ -19,7 +19,7 @@
 package org.apache.streampipes.service.core.scheduler.certificates;
 
 import org.apache.streampipes.model.opcua.Certificate;
-import org.apache.streampipes.storage.api.ICertificateStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;

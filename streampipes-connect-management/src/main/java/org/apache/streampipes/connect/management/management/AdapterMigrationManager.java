@@ -24,7 +24,7 @@ import org.apache.streampipes.manager.migration.IMigrationHandler;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
-import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

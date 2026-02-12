@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.storage.api.IDataExplorerDashboardStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class DataExplorerDashboardStorageImpl extends DefaultCrudStorage<DashboardModel>

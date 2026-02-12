@@ -20,7 +20,7 @@ package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.IDataExplorerDashboardStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.lang3.RandomStringUtils;

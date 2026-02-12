@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.file;
 import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.sdk.helpers.Filetypes;
-import org.apache.streampipes.storage.api.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.io.input.BOMInputStream;

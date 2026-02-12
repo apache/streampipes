@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.storage.api.IDataStreamStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class DataStreamStorageImpl extends DefaultCrudStorage<SpDataStream> implements IDataStreamStorage {

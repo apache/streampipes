@@ -20,7 +20,7 @@ package org.apache.streampipes.service.core.migrations.v093;
 
 import org.apache.streampipes.model.configuration.DefaultEmailTemplateConfiguration;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;

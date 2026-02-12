@@ -19,7 +19,7 @@ package org.apache.streampipes.health.monitoring;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
-import org.apache.streampipes.storage.api.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

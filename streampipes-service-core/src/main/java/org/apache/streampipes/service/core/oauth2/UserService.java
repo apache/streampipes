@@ -26,9 +26,9 @@ import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
-import org.apache.streampipes.storage.api.IRoleStorage;
-import org.apache.streampipes.storage.api.IUserGroupStorage;
-import org.apache.streampipes.storage.api.IUserStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;

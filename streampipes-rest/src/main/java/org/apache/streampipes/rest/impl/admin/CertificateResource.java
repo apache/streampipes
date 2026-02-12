@@ -23,7 +23,7 @@ import org.apache.streampipes.model.opcua.CertificateState;
 import org.apache.streampipes.model.opcua.CertificateUsage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.ICertificateStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;

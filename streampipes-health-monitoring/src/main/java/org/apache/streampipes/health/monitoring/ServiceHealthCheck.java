@@ -24,7 +24,7 @@ import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
-import org.apache.streampipes.storage.api.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;

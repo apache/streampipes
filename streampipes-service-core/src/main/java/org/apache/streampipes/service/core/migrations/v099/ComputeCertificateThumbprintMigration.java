@@ -21,7 +21,7 @@ package org.apache.streampipes.service.core.migrations.v099;
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.opcua.CertificateUtils;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.ICertificateStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;

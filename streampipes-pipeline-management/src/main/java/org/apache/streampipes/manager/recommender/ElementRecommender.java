@@ -32,7 +32,7 @@ import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineModification;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;

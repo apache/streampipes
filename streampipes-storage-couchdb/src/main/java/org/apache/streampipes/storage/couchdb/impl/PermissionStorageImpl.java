@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.client.user.Permission;
-import org.apache.streampipes.storage.api.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;

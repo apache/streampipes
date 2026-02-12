@@ -22,7 +22,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
-import org.apache.streampipes.storage.api.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.slf4j.Logger;

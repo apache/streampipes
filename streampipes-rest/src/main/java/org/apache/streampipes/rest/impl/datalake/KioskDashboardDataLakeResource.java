@@ -28,9 +28,9 @@ import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.api.IDataExplorerDashboardStorage;
-import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
-import org.apache.streampipes.storage.api.IPermissionStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;

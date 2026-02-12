@@ -21,7 +21,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.storage.api.INotificationStorage;
+import org.apache.streampipes.storage.api.system.INotificationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;

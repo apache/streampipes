@@ -22,7 +22,7 @@ import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 

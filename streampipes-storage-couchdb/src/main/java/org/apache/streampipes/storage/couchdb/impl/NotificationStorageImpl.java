@@ -20,7 +20,7 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.Notification;
 import org.apache.streampipes.model.NotificationCount;
-import org.apache.streampipes.storage.api.INotificationStorage;
+import org.apache.streampipes.storage.api.system.INotificationStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 

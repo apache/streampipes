@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.storage.api.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;

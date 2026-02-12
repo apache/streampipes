@@ -19,7 +19,7 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 
 import org.lightcouch.CouchDbClient;
 

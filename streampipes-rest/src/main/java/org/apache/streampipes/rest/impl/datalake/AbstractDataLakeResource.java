@@ -22,7 +22,7 @@ import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
-import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.security.core.context.SecurityContextHolder;
