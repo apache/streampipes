@@ -20,7 +20,7 @@ package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IPrivilegeStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class RemoveObsoletePrivilegesMigration implements Migration {
 
-  public CRUDStorage<Privilege> privilegeStorage;
+  public IPrivilegeStorage privilegeStorage;
 
   private static final List<String> privilegesToRemove = List.of(
       "PRIVILEGE_READ_DASHBOARD_WIDGET",
