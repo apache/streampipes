@@ -27,6 +27,7 @@ import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
 import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.IUserGroupStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -48,7 +49,7 @@ public class UserService {
 
   private final IUserStorage userStorage;
   private final CRUDStorage<Role> roleStorage;
-  private final CRUDStorage<Group> groupStorage;
+  private final IUserGroupStorage groupStorage;
   private final Environment env;
   private List<Role> allRoles;
   private List<Group> allGroups;

@@ -18,7 +18,6 @@
 package org.apache.streampipes.storage.couchdb;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
-import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
@@ -48,6 +47,7 @@ import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.IUserGroupStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
@@ -66,6 +66,7 @@ import org.apache.streampipes.storage.couchdb.impl.PipelineCanvasMetadataStorage
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
@@ -92,12 +93,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<Group> getUserGroupStorage() {
-    return new DefaultViewCrudStorage<>(
-        Utils::getCouchDbUserClient,
-        Group.class,
-        "users/groups"
-    );
+  public IUserGroupStorage getUserGroupStorage() {
+    return new UserGroupStorageImpl();
   }
 
   @Override
