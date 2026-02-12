@@ -19,7 +19,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { LabelsService, SpLabel } from '@streampipes/platform-services';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import {
     SpBasicNavTabsComponent,
     SpBreadcrumbService,

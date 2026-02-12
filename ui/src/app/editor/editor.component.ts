@@ -34,7 +34,7 @@ import {
 } from '@streampipes/shared-ui';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of, zip } from 'rxjs';
-import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
+import { SpPipelineRoutes } from '../pipelines/pipelines.breadcrumb';
 import { catchError, map } from 'rxjs/operators';
 import { EditorService } from './services/editor.service';
 import { JsplumbService } from './services/jsplumb.service';

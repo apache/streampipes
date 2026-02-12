@@ -27,7 +27,7 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
-import { SpConnectRoutes } from '../../connect.routes';
+import { SpConnectRoutes } from '../../connect.breadcrumb';
 import {
     FlexDirective,
     LayoutAlignDirective,

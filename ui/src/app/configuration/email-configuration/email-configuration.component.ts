@@ -27,7 +27,7 @@ import {
 } from '@angular/forms';
 import { EmailConfig, MailConfigService } from '@streampipes/platform-services';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import {
     FormFieldComponent,
     SpAlertBannerComponent,

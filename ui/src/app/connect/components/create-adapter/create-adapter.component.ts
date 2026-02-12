@@ -22,7 +22,7 @@ import {
     AdapterService,
 } from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
-import { SpConnectRoutes } from '../../connect.routes';
+import { SpConnectRoutes } from '../../connect.breadcrumb';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { AdapterConfigurationComponent } from '../adapter-configuration/adapter-configuration.component';
 

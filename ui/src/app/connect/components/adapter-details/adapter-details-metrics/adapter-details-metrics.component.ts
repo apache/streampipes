@@ -29,7 +29,7 @@ import {
     SpBasicNavTabsComponent,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { SpConnectRoutes } from '../../../connect.routes';
+import { SpConnectRoutes } from '../../../connect.breadcrumb';
 import {
     FlexDirective,
     LayoutAlignDirective,

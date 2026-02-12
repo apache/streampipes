@@ -28,7 +28,7 @@ import {
     SpBreadcrumbService,
     SpNavigationItem,
 } from '@streampipes/shared-ui';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { UserRole } from '../../_enums/user-role.enum';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { LocationFeaturesConfigurationComponent } from './location-features-configuration/location-features-configuration.component';

@@ -46,7 +46,7 @@ import {
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { SpDashboardRoutes } from '../../dashboard.routes';
+import { SpDashboardRoutes } from '../../dashboard.breadcrumb';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 import { ChartDetectChangesService } from '../../../chart/services/chart-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/dataview-dashboard.model';

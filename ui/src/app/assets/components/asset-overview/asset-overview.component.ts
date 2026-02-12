@@ -42,7 +42,7 @@ import {
     SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
-import { SpAssetRoutes } from '../../assets.routes';
+import { SpAssetRoutes } from '../../assets.breadcrumb';
 import { Router } from '@angular/router';
 import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';

@@ -27,7 +27,7 @@ import {
 } from '@streampipes/shared-ui';
 import { FileUploadDialogComponent } from '../dialog/file-upload/file-upload-dialog.component';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,

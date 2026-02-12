@@ -106,11 +106,10 @@ let modulesActive = {
 for (let module of config.modules) {
     const cardsForModule = featureCardsByModule[module] || [];
     modulesActive['modulesActive'].push({
-        module: module,
-        componentImport: modules[module]['componentImport'],
-        moduleName: modules[module]['moduleName'],
         component: modules[module]['component'],
         componentPath: modules[module]['componentPath'],
+        routesPath: modules[module]['routesPath'],
+        routesName: modules[module]['routesName'],
         path: modules[module]['path'],
         link: modules[module]['link'],
         pageNames: modules[module]['pageNames'],
@@ -118,8 +117,6 @@ for (let module of config.modules) {
         url: modules[module]['url'],
         title: modules[module]['title'],
         icon: modules[module]['icon'],
-        admin: modules[module]['admin'],
-        description: modules[module]['description'],
         showStatusBox: modules[module]['showStatusBox'],
         statusBox: modules[module]['statusBox'],
         category: modules[module]['category'],

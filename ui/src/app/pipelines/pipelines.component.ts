@@ -37,7 +37,7 @@ import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/s
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
-import { SpPipelineRoutes } from './pipelines.routes';
+import { SpPipelineRoutes } from './pipelines.breadcrumb';
 import { UserRole } from '../_enums/user-role.enum';
 import { ShepherdService } from '../services/tour/shepherd.service';
 import { Subscription } from 'rxjs';

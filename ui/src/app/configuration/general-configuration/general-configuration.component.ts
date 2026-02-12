@@ -45,7 +45,7 @@ import {
     SplitSectionComponent,
     SpNavigationItem,
 } from '@streampipes/shared-ui';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { map } from 'rxjs/operators';
 import {
     FlexDirective,

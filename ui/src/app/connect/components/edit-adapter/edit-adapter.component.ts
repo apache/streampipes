@@ -24,7 +24,7 @@ import {
     AdapterService,
 } from '@streampipes/platform-services';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
-import { SpConnectRoutes } from '../../connect.routes';
+import { SpConnectRoutes } from '../../connect.breadcrumb';
 import { AdapterConfigurationComponent } from '../adapter-configuration/adapter-configuration.component';
 
 @Component({

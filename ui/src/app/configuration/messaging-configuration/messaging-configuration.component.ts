@@ -33,7 +33,7 @@ import {
     SplitSectionComponent,
     SpNavigationItem,
 } from '@streampipes/shared-ui';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { MessagingSettings } from '@streampipes/platform-services';
 import {
     FlexDirective,

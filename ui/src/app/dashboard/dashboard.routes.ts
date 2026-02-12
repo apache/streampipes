@@ -16,11 +16,29 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { Routes } from '@angular/router';
+import { DashboardOverviewComponent } from './components/overview/dashboard-overview.component';
+import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
+import { ChartPanelCanDeactivateGuard } from '../chart-shared/services/chart-panel-can-deactivate-guard.service';
 
-export class SpDashboardRoutes {
-    static BASE: SpBreadcrumbItem = {
-        label: 'Dashboards',
-        link: ['dashboard'],
-    };
-}
+export const DASHBOARD_ROUTES: Routes = [
+    {
+        path: '',
+        children: [
+            {
+                path: '',
+                component: DashboardOverviewComponent,
+            },
+            {
+                path: ':id',
+                component: DashboardPanelComponent,
+                canDeactivate: [ChartPanelCanDeactivateGuard],
+            },
+            {
+                path: ':id/:startTime/:endTime',
+                component: DashboardPanelComponent,
+                canDeactivate: [ChartPanelCanDeactivateGuard],
+            },
+        ],
+    },
+];

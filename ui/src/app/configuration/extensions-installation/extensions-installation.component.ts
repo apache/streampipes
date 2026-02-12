@@ -34,7 +34,7 @@ import {
 } from '@angular/material/select';
 import { ExtensionsInstallationService } from './extensions-installation.service';
 import { SpExtensionsInstallationDialogComponent } from '../dialog/extensions-installation/extensions-installation.component';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {

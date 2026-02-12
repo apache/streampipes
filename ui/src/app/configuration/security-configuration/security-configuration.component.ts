@@ -24,7 +24,7 @@ import {
     SplitSectionComponent,
     SpNavigationItem,
 } from '@streampipes/shared-ui';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { SecurityUserConfigComponent } from './security-user-configuration/security-user-config.component';
 import { SecurityServiceConfigComponent } from './security-service-configuration/security-service-config.component';
 import { SecurityRoleConfigComponent } from './role-configuration/role-configuration.component';

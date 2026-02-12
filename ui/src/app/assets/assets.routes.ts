@@ -16,15 +16,38 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { Routes } from '@angular/router';
+import { SpAssetOverviewComponent } from './components/asset-overview/asset-overview.component';
+import { SpViewAssetComponent } from './components/asset-details/view-asset/view-asset.component';
+import { SpAssetDetailsComponent } from './components/asset-details/edit-asset/asset-details.component';
+import { UserPrivilege } from '../_enums/user-privilege.enum';
+import { PageAuthGuard } from '../_guards/page-auth.can-active.guard';
 
-export class SpAssetRoutes {
-    static BASE: SpBreadcrumbItem = {
-        label: 'Asset Management',
-        link: ['assets'],
-    };
-    static CREATE: SpBreadcrumbItem = {
-        label: 'New Asset',
-        link: ['assets', 'create'],
-    };
-}
+export const ASSET_ROUTES: Routes = [
+    {
+        path: '',
+        children: [
+            {
+                path: '',
+                redirectTo: 'overview',
+                pathMatch: 'full',
+            },
+            {
+                path: 'overview',
+                component: SpAssetOverviewComponent,
+            },
+            {
+                path: 'details/:assetId/view',
+                component: SpViewAssetComponent,
+            },
+            {
+                path: 'details/:assetId/edit',
+                component: SpAssetDetailsComponent,
+                data: {
+                    privileges: [UserPrivilege.PRIVILEGE_WRITE_ASSETS],
+                },
+                canActivate: [PageAuthGuard],
+            },
+        ],
+    },
+];

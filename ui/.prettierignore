@@ -26,3 +26,4 @@ src/app/app.module.ts
 src/app/core/components/base-navigation.component.ts
 src/app/home/home.service.ts
 deployment/app.module.mst
+deployment/*.mst

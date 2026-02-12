@@ -35,7 +35,7 @@ import {
     PanelType,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
+import { SpPipelineRoutes } from '../pipelines/pipelines.breadcrumb';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';

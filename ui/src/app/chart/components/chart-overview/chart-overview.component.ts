@@ -23,7 +23,7 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
-import { SpChartRoutes } from '../../chart.routes';
+import { SpChartRoutes } from '../../chart.breadcrumb';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 import { ChartOverviewTableComponent } from './chart-overview-table/chart-overview-table.component';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
