@@ -19,7 +19,6 @@ package org.apache.streampipes.storage.couchdb;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.Privilege;
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.opcua.Certificate;
@@ -45,6 +44,7 @@ import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.IRoleStorage;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
@@ -72,6 +72,7 @@ import org.apache.streampipes.storage.couchdb.impl.PipelineCanvasMetadataStorage
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserActivationTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
@@ -203,8 +204,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<Role> getRoleStorage() {
-    return new DefaultViewCrudStorage<>(Utils::getCouchDbUserClient, Role.class, "users/role");
+  public IRoleStorage getRoleStorage() {
+    return new RoleStorageImpl();
   }
 
   @Override

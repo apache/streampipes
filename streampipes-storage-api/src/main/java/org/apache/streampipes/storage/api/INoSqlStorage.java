@@ -19,7 +19,6 @@ package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.Privilege;
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
@@ -74,7 +73,7 @@ public interface INoSqlStorage {
 
   ISpCoreConfigurationStorage getSpCoreConfigurationStorage();
 
-  CRUDStorage<Role> getRoleStorage();
+  IRoleStorage getRoleStorage();
 
   CRUDStorage<Privilege> getPrivilegeStorage();
 
