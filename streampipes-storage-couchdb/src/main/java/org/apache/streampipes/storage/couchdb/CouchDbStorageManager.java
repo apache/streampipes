@@ -20,9 +20,9 @@ package org.apache.streampipes.storage.couchdb;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.ICertificateStorage;
 import org.apache.streampipes.storage.api.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.IDataExplorerDashboardStorage;
@@ -51,6 +51,7 @@ import org.apache.streampipes.storage.api.IUserGroupStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.CertificateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CompactPipelineTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataLakeMeasureStorage;
@@ -221,11 +222,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<Certificate> getCertificateStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("certificates"),
-        Certificate.class
-    );
+  public ICertificateStorage getCertificateStorage() {
+    return new CertificateStorageImpl();
   }
 
   @Override
