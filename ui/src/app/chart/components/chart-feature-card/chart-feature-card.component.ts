@@ -27,13 +27,17 @@ import {
 } from '@streampipes/platform-services';
 import { forkJoin } from 'rxjs';
 import {
-    DefaultFlexDirective,
-    DefaultLayoutAlignDirective,
-    DefaultLayoutDirective,
-    DefaultLayoutGapDirective,
+    FlexDirective,
     FlexFillDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout';
-import { SharedUiModule } from '@streampipes/shared-ui';
+import {
+    FeatureCardHeaderComponent,
+    FeatureCardMetaCreationComponent,
+    FeatureCardMetaSectionComponent,
+} from '@streampipes/shared-ui';
 import { ChartSharedModule } from '../../../chart-shared/chart-shared.module';
 import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
 import { MatIcon } from '@angular/material/icon';
@@ -46,14 +50,16 @@ import { Router } from '@angular/router';
     templateUrl: './chart-feature-card.component.html',
     imports: [
         FlexFillDirective,
-        DefaultLayoutDirective,
-        SharedUiModule,
         ChartSharedModule,
-        DefaultFlexDirective,
-        DefaultLayoutAlignDirective,
-        DefaultLayoutGapDirective,
         MatIcon,
         TranslatePipe,
+        FeatureCardHeaderComponent,
+        LayoutDirective,
+        FeatureCardMetaCreationComponent,
+        FeatureCardMetaSectionComponent,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        FlexDirective,
     ],
     styleUrls: ['./chart-feature-card.component.scss'],
 })

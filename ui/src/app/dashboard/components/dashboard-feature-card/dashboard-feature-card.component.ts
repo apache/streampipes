@@ -19,11 +19,15 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { PipelineDetailsModule } from '../../../pipeline-details/pipeline-details.module';
 import {
-    DefaultFlexDirective,
-    DefaultLayoutDirective,
+    FlexDirective,
     FlexFillDirective,
+    LayoutDirective,
 } from '@ngbracket/ngx-layout';
-import { SharedUiModule, TimeSelectionService } from '@streampipes/shared-ui';
+import {
+    FeatureCardHeaderComponent,
+    FeatureCardMetaCreationComponent,
+    TimeSelectionService,
+} from '@streampipes/shared-ui';
 import { MatDivider } from '@angular/material/list';
 import { forkJoin } from 'rxjs';
 import {
@@ -46,12 +50,13 @@ import { Router } from '@angular/router';
     styleUrls: ['./dashboard-feature-card.component.scss'],
     imports: [
         PipelineDetailsModule,
-        DefaultFlexDirective,
-        DefaultLayoutDirective,
-        SharedUiModule,
         FlexFillDirective,
         MatDivider,
         DashboardSharedModule,
+        LayoutDirective,
+        FeatureCardHeaderComponent,
+        FeatureCardMetaCreationComponent,
+        FlexDirective,
     ],
 })
 export class DashboardFeatureCardComponent implements OnInit {

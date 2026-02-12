@@ -18,12 +18,16 @@
 
 import { Component, inject, Input, OnInit } from '@angular/core';
 import {
-    DefaultLayoutAlignDirective,
-    DefaultLayoutDirective,
-    DefaultLayoutGapDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout';
 import { MatIcon } from '@angular/material/icon';
-import { SharedUiModule } from '@streampipes/shared-ui';
+import {
+    FeatureCardMetaCreationComponent,
+    FeatureCardMetaSectionComponent,
+    SpLabelComponent,
+} from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PipelineHealthStatus } from '@streampipes/platform-services';
 
@@ -32,12 +36,14 @@ import { PipelineHealthStatus } from '@streampipes/platform-services';
     templateUrl: './pipeline-preview-meta.component.html',
     styleUrls: ['./pipeline-preview-meta.component.scss'],
     imports: [
-        DefaultLayoutDirective,
-        DefaultLayoutGapDirective,
         MatIcon,
-        DefaultLayoutAlignDirective,
-        SharedUiModule,
         TranslatePipe,
+        FeatureCardMetaCreationComponent,
+        FeatureCardMetaSectionComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        SpLabelComponent,
     ],
 })
 export class PipelinePreviewMetaComponent implements OnInit {
