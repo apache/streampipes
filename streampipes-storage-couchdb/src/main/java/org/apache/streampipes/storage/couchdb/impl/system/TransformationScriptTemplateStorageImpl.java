@@ -19,9 +19,10 @@ package org.apache.streampipes.storage.couchdb.impl.system;
 
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class TransformationScriptTemplateStorageImpl extends org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage<ConnectTransformationScriptTemplate>
+public class TransformationScriptTemplateStorageImpl extends DefaultViewCrudStorage<ConnectTransformationScriptTemplate>
     implements ITransformationScriptTemplateStorage {
 
   public TransformationScriptTemplateStorageImpl() {

@@ -19,9 +19,10 @@ package org.apache.streampipes.storage.couchdb.impl.user;
 
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class UserGroupStorageImpl extends org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage<Group> implements IUserGroupStorage {
+public class UserGroupStorageImpl extends DefaultViewCrudStorage<Group> implements IUserGroupStorage {
 
   public UserGroupStorageImpl() {
     super(

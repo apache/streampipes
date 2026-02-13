@@ -19,9 +19,10 @@ package org.apache.streampipes.storage.couchdb.impl.user;
 
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class UserActivationTokenStorageImpl extends org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage<UserActivationToken>
+public class UserActivationTokenStorageImpl extends DefaultViewCrudStorage<UserActivationToken>
     implements IUserActivationTokenStorage {
 
   public UserActivationTokenStorageImpl() {

@@ -19,9 +19,10 @@ package org.apache.streampipes.storage.couchdb.impl.user;
 
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class PasswordRecoveryTokenStorageImpl extends org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage<PasswordRecoveryToken>
+public class PasswordRecoveryTokenStorageImpl extends DefaultViewCrudStorage<PasswordRecoveryToken>
     implements IPasswordRecoveryTokenStorage {
 
   public PasswordRecoveryTokenStorageImpl() {
