@@ -20,12 +20,13 @@ package org.apache.streampipes.storage.couchdb.impl.connect;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class AdapterInstanceStorageImpl extends org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
+public class AdapterInstanceStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
 
   public AdapterInstanceStorageImpl() {
     super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);

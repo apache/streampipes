@@ -19,12 +19,13 @@ package org.apache.streampipes.storage.couchdb.impl.pipeline;
 
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class DataProcessorStorageImpl extends org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage<DataProcessorDescription>
+public class DataProcessorStorageImpl extends DefaultCrudStorage<DataProcessorDescription>
     implements IDataProcessorStorage {
 
 

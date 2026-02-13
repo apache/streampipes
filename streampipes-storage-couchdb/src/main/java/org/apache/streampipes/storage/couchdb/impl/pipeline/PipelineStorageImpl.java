@@ -20,6 +20,7 @@ package org.apache.streampipes.storage.couchdb.impl.pipeline;
 
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.google.gson.JsonObject;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PipelineStorageImpl extends org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage<Pipeline> implements IPipelineStorage {
+public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements IPipelineStorage {
 
   private static final String ADAPTER_VIEW = "adapters/used-adapters";
   private static final String ALL_PIPELINES_VIEW = "pipelines/all";

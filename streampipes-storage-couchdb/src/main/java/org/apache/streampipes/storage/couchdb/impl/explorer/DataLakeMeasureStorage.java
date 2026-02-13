@@ -20,13 +20,14 @@ package org.apache.streampipes.storage.couchdb.impl.explorer;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 
 import org.lightcouch.CouchDbClient;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public class DataLakeMeasureStorage extends org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage<DataLakeMeasure> implements IDataLakeMeasureStorage {
+public class DataLakeMeasureStorage extends DefaultCrudStorage<DataLakeMeasure> implements IDataLakeMeasureStorage {
 
   public static final String MEASUREMENT_BY_NAME_VIEW = "measurement/by-measure-name";
 

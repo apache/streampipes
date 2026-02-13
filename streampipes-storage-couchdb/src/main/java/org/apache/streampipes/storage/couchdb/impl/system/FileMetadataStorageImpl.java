@@ -19,9 +19,10 @@ package org.apache.streampipes.storage.couchdb.impl.system;
 
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class FileMetadataStorageImpl extends org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage<FileMetadata> implements IFileMetadataStorage {
+public class FileMetadataStorageImpl extends DefaultCrudStorage<FileMetadata> implements IFileMetadataStorage {
 
   public FileMetadataStorageImpl() {
     super(

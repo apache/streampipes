@@ -19,9 +19,10 @@ package org.apache.streampipes.storage.couchdb.impl.pipeline;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class DataStreamStorageImpl extends org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage<SpDataStream> implements IDataStreamStorage {
+public class DataStreamStorageImpl extends DefaultCrudStorage<SpDataStream> implements IDataStreamStorage {
 
   public DataStreamStorageImpl() {
     super(Utils::getCouchDbDataStreamDescriptionClient, SpDataStream.class);

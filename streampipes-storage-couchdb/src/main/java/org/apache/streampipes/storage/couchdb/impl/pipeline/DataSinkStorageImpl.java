@@ -19,11 +19,12 @@ package org.apache.streampipes.storage.couchdb.impl.pipeline;
 
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 
-public class DataSinkStorageImpl extends org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage<DataSinkDescription> implements IDataSinkStorage {
+public class DataSinkStorageImpl extends DefaultCrudStorage<DataSinkDescription> implements IDataSinkStorage {
 
 
   public DataSinkStorageImpl() {
