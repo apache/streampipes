@@ -19,7 +19,6 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;

@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.storage.api.system;
 
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface ITransformationScriptTemplateStorage extends CRUDStorage<ConnectTransformationScriptTemplate> {
 }

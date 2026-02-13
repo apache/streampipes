@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.storage.api.system;
 
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.model.assets.SpAssetModel;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IAssetStorage extends CRUDStorage<SpAssetModel> {
 }

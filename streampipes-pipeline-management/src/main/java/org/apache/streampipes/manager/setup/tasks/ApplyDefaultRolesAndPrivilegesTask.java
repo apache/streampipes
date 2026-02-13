@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.setup.tasks;
 
-import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.storage.api.core.CRUDStorage;

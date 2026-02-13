@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.storage.api.system;
 
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IExtensionsServiceStorage extends CRUDStorage<SpServiceRegistration> {
 }

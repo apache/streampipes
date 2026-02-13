@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.storage.api.explorer;
 
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IDataExplorerDashboardStorage extends CRUDStorage<DashboardModel> {
 }

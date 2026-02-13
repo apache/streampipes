@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.storage.api.pipeline;
 
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 import java.util.List;
 

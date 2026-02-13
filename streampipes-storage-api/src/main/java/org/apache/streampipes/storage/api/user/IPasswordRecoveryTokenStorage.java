@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.storage.api.user;
 
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IPasswordRecoveryTokenStorage extends CRUDStorage<PasswordRecoveryToken> {
 }

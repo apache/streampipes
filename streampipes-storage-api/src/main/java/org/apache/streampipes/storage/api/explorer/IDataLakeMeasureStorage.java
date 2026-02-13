@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.storage.api.explorer;
 
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IDataLakeMeasureStorage extends CRUDStorage<DataLakeMeasure> {
 

@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.storage.api.pipeline;
 
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface ICompactPipelineTemplateStorage extends CRUDStorage<CompactPipelineTemplate> {
 }

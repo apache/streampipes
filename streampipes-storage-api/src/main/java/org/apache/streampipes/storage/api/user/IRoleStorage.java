@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.storage.api.user;
 
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.model.client.user.Role;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IRoleStorage extends CRUDStorage<Role> {
 }

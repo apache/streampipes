@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.storage.api.pipeline;
 
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IDataStreamStorage extends CRUDStorage<SpDataStream> {
 
