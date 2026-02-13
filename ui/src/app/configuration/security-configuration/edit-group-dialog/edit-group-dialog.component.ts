@@ -19,23 +19,52 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Group, Role, UserGroupService } from '@streampipes/platform-services';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
-import { DialogRef } from '@streampipes/shared-ui';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { AlternateIdConfigurationComponent } from '../alternate-id-configuration/alternate-id-configuration.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-group-dialog',
     templateUrl: './edit-group-dialog.component.html',
     styleUrls: ['./edit-group-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatCheckbox,
+        AlternateIdConfigurationComponent,
+        MatDivider,
+        MatButton,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class EditGroupDialogComponent implements OnInit {
     @Input()

@@ -18,7 +18,15 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
+import {
+    MatNestedTreeNode,
+    MatTree,
+    MatTreeNestedDataSource,
+    MatTreeNode,
+    MatTreeNodeDef,
+    MatTreeNodeOutlet,
+    MatTreeNodeToggle,
+} from '@angular/material/tree';
 import {
     AssetLinkType,
     AssetManagementService,
@@ -27,12 +35,25 @@ import {
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { LayoutAlignDirective } from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-asset-link-configuration',
     templateUrl: './asset-link-configuration.component.html',
     styleUrls: ['./asset-link-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        MatTree,
+        MatTreeNodeDef,
+        MatNestedTreeNode,
+        MatIconButton,
+        MatTreeNodeToggle,
+        MatIcon,
+        LayoutAlignDirective,
+        MatTreeNodeOutlet,
+        MatTreeNode,
+    ],
 })
 export class AssetLinkConfigurationComponent implements OnInit {
     @Input() linkageData: LinkageData[] = [];

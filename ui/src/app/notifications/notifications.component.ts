@@ -39,13 +39,37 @@ import {
 } from '@streampipes/platform-services';
 import { AuthService } from '../services/auth.service';
 import { filter, switchMap } from 'rxjs/operators';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    SpBasicViewComponent,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { NotificationItemComponent } from './components/notification-item.component';
 
 @Component({
     selector: 'sp-notifications',
     templateUrl: './notifications.component.html',
     styleUrls: ['./notifications.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatTabGroup,
+        MatTab,
+        MatProgressSpinner,
+        NgClass,
+        ClassDirective,
+        NotificationItemComponent,
+    ],
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
     static readonly NOTIFICATIONS_APP_ID =

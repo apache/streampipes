@@ -16,10 +16,11 @@
  *
  */
 
-export interface App {
-    appName: string;
-    appDescription: string;
-    appId: string;
-    appLink: string;
-    appModuleLink?: any;
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+
+export class SpPipelineRoutes {
+    static BASE: SpBreadcrumbItem = {
+        label: 'Pipelines & Functions',
+        link: ['pipelines'],
+    };
 }

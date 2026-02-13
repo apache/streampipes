@@ -27,16 +27,48 @@ import {
 import {
     AdapterDescription,
     EventSchema,
+    SemanticType,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
-import { SemanticType } from '@streampipes/platform-services';
 import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NoTimestampErrorHintComponent } from './no-timestamp-error-hint/no-timestamp-error-hint.component';
+import { SpBasicInnerPanelComponent } from '@streampipes/shared-ui';
+import { ConfigureFieldsHeaderComponent } from './configure-fields-header/configure-fields-header.component';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { ConfigureFieldsLoadingMessageComponent } from './configure-fields-loading-message/configure-fields-loading-message.component';
+import { ConfigureFieldsErrorMessageComponent } from './error-message/configure-fields-error-message.component';
+import { EventPropertyRowComponent } from './event-property-row/event-property-row.component';
+import { ConfigureFieldsPreviewComponent } from './configure-fields-preview/configure-fields-preview.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-configure-fields',
     templateUrl: './configure-fields.component.html',
     styleUrls: ['./configure-fields.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        NoTimestampErrorHintComponent,
+        SpBasicInnerPanelComponent,
+        ConfigureFieldsHeaderComponent,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        ConfigureFieldsLoadingMessageComponent,
+        ConfigureFieldsErrorMessageComponent,
+        EventPropertyRowComponent,
+        ConfigureFieldsPreviewComponent,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class ConfigureFieldsComponent {
     private stateService = inject(AdapterConfigurationStateService);

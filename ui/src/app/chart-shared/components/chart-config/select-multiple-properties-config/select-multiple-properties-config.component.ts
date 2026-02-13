@@ -25,13 +25,23 @@ import {
     Output,
 } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { MatButton } from '@angular/material/button';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-select-properties-config',
     templateUrl: './select-multiple-properties-config.component.html',
     styleUrls: ['./select-multiple-properties-config.component.scss'],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        MatButton,
+        LayoutDirective,
+        MatCheckbox,
+        TranslatePipe,
+    ],
 })
 export class SelectMultiplePropertiesConfigComponent implements OnInit {
     @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> =

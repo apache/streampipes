@@ -19,6 +19,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
 import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
+import { SpExceptionDetailsComponent } from '../exception-details/exception-details.component';
+import { MatDivider } from '@angular/material/divider';
+import { LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-exception-details-dialog',
@@ -27,7 +32,13 @@ import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
         './exception-details-dialog.component.scss',
         '../../../../../../../../src/scss/sp/sp-dialog.scss',
     ],
-    standalone: false,
+    imports: [
+        SpExceptionDetailsComponent,
+        MatDivider,
+        LayoutGapDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class SpExceptionDetailsDialogComponent implements OnInit {
     @Input()

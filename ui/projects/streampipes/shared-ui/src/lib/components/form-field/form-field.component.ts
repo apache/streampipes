@@ -17,12 +17,23 @@
  */
 
 import { Component, Input } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { FormLabelComponent } from '../form-label/form-label.component';
 
 @Component({
     selector: 'sp-form-field',
     templateUrl: './form-field.component.html',
     styleUrls: ['./form-field.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        FormLabelComponent,
+    ],
 })
 export class FormFieldComponent {
     @Input()

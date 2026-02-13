@@ -18,6 +18,8 @@
 
 import { Component, inject } from '@angular/core';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
@@ -26,12 +28,44 @@ import {
 import { RegistrationModel } from './registration.model';
 import { checkPasswords } from '../../utils/check-password';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
+import { AuthBoxComponent } from '../auth-box/auth-box.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+} from '@streampipes/shared-ui';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-register-user',
     templateUrl: './register.component.html',
     styleUrls: ['../login/login.component.scss'],
-    standalone: false,
+    imports: [
+        AuthBoxComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatError,
+        MatButton,
+        MatProgressSpinner,
+        SpAlertBannerComponent,
+        RouterLink,
+        TranslatePipe,
+    ],
 })
 export class RegisterComponent extends BaseLoginPageDirective {
     parentForm: UntypedFormGroup;

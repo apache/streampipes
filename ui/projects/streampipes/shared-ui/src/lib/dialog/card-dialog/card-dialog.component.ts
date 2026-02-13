@@ -33,6 +33,7 @@ import {
     trigger,
 } from '@angular/animations';
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
+import { CdkPortalOutlet } from '@angular/cdk/portal';
 
 @Component({
     selector: 'card-dialog',
@@ -65,7 +66,7 @@ import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
             transition('* => *', animate('300ms ease-out')),
         ]),
     ],
-    standalone: false,
+    imports: [CdkPortalOutlet],
 })
 export class CardDialogComponent<T>
     extends BaseDialogComponent<T>

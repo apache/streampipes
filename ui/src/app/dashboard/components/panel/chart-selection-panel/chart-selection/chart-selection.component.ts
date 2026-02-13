@@ -24,12 +24,31 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../services/auth.service';
 import { UserPrivilege } from '../../../../../_enums/user-privilege.enum';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { ChartPreviewComponent } from './chart-preview/chart-preview.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-selection',
     templateUrl: './chart-selection.component.html',
     styleUrls: ['./chart-selection.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutGapDirective,
+        LayoutDirective,
+        ChartPreviewComponent,
+        LayoutAlignDirective,
+        MatButton,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class ChartSelectionComponent implements OnInit {
     private authService = inject(AuthService);

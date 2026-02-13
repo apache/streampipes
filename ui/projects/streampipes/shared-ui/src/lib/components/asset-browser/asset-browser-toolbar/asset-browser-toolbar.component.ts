@@ -18,16 +18,35 @@
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AssetBrowserData } from '../asset-browser.model';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { Subscription } from 'rxjs';
 import { CurrentUserService } from '../../../services/current-user.service';
 import { SpAssetBrowserService } from '../asset-browser.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { AssetBrowserFilterComponent } from './asset-browser-filter/asset-browser-filter.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-browser-toolbar',
     templateUrl: 'asset-browser-toolbar.component.html',
     styleUrls: ['asset-browser-toolbar.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutAlignDirective,
+        MatButton,
+        MatMenuTrigger,
+        MatTooltip,
+        MatIcon,
+        MatMenu,
+        FlexDirective,
+        AssetBrowserFilterComponent,
+        TranslatePipe,
+    ],
 })
 export class AssetBrowserToolbarComponent implements OnInit, OnDestroy {
     private currentUserService = inject(CurrentUserService);

@@ -25,26 +25,57 @@ import {
     Output,
 } from '@angular/core';
 import {
+    FormsModule,
     UntypedFormBuilder,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
 import {
     DataType,
+    EventProperty,
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
-    EventProperty,
     SemanticType,
 } from '@streampipes/platform-services';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
+import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-event-property',
     templateUrl: './edit-event-property.component.html',
     styleUrls: ['./edit-event-property.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        LayoutAlignDirective,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        EditSchemaTransformationComponent,
+        EditUnitTransformationComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class EditEventPropertyComponent implements OnInit {
     public dialogRef = inject(DialogRef<EditEventPropertyComponent>);

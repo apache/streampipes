@@ -46,12 +46,17 @@ import { PipelinePositioningService } from '../../../services/pipeline-positioni
 import { HttpDownloadProgressEvent } from '@angular/common/http';
 import { ObjectProvider } from '../../../services/object-provider.service';
 import { Subscription } from 'rxjs';
+import { ErrorHintComponent } from '../../../../core-ui/error-hint/error-hint.component';
 
 @Component({
     selector: 'sp-pipeline-assembly-drawing-area',
     templateUrl: './pipeline-assembly-drawing-area.component.html',
     styleUrls: ['./pipeline-assembly-drawing-area.component.scss'],
-    standalone: false,
+    imports: [
+        ErrorHintComponent,
+        PipelineAssemblyDrawingAreaPanZoomComponent,
+        PipelineComponent,
+    ],
 })
 export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     @Input()

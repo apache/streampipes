@@ -21,14 +21,51 @@ import {
     ConnectScriptTemplatesService,
     ConnectTransformationScriptTemplate,
 } from '@streampipes/platform-services';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SpLabelComponent,
+} from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import {
+    MatOption,
+    MatSelect,
+    MatSelectTrigger,
+} from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatInput } from '@angular/material/input';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-select-adapter-transformation-template-dialog',
     templateUrl:
         './select-adapter-transformation-template-dialog.component.html',
     styleUrl: './select-adapter-transformation-template-dialog.component.scss',
-    standalone: false,
+    imports: [
+        FormFieldComponent,
+        MatFormField,
+        MatSelect,
+        FormsModule,
+        MatSelectTrigger,
+        MatOption,
+        LayoutDirective,
+        SpLabelComponent,
+        MatInput,
+        MatDivider,
+        LayoutGapDirective,
+        MatButton,
+        MatIcon,
+        FlexDirective,
+        TranslatePipe,
+    ],
 })
 export class SelectAdapterTransformationTemplateDialogComponent implements OnInit {
     allTemplates: ConnectTransformationScriptTemplate[] = [];

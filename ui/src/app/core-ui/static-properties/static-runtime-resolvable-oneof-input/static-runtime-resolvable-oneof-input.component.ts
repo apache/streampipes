@@ -19,19 +19,38 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
 import {
     Option,
-    RuntimeResolvableAnyStaticProperty,
     RuntimeResolvableOneOfStaticProperty,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
-import { UntypedFormControl } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormControl,
+} from '@angular/forms';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { SpExceptionMessageComponent } from '@streampipes/shared-ui';
+import { MatRadioButton } from '@angular/material/radio';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-app-static-runtime-resolvable-oneof-input',
     templateUrl: './static-runtime-resolvable-oneof-input.component.html',
     styleUrls: ['./static-runtime-resolvable-oneof-input.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButton,
+        SpExceptionMessageComponent,
+        MatRadioButton,
+        MatProgressSpinner,
+        TranslatePipe,
+    ],
 })
 export class StaticRuntimeResolvableOneOfInputComponent
     extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableOneOfStaticProperty>

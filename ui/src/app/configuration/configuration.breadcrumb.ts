@@ -16,8 +16,8 @@
  *
  */
 
-import { App } from './apps.model';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
-export class AvailableAppsService {
-    public static apps: App[] = [];
+export class SpConfigurationRoutes {
+    static BASE: SpBreadcrumbItem = { label: 'Settings' };
 }

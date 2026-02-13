@@ -25,15 +25,37 @@ import {
 } from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
-import { MatSelectChange } from '@angular/material/select';
+import {
+    MatOption,
+    MatSelect,
+    MatSelectChange,
+    MatSelectTrigger,
+} from '@angular/material/select';
 import { IWidget } from '../../../../../chart-shared/models/dataview-dashboard.model';
 import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { NgComponentOutlet } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-visualisation-settings',
     templateUrl: './chart-visualisation-settings.component.html',
     styleUrls: ['./chart-visualisation-settings.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SplitSectionComponent,
+        MatFormField,
+        MatSelect,
+        MatSelectTrigger,
+        MatOption,
+        MatIcon,
+        NgComponentOutlet,
+        TranslatePipe,
+    ],
 })
 export class ChartVisualisationSettingsComponent implements OnInit, OnChanges {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;

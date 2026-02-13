@@ -16,26 +16,62 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, TemplateRef } from '@angular/core';
 import {
     CollectionStaticProperty,
     ExtensionDeploymentConfiguration,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { AddToCollectionComponent } from './add-to-collection/add-to-collection.component';
+import { NgTemplateOutlet } from '@angular/common';
+import { AlternativeRenderCtx } from '../static-alternatives/static-alternatives.component';
+
+export type CollectionRenderCtx = {
+    child: StaticPropertyUnion;
+    index: number;
+};
 
 @Component({
     selector: 'sp-static-collection',
     templateUrl: './static-collection.component.html',
     styleUrls: ['./static-collection.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatIcon,
+        AddToCollectionComponent,
+        NgTemplateOutlet,
+    ],
 })
 export class StaticCollectionComponent extends AbstractValidatedStaticPropertyRenderer<CollectionStaticProperty> {
     @Input()
     deploymentConfiguration: ExtensionDeploymentConfiguration;
 
+    @Input({ required: true })
+    renderStaticProperty!: TemplateRef<AlternativeRenderCtx>;
+
     constructor() {
         super();
+    }
+
+    ctxFor(
+        staticProperty: StaticPropertyUnion,
+        index: number,
+    ): CollectionRenderCtx {
+        return {
+            child: staticProperty!,
+            index,
+        };
     }
 
     add(property: StaticPropertyUnion) {

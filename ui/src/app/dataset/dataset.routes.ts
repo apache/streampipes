@@ -16,15 +16,17 @@
  *
  */
 
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { environment } from './environments/environment';
-import { AppModule } from './app/app.module';
-import { enableProdMode } from '@angular/core';
+import { Routes } from '@angular/router';
+import { DatalakeConfigurationComponent } from './components/datalake-configuration/datalake-configuration.component';
 
-if (environment.production) {
-    enableProdMode();
-}
-
-platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-    .catch(err => console.error(err));
+export const DATASET_ROUTES: Routes = [
+    {
+        path: '',
+        children: [
+            {
+                path: '',
+                component: DatalakeConfigurationComponent,
+            },
+        ],
+    },
+];

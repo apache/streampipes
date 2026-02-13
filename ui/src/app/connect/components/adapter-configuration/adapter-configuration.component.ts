@@ -24,18 +24,45 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AdapterConfigurationStateService } from './adapter-configuration-state-service/adapter-configuration-state.service';
+import {
+    SpBasicHeaderTitleComponent,
+    SpBasicViewComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { AdapterSettingsComponent } from './adapter-settings/adapter-settings.component';
+import { ConfigureSchemaComponent } from './configure-schema/configure-schema.component';
+import { ConfigureFieldsComponent } from './configure-fields/configure-fields.component';
+import { StartAdapterConfigurationComponent } from './start-adapter-configuration/start-adapter-configuration.component';
 
 @Component({
     selector: 'sp-adapter-configuration',
     templateUrl: './adapter-configuration.component.html',
     styleUrls: ['./adapter-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        SpBasicHeaderTitleComponent,
+        MatStepper,
+        MatStep,
+        MatStepLabel,
+        AdapterSettingsComponent,
+        ConfigureSchemaComponent,
+        ConfigureFieldsComponent,
+        StartAdapterConfigurationComponent,
+        TranslatePipe,
+    ],
 })
 export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     private shepherdService = inject(ShepherdService);

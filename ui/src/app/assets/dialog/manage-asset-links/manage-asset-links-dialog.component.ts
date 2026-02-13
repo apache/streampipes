@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, SplitSectionComponent } from '@streampipes/shared-ui';
 import {
     AdapterService,
     AssetLink,
@@ -31,11 +31,29 @@ import {
     PipelineService,
 } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatDivider } from '@angular/material/divider';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-manage-asset-links-dialog-component',
     templateUrl: './manage-asset-links-dialog.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SplitSectionComponent,
+        LayoutAlignDirective,
+        MatButton,
+        MatCheckbox,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class SpManageAssetLinksDialogComponent
     extends BaseAssetLinksDirective

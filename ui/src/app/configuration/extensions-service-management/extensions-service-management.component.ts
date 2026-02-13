@@ -18,13 +18,37 @@
 
 import { Component, OnInit } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
-import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import {
+    SpBasicNavTabsComponent,
+    SpBreadcrumbService,
+    SplitSectionComponent,
+    SpNavigationItem,
+} from '@streampipes/shared-ui';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpRegisteredExtensionsServiceComponent } from './registered-extensions-services/registered-extensions-services.component';
+import { SpExtensionsServiceConfigurationComponent } from './extensions-service-configuration/extensions-service-configuration.component';
+import { CertificateConfigurationComponent } from './certificate-configuration/certificate-configuration.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-extensions-service-management',
     templateUrl: './extensions-service-management.component.html',
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        SplitSectionComponent,
+        SpRegisteredExtensionsServiceComponent,
+        SpExtensionsServiceConfigurationComponent,
+        CertificateConfigurationComponent,
+        TranslatePipe,
+    ],
 })
 export class ExtensionsServiceManagementComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

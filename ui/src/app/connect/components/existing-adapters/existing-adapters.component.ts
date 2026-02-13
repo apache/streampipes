@@ -25,7 +25,14 @@ import {
     SpLogMessage,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import {
     CurrentUserService,
     DialogRef,
@@ -33,25 +40,71 @@ import {
     ObjectPermissionDialogComponent,
     PanelType,
     SpAssetBrowserService,
+    SpBasicHeaderTitleComponent,
+    SpBasicViewComponent,
     SpBreadcrumbService,
     SpExceptionDetailsDialogComponent,
+    SpLabelComponent,
+    SpTableActionsDirective,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
-import { SpConnectRoutes } from '../../connect.routes';
+import { SpConnectRoutes } from '../../connect.breadcrumb';
 import { Subscription } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { SpConnectFilterToolbarComponent } from '../filter-toolbar/filter-toolbar.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { AdapterStatusLightComponent } from './adapter-status-light/adapter-status-light.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatMenuItem } from '@angular/material/menu';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-existing-adapters',
     templateUrl: './existing-adapters.component.html',
     styleUrls: ['./existing-adapters.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        LayoutGapDirective,
+        MatButton,
+        MatIcon,
+        SpConnectFilterToolbarComponent,
+        MatIconButton,
+        MatTooltip,
+        SpBasicHeaderTitleComponent,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        AdapterStatusLightComponent,
+        MatProgressSpinner,
+        SpLabelComponent,
+        SpTableActionsDirective,
+        MatMenuItem,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     existingAdapters: AdapterDescription[] = [];

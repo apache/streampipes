@@ -19,12 +19,37 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { SpNavigationItem } from '../../models/sp-navigation.model';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatTabLink, MatTabNav, MatTabNavPanel } from '@angular/material/tabs';
+import { NgStyle } from '@angular/common';
+import { DefaultStyleDirective } from '@ngbracket/ngx-layout/extended';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-basic-nav-tabs',
     templateUrl: './basic-nav-tabs.component.html',
     styleUrls: ['./basic-nav-tabs.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        MatTabNav,
+        MatTabLink,
+        MatTabNavPanel,
+        NgStyle,
+        DefaultStyleDirective,
+        TranslatePipe,
+    ],
 })
 export class SpBasicNavTabsComponent {
     @Input()

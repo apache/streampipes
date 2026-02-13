@@ -27,7 +27,7 @@ import { LoginService } from '../login/services/login.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RestorePasswordAllowedCanActivateGuard {
     constructor(
         private router: Router,

@@ -18,12 +18,18 @@
 
 import { Component, Input } from '@angular/core';
 import { PipelineOperationStatus } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-pipeline-operation-status',
     templateUrl: './pipeline-operation-status.component.html',
     styleUrls: ['./pipeline-operation-status.component.scss'],
-    standalone: false,
+    imports: [FlexDirective, LayoutDirective, LayoutAlignDirective, MatIcon],
 })
 export class PipelineOperationStatusComponent {
     @Input()

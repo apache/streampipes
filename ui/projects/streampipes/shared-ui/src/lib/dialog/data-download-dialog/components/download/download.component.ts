@@ -20,12 +20,33 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataExportService } from '../../services/data-export.service';
 import { DownloadProgress } from '../../model/download-progress.model';
 import { Subscription } from 'rxjs';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatStepLabel } from '@angular/material/stepper';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { DecimalPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-download',
     templateUrl: './download.component.html',
     styleUrls: ['./download.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        MatStepLabel,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatProgressSpinner,
+        MatButton,
+        MatIcon,
+        DecimalPipe,
+        TranslatePipe,
+    ],
 })
 export class DownloadComponent implements OnInit, OnDestroy {
     downloadProgress: DownloadProgress;

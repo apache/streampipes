@@ -19,11 +19,28 @@
 import { Component, inject, Input } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { ExportProviderService } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/divider';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-delete-export-provider-dialog',
     templateUrl: './delete-export-provider-dialog.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatProgressSpinner,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class DeleteExportProviderComponent {
     @Input()

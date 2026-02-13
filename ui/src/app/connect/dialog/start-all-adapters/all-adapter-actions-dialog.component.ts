@@ -22,12 +22,15 @@ import {
     AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-start-all-adapters-dialog',
     templateUrl: './all-adapter-actions-dialog.component.html',
-    standalone: false,
+    imports: [FlexDirective, MatDivider, MatButton, TranslatePipe],
 })
 export class AllAdapterActionsComponent implements OnInit {
     @Input()

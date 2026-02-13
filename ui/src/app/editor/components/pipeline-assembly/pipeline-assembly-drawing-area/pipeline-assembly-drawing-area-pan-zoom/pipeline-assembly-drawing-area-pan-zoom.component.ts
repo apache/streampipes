@@ -28,12 +28,13 @@ import { JsplumbBridge } from '../../../../services/jsplumb-bridge.service';
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
 import { Subscription } from 'rxjs';
 import { PipelineElementDraggedService } from '../../../../services/pipeline-element-dragged.service';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-pipeline-assembly-drawing-area-pan-zoom',
     templateUrl: './pipeline-assembly-drawing-area-pan-zoom.component.html',
     styleUrls: ['./pipeline-assembly-drawing-area-pan-zoom.component.scss'],
-    standalone: false,
+    imports: [MatDivider],
 })
 export class PipelineAssemblyDrawingAreaPanZoomComponent
     implements OnInit, AfterViewInit, OnDestroy

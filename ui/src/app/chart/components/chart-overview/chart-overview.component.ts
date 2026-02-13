@@ -19,20 +19,36 @@
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
     CurrentUserService,
+    SpBasicViewComponent,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
-import { SpChartRoutes } from '../../chart.routes';
+import { SpChartRoutes } from '../../chart.breadcrumb';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 import { ChartOverviewTableComponent } from './chart-overview-table/chart-overview-table.component';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { Subscription } from 'rxjs';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-overview',
     templateUrl: './chart-overview.component.html',
     styleUrls: ['./chart-overview.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        MatButton,
+        ChartOverviewTableComponent,
+        TranslatePipe,
+    ],
 })
 export class ChartOverviewComponent implements OnInit, OnDestroy {
     @ViewChild(ChartOverviewTableComponent)

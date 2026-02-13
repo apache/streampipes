@@ -16,11 +16,21 @@
  *
  */
 
-import { NgModule } from '@angular/core';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
-@NgModule({
-    declarations: [],
-    imports: [],
-    exports: [],
-})
-export class PlatformServicesModule {}
+export class SpConnectRoutes {
+    static BASE: SpBreadcrumbItem = {
+        label: 'Connect',
+        link: ['connect'],
+    };
+
+    static CREATE: SpBreadcrumbItem = {
+        label: 'New Adapter',
+        link: ['connect', 'catalog'],
+    };
+
+    static EDIT: SpBreadcrumbItem = {
+        label: 'Edit Adapter',
+        link: ['connect'],
+    };
+}

@@ -17,7 +17,7 @@
  */
 
 import { EChartsOption, PieSeriesOption } from 'echarts';
-import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
+import type { DataTransformOption } from 'echarts/types/src/data/helper/transform.d.ts';
 import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
 import { inject, Injectable } from '@angular/core';
 import { PieChartWidgetModel } from './model/pie-chart-widget.model';

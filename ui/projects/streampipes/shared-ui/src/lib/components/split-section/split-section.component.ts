@@ -17,12 +17,14 @@
  */
 
 import { Component, Input } from '@angular/core';
+import { SpBasicHeaderTitleComponent } from '../basic-header-title/header-title.component';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-split-section',
     templateUrl: './split-section.component.html',
     styleUrls: ['./split-section.component.scss'],
-    standalone: false,
+    imports: [SpBasicHeaderTitleComponent, LayoutDirective],
 })
 export class SplitSectionComponent {
     @Input()

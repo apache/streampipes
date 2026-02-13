@@ -18,12 +18,25 @@
 
 import { Component, Input } from '@angular/core';
 import { Status, StatusIndicator } from './multi-step-status-indicator.model';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'sp-multi-step-status-indicator',
     templateUrl: './multi-step-status-indicator.component.html',
     styleUrls: ['./multi-step-status-indicator.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatProgressSpinner,
+    ],
 })
 export class MultiStepStatusIndicatorComponent {
     @Input()

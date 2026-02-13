@@ -45,12 +45,25 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { CompatibleElementsComponent } from '../../dialog/compatible-elements/compatible-elements.component';
 import { Subscription } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-element-options',
     templateUrl: './pipeline-element-options.component.html',
     styleUrls: ['./pipeline-element-options.component.scss'],
-    standalone: false,
+    imports: [
+        NgStyle,
+        StyleDirective,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     recommendationsAvailable: any = false;

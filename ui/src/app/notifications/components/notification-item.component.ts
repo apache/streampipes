@@ -18,12 +18,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NotificationItem } from '../model/notifications.model';
 import { DomSanitizer } from '@angular/platform-browser';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-notification-item',
     templateUrl: './notification-item.component.html',
     styleUrls: ['./notification-item.component.scss'],
-    standalone: false,
+    imports: [DatePipe],
 })
 export class NotificationItemComponent implements OnInit {
     @Input() notification: NotificationItem;

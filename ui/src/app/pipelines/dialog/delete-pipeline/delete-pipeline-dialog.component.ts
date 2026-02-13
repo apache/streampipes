@@ -19,12 +19,28 @@
 import { Component, inject, Input } from '@angular/core';
 import { Pipeline, PipelineService } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-delete-pipeline-dialog',
     templateUrl: './delete-pipeline-dialog.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatProgressSpinner,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class DeletePipelineDialogComponent {
     @Input()

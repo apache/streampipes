@@ -18,11 +18,30 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FieldConfig, SelectedFilter } from '@streampipes/platform-services';
+import {
+    DefaultFlexDirective,
+    DefaultLayoutAlignDirective,
+    DefaultLayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { FilterSelectionPanelRowPropertySelectionComponent } from './panel-row-property-selection/filter-selection-panel-row-property-selection.component';
+import { FilterSelectionPanelRowOperationSelectionComponent } from './panel-row-operation-selection/filter-selection-panel-row-operation-selection.component';
+import { FilterSelectionPanelRowValueInputComponent } from './panel-row-value-input/filter-selection-panel-row-value-input.component';
+import { FilterSelectionPanelRowValueAutocompleteComponent } from './panel-row-value-input-autocomplete/filter-selection-panel-row-value-autocomplete.component';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-filter-selection-panel-row',
     templateUrl: './filter-selection-panel-row.component.html',
-    standalone: false,
+    imports: [
+        DefaultFlexDirective,
+        DefaultLayoutDirective,
+        DefaultLayoutAlignDirective,
+        FilterSelectionPanelRowPropertySelectionComponent,
+        FilterSelectionPanelRowOperationSelectionComponent,
+        FilterSelectionPanelRowValueInputComponent,
+        FilterSelectionPanelRowValueAutocompleteComponent,
+        MatIconButton,
+    ],
 })
 export class FilterSelectionPanelRowComponent {
     @Input()

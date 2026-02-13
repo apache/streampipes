@@ -16,12 +16,14 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { HomeComponent } from './home.component';
+import { Routes } from '@angular/router';
 
-export class SpAppRoutes {
-    static APP_BASE_LINK = 'apps';
-    static BASE: SpBreadcrumbItem = {
-        label: 'Apps',
-        link: [SpAppRoutes.APP_BASE_LINK],
-    };
-}
+export const HOME_ROUTES: Routes = [
+    {
+        path: '',
+        component: HomeComponent,
+        children: [],
+        providers: [],
+    },
+];

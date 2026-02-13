@@ -21,14 +21,35 @@ import {
     DataExplorerDataConfig,
     ExportProviderService,
     ExportProviderSettings,
+    RetentionTimeConfig,
 } from '@streampipes/platform-services';
-import { RetentionTimeConfig } from '@streampipes/platform-services';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-export',
     templateUrl: './select-format.component.html',
     styleUrls: ['./select-format.component.scss'],
-    standalone: false,
+    imports: [
+        MatRadioGroup,
+        FormsModule,
+        MatRadioButton,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        TranslatePipe,
+        SplitSectionComponent,
+        FormFieldComponent,
+        SpAlertBannerComponent,
+    ],
 })
 export class SelectDataExportComponent implements OnInit {
     @Input()

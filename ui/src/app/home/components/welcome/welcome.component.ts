@@ -19,12 +19,13 @@
 import { Component, inject, Input } from '@angular/core';
 import { UserInfo } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
+import { SpBasicHeaderTitleComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-welcome',
     templateUrl: './welcome.component.html',
     styleUrls: ['./welcome.component.scss'],
-    standalone: false,
+    imports: [SpBasicHeaderTitleComponent],
 })
 export class WelcomeComponent {
     @Input()

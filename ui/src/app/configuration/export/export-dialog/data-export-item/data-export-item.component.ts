@@ -18,13 +18,23 @@
 
 import { Component, Input } from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import {
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-export-item',
     templateUrl: './data-export-item.component.html',
     styleUrls: ['./data-export-item.component.scss'],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        MatCheckbox,
+        SpAlertBannerComponent,
+        TranslatePipe,
+    ],
 })
 export class SpDataExportItemComponent {
     @Input()

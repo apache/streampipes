@@ -199,6 +199,7 @@
                     [eventSchemas]="eventSchemas"
                     [parentForm]="parentForm"
                     [staticProperty]="staticProperty"
+                    [renderStaticProperty]="alternativeStaticPropertyTpl"
                     [staticProperties]="staticProperties"
                     [displayRecommended]="displayRecommended"
                     class="test fullWidth"
@@ -222,6 +223,7 @@
                     [fieldName]="fieldName"
                     [staticProperty]="staticProperty"
                     [staticProperties]="staticProperties"
+                    [renderStaticProperty]="groupStaticPropertyTpl"
                     [displayRecommended]="displayRecommended"
                     class="test fullWidth"
                 >
@@ -240,6 +242,7 @@
                     [parentForm]="parentForm"
                     [fieldName]="fieldName"
                     [staticProperties]="staticProperties"
+                    [renderStaticProperty]="groupStaticPropertyTpl"
                     [staticProperty]="staticProperty"
                     [displayRecommended]="displayRecommended"
                     class="test fullWidth"
@@ -259,6 +262,7 @@
                     [parentForm]="parentForm"
                     [fieldName]="fieldName"
                     [displayRecommended]="displayRecommended"
+                    [renderStaticProperty]="collectionStaticPropertyTpl"
                     [staticProperty]="staticProperty"
                     class="test fullWidth"
                 >
@@ -299,6 +303,68 @@
                 >
                 </sp-static-runtime-resolvable-tree-input>
             }
+
+            <ng-template
+                #alternativeStaticPropertyTpl
+                let-completed="completedConfigurations"
+                let-onCompleted="onCompleted"
+                let-child="child"
+                let-i="index"
+            >
+                <sp-app-static-property
+                    [adapterId]="adapterId"
+                    [completedConfigurations]="completed"
+                    [deploymentConfiguration]="deploymentConfiguration"
+                    [eventSchemas]="eventSchemas"
+                    [parentForm]="parentForm"
+                    [staticProperties]="staticProperties"
+                    [fieldName]="fieldName + '-' + child.internalName + '-' + i"
+                    [staticProperty]="child"
+                    [displayRecommended]="displayRecommended"
+                    (completedConfigurationsEmitter)="onCompleted($event)"
+                    class="test fullWidth"
+                >
+                </sp-app-static-property>
+            </ng-template>
+
+            <ng-template
+                #groupStaticPropertyTpl
+                let-onCompleted="onCompleted"
+                let-child="child"
+                let-i="index"
+            >
+                <sp-app-static-property
+                    [adapterId]="adapterId"
+                    [deploymentConfiguration]="deploymentConfiguration"
+                    [parentForm]="parentForm"
+                    [staticProperties]="staticProperties"
+                    [fieldName]="fieldName + '-' + child.internalName + '-' + i"
+                    [showBorder]="false"
+                    [eventSchemas]="eventSchemas"
+                    [staticProperty]="child"
+                    [displayRecommended]="displayRecommended"
+                    (completedConfigurationsEmitter)="onCompleted($event)"
+                    class="test fullWidth"
+                >
+                </sp-app-static-property>
+            </ng-template>
+
+            <ng-template
+                #collectionStaticPropertyTpl
+                let-child="child"
+                let-i="index"
+            >
+                <sp-app-static-property
+                    [deploymentConfiguration]="deploymentConfiguration"
+                    [adapterId]="adapterId"
+                    [eventSchemas]="eventSchemas"
+                    [parentForm]="parentForm"
+                    [showBorder]="false"
+                    [fieldName]="child.internalName + '-' + i"
+                    [staticProperty]="child"
+                >
+                </sp-app-static-property>
+            </ng-template>
         </div>
     </div>
     @if (showBorder) {

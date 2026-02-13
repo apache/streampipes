@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { GridOptions, WidgetSize } from '../models/dataset.model';
 import { GridOption } from 'echarts/types/dist/shared';
-import { BoxLayoutOptionMixin } from 'echarts/types/src/util/types';
+import type { BoxLayoutOptionMixin } from 'echarts/types/src/util/types.d.ts';
 
 @Injectable({ providedIn: 'root' })
 export class EchartsGridGeneratorService {

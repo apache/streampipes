@@ -18,12 +18,25 @@
 
 import { Component, Input } from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpExceptionMessageComponent } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-configure-fields-error-message',
     templateUrl: './configure-fields-error-message.component.html',
     styleUrls: ['./configure-fields-error-message.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        SpExceptionMessageComponent,
+        TranslatePipe,
+    ],
 })
 export class ConfigureFieldsErrorMessageComponent {
     @Input() errorMessage: SpLogMessage;

@@ -20,13 +20,51 @@ import { Component, inject } from '@angular/core';
 import { UserAccount } from '@streampipes/platform-services';
 import { AbstractSecurityPrincipalConfig } from '../abstract-security-principal-config';
 import { Observable } from 'rxjs';
-import { DateFormatService } from '@streampipes/shared-ui';
+import {
+    DateFormatService,
+    SpLabelComponent,
+    SpTableComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    FlexOrderDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+} from '@angular/material/table';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-security-user-config',
     templateUrl: './security-user-config.component.html',
     styleUrls: ['./security-user-config.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        SpLabelComponent,
+        FlexOrderDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatTooltip,
+        TranslatePipe,
+    ],
 })
 export class SecurityUserConfigComponent extends AbstractSecurityPrincipalConfig<UserAccount> {
     displayedColumns: string[] = [

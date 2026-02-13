@@ -17,5 +17,6 @@
  */
 
 import { Directive } from '@angular/core';
-@Directive({ selector: 'ng-template[spTableActions]', standalone: false })
+
+@Directive({ selector: 'ng-template[spTableActions]' })
 export class SpTableActionsDirective {}

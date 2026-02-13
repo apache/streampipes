@@ -24,11 +24,28 @@ import {
 } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import { ChartFieldProviderService } from '../../../../../../chart-shared/services/chart-field-provider.service';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { FilterSelectionPanelRowComponent } from './filter-selection-panel-row/filter-selection-panel-row.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-filter-selection-panel',
     templateUrl: './filter-selection-panel.component.html',
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatButton,
+        LayoutDirective,
+        FilterSelectionPanelRowComponent,
+        TranslatePipe,
+    ],
 })
 export class FilterSelectionPanelComponent implements OnInit {
     @Input() sourceConfig: SourceConfig;

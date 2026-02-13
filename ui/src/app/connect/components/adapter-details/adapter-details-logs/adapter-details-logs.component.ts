@@ -20,21 +20,40 @@ import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { ActivatedRoute } from '@angular/router';
 import {
-    AdapterService,
     AdapterMonitoringService,
+    AdapterService,
     SpLogEntry,
 } from '@streampipes/platform-services';
 import {
     CurrentUserService,
+    SpBasicNavTabsComponent,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { SpConnectRoutes } from '../../../connect.routes';
+import { SpConnectRoutes } from '../../../connect.breadcrumb';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SpSimpleLogsComponent } from '../../../../core-ui/monitoring/simple-logs/simple-logs.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-details-logs',
     templateUrl: './adapter-details-logs.component.html',
     styleUrls: ['./adapter-details-logs.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        FlexDirective,
+        SpSimpleLogsComponent,
+        TranslatePipe,
+    ],
 })
 export class SpAdapterDetailsLogsComponent
     extends SpAbstractAdapterDetailsDirective

@@ -69,12 +69,29 @@ import {
 } from '@jsplumb/browser-ui';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { DroppedPipelineElementComponent } from './dropped-pipeline-element/dropped-pipeline-element.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
+import { EnabledPipelineElementFilter } from '../../filter/enabled-pipeline-element.filter';
 
 @Component({
     selector: 'sp-pipeline',
     templateUrl: './pipeline.component.html',
     styleUrls: ['./pipeline.component.scss'],
-    standalone: false,
+    imports: [
+        NgStyle,
+        StyleDirective,
+        DroppedPipelineElementComponent,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        TranslatePipe,
+        EnabledPipelineElementFilter,
+    ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
     @Input()

@@ -18,12 +18,23 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CompactPipelineTemplate } from '@streampipes/platform-services';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { FormLabelComponent } from '@streampipes/shared-ui';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-template-selection',
     templateUrl: './template-selection.component.html',
     styleUrls: ['./template-selection.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FormLabelComponent,
+        MatDivider,
+    ],
 })
 export class TemplateSelectionComponent {
     @Input()

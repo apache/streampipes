@@ -20,19 +20,46 @@ import {
     AbstractControl,
     FormBuilder,
     FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
     ValidationErrors,
     Validators,
 } from '@angular/forms';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
 import {
     ExportProviderService,
     ExportProviderSettings,
 } from '@streampipes/platform-services';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { MatDivider } from '@angular/material/divider';
+import { LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-export-provider-dialog',
     templateUrl: './export-provider-dialog.component.html',
-    standalone: false,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        MatInput,
+        MatError,
+        MatDivider,
+        LayoutGapDirective,
+        MatButton,
+        TranslatePipe,
+        SplitSectionComponent,
+        FormFieldComponent,
+    ],
 })
 export class ExportProviderComponent implements OnInit {
     @Input()

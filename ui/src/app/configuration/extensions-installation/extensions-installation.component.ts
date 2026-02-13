@@ -21,22 +21,68 @@ import {
     DialogRef,
     DialogService,
     PanelType,
+    SpBasicHeaderTitleComponent,
+    SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SpNavigationItem,
 } from '@streampipes/shared-ui';
 import { ExtensionItemDescription } from '@streampipes/platform-services';
-import { MatSelectChange } from '@angular/material/select';
+import {
+    MatOption,
+    MatSelect,
+    MatSelectChange,
+} from '@angular/material/select';
 import { ExtensionsInstallationService } from './extensions-installation.service';
 import { SpExtensionsInstallationDialogComponent } from '../dialog/extensions-installation/extensions-installation.component';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatFormField, MatPrefix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { EndpointItemComponent } from './endpoint-item/endpoint-item.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { OrderByPipe } from './filter/order-by.pipe';
+import { PipelineElementNameFilter } from './filter/pipeline-element-name.pipe';
+import { PipelineElementInstallationStatusFilter } from './filter/pipeline-element-installation-status.pipe';
+import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
 
 @Component({
     selector: 'sp-extensions-installation',
     templateUrl: './extensions-installation.component.html',
     styleUrls: ['./extensions-installation.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        MatButton,
+        MatIconButton,
+        MatTooltip,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        MatInput,
+        FormsModule,
+        MatIcon,
+        MatPrefix,
+        SpBasicHeaderTitleComponent,
+        EndpointItemComponent,
+        MatProgressSpinner,
+        TranslatePipe,
+        OrderByPipe,
+        PipelineElementNameFilter,
+        PipelineElementInstallationStatusFilter,
+        PipelineElementTypeFilter,
+    ],
 })
 export class SpExtensionsInstallationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

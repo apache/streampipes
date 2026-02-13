@@ -28,19 +28,40 @@ import {
     PipelineElementConfig,
     PipelineElementUnion,
 } from './model/editor.model';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    SpBasicViewComponent,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of, zip } from 'rxjs';
-import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
+import { SpPipelineRoutes } from '../pipelines/pipelines.breadcrumb';
 import { catchError, map } from 'rxjs/operators';
 import { EditorService } from './services/editor.service';
 import { JsplumbService } from './services/jsplumb.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
+import { PipelineAssemblyComponent } from './components/pipeline-assembly/pipeline-assembly.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-editor',
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatProgressSpinner,
+        SpBasicViewComponent,
+        PipelineElementIconStandComponent,
+        PipelineAssemblyComponent,
+        TranslatePipe,
+    ],
 })
 export class EditorComponent implements OnInit {
     allElements: PipelineElementUnion[] = [];

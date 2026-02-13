@@ -22,12 +22,38 @@ import {
     DashboardLiveSettings,
     TimeSettings,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { TimeRangeSelectorComponent } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-dashboard-toolbar',
     templateUrl: './dashboard-toolbar.component.html',
     styleUrls: ['./dashboard-toolbar.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        MatButton,
+        MatTooltip,
+        MatIcon,
+        MatIconButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        TimeRangeSelectorComponent,
+        TranslatePipe,
+    ],
 })
 export class DashboardToolbarComponent {
     @Input()

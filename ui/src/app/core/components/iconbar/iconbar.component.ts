@@ -18,12 +18,27 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-iconbar',
     templateUrl: './iconbar.component.html',
     styleUrls: ['./iconbar.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIcon,
+        FlexDirective,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class IconbarComponent
     extends BaseNavigationComponent

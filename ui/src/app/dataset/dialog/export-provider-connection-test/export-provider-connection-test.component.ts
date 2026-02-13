@@ -17,14 +17,29 @@
  */
 
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, SpExceptionDetailsComponent } from '@streampipes/shared-ui';
 import { ExportProviderService } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-export-provider-connection-test',
     templateUrl: './export-provider-connection-test.component.html',
-    standalone: false,
+    imports: [
+        LayoutAlignDirective,
+        LayoutDirective,
+        MatProgressSpinner,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+        SpExceptionDetailsComponent,
+    ],
 })
 export class ExportProviderConnectionTestComponent implements OnInit {
     ngOnInit(): void {

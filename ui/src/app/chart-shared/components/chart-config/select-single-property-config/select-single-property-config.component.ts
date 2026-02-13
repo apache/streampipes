@@ -18,12 +18,23 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sp-select-single-property-config',
     templateUrl: './select-single-property-config.component.html',
     styleUrls: [],
-    standalone: false,
+    imports: [
+        MatFormField,
+        FlexDirective,
+        MatLabel,
+        MatSelect,
+        FormsModule,
+        MatOption,
+    ],
 })
 export class SelectSinglePropertyConfigComponent {
     @Output() changeSelectedProperty: EventEmitter<DataExplorerField> =

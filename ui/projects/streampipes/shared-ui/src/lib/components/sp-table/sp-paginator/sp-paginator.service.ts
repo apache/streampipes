@@ -19,7 +19,7 @@ import { Injectable } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PaginatorService extends MatPaginatorIntl {
     constructor(private translateService: TranslateService) {
         super();

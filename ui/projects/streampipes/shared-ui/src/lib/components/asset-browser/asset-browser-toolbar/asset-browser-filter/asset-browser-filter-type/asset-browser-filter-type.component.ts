@@ -22,12 +22,24 @@ import {
     Isa95TypeService,
 } from '@streampipes/platform-services';
 import { AssetFilter } from '../../../asset-browser.model';
+import { AssetBrowserFilterOuterComponent } from '../asset-browser-filter-outer/asset-browser-filter-outer.component';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-browser-filter-type',
     templateUrl: 'asset-browser-filter-type.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
-    standalone: false,
+    imports: [
+        AssetBrowserFilterOuterComponent,
+        MatFormField,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        TranslatePipe,
+    ],
 })
 export class AssetBrowserFilterTypeComponent implements OnInit {
     allAssetTypes: Isa95TypeDesc[] = [];

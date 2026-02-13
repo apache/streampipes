@@ -25,13 +25,46 @@ import {
     Output,
 } from '@angular/core';
 import { SpLabel } from '@streampipes/platform-services';
-import { SpColorizationService } from '@streampipes/shared-ui';
+import {
+    FormFieldComponent,
+    SpColorizationService,
+    SpLabelComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { ColorPickerDirective } from 'ngx-color-picker';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-label',
     templateUrl: './edit-label.component.html',
     styleUrls: ['./edit-label.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        NgClass,
+        ClassDirective,
+        FlexDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        FormFieldComponent,
+        SpLabelComponent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        ColorPickerDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class SpEditLabelComponent implements OnInit {
     private colorizationService = inject(SpColorizationService);

@@ -16,18 +16,17 @@
  *
  */
 
-import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@ngbracket/ngx-layout';
-import { CommonModule } from '@angular/common';
-import { CoreUiModule } from '../core-ui/core-ui.module';
-import { ApidocsComponent } from './apidocs.component';
+import { Routes } from '@angular/router';
+import { DashboardKioskComponent } from './components/kiosk/dashboard-kiosk.component';
 
-@NgModule({
-    imports: [CommonModule, FlexLayoutModule, CoreUiModule],
-    declarations: [ApidocsComponent],
-    providers: [],
-    exports: [ApidocsComponent],
-})
-export class ApidocsModule {
-    constructor() {}
-}
+export const DASHBOARD_KIOSK_ROUTES: Routes = [
+    {
+        path: '',
+        children: [
+            {
+                path: ':dashboardId',
+                component: DashboardKioskComponent,
+            },
+        ],
+    },
+];

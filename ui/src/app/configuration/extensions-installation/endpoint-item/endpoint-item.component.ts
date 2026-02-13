@@ -31,13 +31,39 @@ import {
     PanelType,
 } from '@streampipes/shared-ui';
 import { ExtensionsInstallationService } from '../extensions-installation.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgClass, NgStyle } from '@angular/common';
+import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-endpoint-item',
     templateUrl: './endpoint-item.component.html',
     styleUrls: ['./endpoint-item.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        NgStyle,
+        StyleDirective,
+        NgClass,
+        ClassDirective,
+        MatTooltip,
+        MatButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class EndpointItemComponent implements OnInit {
     @Input()

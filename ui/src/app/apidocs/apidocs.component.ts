@@ -23,7 +23,6 @@ import { SwaggerUIBundle } from 'swagger-ui-dist';
     selector: 'sp-apidocs',
     templateUrl: './apidocs.component.html',
     styleUrls: ['./apidocs.component.scss'],
-    standalone: false,
 })
 export class ApidocsComponent implements OnInit {
     constructor(private el: ElementRef) {}

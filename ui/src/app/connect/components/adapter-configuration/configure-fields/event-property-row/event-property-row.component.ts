@@ -26,23 +26,44 @@ import {
 } from '@angular/core';
 import {
     DataType,
+    EventProperty,
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
-    EventProperty,
     EventSchema,
-    SemanticType,
     FieldStatusInfo,
+    SemanticType,
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { EventPropertyScopeComponent } from './event-property-scope/event-property-scope.component';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-event-property-row',
     templateUrl: './event-property-row.component.html',
     styleUrls: ['./event-property-row.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        MatIcon,
+        MatTooltip,
+        EventPropertyScopeComponent,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class EventPropertyRowComponent implements OnInit {
     private dialogService = inject(DialogService);

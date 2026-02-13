@@ -25,12 +25,46 @@ import {
     SimpleChanges,
 } from '@angular/core';
 import { AssetSiteDesc, SpAsset } from '@streampipes/platform-services';
-import { MatSelectChange } from '@angular/material/select';
+import {
+    MatOption,
+    MatSelect,
+    MatSelectChange,
+} from '@angular/material/select';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { FormFieldComponent } from '@streampipes/shared-ui';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { AssetLocationComponent } from './asset-location/asset-location.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-details-site',
     templateUrl: './asset-details-site.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        FormFieldComponent,
+        MatButton,
+        RouterLink,
+        MatIconButton,
+        MatIcon,
+        MatFormField,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        AssetLocationComponent,
+        TranslatePipe,
+    ],
 })
 export class AssetDetailsSiteComponent implements OnChanges {
     @Input()

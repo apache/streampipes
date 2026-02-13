@@ -22,12 +22,14 @@ import {
     AdapterService,
     CompactAdapter,
 } from '@streampipes/platform-services';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { ConfigurationCodePanelComponent } from '../../../core-ui/configuration-code-panel/configuration-code-panel.component';
 
 @Component({
     selector: 'sp-adapter-code-panel',
     templateUrl: './adapter-code-panel.component.html',
     styleUrls: ['./adapter-code-panel.component.scss'],
-    standalone: false,
+    imports: [FlexDirective, ConfigurationCodePanelComponent],
 })
 export class AdapterCodePanelComponent implements OnInit {
     @Input()

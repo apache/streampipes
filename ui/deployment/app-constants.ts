@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AppConstants {
     public readonly APP_NAME = 'Apache StreamPipes';
     public readonly APP_TITLE = 'Apache StreamPipes';

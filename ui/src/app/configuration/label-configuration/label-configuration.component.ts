@@ -19,16 +19,61 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { LabelsService, SpLabel } from '@streampipes/platform-services';
-import { SpConfigurationRoutes } from '../configuration.routes';
-import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
+import {
+    SpBasicNavTabsComponent,
+    SpBreadcrumbService,
+    SpLabelComponent,
+    SplitSectionComponent,
+    SpNavigationItem,
+    SpTableComponent,
+} from '@streampipes/shared-ui';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { SpEditLabelComponent } from './edit-label/edit-label.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-label-configuration',
     templateUrl: './label-configuration.component.html',
     styleUrls: ['./label-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        SplitSectionComponent,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        MatButton,
+        SpEditLabelComponent,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        SpLabelComponent,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class SpLabelConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

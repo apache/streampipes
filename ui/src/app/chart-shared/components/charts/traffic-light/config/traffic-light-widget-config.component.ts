@@ -25,13 +25,36 @@ import {
 } from '../model/traffic-light-widget.model';
 import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-data-explorer-traffic-light-widget-config',
     templateUrl: './traffic-light-widget-config.component.html',
     styleUrls: ['./traffic-light-widget-config.component.scss'],
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SplitSectionComponent,
+        SelectSinglePropertyConfigComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatRadioGroup,
+        MatRadioButton,
+        MatCheckbox,
+        TranslatePipe,
+    ],
 })
 export class TrafficLightWidgetConfigComponent extends BaseWidgetConfig<
     TrafficLightWidgetModel,

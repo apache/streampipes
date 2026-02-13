@@ -17,12 +17,35 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpBasicInnerPanelComponent } from '@streampipes/shared-ui';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { JsonPrettyPrintPipe } from '../../../../../core-ui/pipes/json-pretty-print.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-configure-fields-preview',
     templateUrl: './configure-fields-preview.component.html',
     styleUrls: ['./configure-fields-preview.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutGapDirective,
+        SpBasicInnerPanelComponent,
+        LayoutAlignDirective,
+        MatButton,
+        MatTooltip,
+        MatIcon,
+        JsonPrettyPrintPipe,
+        TranslatePipe,
+    ],
 })
 export class ConfigureFieldsPreviewComponent {
     @Input() originalPreview: Record<string, any>;

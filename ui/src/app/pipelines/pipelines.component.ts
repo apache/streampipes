@@ -29,22 +29,50 @@ import {
     DialogService,
     PanelType,
     SpAssetBrowserService,
+    SpBasicHeaderTitleComponent,
+    SpBasicViewComponent,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
-import { SpPipelineRoutes } from './pipelines.routes';
+import { SpPipelineRoutes } from './pipelines.breadcrumb';
 import { UserRole } from '../_enums/user-role.enum';
 import { ShepherdService } from '../services/tour/shepherd.service';
 import { Subscription } from 'rxjs';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { PipelineOverviewComponent } from './components/pipeline-overview/pipeline-overview.component';
+import { FunctionsOverviewComponent } from './components/functions-overview/functions-overview.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipelines',
     templateUrl: './pipelines.component.html',
     styleUrls: ['./pipelines.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        LayoutGapDirective,
+        MatButton,
+        MatIcon,
+        MatIconButton,
+        MatTooltip,
+        SpBasicHeaderTitleComponent,
+        PipelineOverviewComponent,
+        FunctionsOverviewComponent,
+        TranslatePipe,
+    ],
 })
 export class PipelinesComponent implements OnInit, OnDestroy {
     pipeline: Pipeline;

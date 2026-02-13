@@ -19,12 +19,32 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Pipeline, SpLogEntry } from '@streampipes/platform-services';
 import { PipelineElementUnion } from '../../../editor/model/editor.model';
+import {
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+} from '@angular/material/expansion';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { PipelineElementDetailsRowComponent } from './pipeline-element-details-row/pipeline-element-details-row.component';
+import { PipelineStatusComponent } from './status/pipeline-status.component';
+import { PipelineActionsComponent } from './actions/pipeline-actions.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-details-expansion-panel',
     templateUrl: './pipeline-details-expansion-panel.component.html',
     styleUrls: ['./pipeline-details-expansion-panel.component.scss'],
-    standalone: false,
+    imports: [
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        LayoutDirective,
+        FlexDirective,
+        PipelineElementDetailsRowComponent,
+        PipelineStatusComponent,
+        PipelineActionsComponent,
+        TranslatePipe,
+    ],
 })
 export class PipelineDetailsExpansionPanelComponent implements OnInit {
     expanded = true;

@@ -16,20 +16,41 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
     SpDataStream,
 } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DialogRef } from '../base-dialog/dialog-ref';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { PipelineElementRuntimeInfoComponent } from '../../components/pipeline-element-runtime-info/pipeline-element-runtime-info.component';
+import { PipelineElementDocumentationComponent } from '../../components/pipeline-element-documentation/pipeline-element-documentation.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-pipeline-element-help',
     templateUrl: './pipeline-element-help.component.html',
     styleUrls: ['./pipeline-element-help.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatTabGroup,
+        MatTab,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class PipelineElementHelpComponent implements OnInit {
     selectedTabIndex = 0;

@@ -17,11 +17,16 @@
  */
 
 import { Component, Input } from '@angular/core';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'sp-adapter-started-loading',
     templateUrl: './adapter-started-loading.component.html',
-    standalone: false,
+    imports: [LayoutDirective, LayoutAlignDirective, MatProgressSpinner],
 })
 export class SpAdapterStartedLoadingComponent {
     @Input()

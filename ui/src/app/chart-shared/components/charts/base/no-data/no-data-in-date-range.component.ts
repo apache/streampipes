@@ -18,12 +18,27 @@
 
 import { Component, Input } from '@angular/core';
 import { TimeSettings } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-no-data-in-date-range',
     templateUrl: './no-data-in-date-range.component.html',
     styleUrls: ['./no-data-in-date-range.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        LayoutGapDirective,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class NoDataInDateRangeComponent {
     @Input()

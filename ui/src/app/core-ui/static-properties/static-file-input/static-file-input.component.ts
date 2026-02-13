@@ -16,25 +16,65 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
     FileMetadata,
     FilesService,
     FileStaticProperty,
 } from '@streampipes/platform-services';
-import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
-import { UntypedFormControl, ValidatorFn, Validators } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormControl,
+    ValidatorFn,
+    Validators,
+} from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FileRenameDialogComponent } from '../../../configuration/dialog/file-rename/file-rename-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import {
+    MatError,
+    MatFormField,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import {
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatOption } from '@angular/material/select';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
     selector: 'sp-static-file-input',
     templateUrl: './static-file-input.component.html',
     styleUrls: ['./static-file-input.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        MatRadioGroup,
+        MatRadioButton,
+        MatFormField,
+        MatInput,
+        MatAutocompleteTrigger,
+        MatIconButton,
+        MatSuffix,
+        MatIcon,
+        MatAutocomplete,
+        MatOption,
+        MatProgressBar,
+        MatButton,
+        MatError,
+        TranslatePipe,
+    ],
 })
 export class StaticFileInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FileStaticProperty>

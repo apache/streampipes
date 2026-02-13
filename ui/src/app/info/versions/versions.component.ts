@@ -20,11 +20,27 @@ import { Component } from '@angular/core';
 import { VersionInfo } from './service/version-info.model';
 import { SystemInfo } from './service/system-info.model';
 import { RestApi } from '../../services/rest-api.service';
+import {
+    DefaultLayoutDirective,
+    DefaultLayoutGapDirective,
+    DefaultFlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+    FlexDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpBasicHeaderTitleComponent } from '@streampipes/shared-ui';
+import { SpBasicInnerPanelComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-versions',
     templateUrl: './versions.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        SpBasicHeaderTitleComponent,
+        SpBasicInnerPanelComponent,
+        FlexDirective,
+    ],
 })
 export class VersionsComponent {
     versionInfo: VersionInfo;

@@ -16,10 +16,12 @@
  *
  */
 import { Component } from '@angular/core';
+import { SpAlertBannerComponent } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-no-timestamp-error-hint',
-    standalone: false,
     templateUrl: './no-timestamp-error-hint.component.html',
+    imports: [SpAlertBannerComponent, TranslatePipe],
 })
 export class NoTimestampErrorHintComponent {}

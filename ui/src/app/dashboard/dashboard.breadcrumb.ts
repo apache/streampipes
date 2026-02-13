@@ -16,14 +16,11 @@
  *
  */
 
-import { NgModule } from '@angular/core';
-import { AppConstants } from './app.constants';
-import { SecurePipe } from './secure.pipe';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
-@NgModule({
-    imports: [],
-    declarations: [SecurePipe],
-    providers: [AppConstants, SecurePipe],
-    exports: [SecurePipe],
-})
-export class ServicesModule {}
+export class SpDashboardRoutes {
+    static BASE: SpBreadcrumbItem = {
+        label: 'Dashboards',
+        link: ['dashboard'],
+    };
+}
