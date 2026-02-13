@@ -47,11 +47,13 @@ import { MarkdownModule } from 'ngx-markdown';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { MatNativeDateModule } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
     providers: [
         importProvidersFrom(
             MatDatepickerModule,
+            MatNativeDateModule,
             LoadingBarHttpClientModule,
             MarkdownModule.forRoot(),
             TranslateModule.forRoot({
