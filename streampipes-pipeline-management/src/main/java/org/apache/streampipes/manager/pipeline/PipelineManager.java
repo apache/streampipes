@@ -28,8 +28,8 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.CrudResourceManager;
 import org.apache.streampipes.resource.management.NotificationsResourceManager;
-import org.apache.streampipes.storage.api.IPermissionStorage;
-import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;

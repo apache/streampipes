@@ -24,7 +24,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
 import org.apache.streampipes.model.pipeline.compact.CompactPipelineElement;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 public class PipelineElementConfigurationStep implements CompactPipelineGenerator {
 

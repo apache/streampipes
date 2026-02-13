@@ -20,7 +20,7 @@ package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.IGenericStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

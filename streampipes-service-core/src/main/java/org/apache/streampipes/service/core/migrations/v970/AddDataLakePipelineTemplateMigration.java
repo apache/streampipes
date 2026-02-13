@@ -19,16 +19,15 @@
 package org.apache.streampipes.service.core.migrations.v970;
 
 import org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate;
-import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 
 public class AddDataLakePipelineTemplateMigration implements Migration {
 
-  private final CRUDStorage<CompactPipelineTemplate> storage;
+  private final ICompactPipelineTemplateStorage storage;
 
   public AddDataLakePipelineTemplateMigration() {
     this.storage = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineTemplateStorage();

@@ -22,7 +22,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -88,7 +88,7 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  private CRUDStorage<Group> getUserGroupStorage() {
+  private IUserGroupStorage getUserGroupStorage() {
     return getNoSqlStorage().getUserGroupStorage();
   }
 }

@@ -38,7 +38,7 @@ import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
-import org.apache.streampipes.storage.api.INoSqlStorage;
+import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

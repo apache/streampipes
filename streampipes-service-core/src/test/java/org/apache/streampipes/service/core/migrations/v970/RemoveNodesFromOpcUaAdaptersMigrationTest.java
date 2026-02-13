@@ -21,7 +21,7 @@ package org.apache.streampipes.service.core.migrations.v970;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.TreeInputNode;
-import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

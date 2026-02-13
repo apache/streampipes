@@ -19,7 +19,7 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.storage.api.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class DataProcessorResourceManager extends

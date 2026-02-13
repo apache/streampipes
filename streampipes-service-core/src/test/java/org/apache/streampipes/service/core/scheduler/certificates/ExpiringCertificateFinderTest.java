@@ -21,7 +21,7 @@ package org.apache.streampipes.service.core.scheduler.certificates;
 
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.opcua.CertificateBuilder;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,14 +40,14 @@ import static org.mockito.Mockito.when;
 
 class ExpiringCertificateFinderTest {
 
-  private CRUDStorage<Certificate> storage;
+  private ICertificateStorage storage;
 
   private static final Instant FIXED_NOW = Instant.parse("2026-01-10T12:00:00Z");
   private Clock clock;
 
   @BeforeEach
   void setUp() {
-    storage = mock(CRUDStorage.class);
+    storage = mock(ICertificateStorage.class);
     clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
   }
 

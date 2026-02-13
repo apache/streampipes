@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.loadbalance.service;
 
-import org.apache.streampipes.storage.api.IUserStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 

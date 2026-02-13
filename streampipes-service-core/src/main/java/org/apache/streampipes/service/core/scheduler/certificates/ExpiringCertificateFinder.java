@@ -19,7 +19,7 @@
 package org.apache.streampipes.service.core.scheduler.certificates;
 
 import org.apache.streampipes.model.opcua.Certificate;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -45,10 +45,10 @@ public class ExpiringCertificateFinder {
   private static final DateTimeFormatter NOT_AFTER_FORMATTER =
       DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
 
-  private final CRUDStorage<Certificate> certificateStorage;
+  private final ICertificateStorage certificateStorage;
   private final Clock clock;
 
-  public ExpiringCertificateFinder(CRUDStorage<Certificate> certificateStorage, Clock clock) {
+  public ExpiringCertificateFinder(ICertificateStorage certificateStorage, Clock clock) {
     this.certificateStorage = certificateStorage;
     this.clock = clock;
   }

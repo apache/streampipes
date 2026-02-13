@@ -21,7 +21,7 @@ package org.apache.streampipes.user.management.authorization;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Role;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 public class RoleManager {
 
-  private final CRUDStorage<Role> storage;
+  private final IRoleStorage storage;
 
   public RoleManager() {
     this.storage = StorageDispatcher.INSTANCE.getNoSqlStore().getRoleStorage();

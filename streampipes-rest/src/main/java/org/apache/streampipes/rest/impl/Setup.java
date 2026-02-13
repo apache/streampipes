@@ -21,7 +21,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonObject;

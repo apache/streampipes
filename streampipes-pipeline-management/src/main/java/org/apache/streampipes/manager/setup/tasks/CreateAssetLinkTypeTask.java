@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.setup.tasks;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.model.assets.AssetLinkType;
-import org.apache.streampipes.storage.api.IGenericStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;

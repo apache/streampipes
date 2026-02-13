@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.setup;
 import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
-import org.apache.streampipes.storage.api.INoSqlStorage;
+import org.apache.streampipes.storage.api.core.INoSqlStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -29,7 +29,7 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.vocabulary.SO;
 
 import java.util.List;
@@ -43,11 +43,11 @@ import static org.apache.streampipes.manager.template.instances.PersistDataLakeP
 
 public class PersistPipelineHandler {
 
-  private final CRUDStorage<CompactPipelineTemplate> templateStorage;
+  private final ICompactPipelineTemplateStorage templateStorage;
   private final CompactPipelineManagement pipelineManagement;
   private final String authenticatedUserSid;
 
-  public PersistPipelineHandler(CRUDStorage<CompactPipelineTemplate> templateStorage,
+  public PersistPipelineHandler(ICompactPipelineTemplateStorage templateStorage,
                                 CompactPipelineManagement pipelineManagement,
                                 String authenticatedUserSid) {
     this.templateStorage = templateStorage;

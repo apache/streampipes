@@ -19,7 +19,7 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.storage.api.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class DataSinkResourceManager

@@ -20,7 +20,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.model.util.ElementIdGenerator;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 import java.util.List;
 

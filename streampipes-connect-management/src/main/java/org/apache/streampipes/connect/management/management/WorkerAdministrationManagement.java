@@ -24,8 +24,8 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.UserResourceManager;
-import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.api.IPermissionStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;

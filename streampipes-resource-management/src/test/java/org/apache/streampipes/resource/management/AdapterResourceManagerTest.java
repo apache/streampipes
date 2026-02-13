@@ -21,7 +21,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.Tuple2;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

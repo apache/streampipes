@@ -17,8 +17,7 @@
  */
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 public class SpResourceManager {
 
@@ -35,7 +34,7 @@ public class SpResourceManager {
   }
 
   public DataExplorerWidgetResourceManager manageDataExplorerWidget(DataExplorerResourceManager dashboardManager,
-                                                                    CRUDStorage<DataExplorerWidgetModel> db) {
+                                                                    IDataExplorerWidgetStorage db) {
     return new DataExplorerWidgetResourceManager(dashboardManager, db);
   }
 
