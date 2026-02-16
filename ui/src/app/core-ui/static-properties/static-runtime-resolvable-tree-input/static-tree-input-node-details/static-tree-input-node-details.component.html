@@ -20,11 +20,14 @@
 </div>
 @for (metadata of nodeMetadata | keyvalue; track metadata) {
     <div
-        class="node-metadata"
+        class="node-metadata p-xs"
         fxLayout="row"
+        fxLayoutGap="5px"
         [attr.data-cy]="'node-details-metadata-row-' + metadata.key"
     >
-        <div fxFlex="30">{{ metadata.key }}</div>
-        <div fxFlex="70">{{ metadata.value }}</div>
+        <span class="text-sm" style="color: var(--fg-muted)">{{
+            metadata.key
+        }}</span>
+        <span class="text-sm font-emphasized">{{ metadata.value }}</span>
     </div>
 }
