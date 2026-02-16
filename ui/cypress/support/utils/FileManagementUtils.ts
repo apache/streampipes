@@ -32,10 +32,25 @@ export class FileManagementUtils {
             { force: true },
         );
         cy.dataCy('sp-file-management-store-file').click();
+
+        this.expectUploadedFileToBeVisibleInFileOverview(filePath);
     }
 
     private static addFixtureDirectoryPrefix(filePath: string): string {
         return 'cypress/fixtures/' + filePath;
+    }
+
+    private static getFileName(filePath: string): string {
+        return filePath.split('/').pop() ?? filePath;
+    }
+
+    private static expectUploadedFileToBeVisibleInFileOverview(
+        filePath: string,
+    ): void {
+        const uploadedFileName = this.getFileName(filePath);
+        cy.get('sp-file-overview', { timeout: 10000 })
+            .contains('span', uploadedFileName)
+            .should('be.visible');
     }
 
     public static deleteFile() {
