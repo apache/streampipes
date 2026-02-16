@@ -323,7 +323,7 @@ export class ConnectBtns {
     }
 
     public static jsonArrayFieldKey() {
-        return 'format-arrayFieldConfig-2-key-0';
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.json-0-json_options-0-arrayFieldConfig-2-key-0';
     }
 
     public static xmlTag() {
