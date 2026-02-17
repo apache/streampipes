@@ -25,13 +25,11 @@
 }
 
 .jv__content {
-    padding: 10px 12px 14px 12px;
     background: var(--color-bg-0);
 }
 
 .raw {
     margin: 0;
-    padding: 12px;
     background: var(--color-bg-0);
     color: var(--text);
     overflow: auto;
@@ -45,7 +43,6 @@
 
 .tree {
     background: var(--color-bg-0);
-    padding: 10px;
     max-height: 520px;
     overflow: auto;
 }

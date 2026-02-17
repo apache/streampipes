@@ -21,8 +21,6 @@ package org.apache.streampipes.extensions.connectors.opcua.model.node;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaTypes;
 import org.apache.streampipes.model.connect.guess.FieldStatus;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
@@ -32,18 +30,14 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 
 import java.util.Base64;
-import java.util.List;
 import java.util.Map;
 
 public class PrimitiveOpcUaNode implements OpcUaNode {
 
   private final BasicVariableNodeInfo nodeInfo;
-  private final List<String> runtimeNamesToDelete;
 
-  public PrimitiveOpcUaNode(BasicVariableNodeInfo nodeInfo,
-                            List<String> runtimeNamesToDelete) {
+  public PrimitiveOpcUaNode(BasicVariableNodeInfo nodeInfo) {
     this.nodeInfo = nodeInfo;
-    this.runtimeNamesToDelete = runtimeNamesToDelete;
   }
 
   @Override
@@ -57,23 +51,11 @@ public class PrimitiveOpcUaNode implements OpcUaNode {
   }
 
   @Override
-  public void addToSchema(OpcUaClient client,
-                          List<EventProperty> eventProperties) {
-    var nodeName = nodeInfo().getBaseNodeName();
-    eventProperties.add(PrimitivePropertyBuilder
-        .create(getType(), nodeName)
-        .label(nodeName)
-        .build());
-  }
-
-  @Override
   public void addToEvent(OpcUaClient client,
                          Map<String, Object> event,
                          Variant variant) {
     var nodeName = nodeInfo.getDesiredName("");
-    if (!runtimeNamesToDelete.contains(nodeName)) {
-      event.put(nodeName, extractValue(variant));
-    }
+    event.put(nodeName, extractValue(variant));
   }
 
   @Override

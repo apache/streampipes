@@ -22,18 +22,89 @@ import org.apache.streampipes.extensions.connectors.opcua.model.node.BasicVariab
 import org.apache.streampipes.extensions.connectors.opcua.model.node.ExtensionObjectOpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.model.node.PrimitiveOpcUaNode;
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaTypes;
 
-import java.util.List;
+import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ExtensionObject;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
+
+import java.lang.reflect.Array;
+import java.util.Objects;
 
 public class OpcUaNodeFactory {
 
-  public static OpcUaNode createOpcUaNode(BasicVariableNodeInfo nodeInfo,
-                                          List<String> runtimeNamesToDelete) {
-    if (OpcUaTypes.isExtensionOrCustom(nodeInfo.getNode())) {
-      return new ExtensionObjectOpcUaNode(nodeInfo, runtimeNamesToDelete);
-    } else {
-      return new PrimitiveOpcUaNode(nodeInfo, runtimeNamesToDelete);
+  public static OpcUaNode createOpcUaNode(
+      BasicVariableNodeInfo nodeInfo,
+      DataValue dataValue
+  ) {
+    var hasVariant = hasVariant(dataValue);
+    if (hasVariant) {
+      var byValue = isExtensionByValue(dataValue);
+        return byValue
+            ? new ExtensionObjectOpcUaNode(nodeInfo)
+            : new PrimitiveOpcUaNode(nodeInfo);
     }
+
+    return isExtensionByDataType(nodeInfo)
+        ? new ExtensionObjectOpcUaNode(nodeInfo)
+        : new PrimitiveOpcUaNode(nodeInfo);
+  }
+
+  private static boolean hasVariant(DataValue dataValue) {
+    if (dataValue == null) {
+      return false;
+    }
+
+    StatusCode sc = dataValue.getStatusCode();
+    if (sc == null || !sc.isGood()) {
+      return false;
+    }
+
+    return dataValue.getValue() != null;
+  }
+
+  /**
+   * @return TRUE  -> value is (or contains) ExtensionObject
+   *         FALSE -> value is present and not ExtensionObject
+   */
+  private static boolean isExtensionByValue(DataValue dv) {
+    Object v = dv.getValue().getValue();
+    if (v == null) {
+      return false;
+    }
+
+    if (v instanceof ExtensionObject) {
+      return true;
+    }
+
+    // Handle arrays of any kind (Object[] or primitive arrays)
+    Class<?> c = v.getClass();
+    if (c.isArray()) {
+      int len = Array.getLength(v);
+      for (int i = 0; i < len; i++) {
+        Object el = Array.get(v, i);
+        if (el instanceof ExtensionObject) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    return false;
+  }
+
+  /**
+   * Conservative fallback based on declared DataType only.
+   * Treat only ExtensionObject itself as "extension" here.
+   *
+   * Why so conservative? Because abstract standard types like Integer/Number
+   * are NOT builtins but are still "primitive-ish" and should not be treated
+   * as custom/extension.
+   */
+  private static boolean isExtensionByDataType(BasicVariableNodeInfo nodeInfo) {
+    NodeId dt = nodeInfo.getNode().getDataType();
+    return Objects.equals(dt, BuiltinDataType.ExtensionObject.getNodeId());
   }
 }
+

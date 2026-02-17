@@ -19,29 +19,22 @@
 package org.apache.streampipes.extensions.connectors.opcua.model.node;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaTypes;
 import org.apache.streampipes.model.connect.guess.FieldStatus;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 
 import org.eclipse.milo.opcua.binaryschema.Struct;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ExtensionObject;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 
-import java.util.List;
 import java.util.Map;
 
 public class ExtensionObjectOpcUaNode implements OpcUaNode {
 
   private final BasicVariableNodeInfo nodeInfo;
-  private final List<String> runtimeNamesToDelete;
 
-  public ExtensionObjectOpcUaNode(BasicVariableNodeInfo nodeInfo,
-                                  List<String> runtimeNamesToDelete) {
+  public ExtensionObjectOpcUaNode(BasicVariableNodeInfo nodeInfo) {
     this.nodeInfo = nodeInfo;
-    this.runtimeNamesToDelete = runtimeNamesToDelete;
   }
 
   @Override
@@ -52,26 +45,7 @@ public class ExtensionObjectOpcUaNode implements OpcUaNode {
   @Override
   public int getNumberOfEventProperties(OpcUaClient client) {
     var struct = extractStruct(client, nodeInfo.getNode().getValue().getValue());
-    return (int) struct.getMembers().entrySet().stream()
-        .filter(entry -> {
-          var nodeName = nodeInfo.getDesiredName(entry.getKey());
-          return !runtimeNamesToDelete.contains(nodeName);
-        })
-        .count();
-  }
-
-  @Override
-  public void addToSchema(OpcUaClient client,
-                          List<EventProperty> eventProperties) {
-    var struct = extractStruct(client, nodeInfo.getNode().getValue().getValue());
-    struct.getMembers().forEach((key, member) -> {
-      var nodeName = nodeInfo.getDesiredName(key);
-      eventProperties.add(
-          PrimitivePropertyBuilder.create(OpcUaTypes.getTypeFromValue(member.getValue()), nodeName)
-              .label(nodeName)
-              .build()
-      );
-    });
+    return struct.getMembers().size();
   }
 
   @Override
@@ -82,9 +56,7 @@ public class ExtensionObjectOpcUaNode implements OpcUaNode {
 
     struct.getMembers().forEach((key, member) -> {
       var nodeName = nodeInfo.getDesiredName(key);
-      if (!runtimeNamesToDelete.contains(nodeName)) {
-        event.put(nodeName, member.getValue());
-      }
+      event.put(nodeName, member.getValue());
     });
   }
 

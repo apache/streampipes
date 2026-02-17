@@ -18,12 +18,12 @@
 
 import { Component, Input } from '@angular/core';
 import {
-    FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { KeyValuePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { LayoutGapDirective } from '@ngbracket/ngx-layout';
 
 @Component({
     selector: 'sp-static-tree-input-node-details',
@@ -32,9 +32,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         LayoutAlignDirective,
         LayoutDirective,
-        FlexDirective,
         KeyValuePipe,
         TranslatePipe,
+        LayoutGapDirective,
     ],
 })
 export class StaticTreeInputNodeDetailsComponent {

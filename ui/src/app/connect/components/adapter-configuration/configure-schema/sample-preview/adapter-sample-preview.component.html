@@ -18,7 +18,7 @@
 <sp-basic-inner-panel
     innerPadding="0"
     [showTitle]="true"
-    [panelTitle]="'Original (Parsed)' | translate"
+    [panelTitle]="'Source' | translate"
 >
     <div header fxLayoutAlign="end center" fxFlex="100">
         <button
@@ -69,14 +69,16 @@
                 [showDetails]="true"
             ></sp-exception-message>
         } @else {
-            <sp-show-field-status-infos
-                [fieldStatusInfos]="fieldStatusInfos()"
-            ></sp-show-field-status-infos>
-            <sp-adapter-event-preview
-                dataCy="configure-schema-event-preview-original"
-                [mode]="sourceViewMode()"
-                [value]="input()"
-            ></sp-adapter-event-preview>
+            <div fxLayout="column" class="w-100 p-sm">
+                <sp-show-field-status-infos
+                    [fieldStatusInfos]="fieldStatusInfos()"
+                ></sp-show-field-status-infos>
+                <sp-adapter-event-preview
+                    dataCy="configure-schema-event-preview-original"
+                    [mode]="sourceViewMode()"
+                    [value]="input()"
+                ></sp-adapter-event-preview>
+            </div>
         }
     }
 </sp-basic-inner-panel>
