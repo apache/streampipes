@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
         private appConstants: AppConstants,
         private translate: TranslateService,
     ) {
-        const supportedLanguages = ['de', 'en'];
+        const supportedLanguages = ['de', 'en', 'pl'];
         const defaultLanguage = 'en';
         this.translate.addLangs(supportedLanguages);
         this.translate.setDefaultLang(defaultLanguage);
