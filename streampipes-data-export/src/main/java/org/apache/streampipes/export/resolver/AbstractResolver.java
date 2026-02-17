@@ -43,7 +43,7 @@ public abstract class AbstractResolver<T> implements DocumentResolver<T> {
 
   public AbstractResolver() {
     this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
-      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false
     ));
     this.spMapper = JacksonSerializer.getObjectMapper();
   }
