@@ -23,15 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MigrationsHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrationsHandler.class);
 
-  public void performMigrations() {
-    LOG.info("Checking for required migrations...");
-    var availableMigrations = new AvailableMigrations().getAvailableMigrations();
-
+  public void performMigrations(List<Migration> availableMigrations) {
+    LOG.info("Running required migrations...");
     availableMigrations.forEach(migration -> {
       if (migration.shouldExecute()) {
         LOG.info("Performing migration: {}", migration.getDescription());
