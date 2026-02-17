@@ -108,9 +108,9 @@ public class OpcUaNodeBrowser {
     );
 
     if (node instanceof VariableNode) {
-      var dv = ((VariableNode) node).getValue();
+      var dataValue = ((VariableNode) node).getValue();
       var nodeInfo = new BasicVariableNodeInfo((VariableNode) node, spOpcConfig.getNamingStrategy());
-      return OpcUaNodeFactory.createOpcUaNode(nodeInfo, dv);
+      return OpcUaNodeFactory.createOpcUaNode(nodeInfo, dataValue);
     }
 
     LOG.warn("Node {} not of type VariableNode", node.getDisplayName());

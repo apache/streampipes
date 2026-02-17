@@ -30,7 +30,6 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 
 import java.lang.reflect.Array;
-import java.util.List;
 import java.util.Objects;
 
 public class OpcUaNodeFactory {
@@ -39,11 +38,12 @@ public class OpcUaNodeFactory {
       BasicVariableNodeInfo nodeInfo,
       DataValue dataValue
   ) {
-    Boolean byValue = isExtensionByValue(dataValue);
-    if (byValue != null) {
-      return byValue
-          ? new ExtensionObjectOpcUaNode(nodeInfo)
-          : new PrimitiveOpcUaNode(nodeInfo);
+    var hasVariant = hasVariant(dataValue);
+    if (hasVariant) {
+      var byValue = isExtensionByValue(dataValue);
+        return byValue
+            ? new ExtensionObjectOpcUaNode(nodeInfo)
+            : new PrimitiveOpcUaNode(nodeInfo);
     }
 
     return isExtensionByDataType(nodeInfo)
@@ -51,32 +51,31 @@ public class OpcUaNodeFactory {
         : new PrimitiveOpcUaNode(nodeInfo);
   }
 
+  private static boolean hasVariant(DataValue dataValue) {
+    if (dataValue == null) {
+      return false;
+    }
+
+    StatusCode sc = dataValue.getStatusCode();
+    if (sc == null || !sc.isGood()) {
+      return false;
+    }
+
+    return dataValue.getValue() != null;
+  }
+
   /**
    * @return TRUE  -> value is (or contains) ExtensionObject
    *         FALSE -> value is present and not ExtensionObject
-   *         NULL  -> cannot decide from value (null DataValue, bad StatusCode, no Variant, etc.)
    */
-  public static Boolean isExtensionByValue(DataValue dv) {
-    if (dv == null) {
-      return null;
-    }
-
-    StatusCode sc = dv.getStatusCode();
-    if (sc == null || !sc.isGood()) {
-      return null;
-    }
-
-    if (dv.getValue() == null) {
-      return null;
-    }
-
+  private static boolean isExtensionByValue(DataValue dv) {
     Object v = dv.getValue().getValue();
     if (v == null) {
-      return Boolean.FALSE;
+      return false;
     }
 
     if (v instanceof ExtensionObject) {
-      return Boolean.TRUE;
+      return true;
     }
 
     // Handle arrays of any kind (Object[] or primitive arrays)
@@ -84,15 +83,15 @@ public class OpcUaNodeFactory {
     if (c.isArray()) {
       int len = Array.getLength(v);
       for (int i = 0; i < len; i++) {
-        Object el = Array.get(v, i); // works for primitive arrays too (boxed)
+        Object el = Array.get(v, i);
         if (el instanceof ExtensionObject) {
-          return Boolean.TRUE;
+          return true;
         }
       }
-      return Boolean.FALSE;
+      return false;
     }
 
-    return Boolean.FALSE;
+    return false;
   }
 
   /**
