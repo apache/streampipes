@@ -310,15 +310,19 @@ export class AdapterStartedDialog implements OnInit {
         this.shepherdService.trigger('confirm_adapter_started_button');
     }
 
-    async addToAsset(): Promise<void> {
+    async addToAsset(pipelineId = ''): Promise<void> {
         let linkageData: LinkageData[];
         try {
             if (!this.editMode) {
                 const adapter = await this.getAdapter();
                 linkageData = this.createLinkageData(adapter);
 
-                if (this.saveInDataLake) {
-                    await this.addDataLakeLinkageData(adapter, linkageData);
+                if (this.saveInDataLake && pipelineId !== '') {
+                    await this.addDataLakeLinkageData(
+                        adapter,
+                        linkageData,
+                        pipelineId,
+                    );
                 }
             } else {
                 linkageData = this.createLinkageData(this.adapter);
@@ -359,8 +363,8 @@ export class AdapterStartedDialog implements OnInit {
     private async addDataLakeLinkageData(
         adapter: AdapterDescription,
         linkageData: LinkageData[],
+        pipelineId: string,
     ): Promise<void> {
-        const pipelineId = `persist-${this.adapter.name.replaceAll(' ', '-')}`;
         linkageData.push({
             type: 'pipeline',
             id: pipelineId,
@@ -415,10 +419,9 @@ export class AdapterStartedDialog implements OnInit {
                 .findById('sp-internal-persist')
                 .subscribe(
                     template => {
+                        const pipelineId = this.createPipelineId();
                         const pipeline: CompactPipeline = {
-                            id:
-                                'persist-' +
-                                this.adapter.name.replaceAll(' ', '-'),
+                            id: pipelineId,
                             name: 'Persist ' + this.adapter.name,
                             description: '',
                             pipelineElements: this.makeTemplateConfigs(
@@ -435,7 +438,7 @@ export class AdapterStartedDialog implements OnInit {
                                 this.pipelineOperationStatus =
                                     pipelineOperationStatus;
                                 this.startAdapter(adapterElementId, true);
-                                this.addToAsset();
+                                this.addToAsset(pipelineId);
                             },
                             error => {
                                 this.onAdapterFailure(error.error);
@@ -476,5 +479,11 @@ export class AdapterStartedDialog implements OnInit {
             output: undefined,
         });
         return template;
+    }
+
+    private createPipelineId(): string {
+        const base = `persist-${this.adapter.name.replaceAll(' ', '-')}`;
+        const suffix = Math.random().toString(36).slice(2, 8);
+        return `${base}-${suffix}`;
     }
 }
