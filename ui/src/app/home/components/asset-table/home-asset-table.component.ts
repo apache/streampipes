@@ -32,15 +32,39 @@ import {
     LocationConfig,
     SpAssetModel,
 } from '@streampipes/platform-services';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { Router } from '@angular/router';
+import { SpLabelComponent, SpTableComponent } from '@streampipes/shared-ui';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { AssetTableLinkPreviewComponent } from './asset-table-link-preview/asset-table-link-preview.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-home-asset-table',
     templateUrl: './home-asset-table.component.html',
     styleUrls: ['./home-asset-table.component.scss'],
-    standalone: false,
+    imports: [
+        SpTableComponent,
+        FlexDirective,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        SpLabelComponent,
+        AssetTableLinkPreviewComponent,
+        TranslatePipe,
+    ],
 })
 export class HomeAssetTableComponent implements OnInit, OnChanges {
     @Input()

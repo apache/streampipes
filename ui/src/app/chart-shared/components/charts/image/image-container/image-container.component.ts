@@ -19,12 +19,16 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-image-container',
     templateUrl: './image-container.component.html',
     styleUrls: ['./image-container.component.scss'],
-    standalone: false,
+    imports: [LayoutAlignDirective, FlexDirective],
 })
 export class SpImageContainerComponent {
     imagePath: SafeUrl;

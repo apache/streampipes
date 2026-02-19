@@ -20,11 +20,32 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
 import { ExportConfiguration } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpDataExportItemComponent } from './data-export-item/data-export-item.component';
+import { GenericStorageItemsComponent } from './generic-storage-items/generic-storage-items.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-export-dialog',
     templateUrl: './data-export-dialog.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SpDataExportItemComponent,
+        GenericStorageItemsComponent,
+        LayoutAlignDirective,
+        MatProgressSpinner,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class SpDataExportDialogComponent implements OnInit {
     @Input()

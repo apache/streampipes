@@ -17,12 +17,30 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-feature-card-header',
     templateUrl: './feature-card-header.component.html',
     styleUrls: ['./feature-card-header.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        NgIf,
+        FlexDirective,
+        MatIcon,
+        MatButton,
+        MatIconButton,
+    ],
 })
 export class FeatureCardHeaderComponent {
     @Input() title: string;

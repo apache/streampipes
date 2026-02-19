@@ -19,20 +19,22 @@
 import {
     Component,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
-    inject,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { RuntimeResolvableTreeInputStaticProperty } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sp-static-tree-input-text-editor',
     templateUrl: './static-tree-input-text-editor.component.html',
-    standalone: false,
+    imports: [CodemirrorModule, FormsModule],
 })
 export class StaticTreeInputTextEditorComponent implements OnInit {
     @Input()

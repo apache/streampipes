@@ -17,12 +17,25 @@
  */
 
 import { Component, Input } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-invalid-configuration',
     templateUrl: './invalid-configuration.component.html',
     styleUrls: ['../no-data/no-data-in-date-range.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        LayoutGapDirective,
+        TranslatePipe,
+    ],
 })
 export class SpInvalidConfigurationComponent {
     @Input()

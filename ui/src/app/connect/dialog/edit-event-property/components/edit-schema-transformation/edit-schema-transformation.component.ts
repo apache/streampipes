@@ -23,23 +23,59 @@ import {
     startWith,
     switchMap,
 } from 'rxjs/operators';
-import { UntypedFormControl } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormControl,
+} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import {
-    DataType,
-    EventPropertyPrimitive,
     EventProperty,
-    SemanticType,
+    EventPropertyPrimitive,
     SemanticTypesRestService,
 } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { EditDataTypeComponent } from './edit-data-type/edit-data-type.component';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import {
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
+import { MatOption } from '@angular/material/select';
+import { MatTooltip } from '@angular/material/tooltip';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-schema-transformation',
     templateUrl: './edit-schema-transformation.component.html',
     styleUrls: ['../../edit-event-property.component.scss'],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        FormFieldComponent,
+        EditDataTypeComponent,
+        SpAlertBannerComponent,
+        FlexDirective,
+        LayoutDirective,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatAutocompleteTrigger,
+        ReactiveFormsModule,
+        MatAutocomplete,
+        MatOption,
+        MatTooltip,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class EditSchemaTransformationComponent implements OnInit {
     @Input()

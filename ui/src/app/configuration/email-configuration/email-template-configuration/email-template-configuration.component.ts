@@ -17,20 +17,43 @@
  */
 
 import { Component, inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { FormsModule, UntypedFormBuilder } from '@angular/forms';
 import {
     EmailTemplate,
     MailConfigService,
 } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import 'codemirror/mode/htmlembedded/htmlembedded';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatButton } from '@angular/material/button';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 
 @Component({
     selector: 'sp-email-template-configuration',
     templateUrl: './email-template-configuration.component.html',
     styleUrls: ['./email-template-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        SplitSectionComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatButton,
+        SpAlertBannerComponent,
+        LayoutGapDirective,
+        CodemirrorModule,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class SpEmailTemplateConfigurationComponent implements OnInit {
     template: EmailTemplate;

@@ -23,11 +23,28 @@ import {
     PipelineTemplateService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { TemplateSelectionComponent } from './template-selection/template-selection.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-add-template-dialog',
     templateUrl: './add-template-dialog.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        TemplateSelectionComponent,
+        MatDivider,
+        LayoutGapDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class AddTemplateDialogComponent implements OnInit {
     pipelineTemplates: CompactPipelineTemplate[] = [];

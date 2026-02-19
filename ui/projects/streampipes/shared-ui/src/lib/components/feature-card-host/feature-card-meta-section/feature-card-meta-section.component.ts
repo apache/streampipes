@@ -21,7 +21,6 @@ import { Component, Input } from '@angular/core';
 @Component({
     selector: 'sp-feature-card-meta-section',
     templateUrl: './feature-card-meta-section.component.html',
-    standalone: false,
 })
 export class FeatureCardMetaSectionComponent {
     @Input() label: string;

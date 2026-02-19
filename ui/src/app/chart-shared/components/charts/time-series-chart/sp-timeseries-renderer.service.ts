@@ -22,7 +22,7 @@ import {
     LineSeriesOption,
     ScatterSeriesOption,
 } from 'echarts';
-import { SeriesOption } from 'echarts/types/src/util/types';
+import type { SeriesOption } from 'echarts/types/src/util/types.d.ts';
 import { Injectable } from '@angular/core';
 import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
@@ -32,11 +32,11 @@ import {
     AxisConfig,
     WidgetBaseAppearanceConfig,
 } from '../../../models/dataview-dashboard.model';
-import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
-import { ToolboxDataZoomFeatureOption } from 'echarts/types/src/component/toolbox/feature/DataZoom';
+import type { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager.d.ts';
+import type { ToolboxDataZoomFeatureOption } from 'echarts/types/src/component/toolbox/feature/DataZoom.d.ts';
 import { YAXisOption } from 'echarts/types/dist/shared';
-import { CartesianAxisPosition } from 'echarts/types/src/coord/cartesian/AxisModel';
-import { FieldUpdateInfo } from '../../../models/field-update.model';
+import type { CartesianAxisPosition } from 'echarts/types/src/coord/cartesian/AxisModel.d.ts';
+import type { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSeriesChartWidgetModel> {

@@ -23,11 +23,32 @@ import {
     ValueHeatmapChartWidgetModel,
 } from '../model/value-heatmap-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-value-heatmap-widget-config',
     templateUrl: './value-heatmap-chart-widget-config.component.html',
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SplitSectionComponent,
+        SelectSinglePropertyConfigComponent,
+        FormFieldComponent,
+        MatFormField,
+        FlexDirective,
+        MatInput,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class SpValueHeatmapWidgetConfigComponent extends BaseWidgetConfig<
     ValueHeatmapChartWidgetModel,

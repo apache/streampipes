@@ -18,11 +18,46 @@
 
 import { Component, input, output } from '@angular/core';
 import { ScriptMetadata } from '@streampipes/platform-services';
+import {
+    SpAlertBannerComponent,
+    SpBasicInnerPanelComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TitleCasePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-script-editor',
-    standalone: false,
     templateUrl: './adapter-script-editor.component.html',
+    imports: [
+        SpBasicInnerPanelComponent,
+        SpAlertBannerComponent,
+        LayoutAlignDirective,
+        FlexDirective,
+        LayoutGapDirective,
+        MatButton,
+        MatMenuTrigger,
+        MatIcon,
+        MatMenu,
+        MatMenuItem,
+        MatSlideToggle,
+        FormsModule,
+        CodemirrorModule,
+        MatTooltip,
+        TitleCasePipe,
+        TranslatePipe,
+    ],
 })
 export class AdapterScriptEditorComponent {
     scriptActive = input(false);

@@ -27,7 +27,7 @@ import {
 import { Directive } from '@angular/core';
 import { Observable, zip } from 'rxjs';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
-import { SpPipelineRoutes } from '../../pipelines.routes';
+import { SpPipelineRoutes } from '../../pipelines.breadcrumb';
 
 @Directive()
 export abstract class AbstractFunctionDetailsDirective {

@@ -24,7 +24,6 @@ import { FeatureCardService } from '@streampipes/shared-ui';
     selector: 'sp-asset-table-link-preview',
     templateUrl: './asset-table-link-preview.component.html',
     styleUrls: ['./asset-table-link-preview.component.scss'],
-    standalone: false,
 })
 export class AssetTableLinkPreviewComponent implements OnInit {
     @Input()

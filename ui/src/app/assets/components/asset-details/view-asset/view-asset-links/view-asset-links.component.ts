@@ -23,12 +23,29 @@ import {
     GenericStorageService,
     SpAsset,
 } from '@streampipes/platform-services';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { AssetLinkTableComponent } from './asset-link-table/asset-link-table.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-view-asset-links',
     templateUrl: './view-asset-links.component.html',
     styleUrls: ['./view-asset-links.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        SplitSectionComponent,
+        AssetLinkTableComponent,
+        SpAlertBannerComponent,
+        TranslatePipe,
+    ],
 })
 export class ViewAssetLinksComponent implements OnInit {
     @Input()

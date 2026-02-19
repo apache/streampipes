@@ -16,11 +16,24 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-configure-fields-loading-message',
     templateUrl: './configure-fields-loading-message.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        MatProgressSpinner,
+        TranslatePipe,
+    ],
 })
 export class ConfigureFieldsLoadingMessageComponent {}

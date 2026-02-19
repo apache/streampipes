@@ -23,12 +23,31 @@ import {
 } from '../../../model/editor.model';
 import { PipelineElementTypeUtils } from '../../../utils/editor.utils';
 import { EditorService } from '../../../services/editor.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { PipelineElementComponent } from '@streampipes/shared-ui';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-pe-icon-stand-row',
     templateUrl: './pipeline-element-icon-stand-row.component.html',
     styleUrls: ['./pipeline-element-icon-stand-row.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        MatTooltip,
+        NgClass,
+        ClassDirective,
+        PipelineElementComponent,
+        LayoutAlignDirective,
+        MatButton,
+    ],
 })
 export class PipelineElementIconStandRowComponent implements OnInit {
     @Input()

@@ -27,7 +27,26 @@ import {
 import { DialogRef } from '@streampipes/shared-ui';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import { Observable, zip } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
+import {
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatDivider } from '@angular/material/divider';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 export interface WidgetClone {
     current: DataExplorerWidgetModel;
@@ -38,7 +57,26 @@ export interface WidgetClone {
     selector: 'sp-clone-dashboard-dialog-component',
     templateUrl: './clone-dashboard-dialog.component.html',
     styleUrls: ['./clone-dashboard-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        FormsModule,
+        MatError,
+        MatCheckbox,
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        MatDivider,
+        LayoutGapDirective,
+        MatButton,
+        LayoutAlignDirective,
+        MatProgressSpinner,
+        TranslatePipe,
+    ],
 })
 export class CloneDashboardDialogComponent implements OnInit {
     private dialogRef = inject(DialogRef<CloneDashboardDialogComponent>);

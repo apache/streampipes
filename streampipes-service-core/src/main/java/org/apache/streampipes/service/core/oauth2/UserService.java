@@ -26,8 +26,9 @@ import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.api.IUserStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -47,8 +48,8 @@ public class UserService {
   private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
   private final IUserStorage userStorage;
-  private final CRUDStorage<Role> roleStorage;
-  private final CRUDStorage<Group> groupStorage;
+  private final IRoleStorage roleStorage;
+  private final IUserGroupStorage groupStorage;
   private final Environment env;
   private List<Role> allRoles;
   private List<Group> allGroups;

@@ -32,24 +32,66 @@ import {
     ViewChild,
 } from '@angular/core';
 import {
+    MatCell,
+    MatCellDef,
     MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
     MatHeaderRowDef,
     MatNoDataRow,
+    MatRow,
     MatRowDef,
     MatTable,
     MatTableDataSource,
 } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { SpTableActionsDirective } from './sp-table-actions.directive';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { LocalStorageService } from '../../services/local-storage-settings.service';
 import { FeatureCardService } from '../feature-card-host/feature-card.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-table',
     templateUrl: './sp-table.component.html',
     styleUrls: ['./sp-table.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        MatMenuTrigger,
+        MatMenu,
+        NgTemplateOutlet,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        NgClass,
+        ClassDirective,
+        MatNoDataRow,
+        FlexDirective,
+        MatPaginator,
+        TranslatePipe,
+    ],
 })
 export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
     @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;

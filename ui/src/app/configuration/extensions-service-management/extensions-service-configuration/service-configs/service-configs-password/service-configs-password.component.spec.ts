@@ -57,7 +57,6 @@ describe('ServiceConfigsPasswordComponent', () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [ServiceConfigsPasswordComponent],
             imports: [
                 CommonModule,
                 BrowserAnimationsModule,
@@ -69,6 +68,7 @@ describe('ServiceConfigsPasswordComponent', () => {
                 MatCheckboxModule,
                 MatTooltipModule,
                 FormsModule,
+                ServiceConfigsPasswordComponent,
             ],
             providers: [
                 {

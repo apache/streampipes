@@ -22,7 +22,7 @@ import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -52,7 +52,7 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
     ));
 
-  private final CRUDStorage<FileMetadata> fileMetadataStorage =
+  private final IFileMetadataStorage fileMetadataStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage();
 
   private final FileHandler fileHandler = new FileHandler();
@@ -99,7 +99,7 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
   /**
    * Fetches all fileIds stored in CouchDB
    */
-  private List<String> getAllFileIds(CRUDStorage<FileMetadata> fileMetadataStorage) {
+  private List<String> getAllFileIds(IFileMetadataStorage fileMetadataStorage) {
     return fileMetadataStorage.findAll().stream().map(FileMetadata::getFileId)
         .toList();
   }

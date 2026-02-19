@@ -22,12 +22,13 @@ import { slideInAnimation } from './animation';
 import { Title } from '@angular/platform-browser';
 import { AppConstants } from './services/app.constants';
 import { TranslateService } from '@ngx-translate/core';
+import { LoadingBarModule } from '@ngx-loading-bar/core';
 
 @Component({
     selector: 'sp-app-root',
     templateUrl: './app.component.html',
     animations: [slideInAnimation],
-    standalone: false,
+    imports: [LoadingBarModule, RouterOutlet],
 })
 export class AppComponent implements OnInit {
     constructor(
@@ -35,7 +36,7 @@ export class AppComponent implements OnInit {
         private appConstants: AppConstants,
         private translate: TranslateService,
     ) {
-        const supportedLanguages = ['de', 'en'];
+        const supportedLanguages = ['de', 'en', 'pl'];
         const defaultLanguage = 'en';
         this.translate.addLangs(supportedLanguages);
         this.translate.setDefaultLang(defaultLanguage);

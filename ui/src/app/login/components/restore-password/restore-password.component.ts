@@ -18,18 +18,49 @@
 
 import { Component, inject } from '@angular/core';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
+import { AuthBoxComponent } from '../auth-box/auth-box.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+} from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-restore-password',
     templateUrl: './restore-password.component.html',
     styleUrls: ['../login/login.component.scss'],
-    standalone: false,
+    imports: [
+        AuthBoxComponent,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatButton,
+        SpAlertBannerComponent,
+        RouterLink,
+        TranslatePipe,
+    ],
 })
 export class RestorePasswordComponent extends BaseLoginPageDirective {
     parentForm: UntypedFormGroup;

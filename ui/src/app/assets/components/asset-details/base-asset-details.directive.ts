@@ -28,7 +28,7 @@ import {
 } from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
 import { zip } from 'rxjs';
-import { SpAssetRoutes } from '../../assets.routes';
+import { SpAssetRoutes } from '../../assets.breadcrumb';
 
 @Directive()
 export abstract class BaseAssetDetailsDirective implements OnInit {

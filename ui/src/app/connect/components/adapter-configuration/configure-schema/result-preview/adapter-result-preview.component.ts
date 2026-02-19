@@ -17,12 +17,41 @@
  */
 
 import { Component, input, output } from '@angular/core';
-import { Mode } from '../../adapter-event-preview/adapter-event-preview.component';
+import {
+    AdapterEventPreviewComponent,
+    Mode,
+} from '../../adapter-event-preview/adapter-event-preview.component';
+import {
+    SpBasicInnerPanelComponent,
+    SpExceptionMessageComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    MatButtonToggle,
+    MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-result-preview',
-    standalone: false,
     templateUrl: './adapter-result-preview.component.html',
+    imports: [
+        SpBasicInnerPanelComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        LayoutDirective,
+        MatProgressSpinner,
+        SpExceptionMessageComponent,
+        AdapterEventPreviewComponent,
+        TranslatePipe,
+    ],
 })
 export class AdapterResultPreviewComponent {
     isRunningScript = input(false);

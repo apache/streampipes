@@ -28,18 +28,61 @@ import {
     ViewChild,
 } from '@angular/core';
 import { PipelineOperationsService } from '../../services/pipeline-operations.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { CurrentUserService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    SpTableActionsDirective,
+    SpTableComponent,
+} from '@streampipes/shared-ui';
 import { Subscription } from 'rxjs';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuItem } from '@angular/material/menu';
+import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-overview',
     templateUrl: './pipeline-overview.component.html',
     styleUrls: ['./pipeline-overview.component.scss'],
-    standalone: false,
+    imports: [
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatTooltip,
+        MatIconButton,
+        MatIcon,
+        LayoutGapDirective,
+        SpTableActionsDirective,
+        MatMenuItem,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class PipelineOverviewComponent implements OnInit, OnDestroy {
     _pipelines: Pipeline[];

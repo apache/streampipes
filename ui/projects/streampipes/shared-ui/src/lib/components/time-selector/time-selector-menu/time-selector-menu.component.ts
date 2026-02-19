@@ -25,19 +25,35 @@ import {
     ViewChild,
 } from '@angular/core';
 import {
+    ExtendedTimeSettings,
     QuickTimeSelection,
     TimeSettings,
-    ExtendedTimeSettings,
 } from '@streampipes/platform-services';
 import { TimeSelectionService } from '../../../services/time-selection.service';
 import { CustomTimeRangeSelectionComponent } from './custom-time-range-selection/custom-time-range-selection.component';
 import { TimeSelectorLabel } from '../time-selector.model';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-time-selector-menu',
     templateUrl: 'time-selector-menu.component.html',
     styleUrls: ['./time-selector-menu.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        FlexDirective,
+        NgClass,
+        ClassDirective,
+        MatDivider,
+        CustomTimeRangeSelectionComponent,
+    ],
 })
 export class TimeRangeSelectorMenuComponent implements OnInit {
     @Input()

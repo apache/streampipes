@@ -17,11 +17,15 @@
  */
 
 import { Component, Input } from '@angular/core';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-adapter-status-light',
     templateUrl: './adapter-status-light.component.html',
-    standalone: false,
+    imports: [LayoutDirective, LayoutAlignDirective],
 })
 export class AdapterStatusLightComponent {
     @Input()

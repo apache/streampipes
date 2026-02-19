@@ -17,12 +17,47 @@
  */
 
 import { Component, input, output } from '@angular/core';
-import { Mode } from '../../adapter-event-preview/adapter-event-preview.component';
+import {
+    AdapterEventPreviewComponent,
+    Mode,
+} from '../../adapter-event-preview/adapter-event-preview.component';
+import {
+    SpBasicInnerPanelComponent,
+    SpExceptionMessageComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import {
+    MatButtonToggle,
+    MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ShowFieldStatusInfosComponent } from '../show-field-status-infos/show-field-status-infos.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-sample-preview',
-    standalone: false,
     templateUrl: './adapter-sample-preview.component.html',
+    imports: [
+        SpBasicInnerPanelComponent,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatButton,
+        MatIcon,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        LayoutDirective,
+        MatProgressSpinner,
+        SpExceptionMessageComponent,
+        ShowFieldStatusInfosComponent,
+        AdapterEventPreviewComponent,
+        TranslatePipe,
+    ],
 })
 export class AdapterSamplePreviewComponent {
     isSampleLoading = input(false);

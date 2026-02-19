@@ -16,14 +16,19 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-status-indicator',
     templateUrl: './status-indicator.component.html',
     styleUrls: ['./status-indicator.component.scss'],
-    standalone: false,
+    imports: [LayoutDirective, FlexDirective, LayoutAlignDirective],
 })
 export class StatusIndicatorComponent {
     translateService = inject(TranslateService);

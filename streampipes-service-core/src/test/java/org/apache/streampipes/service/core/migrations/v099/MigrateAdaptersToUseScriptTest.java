@@ -35,7 +35,7 @@ import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescrip
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
-import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.jupiter.api.BeforeEach;

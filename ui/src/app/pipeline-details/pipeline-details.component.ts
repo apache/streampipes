@@ -35,7 +35,7 @@ import {
     PanelType,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
+import { SpPipelineRoutes } from '../pipelines/pipelines.breadcrumb';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
@@ -43,12 +43,30 @@ import { PipelinePreviewComponent } from './components/preview/pipeline-preview.
 import { HttpContext } from '@angular/common/http';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-code-dialog.component';
+import { SpBasicViewComponent } from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { PipelineDetailsToolbarComponent } from './components/pipeline-details-toolbar/pipeline-details-toolbar.component';
+import { PipelineDetailsExpansionPanelComponent } from './components/pipeline-details-expansion-panel/pipeline-details-expansion-panel.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-details-overview-component',
     templateUrl: './pipeline-details.component.html',
     styleUrls: ['./pipeline-details.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        PipelineDetailsToolbarComponent,
+        LayoutDirective,
+        PipelinePreviewComponent,
+        PipelineDetailsExpansionPanelComponent,
+        TranslatePipe,
+    ],
 })
 export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     hasPipelineWritePrivileges = false;

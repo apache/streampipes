@@ -25,7 +25,7 @@ import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.storage.api.INoSqlStorage;
+import org.apache.streampipes.storage.api.core.INoSqlStorage;
 
 import java.util.ArrayList;
 import java.util.List;

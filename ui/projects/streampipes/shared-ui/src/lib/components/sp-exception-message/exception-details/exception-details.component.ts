@@ -18,12 +18,25 @@
 
 import { Component, Input } from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-exception-details',
     templateUrl: './exception-details.component.html',
     styleUrl: './exception-details.component.scss',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class SpExceptionDetailsComponent {
     @Input()

@@ -18,12 +18,14 @@
 import { Component, Input } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
+import { NgClass } from '@angular/common';
+import { DefaultClassDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-image-bar-preview',
     templateUrl: './image-bar-preview.component.html',
     styleUrls: ['./image-bar-preview.component.scss'],
-    standalone: false,
+    imports: [NgClass, DefaultClassDirective],
 })
 export class ImageBarPreviewComponent {
     @Input()

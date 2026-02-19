@@ -17,12 +17,17 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    PipelineElementDocumentationComponent,
+} from '@streampipes/shared-ui';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-adapter-documentation-dialog',
     templateUrl: './adapter-documentation-dialog.component.html',
-    standalone: false,
+    imports: [PipelineElementDocumentationComponent, MatDivider, MatButton],
 })
 export class SpAdapterDocumentationDialogComponent {
     @Input()

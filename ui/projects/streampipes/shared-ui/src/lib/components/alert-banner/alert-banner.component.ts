@@ -18,12 +18,31 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AlertType } from '@streampipes/platform-services';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatIcon } from '@angular/material/icon';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-alert-banner',
     templateUrl: './alert-banner.component.html',
     styleUrls: ['./alert-banner.component.scss'],
-    standalone: false,
+    imports: [
+        NgClass,
+        ClassDirective,
+        MatIcon,
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class SpAlertBannerComponent {
     @Input() type: AlertType = 'info';

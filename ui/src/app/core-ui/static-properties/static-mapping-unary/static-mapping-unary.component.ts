@@ -16,16 +16,29 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StaticMappingComponent } from '../static-mapping/static-mapping';
 import { MappingPropertyUnary } from '@streampipes/platform-services';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
 
 @Component({
     selector: 'sp-app-static-mapping-unary',
     templateUrl: './static-mapping-unary.component.html',
     styleUrls: ['./static-mapping-unary.component.scss'],
-    standalone: false,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        FlexDirective,
+        LayoutDirective,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        DisplayRecommendedPipe,
+    ],
 })
 export class StaticMappingUnaryComponent
     extends StaticMappingComponent<MappingPropertyUnary>

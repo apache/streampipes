@@ -22,11 +22,32 @@ import { ChartConfigurationService } from '../../../../services/chart-configurat
 import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { GaugeVisConfig, GaugeWidgetModel } from '../model/gauge-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-gauge-widget-config',
     templateUrl: './gauge-widget-config.component.html',
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SplitSectionComponent,
+        SelectSinglePropertyConfigComponent,
+        FormFieldComponent,
+        MatFormField,
+        FlexDirective,
+        MatInput,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
     GaugeWidgetModel,

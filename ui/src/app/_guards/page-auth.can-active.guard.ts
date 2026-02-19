@@ -27,7 +27,7 @@ import {
 import { AuthService } from '../services/auth.service';
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PageAuthGuard implements CanActivate, CanActivateChild {
     constructor(private authService: AuthService) {}
 

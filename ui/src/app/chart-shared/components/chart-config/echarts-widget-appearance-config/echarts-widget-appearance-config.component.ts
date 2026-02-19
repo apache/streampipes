@@ -19,11 +19,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { WidgetEchartsAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-echarts-widget-appearance-config',
     templateUrl: './echarts-widget-appearance-config.component.html',
-    standalone: false,
+    imports: [SplitSectionComponent, MatCheckbox, FormsModule, TranslatePipe],
 })
 export class SpEchartsWidgetAppearanceConfigComponent implements OnInit {
     @Input()

@@ -17,8 +17,20 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef,
+    MatTable,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { TableWidgetModel } from './model/table-widget.model';
 import {
@@ -26,12 +38,40 @@ import {
     SpQueryResult,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { DatePipe, NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-range.component';
+import { TooMuchDataComponent } from '../base/too-much-data/too-much-data.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-table-widget',
     templateUrl: './table-widget.component.html',
     styleUrls: ['./table-widget.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        NgStyle,
+        StyleDirective,
+        NoDataInDateRangeComponent,
+        TooMuchDataComponent,
+        MatTable,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatPaginator,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class TableWidgetComponent
     extends BaseDataExplorerWidgetDirective<TableWidgetModel>

@@ -22,12 +22,33 @@ import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
 import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
 import { Subscription } from 'rxjs';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { ColorPickerDirective } from 'ngx-color-picker';
+import { NgComponentOutlet } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-appearance-settings',
     templateUrl: './chart-appearance-settings.component.html',
     styleUrls: ['./chart-appearance-settings.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatRadioGroup,
+        FormsModule,
+        MatRadioButton,
+        ColorPickerDirective,
+        NgComponentOutlet,
+        TranslatePipe,
+    ],
 })
 export class ChartAppearanceSettingsComponent implements OnInit, OnDestroy {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;

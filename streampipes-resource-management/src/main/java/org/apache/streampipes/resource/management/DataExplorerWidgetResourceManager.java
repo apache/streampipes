@@ -19,14 +19,14 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataExplorerWidgetModel> {
 
   private final DataExplorerResourceManager dashboardManager;
 
   public DataExplorerWidgetResourceManager(DataExplorerResourceManager dashboardManager,
-      CRUDStorage<DataExplorerWidgetModel> db) {
+      IDataExplorerWidgetStorage db) {
     super(db, DataExplorerWidgetModel.class);
     this.dashboardManager = dashboardManager;
   }

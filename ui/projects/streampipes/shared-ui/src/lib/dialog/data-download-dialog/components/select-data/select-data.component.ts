@@ -20,12 +20,14 @@ import { Component, Input } from '@angular/core';
 
 import { DataExportConfig } from '../../model/data-export-config.model';
 import { DataExplorerDataConfig } from '@streampipes/platform-services';
+import { SelectDataRangeComponent } from './select-data-range/select-data-range.component';
+import { SelectDataMissingValuesComponent } from './select-data-missing-values/select-data-missing-values.component';
 
 @Component({
     selector: 'sp-select-data',
     templateUrl: './select-data.component.html',
     styleUrls: ['./select-data.component.scss'],
-    standalone: false,
+    imports: [SelectDataRangeComponent, SelectDataMissingValuesComponent],
 })
 export class SelectDataComponent {
     /**

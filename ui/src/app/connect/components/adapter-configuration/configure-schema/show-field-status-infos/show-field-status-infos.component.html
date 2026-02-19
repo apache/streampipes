@@ -17,42 +17,29 @@
 -->
 <div fxFlex="100" fxLayout="column">
     @if (hasBadFieldStatusInfos()) {
-        <div class="fs-alert fs-alert-header">
-            <div class="fs-alert-icon">
-                <mat-icon>error</mat-icon>
-            </div>
-            <div class="fs-alert-content" fxLayout="column" fxFlex="100">
-                <div class="fs-alert-title">
-                    Problems reading the following nodes
-                </div>
-                <div class="fs-alert-description">
-                    Please change the adapter configuration to fix them.
-                </div>
-            </div>
-        </div>
-        <div fxFlex="100" fxLayout="column" fxLayoutGap="8px">
-            @for (entry of badFieldStatusInfos(); track entry[0]) {
-                @let runtimeName = entry[0];
-                @let info = entry[1];
-
-                <div class="fs-alert">
-                    <div
-                        class="fs-alert-content"
-                        fxLayout="column"
-                        fxFlex="100"
-                    >
-                        <div class="fs-alert-title">{{ runtimeName }}</div>
+        <sp-alert-banner
+            type="warning"
+            [title]="'Problems reading the following nodes' | translate"
+            [description]="
+                'Please change the adapter configuration to fix them.'
+                    | translate
+            "
+        >
+            <div class="mt-md">
+                @for (entry of badFieldStatusInfos(); track entry[0]) {
+                    @let runtimeName = entry[0];
+                    @let info = entry[1];
+                    <div fxLayout="column">
+                        <div class="font-bold text-sm">{{ runtimeName }}</div>
 
                         @if (info.additionalInfo) {
-                            <div class="fs-alert-description">
-                                <span class="fs-additional">{{
-                                    info.additionalInfo
-                                }}</span>
-                            </div>
+                            <span class="text-sm">{{
+                                info.additionalInfo
+                            }}</span>
                         }
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        </sp-alert-banner>
     }
 </div>

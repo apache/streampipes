@@ -18,12 +18,29 @@
 
 import { Component, Input } from '@angular/core';
 import { SpLogEntry } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    SpBasicHeaderTitleComponent,
+    SpExceptionMessageComponent,
+} from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-simple-logs',
     templateUrl: './simple-logs.component.html',
     styleUrls: [],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SpBasicHeaderTitleComponent,
+        LayoutAlignDirective,
+        SpExceptionMessageComponent,
+        TranslatePipe,
+    ],
 })
 export class SpSimpleLogsComponent {
     @Input()

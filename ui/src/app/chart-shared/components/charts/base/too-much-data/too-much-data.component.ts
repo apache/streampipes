@@ -17,12 +17,25 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-too-much-data',
     templateUrl: './too-much-data.component.html',
     styleUrls: ['./too-much-data.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class TooMuchDataComponent {
     @Input()

@@ -315,19 +315,19 @@ export class ConnectBtns {
     // =====================  Format configurations  ==========================
 
     public static csvDelimiter() {
-        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-delimiter-0';
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-delimiter-0';
     }
 
     public static csvHeader() {
-        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-header-1';
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-header-1';
     }
 
     public static jsonArrayFieldKey() {
-        return 'undefined-arrayFieldConfig-2-key-0';
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.json-0-json_options-0-arrayFieldConfig-2-key-0';
     }
 
     public static xmlTag() {
-        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.xml-2-tag-0';
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.xml-2-tag-0';
     }
 
     // ========================================================================

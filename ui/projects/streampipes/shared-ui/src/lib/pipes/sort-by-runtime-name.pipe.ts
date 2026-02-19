@@ -19,10 +19,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { EventPropertyUnion } from '@streampipes/platform-services';
 
-@Pipe({
-    name: 'sortByRuntimeName',
-    standalone: false,
-})
+@Pipe({ name: 'sortByRuntimeName' })
 export class SortByRuntimeNamePipe implements PipeTransform {
     transform(value: EventPropertyUnion[]): any[] {
         if (!Array.isArray(value)) {

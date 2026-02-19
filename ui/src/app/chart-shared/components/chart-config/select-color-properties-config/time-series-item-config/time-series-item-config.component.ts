@@ -19,12 +19,46 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TimeSeriesChartWidgetModel } from '../../../charts/time-series-chart/model/time-series-chart-widget.model';
+import {
+    DefaultFlexDirective,
+    DefaultLayoutAlignDirective,
+    DefaultLayoutDirective,
+    DefaultLayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { NgStyle } from '@angular/common';
+import { DefaultStyleDirective } from '@ngbracket/ngx-layout/extended';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ColorPickerDirective } from 'ngx-color-picker';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-time-series-item-config',
     templateUrl: './time-series-item-config.component.html',
     styleUrls: ['./time-series-item-config.component.scss'],
-    standalone: false,
+    imports: [
+        DefaultLayoutDirective,
+        DefaultLayoutAlignDirective,
+        MatCheckbox,
+        DefaultFlexDirective,
+        NgStyle,
+        DefaultStyleDirective,
+        MatIconButton,
+        MatTooltip,
+        DefaultLayoutGapDirective,
+        ColorPickerDirective,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatSelect,
+        MatOption,
+        TranslatePipe,
+    ],
 })
 export class SpTimeseriesItemConfigComponent {
     @Input()

@@ -20,12 +20,24 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import { OneOfStaticProperty } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
     selector: 'sp-static-one-of-input',
     templateUrl: './static-one-of-input.component.html',
     styleUrls: ['./static-one-of-input.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatRadioGroup,
+        MatRadioButton,
+        MatFormField,
+        MatSelect,
+        MatOption,
+    ],
 })
 export class StaticOneOfInputComponent
     extends AbstractStaticPropertyRenderer<OneOfStaticProperty>

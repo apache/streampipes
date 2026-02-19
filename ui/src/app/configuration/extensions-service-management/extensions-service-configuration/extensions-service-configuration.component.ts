@@ -18,7 +18,19 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef,
+    MatTable,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { ConfigurationService } from '../../shared/configuration.service';
 import {
     animate,
@@ -28,6 +40,16 @@ import {
     trigger,
 } from '@angular/animations';
 import { SpServiceConfiguration } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { ServiceConfigsComponent } from './service-configs/service-configs.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-extensions-service-configuration',
@@ -46,7 +68,26 @@ import { SpServiceConfiguration } from '@streampipes/platform-services';
             ),
         ]),
     ],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        LayoutAlignDirective,
+        MatCellDef,
+        MatCell,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        ServiceConfigsComponent,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        TranslatePipe,
+    ],
 })
 export class SpExtensionsServiceConfigurationComponent {
     displayedColumns: string[] = ['group', 'name', 'action'];

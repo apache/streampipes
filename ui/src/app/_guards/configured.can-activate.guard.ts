@@ -21,7 +21,7 @@ import { Router, UrlTree } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { BaseConfiguredCanActivateGuard } from './base-configured.can-activate.guard';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ConfiguredCanActivateGuard extends BaseConfiguredCanActivateGuard {
     constructor(router: Router, authService: AuthService) {
         super(router, authService);

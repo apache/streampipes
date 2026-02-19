@@ -22,12 +22,25 @@ import {
     Isa95TypeService,
     SpAsset,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpLabelComponent } from '@streampipes/shared-ui';
+import { ViewAssetLabelsComponent } from '../view-asset-labels/view-asset-labels.component';
 
 @Component({
     selector: 'sp-view-asset-basics',
     templateUrl: './view-asset-basics.component.html',
     styleUrls: ['./view-asset-basics.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        FlexDirective,
+        SpLabelComponent,
+        ViewAssetLabelsComponent,
+    ],
 })
 export class ViewAssetBasicsComponent implements OnChanges {
     @Input()

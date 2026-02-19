@@ -17,20 +17,66 @@
  */
 
 import { Component, inject } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
     AssetExportConfiguration,
     ExportItem,
 } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    MatError,
+    MatFormField,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpDataExportItemComponent } from '../export-dialog/data-export-item/data-export-item.component';
+import { GenericStorageItemsComponent } from '../export-dialog/generic-storage-items/generic-storage-items.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-data-import-dialog',
     templateUrl: './data-import-dialog.component.html',
     styleUrls: ['./data-import-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        MatFormField,
+        MatInput,
+        MatProgressBar,
+        MatButton,
+        MatSuffix,
+        MatIcon,
+        MatError,
+        SpAlertBannerComponent,
+        LayoutGapDirective,
+        SpDataExportItemComponent,
+        GenericStorageItemsComponent,
+        LayoutDirective,
+        MatCheckbox,
+        FormsModule,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatProgressSpinner,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class SpDataImportDialogComponent {
     private translateService = inject(TranslateService);

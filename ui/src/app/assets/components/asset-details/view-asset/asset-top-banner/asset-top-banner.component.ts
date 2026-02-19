@@ -22,12 +22,35 @@ import {
     LocationConfig,
     SpAssetModel,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    SpBasicHeaderTitleComponent,
+    SpLabelComponent,
+} from '@streampipes/shared-ui';
+import { ViewAssetLabelsComponent } from '../view-asset-labels/view-asset-labels.component';
+import { SingleMarkerMapComponent } from '../../../../../core-ui/single-marker-map/single-marker-map.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-top-banner',
     templateUrl: './asset-top-banner.component.html',
     styleUrls: ['./asset-top-banner.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        SpBasicHeaderTitleComponent,
+        LayoutGapDirective,
+        SpLabelComponent,
+        ViewAssetLabelsComponent,
+        SingleMarkerMapComponent,
+        TranslatePipe,
+    ],
 })
 export class SpAssetTopBannerComponent implements OnInit {
     @Input()

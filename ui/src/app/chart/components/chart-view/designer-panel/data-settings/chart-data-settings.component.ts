@@ -40,12 +40,74 @@ import { TableVisConfig } from '../../../../../chart-shared/components/charts/ta
 import { ChartFieldProviderService } from '../../../../../chart-shared/services/chart-field-provider.service';
 import { FieldProvider } from '../../../../../chart-shared/models/dataview-dashboard.model';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+} from '@angular/material/expansion';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatIcon } from '@angular/material/icon';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatInput } from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { AggregateConfigurationComponent } from './aggregate-configuration/aggregate-configuration.component';
+import { FilterSelectionPanelComponent } from './filter-selection-panel/filter-selection-panel.component';
+import { OrderSelectionPanelComponent } from './order-selection-panel/order-selection-panel.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-data-settings',
     templateUrl: './chart-data-settings.component.html',
     styleUrls: ['./chart-data-settings.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        SplitSectionComponent,
+        SpAlertBannerComponent,
+        LayoutGapDirective,
+        MatButton,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        MatIcon,
+        MatRadioGroup,
+        FormsModule,
+        NgClass,
+        ClassDirective,
+        MatRadioButton,
+        FormFieldComponent,
+        MatInput,
+        MatCheckbox,
+        AggregateConfigurationComponent,
+        FieldSelectionPanelComponent,
+        FilterSelectionPanelComponent,
+        GroupSelectionPanelComponent,
+        OrderSelectionPanelComponent,
+        TranslatePipe,
+    ],
 })
 export class ChartDataSettingsComponent implements OnInit {
     @Input() dataConfig: DataExplorerDataConfig;

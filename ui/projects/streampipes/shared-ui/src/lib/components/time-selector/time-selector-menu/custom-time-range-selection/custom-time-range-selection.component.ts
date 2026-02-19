@@ -24,16 +24,39 @@ import {
 import {
     DateRange,
     DefaultMatCalendarRangeStrategy,
+    MatCalendar,
     MatRangeDateSelectionModel,
 } from '@angular/material/datepicker';
 import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { TimeSelectorLabel } from '../../time-selector.model';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatCard } from '@angular/material/card';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-custom-time-range-selection',
     templateUrl: 'custom-time-range-selection.component.html',
     styleUrls: ['./custom-time-range-selection.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        MatCard,
+        MatCalendar,
+        LayoutGapDirective,
+        MatInput,
+        FormsModule,
+        LayoutAlignDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class CustomTimeRangeSelectionComponent implements OnInit {
     @Input() timeSettings: TimeSettings;

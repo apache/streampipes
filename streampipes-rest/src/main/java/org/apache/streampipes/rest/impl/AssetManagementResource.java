@@ -23,7 +23,7 @@ import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.resource.management.CrudResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.HttpStatus;
@@ -50,7 +50,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   private final CrudResourceManager<SpAssetModel> resourceManager;
 
   public AssetManagementResource() {
-    CRUDStorage<SpAssetModel> assetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
+    IAssetStorage assetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
     this.resourceManager = new CrudResourceManager<>(assetStorage, SpAssetModel.class);
   }
 

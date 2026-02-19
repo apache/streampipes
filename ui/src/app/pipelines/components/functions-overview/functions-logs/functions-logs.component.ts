@@ -19,12 +19,29 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractFunctionDetailsDirective } from '../abstract-function-details.directive';
 import { SpLogEntry } from '@streampipes/platform-services';
+import { SpBasicNavTabsComponent } from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SpSimpleLogsComponent } from '../../../../core-ui/monitoring/simple-logs/simple-logs.component';
 
 @Component({
     selector: 'sp-functions-logs',
     templateUrl: './functions-logs.component.html',
     styleUrls: [],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        SpSimpleLogsComponent,
+    ],
 })
 export class SpFunctionsLogsComponent
     extends AbstractFunctionDetailsDirective

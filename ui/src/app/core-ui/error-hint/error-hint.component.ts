@@ -18,12 +18,16 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-error-hint',
     templateUrl: './error-hint.component.html',
     styleUrls: ['./error-hint.component.scss'],
-    standalone: false,
+    imports: [LayoutDirective, LayoutAlignDirective],
 })
 export class ErrorHintComponent implements OnInit {
     @Input() errorMessages: UserErrorMessage[];

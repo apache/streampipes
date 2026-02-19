@@ -17,12 +17,13 @@
  */
 
 import { Component, Input, OnInit, signal } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
     selector: 'sp-adapter-event-preview-node',
-    standalone: false,
     templateUrl: './adapter-event-preview-node.component.html',
     styleUrl: './adapter-event-preview-node.component.scss',
+    imports: [NgIf, NgFor],
 })
 export class AdapterEventPreviewNodeComponent implements OnInit {
     @Input() keyLabel: string | number | null = null;

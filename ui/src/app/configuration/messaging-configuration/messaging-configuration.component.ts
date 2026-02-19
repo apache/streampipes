@@ -18,17 +18,59 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../shared/configuration.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+    CdkDrag,
+    CdkDragDrop,
+    CdkDropList,
+    moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
-import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SpBasicNavTabsComponent,
+    SpBreadcrumbService,
+    SplitSectionComponent,
+    SpNavigationItem,
+} from '@streampipes/shared-ui';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { MessagingSettings } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { SpMessagingBrokerConfigComponent } from './broker-config/broker-config.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-messaging-configuration',
     templateUrl: './messaging-configuration.component.html',
     styleUrls: ['./messaging-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        SplitSectionComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        FormsModule,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatButton,
+        MatIcon,
+        SpAlertBannerComponent,
+        CdkDropList,
+        CdkDrag,
+        SpMessagingBrokerConfigComponent,
+        MatLabel,
+        TranslatePipe,
+    ],
 })
 export class MessagingConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

@@ -25,12 +25,14 @@ import {
     PipelineElementIconTextService,
     SpDataStream,
 } from '@streampipes/platform-services';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-pipeline-element',
     templateUrl: './pipeline-element.component.html',
     styleUrls: ['./pipeline-element.component.scss'],
-    standalone: false,
+    imports: [NgClass, ClassDirective],
 })
 export class PipelineElementComponent {
     showImage: any;

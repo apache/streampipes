@@ -18,12 +18,24 @@
 import { Component, Input } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { SpImageContainerComponent } from '../image-container/image-container.component';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { ImageBarComponent } from '../image-bar/image-bar.component';
 
 @Component({
     selector: 'sp-image-viewer',
     templateUrl: './image-viewer.component.html',
     styleUrls: ['./image-viewer.component.scss'],
-    standalone: false,
+    imports: [
+        NgStyle,
+        StyleDirective,
+        SpImageContainerComponent,
+        FlexDirective,
+        LayoutDirective,
+        ImageBarComponent,
+    ],
 })
 export class ImageViewerComponent {
     @Input()

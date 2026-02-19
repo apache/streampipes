@@ -22,7 +22,7 @@ import org.apache.streampipes.connect.management.compact.generator.AdapterModelG
 import org.apache.streampipes.connect.management.compact.generator.CompactAdapterGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
-import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;

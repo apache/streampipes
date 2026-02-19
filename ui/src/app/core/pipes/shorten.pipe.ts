@@ -18,10 +18,7 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-    name: 'shorten',
-    standalone: false,
-})
+@Pipe({ name: 'shorten' })
 export class ShortenPipe implements PipeTransform {
     transform(value: string, maxLength: number): string {
         if (value.length > maxLength) {

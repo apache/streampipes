@@ -18,12 +18,33 @@
 
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-basic-view',
     templateUrl: './basic-view.component.html',
     styleUrls: ['./basic-view.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        NgClass,
+        ClassDirective,
+        TranslatePipe,
+    ],
 })
 export class SpBasicViewComponent {
     @Input()

@@ -19,24 +19,45 @@
 import {
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     Input,
     OnInit,
-    Output,
+    TemplateRef,
 } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
     ExtensionDeploymentConfiguration,
     StaticPropertyAlternative,
     StaticPropertyAlternatives,
+    StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import {
+    DefaultFlexDirective,
+    DefaultLayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgTemplateOutlet } from '@angular/common';
+
+export type AlternativeRenderCtx = {
+    child: StaticPropertyUnion;
+    index: number;
+    completedConfigurations: ConfigurationInfo[];
+    onCompleted: (event: ConfigurationInfo) => void;
+};
 
 @Component({
     selector: 'sp-app-static-alternatives',
     templateUrl: './static-alternatives.component.html',
     styleUrls: ['./static-alternatives.component.scss'],
-    standalone: false,
+    imports: [
+        DefaultFlexDirective,
+        DefaultLayoutDirective,
+        MatRadioGroup,
+        MatRadioButton,
+        MatTooltip,
+        NgTemplateOutlet,
+    ],
 })
 export class StaticAlternativesComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives>
@@ -44,6 +65,9 @@ export class StaticAlternativesComponent
 {
     @Input()
     deploymentConfiguration: ExtensionDeploymentConfiguration;
+
+    @Input({ required: true })
+    renderStaticProperty!: TemplateRef<AlternativeRenderCtx>;
 
     // dependentStaticPropertyIds: Map<string, boolean> = new Map<
     //     string,
@@ -69,6 +93,18 @@ export class StaticAlternativesComponent
             this.staticProperty.alternatives[0].selected = true;
             this.checkFireCompleted(this.staticProperty.alternatives[0]);
         }
+    }
+
+    ctxFor(
+        alternative: StaticPropertyAlternative,
+        index: number,
+    ): AlternativeRenderCtx {
+        return {
+            child: alternative.staticProperty!,
+            index,
+            completedConfigurations: this.completedAlternativeConfigurations,
+            onCompleted: ev => this.handleConfigurationUpdate(ev),
+        };
     }
 
     radioSelectionChange(event) {

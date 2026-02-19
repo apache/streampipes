@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.manager.setup.tasks;
 
-import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.shared.api.Storable;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
+import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.authorization.PrivilegeManager;
 import org.apache.streampipes.user.management.authorization.RoleManager;
@@ -35,8 +36,8 @@ public class ApplyDefaultRolesAndPrivilegesTask implements InstallationTask {
 
   private static final Logger LOG = LoggerFactory.getLogger(ApplyDefaultRolesAndPrivilegesTask.class);
 
-  private final CRUDStorage<Role> roleStorage;
-  private final CRUDStorage<Privilege> privilegeStorage;
+  private final IRoleStorage roleStorage;
+  private final IPrivilegeStorage privilegeStorage;
 
   public ApplyDefaultRolesAndPrivilegesTask() {
     this.roleStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getRoleStorage();

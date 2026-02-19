@@ -17,14 +17,16 @@
  */
 
 import { Component, computed, Input, signal } from '@angular/core';
+import { NgSwitch, NgSwitchCase } from '@angular/common';
+import { AdapterEventPreviewNodeComponent } from './adapter-event-preview-node/adapter-event-preview-node.component';
 
 export type Mode = 'tree' | 'raw';
 
 @Component({
     selector: 'sp-adapter-event-preview',
-    standalone: false,
     templateUrl: './adapter-event-preview.component.html',
     styleUrl: './adapter-event-preview.component.scss',
+    imports: [NgSwitch, NgSwitchCase, AdapterEventPreviewNodeComponent],
 })
 export class AdapterEventPreviewComponent {
     private valueSignal = signal<unknown>(null);

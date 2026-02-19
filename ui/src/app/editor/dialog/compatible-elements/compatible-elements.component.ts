@@ -17,19 +17,40 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    FormLabelComponent,
+    PipelineElementComponent,
+} from '@streampipes/shared-ui';
 import { JsplumbService } from '../../services/jsplumb.service';
 import { DataProcessorInvocation } from '@streampipes/platform-services';
 import {
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../model/editor.model';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-compatible-elements',
     templateUrl: './compatible-elements.component.html',
     styleUrls: ['./compatible-elements.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        PipelineElementComponent,
+        FormLabelComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class CompatibleElementsComponent implements OnInit {
     @Input()

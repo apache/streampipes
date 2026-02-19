@@ -18,7 +18,7 @@
 
 import { BarSeriesOption, EChartsOption } from 'echarts';
 import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
-import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
+import type { DataTransformOption } from 'echarts/types/src/data/helper/transform.d.ts';
 import { Injectable } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';

@@ -19,12 +19,39 @@
 import { Component, Input } from '@angular/core';
 import { EventSchema } from '@streampipes/platform-services';
 import { RuntimeInfo } from '../pipeline-element-runtime-info.model';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef,
+    MatTable,
+} from '@angular/material/table';
+import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-live-preview-table',
     templateUrl: './live-preview-table.component.html',
     styleUrls: ['./live-preview-table.component.scss'],
-    standalone: false,
+    imports: [
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class LivePreviewTableComponent {
     @Input()

@@ -106,11 +106,10 @@ let modulesActive = {
 for (let module of config.modules) {
     const cardsForModule = featureCardsByModule[module] || [];
     modulesActive['modulesActive'].push({
-        module: module,
-        componentImport: modules[module]['componentImport'],
-        moduleName: modules[module]['moduleName'],
         component: modules[module]['component'],
         componentPath: modules[module]['componentPath'],
+        routesPath: modules[module]['routesPath'],
+        routesName: modules[module]['routesName'],
         path: modules[module]['path'],
         link: modules[module]['link'],
         pageNames: modules[module]['pageNames'],
@@ -118,8 +117,6 @@ for (let module of config.modules) {
         url: modules[module]['url'],
         title: modules[module]['title'],
         icon: modules[module]['icon'],
-        admin: modules[module]['admin'],
-        description: modules[module]['description'],
         showStatusBox: modules[module]['showStatusBox'],
         statusBox: modules[module]['statusBox'],
         category: modules[module]['category'],
@@ -131,9 +128,9 @@ for (let module of config.modules) {
 
 // Create necessary JavaScript-Files from Template and move to respective Directory
 fs.writeFileSync(
-    'src/app/app.module.ts',
+    'src/app/app.routes.ts',
     mustache.render(
-        fs.readFileSync('deployment/app.module.mst', 'utf8').toString(),
+        fs.readFileSync('deployment/app.routes.mst', 'utf8').toString(),
         modulesActive,
     ),
 );
@@ -145,13 +142,6 @@ fs.writeFileSync(
     ),
 );
 fs.writeFileSync(
-    'src/app/app-routing.module.ts',
-    mustache.render(
-        fs.readFileSync('deployment/app-routing.module.mst', 'utf8').toString(),
-        modulesActive,
-    ),
-);
-fs.writeFileSync(
     'src/app/core/components/base-navigation.component.ts',
     mustache.render(
         fs
@@ -159,10 +149,6 @@ fs.writeFileSync(
             .toString(),
         modulesActive,
     ),
-);
-fs.writeFileSync(
-    'src/app/app-overview/apps.ts',
-    fs.readFileSync('deployment/apps.ts'),
 );
 fs.writeFileSync(
     'src/app/services/app.constants.ts',

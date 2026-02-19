@@ -31,12 +31,25 @@ import { TimeSelectionService } from '@streampipes/shared-ui';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
 import { ObservableGenerator } from '../../../chart-shared/models/dataview-dashboard.model';
+import { MatToolbar } from '@angular/material/toolbar';
+import { DashboardGridViewComponent } from '../../../dashboard-shared/components/chart-view/grid-view/dashboard-grid-view.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-dashboard-kiosk',
-    standalone: false,
     templateUrl: './dashboard-kiosk.component.html',
     styleUrl: './dashboard-kiosk.component.scss',
+    imports: [
+        LayoutDirective,
+        MatToolbar,
+        FlexDirective,
+        LayoutAlignDirective,
+        DashboardGridViewComponent,
+    ],
 })
 export class DashboardKioskComponent implements OnInit, OnDestroy {
     private route = inject(ActivatedRoute);

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
 import { DataRetentionDialogModel } from './model/data-retention-dialog.model';
 import {
@@ -24,14 +24,27 @@ import {
     ExportProviderSettings,
     RetentionTimeConfig,
 } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DataRetentionNowDialogComponent } from '../data-retention-now-dialog/data-retention-now-dialog.component';
+import { FlexDirective, LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
+import { SelectDataComponent } from './components/select-retention/select-data.component';
+import { SelectDataExportComponent } from './components/select-export/select-format.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-data-retention-dialog',
     templateUrl: 'data-retention-dialog.component.html',
     styleUrls: ['./data-retention-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        SelectDataComponent,
+        SelectDataExportComponent,
+        MatDivider,
+        LayoutGapDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class DataRetentionDialogComponent implements OnInit {
     @Input() dataRetentionDialogModel: DataRetentionDialogModel;

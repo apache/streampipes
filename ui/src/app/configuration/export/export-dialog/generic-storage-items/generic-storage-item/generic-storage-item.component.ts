@@ -18,11 +18,24 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-generic-storage-item',
     templateUrl: './generic-storage-item.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatIconButton,
+        MatCheckbox,
+    ],
 })
 export class GenericStorageItemComponent {
     @Input()

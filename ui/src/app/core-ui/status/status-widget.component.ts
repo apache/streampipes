@@ -17,12 +17,25 @@
  */
 
 import { Component, Input } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-status-widget',
     templateUrl: './status-widget.component.html',
     styleUrls: ['./status-widget.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        NgStyle,
+        StyleDirective,
+    ],
 })
 export class StatusWidgetComponent {
     @Input() widgetHeight = '150px';

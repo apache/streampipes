@@ -18,17 +18,51 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FileMetadata, FilesService } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
-import { ConfirmDialogComponent } from '@streampipes/shared-ui';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
+import {
+    ConfirmDialogComponent,
+    SpLabelComponent,
+    SpTableComponent,
+} from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { saveAs } from 'file-saver';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-file-overview',
     templateUrl: './file-overview.component.html',
     styleUrls: ['./file-overview.component.scss'],
-    standalone: false,
+    imports: [
+        SpTableComponent,
+        FlexDirective,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        SpLabelComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class FileOverviewComponent implements OnInit {
     displayedColumns: string[] = ['filename', 'filetype', 'uploaded', 'action'];

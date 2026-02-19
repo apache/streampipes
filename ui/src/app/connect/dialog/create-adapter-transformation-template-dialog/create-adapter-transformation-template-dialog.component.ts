@@ -17,15 +17,33 @@
  */
 
 import { Component, inject, Input } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, FormFieldComponent } from '@streampipes/shared-ui';
 import { ConnectScriptTemplatesService } from '@streampipes/platform-services';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatDivider } from '@angular/material/divider';
+import { LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-create-adapter-transformation-template-dialog',
     templateUrl:
         './create-adapter-transformation-template-dialog.component.html',
     styleUrl: './create-adapter-transformation-template-dialog.component.scss',
-    standalone: false,
+    imports: [
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatDivider,
+        LayoutGapDirective,
+        MatButton,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class CreateAdapterTransformationTemplateDialogComponent {
     @Input()

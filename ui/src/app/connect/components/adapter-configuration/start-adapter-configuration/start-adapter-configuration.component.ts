@@ -26,12 +26,14 @@ import {
 import {
     AdapterDescription,
     EventSchema,
+    ReduceEventRateRule,
+    RemoveDuplicateRule,
     SpAssetTreeNode,
     UserInfo,
-    RemoveDuplicateRule,
-    ReduceEventRateRule,
 } from '@streampipes/platform-services';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
@@ -40,21 +42,56 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterStartedDialog } from '../../../dialog/adapter-started/adapter-started-dialog.component';
 import {
+    AssetLinkConfigurationComponent,
     CurrentUserService,
     DialogService,
+    FormFieldComponent,
     PanelType,
+    SpBasicInnerPanelComponent,
 } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { UserRole } from '../../../../_enums/user-role.enum';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { SpAdapterOptionsPanelComponent } from './adapter-options-panel/adapter-options-panel.component';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatTooltip } from '@angular/material/tooltip';
+import { AdapterCodePanelComponent } from '../../adapter-code-panel/adapter-code-panel.component';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-start-adapter-configuration',
     templateUrl: './start-adapter-configuration.component.html',
     styleUrls: ['./start-adapter-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        SpBasicInnerPanelComponent,
+        LayoutAlignDirective,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatError,
+        SpAdapterOptionsPanelComponent,
+        AssetLinkConfigurationComponent,
+        MatSelect,
+        MatOption,
+        MatTooltip,
+        AdapterCodePanelComponent,
+        MatButton,
+        TranslatePipe,
+        TimestampPipe,
+    ],
 })
 export class StartAdapterConfigurationComponent implements OnInit {
     private dialogService = inject(DialogService);

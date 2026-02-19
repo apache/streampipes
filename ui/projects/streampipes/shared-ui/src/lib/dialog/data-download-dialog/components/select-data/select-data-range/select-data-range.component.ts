@@ -22,6 +22,15 @@ import {
     DateRange,
 } from '@streampipes/platform-services';
 import { DataExportConfig } from '../../../model/data-export-config.model';
+import { SplitSectionComponent } from '../../../../../components/split-section/split-section.component';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import {
+    DefaultLayoutDirective,
+    DefaultLayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { DateInputComponent } from '../../../../../components/date-input/date-input.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-select-data-range',
@@ -30,7 +39,16 @@ import { DataExportConfig } from '../../../model/data-export-config.model';
         './select-data-range.component.scss',
         '../select-data.component.scss',
     ],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        MatRadioGroup,
+        FormsModule,
+        MatRadioButton,
+        DefaultLayoutDirective,
+        DefaultLayoutGapDirective,
+        DateInputComponent,
+        TranslatePipe,
+    ],
 })
 export class SelectDataRangeComponent implements OnInit {
     @Input() dataExplorerDataConfig: DataExplorerDataConfig;

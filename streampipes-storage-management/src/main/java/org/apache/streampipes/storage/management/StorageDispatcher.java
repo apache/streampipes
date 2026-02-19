@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.storage.management;
 
-import org.apache.streampipes.storage.api.INoSqlStorage;
+import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
 public enum StorageDispatcher {

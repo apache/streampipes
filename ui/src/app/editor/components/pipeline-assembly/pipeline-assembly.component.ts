@@ -25,7 +25,11 @@ import {
     PipelineElementUnion,
 } from '../../model/editor.model';
 import { ObjectProvider } from '../../services/object-provider.service';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    DialogService,
+    PanelType,
+    SpBasicViewComponent,
+} from '@streampipes/shared-ui';
 import { SavePipelineComponent } from '../../dialog/save-pipeline/save-pipeline.component';
 import { EditorService } from '../../services/editor.service';
 import {
@@ -39,12 +43,18 @@ import { PipelineAssemblyDrawingAreaComponent } from './pipeline-assembly-drawin
 import { PipelineAssemblyOptionsComponent } from './pipeline-assembly-options/pipeline-assembly-options.component';
 import { JsplumbService } from '../../services/jsplumb.service';
 import { TranslateService } from '@ngx-translate/core';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-pipeline-assembly',
     templateUrl: './pipeline-assembly.component.html',
     styleUrls: ['./pipeline-assembly.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        PipelineAssemblyOptionsComponent,
+        PipelineAssemblyDrawingAreaComponent,
+    ],
 })
 export class PipelineAssemblyComponent implements AfterViewInit {
     @Input()

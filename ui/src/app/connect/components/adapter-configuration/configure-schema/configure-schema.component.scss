@@ -17,13 +17,11 @@
  */
 
 :host {
-    --mat-standard-button-toggle-selected-state-text-color: var(--color-bg-1);
-    --mat-standard-button-toggle-selected-state-background-color: var(
-        --color-primary
-    );
-    --mat-standard-button-toggle-text-color: var(--color-default-text);
-    --mat-standard-button-toggle-background-color: var(--color-bg-0);
-    --mat-standard-button-toggle-height: 20px;
+    --mat-button-toggle-selected-state-text-color: var(--color-bg-1);
+    --mat-button-toggle-selected-state-background-color: var(--color-primary);
+    --mat-button-toggle-text-color: var(--color-default-text);
+    --mat-button-toggle-background-color: var(--color-bg-0);
+    --mat-button-toggle-height: 20px;
 }
 
 .stepper-button {

@@ -17,12 +17,29 @@
  */
 
 import { Component, Input } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpBasicHeaderTitleComponent } from '@streampipes/shared-ui';
+import { StatusWidgetComponent } from '../../status/status-widget.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-simple-metrics',
     templateUrl: './simple-metrics.component.html',
     styleUrls: [],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        SpBasicHeaderTitleComponent,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        FlexDirective,
+        StatusWidgetComponent,
+        DatePipe,
+    ],
 })
 export class SpSimpleMetricsComponent {
     @Input()

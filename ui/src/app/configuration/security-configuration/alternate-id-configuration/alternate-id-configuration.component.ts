@@ -16,12 +16,37 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-alternate-id-configuration',
     templateUrl: './alternate-id-configuration.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatIconButton,
+        MatIcon,
+        LayoutGapDirective,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        FormsModule,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class AlternateIdConfigurationComponent {
     @Input()

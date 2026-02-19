@@ -16,17 +16,26 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
 import { DialogService } from '../../dialog/base-dialog/base-dialog.service';
 import { PanelType } from '../../dialog/base-dialog/base-dialog.model';
 import { SpExceptionDetailsDialogComponent } from './exception-details-dialog/exception-details-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { SpAlertBannerComponent } from '../alert-banner/alert-banner.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-exception-message',
     templateUrl: './sp-exception-message.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SpAlertBannerComponent,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class SpExceptionMessageComponent {
     translateService = inject(TranslateService);

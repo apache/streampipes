@@ -17,6 +17,14 @@
  */
 
 import { Component, EventEmitter, Output } from '@angular/core';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import {
+    FlexDirective,
+    FlexFillDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { ChartSelectionComponent } from './chart-selection/chart-selection.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-dashboard-chart-selection-panel',
@@ -25,7 +33,15 @@ import { Component, EventEmitter, Output } from '@angular/core';
         './chart-selection-panel.component.scss',
         '../../../../chart/components/chart-view/designer-panel/chart-designer-panel.component.scss',
     ],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatTabGroup,
+        FlexFillDirective,
+        MatTab,
+        ChartSelectionComponent,
+        TranslatePipe,
+    ],
 })
 export class ChartSelectionPanelComponent {
     @Output()

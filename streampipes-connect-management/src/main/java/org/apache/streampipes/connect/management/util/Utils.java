@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.management.util;
 
-import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class Utils {

@@ -19,7 +19,7 @@ package org.apache.streampipes.health.monitoring;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +30,9 @@ public class ServiceRegistrationManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(ServiceRegistrationManager.class);
 
-  private final CRUDStorage<SpServiceRegistration> storage;
+  private final IExtensionsServiceStorage storage;
 
-  public ServiceRegistrationManager(CRUDStorage<SpServiceRegistration> storage) {
+  public ServiceRegistrationManager(IExtensionsServiceStorage storage) {
     this.storage = storage;
   }
 

@@ -19,14 +19,13 @@
 package org.apache.streampipes.manager.setup.tasks;
 
 import org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate;
-import org.apache.streampipes.model.template.CompactPipelineTemplate;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 
 public class AddDefaultPipelineTemplatesTask implements InstallationTask {
 
-  CRUDStorage<CompactPipelineTemplate> storage;
+  ICompactPipelineTemplateStorage storage;
 
-  public AddDefaultPipelineTemplatesTask(CRUDStorage<CompactPipelineTemplate> storage) {
+  public AddDefaultPipelineTemplatesTask(ICompactPipelineTemplateStorage storage) {
     this.storage = storage;
   }
 

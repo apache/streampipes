@@ -23,12 +23,29 @@ import {
     DataExplorerField,
     SpQueryResult,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgClass, NgStyle } from '@angular/common';
+import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-range.component';
 
 @Component({
     selector: 'sp-data-explorer-traffic-light-widget',
     templateUrl: './traffic-light-widget.component.html',
     styleUrls: ['./traffic-light-widget.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        NgStyle,
+        StyleDirective,
+        NoDataInDateRangeComponent,
+        NgClass,
+        ClassDirective,
+    ],
 })
 export class TrafficLightWidgetComponent
     extends BaseDataExplorerWidgetDirective<TrafficLightWidgetModel>

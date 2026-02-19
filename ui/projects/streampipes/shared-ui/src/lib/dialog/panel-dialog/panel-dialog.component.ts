@@ -33,6 +33,8 @@ import {
     trigger,
 } from '@angular/animations';
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
+import { MatIconButton } from '@angular/material/button';
+import { CdkPortalOutlet } from '@angular/cdk/portal';
 
 @Component({
     selector: 'app-dialog-container',
@@ -62,7 +64,7 @@ import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
             transition('* => *', animate(300)),
         ]),
     ],
-    standalone: false,
+    imports: [MatIconButton, CdkPortalOutlet],
 })
 export class PanelDialogComponent<T>
     extends BaseDialogComponent<T>

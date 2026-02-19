@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, FormFieldComponent } from '@streampipes/shared-ui';
 import {
     AdapterService,
     AssetLink,
@@ -30,14 +30,36 @@ import {
     PipelineElementService,
     PipelineService,
 } from '@streampipes/platform-services';
-import { UntypedFormGroup } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
+import { FormsModule, UntypedFormGroup } from '@angular/forms';
+import {
+    MatOption,
+    MatSelect,
+    MatSelectChange,
+} from '@angular/material/select';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-asset-link-dialog-component',
     templateUrl: './edit-asset-link-dialog.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormFieldComponent,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        FormsModule,
+        MatInput,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class EditAssetLinkDialogComponent
     extends BaseAssetLinksDirective

@@ -17,6 +17,13 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-static-tree-input-selected-nodes',
@@ -25,7 +32,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         '../static-runtime-resolvable-tree-input.component.scss',
         './static-tree-input-selected-nodes.component.scss',
     ],
-    standalone: false,
+    imports: [
+        LayoutAlignDirective,
+        LayoutDirective,
+        FlexDirective,
+        MatIconButton,
+        TranslatePipe,
+    ],
 })
 export class StaticTreeInputSelectedNodesComponent {
     @Input()

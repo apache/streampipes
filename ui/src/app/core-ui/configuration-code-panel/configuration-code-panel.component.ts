@@ -18,13 +18,34 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { stringify } from 'yaml';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTab, MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
+import { MatIconButton } from '@angular/material/button';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { TranslatePipe } from '@ngx-translate/core';
+import { JsonPrettyPrintPipe } from '../pipes/json-pretty-print.pipe';
+import { YamlPrettyPrintPipe } from '../pipes/yaml-pretty-print.pipe';
 
 @Component({
     selector: 'sp-configuration-code-panel',
     templateUrl: './configuration-code-panel.component.html',
     styleUrls: ['./configuration-code-panel.component.scss'],
-    standalone: false,
+    imports: [
+        MatTabGroup,
+        MatTab,
+        MatIconButton,
+        CdkCopyToClipboard,
+        MatTooltip,
+        MatIcon,
+        NgStyle,
+        StyleDirective,
+        TranslatePipe,
+        JsonPrettyPrintPipe,
+        YamlPrettyPrintPipe,
+    ],
 })
 export class ConfigurationCodePanelComponent implements OnInit {
     @Input()

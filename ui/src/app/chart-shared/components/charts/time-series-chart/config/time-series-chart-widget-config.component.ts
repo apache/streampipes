@@ -25,11 +25,26 @@ import {
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import { SelectColorPropertiesConfigComponent } from '../../../chart-config/select-color-properties-config/select-color-properties-config.component';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { SpSelectAxisOptionsConfigComponent } from '../../../chart-config/select-axis-options-config/select-axis-options-config.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-time-series-chart-widget-config',
     templateUrl: './time-series-chart-widget-config.component.html',
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SelectColorPropertiesConfigComponent,
+        SplitSectionComponent,
+        SpSelectAxisOptionsConfigComponent,
+        MatCheckbox,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
     TimeSeriesChartWidgetModel,

@@ -23,13 +23,31 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
-import { NestedTreeControl } from '@angular/cdk/tree';
 import {
     RuntimeResolvableTreeInputStaticProperty,
     TreeInputNode,
 } from '@streampipes/platform-services';
-import { MatTree, MatTreeNestedDataSource } from '@angular/material/tree';
+import {
+    MatNestedTreeNode,
+    MatTree,
+    MatTreeNestedDataSource,
+    MatTreeNode,
+    MatTreeNodeDef,
+    MatTreeNodeOutlet,
+    MatTreeNodeToggle,
+} from '@angular/material/tree';
 import { StaticTreeInputServiceService } from '../static-tree-input-service.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NgClass } from '@angular/common';
+import { DefaultClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-static-tree-input-browse-nodes',
@@ -38,7 +56,23 @@ import { StaticTreeInputServiceService } from '../static-tree-input-service.serv
         './static-tree-input-browse-nodes.component.scss',
         '../static-runtime-resolvable-tree-input.component.scss',
     ],
-    standalone: false,
+    imports: [
+        LayoutAlignDirective,
+        LayoutDirective,
+        FlexDirective,
+        MatIconButton,
+        MatIcon,
+        MatTree,
+        NgClass,
+        DefaultClassDirective,
+        MatTreeNodeDef,
+        MatTreeNode,
+        MatTreeNodeToggle,
+        MatTooltip,
+        MatNestedTreeNode,
+        MatTreeNodeOutlet,
+        TranslatePipe,
+    ],
 })
 export class StaticTreeInputBrowseNodesComponent implements OnInit {
     @Input()

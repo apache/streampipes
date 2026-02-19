@@ -17,21 +17,53 @@
  */
 
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
+import { AuthBoxComponent } from '../auth-box/auth-box.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+} from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
-    standalone: false,
+    imports: [
+        AuthBoxComponent,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatButton,
+        MatProgressSpinner,
+        SpAlertBannerComponent,
+        RouterLink,
+        TranslatePipe,
+    ],
 })
 export class LoginComponent extends BaseLoginPageDirective {
     parentForm: UntypedFormGroup;

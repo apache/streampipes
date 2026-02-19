@@ -27,29 +27,29 @@ import {
     PipelineService,
 } from '@streampipes/platform-services';
 import { forkJoin } from 'rxjs';
-import { PipelineDetailsModule } from '../../../pipeline-details/pipeline-details.module';
 import {
-    DefaultFlexDirective,
-    DefaultLayoutDirective,
+    FlexDirective,
     FlexFillDirective,
+    LayoutDirective,
 } from '@ngbracket/ngx-layout';
-import { SharedUiModule } from '@streampipes/shared-ui';
+import { FeatureCardHeaderComponent } from '@streampipes/shared-ui';
 import { PipelinePreviewMetaComponent } from './pipeline-preview-meta/pipeline-preview-meta.component';
 import { MatDivider } from '@angular/material/list';
 import { Router } from '@angular/router';
+import { PipelinePreviewComponent } from '../../../pipeline-details/components/preview/pipeline-preview.component';
 
 @Component({
     selector: 'sp-pipeline-feature-card',
     templateUrl: './pipeline-feature-card.component.html',
     styleUrls: ['./pipeline-feature-card.component.scss'],
     imports: [
-        PipelineDetailsModule,
-        DefaultFlexDirective,
-        DefaultLayoutDirective,
-        SharedUiModule,
         PipelinePreviewMetaComponent,
         FlexFillDirective,
         MatDivider,
+        LayoutDirective,
+        FeatureCardHeaderComponent,
+        FlexDirective,
+        PipelinePreviewComponent,
     ],
 })
 export class PipelineFeatureCardComponent implements OnInit {

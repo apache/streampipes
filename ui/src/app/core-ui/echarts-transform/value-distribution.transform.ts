@@ -16,11 +16,11 @@
  *
  */
 
-import {
+import type {
     DataTransformOption,
     ExternalDataTransform,
     ExternalDataTransformResultItem,
-} from 'echarts/types/src/data/helper/transform';
+} from 'echarts/types/src/data/helper/transform.d.ts';
 
 export interface ValueDistributionConfig extends DataTransformOption {
     field: string;

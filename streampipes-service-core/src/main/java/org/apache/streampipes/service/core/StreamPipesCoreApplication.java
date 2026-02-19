@@ -48,10 +48,12 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
+import org.apache.streampipes.service.core.migrations.AvailableMigrations;
+import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
-import org.apache.streampipes.storage.api.IPipelineStorage;
-import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.couchdb.impl.UserStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -142,7 +144,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       if (coreConfigStorage.exists()) {
         coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.MIGRATING);
       }
-      new MigrationsHandler().performMigrations();
+      new MigrationsHandler().performMigrations(getMigrations());
     }
 
     new ApplyDefaultRolesAndPrivilegesTask().execute();
@@ -183,6 +185,10 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                                                      healthCheckIntervalInMillis,
                                                      TimeUnit.MILLISECONDS);
     });
+  }
+
+  protected List<Migration> getMigrations() {
+    return new AvailableMigrations().getAvailableMigrations();
   }
 
   private boolean isConfigured() {

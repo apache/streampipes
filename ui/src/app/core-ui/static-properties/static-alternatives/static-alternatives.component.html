@@ -62,32 +62,12 @@
                 ) {
                     <div>
                         <div style="padding: 0 10px">
-                            <sp-app-static-property
-                                [adapterId]="adapterId"
-                                [completedConfigurations]="
-                                    completedAlternativeConfigurations
+                            <ng-container
+                                [ngTemplateOutlet]="renderStaticProperty"
+                                [ngTemplateOutletContext]="
+                                    ctxFor(alternative, i)
                                 "
-                                [deploymentConfiguration]="
-                                    deploymentConfiguration
-                                "
-                                [eventSchemas]="eventSchemas"
-                                [parentForm]="parentForm"
-                                [staticProperties]="staticProperties"
-                                [fieldName]="
-                                    fieldName +
-                                    '-' +
-                                    alternative.staticProperty.internalName +
-                                    '-' +
-                                    i
-                                "
-                                [staticProperty]="alternative.staticProperty"
-                                [displayRecommended]="displayRecommended"
-                                (completedConfigurationsEmitter)="
-                                    handleConfigurationUpdate($event)
-                                "
-                                class="test fullWidth"
-                            >
-                            </sp-app-static-property>
+                            />
                         </div>
                     </div>
                 }

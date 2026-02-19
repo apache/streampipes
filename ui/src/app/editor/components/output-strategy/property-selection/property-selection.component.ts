@@ -22,11 +22,14 @@ import {
     EventPropertyNested,
     EventPropertyUnion,
 } from '@streampipes/platform-services';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatHint } from '@angular/material/form-field';
 
 @Component({
     selector: 'sp-property-selection',
     templateUrl: './property-selection.component.html',
-    standalone: false,
+    imports: [LayoutDirective, MatCheckbox, MatHint],
 })
 export class PropertySelectionComponent implements OnInit {
     @Input()

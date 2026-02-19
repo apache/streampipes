@@ -21,6 +21,7 @@
         "@typescript-eslint/no-inferrable-types": "off",
         "@typescript-eslint/ban-types": "off",
         "@typescript-eslint/ban-ts-comment": "off",
+        "@angular-eslint/prefer-inject": "off",
         "@angular-eslint/component-selector": [
           "error",
           {

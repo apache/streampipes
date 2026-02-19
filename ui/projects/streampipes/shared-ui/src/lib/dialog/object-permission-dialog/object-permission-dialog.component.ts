@@ -27,6 +27,8 @@ import {
 } from '@angular/core';
 import { DialogRef } from '../base-dialog/dialog-ref';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
@@ -42,16 +44,75 @@ import {
     UserGroupService,
     UserService,
 } from '@streampipes/platform-services';
-import { MatChipInputEvent } from '@angular/material/chips';
+import {
+    MatChipGrid,
+    MatChipInput,
+    MatChipInputEvent,
+    MatChipRemove,
+    MatChipRow,
+} from '@angular/material/chips';
 import { combineLatest, Observable, shareReplay, zip } from 'rxjs';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+    MatAutocomplete,
+    MatAutocompleteSelectedEvent,
+    MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
 import { map, startWith } from 'rxjs/operators';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SplitSectionComponent } from '../../components/split-section/split-section.component';
+import { FormFieldComponent } from '../../components/form-field/form-field.component';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { MatDivider } from '@angular/material/divider';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-object-permission-dialog',
     templateUrl: './object-permission-dialog.component.html',
     styleUrls: ['./object-permission-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        MatProgressSpinner,
+        FormsModule,
+        ReactiveFormsModule,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        MatCheckbox,
+        MatChipGrid,
+        MatChipRow,
+        MatChipRemove,
+        MatIcon,
+        MatInput,
+        MatAutocompleteTrigger,
+        MatChipInput,
+        MatAutocomplete,
+        LayoutGapDirective,
+        MatIconButton,
+        MatTooltip,
+        CdkCopyToClipboard,
+        MatDivider,
+        MatButton,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class ObjectPermissionDialogComponent implements OnInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];

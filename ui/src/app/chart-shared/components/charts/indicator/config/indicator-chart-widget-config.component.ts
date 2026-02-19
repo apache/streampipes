@@ -23,12 +23,24 @@ import {
     IndicatorChartWidgetModel,
 } from '../model/indicator-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget-config',
     templateUrl: './indicator-chart-widget-config.component.html',
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SplitSectionComponent,
+        SelectSinglePropertyConfigComponent,
+        MatCheckbox,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<
     IndicatorChartWidgetModel,

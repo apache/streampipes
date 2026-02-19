@@ -17,12 +17,31 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-configuration-link-settings',
     templateUrl: './link-settings.component.html',
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        FlexDirective,
+        MatCheckbox,
+        TranslatePipe,
+    ],
 })
 export class SpConfigurationLinkSettingsComponent {
     @Input()

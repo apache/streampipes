@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.health;
 
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
-import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

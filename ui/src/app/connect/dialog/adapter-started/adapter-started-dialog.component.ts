@@ -18,38 +18,60 @@
 
 import {
     Component,
+    EventEmitter,
+    inject,
     Input,
     OnInit,
-    EventEmitter,
     Output,
-    inject,
 } from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
     AdapterService,
-    SpAssetTreeNode,
     CompactPipeline,
     CompactPipelineElement,
+    CompactPipelineService,
     DatalakeRestService,
     ErrorMessage,
+    LinkageData,
     Message,
     PipelineOperationStatus,
     PipelineTemplateService,
     PipelineUpdateInfo,
+    SpAssetTreeNode,
     SpLogMessage,
-    LinkageData,
-    CompactPipelineService,
 } from '@streampipes/platform-services';
 import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
 
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpAdapterStartedLoadingComponent } from './adapter-started-loading/adapter-started-loading.component';
+import { SpAdapterStartedUpdateMigrationComponent } from './adapter-started-update-migration/adapter-started-update-migration.component';
+import { SpAdapterStartedSuccessComponent } from './adapter-started-success/adapter-started-success.component';
+import { SpAdapterStartedPreviewComponent } from './adapter-started-preview/adapter-started-preview.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
     templateUrl: './adapter-started-dialog.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        SpAdapterStartedLoadingComponent,
+        SpAdapterStartedUpdateMigrationComponent,
+        SpAdapterStartedSuccessComponent,
+        SpAdapterStartedPreviewComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class AdapterStartedDialog implements OnInit {
     translateService = inject(TranslateService);
@@ -288,15 +310,19 @@ export class AdapterStartedDialog implements OnInit {
         this.shepherdService.trigger('confirm_adapter_started_button');
     }
 
-    async addToAsset(): Promise<void> {
+    async addToAsset(pipelineId = ''): Promise<void> {
         let linkageData: LinkageData[];
         try {
             if (!this.editMode) {
                 const adapter = await this.getAdapter();
                 linkageData = this.createLinkageData(adapter);
 
-                if (this.saveInDataLake) {
-                    await this.addDataLakeLinkageData(adapter, linkageData);
+                if (this.saveInDataLake && pipelineId !== '') {
+                    await this.addDataLakeLinkageData(
+                        adapter,
+                        linkageData,
+                        pipelineId,
+                    );
                 }
             } else {
                 linkageData = this.createLinkageData(this.adapter);
@@ -337,8 +363,8 @@ export class AdapterStartedDialog implements OnInit {
     private async addDataLakeLinkageData(
         adapter: AdapterDescription,
         linkageData: LinkageData[],
+        pipelineId: string,
     ): Promise<void> {
-        const pipelineId = `persist-${this.adapter.name.replaceAll(' ', '-')}`;
         linkageData.push({
             type: 'pipeline',
             id: pipelineId,
@@ -393,10 +419,9 @@ export class AdapterStartedDialog implements OnInit {
                 .findById('sp-internal-persist')
                 .subscribe(
                     template => {
+                        const pipelineId = this.createPipelineId();
                         const pipeline: CompactPipeline = {
-                            id:
-                                'persist-' +
-                                this.adapter.name.replaceAll(' ', '-'),
+                            id: pipelineId,
                             name: 'Persist ' + this.adapter.name,
                             description: '',
                             pipelineElements: this.makeTemplateConfigs(
@@ -413,7 +438,7 @@ export class AdapterStartedDialog implements OnInit {
                                 this.pipelineOperationStatus =
                                     pipelineOperationStatus;
                                 this.startAdapter(adapterElementId, true);
-                                this.addToAsset();
+                                this.addToAsset(pipelineId);
                             },
                             error => {
                                 this.onAdapterFailure(error.error);
@@ -454,5 +479,11 @@ export class AdapterStartedDialog implements OnInit {
             output: undefined,
         });
         return template;
+    }
+
+    private createPipelineId(): string {
+        const base = `persist-${this.adapter.name.replaceAll(' ', '-')}`;
+        const suffix = Math.random().toString(36).slice(2, 8);
+        return `${base}-${suffix}`;
     }
 }

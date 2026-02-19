@@ -19,12 +19,25 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartRegistry } from '../../../../../../chart-shared/registry/chart-registry.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-chart-preview',
     templateUrl: './chart-preview.component.html',
     styleUrls: ['./chart-preview.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        MatIcon,
+    ],
 })
 export class ChartPreviewComponent implements OnInit {
     @Input()

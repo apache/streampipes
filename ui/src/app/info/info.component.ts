@@ -17,12 +17,15 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    SpBasicViewComponent,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
+import { VersionsComponent } from './versions/versions.component';
 
 @Component({
     templateUrl: './info.component.html',
-    standalone: false,
+    imports: [SpBasicViewComponent, VersionsComponent],
 })
 export class InfoComponent implements OnInit {
     constructor(private breadcrumbService: SpBreadcrumbService) {}

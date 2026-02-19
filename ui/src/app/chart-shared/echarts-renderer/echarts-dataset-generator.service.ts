@@ -27,7 +27,7 @@ import {
     PreparedDataset,
     TagValue,
 } from '../models/dataset.model';
-import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
+import type { DataTransformOption } from 'echarts/types/src/data/helper/transform.d.ts';
 
 /**
  * The dataset generator generates Echarts datasets as follows:

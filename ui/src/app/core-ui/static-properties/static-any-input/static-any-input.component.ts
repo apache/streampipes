@@ -16,15 +16,28 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import { AnyStaticProperty } from '@streampipes/platform-services';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
     selector: 'sp-app-static-any-input',
     templateUrl: './static-any-input.component.html',
     styleUrls: ['./static-any-input.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatCheckbox,
+        FormsModule,
+        MatFormField,
+        MatSelect,
+        MatOption,
+    ],
 })
 export class StaticAnyInputComponent extends AbstractStaticPropertyRenderer<AnyStaticProperty> {
     select(elementId: string) {

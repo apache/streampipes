@@ -16,12 +16,27 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-configure-fields-header',
     templateUrl: './configure-fields-header.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+    ],
 })
 export class ConfigureFieldsHeaderComponent {
     @Output() guessSchemaEmitter = new EventEmitter();

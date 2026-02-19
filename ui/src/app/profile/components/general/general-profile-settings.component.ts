@@ -25,17 +25,48 @@ import {
     CurrentUserService,
     DialogRef,
     DialogService,
+    FormFieldComponent,
     PanelType,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { ChangeEmailDialogComponent } from '../../dialog/change-email/change-email-dialog.component';
 import { ChangePasswordDialogComponent } from '../../dialog/change-password/change-password-dialog.component';
 import { Router } from '@angular/router';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-general-profile-settings',
     templateUrl: './general-profile-settings.component.html',
     styleUrls: ['./general-profile-settings.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        SplitSectionComponent,
+        SpAlertBannerComponent,
+        MatButton,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatSelect,
+        MatOption,
+        MatRadioGroup,
+        MatRadioButton,
+        TranslatePipe,
+    ],
 })
 export class GeneralProfileSettingsComponent
     extends BasicProfileSettings
@@ -50,6 +81,7 @@ export class GeneralProfileSettingsComponent
         { label: 'Browser language', id: 'browser' },
         { label: 'English', id: 'en' },
         { label: 'Deutsch', id: 'de' },
+        { label: 'Polski', id: 'pl' },
     ];
 
     constructor(

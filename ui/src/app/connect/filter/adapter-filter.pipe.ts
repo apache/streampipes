@@ -20,10 +20,7 @@ import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { AdapterFilterSettingsModel } from '../model/adapter-filter-settings.model';
 
-@Pipe({
-    name: 'adapterFilter',
-    standalone: false,
-})
+@Pipe({ name: 'adapterFilter' })
 @Injectable({ providedIn: 'root' })
 export class AdapterFilterPipe implements PipeTransform {
     constructor() {}
