@@ -21,6 +21,7 @@ import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
@@ -108,4 +109,6 @@ public interface INoSqlStorage {
   IAssetStorage getAssetStorage();
 
   ITransformationScriptTemplateStorage getTransformationScriptTemplateStorage();
+
+  IFunctionStateStorage getFunctionStateStorage();
 }

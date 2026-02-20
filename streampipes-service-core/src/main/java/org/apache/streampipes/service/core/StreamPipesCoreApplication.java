@@ -35,6 +35,7 @@ import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
 import org.apache.streampipes.manager.setup.tasks.ApplyDefaultRolesAndPrivilegesTask;
+import org.apache.streampipes.manager.util.AuthTokenUtils;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
@@ -42,6 +43,7 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -57,6 +59,8 @@ import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -68,6 +72,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -85,6 +90,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
+  private static final String FUNCTION_SHUTDOWN_PATH = "/api/v1/functions/shutdown";
 
   private final ISpCoreConfigurationStorage coreConfigStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();
@@ -233,7 +239,43 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       }
     });
 
+    triggerExtensionFunctionShutdown();
+
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
+  }
+
+  private void triggerExtensionFunctionShutdown() {
+    var extensions = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage().findAll();
+    var serviceAdmin = new SpResourceManager().manageUsers().getServiceAdmin();
+    var authToken = AuthTokenUtils.getAuthTokenForUser(serviceAdmin);
+
+    LOG.info("Triggering function shutdown at {} extension services...", extensions.size());
+    extensions.forEach(service -> triggerFunctionShutdown(service, authToken));
+  }
+
+  private void triggerFunctionShutdown(SpServiceRegistration service,
+                                       String authToken) {
+    var endpoint = service.getServiceUrl() + FUNCTION_SHUTDOWN_PATH;
+
+    try {
+      LOG.info("Triggering function shutdown at {}", endpoint);
+      Response response = Request
+          .Post(endpoint)
+          .addHeader("Authorization", authToken)
+          .connectTimeout(5000)
+          .socketTimeout(10000)
+          .execute();
+      int statusCode = response.returnResponse().getStatusLine().getStatusCode();
+
+      if (statusCode >= 200 && statusCode < 300) {
+        LOG.debug("Function shutdown triggered at {} (HTTP {})", service.getSvcId(), statusCode);
+      } else {
+        LOG.warn("Function shutdown request returned non-success status at {} (HTTP {})",
+            service.getSvcId(), statusCode);
+      }
+    } catch (IOException e) {
+      LOG.warn("Could not trigger function shutdown at {}: {}", endpoint, e.getMessage());
+    }
   }
 
   private List<Pipeline> getAllPipelines() {

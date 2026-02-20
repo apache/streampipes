@@ -93,10 +93,16 @@ public enum StreamPipesFunctionHandler {
   }
 
   public void cleanupFunctions() {
+    if (this.runningInstances.isEmpty()) {
+      return;
+    }
+
+    var functionDefinitions = getFunctionDefinitions();
     this.runningInstances.forEach((key, value) -> {
       value.discardRuntime();
     });
-    new FunctionDeregistrationHandler(getFunctionDefinitions()).run();
+    new FunctionDeregistrationHandler(functionDefinitions).run();
+    this.runningInstances.clear();
   }
 
   private List<FunctionDefinition> getFunctionDefinitions() {

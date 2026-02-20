@@ -38,12 +38,14 @@ public class FunctionContext {
   private StreamPipesClient client;
   private String functionId;
   private ConfigExtractor config;
+  private final Map<Class<?>, StateStore<?>> stateStores;
 
   private Map<String, SpOutputCollector> outputCollectors;
   private IExtensionsLogger extensionsLogger;
 
   public FunctionContext() {
     this.streams = new HashMap<>();
+    this.stateStores = new HashMap<>();
   }
 
   public FunctionContext(String functionId,
@@ -86,5 +88,12 @@ public class FunctionContext {
 
   public Map<String, SpOutputCollector> getOutputCollectors() {
     return outputCollectors;
+  }
+
+  public <T> StateStore<T> getStateStore(Class<T> stateClass) {
+    return (StateStore<T>) stateStores.computeIfAbsent(
+        stateClass,
+        key -> new FunctionStateStore<>(functionId, client, stateClass)
+    );
   }
 }

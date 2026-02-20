@@ -27,6 +27,8 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class AdminApi extends AbstractClientApi implements IAdminApi {
 
@@ -65,6 +67,18 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
   @Override
   public void deregisterFunction(String functionId) {
     delete(getDeleteFunctionPath(functionId), SuccessMessage.class);
+  }
+
+  @Override
+  public Optional<Map<String, Object>> getFunctionState(String functionId) {
+    return getSingleOpt(getFunctionStatePath(functionId), Map.class)
+        .map(state -> (Map<String, Object>) state);
+  }
+
+  @Override
+  public void persistFunctionState(String functionId,
+                                   Map<String, Object> state) {
+    put(getFunctionStatePath(functionId), state);
   }
 
   /**
@@ -107,6 +121,10 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
 
   private StreamPipesApiPath getDeleteFunctionPath(String functionId) {
     return getFunctionsPath().addToPath(functionId);
+  }
+
+  private StreamPipesApiPath getFunctionStatePath(String functionId) {
+    return getDeleteFunctionPath(functionId).addToPath("state");
   }
 
   private StreamPipesApiPath getMigrationPath() {
