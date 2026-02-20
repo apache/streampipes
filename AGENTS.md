@@ -11,7 +11,6 @@ Applies to the whole repository unless a deeper `AGENTS.md` overrides it.
 ## Java Standards
 - Follow style and import order from:
   - `tools/maven/checkstyle.xml`
-  - `tools/maven/streampipes-code-formatter.xml`
   - `tools/maven/checkstyle-header.txt`
 - Prefer constructor/typed APIs over loosely typed maps when extending domain logic.
 

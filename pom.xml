@@ -1215,6 +1215,9 @@
                         <!-- Exclude GO -->
                         <exclude>**/go.sum</exclude>
 
+                        <!-- Exclude AI agent guidance files -->
+                        <exclude>**/AGENTS.md</exclude>
+
 
 
           <!-- Resource files for Integration Test-->
