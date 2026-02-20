@@ -81,6 +81,7 @@ export class GeneralProfileSettingsComponent
         { label: 'Browser language', id: 'browser' },
         { label: 'English', id: 'en' },
         { label: 'Deutsch', id: 'de' },
+        { label: 'Polski', id: 'pl' },
     ];
 
     constructor(
