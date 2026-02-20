@@ -16,24 +16,31 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.declarer;
+package org.apache.streampipes.model.function;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
-public interface IStreamPipesFunctionDeclarer {
+@TsModel
+public class FunctionsShutdownResponse {
 
-  IFunctionConfig getFunctionConfig();
+  private List<FunctionShutdownResult> functions;
 
-  List<String> requiredStreamIds();
-
-  void invokeRuntime(String serviceGroup);
-
-  void discardRuntime();
-
-  default Optional<Map<String, Object>> getRegisteredStatePayload() {
-    return Optional.empty();
+  public FunctionsShutdownResponse() {
+    this.functions = new ArrayList<>();
   }
 
+  public FunctionsShutdownResponse(List<FunctionShutdownResult> functions) {
+    this.functions = functions;
+  }
+
+  public List<FunctionShutdownResult> getFunctions() {
+    return functions;
+  }
+
+  public void setFunctions(List<FunctionShutdownResult> functions) {
+    this.functions = functions;
+  }
 }

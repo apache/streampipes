@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.function;
 
-import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.function.FunctionsShutdownResponse;
 import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
 
@@ -33,12 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class FunctionShutdownResource extends AbstractExtensionsResource {
 
   @PostMapping(path = "shutdown", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Response> shutdownFunctions() {
-    try {
-      StreamPipesFunctionHandler.INSTANCE.cleanupFunctions();
-      return ok(new Response("functions-shutdown", true, "Function shutdown triggered"));
-    } catch (RuntimeException e) {
-      return ok(new Response("functions-shutdown", false, e.getMessage()));
-    }
+  public ResponseEntity<FunctionsShutdownResponse> shutdownFunctions() {
+    var shutdownResponse = StreamPipesFunctionHandler.INSTANCE.shutdownFunctionsAndGetState();
+    return ok(shutdownResponse);
   }
 }

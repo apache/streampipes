@@ -30,6 +30,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class FunctionContext {
 
@@ -39,6 +41,7 @@ public class FunctionContext {
   private String functionId;
   private ConfigExtractor config;
   private final Map<Class<?>, StateStore<?>> stateStores;
+  private Supplier<Object> stateSupplier;
 
   private Map<String, SpOutputCollector> outputCollectors;
   private IExtensionsLogger extensionsLogger;
@@ -95,5 +98,30 @@ public class FunctionContext {
         stateClass,
         key -> new FunctionStateStore<>(functionId, client, stateClass)
     );
+  }
+
+  public void registerStateSupplier(Supplier<Object> stateSupplier) {
+    this.stateSupplier = stateSupplier;
+  }
+
+  public Optional<Object> getRegisteredState() {
+    if (stateSupplier != null) {
+      return Optional.ofNullable(stateSupplier.get());
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public Optional<Map<String, Object>> getPersistedStatePayload() {
+    return stateStores
+        .values()
+        .stream()
+        .filter(FunctionStateStore.class::isInstance)
+        .map(FunctionStateStore.class::cast)
+        .map(FunctionStateStore::getPersistedStatePayload)
+        .filter(payload -> payload != null)
+        .map(payload -> (Map<String, Object>) payload)
+        .findFirst();
   }
 }

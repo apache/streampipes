@@ -24,8 +24,11 @@ import org.apache.streampipes.extensions.api.pe.config.IDataStreamConfiguration;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.model.function.FunctionDefinition;
+import org.apache.streampipes.model.function.FunctionShutdownResult;
+import org.apache.streampipes.model.function.FunctionsShutdownResponse;
 import org.apache.streampipes.sdk.builder.stream.DataStreamConfiguration;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -103,6 +106,17 @@ public enum StreamPipesFunctionHandler {
     });
     new FunctionDeregistrationHandler(functionDefinitions).run();
     this.runningInstances.clear();
+  }
+
+  public FunctionsShutdownResponse shutdownFunctionsAndGetState() {
+    var shutdownResults = new ArrayList<FunctionShutdownResult>();
+    this.runningInstances.forEach((key, value) -> {
+      value.discardRuntime();
+      shutdownResults.add(new FunctionShutdownResult(key, value.getRegisteredStatePayload().orElse(null)));
+    });
+    this.runningInstances.clear();
+
+    return new FunctionsShutdownResponse(shutdownResults);
   }
 
   private List<FunctionDefinition> getFunctionDefinitions() {
