@@ -39,6 +39,7 @@ public class SupportedRestQueryParams {
   public static final String QP_COUNT_ONLY = "countOnly";
   public static final String QP_AUTO_AGGREGATE = "autoAggregate";
   public static final String QP_FILTER = "filter";
+  public static final String QP_FILTER_EXPRESSION = "filterExpression";
   public static final String QP_MAXIMUM_AMOUNT_OF_EVENTS = "maximumAmountOfEvents";
   public static final String QP_XLSX_USE_TEMPLATE = "useTemplate";
   public static final String QP_XLSX_TEMPLATE_ID = "templateId";
@@ -62,6 +63,7 @@ public class SupportedRestQueryParams {
       QP_AUTO_AGGREGATE,
       QP_MISSING_VALUE_BEHAVIOUR,
       QP_FILTER,
+      QP_FILTER_EXPRESSION,
       QP_MAXIMUM_AMOUNT_OF_EVENTS,
       QP_XLSX_START_ROW,
       QP_XLSX_TEMPLATE_ID,

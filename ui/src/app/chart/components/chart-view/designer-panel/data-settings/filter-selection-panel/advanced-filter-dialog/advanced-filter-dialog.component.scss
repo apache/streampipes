@@ -1,0 +1,36 @@
+.advanced-filter-group {
+    border: 1px solid var(--color-bg-3);
+    border-radius: 6px;
+    padding: 10px;
+    background: #fff;
+}
+
+.advanced-filter-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.advanced-filter-group-title {
+    font-weight: 600;
+    min-width: 70px;
+}
+
+.advanced-filter-operator {
+    width: 110px;
+}
+
+.advanced-filter-group-children {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.advanced-filter-remove-group {
+    margin-top: 6px;
+}
+
+.advanced-filter-condition {
+    padding: 4px 0;
+}

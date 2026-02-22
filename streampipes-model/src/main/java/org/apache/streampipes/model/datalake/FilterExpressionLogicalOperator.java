@@ -15,28 +15,9 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.datalake;
 
-import { MissingValueBehaviour } from './data-lake-query-config.model';
-
-export interface DatalakeQueryParameters {
-    columns?: string;
-    startDate?: number;
-    endDate?: number;
-    page?: number;
-    limit?: number;
-    offset?: number;
-    groupBy?: string;
-    order?: string;
-    aggregationFunction?: string;
-    timeInterval?: string;
-    countOnly?: boolean;
-    autoAggregate?: boolean;
-    filter?: string;
-    filterExpression?: string;
-    missingValueBehaviour?: MissingValueBehaviour;
-    maximumAmountOfEvents?: number;
-
-    // should be only used for multi-query requests
-    measureName?: string;
-    forId?: string;
+public enum FilterExpressionLogicalOperator {
+  AND,
+  OR
 }

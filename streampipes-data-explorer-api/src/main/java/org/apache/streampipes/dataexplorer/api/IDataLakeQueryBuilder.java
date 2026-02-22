@@ -23,6 +23,7 @@ package org.apache.streampipes.dataexplorer.api;
 import org.apache.streampipes.model.datalake.AggregationFunction;
 import org.apache.streampipes.model.datalake.DataLakeQueryOrdering;
 import org.apache.streampipes.model.datalake.FilterCondition;
+import org.apache.streampipes.model.datalake.FilterExpressionGroup;
 
 import java.util.List;
 
@@ -64,6 +65,8 @@ public interface IDataLakeQueryBuilder<T> {
                                             List<?> values);
 
   IDataLakeQueryBuilder<T> withInclusiveFilter(List<FilterCondition> filterConditions);
+
+  IDataLakeQueryBuilder<T> withFilterExpression(FilterExpressionGroup filterExpression);
 
   IDataLakeQueryBuilder<T> withGroupByTime(String timeInterval);
 

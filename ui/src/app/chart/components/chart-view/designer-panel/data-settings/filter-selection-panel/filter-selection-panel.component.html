@@ -19,7 +19,6 @@
 <sp-split-section [level]="3" [title]="'Filter' | translate">
     <div section-actions fxLayoutAlign="start center" fxFlex="100">
         <button
-            mat-button
             mat-flat-button
             color="accent"
             class="small-button"
@@ -29,8 +28,44 @@
         >
             {{ 'Add Filter' | translate }}
         </button>
+
+        <button
+            mat-flat-button
+            class="mat-basic small-button"
+            data-cy="design-panel-data-settings-advanced-filter"
+            (click)="openAdvancedFilterDialog()"
+        >
+            {{ 'Advanced Filter' | translate }}
+        </button>
     </div>
     <div fxLayout="column">
+        @if (hasAdvancedFilterExpression()) {
+            <sp-alert-banner
+                type="info"
+                [title]="'Advanced filter active' | translate"
+                [description]="advancedFilterSummary()"
+                style="margin-bottom: 10px"
+            >
+                <div
+                    style="font-size: 12px; margin-top: 6px; margin-bottom: 6px"
+                >
+                    {{
+                        'Simple filters below are kept for fallback, but the advanced filter is currently used for queries.'
+                            | translate
+                    }}
+                </div>
+                <div>
+                    <button
+                        mat-flat-button
+                        class="small-button"
+                        (click)="disableAdvancedFilter()"
+                    >
+                        {{ 'Clear & use simple filters' | translate }}
+                    </button>
+                </div>
+            </sp-alert-banner>
+        }
+
         @for (
             filter of sourceConfig.queryConfig.selectedFilters;
             track filter;
@@ -38,6 +73,7 @@
         ) {
             <sp-filter-selection-panel-row
                 [filter]="filter"
+                [index]="i"
                 [possibleFields]="sourceConfig.queryConfig.fields"
                 [tagValues]="tagValues"
                 (update)="updateWidget()"

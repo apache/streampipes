@@ -26,8 +26,12 @@ import org.apache.streampipes.dataexplorer.param.model.OffsetClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.OrderByClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.SelectClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.WhereClauseParams;
+import org.apache.streampipes.model.datalake.FilterExpressionGroup;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +44,7 @@ public class ProvidedRestQueryParamConverter {
   public static final String BRACKET_CLOSE = "\\]";
 
   public static final String ORDER_DESCENDING = "DESC";
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   public static SelectQueryParams getSelectQueryParams(ProvidedRestQueryParams params) {
     SelectQueryParams queryParameters = new SelectQueryParams(params.getMeasurementId());
@@ -54,15 +59,20 @@ public class ProvidedRestQueryParamConverter {
           params.getAsString(SupportedRestQueryParams.QP_AGGREGATION_FUNCTION)));
     }
 
-    String filterConditions = params.getAsString(SupportedRestQueryParams.QP_FILTER);
+    String filterExpression = params.getAsString(SupportedRestQueryParams.QP_FILTER_EXPRESSION);
+    FilterExpressionGroup parsedFilterExpression = parseFilterExpression(filterExpression);
+    String filterConditions = parsedFilterExpression == null
+        ? params.getAsString(SupportedRestQueryParams.QP_FILTER)
+        : null;
 
     if (hasTimeParams(params)) {
       queryParameters.withWhereParams(WhereClauseParams.from(
           params.getAsLong(SupportedRestQueryParams.QP_START_DATE),
           params.getAsLong(SupportedRestQueryParams.QP_END_DATE),
-          filterConditions));
-    } else if (filterConditions != null) {
-      queryParameters.withWhereParams(WhereClauseParams.from(filterConditions));
+          filterConditions,
+          parsedFilterExpression));
+    } else if (filterConditions != null || parsedFilterExpression != null) {
+      queryParameters.withWhereParams(WhereClauseParams.from(filterConditions, parsedFilterExpression));
     }
 
     if (params.has(SupportedRestQueryParams.QP_TIME_INTERVAL)) {
@@ -132,5 +142,17 @@ public class ProvidedRestQueryParamConverter {
         .replaceAll(BRACKET_OPEN, "")
         .replaceAll(BRACKET_CLOSE, "")
         .split(";");
+  }
+
+  private static FilterExpressionGroup parseFilterExpression(String filterExpression) {
+    if (filterExpression == null || filterExpression.isBlank()) {
+      return null;
+    }
+
+    try {
+      return OBJECT_MAPPER.readValue(filterExpression, FilterExpressionGroup.class);
+    } catch (JsonProcessingException e) {
+      throw new IllegalArgumentException("Invalid filter expression provided", e);
+    }
   }
 }
