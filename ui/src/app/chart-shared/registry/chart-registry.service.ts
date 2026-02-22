@@ -275,6 +275,10 @@ export class ChartRegistry {
         ];
     }
 
+    registerChart(chart: IWidget<any>): void {
+        this.chartTypes.push(chart);
+    }
+
     getAvailableChartTemplates(): IWidget<any>[] {
         return this.chartTypes.sort((a, b) => a.label.localeCompare(b.label));
     }
