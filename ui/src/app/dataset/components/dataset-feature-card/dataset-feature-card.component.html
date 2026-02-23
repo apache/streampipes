@@ -50,7 +50,7 @@
                             size="small"
                             variant="soft"
                         >
-                            {{ (lastEventTs | date: 'short') || '-' }}
+                            {{ formatDate(lastEventTs) }}
                         </sp-label>
                     </div>
                 </div>
@@ -61,26 +61,29 @@
             </div>
             <div class="dataset-preview-inner">
                 @if (dataPreview && dataPreview.total > 0) {
-                    <div fxLayout="column">
+                    <div class="dataset-preview-table" fxLayout="column">
                         @for (
                             header of dataPreview.headers;
                             let i = $index;
                             track $index
                         ) {
-                            <div fxLayout="row" fxFlex="100">
-                                <span class="text-sm" fxFlex="70">{{
-                                    header
-                                }}</span>
-                                <span class="text-sm font-bold" fxFlex="30">
+                            <div class="dataset-preview-row">
+                                <span class="dataset-preview-key">
+                                    {{ header }}
+                                </span>
+                                <span class="dataset-preview-value">
                                     {{
-                                        dataPreview.allDataSeries[0].rows[0][i]
-                                    }}</span
-                                >
+                                        formatPreviewValue(
+                                            header,
+                                            previewRow[i]
+                                        )
+                                    }}
+                                </span>
                             </div>
                         }
                     </div>
                 } @else {
-                    <span class="text-sm">{{
+                    <span class="text-sm dataset-preview-empty">{{
                         'No data available.' | translate
                     }}</span>
                 }

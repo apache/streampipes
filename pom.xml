@@ -1215,6 +1215,9 @@
                         <!-- Exclude GO -->
                         <exclude>**/go.sum</exclude>
 
+                        <!-- Exclude AI agent guidance files -->
+                        <exclude>**/AGENTS.md</exclude>
+
 
 
           <!-- Resource files for Integration Test-->
@@ -1243,12 +1246,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven-checkstyle-plugin.version}</version>
-                <configuration>
-                    <logViolationsToConsole>false</logViolationsToConsole>
-                    <failOnViolation>false</failOnViolation>
-                </configuration>
-                <inherited>false</inherited>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
