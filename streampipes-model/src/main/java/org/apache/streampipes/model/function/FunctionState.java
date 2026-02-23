@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.function;
 
+import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
@@ -27,6 +28,10 @@ import java.util.Map;
 
 @TsModel
 public class FunctionState implements Storable {
+
+  public static final String APP_DOC_TYPE = GenericDocTypes.DOC_FUNCTION_STATE;
+
+  private final String appDocType = APP_DOC_TYPE;
 
   protected @SerializedName("_rev") String rev;
   private @SerializedName("_id") String functionId;
@@ -75,5 +80,9 @@ public class FunctionState implements Storable {
   @Override
   public void setElementId(String elementId) {
     this.functionId = elementId;
+  }
+
+  public String getAppDocType() {
+    return appDocType;
   }
 }

@@ -16,21 +16,28 @@
  *
  */
 
-package org.apache.streampipes.storage.couchdb.impl.function;
+package org.apache.streampipes.manager.setup.tasks;
 
-import org.apache.streampipes.model.function.FunctionState;
-import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
-import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.apache.streampipes.commons.constants.GenericDocTypes;
 
-public class FunctionStateStorageImpl extends DefaultViewCrudStorage<FunctionState>
-    implements IFunctionStateStorage {
+public class AddFunctionStateViewTask extends AbstractAddGenericStorageViewTask {
 
-  public FunctionStateStorageImpl() {
-    super(
-        () -> Utils.getCouchDbGsonClient("genericstorage"),
-        FunctionState.class,
-        "function-states/all-function-states"
-    );
+  public static final String DESIGN_DOCUMENT = "_design/function-states";
+  public static final String VIEW_NAME = "all-function-states";
+
+  @Override
+  public String getDesignDocument() {
+    return DESIGN_DOCUMENT;
+  }
+
+  @Override
+  public String getViewName() {
+    return VIEW_NAME;
+  }
+
+  @Override
+  public String getMapFunction() {
+    return String.format("function(doc) { if(doc.appDocType === '%s') { emit(doc._id, doc); } }",
+        GenericDocTypes.DOC_FUNCTION_STATE);
   }
 }
