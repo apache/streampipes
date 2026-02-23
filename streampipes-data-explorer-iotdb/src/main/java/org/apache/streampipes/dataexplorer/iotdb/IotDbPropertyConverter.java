@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
+
+import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 
 /**
  * Converts StreamPipes {@link EventProperty} into {@link IotDbMeasurementRecord}s.
@@ -57,13 +58,13 @@ public class IotDbPropertyConverter {
     } else if (XSD.FLOAT.toString().equals(runtimeType)) {
       iotDbType = TSDataType.FLOAT;
       value = primitiveField.getAsFloat();
-     }else if (XSD.DOUBLE.toString().equals(runtimeType) || SO.NUMBER.equals(runtimeType)) {
+    } else if (XSD.DOUBLE.toString().equals(runtimeType) || SO.NUMBER.equals(runtimeType)) {
       iotDbType = TSDataType.DOUBLE;
       value = primitiveField.getAsDouble();
     } else if (XSD.BOOLEAN.toString().equals(runtimeType)) {
       iotDbType = TSDataType.BOOLEAN;
       value = primitiveField.getAsBoolean();
-    } else if (XSD.STRING.toString().equals(runtimeType)){
+    } else if (XSD.STRING.toString().equals(runtimeType)) {
       iotDbType = TSDataType.TEXT;
       value = primitiveField.getAsString();
     } else {
@@ -84,7 +85,8 @@ public class IotDbPropertyConverter {
   public IotDbMeasurementRecord convertNonPrimitiveProperty(
       EventProperty eventProperty,
       String sanitizedRuntimeName) throws SpRuntimeException {
-    throw new SpRuntimeException("Handling non-primitive event properties is not yet supported " +
-        "when using IoTDB as time series store.");
+    throw new SpRuntimeException(
+        "Handling non-primitive event properties is not yet supported "
+            + "when using IoTDB as time series store.");
   }
 }

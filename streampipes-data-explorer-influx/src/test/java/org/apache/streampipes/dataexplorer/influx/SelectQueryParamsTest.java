@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
+import org.apache.streampipes.dataexplorer.influx.utils.ProvidedQueryParameterBuilder;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
-import org.apache.streampipes.dataexplorer.influx.utils.ProvidedQueryParameterBuilder;
 
 import org.junit.jupiter.api.Test;
 
