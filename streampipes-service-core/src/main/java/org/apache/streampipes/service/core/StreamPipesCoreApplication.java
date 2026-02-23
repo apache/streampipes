@@ -257,6 +257,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   }
 
   private void triggerExtensionFunctionShutdown() {
+
     var extensions = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage().findAll();
     var serviceAdmin = new SpResourceManager().manageUsers().getServiceAdmin();
     var authToken = AuthTokenUtils.getAuthTokenForUser(serviceAdmin);

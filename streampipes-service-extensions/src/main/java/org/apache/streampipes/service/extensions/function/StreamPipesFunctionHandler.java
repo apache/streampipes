@@ -95,19 +95,6 @@ public enum StreamPipesFunctionHandler {
     });
   }
 
-  public void cleanupFunctions() {
-    if (this.runningInstances.isEmpty()) {
-      return;
-    }
-
-    var functionDefinitions = getFunctionDefinitions();
-    this.runningInstances.forEach((key, value) -> {
-      value.discardRuntime();
-    });
-    new FunctionDeregistrationHandler(functionDefinitions).run();
-    this.runningInstances.clear();
-  }
-
   public FunctionsShutdownResponse shutdownFunctionsAndGetState() {
     var shutdownResults = new ArrayList<FunctionShutdownResult>();
     this.runningInstances.forEach((key, value) -> {
