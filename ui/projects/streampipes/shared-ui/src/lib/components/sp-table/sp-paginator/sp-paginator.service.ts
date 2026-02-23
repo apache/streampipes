@@ -32,15 +32,14 @@ export class PaginatorService extends MatPaginatorIntl {
             pageSize: number,
             length: number,
         ) => {
-            const start = page * pageSize + 1;
+            const start = Math.min(page * pageSize + 1, length);
             const end = Math.min((page + 1) * pageSize, length);
-            const total = length;
             const rangeLabel =
                 start +
                 ' - ' +
                 end +
                 this.translateService.instant(' of ') +
-                total +
+                length +
                 this.translateService.instant(' items ');
             return rangeLabel;
         };

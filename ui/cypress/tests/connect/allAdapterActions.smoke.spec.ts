@@ -17,7 +17,6 @@
  */
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe('Testing Start/Stop All Adapters', () => {
     beforeEach('Setup Test', () => {
@@ -28,12 +27,25 @@ describe('Testing Start/Stop All Adapters', () => {
     });
 
     it('Test start/stop all adapters', () => {
-        // Clicking the stop all adapters button
-        ConnectBtns.stopAllAdapters().click();
+        cy.wait(1000);
+        // Select visible adapters and stop them via the shared multi-select toolbar
+        cy.dataCy('sp-table-select-all-checkbox')
+            .find('input[type="checkbox"]')
+            .check({ force: true });
+        cy.dataCy('sp-table-multi-action-select').click();
+        cy.dataCy('sp-table-multi-action-option-stop').click();
+        cy.dataCy('sp-table-multi-action-execute').click();
         // Navigating through the stop all adapters dialog box
         ConnectUtils.allAdapterActionsDialog();
-        // Clicking the start all adapters button
-        ConnectBtns.startAllAdapters().click();
+
+        cy.wait(1000);
+        // Select visible adapters again and start them via the shared multi-select toolbar
+        cy.dataCy('sp-table-select-all-checkbox')
+            .find('input[type="checkbox"]')
+            .check({ force: true });
+        cy.dataCy('sp-table-multi-action-select').click();
+        cy.dataCy('sp-table-multi-action-option-start').click();
+        cy.dataCy('sp-table-multi-action-execute').click();
         // Navigating through the start all adapters dialog box
         ConnectUtils.allAdapterActionsDialog();
     });

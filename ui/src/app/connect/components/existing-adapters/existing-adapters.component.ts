@@ -45,6 +45,8 @@ import {
     SpBreadcrumbService,
     SpExceptionDetailsDialogComponent,
     SpLabelComponent,
+    SpTableMultiActionExecuteEvent,
+    SpTableMultiActionOption,
     SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
@@ -132,6 +134,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
     tutorialActive = false;
+    readonly bulkAdapterActionOptions: SpTableMultiActionOption[] = [
+        { value: 'start', label: 'Start selected', icon: 'play_arrow' },
+        { value: 'stop', label: 'Stop selected', icon: 'stop' },
+    ];
 
     assetFilter$: Subscription;
     user$: Subscription;
@@ -207,26 +213,28 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         );
     }
 
-    checkCurrentSelectionStatus(status) {
-        let active = true;
-        this.existingAdapters.forEach(adapter => {
-            if (adapter.running == status) {
-                active = false;
-            }
-        });
-        return active;
-    }
+    startStopSelectedAdapters(
+        event: SpTableMultiActionExecuteEvent<AdapterDescription>,
+    ) {
+        if (event.action !== 'start' && event.action !== 'stop') {
+            return;
+        }
 
-    startAllAdapters(action: boolean) {
+        const selectedAdapters = event.selectedRows ?? [];
+        if (!selectedAdapters.length) {
+            return;
+        }
+
+        const action = event.action === 'start';
         const dialogRef: DialogRef<AllAdapterActionsComponent> =
             this.dialogService.open(AllAdapterActionsComponent, {
                 panelType: PanelType.STANDARD_PANEL,
                 title: action
-                    ? this.translate.instant('Start all adapters')
-                    : this.translate.instant('Stop all adapters'),
+                    ? this.translate.instant('Start selected adapters')
+                    : this.translate.instant('Stop selected adapters'),
                 width: '70vw',
                 data: {
-                    adapters: this.existingAdapters,
+                    adapters: selectedAdapters,
                     action: action,
                 },
             });

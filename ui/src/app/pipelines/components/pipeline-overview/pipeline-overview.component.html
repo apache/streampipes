@@ -21,7 +21,9 @@
     [columns]="displayedColumns"
     [showSelectionCheckboxes]="hasPipelineWritePrivileges"
     [showMultiActionsExecuteButton]="true"
-    [multiActionOptions]="bulkPipelineActionOptions"
+    [multiActionOptions]="
+        hasPipelineWritePrivileges ? bulkPipelineActionOptions : []
+    "
     featureCardId="pipeline"
     resourceIdKey="_id"
     [showActionsMenu]="true"

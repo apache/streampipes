@@ -38,28 +38,6 @@
                 }}
             </button>
         }
-        @if (hasPipelineWritePrivileges) {
-            <button
-                mat-flat-button
-                class="mat-basic"
-                (click)="startAllPipelines(true)"
-                [disabled]="checkCurrentSelectionStatus(false)"
-            >
-                <mat-icon>play_arrow</mat-icon>
-                <span>{{ 'Start All Pipelines' | translate }}</span>
-            </button>
-        }
-        @if (hasPipelineWritePrivileges) {
-            <button
-                mat-flat-button
-                class="mat-basic"
-                (click)="startAllPipelines(false)"
-                [disabled]="checkCurrentSelectionStatus(true)"
-            >
-                <mat-icon>stop</mat-icon>
-                <span>{{ 'Stop all pipelines' | translate }}</span>
-            </button>
-        }
         <span fxFlex></span>
         <button
             mat-icon-button
