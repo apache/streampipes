@@ -78,11 +78,11 @@ public class AvailableMigrations {
         new RemoveObsoletePrivilegesMigration(),
         new UniqueDashboardIdMigration(),
         new AddScriptTemplateViewMigration(),
-        new AddFunctionStateViewMigration(),
         new ComputeCertificateThumbprintMigration(),
         new MigrateAdaptersToUseScript(),
         new ModifyAssetLinkIconMigration(),
-        new RemoveDuplicatedAssetPermissions()
+        new RemoveDuplicatedAssetPermissions(),
+        new AddFunctionStateViewMigration()
     );
   }
 }

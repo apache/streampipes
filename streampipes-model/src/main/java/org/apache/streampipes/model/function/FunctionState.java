@@ -19,14 +19,12 @@
 package org.apache.streampipes.model.function;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 
-@TsModel
 public class FunctionState implements Storable {
 
   public static final String APP_DOC_TYPE = GenericDocTypes.DOC_FUNCTION_STATE;

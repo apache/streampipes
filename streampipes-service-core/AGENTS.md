@@ -16,6 +16,8 @@ Applies to `streampipes-service-core/`.
 ## Best Practices
 - Keep this module orchestration-focused; domain behavior belongs in management modules.
 - New migrations must be idempotent and explicitly registered.
+- In `migrations/AvailableMigrations`, always append new migrations at the end of the list.
+- Do not insert new migrations between existing entries to avoid conflicting migration order.
 - Preserve existing startup behavior for OAuth and non-OAuth deployments.
 - Avoid introducing long-running/blocking work on startup thread paths.
 

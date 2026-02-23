@@ -57,8 +57,8 @@ public class FunctionStateStore<T> implements StateStore<T> {
         if (persistedState.containsKey(STATE_PAYLOAD_KEY)) {
           return objectMapper.convertValue(persistedState.get(STATE_PAYLOAD_KEY), stateClass);
         } else {
-          // Backward-compatible path for states stored before payload wrapping was introduced.
-          return objectMapper.convertValue(persistedState, stateClass);
+          LOG.warn("Could not load function state for {}: missing payload key", functionId);
+          return defaultState;
         }
       } else {
         return defaultState;
