@@ -99,7 +99,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
-  private static final String FUNCTION_SHUTDOWN_PATH = "/api/v1/functions/shutdown";
+  private static final String FUNCTION_SHUTDOWN_PATH = "/api/v1/functions/stop";
 
   private final ISpCoreConfigurationStorage coreConfigStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();

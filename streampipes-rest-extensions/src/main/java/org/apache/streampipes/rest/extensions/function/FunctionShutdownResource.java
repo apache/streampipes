@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/functions")
 public class FunctionShutdownResource extends AbstractExtensionsResource {
 
-  @PostMapping(path = "shutdown", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "stop", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FunctionsShutdownResponse> shutdownFunctions() {
     var shutdownResponse = StreamPipesFunctionHandler.INSTANCE.shutdownFunctionsAndGetState();
     return ok(shutdownResponse);
