@@ -23,18 +23,18 @@ import { FilterExpressionGroup } from '@streampipes/platform-services';
     providedIn: 'root',
 })
 export class FilterExpressionPreviewService {
-    format(group?: FilterExpressionGroup): string {
-        if (!group) {
+    format(expression?: FilterExpressionGroup): string {
+        if (!expression) {
             return '';
         }
 
-        return this.formatExpressionGroup(group);
+        return this.formatGroup(expression);
     }
 
-    private formatExpressionGroup(group: FilterExpressionGroup): string {
-        const formattedChildren = group.children.map(child =>
+    private formatGroup(group: FilterExpressionGroup): string {
+        const children = group.children.map(child =>
             child.type === 'group'
-                ? this.formatExpressionGroup(child)
+                ? this.formatGroup(child)
                 : this.formatCondition(
                       child.field,
                       child.operator,
@@ -42,11 +42,11 @@ export class FilterExpressionPreviewService {
                   ),
         );
 
-        if (formattedChildren.length === 0) {
+        if (children.length === 0) {
             return '()';
         }
 
-        return '(' + formattedChildren.join(` ${group.operator} `) + ')';
+        return `(${children.join(` ${group.operator} `)})`;
     }
 
     private formatCondition(

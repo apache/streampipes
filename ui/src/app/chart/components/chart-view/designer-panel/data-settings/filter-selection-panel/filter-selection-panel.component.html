@@ -41,6 +41,7 @@
     <div fxLayout="column">
         @if (hasAdvancedFilterExpression()) {
             <sp-alert-banner
+                data-cy="filter-alert-banner"
                 type="info"
                 [title]="'Advanced filter active' | translate"
                 [description]="advancedFilterSummary()"

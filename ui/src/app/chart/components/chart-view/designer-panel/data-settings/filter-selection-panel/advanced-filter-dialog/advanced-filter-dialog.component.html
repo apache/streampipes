@@ -31,6 +31,7 @@
                         type="info"
                         [title]="'Filter Preview' | translate"
                         [description]="previewSummary()"
+                        data-cy="advanced-filter-preview-banner"
                     >
                     </sp-alert-banner>
                 }
@@ -47,6 +48,7 @@
                         type="error"
                         [title]="'Validation Error' | translate"
                         [description]="validationMessage"
+                        data-cy="advanced-filter-validation-banner"
                     >
                     </sp-alert-banner>
                 }
@@ -55,17 +57,27 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions" fxLayoutGap="10px">
-        <button mat-flat-button (click)="save()">
+        <button
+            mat-flat-button
+            (click)="save()"
+            data-cy="advanced-filter-apply"
+        >
             {{ 'Apply' | translate }}
         </button>
         <button
             mat-flat-button
             class="mat-basic"
             (click)="clearAdvancedFilter()"
+            data-cy="advanced-filter-clear"
         >
             {{ 'Use simple filters' | translate }}
         </button>
-        <button mat-flat-button class="mat-basic" (click)="close()">
+        <button
+            mat-flat-button
+            class="mat-basic"
+            (click)="close()"
+            data-cy="advanced-filter-cancel"
+        >
             {{ 'Cancel' | translate }}
         </button>
     </div>
@@ -85,6 +97,7 @@
                 <mat-select
                     [(value)]="group.operator"
                     (selectionChange)="onExpressionChanged()"
+                    data-cy="advanced-filter-group-operator"
                 >
                     <mat-option [value]="'AND'">AND</mat-option>
                     <mat-option [value]="'OR'">OR</mat-option>
@@ -95,10 +108,16 @@
                 mat-flat-button
                 class="mat-basic"
                 (click)="addCondition(group)"
+                data-cy="advanced-filter-add-condition"
             >
                 {{ 'Add condition' | translate }}
             </button>
-            <button mat-flat-button class="mat-basic" (click)="addGroup(group)">
+            <button
+                mat-flat-button
+                class="mat-basic"
+                (click)="addGroup(group)"
+                data-cy="advanced-filter-add-group"
+            >
                 {{ 'Add group' | translate }}
             </button>
         </div>
