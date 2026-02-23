@@ -91,8 +91,8 @@ public class X509IdentityConfig implements IdentityConfig {
       }
     }
     throw new IllegalArgumentException(
-        "Unsupported or invalid PKCS#8 private key. " +
-            "Make sure it is an unencrypted PKCS#8 key (BEGIN PRIVATE KEY).");
+        "Unsupported or invalid PKCS#8 private key. "
+            + "Make sure it is an unencrypted PKCS#8 key (BEGIN PRIVATE KEY).");
   }
 
   private static byte[] extractPemBlock(String pem, String type) {

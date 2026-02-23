@@ -21,13 +21,12 @@ package org.apache.streampipes.dataexplorer.export;
 import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Map;
 
 public class TestJsonItemGenerator extends TestItemGenerator {
 
