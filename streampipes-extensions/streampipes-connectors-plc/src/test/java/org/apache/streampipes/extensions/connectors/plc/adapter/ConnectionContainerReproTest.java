@@ -34,7 +34,6 @@ import org.apache.plc4x.java.api.messages.PlcWriteRequest;
 import org.apache.plc4x.java.api.metadata.PlcConnectionMetadata;
 import org.apache.plc4x.java.api.model.PlcTag;
 import org.apache.plc4x.java.api.value.PlcValue;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -43,7 +42,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,8 +58,12 @@ class ConnectionContainerReproTest {
     @Override
     public PlcConnection getConnection(String url) throws PlcConnectionException {
       int n = calls.getAndIncrement();
-      if (n == 0) return c1;                           // initial success
-      if (n == 1) throw new PlcConnectionException("PLC down"); // reconnect fails once
+      if (n == 0) {
+        return c1; // initial success
+      }
+      if (n == 1) {
+        throw new PlcConnectionException("PLC down"); // reconnect fails once
+      }
       return c2;                                       // would succeed later
     }
 

@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.streampipes.commons.environment.Environment;
+
+import org.apache.iotdb.session.pool.SessionPool;
 
 /**
  * This class provides a method to retrieve a session pool for IoT DB operations based on the given environment configuration.
