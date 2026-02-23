@@ -29,3 +29,7 @@
   componentPath: './dataset/components/dataset-feature-card/dataset-feature-card.component'
   componentName: DatasetFeatureCardComponent
   moduleName: spDatasets
+- id: adapter
+  componentPath: './connect/components/connect-feature-card/connect-feature-card.component'
+  componentName: ConnectFeatureCardComponent
+  moduleName: spConnect

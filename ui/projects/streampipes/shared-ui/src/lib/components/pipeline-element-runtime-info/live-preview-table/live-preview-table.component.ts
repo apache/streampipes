@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EventSchema } from '@streampipes/platform-services';
 import { RuntimeInfo } from '../pipeline-element-runtime-info.model';
 import {
@@ -53,7 +53,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         TranslatePipe,
     ],
 })
-export class LivePreviewTableComponent {
+export class LivePreviewTableComponent implements OnInit {
     @Input()
     eventSchema: EventSchema;
 
@@ -63,13 +63,14 @@ export class LivePreviewTableComponent {
     @Input()
     showTitle = true;
 
-    displayedColumns: string[] = [
-        'runtimeName',
-        'label',
-        'description',
-        'runtimeType',
-        'value',
-    ];
+    @Input()
+    compact = false;
 
-    constructor() {}
+    displayedColumns: string[] = [];
+
+    ngOnInit() {
+        this.displayedColumns = this.compact
+            ? ['runtimeName', 'value']
+            : ['runtimeName', 'label', 'description', 'runtimeType', 'value'];
+    }
 }

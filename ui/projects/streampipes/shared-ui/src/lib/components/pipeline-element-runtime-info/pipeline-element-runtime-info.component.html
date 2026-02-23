@@ -18,6 +18,7 @@
 
 @if (runtimeInfo) {
     <sp-live-preview-table
+        [compact]="compact"
         [showTitle]="showTitle"
         [eventSchema]="streamDescription.eventSchema"
         [runtimeInfo]="runtimeInfo"
