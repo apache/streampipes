@@ -166,7 +166,7 @@ export class PipelineUtils {
 
     public static startPipelineWithAssetLinkage(
         pipelineInput?: PipelineInput,
-        assetNameList?: String[],
+        assetNameList?: string[],
     ) {
         // Save and start pipeline
         PipelineBtns.savePipelineBtn().click();
@@ -207,7 +207,7 @@ export class PipelineUtils {
         cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
     }
 
-    public static finalizePipelineStart(assetNameList?: String[]) {
+    public static finalizePipelineStart(assetNameList?: string[]) {
         PipelineBtns.navigateToOverviewCheckbox().children().click();
         if (assetNameList) {
             PipelineUtils.addToAsset(assetNameList);

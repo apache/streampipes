@@ -20,6 +20,7 @@
     @if (showSelectionCheckboxes) {
         <div
             class="selection-toolbar"
+            data-cy="sp-table-selection-toolbar"
             fxLayout="row wrap"
             fxLayoutAlign="space-between center"
             fxLayoutGap="8px"
@@ -37,6 +38,7 @@
                     <button
                         mat-flat-button
                         class="mat-basic"
+                        data-cy="sp-table-select-visible"
                         (click)="selectVisiblePageRows()"
                         [disabled]="!visiblePageRows.length"
                     >
@@ -46,6 +48,7 @@
                     <button
                         mat-flat-button
                         class="mat-basic"
+                        data-cy="sp-table-select-none"
                         (click)="clearSelection()"
                         [disabled]="!selectedRows.length"
                     >
@@ -65,6 +68,7 @@
                         >
                             <mat-form-field class="form-field-small">
                                 <mat-select
+                                    data-cy="sp-table-multi-action-select"
                                     panelClass="small-select-panel"
                                     [placeholder]="'Select action' | translate"
                                     [value]="selectedMultiAction"
@@ -78,6 +82,10 @@
                                     ) {
                                         <mat-option
                                             [value]="actionOption.value"
+                                            [attr.data-cy]="
+                                                'sp-table-multi-action-option-' +
+                                                actionOption.value
+                                            "
                                             [disabled]="actionOption.disabled"
                                         >
                                             @if (actionOption.icon) {
@@ -109,6 +117,7 @@
                         <sp-form-field [level]="3" label="&nbsp;" margin="0">
                             <button
                                 mat-flat-button
+                                data-cy="sp-table-multi-action-execute"
                                 (click)="emitMultiActionsExecute()"
                                 [disabled]="
                                     isMultiActionsExecuteButtonDisabled()
@@ -134,6 +143,7 @@
                     class="checkbox-multi-select"
                 >
                     <mat-checkbox
+                        data-cy="sp-table-select-all-checkbox"
                         [checked]="areAllVisibleRowsSelected()"
                         [indeterminate]="areSomeVisibleRowsSelected()"
                         (change)="toggleSelectAllVisibleRows($event.checked)"
@@ -147,6 +157,7 @@
                     class="checkbox-multi-select"
                 >
                     <mat-checkbox
+                        data-cy="sp-table-row-checkbox"
                         [checked]="isRowSelected(element)"
                         (change)="toggleRowSelection(element, $event.checked)"
                         (click)="$event.stopPropagation()"
