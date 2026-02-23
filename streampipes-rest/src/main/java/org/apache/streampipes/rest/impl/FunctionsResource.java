@@ -20,8 +20,8 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.manager.function.FunctionRegistrationService;
-import org.apache.streampipes.model.function.FunctionState;
 import org.apache.streampipes.model.function.FunctionDefinition;
+import org.apache.streampipes.model.function.FunctionState;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.monitoring.SpLogEntry;

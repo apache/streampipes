@@ -18,11 +18,8 @@
 
 package org.apache.streampipes.model.function;
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
-
 import java.util.Map;
 
-@TsModel
 public class FunctionShutdownResult {
 
   private String functionId;

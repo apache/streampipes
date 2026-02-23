@@ -18,12 +18,9 @@
 
 package org.apache.streampipes.model.function;
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@TsModel
 public class FunctionsShutdownResponse {
 
   private List<FunctionShutdownResult> functions;
