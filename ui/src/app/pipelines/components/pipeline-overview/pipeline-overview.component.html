@@ -19,10 +19,14 @@
 <sp-table
     [dataSource]="dataSource"
     [columns]="displayedColumns"
+    [showSelectionCheckboxes]="hasPipelineWritePrivileges"
+    [showMultiActionsExecuteButton]="true"
+    [multiActionOptions]="bulkPipelineActionOptions"
     featureCardId="pipeline"
     resourceIdKey="_id"
     [showActionsMenu]="true"
     [rowsClickable]="true"
+    (multiActionsExecute)="executeSelectedPipelineAction($event)"
     (rowClicked)="
         pipelineOperationsService.showPipelineDetails($event.elementId)
     "
@@ -133,7 +137,6 @@
                 }
                 @if (pipeline.running) {
                     <button
-                        color="accent"
                         mat-icon-button
                         [matTooltip]="'Stop pipeline' | translate"
                         matTooltipPosition="above"

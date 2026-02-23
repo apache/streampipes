@@ -17,8 +17,144 @@
   -->
 
 <div fxLayout="column">
+    @if (showSelectionCheckboxes) {
+        <div
+            class="selection-toolbar"
+            fxLayout="row wrap"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="8px"
+        >
+            <div
+                fxLayout="row wrap"
+                fxLayoutAlign="start center"
+                fxLayoutGap="8px"
+            >
+                <div
+                    fxLayout="row wrap"
+                    fxLayoutAlign="start center"
+                    fxLayoutGap="4px"
+                >
+                    <button
+                        mat-flat-button
+                        class="mat-basic"
+                        (click)="selectVisiblePageRows()"
+                        [disabled]="!visiblePageRows.length"
+                    >
+                        <mat-icon>select_all</mat-icon>
+                        {{ 'Select visible' | translate }}
+                    </button>
+                    <button
+                        mat-flat-button
+                        class="mat-basic"
+                        (click)="clearSelection()"
+                        [disabled]="!selectedRows.length"
+                    >
+                        <mat-icon>deselect</mat-icon>
+                        {{ 'Select none' | translate }}
+                    </button>
+                </div>
+            </div>
+
+            @if (hasMultiActionsToolbarControls()) {
+                <div fxLayout="row" fxLayoutGap="5px">
+                    @if (hasBuiltInMultiActionSelect()) {
+                        <sp-form-field
+                            [level]="3"
+                            [label]="multiActionsSelectLabel | translate"
+                            margin="0"
+                        >
+                            <mat-form-field class="form-field-small">
+                                <mat-select
+                                    panelClass="small-select-panel"
+                                    [placeholder]="'Select action' | translate"
+                                    [value]="selectedMultiAction"
+                                    (valueChange)="
+                                        onSelectedMultiActionChange($event)
+                                    "
+                                >
+                                    @for (
+                                        actionOption of multiActionOptions;
+                                        track actionOption.value
+                                    ) {
+                                        <mat-option
+                                            [value]="actionOption.value"
+                                            [disabled]="actionOption.disabled"
+                                        >
+                                            @if (actionOption.icon) {
+                                                <mat-icon
+                                                    class="selection-toolbar__action-option-icon"
+                                                >
+                                                    {{ actionOption.icon }}
+                                                </mat-icon>
+                                            }
+                                            {{ actionOption.label | translate }}
+                                        </mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </sp-form-field>
+                    }
+
+                    @if (multiActionsTemplate) {
+                        <ng-container
+                            *ngTemplateOutlet="
+                                multiActionsTemplate;
+                                context: multiActionsContext
+                            "
+                        >
+                        </ng-container>
+                    }
+
+                    @if (showMultiActionsExecuteButton) {
+                        <sp-form-field [level]="3" label="&nbsp;" margin="0">
+                            <button
+                                mat-flat-button
+                                (click)="emitMultiActionsExecute()"
+                                [disabled]="
+                                    isMultiActionsExecuteButtonDisabled()
+                                "
+                            >
+                                {{ multiActionsExecuteLabel | translate }}
+                            </button>
+                        </sp-form-field>
+                    }
+                </div>
+            }
+        </div>
+    }
+
     <table mat-table class="sp-table" [dataSource]="dataSource">
         <ng-content></ng-content>
+
+        @if (showSelectionCheckboxes) {
+            <ng-container [matColumnDef]="selectionColumnId">
+                <th
+                    mat-header-cell
+                    *matHeaderCellDef
+                    class="checkbox-multi-select"
+                >
+                    <mat-checkbox
+                        [checked]="areAllVisibleRowsSelected()"
+                        [indeterminate]="areSomeVisibleRowsSelected()"
+                        (change)="toggleSelectAllVisibleRows($event.checked)"
+                        (click)="$event.stopPropagation()"
+                    >
+                    </mat-checkbox>
+                </th>
+                <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="checkbox-multi-select"
+                >
+                    <mat-checkbox
+                        [checked]="isRowSelected(element)"
+                        (change)="toggleRowSelection(element, $event.checked)"
+                        (click)="$event.stopPropagation()"
+                    >
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+        }
 
         @if (showActionsMenu) {
             <ng-container matColumnDef="actions">
@@ -72,10 +208,10 @@
             </ng-container>
         }
 
-        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-header-row *matHeaderRowDef="renderedColumns"></tr>
         <tr
             mat-row
-            *matRowDef="let row; columns: columns"
+            *matRowDef="let row; columns: renderedColumns"
             (click)="rowClicked.emit(row)"
             [ngClass]="rowsClickable ? 'cursor-pointer' : ''"
         ></tr>
@@ -84,7 +220,7 @@
             <td
                 data-cy="no-table-entries"
                 class="mat-cell"
-                [colSpan]="columns.length"
+                [colSpan]="renderedColumns.length"
             >
                 {{ 'No entries available.' | translate }}
             </td>

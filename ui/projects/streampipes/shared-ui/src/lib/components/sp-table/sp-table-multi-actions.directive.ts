@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,32 +16,7 @@
  *
  */
 
-.paginator-container {
-    border-top: 1px solid var(--color-bg-3);
-}
+import { Directive } from '@angular/core';
 
-.selection-toolbar {
-    border-bottom: 1px solid var(--color-bg-3);
-}
-
-.mat-mdc-row:hover {
-    background-color: var(--color-bg-1);
-}
-
-.mat-mdc-no-data-row {
-    height: var(--mat-table-row-item-container-height, 52px);
-    text-align: center;
-}
-
-.cursor-pointer {
-    cursor: pointer;
-}
-
-.right-column {
-    text-align: right; /* align contents inside cell */
-    margin-left: auto; /* push this column to the far right */
-}
-
-.checkbox-multi-select {
-    width: 100px;
-}
+@Directive({ selector: 'ng-template[spTableMultiActions]' })
+export class SpTableMultiActionsDirective {}
