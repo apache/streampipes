@@ -19,6 +19,7 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { FlexFillDirective } from '@ngbracket/ngx-layout';
 import {
+    DateFormatService,
     FeatureCardHeaderComponent,
     FeatureCardMetaSectionComponent,
     SpLabelComponent,
@@ -34,9 +35,7 @@ import {
 import { forkJoin } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
-import { DatePipe } from '@angular/common';
 import {
-    FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
     LayoutGapDirective,
@@ -48,13 +47,11 @@ import {
     styleUrls: ['./dataset-feature-card.component.scss'],
     imports: [
         FlexFillDirective,
-        FlexDirective,
         LayoutDirective,
         TranslatePipe,
         LayoutAlignDirective,
         LayoutGapDirective,
         MatIcon,
-        DatePipe,
         FeatureCardHeaderComponent,
         FeatureCardMetaSectionComponent,
         SpLabelComponent,
@@ -70,10 +67,12 @@ export class DatasetFeatureCardComponent implements OnInit {
     dataset: DataLakeMeasure;
     assetLinkType: AssetLinkType;
     dataPreview: SpQueryResult;
-    lastEventTs: number;
+    lastEventTs: number | undefined;
+    previewRow: unknown[] = [];
 
     private datalakeRestService = inject(DatalakeRestService);
     private genericStorageService = inject(GenericStorageService);
+    private dateFormatService = inject(DateFormatService);
 
     ngOnInit() {
         forkJoin([
@@ -103,9 +102,41 @@ export class DatasetFeatureCardComponent implements OnInit {
             .subscribe(res => {
                 this.dataPreview = res;
                 if (res.total > 0) {
-                    this.lastEventTs = res.allDataSeries[0].rows[0][0];
+                    this.previewRow = res.allDataSeries?.[0]?.rows?.[0] ?? [];
+                    this.lastEventTs = Number(this.previewRow[0]);
+                } else {
+                    this.previewRow = [];
+                    this.lastEventTs = undefined;
                 }
             });
+    }
+
+    formatDate(timestamp?: number): string {
+        return this.dateFormatService.formatDate(timestamp);
+    }
+
+    formatPreviewValue(header: string, value: unknown): string {
+        if (value === null || value === undefined || value === '') {
+            return '–';
+        }
+
+        if (this.isTimestampField(header)) {
+            return this.dateFormatService.formatDate(Number(value));
+        }
+
+        if (typeof value === 'object') {
+            try {
+                return JSON.stringify(value);
+            } catch {
+                return String(value);
+            }
+        }
+
+        return String(value);
+    }
+
+    private isTimestampField(header: string): boolean {
+        return 'time' === header;
     }
 
     navigateToChartView(): void {}
