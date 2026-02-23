@@ -23,7 +23,6 @@ import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
-import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
@@ -54,7 +53,6 @@ import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorag
 import org.apache.streampipes.storage.couchdb.impl.explorer.DataExplorerDashboardStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DataExplorerWidgetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DataLakeMeasureStorage;
-import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.CompactPipelineTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.DataSinkStorageImpl;
@@ -235,10 +233,5 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public ITransformationScriptTemplateStorage getTransformationScriptTemplateStorage() {
     return new TransformationScriptTemplateStorageImpl();
-  }
-
-  @Override
-  public IFunctionStateStorage getFunctionStateStorage() {
-    return new FunctionStateStorageImpl();
   }
 }

@@ -50,7 +50,11 @@ import java.util.Map;
 @RequestMapping("/api/v2/functions")
 public class FunctionsResource extends AbstractAuthGuardedRestResource {
 
-  private final IFunctionStateStorage functionStateStorage = getNoSqlStorage().getFunctionStateStorage();
+  private final IFunctionStateStorage functionStateStorage;
+
+  public FunctionsResource(IFunctionStateStorage functionStateStorage) {
+    this.functionStateStorage = functionStateStorage;
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Collection<FunctionDefinition>> getActiveFunctions() {

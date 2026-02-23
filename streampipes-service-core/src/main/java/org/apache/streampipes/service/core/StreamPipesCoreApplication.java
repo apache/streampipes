@@ -56,6 +56,8 @@ import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.core.migrations.AvailableMigrations;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
+import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
+import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
@@ -67,6 +69,7 @@ import org.apache.http.client.fluent.Response;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -88,7 +91,8 @@ import java.util.function.Supplier;
 @EnableAutoConfiguration
 @EnableScheduling
 @Import({OpenApiConfiguration.class, StreamPipesPasswordEncoder.class,
-    StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class})
+    StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class,
+    StorageApiConfiguration.class})
 @ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.service.core.oauth2",
     "org.apache.streampipes.service.core.scheduler"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
@@ -102,6 +106,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private final CoreServiceStatusManager coreStatusManager =
       new CoreServiceStatusManager(coreConfigStorage);
+
+  @Autowired
+  private IFunctionStateStorage functionStateStorage;
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
@@ -302,8 +309,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     if (shutdownResponse == null || shutdownResponse.getFunctions() == null) {
       return;
     }
-
-    var functionStateStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getFunctionStateStorage();
 
     shutdownResponse.getFunctions().forEach(functionResult -> {
       if (functionResult.getState() != null) {
