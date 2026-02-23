@@ -31,11 +31,11 @@ import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
+import org.apache.streampipes.manager.function.FunctionManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
 import org.apache.streampipes.manager.setup.tasks.ApplyDefaultRolesAndPrivilegesTask;
-import org.apache.streampipes.manager.util.AuthTokenUtils;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
@@ -43,13 +43,9 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.function.FunctionState;
-import org.apache.streampipes.model.function.FunctionsShutdownResponse;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
@@ -64,9 +60,6 @@ import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,9 +72,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -99,7 +90,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
-  private static final String FUNCTION_SHUTDOWN_PATH = "/api/v1/functions/stop";
 
   private final ISpCoreConfigurationStorage coreConfigStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();
@@ -251,77 +241,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       }
     });
 
-    triggerExtensionFunctionShutdown();
+    FunctionManager.stopAllFunctionsAndPersistState(functionStateStorage);
 
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
-  }
-
-  private void triggerExtensionFunctionShutdown() {
-
-    var extensions = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage().findAll();
-    var serviceAdmin = new SpResourceManager().manageUsers().getServiceAdmin();
-    var authToken = AuthTokenUtils.getAuthTokenForUser(serviceAdmin);
-
-    LOG.info("Triggering function shutdown at {} extension services...", extensions.size());
-    extensions.forEach(service -> {
-      var shutdownResponse = triggerFunctionShutdown(service, authToken);
-      if (shutdownResponse != null) {
-        persistReturnedFunctionStates(shutdownResponse);
-      }
-    });
-  }
-
-  private FunctionsShutdownResponse triggerFunctionShutdown(SpServiceRegistration service,
-                                                            String authToken) {
-    var endpoint = service.getServiceUrl() + FUNCTION_SHUTDOWN_PATH;
-
-    try {
-      LOG.info("Triggering function shutdown at {}", endpoint);
-      Response response = Request
-          .Post(endpoint)
-          .addHeader("Authorization", authToken)
-          .connectTimeout(5000)
-          .socketTimeout(10000)
-          .execute();
-      var httpResponse = response.returnResponse();
-      int statusCode = httpResponse.getStatusLine().getStatusCode();
-
-      if (statusCode >= 200 && statusCode < 300) {
-        LOG.debug("Function shutdown triggered at {} (HTTP {})", service.getSvcId(), statusCode);
-        if (httpResponse.getEntity() == null) {
-          return null;
-        }
-        return JacksonSerializer.getObjectMapper().readValue(
-            EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8),
-            FunctionsShutdownResponse.class
-        );
-      } else {
-        LOG.warn("Function shutdown request returned non-success status at {} (HTTP {})",
-            service.getSvcId(), statusCode);
-        return null;
-      }
-    } catch (IOException e) {
-      LOG.warn("Could not trigger function shutdown at {}: {}", endpoint, e.getMessage());
-      return null;
-    }
-  }
-
-  private void persistReturnedFunctionStates(FunctionsShutdownResponse shutdownResponse) {
-    if (shutdownResponse == null || shutdownResponse.getFunctions() == null) {
-      return;
-    }
-
-    shutdownResponse.getFunctions().forEach(functionResult -> {
-      if (functionResult.getState() != null) {
-        var existingFunctionState = functionStateStorage.getElementById(functionResult.getFunctionId());
-        if (existingFunctionState != null) {
-          existingFunctionState.setState(functionResult.getState());
-          functionStateStorage.updateElement(existingFunctionState);
-        } else {
-          functionStateStorage.persist(new FunctionState(functionResult.getFunctionId(), functionResult.getState()));
-        }
-      }
-    });
   }
 
   private List<Pipeline> getAllPipelines() {

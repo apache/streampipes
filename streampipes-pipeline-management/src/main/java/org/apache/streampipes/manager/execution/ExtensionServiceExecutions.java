@@ -35,6 +35,15 @@ public class ExtensionServiceExecutions {
         .socketTimeout(10000);
   }
 
+  public static Request extServicePostRequestAsServiceAdmin(String url) {
+    return Request
+        .Post(url)
+        .addHeader("Authorization", AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()))
+        .addHeader("Accept", "application/json")
+        .connectTimeout(10000)
+        .socketTimeout(10000);
+  }
+
   private static String getServiceAdminSid() {
     return new SpResourceManager().manageUsers().getServiceAdmin().getPrincipalId();
   }
