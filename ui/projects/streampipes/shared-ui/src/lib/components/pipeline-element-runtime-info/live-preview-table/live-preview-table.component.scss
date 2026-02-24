@@ -41,3 +41,12 @@
     text-align: center;
     background: #ffe7ad;
 }
+
+.mat-mdc-table.compact {
+    --mat-table-row-item-container-height: 36px;
+
+    .mat-mdc-header-cell,
+    .mat-mdc-cell {
+        font-size: var(--font-size-xs);
+    }
+}

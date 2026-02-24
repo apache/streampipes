@@ -38,7 +38,6 @@ import { LivePreviewErrorComponent } from './live-preview-error/live-preview-err
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
     templateUrl: './pipeline-element-runtime-info.component.html',
-    styleUrls: ['./pipeline-element-runtime-info.component.scss'],
     imports: [LivePreviewTableComponent, LivePreviewErrorComponent],
 })
 export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
@@ -47,6 +46,9 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
 
     @Input()
     showTitle = true;
+
+    @Input()
+    compact = false;
 
     runtimeData: { runtimeName: string; value: any }[];
     runtimeInfo: RuntimeInfo[];
