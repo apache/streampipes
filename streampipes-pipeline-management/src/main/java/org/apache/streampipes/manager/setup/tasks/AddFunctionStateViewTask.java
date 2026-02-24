@@ -16,24 +16,28 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.declarer;
+package org.apache.streampipes.manager.setup.tasks;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.apache.streampipes.commons.constants.GenericDocTypes;
 
-public interface IStreamPipesFunctionDeclarer {
+public class AddFunctionStateViewTask extends AbstractAddGenericStorageViewTask {
 
-  IFunctionConfig getFunctionConfig();
+  public static final String DESIGN_DOCUMENT = "_design/function-states";
+  public static final String VIEW_NAME = "all-function-states";
 
-  List<String> requiredStreamIds();
-
-  void invokeRuntime(String serviceGroup);
-
-  void discardRuntime();
-
-  default Optional<Map<String, Object>> getRegisteredStatePayload() {
-    return Optional.empty();
+  @Override
+  public String getDesignDocument() {
+    return DESIGN_DOCUMENT;
   }
 
+  @Override
+  public String getViewName() {
+    return VIEW_NAME;
+  }
+
+  @Override
+  public String getMapFunction() {
+    return String.format("function(doc) { if(doc.appDocType === '%s') { emit(doc._id, doc); } }",
+        GenericDocTypes.DOC_FUNCTION_STATE);
+  }
 }

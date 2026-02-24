@@ -190,7 +190,6 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   @PreDestroy
   public void onExit() {
     new ExtensionsServiceShutdownHandler().onShutdown();
-    StreamPipesFunctionHandler.INSTANCE.cleanupFunctions();
     deregisterService(DeclarersSingleton.getInstance().getServiceId());
   }
 

@@ -29,6 +29,7 @@ import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.manager.function.FunctionManager;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
@@ -51,6 +52,8 @@ import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.core.migrations.AvailableMigrations;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
+import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
+import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
@@ -59,6 +62,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -78,7 +82,8 @@ import java.util.function.Supplier;
 @EnableAutoConfiguration
 @EnableScheduling
 @Import({OpenApiConfiguration.class, StreamPipesPasswordEncoder.class,
-    StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class})
+    StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class,
+    StorageApiConfiguration.class})
 @ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.service.core.oauth2",
     "org.apache.streampipes.service.core.scheduler"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
@@ -91,6 +96,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private final CoreServiceStatusManager coreStatusManager =
       new CoreServiceStatusManager(coreConfigStorage);
+
+  @Autowired
+  private IFunctionStateStorage functionStateStorage;
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
@@ -232,6 +240,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         LOG.error("Pipeline {} could not be stopped", s.getPipelineName());
       }
     });
+
+    FunctionManager.stopAllFunctionsAndPersistState(functionStateStorage);
 
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
   }

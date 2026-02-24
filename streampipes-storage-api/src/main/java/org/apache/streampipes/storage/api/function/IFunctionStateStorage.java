@@ -16,24 +16,10 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.declarer;
+package org.apache.streampipes.storage.api.function;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.apache.streampipes.model.function.FunctionState;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
-public interface IStreamPipesFunctionDeclarer {
-
-  IFunctionConfig getFunctionConfig();
-
-  List<String> requiredStreamIds();
-
-  void invokeRuntime(String serviceGroup);
-
-  void discardRuntime();
-
-  default Optional<Map<String, Object>> getRegisteredStatePayload() {
-    return Optional.empty();
-  }
-
+public interface IFunctionStateStorage extends CRUDStorage<FunctionState> {
 }

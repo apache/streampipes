@@ -16,24 +16,27 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.declarer;
+package org.apache.streampipes.service.core.migrations.v099;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.apache.streampipes.manager.setup.tasks.AddFunctionStateViewTask;
+import org.apache.streampipes.service.core.migrations.templates.AddGenericStorageViewMigration;
 
-public interface IStreamPipesFunctionDeclarer {
+import java.io.IOException;
 
-  IFunctionConfig getFunctionConfig();
+public class AddFunctionStateViewMigration extends AddGenericStorageViewMigration {
 
-  List<String> requiredStreamIds();
-
-  void invokeRuntime(String serviceGroup);
-
-  void discardRuntime();
-
-  default Optional<Map<String, Object>> getRegisteredStatePayload() {
-    return Optional.empty();
+  @Override
+  public String getDesignDocumentName() {
+    return AddFunctionStateViewTask.DESIGN_DOCUMENT;
   }
 
+  @Override
+  public String getViewName() {
+    return AddFunctionStateViewTask.VIEW_NAME;
+  }
+
+  @Override
+  public void executeMigration() throws IOException {
+    new AddFunctionStateViewTask().execute();
+  }
 }

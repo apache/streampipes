@@ -16,24 +16,19 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.declarer;
+package org.apache.streampipes.service.core.storage;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
+import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorageImpl;
 
-public interface IStreamPipesFunctionDeclarer {
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-  IFunctionConfig getFunctionConfig();
+@Configuration
+public class StorageApiConfiguration {
 
-  List<String> requiredStreamIds();
-
-  void invokeRuntime(String serviceGroup);
-
-  void discardRuntime();
-
-  default Optional<Map<String, Object>> getRegisteredStatePayload() {
-    return Optional.empty();
+  @Bean
+  public IFunctionStateStorage functionStateStorage() {
+    return new FunctionStateStorageImpl();
   }
-
 }

@@ -25,6 +25,8 @@ import org.apache.streampipes.model.function.FunctionDefinition;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface IAdminApi {
 
@@ -39,6 +41,10 @@ public interface IAdminApi {
   void registerFunctions(List<FunctionDefinition> functions);
 
   void deregisterFunction(String functionId);
+
+  Optional<Map<String, Object>> getFunctionState(String functionId);
+
+  void persistFunctionState(String functionId, Map<String, Object> state);
 
   void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
 

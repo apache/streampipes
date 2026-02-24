@@ -16,24 +16,21 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.declarer;
+package org.apache.streampipes.storage.couchdb.impl.function;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.apache.streampipes.model.function.FunctionState;
+import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public interface IStreamPipesFunctionDeclarer {
+public class FunctionStateStorageImpl extends DefaultViewCrudStorage<FunctionState>
+    implements IFunctionStateStorage {
 
-  IFunctionConfig getFunctionConfig();
-
-  List<String> requiredStreamIds();
-
-  void invokeRuntime(String serviceGroup);
-
-  void discardRuntime();
-
-  default Optional<Map<String, Object>> getRegisteredStatePayload() {
-    return Optional.empty();
+  public FunctionStateStorageImpl() {
+    super(
+        () -> Utils.getCouchDbGsonClient("genericstorage"),
+        FunctionState.class,
+        "function-states/all-function-states"
+    );
   }
-
 }

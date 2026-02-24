@@ -16,24 +16,37 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.declarer;
+package org.apache.streampipes.model.function;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-public interface IStreamPipesFunctionDeclarer {
+public class FunctionShutdownResult {
 
-  IFunctionConfig getFunctionConfig();
+  private String functionId;
+  private Map<String, Object> state;
 
-  List<String> requiredStreamIds();
-
-  void invokeRuntime(String serviceGroup);
-
-  void discardRuntime();
-
-  default Optional<Map<String, Object>> getRegisteredStatePayload() {
-    return Optional.empty();
+  public FunctionShutdownResult() {
   }
 
+  public FunctionShutdownResult(String functionId,
+                                Map<String, Object> state) {
+    this.functionId = functionId;
+    this.state = state;
+  }
+
+  public String getFunctionId() {
+    return functionId;
+  }
+
+  public void setFunctionId(String functionId) {
+    this.functionId = functionId;
+  }
+
+  public Map<String, Object> getState() {
+    return state;
+  }
+
+  public void setState(Map<String, Object> state) {
+    this.state = state;
+  }
 }

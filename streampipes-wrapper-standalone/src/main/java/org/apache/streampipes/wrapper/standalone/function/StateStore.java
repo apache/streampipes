@@ -16,24 +16,11 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.declarer;
+package org.apache.streampipes.wrapper.standalone.function;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+public interface StateStore<T> {
 
-public interface IStreamPipesFunctionDeclarer {
+  T load(T defaultState);
 
-  IFunctionConfig getFunctionConfig();
-
-  List<String> requiredStreamIds();
-
-  void invokeRuntime(String serviceGroup);
-
-  void discardRuntime();
-
-  default Optional<Map<String, Object>> getRegisteredStatePayload() {
-    return Optional.empty();
-  }
-
+  void persist(T state);
 }
