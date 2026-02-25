@@ -20,8 +20,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 const TEMPLATE_NAME = 'TestTemplate';
-const SCRIPT_LINE = "event.b = 'b';";
-const SCRIPT = `  ${SCRIPT_LINE}
+const SCRIPT = `  event.b = 'b';
 out.collect(event);
 }`;
 
@@ -55,17 +54,17 @@ describe('Validate Warning Pops For Configuration Changes ', () => {
     const validateScriptTemplateIsStored = (templateName: string) => {
         ConnectBtns.configureSchemaScriptEditor().should(
             'contain.text',
-            SCRIPT_LINE,
+            'event.b',
         );
         ConnectBtns.resetScriptBtn().click();
         ConnectBtns.configureSchemaScriptEditor().should(
             'not.contain',
-            SCRIPT_LINE,
+            'event.b',
         );
         ConnectUtils.useScriptTemplate(templateName);
         ConnectBtns.configureSchemaScriptEditor().should(
             'contain.text',
-            SCRIPT_LINE,
+            'event.b',
         );
     };
 

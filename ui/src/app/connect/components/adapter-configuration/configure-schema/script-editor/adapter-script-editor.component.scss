@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,32 +16,9 @@
  *
  */
 
-.placeholder-explanation {
-    padding: 8px;
-    border: 1px solid var(--color-primary);
-    background: var(--color-bg-1);
-    margin-bottom: 10px;
+.code-editor-outer {
     width: 100%;
-}
-
-.placeholder-item {
-    padding: 3px;
-    border-radius: 5px;
-    border: 1px solid var(--color-default-text);
-    margin: 3px 5px;
-}
-
-.placeholder-variable {
-    margin-right: 5px;
-    font-weight: bold;
-}
-
-.placeholder-description {
-}
-
-.code-editor-resizable {
-    width: 100%;
-    height: 320px;
+    height: 220px;
     resize: vertical;
     overflow: hidden;
 }
@@ -50,13 +27,4 @@
     width: 100%;
     height: 100%;
     display: block;
-}
-
-.action-button {
-    margin-right: 10px;
-    margin-bottom: 10px;
-}
-
-.save-button {
-    margin-right: 10px;
 }

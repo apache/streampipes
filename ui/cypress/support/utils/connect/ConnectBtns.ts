@@ -87,6 +87,7 @@ export class ConnectBtns {
     public static getNewSampleBtn() {
         return cy.dataCy('connect-get-new-sample-button');
     }
+
     public static refreshSchemaBtn() {
         return cy.dataCy('connect-refresh-schema-button', { timeout: 10000 });
     }
@@ -134,6 +135,7 @@ export class ConnectBtns {
     public static connectRemoveDuplicateBox() {
         return cy.dataCy('connect-remove-duplicates-box');
     }
+
     public static connectReduceEventRate() {
         return cy.dataCy('connect-reduce-event-rate-box');
     }
@@ -201,9 +203,11 @@ export class ConnectBtns {
     }
 
     public static configureSchemaScriptEditor() {
-        return cy.dataCy('configure-schema-script-editor', {
-            timeout: 10000,
-        });
+        return cy
+            .dataCy('configure-schema-script-editor', {
+                timeout: 10000,
+            })
+            .find('.view-lines');
     }
 
     public static configureSchemaRunScriptBtn() {

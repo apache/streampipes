@@ -24,7 +24,6 @@ import {
 } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import 'codemirror/mode/htmlembedded/htmlembedded';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -36,7 +35,8 @@ import {
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
-import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import type { editor as MonacoEditor } from 'monaco-editor';
 
 @Component({
     selector: 'sp-email-template-configuration',
@@ -50,7 +50,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
         MatButton,
         SpAlertBannerComponent,
         LayoutGapDirective,
-        CodemirrorModule,
+        MonacoEditorModule,
         FormsModule,
         TranslatePipe,
     ],
@@ -62,15 +62,14 @@ export class SpEmailTemplateConfigurationComponent implements OnInit {
     templateStored = false;
     private translateService = inject(TranslateService);
 
-    editorOptions = {
-        mode: 'htmlembedded',
-        autoRefresh: true,
-        theme: 'dracula',
-        autoCloseBrackets: true,
-        lineNumbers: true,
-        lineWrapping: true,
-        gutters: ['CodeMirror-lint-markers'],
-        lint: true,
+    editorOptions: MonacoEditor.IStandaloneEditorConstructionOptions = {
+        language: 'html',
+        theme: 'vs-dark',
+        lineNumbers: 'on',
+        wordWrap: 'on',
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
+        minimap: { enabled: false },
     };
 
     allowedPlaceholders: { placeholder: string; description: string }[] = [

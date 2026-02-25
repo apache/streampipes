@@ -17,13 +17,18 @@
             "index": "src/index.html",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": ["src/polyfills.ts", "zone.js"],
-            "allowedCommonJsDependencies": ["codemirror"],
+            "allowedCommonJsDependencies": [],
             "assets": [
               "src/assets",
               {
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images",
                 "output": "assets/img"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/monaco-editor",
+                "output": "/assets/monaco/"
               }
             ],
             "styles": ["src/scss/main.scss"],

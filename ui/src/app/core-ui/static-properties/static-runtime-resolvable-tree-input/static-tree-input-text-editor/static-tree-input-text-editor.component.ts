@@ -28,13 +28,15 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { RuntimeResolvableTreeInputStaticProperty } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
-import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import type { editor as MonacoEditor } from 'monaco-editor';
 import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sp-static-tree-input-text-editor',
     templateUrl: './static-tree-input-text-editor.component.html',
-    imports: [CodemirrorModule, FormsModule],
+    styleUrl: './static-tree-input-text-editor.component.scss',
+    imports: [MonacoEditorModule, FormsModule],
 })
 export class StaticTreeInputTextEditorComponent implements OnInit {
     @Input()
@@ -45,16 +47,15 @@ export class StaticTreeInputTextEditorComponent implements OnInit {
 
     translateService = inject(TranslateService);
 
-    editorOptions = {
-        mode: 'text/plain',
-        autoRefresh: true,
-        theme: 'dracula',
-        lineNumbers: true,
-        lineWrapping: true,
+    editorOptions: MonacoEditor.IStandaloneEditorConstructionOptions = {
+        language: 'plaintext',
+        theme: 'vs-dark',
+        lineNumbers: 'on',
+        wordWrap: 'on',
         readOnly: false,
-        extraKeys: {
-            'Ctrl-Space': 'autocomplete',
-        },
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
+        minimap: { enabled: false },
     };
 
     headerText = this.translateService.instant(
