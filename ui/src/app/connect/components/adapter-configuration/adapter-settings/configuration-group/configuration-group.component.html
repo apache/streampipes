@@ -17,11 +17,7 @@
 -->
 
 <div>
-    <form
-        [formGroup]="configurationGroup"
-        (keydown.enter)="$event.preventDefault()"
-        fxFlex="100"
-    >
+    <form [formGroup]="configurationGroup" fxFlex="100">
         <div fxFlex="100">
             @for (config of configuration; track config) {
                 <sp-app-static-property

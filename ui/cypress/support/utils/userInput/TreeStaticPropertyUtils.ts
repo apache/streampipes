@@ -57,7 +57,7 @@ export class TreeStaticPropertyUtils {
             .find('textarea.inputarea')
             .click({ force: true })
             .type('{selectall}{backspace}', { force: true })
-            .type(text, { force: true, parseSpecialCharSequences: false });
+            .type(text, { force: true });
     }
 
     /**
