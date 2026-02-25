@@ -128,7 +128,7 @@ class QueryResult(Resource):
             raise StreamPipesUnsupportedDataSeries(f"First column must be 'timestamp', got {headers[0]!r}")
 
         df["timestamp"] = df["timestamp"].astype("int64")
-        rows = df.values.tolist()
+        rows = df.astype(object).to_numpy().tolist()
         data_series = DataSeries(total=len(rows), headers=headers, rows=rows, tags=None)
 
         return cls(
