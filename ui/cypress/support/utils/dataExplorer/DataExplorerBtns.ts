@@ -157,4 +157,52 @@ export class DataExplorerBtns {
     public static closeDashboardCreate() {
         return cy.dataCy('close-data-view');
     }
+
+    public static advancedFilterBtn() {
+        return cy.dataCy('design-panel-data-settings-advanced-filter');
+    }
+
+    public static advancedFilterAddConditionBtn() {
+        return cy.dataCy('advanced-filter-add-condition');
+    }
+
+    public static advancedFilterAddGroupBtn() {
+        return cy.dataCy('advanced-filter-add-group');
+    }
+
+    public static advancedFilterGroupOperator() {
+        return cy.dataCy('advanced-filter-group-operator', {}, true);
+    }
+
+    public static advancedFilterPreviewBanner() {
+        return cy.dataCy('advanced-filter-preview-banner');
+    }
+
+    public static advancedFilterApplyBtn() {
+        return cy.dataCy('advanced-filter-apply');
+    }
+
+    public static filterAlertBanner() {
+        return cy.dataCy('filter-alert-banner', { timeout: 2000 });
+    }
+
+    public static filterFieldSelect() {
+        return cy.dataCy('design-panel-data-settings-filter-field', {}, true);
+    }
+
+    public static filterOperatorSelect() {
+        return cy.dataCy(
+            'design-panel-data-settings-filter-operator',
+            {},
+            true,
+        );
+    }
+
+    public static filterValueInput() {
+        return cy.dataCy('design-panel-data-settings-filter-value', {}, true);
+    }
+
+    public static matOptionByText(text: string | RegExp) {
+        return cy.get('mat-option').contains(text);
+    }
 }

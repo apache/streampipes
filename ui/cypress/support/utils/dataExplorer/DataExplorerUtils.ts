@@ -24,7 +24,6 @@ import { FileManagementUtils } from '../FileManagementUtils';
 import { ConnectUtils } from '../connect/ConnectUtils';
 import { ConnectBtns } from '../connect/ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
-import { differenceInMonths } from 'date-fns';
 import { GeneralUtils } from '../GeneralUtils';
 import { DataExplorerBtns } from './DataExplorerBtns';
 import { SharedBtns } from '../shared/SharedBtns';
@@ -101,7 +100,7 @@ export class DataExplorerUtils {
                 'speed',
                 'fastest_\\(ignore_original_time\\)',
             )
-            .setStartAdapter(true);
+            .setStartAdapter(false);
 
         if (format === 'csv') {
             adapterBuilder
@@ -659,19 +658,21 @@ export class DataExplorerUtils {
     }
 
     public static selectTimeRange(from: Date, to: Date) {
-        DataExplorerUtils.openTimeSelectorMenu();
-        const monthsBack = Math.abs(differenceInMonths(from, new Date())) + 1;
-        DataExplorerUtils.navigateCalendar('previous', monthsBack);
-        DataExplorerUtils.selectDay(from.getDate());
+        cy.location('hash').then(hash => {
+            const [route, queryString] = hash.split('?');
+            const searchParams = new URLSearchParams(queryString ?? '');
 
-        const monthsForward = Math.abs(differenceInMonths(from, to));
-        DataExplorerUtils.navigateCalendar('next', monthsForward);
+            searchParams.set('startDate', from.getTime().toString());
+            searchParams.set('endDate', to.getTime().toString());
 
-        DataExplorerUtils.selectDay(to.getDate());
+            const updatedHash = `${route}?${searchParams.toString()}`;
+            cy.window().then(win => {
+                win.location.hash = updatedHash;
+            });
+        });
 
-        DataExplorerUtils.setTimeInput('time-selector-start-time', from);
-        DataExplorerUtils.setTimeInput('time-selector-end-time', to);
-        DataExplorerUtils.applyCustomTimeSelection();
+        cy.location('hash').should('contain', `startDate=${from.getTime()}`);
+        cy.location('hash').should('contain', `endDate=${to.getTime()}`);
     }
 
     public static navigateCalendar(direction: string, numberOfMonths: number) {
