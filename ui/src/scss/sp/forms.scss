@@ -97,6 +97,18 @@ mat-form-field.mat-mdc-form-field.form-field-size-smaller {
     }
 }
 
+.small-select-panel {
+    --mat-option-label-text-size: var(--font-size-md);
+    font-size: var(--font-size-md);
+
+    .mat-icon {
+        width: var(--font-size-md);
+        height: var(--font-size-md);
+        font-size: var(--font-size-md);
+        line-height: var(--font-size-md);
+    }
+}
+
 .form-field-smaller {
     .mat-mdc-form-field-input-control.mat-mdc-form-field-input-control {
         letter-spacing: 0;

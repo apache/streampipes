@@ -33,6 +33,9 @@ export class StartAllPipelinesDialogComponent implements OnInit {
     @Input()
     pipelines: Pipeline[];
 
+    @Input()
+    forceStop = false;
+
     pipelinesToModify: Pipeline[];
     installationStatus: any;
     installationFinished: boolean;
@@ -133,7 +136,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
 
     stopPipeline(pipeline, index) {
         this.pipelineService
-            .stopPipeline(pipeline._id)
+            .stopPipeline(pipeline._id, this.forceStop)
             .subscribe(
                 data => {
                     this.installationStatus[index].status = data.success

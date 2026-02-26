@@ -27,6 +27,7 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
+import { StartAllPipelinesDialogComponent } from '../../dialog/start-all-pipelines/start-all-pipelines-dialog.component';
 import { PipelineOperationsService } from '../../services/pipeline-operations.service';
 import {
     MatCell,
@@ -41,6 +42,11 @@ import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import {
     CurrentUserService,
+    DialogRef,
+    DialogService,
+    PanelType,
+    SpTableMultiActionExecuteEvent,
+    SpTableMultiActionOption,
     SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
@@ -105,12 +111,18 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     starting = false;
     stopping = false;
     hasPipelineWritePrivileges = false;
+    readonly bulkPipelineActionOptions: SpTableMultiActionOption[] = [
+        { value: 'start', label: 'Start selected', icon: 'play_arrow' },
+        { value: 'stop', label: 'Stop selected', icon: 'stop' },
+        { value: 'forceStop', label: 'Force stop selected', icon: 'stop' },
+    ];
 
     userSub: Subscription;
 
     public pipelineOperationsService = inject(PipelineOperationsService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
+    private dialogService = inject(DialogService);
 
     ngOnInit() {
         this.userSub = this.currentUserService.user$.subscribe(user => {
@@ -159,6 +171,64 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             this.dataSource.sort = this.sort;
         });
+    }
+
+    startStopSelectedPipelines(
+        selectedPipelines: Pipeline[],
+        action: boolean,
+        forceStop = false,
+    ) {
+        const pipelines = selectedPipelines.filter(pipeline =>
+            action ? !pipeline.running && pipeline.valid : pipeline.running,
+        );
+
+        if (!pipelines.length) {
+            return;
+        }
+
+        const dialogRef: DialogRef<StartAllPipelinesDialogComponent> =
+            this.dialogService.open(StartAllPipelinesDialogComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: (action ? 'Start' : 'Stop') + ' selected pipelines',
+                width: '70vw',
+                data: {
+                    pipelines,
+                    action,
+                    forceStop,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.refreshPipelinesEmitter.emit(true);
+            }
+        });
+    }
+
+    executeSelectedPipelineAction(
+        event: SpTableMultiActionExecuteEvent<Pipeline>,
+    ) {
+        if (
+            !this.hasPipelineWritePrivileges ||
+            this.starting ||
+            this.stopping
+        ) {
+            return;
+        }
+
+        if (
+            event.action !== 'start' &&
+            event.action !== 'stop' &&
+            event.action !== 'forceStop'
+        ) {
+            return;
+        }
+
+        this.startStopSelectedPipelines(
+            event.selectedRows,
+            event.action === 'start',
+            event.action === 'forceStop',
+        );
     }
 
     ngOnDestroy() {
