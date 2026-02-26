@@ -18,6 +18,8 @@
 
 import {
     FieldConfig,
+    FilterExpressionCondition,
+    FilterExpressionGroup,
     MissingValueBehaviour,
     SelectedFilter,
 } from '../model/datalake/data-lake-query-config.model';
@@ -155,26 +157,144 @@ export class DatalakeQueryParameterBuilder {
     public withFilters(
         filterConditions: SelectedFilter[],
     ): DatalakeQueryParameterBuilder {
-        const filters = [];
-        filterConditions.forEach(filter => {
-            if (filter.field && filter.value && filter.operator) {
-                filters.push(
-                    '[' +
-                        filter.field.runtimeName +
-                        ';' +
-                        filter.operator +
-                        ';' +
-                        filter.value +
-                        ']',
-                );
-            }
-        });
+        const validFilters = filterConditions.filter(filter =>
+            this.isValidFilter(filter),
+        );
+        const hasOrConnector = validFilters.some(
+            (filter, index) => index > 0 && filter.chainingOperator === 'OR',
+        );
+
+        if (hasOrConnector) {
+            this.queryParams.filterExpression = JSON.stringify(
+                this.buildChainedExpression(validFilters),
+            );
+            delete this.queryParams.filter;
+            return this;
+        }
+
+        const filters = validFilters.map(
+            filter =>
+                '[' +
+                filter.field!.runtimeName +
+                ';' +
+                filter.operator +
+                ';' +
+                filter.value +
+                ']',
+        );
 
         if (filters.length > 0) {
             this.queryParams.filter = filters.toString();
         }
 
         return this;
+    }
+
+    public withFilterExpression(
+        filterExpression: FilterExpressionGroup,
+    ): DatalakeQueryParameterBuilder {
+        this.queryParams.filterExpression = JSON.stringify(
+            this.normalizeExpressionGroup(filterExpression),
+        );
+        delete this.queryParams.filter;
+
+        return this;
+    }
+
+    private buildChainedExpression(
+        filterConditions: SelectedFilter[],
+    ): FilterExpressionGroup {
+        let expression: FilterExpressionCondition | FilterExpressionGroup =
+            this.toExpressionCondition(filterConditions[0]);
+
+        for (let i = 1; i < filterConditions.length; i++) {
+            const currentFilter = filterConditions[i];
+            expression = {
+                type: 'group',
+                operator: currentFilter.chainingOperator ?? 'AND',
+                children: [
+                    expression,
+                    this.toExpressionCondition(currentFilter),
+                ],
+            };
+        }
+
+        if (expression.type === 'condition') {
+            return {
+                type: 'group',
+                operator: 'AND',
+                children: [expression],
+            };
+        }
+
+        return expression;
+    }
+
+    private toExpressionCondition(
+        filter: SelectedFilter,
+    ): FilterExpressionCondition {
+        return {
+            type: 'condition',
+            field: filter.field!.runtimeName,
+            operator: filter.operator,
+            condition: this.normalizeConditionValue(filter.value),
+        };
+    }
+
+    private normalizeConditionValue(value: any): any {
+        if (
+            typeof value === 'string' &&
+            value.startsWith('"') &&
+            value.endsWith('"') &&
+            value.length >= 2
+        ) {
+            return value.substring(1, value.length - 1);
+        }
+
+        if (typeof value === 'string') {
+            if (value.toLowerCase() === 'true') {
+                return true;
+            }
+
+            if (value.toLowerCase() === 'false') {
+                return false;
+            }
+
+            if (value !== '' && !Number.isNaN(Number(value))) {
+                return Number(value);
+            }
+        }
+
+        return value;
+    }
+
+    private normalizeExpressionGroup(
+        group: FilterExpressionGroup,
+    ): FilterExpressionGroup {
+        return {
+            type: 'group',
+            operator: group.operator ?? 'AND',
+            children: group.children.map(child =>
+                child.type === 'group'
+                    ? this.normalizeExpressionGroup(child)
+                    : {
+                          type: 'condition',
+                          field: child.field,
+                          operator: child.operator,
+                          condition: this.normalizeConditionValue(
+                              child.condition,
+                          ),
+                      },
+            ),
+        };
+    }
+
+    private isValidFilter(filter: SelectedFilter): boolean {
+        const hasValue =
+            filter.value !== undefined &&
+            filter.value !== null &&
+            filter.value !== '';
+        return !!filter.field && !!filter.operator && hasValue;
     }
 
     public withMissingValueBehaviour(

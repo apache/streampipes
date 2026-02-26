@@ -74,6 +74,12 @@ public class ProvidedQueryParameterBuilder {
     return this;
   }
 
+  public ProvidedQueryParameterBuilder withFilterExpression(String filterExpression) {
+    this.queryParams.put(SupportedRestQueryParams.QP_FILTER_EXPRESSION, filterExpression);
+
+    return this;
+  }
+
   public ProvidedQueryParameterBuilder withPage(int page) {
     this.queryParams.put(SupportedRestQueryParams.QP_PAGE, String.valueOf(page));
 

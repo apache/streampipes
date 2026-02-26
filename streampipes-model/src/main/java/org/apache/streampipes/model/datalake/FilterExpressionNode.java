@@ -15,28 +15,15 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.datalake;
 
-import { MissingValueBehaviour } from './data-lake-query-config.model';
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-export interface DatalakeQueryParameters {
-    columns?: string;
-    startDate?: number;
-    endDate?: number;
-    page?: number;
-    limit?: number;
-    offset?: number;
-    groupBy?: string;
-    order?: string;
-    aggregationFunction?: string;
-    timeInterval?: string;
-    countOnly?: boolean;
-    autoAggregate?: boolean;
-    filter?: string;
-    filterExpression?: string;
-    missingValueBehaviour?: MissingValueBehaviour;
-    maximumAmountOfEvents?: number;
-
-    // should be only used for multi-query requests
-    measureName?: string;
-    forId?: string;
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = FilterExpressionGroup.class, name = "group"),
+    @JsonSubTypes.Type(value = FilterExpressionCondition.class, name = "condition")
+})
+public interface FilterExpressionNode {
 }

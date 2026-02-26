@@ -1,0 +1,164 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
+        <div fxFlex="100" fxLayout="column">
+            <sp-split-section
+                [level]="3"
+                [title]="'Advanced filter' | translate"
+                [subtitle]="
+                    'Build nested AND/OR expressions with groups.' | translate
+                "
+            >
+                @if (hasPreview()) {
+                    <sp-alert-banner
+                        type="info"
+                        [title]="'Filter Preview' | translate"
+                        [description]="previewSummary()"
+                        data-cy="advanced-filter-preview-banner"
+                    >
+                    </sp-alert-banner>
+                }
+
+                <ng-container
+                    *ngTemplateOutlet="
+                        groupEditor;
+                        context: { $implicit: expression, depth: 0 }
+                    "
+                ></ng-container>
+
+                @if (validationMessage) {
+                    <sp-alert-banner
+                        type="error"
+                        [title]="'Validation Error' | translate"
+                        [description]="validationMessage"
+                        data-cy="advanced-filter-validation-banner"
+                    >
+                    </sp-alert-banner>
+                }
+            </sp-split-section>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions" fxLayoutGap="10px">
+        <button
+            mat-flat-button
+            (click)="save()"
+            data-cy="advanced-filter-apply"
+        >
+            {{ 'Apply' | translate }}
+        </button>
+        <button
+            mat-flat-button
+            class="mat-basic"
+            (click)="clearAdvancedFilter()"
+            data-cy="advanced-filter-clear"
+        >
+            {{ 'Use simple filters' | translate }}
+        </button>
+        <button
+            mat-flat-button
+            class="mat-basic"
+            (click)="close()"
+            data-cy="advanced-filter-cancel"
+        >
+            {{ 'Cancel' | translate }}
+        </button>
+    </div>
+</div>
+
+<ng-template #groupEditor let-group let-depth="depth">
+    <div class="advanced-filter-group" [style.marginLeft.px]="depth * 16">
+        <div class="advanced-filter-group-header">
+            <div class="advanced-filter-group-title">
+                {{ formatGroupLabel(depth) }}
+            </div>
+
+            <mat-form-field
+                appearance="outline"
+                class="advanced-filter-operator"
+            >
+                <mat-select
+                    [(value)]="group.operator"
+                    (selectionChange)="onExpressionChanged()"
+                    data-cy="advanced-filter-group-operator"
+                >
+                    <mat-option [value]="'AND'">AND</mat-option>
+                    <mat-option [value]="'OR'">OR</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <button
+                mat-flat-button
+                class="mat-basic"
+                (click)="addCondition(group)"
+                data-cy="advanced-filter-add-condition"
+            >
+                {{ 'Add condition' | translate }}
+            </button>
+            <button
+                mat-flat-button
+                class="mat-basic"
+                (click)="addGroup(group)"
+                data-cy="advanced-filter-add-group"
+            >
+                {{ 'Add group' | translate }}
+            </button>
+        </div>
+
+        <div class="advanced-filter-group-children">
+            @for (child of group.children; track child; let i = $index) {
+                @if (child.type === 'group') {
+                    <div
+                        fxLayout="row"
+                        fxLayoutGap="10px"
+                        fxLayoutAlign="start center"
+                    >
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            (click)="removeChild(group, i)"
+                            class="advanced-filter-remove-group"
+                        >
+                            <i class="material-icons">remove</i>
+                        </button>
+
+                        <ng-container
+                            *ngTemplateOutlet="
+                                groupEditor;
+                                context: { $implicit: child, depth: depth + 1 }
+                            "
+                        ></ng-container>
+                    </div>
+                } @else {
+                    <div class="advanced-filter-condition">
+                        <sp-advanced-filter-condition-row
+                            [condition]="child"
+                            [possibleFields]="possibleFields"
+                            [tagValues]="tagValues"
+                            (update)="onExpressionChanged()"
+                            (remove)="removeChild(group, i)"
+                        >
+                        </sp-advanced-filter-condition-row>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</ng-template>

@@ -28,6 +28,8 @@ import { FilterSelectionPanelRowOperationSelectionComponent } from './panel-row-
 import { FilterSelectionPanelRowValueInputComponent } from './panel-row-value-input/filter-selection-panel-row-value-input.component';
 import { FilterSelectionPanelRowValueAutocompleteComponent } from './panel-row-value-input-autocomplete/filter-selection-panel-row-value-autocomplete.component';
 import { MatIconButton } from '@angular/material/button';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
     selector: 'sp-filter-selection-panel-row',
@@ -41,6 +43,9 @@ import { MatIconButton } from '@angular/material/button';
         FilterSelectionPanelRowValueInputComponent,
         FilterSelectionPanelRowValueAutocompleteComponent,
         MatIconButton,
+        MatFormField,
+        MatSelect,
+        MatOption,
     ],
 })
 export class FilterSelectionPanelRowComponent {
@@ -49,6 +54,9 @@ export class FilterSelectionPanelRowComponent {
 
     @Input()
     public possibleFields: FieldConfig[];
+
+    @Input()
+    public index: number;
 
     @Input()
     public tagValues: Map<string, string[]>;

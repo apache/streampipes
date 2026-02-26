@@ -24,6 +24,10 @@ import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.model.datalake.AggregationFunction;
 import org.apache.streampipes.model.datalake.DataLakeQueryOrdering;
 import org.apache.streampipes.model.datalake.FilterCondition;
+import org.apache.streampipes.model.datalake.FilterExpressionCondition;
+import org.apache.streampipes.model.datalake.FilterExpressionGroup;
+import org.apache.streampipes.model.datalake.FilterExpressionLogicalOperator;
+import org.apache.streampipes.model.datalake.FilterExpressionNode;
 
 import org.influxdb.dto.Query;
 import org.influxdb.querybuilder.Ordering;
@@ -178,6 +182,17 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
+  public IDataLakeQueryBuilder<Query> withFilterExpression(FilterExpressionGroup filterExpression) {
+    if (Objects.nonNull(filterExpression)
+        && Objects.nonNull(filterExpression.children())
+        && !filterExpression.children().isEmpty()) {
+      this.whereClauses.add(toNestedClause(filterExpression));
+    }
+
+    return this;
+  }
+
+  @Override
   public DataLakeInfluxQueryBuilder withGroupByTime(String timeInterval) {
 
     this.groupByClauses.add(new RawTextClause("time(" + timeInterval + ")"));
@@ -274,6 +289,32 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   private void addNestedWhereClause(List<ConjunctionClause> clauses) {
     NestedClause nestedClause = new NestedClause(clauses);
     this.whereClauses.add(nestedClause);
+  }
+
+  private NestedClause toNestedClause(FilterExpressionGroup group) {
+    List<ConjunctionClause> conjunctionClauses = new ArrayList<>();
+    var conjunction = Objects.nonNull(group.operator()) ? group.operator() : FilterExpressionLogicalOperator.AND;
+    group.children().forEach(node -> conjunctionClauses.add(makeConjunction(node, conjunction)));
+    return new NestedClause(conjunctionClauses);
+  }
+
+  private ConjunctionClause makeConjunction(FilterExpressionNode node, FilterExpressionLogicalOperator conjunction) {
+    Clause clause = toClause(node);
+    return conjunction == FilterExpressionLogicalOperator.OR
+        ? new OrConjunction(clause)
+        : new AndConjunction(clause);
+  }
+
+  private Clause toClause(FilterExpressionNode node) {
+    if (node instanceof FilterExpressionCondition condition) {
+      return new SimpleClause(condition.field(), condition.operator(), condition.condition());
+    }
+
+    if (node instanceof FilterExpressionGroup group) {
+      return toNestedClause(group);
+    }
+
+    throw new IllegalArgumentException("Unsupported filter expression node: " + node);
   }
 
   private String escapeIndex(String index) {

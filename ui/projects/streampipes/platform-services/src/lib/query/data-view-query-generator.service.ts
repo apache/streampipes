@@ -113,7 +113,9 @@ export class DataViewQueryGeneratorService {
             }
         }
 
-        if (queryConfig.selectedFilters.length > 0) {
+        if (queryConfig.filterExpression) {
+            queryBuilder.withFilterExpression(queryConfig.filterExpression);
+        } else if (queryConfig.selectedFilters.length > 0) {
             queryBuilder.withFilters(queryConfig.selectedFilters);
         }
 

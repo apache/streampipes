@@ -70,6 +70,7 @@ import static org.apache.streampipes.model.datalake.param.SupportedRestQueryPara
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_END_DATE;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FILTER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FILTER_EXPRESSION;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FORMAT;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_GROUP_BY;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_HEADER_COLUMN_NAME;
@@ -194,6 +195,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
       @Parameter(in = ParameterIn.QUERY, description = "auto-aggregate the number of results to avoid browser overload") @RequestParam(value = QP_AUTO_AGGREGATE, required = false) boolean autoAggregate,
       @Parameter(in = ParameterIn.QUERY, description = "filter conditions (a comma-separated list of filter conditions"
           + "such as [field,operator,condition])") @RequestParam(value = QP_FILTER, required = false) String filter,
+      @Parameter(in = ParameterIn.QUERY, description = "JSON encoded nested filter expression") @RequestParam(value = QP_FILTER_EXPRESSION, required = false) String filterExpression,
       @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)") @RequestParam(value = QP_MISSING_VALUE_BEHAVIOUR, required = false) String missingValueBehaviour,
       @Parameter(in = ParameterIn.QUERY, description = "the maximum amount of resulting events,"
           + "when too high the query status is set to TOO_MUCH_DATA") @RequestParam(value = QP_MAXIMUM_AMOUNT_OF_EVENTS, required = false) Integer maximumAmountOfResults,
@@ -248,6 +250,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
       @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)") @RequestParam(value = QP_MISSING_VALUE_BEHAVIOUR, required = false) String missingValueBehaviour,
       @Parameter(in = ParameterIn.QUERY, description = "filter conditions (a comma-separated list of filter conditions"
           + "such as [field,operator,condition])") @RequestParam(value = QP_FILTER, required = false) String filter,
+      @Parameter(in = ParameterIn.QUERY, description = "JSON encoded nested filter expression") @RequestParam(value = QP_FILTER_EXPRESSION, required = false) String filterExpression,
       @Parameter(in = ParameterIn.QUERY, description = "Excel export with template") @RequestParam(value = QP_XLSX_USE_TEMPLATE, required = false) boolean useTemplate,
       @Parameter(in = ParameterIn.QUERY, description = "ID of the excel template file to use") @RequestParam(value = QP_XLSX_TEMPLATE_ID, required = false) String templateId,
       @Parameter(in = ParameterIn.QUERY, description = "The first row in the excel file where data should be written") @RequestParam(value = QP_XLSX_START_ROW, required = false) Integer startRow,
