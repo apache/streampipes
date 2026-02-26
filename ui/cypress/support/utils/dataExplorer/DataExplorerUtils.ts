@@ -100,7 +100,7 @@ export class DataExplorerUtils {
                 'speed',
                 'fastest_\\(ignore_original_time\\)',
             )
-            .setStartAdapter(false);
+            .setStartAdapter(true);
 
         if (format === 'csv') {
             adapterBuilder
