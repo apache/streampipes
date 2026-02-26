@@ -26,3 +26,7 @@ src/app/app.routes.ts
 src/app/core/components/base-navigation.component.ts
 src/app/home/home.service.ts
 deployment/*.mst
+
+# Ignore nginx runtime/template config files (unsupported by prettier parser inference)
+nginx_config/*.conf
+nginx_config/*.conf.template
