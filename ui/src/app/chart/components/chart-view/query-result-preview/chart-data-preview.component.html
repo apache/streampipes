@@ -16,11 +16,12 @@
 ~
 -->
 
-<div class="preview-shell" fxLayout="column">
+<div class="preview-shell" fxLayout="column" data-cy="chart-data-preview">
     <div
         class="preview-header"
         fxLayout="row"
         fxLayoutAlign="space-between center"
+        data-cy="chart-data-preview-header"
     >
         <div class="preview-title" fxFlex>
             {{ 'Data preview' | translate }}
@@ -41,6 +42,7 @@
             <button
                 mat-icon-button
                 (click)="toggleExpanded()"
+                data-cy="chart-data-preview-toggle"
                 [attr.aria-label]="
                     (expanded ? 'Collapse preview' : 'Expand preview')
                         | translate
@@ -54,8 +56,12 @@
     </div>
 
     @if (expanded && rows.length > 0 && columns.length > 0) {
-        <div class="preview-table-scroll" fxFlex>
-            <table class="preview-table">
+        <div
+            class="preview-table-scroll"
+            fxFlex
+            data-cy="chart-data-preview-table-scroll"
+        >
+            <table class="preview-table" data-cy="chart-data-preview-table">
                 <thead>
                     <tr>
                         <th class="index-col">#</th>
@@ -77,7 +83,12 @@
                                 column of columns;
                                 track trackColumn($index, column)
                             ) {
-                                <td [title]="stringify(row[column])">
+                                <td
+                                    [title]="stringify(row[column])"
+                                    [attr.data-cy]="
+                                        'chart-data-preview-cell-' + column
+                                    "
+                                >
                                     {{ formatCellValue(column, row[column]) }}
                                 </td>
                             }
@@ -92,6 +103,7 @@
             fxFlex
             fxLayout
             fxLayoutAlign="center center"
+            data-cy="chart-data-preview-empty"
         >
             {{ 'Run or adjust the query to see a row preview.' | translate }}
         </div>
