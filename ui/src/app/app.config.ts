@@ -48,6 +48,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -64,6 +65,9 @@ export const appConfig: ApplicationConfig = {
             }),
             NgxEchartsModule.forRoot({
                 echarts: () => import('echarts'),
+            }),
+            MonacoEditorModule.forRoot({
+                baseUrl: window.location.origin + '/assets/monaco/min/vs',
             }),
         ),
         provideHttpClient(withInterceptorsFromDi()),

@@ -51,7 +51,13 @@ export class TreeStaticPropertyUtils {
      * Appends the @param text to the text editor
      */
     public static typeInTextEditor(text: string) {
-        cy.dataCy('static-tree-input-text-editor').type(text + '{enter}');
+        const editor = cy.dataCy('static-tree-input-text-editor');
+
+        editor
+            .find('textarea.inputarea')
+            .click({ force: true })
+            .type('{selectall}{backspace}', { force: true })
+            .type(text, { force: true });
     }
 
     /**
@@ -60,7 +66,7 @@ export class TreeStaticPropertyUtils {
     public static getTextInTextEditor() {
         return cy
             .dataCy('static-tree-input-text-editor')
-            .find('.CodeMirror-line')
+            .find('.view-lines')
             .invoke('text');
     }
 

@@ -16,11 +16,11 @@
   ~
   -->
 
-<ngx-codemirror
-    style="width: 100%"
+<ngx-monaco-editor
+    class="code-editor"
     [(ngModel)]="textEditor"
     (ngModelChange)="onTextEditorChange($event)"
     [options]="editorOptions"
     data-cy="static-tree-input-text-editor"
 >
-</ngx-codemirror>
+</ngx-monaco-editor>

@@ -56,6 +56,7 @@ import { AdapterScriptEditorComponent } from './script-editor/adapter-script-edi
 import { AdapterSamplePreviewComponent } from './sample-preview/adapter-sample-preview.component';
 import { AdapterResultPreviewComponent } from './result-preview/adapter-result-preview.component';
 import { MatButton } from '@angular/material/button';
+import type { editor as MonacoEditor } from 'monaco-editor';
 
 @Component({
     selector: 'sp-configure-schema',
@@ -128,6 +129,10 @@ export class ConfigureSchemaComponent implements OnInit {
                 ?.inputs?.[0] || {},
     );
 
+    eventPropertyNames = computed(() =>
+        Object.keys(this.input() ?? {}).filter(runtimeName => !!runtimeName),
+    );
+
     fieldStatusInfos = computed(
         () => this.stateService.state().sampleFieldStatusInfos || {},
     );
@@ -165,18 +170,16 @@ export class ConfigureSchemaComponent implements OnInit {
         });
     }
 
-    editorOptions = {
-        mode: 'javascript',
-        autoRefresh: true,
-        theme: 'dracula',
-        autoCloseBrackets: true,
-        lineNumbers: true,
-        lineWrapping: true,
-        gutters: ['CodeMirror-lint-markers'],
-        lint: true,
-        extraKeys: {
-            'Ctrl-Space': 'autocomplete',
-        },
+    editorOptions: MonacoEditor.IStandaloneEditorConstructionOptions = {
+        language: 'javascript',
+        theme: 'vs-dark',
+        lineNumbers: 'on',
+        wordWrap: 'on',
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
+        minimap: { enabled: false },
+        quickSuggestions: true,
+        suggestOnTriggerCharacters: true,
     };
 
     ngOnInit(): void {

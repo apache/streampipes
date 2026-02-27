@@ -109,20 +109,12 @@ const getAdapterBuilderWithTextNodes = (pullMode: boolean) => {
     const builder = OpcUaUtils.getBaseAdapterConfigBuilder(pullMode);
     builder.addTreeNode(
         TreeNodeUserInputBuilder.create(
-            'ns=3;s=AlternatingBoolean',
-        ).isTextConfig(),
-    );
-    builder.addTreeNode(
-        TreeNodeUserInputBuilder.create('ns=3;s=StepUp').isTextConfig(),
-    );
-    builder.addTreeNode(
-        TreeNodeUserInputBuilder.create(
-            'ns=3;s=RandomSignedInt32',
-        ).isTextConfig(),
-    );
-    builder.addTreeNode(
-        TreeNodeUserInputBuilder.create(
-            'ns=3;s=RandomUnsignedInt32',
+            [
+                'ns=3;s=AlternatingBoolean\n',
+                'ns=3;s=StepUp\n',
+                'ns=3;s=RandomSignedInt32\n',
+                'ns=3;s=RandomUnsignedInt32\n',
+            ].join('\n'),
         ).isTextConfig(),
     );
 

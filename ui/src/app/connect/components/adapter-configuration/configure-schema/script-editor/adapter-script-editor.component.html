@@ -90,13 +90,14 @@
 
     @if (scriptActive()) {
         <div class="code-editor-outer">
-            <ngx-codemirror
+            <ngx-monaco-editor
                 class="code-editor"
                 [ngModel]="script()"
                 (ngModelChange)="codeChange.emit($event)"
                 [options]="editorOptions()"
+                (onInit)="onEditorInit()"
                 data-cy="configure-schema-script-editor"
-            ></ngx-codemirror>
+            ></ngx-monaco-editor>
         </div>
         <div fxLayoutGap="10px">
             <button
