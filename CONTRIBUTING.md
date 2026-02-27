@@ -28,3 +28,16 @@ other means you agree to license the material under the project's open source li
 warrant that you have the legal authority to do so.
 
 ---
+### Description
+This PR fixes a misleading variable name in the DataLakeManagementController class.
+
+The variable `measurementID` in the `dropMeasurementSeries` method actually represents a measure name instead of a measurement ID.  
+It has been renamed to `measureName` to improve clarity and maintain consistency.
+
+### Type of Change
+- Code refactoring (non-breaking change)
+
+### Checklist
+- [x] Code compiles successfully
+- [x] No functional changes introduced
+- [x] Variable renamed consistently across usages
