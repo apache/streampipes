@@ -141,4 +141,8 @@ export class PipelineBtns {
             .dataCy('sp-table-select-all-checkbox')
             .find('input[type="checkbox"]');
     }
+
+    public static pipelineNameCells() {
+        return cy.dataCy('pipeline-name-cell', { timeout: 10000 });
+    }
 }
