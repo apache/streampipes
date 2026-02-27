@@ -17,6 +17,7 @@
  */
 
 import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 import { DataExplorerWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
 
 describe('Advanced Filter Expressions in Data Explorer', () => {
@@ -34,21 +35,21 @@ describe('Advanced Filter Expressions in Data Explorer', () => {
         DataExplorerWidgetTableUtils.checkAmountOfRows(10);
         DataExplorerUtils.selectDataConfig();
 
-        cy.dataCy('design-panel-data-settings-advanced-filter').click();
+        DataExplorerBtns.advancedFilterBtn().click();
 
         // Root condition: randomtext = a
-        cy.dataCy('advanced-filter-add-condition').first().click();
+        DataExplorerBtns.advancedFilterAddConditionBtn().first().click();
         // Root nested group
-        cy.dataCy('advanced-filter-add-group').first().click();
+        DataExplorerBtns.advancedFilterAddGroupBtn().first().click();
         // Two conditions in nested group
-        cy.dataCy('advanced-filter-add-condition').last().click();
-        cy.dataCy('advanced-filter-add-condition').last().click();
+        DataExplorerBtns.advancedFilterAddConditionBtn().last().click();
+        DataExplorerBtns.advancedFilterAddConditionBtn().last().click();
 
         // Set nested group operator to OR
-        cy.dataCy('advanced-filter-group-operator', {}, true)
+        DataExplorerBtns.advancedFilterGroupOperator()
             .last()
             .click({ force: true });
-        cy.get('mat-option').contains(/^OR$/).click();
+        DataExplorerBtns.matOptionByText(/^OR$/).click();
 
         setAdvancedCondition(0, 'randomtext', '=', 'a');
         setAdvancedCondition(1, 'randomnumber', '=', '22');
@@ -57,13 +58,13 @@ describe('Advanced Filter Expressions in Data Explorer', () => {
         // Value inputs update the model on change; blur the active input before checking the preview.
         cy.focused().blur();
 
-        cy.dataCy('advanced-filter-preview-banner')
+        DataExplorerBtns.advancedFilterPreviewBanner()
             .should('contain.text', 'randomtext = a')
             .and('contain.text', 'randomnumber = 22')
             .and('contain.text', 'randomnumber = 56')
             .and('contain.text', 'OR');
 
-        cy.dataCy('advanced-filter-apply').click();
+        DataExplorerBtns.advancedFilterApplyBtn().click();
 
         // a AND (22 OR 56) => 2 rows in sample.csv
         DataExplorerWidgetTableUtils.checkAmountOfRows(2);
@@ -72,10 +73,8 @@ describe('Advanced Filter Expressions in Data Explorer', () => {
         DataExplorerWidgetTableUtils.checkAmountOfRows(2);
 
         DataExplorerUtils.selectDataConfig();
-        cy.dataCy('design-panel-data-settings-advanced-filter').should(
-            'be.visible',
-        );
-        cy.dataCy('filter-alert-banner', { timeout: 2000 })
+        DataExplorerBtns.advancedFilterBtn().should('be.visible');
+        DataExplorerBtns.filterAlertBanner()
             .should('be.visible')
             .within(() => {
                 cy.contains('randomtext = a');
@@ -89,17 +88,13 @@ function setAdvancedCondition(
     operator: '=' | '!=' | '<' | '<=' | '>' | '>=',
     value: string,
 ) {
-    cy.dataCy('design-panel-data-settings-filter-field', {}, true)
-        .eq(index)
-        .click({ force: true });
-    cy.get('mat-option').contains(field).click();
+    DataExplorerBtns.filterFieldSelect().eq(index).click({ force: true });
+    DataExplorerBtns.matOptionByText(field).click();
 
-    cy.dataCy('design-panel-data-settings-filter-operator', {}, true)
-        .eq(index)
-        .click({ force: true });
-    cy.get('mat-option').contains(operator).click();
+    DataExplorerBtns.filterOperatorSelect().eq(index).click({ force: true });
+    DataExplorerBtns.matOptionByText(operator).click();
 
-    cy.dataCy('design-panel-data-settings-filter-value', {}, true)
+    DataExplorerBtns.filterValueInput()
         .eq(index)
         .clear({ force: true })
         .type(value, { force: true });

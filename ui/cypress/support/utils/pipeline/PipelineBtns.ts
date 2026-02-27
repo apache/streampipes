@@ -101,4 +101,44 @@ export class PipelineBtns {
     public static pipelineHelpBtn() {
         return cy.dataCy('help-button-icon-stand');
     }
+
+    public static selectionToolbar() {
+        return cy.dataCy('sp-table-selection-toolbar');
+    }
+
+    public static rowCheckbox() {
+        return cy.dataCy('sp-table-row-checkbox');
+    }
+
+    public static rowCheckboxInput(index: number) {
+        return PipelineBtns.rowCheckbox()
+            .eq(index)
+            .find('input[type="checkbox"]');
+    }
+
+    public static multiActionExecute() {
+        return cy.dataCy('sp-table-multi-action-execute');
+    }
+
+    public static selectNone() {
+        return cy.dataCy('sp-table-select-none');
+    }
+
+    public static multiActionSelect() {
+        return cy.dataCy('sp-table-multi-action-select');
+    }
+
+    public static multiActionOptionStop() {
+        return cy.dataCy('sp-table-multi-action-option-stop');
+    }
+
+    public static selectVisible() {
+        return cy.dataCy('sp-table-select-visible');
+    }
+
+    public static selectAllCheckboxInput() {
+        return cy
+            .dataCy('sp-table-select-all-checkbox')
+            .find('input[type="checkbox"]');
+    }
 }
