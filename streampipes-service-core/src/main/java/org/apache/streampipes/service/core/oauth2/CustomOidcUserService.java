@@ -19,6 +19,7 @@
 package org.apache.streampipes.service.core.oauth2;
 
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
 
 import org.springframework.security.core.AuthenticationException;
@@ -28,8 +29,23 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class CustomOidcUserService extends OidcUserService {
+
+  public CustomOidcUserService() {
+    var env = Environments.getEnvironment();
+    this.setRetrieveUserInfo(req -> {
+      var config = env.getOAuthConfigurations()
+          .stream()
+          .filter(c -> c.getRegistrationId().equals(req.getClientRegistration().getRegistrationId()))
+          .findFirst();
+      return config
+          .filter(oAuthConfiguration -> Objects.nonNull(oAuthConfiguration.getUserInfoUri()))
+          .isPresent();
+    });
+  }
 
   @Override
   public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
