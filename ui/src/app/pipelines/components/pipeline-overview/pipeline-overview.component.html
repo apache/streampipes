@@ -167,7 +167,9 @@
         <td mat-cell *matCellDef="let pipeline" class="truncate">
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
                 <div fxLayout="column" fxLayoutAlign="start start">
-                    <span class="text-sm">{{ pipeline.name }}</span>
+                    <span class="text-sm" data-cy="pipeline-name-cell">{{
+                        pipeline.name
+                    }}</span>
                     <small> {{ pipeline.description }}</small>
                 </div>
             </div>

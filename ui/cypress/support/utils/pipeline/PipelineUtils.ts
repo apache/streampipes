@@ -247,11 +247,9 @@ export class PipelineUtils {
     }
 
     public static verifyPipelineName(expectedName: string) {
-        cy.dataCy('all-pipelines-table', { timeout: 10000 })
+        PipelineBtns.pipelineNameCells()
             .first()
-            .within(() => {
-                cy.get('td').eq(2).should('contain', expectedName);
-            });
+            .should('contain.text', expectedName);
     }
 
     public static verifyPipelineCount(expectedCount: number) {
