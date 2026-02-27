@@ -100,6 +100,39 @@
     --mat-sidenav-container-divider-color: var(--color-bg-3);
     --mat-button-toggle-height: 30px;
     --mat-table-header-headline-color: var(--mat-sys-on-surface);
+
+    --size-panel-header-compact: calc(var(--space-md) * 3.4);
+    --size-icon-button-compact: calc(var(--space-md) * 2.2);
+    --size-icon-compact: calc(var(--space-md) * 1.4);
+    --size-table-index-column: calc(var(--space-md) * 4);
+    --size-data-preview-collapsed: calc(var(--size-panel-header-compact) + 2px);
+    --size-data-preview-expanded: 16.25rem;
+
+    --padding-table-cell-compact-y: var(--space-xs);
+    --padding-table-cell-compact-x: var(--space-sm);
+    --padding-panel-header-y: var(--space-sm);
+    --padding-panel-header-x: var(--space-md);
+
+    --color-surface-subtle: color-mix(
+        in srgb,
+        var(--color-bg-2) 55%,
+        var(--color-bg-0)
+    );
+    --color-surface-selected-subtle: color-mix(
+        in srgb,
+        var(--color-primary) 10%,
+        var(--color-bg-0)
+    );
+    --color-border-subtle: color-mix(
+        in srgb,
+        var(--color-bg-3) 72%,
+        transparent
+    );
+    --color-panel-header-accent: color-mix(
+        in srgb,
+        var(--color-primary) 5%,
+        var(--color-bg-0)
+    );
 }
 
 .dark-mode {

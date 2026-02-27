@@ -38,6 +38,7 @@ import {
     ExtendedTimeSettings,
     QuickTimeSelection,
     SpLogMessage,
+    SpQueryResult,
     TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
@@ -152,6 +153,8 @@ export class ChartContainerComponent
     @Output() deleteCallback: EventEmitter<number> = new EventEmitter<number>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
+    @Output() queryResultsEmitter: EventEmitter<SpQueryResult[]> =
+        new EventEmitter<SpQueryResult[]>();
 
     title = '';
     widgetLoaded = false;
@@ -352,7 +355,15 @@ export class ChartContainerComponent
             this.handleTimer(ev),
         );
         const error$ = this.componentRef.instance.errorCallback.subscribe(
-            ev => (this.errorMessage = ev),
+            ev => {
+                this.errorMessage = ev;
+                if (ev) {
+                    this.queryResultsEmitter.emit([]);
+                }
+            },
+        );
+        const data$ = this.componentRef.instance.dataReceivedCallback.subscribe(
+            results => this.queryResultsEmitter.emit(results),
         );
 
         this.componentRef.onDestroy(destroy => {
@@ -360,6 +371,7 @@ export class ChartContainerComponent
             remove$?.unsubscribe();
             timer$?.unsubscribe();
             error$?.unsubscribe();
+            data$?.unsubscribe();
         });
     }
 

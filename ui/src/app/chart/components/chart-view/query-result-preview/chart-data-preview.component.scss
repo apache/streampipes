@@ -1,0 +1,151 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:host {
+    display: block;
+    min-height: 0;
+    height: var(--size-data-preview-collapsed);
+    transition: height 160ms ease;
+    color: var(--color-default-text);
+}
+
+.preview-shell {
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    border-top: 1px solid var(--color-bg-2);
+    border-radius: 0;
+    background: var(--color-bg-0);
+    overflow: hidden;
+}
+
+.preview-header {
+    gap: var(--space-sm);
+    padding: var(--padding-panel-header-y) var(--padding-panel-header-x);
+    border-bottom: 1px solid var(--color-tab-border);
+    background: var(--color-panel-header-accent);
+    min-height: var(--size-panel-header-compact);
+    box-sizing: border-box;
+}
+
+.preview-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-normal);
+}
+
+.preview-header-actions {
+    gap: var(--space-2xs);
+}
+
+.preview-meta {
+    font-size: var(--font-size-xs);
+    color: var(--color-secondary-text);
+    white-space: nowrap;
+}
+
+.preview-meta-note {
+    margin-left: var(--space-2xs);
+}
+
+.preview-toggle {
+    width: var(--size-icon-button-compact);
+    height: var(--size-icon-button-compact);
+    line-height: var(--size-icon-button-compact);
+    color: var(--color-default-text);
+}
+
+.preview-toggle .mat-icon {
+    font-size: var(--size-icon-compact);
+    width: var(--size-icon-compact);
+    height: var(--size-icon-compact);
+    line-height: var(--size-icon-compact);
+}
+
+.preview-table-scroll {
+    min-height: 0;
+    overflow: auto;
+}
+
+.preview-table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-tight);
+    background: var(--color-bg-0);
+}
+
+.preview-table th,
+.preview-table td {
+    padding: var(--padding-table-cell-compact-y)
+        var(--padding-table-cell-compact-x);
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-subtle);
+    border-right: 1px solid var(--color-border-subtle);
+    white-space: nowrap;
+    max-width: 16rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.preview-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--color-bg-0);
+    color: var(--color-default-text);
+    font-weight: var(--font-weight-semibold);
+}
+
+.preview-table tbody tr:nth-child(even) td {
+    background: var(--color-surface-subtle);
+}
+
+.preview-table tbody tr:hover td {
+    background: var(--color-surface-selected-subtle);
+}
+
+.preview-table th.index-col,
+.preview-table td.index-col {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    min-width: var(--size-table-index-column);
+    max-width: var(--size-table-index-column);
+    text-align: right;
+    color: var(--color-secondary-text);
+    background: var(--color-bg-0);
+}
+
+.preview-table tbody tr:nth-child(even) td.index-col {
+    background: var(--color-surface-subtle);
+}
+
+.preview-table tbody tr:hover td.index-col {
+    background: var(--color-surface-selected-subtle);
+}
+
+.preview-empty {
+    min-height: 0;
+    padding: var(--space-md);
+    text-align: center;
+    color: var(--color-secondary-text);
+    font-size: var(--font-size-xs);
+}
