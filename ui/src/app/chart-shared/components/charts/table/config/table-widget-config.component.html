@@ -31,20 +31,83 @@
         "
     >
     </sp-select-properties-config>
-    <sp-split-section
-        [level]="3"
-        [title]="'Search' | translate"
-        marginTop="5px"
-    >
-        <mat-form-field appearance="outline" fxFlex="100" color="accent">
-            <mat-label>{{ 'Filter' | translate }}</mat-label>
-            <input
-                [(ngModel)]="
-                    currentlyConfiguredWidget.visualizationConfig.searchValue
-                "
-                matInput
-                (input)="onFilterChange($event.target.value)"
-            />
-        </mat-form-field>
+    <sp-split-section [level]="3" [title]="'Settings' | translate">
+        <sp-form-field [level]="3" [label]="'Filter' | translate">
+            <mat-form-field fxFlex="100">
+                <input
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .searchValue
+                    "
+                    matInput
+                    (input)="onFilterChange($event.target.value)"
+                />
+            </mat-form-field>
+        </sp-form-field>
+        <sp-form-field [level]="3" [label]="'Page size' | translate">
+            <mat-form-field fxFlex="100">
+                <mat-select
+                    [value]="
+                        currentlyConfiguredWidget.visualizationConfig.pageSize
+                    "
+                    (valueChange)="setPageSize($event)"
+                >
+                    @for (pageSize of pageSizeOptions; track pageSize) {
+                        <mat-option [value]="pageSize">
+                            {{ pageSize }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </sp-form-field>
+    </sp-split-section>
+    <sp-split-section [level]="3" [title]="'Value Highlighting' | translate">
+        <div fxLayout="column" class="highlight-color-list">
+            @for (field of highlightableFields; track colorKey(field)) {
+                <div
+                    class="highlight-color-row"
+                    fxLayout="row"
+                    fxLayoutAlign="space-between center"
+                >
+                    <mat-checkbox
+                        [checked]="isHighlighted(field)"
+                        (change)="toggleHighlightedField(field)"
+                    >
+                        <div class="highlight-color-label">
+                            <b>{{ field.runtimeName }}</b>
+                            <span class="highlight-color-measure">
+                                {{
+                                    '(' +
+                                        field.measure +
+                                        ', ' +
+                                        (fieldTypeLabel(field) | translate) +
+                                        ')'
+                                }}
+                            </span>
+                        </div>
+                    </mat-checkbox>
+                    <input
+                        class="highlight-color-picker"
+                        [colorPicker]="getHighlightColor(field)"
+                        [style.background]="getHighlightColor(field)"
+                        [cpPosition]="'auto'"
+                        [cpPresetColors]="presetColors"
+                        (colorPickerChange)="setHighlightColor(field, $event)"
+                        [disabled]="!isHighlighted(field)"
+                        [attr.aria-label]="
+                            'Select highlight color for ' + field.runtimeName
+                                | translate
+                        "
+                    />
+                </div>
+            } @empty {
+                <sp-alert-banner
+                    type="info"
+                    [title]="
+                        'No numeric or boolean fields available.' | translate
+                    "
+                ></sp-alert-banner>
+            }
+        </div>
     </sp-split-section>
 </sp-visualization-config-outer>

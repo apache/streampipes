@@ -22,7 +22,6 @@
     [ngStyle]="{
         background: dataExplorerWidget.baseAppearanceConfig.backgroundColor,
         color: dataExplorerWidget.baseAppearanceConfig.textColor,
-        overflowX: 'auto',
     }"
 >
     @if (showNoDataInDateRange) {
@@ -39,126 +38,120 @@
         </sp-too-much-data>
     }
 
-    <div class="table-container">
-        @if (showData) {
-            <table
-                data-cy="data-explorer-table"
-                mat-table
-                [dataSource]="dataSource"
-                matSort
-                (matSortChange)="sortData($event)"
-                class="table-widget"
-            >
-                <ng-container [matColumnDef]="'time'">
-                    <div>
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            [ngStyle]="{
-                                background:
-                                    dataExplorerWidget.baseAppearanceConfig
-                                        .backgroundColor,
-                                color: dataExplorerWidget.baseAppearanceConfig
-                                    .textColor,
-                            }"
-                        >
-                            <label class="column-header">{{
-                                'Time' | translate
-                            }}</label>
-                        </th>
-                        <td
-                            mat-cell
-                            data-cy="data-explorer-table-row-timestamp"
-                            *matCellDef="let row"
-                            style="text-align: left"
-                        >
-                            {{ row['time'] | date: 'yyyy-MM-dd HH:mm:ss.SSS' }}
-                        </td>
-                    </div>
-                </ng-container>
-                @for (
-                    element of dataExplorerWidget.visualizationConfig
-                        .selectedColumns;
-                    track element
-                ) {
-                    <ng-container [matColumnDef]="element.fullDbName">
-                        @if (!(element.fullDbName === 'time')) {
-                            <div>
+    @if (showData) {
+        <div class="analytics-table-shell" fxLayout="column" fxFlex>
+            <div class="analytics-table-scroll" fxFlex>
+                <table data-cy="data-explorer-table" class="analytics-table">
+                    <thead>
+                        <tr>
+                            @for (
+                                column of columnNames;
+                                track trackColumn($index, column)
+                            ) {
                                 <th
-                                    mat-header-cell
-                                    mat-sort-header
-                                    *matHeaderCellDef
-                                    [ngStyle]="{
-                                        background:
-                                            dataExplorerWidget
-                                                .baseAppearanceConfig
-                                                .backgroundColor,
-                                        color: dataExplorerWidget
-                                            .baseAppearanceConfig.textColor,
+                                    [ngClass]="{
+                                        'time-column': column === 'time',
+                                        'numeric-cell': isNumericColumn(column),
+                                        'highlighted-column':
+                                            isHighlightedColumn(column),
                                     }"
                                 >
-                                    <label class="column-header">{{
-                                        element.fullDbName
-                                    }}</label>
+                                    <button
+                                        type="button"
+                                        class="sort-trigger"
+                                        (click)="sortBy(column)"
+                                    >
+                                        <span>
+                                            @if (column === 'time') {
+                                                {{ 'Time' | translate }}
+                                            } @else {
+                                                {{ headerLabel(column) }}
+                                            }
+                                        </span>
+                                        <mat-icon class="sort-icon">
+                                            {{ sortIcon(column) }}
+                                        </mat-icon>
+                                    </button>
                                 </th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (pagedRows.length > 0) {
+                            @for (
+                                row of pagedRows;
+                                track trackRow($index, row)
+                            ) {
+                                <tr>
+                                    @for (
+                                        column of columnNames;
+                                        track trackColumn($index, column)
+                                    ) {
+                                        <td
+                                            [ngClass]="{
+                                                'time-column':
+                                                    column === 'time',
+                                                'numeric-cell':
+                                                    isNumericColumn(column),
+                                                'highlighted-column':
+                                                    isHighlightedColumn(column),
+                                            }"
+                                            [ngStyle]="
+                                                getCellStyle(row, column)
+                                            "
+                                            [attr.data-cy]="
+                                                column === 'time'
+                                                    ? 'data-explorer-table-row-timestamp'
+                                                    : 'data-explorer-table-row-' +
+                                                      column
+                                            "
+                                        >
+                                            @if (column === 'time') {
+                                                {{
+                                                    row[column]
+                                                        | date
+                                                            : 'yyyy-MM-dd HH:mm:ss.SSS'
+                                                }}
+                                            } @else {
+                                                {{
+                                                    formatCellValue(
+                                                        column,
+                                                        row[column]
+                                                    )
+                                                }}
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        } @else {
+                            <tr>
                                 <td
-                                    mat-cell
-                                    *matCellDef="let row"
-                                    [attr.data-cy]="
-                                        'data-explorer-table-row-' +
-                                        element.fullDbName
-                                    "
-                                    style="text-align: left"
+                                    class="table-empty-row"
+                                    [attr.colspan]="columnNames.length"
                                 >
-                                    {{ row[element.fullDbName] }}
+                                    {{
+                                        'No table rows match the current filter.'
+                                            | translate
+                                    }}
                                 </td>
-                            </div>
+                            </tr>
                         }
-                    </ng-container>
-                }
-                @for (element of groupByColumnNames; track element) {
-                    <ng-container [matColumnDef]="element">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            [ngStyle]="{
-                                background:
-                                    dataExplorerWidget.baseAppearanceConfig
-                                        .backgroundColor,
-                                color: dataExplorerWidget.baseAppearanceConfig
-                                    .textColor,
-                            }"
-                        >
-                            <label class="column-header">{{ element }}</label>
-                        </th>
-                        <td
-                            mat-cell
-                            *matCellDef="let row"
-                            [attr.data-cy]="
-                                'data-explorer-table-row-' + element
-                            "
-                            style="text-align: left"
-                        >
-                            {{ row[element] }}
-                        </td>
-                    </ng-container>
-                }
-                <tr
-                    mat-header-row
-                    *matHeaderRowDef="columnNames; sticky: true"
-                ></tr>
-                <tr mat-row *matRowDef="let row; columns: columnNames"></tr>
-            </table>
-        }
-        <mat-paginator
-            color="accent"
-            [length]="100"
-            [pageSize]="500"
-            [pageSizeOptions]="[10, 20, 50, 100, 500, 1000]"
-            aria-label="Select page"
-        >
-        </mat-paginator>
-    </div>
+                    </tbody>
+                </table>
+            </div>
+
+            <mat-paginator
+                color="accent"
+                [length]="filteredRows.length"
+                [pageIndex]="pageIndex"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions"
+                [showFirstLastButtons]="true"
+                aria-label="Select page"
+                (page)="onPage($event)"
+            >
+            </mat-paginator>
+        </div>
+    }
 </div>

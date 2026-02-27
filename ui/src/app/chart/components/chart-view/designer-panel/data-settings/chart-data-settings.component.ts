@@ -236,6 +236,9 @@ export class ChartDataSettingsComponent implements OnInit {
     makeVisualizationConfig(fields: FieldProvider): TableVisConfig {
         return {
             configurationValid: true,
+            highlightedColumns: [],
+            highlightedColumnColors: {},
+            pageSize: 20,
             searchValue: '',
             selectedColumns: fields.allFields,
         };

@@ -63,20 +63,6 @@
     margin-left: var(--space-2xs);
 }
 
-.preview-toggle {
-    width: var(--size-icon-button-compact);
-    height: var(--size-icon-button-compact);
-    line-height: var(--size-icon-button-compact);
-    color: var(--color-default-text);
-}
-
-.preview-toggle .mat-icon {
-    font-size: var(--size-icon-compact);
-    width: var(--size-icon-compact);
-    height: var(--size-icon-compact);
-    line-height: var(--size-icon-compact);
-}
-
 .preview-table-scroll {
     min-height: 0;
     overflow: auto;
