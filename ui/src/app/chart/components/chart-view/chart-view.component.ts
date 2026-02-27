@@ -31,6 +31,7 @@ import {
     EventPropertyUnion,
     FieldConfig,
     LinkageData,
+    TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
 import {
@@ -130,6 +131,7 @@ export class ChartViewComponent
     private assetSaveService = inject(AssetSaveService);
 
     currentUser$: Subscription;
+    queryParams$: Subscription;
 
     chartNotFound = false;
 
@@ -153,10 +155,16 @@ export class ChartViewComponent
             this.loadDataView(dataViewId);
         } else {
             this.createWidget();
-            this.timeSettings = this.makeDefaultTimeSettings();
+            this.timeSettings =
+                this.getTimeSettingsFromQueryParams() ??
+                this.makeDefaultTimeSettings();
             this.dataView.timeSettings = this.timeSettings;
             this.afterDataViewLoaded();
         }
+
+        this.queryParams$ = this.route.queryParams.subscribe(queryParams => {
+            this.applyTimeSettingsFromQueryParams(queryParams);
+        });
     }
 
     onAddWidget(event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
@@ -225,9 +233,65 @@ export class ChartViewComponent
                         this.dataExplorerSharedService.makeChartTimeSettings(
                             this.dataView,
                         );
+                    this.timeSettings =
+                        this.getTimeSettingsFromQueryParams() ??
+                        this.timeSettings;
                     this.afterDataViewLoaded();
                 }
             });
+    }
+
+    private applyTimeSettingsFromQueryParams(queryParams: {
+        [key: string]: any;
+    }): void {
+        if (!this.timeSettings) {
+            return;
+        }
+
+        const startDate = Number(queryParams.startDate);
+        const endDate = Number(queryParams.endDate);
+        if (
+            !Number.isFinite(startDate) ||
+            !Number.isFinite(endDate) ||
+            startDate >= endDate
+        ) {
+            return;
+        }
+
+        if (
+            this.timeSettings.startTime === startDate &&
+            this.timeSettings.endTime === endDate
+        ) {
+            return;
+        }
+
+        this.timeSettings = {
+            ...this.timeSettings,
+            startTime: startDate,
+            endTime: endDate,
+            timeSelectionId: TimeSelectionConstants.CUSTOM,
+        };
+        this.timeSelectionService.notify(this.timeSettings);
+    }
+
+    private getTimeSettingsFromQueryParams(): TimeSettings | undefined {
+        const startDate = Number(this.route.snapshot.queryParams.startDate);
+        const endDate = Number(this.route.snapshot.queryParams.endDate);
+
+        if (
+            !Number.isFinite(startDate) ||
+            !Number.isFinite(endDate) ||
+            startDate >= endDate
+        ) {
+            return undefined;
+        }
+
+        return {
+            startTime: startDate,
+            endTime: endDate,
+            dynamicSelection: -1,
+            timeSelectionId: TimeSelectionConstants.CUSTOM,
+        };
     }
 
     afterDataViewLoaded(): void {
@@ -452,5 +516,6 @@ export class ChartViewComponent
 
     ngOnDestroy() {
         this.currentUser$?.unsubscribe();
+        this.queryParams$?.unsubscribe();
     }
 }

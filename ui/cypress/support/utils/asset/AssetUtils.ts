@@ -158,9 +158,7 @@ export class AssetUtils {
 
     public static editAsset(assetName: string) {
         GeneralUtils.openMenuForRow(assetName);
-        cy.contains('button', 'Edit').click({ force: true });
-        //This is the old version and there in case above does not work for all tests
-        //AssetBtns.editAssetBtn(assetName).click({ force: true });
+        AssetBtns.editAssetBtn(assetName).click({ force: true });
     }
 
     public static addAssetWithOneAdapter(assetName: string) {

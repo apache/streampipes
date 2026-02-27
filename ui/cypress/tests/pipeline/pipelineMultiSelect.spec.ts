@@ -18,6 +18,7 @@
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
+import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 
@@ -54,78 +55,41 @@ describe('Pipeline Overview Multi Select', () => {
     });
 
     it('supports selecting rows and bulk action state changes', () => {
-        cy.dataCy('sp-table-selection-toolbar').should('be.visible');
-        cy.dataCy('sp-table-row-checkbox').should('have.length', 2);
+        PipelineBtns.selectionToolbar().should('be.visible');
+        PipelineBtns.rowCheckbox().should('have.length', 2);
 
-        cy.dataCy('sp-table-multi-action-execute').should('be.disabled');
-        cy.dataCy('sp-table-select-none').should('be.disabled');
+        PipelineBtns.multiActionExecute().should('be.disabled');
+        PipelineBtns.selectNone().should('be.disabled');
 
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(0)
-            .find('input[type="checkbox"]')
-            .check({ force: true });
-        cy.dataCy('sp-table-select-none').should('not.be.disabled');
-        cy.dataCy('sp-table-multi-action-execute').should('be.disabled');
+        PipelineBtns.rowCheckboxInput(0).check({ force: true });
+        PipelineBtns.selectNone().should('not.be.disabled');
+        PipelineBtns.multiActionExecute().should('be.disabled');
 
-        cy.dataCy('sp-table-multi-action-select').click();
-        cy.dataCy('sp-table-multi-action-option-stop').click();
-        cy.dataCy('sp-table-multi-action-execute').should('not.be.disabled');
+        PipelineBtns.multiActionSelect().click();
+        PipelineBtns.multiActionOptionStop().click();
+        PipelineBtns.multiActionExecute().should('not.be.disabled');
 
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(0)
-            .find('input')
-            .should('be.checked');
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(1)
-            .find('input')
-            .should('not.be.checked');
+        PipelineBtns.rowCheckboxInput(0).should('be.checked');
+        PipelineBtns.rowCheckboxInput(1).should('not.be.checked');
 
-        cy.dataCy('sp-table-select-visible').click();
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(0)
-            .find('input')
-            .should('be.checked');
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(1)
-            .find('input')
-            .should('be.checked');
-        cy.dataCy('sp-table-multi-action-execute').should('not.be.disabled');
+        PipelineBtns.selectVisible().click();
+        PipelineBtns.rowCheckboxInput(0).should('be.checked');
+        PipelineBtns.rowCheckboxInput(1).should('be.checked');
+        PipelineBtns.multiActionExecute().should('not.be.disabled');
 
-        cy.dataCy('sp-table-select-none').click();
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(0)
-            .find('input')
-            .should('not.be.checked');
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(1)
-            .find('input')
-            .should('not.be.checked');
-        cy.dataCy('sp-table-multi-action-execute').should('be.disabled');
+        PipelineBtns.selectNone().click();
+        PipelineBtns.rowCheckboxInput(0).should('not.be.checked');
+        PipelineBtns.rowCheckboxInput(1).should('not.be.checked');
+        PipelineBtns.multiActionExecute().should('be.disabled');
 
-        cy.dataCy('sp-table-select-all-checkbox')
-            .find('input[type="checkbox"]')
-            .check({ force: true });
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(0)
-            .find('input')
-            .should('be.checked');
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(1)
-            .find('input')
-            .should('be.checked');
-        cy.dataCy('sp-table-multi-action-execute').should('not.be.disabled');
+        PipelineBtns.selectAllCheckboxInput().check({ force: true });
+        PipelineBtns.rowCheckboxInput(0).should('be.checked');
+        PipelineBtns.rowCheckboxInput(1).should('be.checked');
+        PipelineBtns.multiActionExecute().should('not.be.disabled');
 
-        cy.dataCy('sp-table-select-all-checkbox')
-            .find('input[type="checkbox"]')
-            .uncheck({ force: true });
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(0)
-            .find('input')
-            .should('not.be.checked');
-        cy.dataCy('sp-table-row-checkbox')
-            .eq(1)
-            .find('input')
-            .should('not.be.checked');
-        cy.dataCy('sp-table-multi-action-execute').should('be.disabled');
+        PipelineBtns.selectAllCheckboxInput().uncheck({ force: true });
+        PipelineBtns.rowCheckboxInput(0).should('not.be.checked');
+        PipelineBtns.rowCheckboxInput(1).should('not.be.checked');
+        PipelineBtns.multiActionExecute().should('be.disabled');
     });
 });
