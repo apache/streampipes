@@ -32,6 +32,7 @@ import {
     FieldConfig,
     LinkageData,
     TimeSelectionConstants,
+    SpQueryResult,
     TimeSettings,
 } from '@streampipes/platform-services';
 import {
@@ -77,6 +78,7 @@ import {
 } from '@angular/material/sidenav';
 import { ChartDesignerPanelComponent } from './designer-panel/chart-designer-panel.component';
 import { ChartContainerComponent } from '../../../chart-shared/components/chart-container/chart-container.component';
+import { ChartDataPreviewComponent } from './query-result-preview/chart-data-preview.component';
 
 @Component({
     selector: 'sp-chart-data-view',
@@ -94,6 +96,7 @@ import { ChartContainerComponent } from '../../../chart-shared/components/chart-
         ChartDesignerPanelComponent,
         MatDrawerContent,
         ChartContainerComponent,
+        ChartDataPreviewComponent,
         TranslatePipe,
     ],
 })
@@ -134,6 +137,7 @@ export class ChartViewComponent
     queryParams$: Subscription;
 
     chartNotFound = false;
+    latestQueryResults: SpQueryResult[] = [];
 
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
@@ -212,6 +216,7 @@ export class ChartViewComponent
 
     loadDataView(dataViewId: string): void {
         this.dataViewLoaded = false;
+        this.latestQueryResults = [];
         this.dataViewService
             .getChart(dataViewId)
             .pipe(
@@ -304,6 +309,10 @@ export class ChartViewComponent
 
     editDataView(): void {
         this.routingService.navigateToChart(true, this.dataView.elementId);
+    }
+
+    onQueryResultsChanged(results: SpQueryResult[]): void {
+        this.latestQueryResults = results ?? [];
     }
 
     makeDefaultTimeSettings(): TimeSettings {

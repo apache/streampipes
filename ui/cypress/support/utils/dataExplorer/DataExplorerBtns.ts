@@ -126,6 +126,30 @@ export class DataExplorerBtns {
         return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
+    public static chartDataPreview() {
+        return cy.dataCy('chart-data-preview');
+    }
+
+    public static chartDataPreviewHeader() {
+        return cy.dataCy('chart-data-preview-header');
+    }
+
+    public static chartDataPreviewToggle() {
+        return cy.dataCy('chart-data-preview-toggle');
+    }
+
+    public static chartDataPreviewTable() {
+        return cy.dataCy('chart-data-preview-table');
+    }
+
+    public static chartDataPreviewCell(columnName: string) {
+        return cy.dataCy(`chart-data-preview-cell-${columnName}`);
+    }
+
+    public static chartDataPreviewEmpty() {
+        return cy.dataCy('chart-data-preview-empty');
+    }
+
     public static addNewWidgetBtn() {
         return cy.dataCy('add-new-widget');
     }

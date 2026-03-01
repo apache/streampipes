@@ -25,6 +25,9 @@ import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.mod
 
 export interface TableVisConfig extends DataExplorerVisConfig {
     selectedColumns: DataExplorerField[];
+    highlightedColumns?: DataExplorerField[];
+    highlightedColumnColors?: Record<string, string>;
+    pageSize?: number;
     searchValue: string;
 }
 

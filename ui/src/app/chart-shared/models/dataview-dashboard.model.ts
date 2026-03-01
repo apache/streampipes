@@ -36,6 +36,7 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     removeWidgetCallback: EventEmitter<boolean>;
     timerCallback: EventEmitter<boolean>;
     errorCallback: EventEmitter<SpLogMessage>;
+    dataReceivedCallback: EventEmitter<SpQueryResult[]>;
 
     editMode: boolean;
     kioskMode: boolean;

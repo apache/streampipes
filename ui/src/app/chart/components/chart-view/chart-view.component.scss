@@ -16,47 +16,10 @@
  *
  */
 
-.fixed-height {
-    height: 50px;
-}
-
-.data-explorer-options {
-    padding: 0px;
-}
-
-.data-explorer-options-item {
-    display: inline;
-    margin-right: 10px;
-}
-
-.m-20 {
-    margin: 20px;
-}
-
-.h-100 {
-    height: 100%;
-}
-
-.dashboard-grid {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
-
-.designer-panel-container {
-    width: 100%;
-    height: 100%;
-}
-
 .designer-panel {
     border: 1px solid var(--color-tab-border);
     width: auto;
     flex: 0 0 auto;
     display: inline-block;
     overflow-x: hidden;
-}
-
-.widget-title-text {
-    white-space: nowrap;
-    margin-right: 12px;
 }
