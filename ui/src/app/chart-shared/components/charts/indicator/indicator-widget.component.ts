@@ -34,7 +34,10 @@ import {
     IndicatorGroupCardComponent,
     IndicatorGroupCardView,
 } from './indicator-group-card.component';
-import { IndicatorChartWidgetModel } from './model/indicator-chart-widget.model';
+import {
+    IndicatorAppearanceConfig,
+    IndicatorChartWidgetModel,
+} from './model/indicator-chart-widget.model';
 
 @Component({
     selector: 'sp-data-explorer-indicator-widget',
@@ -70,33 +73,18 @@ export class IndicatorWidgetComponent
     }
 
     get widgetStyles(): Record<string, string> {
-        const minDimension = Math.max(
-            Math.min(this.currentWidth ?? 0, this.currentHeight ?? 0),
-            1,
-        );
+        const compactMode =
+            this.hasMultipleCards || (this.currentWidth ?? 0) < 640;
+        const appearanceConfig = this.appearanceConfig;
 
         return {
-            'background':
-                this.dataExplorerWidget.baseAppearanceConfig.backgroundColor,
-            'color': this.dataExplorerWidget.baseAppearanceConfig.textColor,
-            '--indicator-selected-background':
-                this.dataExplorerWidget.baseAppearanceConfig.backgroundColor,
-            '--indicator-padding': `${this.clamp(
-                minDimension * 0.08,
-                12,
-                28,
-            )}px`,
-            '--indicator-gap': `${this.clamp(minDimension * 0.045, 8, 20)}px`,
-            '--indicator-title-size': `${this.clamp(
-                minDimension * 0.082,
-                14,
-                30,
-            )}px`,
-            '--indicator-description-size': `${this.clamp(
-                minDimension * 0.055,
-                12,
-                18,
-            )}px`,
+            'background': appearanceConfig.backgroundColor,
+            'color': appearanceConfig.textColor,
+            '--indicator-selected-background': appearanceConfig.backgroundColor,
+            '--indicator-padding': compactMode ? '12px' : '18px',
+            '--indicator-gap': compactMode ? '10px' : '16px',
+            '--indicator-title-size': compactMode ? '18px' : '24px',
+            '--indicator-description-size': compactMode ? '12px' : '14px',
         };
     }
 
@@ -104,6 +92,17 @@ export class IndicatorWidgetComponent
         return {
             '--indicator-grid-columns': `${this.gridColumnCount}`,
         };
+    }
+
+    get appearanceConfig(): IndicatorAppearanceConfig {
+        this.dataExplorerWidget.baseAppearanceConfig ??= {
+            backgroundColor: 'var(--color-bg-0)',
+            textColor: 'var(--color-default-text)',
+            widgetTitle: '',
+        };
+
+        return this.dataExplorerWidget
+            .baseAppearanceConfig as IndicatorAppearanceConfig;
     }
 
     get titleText(): string {
@@ -268,7 +267,6 @@ export class IndicatorWidgetComponent
                 series.tags ?? {},
             )}`,
             label: groupInfo.label,
-            detail: groupInfo.detail,
             displayValue: this.formatValue(currentValue),
             deltaView: this.buildDelta(valueField, series, currentValue),
         };
@@ -416,7 +414,6 @@ export class IndicatorWidgetComponent
 
     private makeGroupInfo(tags: Record<string, string>): {
         label?: string;
-        detail?: string;
     } {
         const entries = Object.entries(tags);
 
@@ -425,10 +422,9 @@ export class IndicatorWidgetComponent
         }
 
         if (entries.length === 1) {
-            const [key, value] = entries[0];
+            const [, value] = entries[0];
             return {
                 label: value,
-                detail: key,
             };
         }
 
@@ -503,30 +499,26 @@ export class IndicatorWidgetComponent
     }
 
     private get estimatedPadding(): number {
-        const minDimension = Math.max(
-            Math.min(this.currentWidth ?? 0, this.currentHeight ?? 0),
-            1,
-        );
-        return this.clamp(minDimension * 0.08, 12, 28);
+        return this.hasMultipleCards || (this.currentWidth ?? 0) < 640
+            ? 12
+            : 18;
     }
 
     private get estimatedGap(): number {
-        const minDimension = Math.max(
-            Math.min(this.currentWidth ?? 0, this.currentHeight ?? 0),
-            1,
-        );
-        return this.clamp(minDimension * 0.045, 8, 20);
+        return this.hasMultipleCards || (this.currentWidth ?? 0) < 640
+            ? 10
+            : 16;
     }
 
     private get estimatedCopyHeight(): number {
         let height = 0;
 
         if (this.titleText) {
-            height += this.clamp((this.currentHeight ?? 0) * 0.11, 28, 52);
+            height += this.hasMultipleCards ? 26 : 34;
         }
 
         if (this.descriptionText) {
-            height += this.clamp((this.currentHeight ?? 0) * 0.1, 24, 56);
+            height += this.hasMultipleCards ? 20 : 28;
         }
 
         if (height > 0) {
@@ -534,9 +526,5 @@ export class IndicatorWidgetComponent
         }
 
         return height;
-    }
-
-    private clamp(value: number, min: number, max: number): number {
-        return Math.min(Math.max(value, min), max);
     }
 }

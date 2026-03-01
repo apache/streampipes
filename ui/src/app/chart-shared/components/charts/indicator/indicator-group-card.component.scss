@@ -23,8 +23,6 @@
 }
 
 .indicator-card {
-    --indicator-delta-accent: currentColor;
-
     background: color-mix(
         in srgb,
         var(--indicator-selected-background) 88%,
@@ -49,7 +47,6 @@
 }
 
 .indicator-card-copy {
-    gap: calc(var(--indicator-card-copy-gap) * 0.4);
     margin-bottom: var(--indicator-card-copy-gap);
     min-height: 0;
     min-width: 0;
@@ -64,14 +61,6 @@
     overflow: hidden;
     overflow-wrap: anywhere;
     text-wrap: balance;
-}
-
-.indicator-card-detail {
-    color: color-mix(in srgb, currentColor 60%, transparent);
-    font-size: var(--indicator-card-detail-size);
-    line-height: 1.25;
-    overflow: hidden;
-    overflow-wrap: anywhere;
 }
 
 .indicator-card-value-panel {
@@ -93,21 +82,16 @@
     border-radius: calc(var(--space-md) * 1.1);
     box-sizing: border-box;
     gap: calc(var(--space-sm) * 0.8);
+    margin-inline: auto;
     max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
     min-height: var(--indicator-card-delta-height);
     padding: var(--space-2xs) var(--space-sm) var(--space-2xs) var(--space-2xs);
 }
 
 .indicator-card-delta-marker {
-    background: color-mix(
-        in srgb,
-        var(--indicator-delta-accent) 16%,
-        var(--color-bg-0)
-    );
+    background: color-mix(in srgb, currentColor 12%, transparent);
     border-radius: 999px;
-    color: var(--indicator-delta-accent);
+    color: inherit;
     flex: 0 0 auto;
     height: calc(var(--indicator-card-delta-size) * 1.55);
     width: calc(var(--indicator-card-delta-size) * 1.55);

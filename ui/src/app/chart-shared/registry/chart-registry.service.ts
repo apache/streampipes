@@ -28,6 +28,7 @@ import { TimeSeriesChartWidgetConfigComponent } from '../components/charts/time-
 import { ImageWidgetConfigComponent } from '../components/charts/image/config/image-widget-config.component';
 import { ImageWidgetComponent } from '../components/charts/image/image-widget.component';
 import { IndicatorWidgetConfigComponent } from '../components/charts/indicator/config/indicator-chart-widget-config.component';
+import { IndicatorAppearanceConfigComponent } from '../components/charts/indicator/appearance-config/indicator-appearance-config.component';
 import { CorrelationWidgetConfigComponent } from '../components/charts/correlation-chart/config/correlation-chart-widget-config.component';
 import { SpEchartsWidgetComponent } from '../components/charts/base/echarts-widget.component';
 import { HeatmapWidgetModel } from '../components/charts/heatmap/model/heatmap-widget.model';
@@ -184,6 +185,8 @@ export class ChartRegistry {
             {
                 id: 'indicator-chart',
                 label: this.translateService.instant('Indicator'),
+                widgetAppearanceConfigurationComponent:
+                    IndicatorAppearanceConfigComponent,
                 widgetConfigurationComponent: IndicatorWidgetConfigComponent,
                 widgetComponent: IndicatorWidgetComponent,
                 icon: '123',

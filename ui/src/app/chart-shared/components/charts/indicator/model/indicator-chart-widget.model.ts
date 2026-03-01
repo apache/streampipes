@@ -21,7 +21,10 @@ import {
     DataExplorerField,
     DataExplorerWidgetModel,
 } from '@streampipes/platform-services';
-import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
+import {
+    DataExplorerVisConfig,
+    WidgetBaseAppearanceConfig,
+} from '../../../../models/dataview-dashboard.model';
 
 export interface IndicatorChartVisConfig extends DataExplorerVisConfig {
     valueField?: DataExplorerField;
@@ -29,6 +32,11 @@ export interface IndicatorChartVisConfig extends DataExplorerVisConfig {
     showDelta?: boolean;
     title?: string;
     description?: string;
+}
+
+export interface IndicatorAppearanceConfig extends WidgetBaseAppearanceConfig {
+    valueFontSize?: number;
+    deltaFontSize?: number;
 }
 
 export interface IndicatorChartWidgetModel extends DataExplorerWidgetModel {

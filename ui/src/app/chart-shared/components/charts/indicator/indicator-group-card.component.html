@@ -23,15 +23,9 @@
     [class.grouped]="grouped"
     data-cy="indicator-chart-card"
 >
-    @if (card.label || card.detail) {
+    @if (card.label) {
         <div class="indicator-card-copy" fxLayout="column">
-            @if (card.label) {
-                <div class="indicator-card-label">{{ card.label }}</div>
-            }
-
-            @if (card.detail) {
-                <div class="indicator-card-detail">{{ card.detail }}</div>
-            }
+            <div class="indicator-card-label">{{ card.label }}</div>
         </div>
     }
 
@@ -51,7 +45,6 @@
             class="indicator-card-delta"
             fxLayout="row"
             fxLayoutAlign="start center"
-            [ngClass]="'indicator-card-delta-' + card.deltaView.tone"
             data-cy="indicator-chart-delta"
         >
             <div

@@ -16,7 +16,7 @@
  *
  */
 
-import { NgClass, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -38,7 +38,6 @@ export interface IndicatorDeltaView {
 export interface IndicatorGroupCardView {
     id: string;
     label?: string;
-    detail?: string;
     displayValue: string;
     deltaView?: IndicatorDeltaView;
 }
@@ -52,100 +51,107 @@ export interface IndicatorGroupCardView {
         LayoutAlignDirective,
         FlexDirective,
         NgStyle,
-        NgClass,
         MatIcon,
     ],
 })
 export class IndicatorGroupCardComponent {
+    private static readonly REFERENCE_CARD_WIDTH = 560;
+    private static readonly REFERENCE_CARD_HEIGHT = 320;
+    private static readonly MIN_FONT_SCALE = 0.15;
+    private static readonly MAX_FONT_SCALE = 1;
+
     @Input({ required: true }) card: IndicatorGroupCardView;
     @Input() cardWidth = 320;
     @Input() cardHeight = 240;
     @Input() grouped = false;
+    @Input() manualValueFontSize?: number;
+    @Input() manualDeltaFontSize?: number;
+    @Input() scaleManualFonts = false;
 
     get cardStyles(): Record<string, string> {
-        const minDimension = Math.max(
-            Math.min(this.cardWidth, this.cardHeight),
-            1,
-        );
-        const hasSupport = !!this.card.label || !!this.card.detail;
-        const hasDelta = !!this.card.deltaView;
-        const compactMode = this.grouped || this.cardWidth < 320;
+        const tinyMode = this.cardWidth < 220 || this.cardHeight < 150;
+        const compactMode =
+            this.grouped || this.cardWidth < 320 || this.cardHeight < 220;
 
-        const padding = this.clamp(
-            minDimension * (compactMode ? 0.055 : 0.07),
-            8,
-            20,
-        );
-        const sectionGap = this.clamp(
-            minDimension * (compactMode ? 0.018 : 0.028),
-            4,
-            12,
-        );
-        const copyGap = this.clamp(sectionGap * 0.7, 2, 8);
-        const valueGap = this.clamp(sectionGap * 0.45, 2, 6);
-        const labelSize = this.clamp(minDimension * 0.07, 11, 18);
-        const detailSize = this.clamp(minDimension * 0.055, 10, 14);
-        const deltaSize = this.clamp(
-            minDimension * (compactMode ? 0.072 : 0.07),
-            12,
-            19,
-        );
-        const deltaMetaSize = this.clamp(
-            minDimension * (compactMode ? 0.04 : 0.044),
-            9,
-            12,
-        );
-        const deltaHeight = this.clamp(
-            minDimension * (compactMode ? 0.18 : 0.2),
-            30,
-            52,
-        );
-        const supportHeight =
-            (this.card.label ? labelSize * 1.25 : 0) +
-            (this.card.detail ? detailSize * 1.35 : 0) +
-            (hasSupport ? copyGap : 0);
-        const availableValueHeight =
-            this.cardHeight -
-            padding * 2 -
-            supportHeight -
-            (hasDelta ? deltaHeight + valueGap : 0);
-        const valueSize = this.clamp(
-            Math.min(
-                this.cardWidth * (compactMode ? 0.19 : 0.22),
-                availableValueHeight *
-                    (compactMode
-                        ? hasSupport && hasDelta
-                            ? 0.72
-                            : 0.78
-                        : hasSupport && hasDelta
-                          ? 0.76
-                          : 0.82),
-            ),
-            compactMode ? 20 : 24,
-            compactMode ? 20 : 112,
-        );
-        const deltaSizeAdjusted = this.clamp(
-            Math.min(
-                deltaSize,
-                this.cardWidth * (compactMode ? 0.072 : 0.082),
-                deltaHeight * (compactMode ? 0.32 : 0.36),
-            ),
-            10,
-            18,
-        );
+        const defaults = tinyMode
+            ? {
+                  padding: 8,
+                  copyGap: 3,
+                  valueGap: 2,
+                  labelSize: 11,
+                  valueSize: 34,
+                  deltaSize: 13,
+                  deltaMetaSize: 9,
+                  deltaHeight: 24,
+              }
+            : compactMode
+              ? {
+                    padding: 10,
+                    copyGap: 4,
+                    valueGap: 4,
+                    labelSize: 12,
+                    valueSize: 48,
+                    deltaSize: 16,
+                    deltaMetaSize: 10,
+                    deltaHeight: 30,
+                }
+              : {
+                    padding: 16,
+                    copyGap: 6,
+                    valueGap: 6,
+                    labelSize: 14,
+                    valueSize: 72,
+                    deltaSize: 20,
+                    deltaMetaSize: 12,
+                    deltaHeight: 38,
+                };
 
         return {
-            '--indicator-card-padding': `${padding}px`,
-            '--indicator-card-gap': `${sectionGap}px`,
-            '--indicator-card-copy-gap': `${copyGap}px`,
-            '--indicator-card-value-gap': `${valueGap}px`,
-            '--indicator-card-label-size': `${labelSize}px`,
-            '--indicator-card-detail-size': `${detailSize}px`,
-            '--indicator-card-value-size': `${valueSize}px`,
-            '--indicator-card-delta-size': `${deltaSizeAdjusted}px`,
-            '--indicator-card-delta-meta-size': `${deltaMetaSize}px`,
-            '--indicator-card-delta-height': `${deltaHeight}px`,
+            '--indicator-card-padding': `${defaults.padding}px`,
+            '--indicator-card-copy-gap': `${defaults.copyGap}px`,
+            '--indicator-card-value-gap': `${defaults.valueGap}px`,
+            '--indicator-card-label-size': `${defaults.labelSize}px`,
+            '--indicator-card-value-size': `${this.resolveManualFontSize(
+                this.manualValueFontSize,
+                defaults.valueSize,
+            )}px`,
+            '--indicator-card-delta-size': `${this.resolveManualFontSize(
+                this.manualDeltaFontSize,
+                defaults.deltaSize,
+            )}px`,
+            '--indicator-card-delta-meta-size': `${defaults.deltaMetaSize}px`,
+            '--indicator-card-delta-height': `${defaults.deltaHeight}px`,
         };
+    }
+
+    private resolveManualFontSize(
+        manualSize: number | undefined,
+        fallbackSize: number,
+    ): number {
+        if (
+            manualSize === undefined ||
+            manualSize === null ||
+            Number.isNaN(Number(manualSize)) ||
+            manualSize <= 0
+        ) {
+            return fallbackSize;
+        }
+
+        if (!this.scaleManualFonts) {
+            return manualSize;
+        }
+
+        const widthScale =
+            this.cardWidth / IndicatorGroupCardComponent.REFERENCE_CARD_WIDTH;
+        const heightScale =
+            this.cardHeight / IndicatorGroupCardComponent.REFERENCE_CARD_HEIGHT;
+        const scale = this.clamp(
+            Math.min(widthScale, heightScale),
+            IndicatorGroupCardComponent.MIN_FONT_SCALE,
+            IndicatorGroupCardComponent.MAX_FONT_SCALE,
+        );
+
+        return Math.round(manualSize * scale * 10) / 10;
     }
 
     private clamp(value: number, min: number, max: number): number {
