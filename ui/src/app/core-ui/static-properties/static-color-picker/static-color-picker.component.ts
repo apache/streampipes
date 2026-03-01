@@ -18,7 +18,12 @@
 
 import { Component, OnInit } from '@angular/core';
 import { StaticPropertyUtilService } from '../static-property-util.service';
-import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    ValidatorFn,
+    Validators,
+} from '@angular/forms';
 import { ColorPickerStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -59,23 +64,37 @@ export class StaticColorPickerComponent
     ngOnInit() {
         this.addValidator(
             this.staticProperty.selectedColor,
-            Validators.required,
+            this.collectValidators(),
         );
         this.enableValidators();
+        this.checkCompleted();
+    }
+
+    private collectValidators(): ValidatorFn[] {
+        const validators: ValidatorFn[] = [];
+        if (!this.staticProperty.optional) {
+            validators.push(Validators.required);
+        }
+
+        return validators;
     }
 
     checkCompleted() {
         this.applyCompletedConfiguration(
-            this.staticPropertyUtil.asColorPickerStaticProperty(
-                this.staticProperty,
-            ).selectedColor &&
-                this.staticPropertyUtil.asColorPickerStaticProperty(
+            this.staticProperty.optional ||
+                (this.staticPropertyUtil.asColorPickerStaticProperty(
                     this.staticProperty,
-                ).selectedColor !== '',
+                ).selectedColor &&
+                    this.staticPropertyUtil.asColorPickerStaticProperty(
+                        this.staticProperty,
+                    ).selectedColor !== ''),
         );
     }
 
     onStatusChange(status: any) {}
 
-    onValueChange(value: any) {}
+    onValueChange(value: any) {
+        this.staticProperty.selectedColor = value;
+        this.checkCompleted();
+    }
 }

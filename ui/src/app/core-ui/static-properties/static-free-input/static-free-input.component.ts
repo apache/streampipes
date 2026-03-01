@@ -128,9 +128,10 @@ export class StaticFreeInputComponent
 
     emitUpdate() {
         const valid =
-            this.staticProperty.value !== undefined &&
-            this.staticProperty.value !== '' &&
-            this.staticProperty.value !== null;
+            this.staticProperty.optional ||
+            (this.staticProperty.value !== undefined &&
+                this.staticProperty.value !== '' &&
+                this.staticProperty.value !== null);
         this.applyCompletedConfiguration(valid);
     }
 

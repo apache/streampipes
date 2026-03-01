@@ -17,7 +17,12 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    ValidatorFn,
+    Validators,
+} from '@angular/forms';
 import { StaticMappingComponent } from '../static-mapping/static-mapping';
 import { MappingPropertyUnary } from '@streampipes/platform-services';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -50,22 +55,41 @@ export class StaticMappingUnaryComponent
 
     ngOnInit() {
         this.extractPossibleSelections();
-        if (!this.staticProperty.selectedProperty) {
+        if (
+            !this.staticProperty.selectedProperty &&
+            !this.staticProperty.optional
+        ) {
             this.staticProperty.selectedProperty =
                 this.availableProperties[0].propertySelector;
             this.applyCompletedConfiguration(true);
         }
         this.addValidator(
             this.staticProperty.selectedProperty,
-            Validators.required,
+            this.collectValidators(),
         );
         this.enableValidators();
+        this.applyCompletedConfiguration(
+            this.staticProperty.optional ||
+                !!this.staticProperty.selectedProperty,
+        );
+    }
+
+    private collectValidators(): ValidatorFn[] {
+        const validators: ValidatorFn[] = [];
+        if (!this.staticProperty.optional) {
+            validators.push(Validators.required);
+        }
+
+        return validators;
     }
 
     onStatusChange(status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.selectedProperty = value;
-        this.applyCompletedConfiguration(true);
+        this.applyCompletedConfiguration(
+            this.staticProperty.optional ||
+                !!this.staticProperty.selectedProperty,
+        );
     }
 }
