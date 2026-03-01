@@ -46,8 +46,6 @@ import { SpValueHeatmapRendererService } from '../components/charts/value-heatma
 import { CorrelationChartWidgetModel } from '../components/charts/correlation-chart/model/correlation-chart-widget.model';
 import { SpScatterRendererService } from '../components/charts/scatter/scatter-renderer.service';
 import { SpDensityRendererService } from '../components/charts/density/density-renderer.service';
-import { IndicatorChartWidgetModel } from '../components/charts/indicator/model/indicator-chart-widget.model';
-import { SpIndicatorRendererService } from '../components/charts/indicator/indicator-renderer.service';
 import { TimeSeriesChartWidgetModel } from '../components/charts/time-series-chart/model/time-series-chart-widget.model';
 import { SpTimeseriesRendererService } from '../components/charts/time-series-chart/sp-timeseries-renderer.service';
 import { SpEchartsWidgetAppearanceConfigComponent } from '../components/chart-config/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
@@ -59,6 +57,7 @@ import { TrafficLightWidgetConfigComponent } from '../components/charts/traffic-
 import { TrafficLightWidgetComponent } from '../components/charts/traffic-light/traffic-light-widget.component';
 import { StatusWidgetConfigComponent } from '../components/charts/status/config/status-widget-config.component';
 import { StatusWidgetComponent } from '../components/charts/status/status-widget.component';
+import { IndicatorWidgetComponent } from '../components/charts/indicator/indicator-widget.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
@@ -74,7 +73,6 @@ export class ChartRegistry {
         private valueHeatmapRenderer: SpValueHeatmapRendererService,
         private scatterRenderer: SpScatterRendererService,
         private densityRenderer: SpDensityRendererService,
-        private indicatorRenderer: SpIndicatorRendererService,
         private timeseriesRenderer: SpTimeseriesRendererService,
         private translateService: TranslateService,
     ) {
@@ -186,12 +184,8 @@ export class ChartRegistry {
             {
                 id: 'indicator-chart',
                 label: this.translateService.instant('Indicator'),
-                widgetAppearanceConfigurationComponent:
-                    SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: IndicatorWidgetConfigComponent,
-                widgetComponent:
-                    SpEchartsWidgetComponent<IndicatorChartWidgetModel>,
-                chartRenderer: this.indicatorRenderer,
+                widgetComponent: IndicatorWidgetComponent,
                 icon: '123',
                 description: this.translateService.instant(
                     'The current value displayed as a number',

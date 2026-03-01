@@ -34,11 +34,40 @@
     <sp-split-section [level]="3" [title]="'Settings' | translate">
         <mat-checkbox
             data-cy="data-explorer-select-delta-checkbox"
-            (change)="updateDelta($event)"
+            (change)="updateDelta()"
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.showDelta
             "
             >{{ 'Show delta indicator' | translate }}
         </mat-checkbox>
+    </sp-split-section>
+    <sp-split-section [level]="3" [title]="'Content' | translate">
+        <sp-form-field [level]="3" [label]="'Title' | translate">
+            <mat-form-field fxFlex="100">
+                <input
+                    data-cy="data-explorer-indicator-title-input"
+                    matInput
+                    type="text"
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig.title
+                    "
+                    (ngModelChange)="triggerViewRefresh()"
+                />
+            </mat-form-field>
+        </sp-form-field>
+        <sp-form-field [level]="3" [label]="'Description' | translate">
+            <mat-form-field fxFlex="100">
+                <textarea
+                    data-cy="data-explorer-indicator-description-input"
+                    matInput
+                    rows="3"
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .description
+                    "
+                    (ngModelChange)="triggerViewRefresh()"
+                ></textarea>
+            </mat-form-field>
+        </sp-form-field>
     </sp-split-section>
 </sp-visualization-config-outer>

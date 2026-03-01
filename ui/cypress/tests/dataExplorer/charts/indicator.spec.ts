@@ -18,6 +18,7 @@
 
 import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
 import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
+import { DataExplorerBtns } from '../../../support/utils/dataExplorer/DataExplorerBtns';
 
 describe('Test Indicator View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
@@ -31,10 +32,23 @@ describe('Test Indicator View in Data Explorer', () => {
             'indicator-chart',
         );
 
-        // Check checkbox
         DataExplorerUtils.openVisualizationConfig();
-        cy.dataCy('data-explorer-select-delta-checkbox').click();
+        DataExplorerBtns.indicatorChartDeltaCheckbox().click();
+        DataExplorerBtns.indicatorChartTitleInput().type('Current Metric');
+        DataExplorerBtns.indicatorChartDescriptionInput().type(
+            'Live value compared to the previous event.',
+        );
 
-        cy.dataCy('indicator-chart').should('be.visible');
+        DataExplorerBtns.indicatorChart().should('be.visible');
+        DataExplorerBtns.indicatorChartTitle().should(
+            'contain.text',
+            'Current Metric',
+        );
+        DataExplorerBtns.indicatorChartDescription().should(
+            'contain.text',
+            'Live value compared to the previous event.',
+        );
+        DataExplorerBtns.indicatorChartValue().should('not.be.empty');
+        DataExplorerBtns.indicatorChartDelta().should('be.visible');
     });
 });

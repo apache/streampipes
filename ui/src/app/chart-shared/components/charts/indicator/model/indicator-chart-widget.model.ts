@@ -27,6 +27,8 @@ export interface IndicatorChartVisConfig extends DataExplorerVisConfig {
     valueField?: DataExplorerField;
     deltaField?: DataExplorerField;
     showDelta?: boolean;
+    title?: string;
+    description?: string;
 }
 
 export interface IndicatorChartWidgetModel extends DataExplorerWidgetModel {
