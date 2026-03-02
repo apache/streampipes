@@ -38,6 +38,7 @@ export abstract class AbstractValidatedStaticPropertyRenderer<
     }
 
     enableValidators() {
+        this.fieldValid = this.parentForm.controls[this.fieldName].valid;
         this.parentForm.controls[this.fieldName].valueChanges.subscribe(
             value => {
                 this.onValueChange(value);

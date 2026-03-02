@@ -126,7 +126,9 @@ export class StaticFileInputComponent
 
     collectValidators() {
         const validators: ValidatorFn[] = [];
-        validators.push(Validators.required);
+        if (!this.staticProperty.optional) {
+            validators.push(Validators.required);
+        }
 
         return validators;
     }

@@ -17,7 +17,12 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    ValidatorFn,
+    Validators,
+} from '@angular/forms';
 import { StaticPropertyUtilService } from '../static-property-util.service';
 import { SecretStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
@@ -48,18 +53,29 @@ export class StaticSecretInputComponent
     }
 
     ngOnInit() {
-        this.addValidator(this.staticProperty.value, Validators.required);
+        this.addValidator(this.staticProperty.value, this.collectValidators());
         this.enableValidators();
+        this.emitUpdate();
+    }
+
+    private collectValidators(): ValidatorFn[] {
+        const validators: ValidatorFn[] = [];
+        if (!this.staticProperty.optional) {
+            validators.push(Validators.required);
+        }
+
+        return validators;
     }
 
     emitUpdate() {
         this.applyCompletedConfiguration(
-            this.staticPropertyUtil.asFreeTextStaticProperty(
-                this.staticProperty,
-            ).value &&
-                this.staticPropertyUtil.asFreeTextStaticProperty(
+            this.staticProperty.optional ||
+                (this.staticPropertyUtil.asFreeTextStaticProperty(
                     this.staticProperty,
-                ).value !== '',
+                ).value &&
+                    this.staticPropertyUtil.asFreeTextStaticProperty(
+                        this.staticProperty,
+                    ).value !== ''),
         );
     }
 
@@ -68,5 +84,6 @@ export class StaticSecretInputComponent
     onValueChange(value: any) {
         this.staticProperty.value = value;
         this.staticProperty.encrypted = false;
+        this.emitUpdate();
     }
 }

@@ -191,6 +191,7 @@ export class StaticPropertyUtilService {
         dst.label = src.label;
         dst.description = src.description;
         dst.internalName = src.internalName;
+        dst.optional = src.optional;
         return dst;
     }
 
