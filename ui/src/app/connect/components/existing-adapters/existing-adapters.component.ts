@@ -288,7 +288,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     getIconUrl(adapter: AdapterDescription) {
-        if (adapter.includedAssets.length > 0) {
+        if (adapter.includedAssets?.some(asset => asset.startsWith('icon.'))) {
             return (
                 this.pipelineElementAssetService.getAssetUrl(adapter.appId) +
                 '/icon'

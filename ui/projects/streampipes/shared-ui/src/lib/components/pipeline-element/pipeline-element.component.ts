@@ -61,7 +61,9 @@ export class PipelineElementComponent {
     checkImageAvailable() {
         if (
             this.pipelineElement.includesAssets &&
-            this.pipelineElement.includedAssets.indexOf('icon.png') > -1
+            this.pipelineElement.includedAssets?.some(asset =>
+                asset.startsWith('icon.'),
+            )
         ) {
             this.image = this.sanitizer.bypassSecurityTrustUrl(
                 this.makeAssetIconUrl(),

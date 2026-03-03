@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.extensions.api.pe.config;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
+import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
@@ -29,4 +31,8 @@ public interface IPipelineElementConfiguration<NeT extends NamedStreamPipesEntit
   NeT getDescription();
 
   Supplier<PeT> getSupplier();
+
+  default AssetResolver getAssetResolver() {
+    return new DefaultAssetResolver(getDescription().getAppId());
+  }
 }

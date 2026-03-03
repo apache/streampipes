@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.sdk.builder.processor;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
@@ -28,16 +29,25 @@ public class DataProcessorConfiguration implements IDataProcessorConfiguration {
 
   private final Supplier<IStreamPipesDataProcessor> supplier;
   private final DataProcessorDescription dataProcessorDescription;
+  private final AssetResolver assetResolver;
 
   public static DataProcessorConfiguration create(Supplier<IStreamPipesDataProcessor> supplier,
                                                   DataProcessorDescription dataProcessorDescription) {
-    return new DataProcessorConfiguration(supplier, dataProcessorDescription);
+    return new DataProcessorConfiguration(supplier, dataProcessorDescription, null);
+  }
+
+  public static DataProcessorConfiguration create(Supplier<IStreamPipesDataProcessor> supplier,
+                                                  DataProcessorDescription dataProcessorDescription,
+                                                  AssetResolver assetResolver) {
+    return new DataProcessorConfiguration(supplier, dataProcessorDescription, assetResolver);
   }
 
   private DataProcessorConfiguration(Supplier<IStreamPipesDataProcessor> supplier,
-                                    DataProcessorDescription dataProcessorDescription) {
+                                     DataProcessorDescription dataProcessorDescription,
+                                     AssetResolver assetResolver) {
     this.supplier = supplier;
     this.dataProcessorDescription = dataProcessorDescription;
+    this.assetResolver = assetResolver;
   }
 
   @Override
@@ -48,5 +58,10 @@ public class DataProcessorConfiguration implements IDataProcessorConfiguration {
   @Override
   public Supplier<IStreamPipesDataProcessor> getSupplier() {
     return supplier;
+  }
+
+  @Override
+  public AssetResolver getAssetResolver() {
+    return assetResolver == null ? IDataProcessorConfiguration.super.getAssetResolver() : assetResolver;
   }
 }

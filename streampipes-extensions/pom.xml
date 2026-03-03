@@ -34,6 +34,7 @@
         <module>streampipes-connect-adapters</module>
         <module>streampipes-connect-adapters-iiot</module>
 
+        <module>streampipes-connectors-camel</module>
         <module>streampipes-connectors-influx</module>
         <module>streampipes-connectors-kafka</module>
         <module>streampipes-connectors-mqtt</module>
@@ -65,12 +66,48 @@
         <module>streampipes-extensions-iiot-minimal</module>
         <module>streampipes-connectors-ros</module>
         <module>streampipes-processors-llm-jvm</module>
+        <module>streampipes-connectors-camel-azure</module>
     </modules>
 
     <properties>
         <owasp.check.skip>true</owasp.check.skip>
         <maven.deploy.skip>false</maven.deploy.skip>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>msal4j</artifactId>
+                <version>1.23.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.azure</groupId>
+                <artifactId>azure-json</artifactId>
+                <version>1.5.0</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>4.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>5.17.0</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna-platform</artifactId>
+                <version>5.17.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hdrhistogram</groupId>
+                <artifactId>HdrHistogram</artifactId>
+                <version>2.2.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement>
