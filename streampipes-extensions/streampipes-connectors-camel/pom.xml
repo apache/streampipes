@@ -28,10 +28,6 @@
 
     <artifactId>streampipes-connectors-camel</artifactId>
 
-    <properties>
-        <camel.version>4.18.0</camel.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
@@ -62,27 +58,22 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-bean</artifactId>
-            <version>${camel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-direct</artifactId>
-            <version>${camel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-kamelet</artifactId>
-            <version>${camel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-yaml-dsl</artifactId>
-            <version>${camel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.snakeyaml</groupId>
             <artifactId>snakeyaml-engine</artifactId>
-            <version>3.0.1</version>
         </dependency>
     </dependencies>
 
