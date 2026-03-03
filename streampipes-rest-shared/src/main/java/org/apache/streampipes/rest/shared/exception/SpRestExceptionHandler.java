@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.shared.exception;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 
@@ -32,15 +33,24 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class SpRestExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(value = {AdapterException.class})
-  private ResponseEntity<Object> handleAdapterException(RuntimeException ex, WebRequest request) {
-    var spLogMessageException =  new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
+  private ResponseEntity<Object> handleAdapterException(AdapterException ex, WebRequest request) {
+    var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
+    return handleSpLogMessageException(spLogMessageException, request);
+  }
+
+  @ExceptionHandler(value = {NoServiceEndpointsAvailableException.class})
+  private ResponseEntity<Object> handleNoServiceEndpointsAvailableException(
+      NoServiceEndpointsAvailableException ex,
+      WebRequest request) {
+    var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
     return handleSpLogMessageException(spLogMessageException, request);
   }
 
   @ExceptionHandler(value = {SpLogMessageException.class})
   protected ResponseEntity<Object> handleSpLogMessageException(
-      RuntimeException ex, WebRequest request) {
-    var exception = (SpLogMessageException) ex;
+      SpLogMessageException ex,
+      WebRequest request) {
+    var exception = ex;
     return ResponseEntity
         .status(exception.getStatus())
         .body(exception.getSpMessage());
