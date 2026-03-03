@@ -102,15 +102,9 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       if (result == null) {
         LOG.error("Not found adapter with id {}", id);
         return fail();
-<<<<<<< Updated upstream
       } else {
         return ok(result);
-=======
->>>>>>> Stashed changes
       }
-      return ResponseEntity.ok()
-          .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(result)))
-          .body(result);
     } catch (AdapterException | NoServiceEndpointsAvailableException e) {
       LOG.error("Not found adapter with id {}", id, e);
       return fail();
