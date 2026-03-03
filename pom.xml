@@ -115,6 +115,7 @@
         <!-- dependency convergence -->
         <javassist.version>3.30.1-GA</javassist.version>
         <woodstox.version>7.0.0</woodstox.version>
+        <hdrhistogram.version>2.2.2</hdrhistogram.version>
         <istack-runtime.version>4.1.2</istack-runtime.version>
         <javax.xml.bind.version>2.3.1</javax.xml.bind.version>
         <jaxb-runtime.version>2.3.9</jaxb-runtime.version>
@@ -736,6 +737,11 @@
                 <groupId>org.graalvm.polyglot</groupId>
                 <artifactId>polyglot</artifactId>
                 <version>${graalvm.js.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hdrhistogram</groupId>
+                <artifactId>HdrHistogram</artifactId>
+                <version>${hdrhistogram.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.influxdb</groupId>

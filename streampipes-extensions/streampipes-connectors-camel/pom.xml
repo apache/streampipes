@@ -75,6 +75,10 @@
             <groupId>org.snakeyaml</groupId>
             <artifactId>snakeyaml-engine</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.hdrhistogram</groupId>
+            <artifactId>HdrHistogram</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
