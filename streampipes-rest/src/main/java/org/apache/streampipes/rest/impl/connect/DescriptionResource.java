@@ -56,9 +56,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   @GetMapping(path = "/adapters", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<List<AdapterDescription>> getAdapters() {
-    List<AdapterDescription> result = managementService.getAdapters();
-
-    return ok(result);
+    return ok(managementService.getAdapters());
   }
 
   @GetMapping(path = "/{id}/assets", produces = "application/zip")
@@ -76,15 +74,12 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       }
 
       if (result == null) {
-        LOG.error("Not found adapter with id " + id);
+        LOG.error("Not found adapter with id {}", id);
         return fail();
-      } else {
-        return ok(result);
       }
-    } catch (AdapterException e) {
-      LOG.error("Not found adapter with id " + id, e);
-      return fail();
-    } catch (NoServiceEndpointsAvailableException e) {
+      return ok(result);
+    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+      LOG.error("Not found adapter with id {}", id, e);
       return fail();
     }
   }
@@ -105,15 +100,13 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       }
 
       if (result == null) {
-        LOG.error("Not found adapter with id " + id);
+        LOG.error("Not found adapter with id {}", id);
         return fail();
       } else {
         return ok(result);
       }
-    } catch (AdapterException e) {
-      LOG.error("Not found adapter with id " + id);
-      return fail();
-    } catch (NoServiceEndpointsAvailableException e) {
+    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+      LOG.error("Not found adapter with id {}", id, e);
       return fail();
     }
   }
@@ -133,15 +126,12 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       }
 
       if (result == null) {
-        LOG.error("Not found adapter with id " + id);
+        LOG.error("Not found adapter with id {}", id);
         return fail();
-      } else {
-        return ok(result);
       }
-    } catch (AdapterException e) {
-      LOG.error("Not found adapter with id " + id, e);
-      return fail();
-    } catch (NoServiceEndpointsAvailableException e) {
+      return ok(result);
+    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+      LOG.error("Not found adapter with id {}", id, e);
       return fail();
     }
   }

@@ -72,11 +72,8 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<Void> {
       RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(baseUrl, appId, runtimeOptionsRequest);
 
       return ok(result);
-    } catch (AdapterException e) {
-      LOG.error("Adapter exception occurred", e);
-      return serverError(SpLogMessage.from(e));
-    } catch (NoServiceEndpointsAvailableException e) {
-      LOG.error("Could not find service endpoint for {} while fetching configuration", appId);
+    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+      LOG.error("Could not fetch runtime configuration for {}", appId, e);
       return serverError(SpLogMessage.from(e));
     } catch (SpConfigurationException e) {
       LOG.error("Tried to fetch a runtime configuration with insufficient settings");

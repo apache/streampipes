@@ -23,16 +23,11 @@ import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.connect.ScriptMetadata;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.monitoring.SpLogMessage;
-import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,14 +69,5 @@ public class TransformationScriptLanguageResource {
           "Transformation capability unavailable: No service endpoints found supporting script languages.");
     }
 
-  }
-
-  // TODO move these ExceptionHandlers to another place
-  @ExceptionHandler(value = {NoServiceEndpointsAvailableException.class})
-  private ResponseEntity<Object> handleAdapterException(NoServiceEndpointsAvailableException ex) {
-    var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
-    return ResponseEntity
-        .status(spLogMessageException.getStatus())
-        .body(spLogMessageException.getSpMessage());
   }
 }
