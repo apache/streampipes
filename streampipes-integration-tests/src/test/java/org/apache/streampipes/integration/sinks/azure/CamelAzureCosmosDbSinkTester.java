@@ -56,6 +56,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class CamelAzureCosmosDbSinkTester extends SinkTesterBase {
 
   private static final String TEMPLATE_NAME = "azure-cosmosdb-sink";
+  private static final int COSMOS_STARTUP_ATTEMPTS = 12;
+  private static final long COSMOS_STARTUP_RETRY_DELAY_MS = 5000;
 
   private final String databaseName = "streampipes-test-" + UUID.randomUUID();
   private final String containerName = "items";
@@ -80,7 +82,7 @@ public class CamelAzureCosmosDbSinkTester extends SinkTesterBase {
     trustStore.install();
     emulatorKey = resolveEmulatorKey();
 
-    cosmosClient = createCosmosClient();
+    cosmosClient = awaitCosmosClientReady();
 
     cosmosClient.createDatabaseIfNotExists(databaseName);
     CosmosDatabase database = cosmosClient.getDatabase(databaseName);
@@ -271,7 +273,7 @@ public class CamelAzureCosmosDbSinkTester extends SinkTesterBase {
   private void awaitContainerReady() throws Exception {
     Exception lastException = null;
 
-    for (int attempt = 0; attempt < 20; attempt++) {
+    for (int attempt = 0; attempt < COSMOS_STARTUP_ATTEMPTS; attempt++) {
       try (CosmosClient probeClient = createCosmosClient()) {
         CosmosDatabase probeDatabase = probeClient.getDatabase(databaseName);
         CosmosContainer probeContainer = probeDatabase.getContainer(containerName);
@@ -280,7 +282,22 @@ public class CamelAzureCosmosDbSinkTester extends SinkTesterBase {
         return;
       } catch (Exception e) {
         lastException = e;
-        Thread.sleep(1000);
+        Thread.sleep(COSMOS_STARTUP_RETRY_DELAY_MS);
+      }
+    }
+
+    throw lastException;
+  }
+
+  private CosmosClient awaitCosmosClientReady() throws Exception {
+    Exception lastException = null;
+
+    for (int attempt = 0; attempt < COSMOS_STARTUP_ATTEMPTS; attempt++) {
+      try {
+        return createCosmosClient();
+      } catch (Exception e) {
+        lastException = e;
+        Thread.sleep(COSMOS_STARTUP_RETRY_DELAY_MS);
       }
     }
 
