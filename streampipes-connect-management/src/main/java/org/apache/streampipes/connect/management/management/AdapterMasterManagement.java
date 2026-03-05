@@ -18,20 +18,20 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
 import org.apache.streampipes.connect.management.util.GroundingUtils;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
-import org.apache.streampipes.manager.verification.DataStreamVerifier;
+import org.apache.streampipes.manager.verification.TypedElementVerifier;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
@@ -199,11 +199,15 @@ public class AdapterMasterManagement {
   }
 
   private void installDataSource(SpDataStream stream, String principalSid) throws AdapterException {
-    try {
-      new DataStreamVerifier(stream).verifyAndAdd(principalSid, false);
-    } catch (SepaParseException e) {
-      LOG.error("Error while installing data source: {}", stream.getElementId(), e);
-      throw new AdapterException();
-    }
+    var storageApi = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage();
+    var verifier = new TypedElementVerifier<>(
+        stream,
+        storageApi,
+        storageApi::exists,
+        storageApi::storeDataStream,
+        storageApi::update,
+        SpServiceUrlProvider.DATA_STREAM
+    );
+    verifier.verifyAndAdd(principalSid, false);
   }
 }
