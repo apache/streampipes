@@ -55,7 +55,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_READ_ASSETS_PRIVILEGE)
+  @PreAuthorize(AuthConstants.IS_AUTHENTICATED)
   @PostFilter("hasPermission(filterObject.elementId, 'READ')")
   public List<SpAssetModel> getAll() {
     return resourceManager.findAll();
@@ -69,7 +69,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
+  @PreAuthorize(AuthConstants.IS_AUTHENTICATED + " and hasPermission(#elementId, 'READ')")
   public ResponseEntity<SpAssetModel> getAsset(@PathVariable("id") String elementId) {
       var obj = resourceManager.find(elementId);
       if (obj != null) {
@@ -96,13 +96,6 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<Void> delete(@PathVariable("id") String elementId) {
     resourceManager.delete(elementId);
     return ok();
-  }
-
-  /**
-   * required by Spring expression
-   */
-  public boolean hasReadAuthority() {
-    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_ASSETS_VALUE);
   }
 
   /**

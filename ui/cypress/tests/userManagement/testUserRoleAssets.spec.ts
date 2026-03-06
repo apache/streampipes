@@ -34,7 +34,7 @@ describe('Test User Roles for Dashboards', () => {
 
         assetUser1 = UserUtils.createUser(
             'assetUser1',
-            UserRole.ROLE_ASSET_USER,
+            UserRole.ROLE_PIPELINE_USER,
         );
 
         assetAdmin1 = UserUtils.createUser(

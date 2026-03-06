@@ -360,9 +360,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {
-        if (this.assetFilterService.hasNoAssetFilterPermission()) {
-            elementIds = new Set<string>();
-        }
         this.currentFilterIds = elementIds;
         this.filteredAdapters = this.adapterFilter
             .transform(this.existingAdapters, this.currentFilter)
