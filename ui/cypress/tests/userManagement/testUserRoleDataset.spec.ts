@@ -20,9 +20,9 @@ import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { User } from '../../support/model/User';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
-import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
+import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
@@ -97,7 +97,7 @@ describe('Test Dataset Permissions', () => {
 
         assertDatasetAvailabilityInCharts(true);
 
-        DataExplorerUtils.goToDatalake();
+        ChartUtils.goToDatalake();
 
         PermissionUtils.authorizeUser(
             'test',
@@ -109,11 +109,11 @@ describe('Test Dataset Permissions', () => {
 
         UserUtils.switchUser(chartUser1);
 
-        DataExplorerUtils.checkAmountOfCharts(1);
+        ChartUtils.checkAmountOfCharts(1);
 
         GeneralUtils.openMenuForRow('test');
 
-        DataExplorerBtns.viewWidget('test').click();
+        ChartBtns.viewWidget('test').click();
 
         assertAlertBanner(true);
 
@@ -123,11 +123,11 @@ describe('Test Dataset Permissions', () => {
 
         UserUtils.switchUser(chartUser1);
 
-        DataExplorerUtils.checkAmountOfCharts(1);
+        ChartUtils.checkAmountOfCharts(1);
 
         GeneralUtils.openMenuForRow('test');
 
-        DataExplorerBtns.viewWidget('test').click();
+        ChartBtns.viewWidget('test').click();
 
         assertAlertBanner(false);
     });
@@ -152,7 +152,7 @@ describe('Test Dataset Permissions', () => {
 
         assertAlertBanner(true);
 
-        DataExplorerBtns.discardDashboard().click();
+        ChartBtns.discardDashboard().click();
 
         assertDatasetIsNotVisible(dashboardAdmin1);
 
@@ -166,18 +166,14 @@ describe('Test Dataset Permissions', () => {
     });
 
     function assertDatasetAvailabilityInCharts(available: boolean) {
-        DataExplorerUtils.goToDatalake();
-        DataExplorerBtns.openNewDataViewBtn().click();
+        ChartUtils.goToDatalake();
+        ChartBtns.openNewDataViewBtn().click();
         if (!available) {
             cy.get('sp-alert-banner').should('be.visible');
         } else {
-            DataExplorerUtils.assertSelectDataSet('simulator');
-            DataExplorerUtils.addDataViewAndTableWidget(
-                'test',
-                'simulator',
-                true,
-            );
-            DataExplorerUtils.saveDataViewConfiguration();
+            ChartUtils.assertSelectDataSet('simulator');
+            ChartUtils.addDataViewAndTableWidget('test', 'simulator', true);
+            ChartUtils.saveDataViewConfiguration();
         }
     }
 
@@ -187,10 +183,10 @@ describe('Test Dataset Permissions', () => {
     }
 
     function generateDashboard(name: string) {
-        DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.createNewDashboard(name);
-        DataExplorerUtils.editDashboard(name);
-        DataExplorerUtils.addDataViewToDashboard('test', true);
+        ChartUtils.goToDashboard();
+        ChartUtils.createNewDashboard(name);
+        ChartUtils.editDashboard(name);
+        ChartUtils.addDataViewToDashboard('test', true);
     }
     function assertDatasetIsVisibleAndEditableCanChangePermissions(user: User) {
         UserUtils.switchUser(user);

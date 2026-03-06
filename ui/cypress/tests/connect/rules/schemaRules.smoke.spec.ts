@@ -20,7 +20,7 @@ import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
-import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 
 describe('Connect schema rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -57,7 +57,7 @@ describe('Connect schema rule transformations', () => {
 
         ConnectUtils.startAdapter(adapterConfiguration, true);
 
-        DataExplorerUtils.checkResults(
+        ChartUtils.checkResults(
             'Adapter to test rules',
             'cypress/fixtures/connect/schemaRules/expected.csv',
             true,

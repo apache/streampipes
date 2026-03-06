@@ -16,18 +16,18 @@
  *
  */
 
-export class DataExplorerWidgetTableUtils {
-    public static dataExplorerTableRowTimestamp() {
+export class ChartWidgetTableUtils {
+    public static chartTableRowTimestamp() {
         return cy.dataCy('data-explorer-table-row-timestamp', {
             timeout: 10000,
         });
     }
 
     /**
-     * Checks how many rows are visible within the table widget in the data explorer
+     * Checks how many rows are visible within the table widget in charts
      * @param amount of expected rows
      */
     public static checkAmountOfRows(amount: number) {
-        this.dataExplorerTableRowTimestamp().should('have.length', amount);
+        this.chartTableRowTimestamp().should('have.length', amount);
     }
 }

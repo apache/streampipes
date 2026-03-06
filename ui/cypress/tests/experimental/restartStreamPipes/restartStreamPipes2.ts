@@ -17,7 +17,7 @@
  */
 
 import { DashboardUtils } from '../../../support/utils/DashboardUtils';
-import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 
 describe('Validate StreamPipes after restart', () => {
     beforeEach('Setup Test', () => {
@@ -26,7 +26,7 @@ describe('Validate StreamPipes after restart', () => {
 
     it('Perform Test', () => {
         // Truncate data in db
-        DataExplorerUtils.goToDatalakeConfiguration();
+        ChartUtils.goToDatalakeConfiguration();
         cy.dataCy('datalake-truncate-btn').should('be.visible').click();
         cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 })
             .should('be.visible')

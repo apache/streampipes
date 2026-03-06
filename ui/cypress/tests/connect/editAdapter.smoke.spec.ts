@@ -19,8 +19,8 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
+import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { SharedUtils } from '../../support/utils/shared/SharedUtils';
 import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
@@ -114,23 +114,23 @@ describe('Test Edit Adapter', () => {
         storeAndStartEditedAdapter();
 
         // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
-        DataExplorerUtils.goToDatalakeConfiguration();
+        ChartUtils.goToDatalakeConfiguration();
 
-        DataExplorerUtils.waitForCountingResults();
+        ChartUtils.waitForCountingResults();
 
         let initialValue;
 
-        DataExplorerUtils.getDatalakeNumberOfEvents().then(value => {
+        ChartUtils.getDatalakeNumberOfEvents().then(value => {
             initialValue = value;
         });
 
         cy.wait(3000);
 
-        DataExplorerBtns.refreshDataLakeMeasures().click();
+        ChartBtns.refreshDataLakeMeasures().click();
 
-        DataExplorerUtils.waitForCountingResults();
+        ChartUtils.waitForCountingResults();
 
-        DataExplorerUtils.getDatalakeNumberOfEvents().then(newValue => {
+        ChartUtils.getDatalakeNumberOfEvents().then(newValue => {
             expect(newValue).not.equal(initialValue);
         });
     });

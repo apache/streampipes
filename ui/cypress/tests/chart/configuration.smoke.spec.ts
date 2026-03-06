@@ -17,37 +17,33 @@
  */
 
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
+import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 
 describe('Test Truncate data in datalake', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataExplorerUtils.loadRandomDataSetIntoDataLake();
+        ChartUtils.loadRandomDataSetIntoDataLake();
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.goToDatalakeConfiguration();
+        ChartUtils.goToDatalakeConfiguration();
         cy.dataCy('datalake-total-count-button').click();
 
         // Check if amount of events is correct
-        DataExplorerBtns.datalakeNumberEvents()
-            .should('be.visible')
-            .contains('10');
+        ChartBtns.datalakeNumberEvents().should('be.visible').contains('10');
 
         // Truncate data
         GeneralUtils.openMenuForRow(PrepareTestDataUtils.dataName);
-        DataExplorerBtns.dataLakeTruncateBtn().should('be.visible').click();
-        DataExplorerBtns.confirmDataLakeTruncateBtn()
-            .should('be.visible')
-            .click();
+        ChartBtns.dataLakeTruncateBtn().should('be.visible').click();
+        ChartBtns.confirmDataLakeTruncateBtn().should('be.visible').click();
 
         cy.dataCy('datalake-total-count-button').click();
 
         // Check if amount of events is zero. The should('have.text, '0') is required to check for text equality
-        DataExplorerBtns.datalakeNumberEvents()
+        ChartBtns.datalakeNumberEvents()
             .should('be.visible')
             .should($element => {
                 const text = $element.text().trim();
@@ -59,27 +55,23 @@ describe('Test Truncate data in datalake', () => {
 describe('Delete data in datalake', () => {
     before('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataExplorerUtils.loadRandomDataSetIntoDataLake();
+        ChartUtils.loadRandomDataSetIntoDataLake();
         PipelineUtils.deletePipeline('Persist prepared_data');
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.goToDatalakeConfiguration();
+        ChartUtils.goToDatalakeConfiguration();
         cy.dataCy('datalake-total-count-button').click();
 
         // Check if amount of events is correct
-        DataExplorerBtns.datalakeNumberEvents()
-            .should('be.visible')
-            .contains('10');
+        ChartBtns.datalakeNumberEvents().should('be.visible').contains('10');
 
         // Delete data
         GeneralUtils.openMenuForRow(PrepareTestDataUtils.dataName);
-        DataExplorerBtns.dataLakeDeleteBtn().should('be.visible').click();
-        DataExplorerBtns.confirmDataLakeDeleteBtn()
-            .should('be.visible')
-            .click();
+        ChartBtns.dataLakeDeleteBtn().should('be.visible').click();
+        ChartBtns.confirmDataLakeDeleteBtn().should('be.visible').click();
 
         // Check if amount of events is zero
-        DataExplorerBtns.datalakeNumberEvents().should('have.length', 0);
+        ChartBtns.datalakeNumberEvents().should('have.length', 0);
     });
 });

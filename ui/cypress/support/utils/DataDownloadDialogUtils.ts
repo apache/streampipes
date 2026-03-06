@@ -17,7 +17,7 @@
  */
 
 import { ExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/export-config.model';
-import { DataExplorerUtils } from './dataExplorer/DataExplorerUtils';
+import { ChartUtils } from './chart/ChartUtils';
 import { FileNameService } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/services/file-name.service';
 import { CsvFormatExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/format-export-config.model';
 import { GeneralUtils } from './GeneralUtils';
@@ -29,11 +29,11 @@ export class DataDownloadDialogUtils {
         dataViewName: string,
     ) {
         // const exportDate: Date;
-        DataExplorerUtils.goToDatalake();
+        ChartUtils.goToDatalake();
 
         GeneralUtils.openMenuForRow(dataViewName);
         // select data view in edit mode
-        DataExplorerUtils.editDataView(dataViewName);
+        ChartUtils.editDataView(dataViewName);
 
         // select download button
         cy.dataCy('data-view-data-download-btn').click();

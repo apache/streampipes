@@ -16,23 +16,23 @@
  *
  */
 
-import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
-describe('Test Map View in Data Explorer', () => {
+describe('Test Map View in Charts', () => {
     beforeEach('Setup Test', () => {
-        DataExplorerUtils.initDataLakeTests();
+        ChartUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.addDataViewAndWidget(
+        ChartUtils.addDataViewAndWidget(
             'view',
             PrepareTestDataUtils.dataName,
             'map',
         );
 
         // Change marker positions
-        DataExplorerUtils.openVisualizationConfig();
+        ChartUtils.openVisualizationConfig();
         cy.dataCy('data-view-map-select-latitude')
             .click()
             .get('mat-option')
@@ -53,7 +53,7 @@ describe('Test Map View in Data Explorer', () => {
         );
 
         // Change from markers to trace
-        DataExplorerUtils.openVisualizationConfig();
+        ChartUtils.openVisualizationConfig();
         cy.dataCy('data-view-map-select-marker-or-trace')
             .click()
             .get('mat-option')

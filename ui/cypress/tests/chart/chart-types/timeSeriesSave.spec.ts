@@ -16,7 +16,7 @@
  *
  */
 
-import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
 const testView1 = 'TestView1';
@@ -24,22 +24,22 @@ const testView2 = 'TestView2';
 
 describe('Test if widget configuration is updated correctly', () => {
     beforeEach('Setup Test', () => {
-        DataExplorerUtils.initDataLakeTests();
+        ChartUtils.initDataLakeTests();
 
         // Create first test data view with one time series widget
-        DataExplorerUtils.addDataViewAndTimeSeriesWidget(
+        ChartUtils.addDataViewAndTimeSeriesWidget(
             testView1,
             PrepareTestDataUtils.dataName,
         );
-        DataExplorerUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration();
 
         cy.wait(1000);
         // Create second test data view with one time series widget
-        DataExplorerUtils.addDataViewAndTimeSeriesWidget(
+        ChartUtils.addDataViewAndTimeSeriesWidget(
             testView2,
             PrepareTestDataUtils.dataName,
         );
-        DataExplorerUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration();
     });
 
     it('Perform Test', () => {
@@ -49,10 +49,10 @@ describe('Test if widget configuration is updated correctly', () => {
 
 const runTestCase = () => {
     // Visit settings of widget
-    DataExplorerUtils.editDataView(testView1);
+    ChartUtils.editDataView(testView1);
 
     // Change first field from line plot to scatter plot
-    DataExplorerUtils.openVisualizationConfig();
+    ChartUtils.openVisualizationConfig();
 
     // select type scatter
     cy.dataCy('time-series-item-config-toggle').first().click();

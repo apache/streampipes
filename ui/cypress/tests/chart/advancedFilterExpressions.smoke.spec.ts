@@ -16,40 +16,38 @@
  *
  */
 
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
-import { DataExplorerWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
+import { ChartBtns } from '../../support/utils/chart/ChartBtns';
+import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTableUtils';
 
-describe('Advanced Filter Expressions in Data Explorer', () => {
+describe('Advanced Filter Expressions in Charts', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
+        ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
     });
 
     it('Applies nested advanced filter expressions and persists them', () => {
-        DataExplorerUtils.addDataViewAndTableWidget(
+        ChartUtils.addDataViewAndTableWidget(
             'AdvancedFilterWidget',
-            DataExplorerUtils.ADAPTER_NAME,
+            ChartUtils.ADAPTER_NAME,
         );
 
-        DataExplorerWidgetTableUtils.checkAmountOfRows(10);
-        DataExplorerUtils.selectDataConfig();
+        ChartWidgetTableUtils.checkAmountOfRows(10);
+        ChartUtils.selectDataConfig();
 
-        DataExplorerBtns.advancedFilterBtn().click();
+        ChartBtns.advancedFilterBtn().click();
 
         // Root condition: randomtext = a
-        DataExplorerBtns.advancedFilterAddConditionBtn().first().click();
+        ChartBtns.advancedFilterAddConditionBtn().first().click();
         // Root nested group
-        DataExplorerBtns.advancedFilterAddGroupBtn().first().click();
+        ChartBtns.advancedFilterAddGroupBtn().first().click();
         // Two conditions in nested group
-        DataExplorerBtns.advancedFilterAddConditionBtn().last().click();
-        DataExplorerBtns.advancedFilterAddConditionBtn().last().click();
+        ChartBtns.advancedFilterAddConditionBtn().last().click();
+        ChartBtns.advancedFilterAddConditionBtn().last().click();
 
         // Set nested group operator to OR
-        DataExplorerBtns.advancedFilterGroupOperator()
-            .last()
-            .click({ force: true });
-        DataExplorerBtns.matOptionByText(/^OR$/).click();
+        ChartBtns.advancedFilterGroupOperator().last().click({ force: true });
+        ChartBtns.matOptionByText(/^OR$/).click();
 
         setAdvancedCondition(0, 'randomtext', '=', 'a');
         setAdvancedCondition(1, 'randomnumber', '=', '22');
@@ -58,23 +56,23 @@ describe('Advanced Filter Expressions in Data Explorer', () => {
         // Value inputs update the model on change; blur the active input before checking the preview.
         cy.focused().blur();
 
-        DataExplorerBtns.advancedFilterPreviewBanner()
+        ChartBtns.advancedFilterPreviewBanner()
             .should('contain.text', 'randomtext = a')
             .and('contain.text', 'randomnumber = 22')
             .and('contain.text', 'randomnumber = 56')
             .and('contain.text', 'OR');
 
-        DataExplorerBtns.advancedFilterApplyBtn().click();
+        ChartBtns.advancedFilterApplyBtn().click();
 
         // a AND (22 OR 56) => 2 rows in sample.csv
-        DataExplorerWidgetTableUtils.checkAmountOfRows(2);
+        ChartWidgetTableUtils.checkAmountOfRows(2);
 
-        DataExplorerUtils.saveAndReEditWidget('AdvancedFilterWidget');
-        DataExplorerWidgetTableUtils.checkAmountOfRows(2);
+        ChartUtils.saveAndReEditWidget('AdvancedFilterWidget');
+        ChartWidgetTableUtils.checkAmountOfRows(2);
 
-        DataExplorerUtils.selectDataConfig();
-        DataExplorerBtns.advancedFilterBtn().should('be.visible');
-        DataExplorerBtns.filterAlertBanner()
+        ChartUtils.selectDataConfig();
+        ChartBtns.advancedFilterBtn().should('be.visible');
+        ChartBtns.filterAlertBanner()
             .should('be.visible')
             .within(() => {
                 cy.contains('randomtext = a');
@@ -88,13 +86,13 @@ function setAdvancedCondition(
     operator: '=' | '!=' | '<' | '<=' | '>' | '>=',
     value: string,
 ) {
-    DataExplorerBtns.filterFieldSelect().eq(index).click({ force: true });
-    DataExplorerBtns.matOptionByText(field).click();
+    ChartBtns.filterFieldSelect().eq(index).click({ force: true });
+    ChartBtns.matOptionByText(field).click();
 
-    DataExplorerBtns.filterOperatorSelect().eq(index).click({ force: true });
-    DataExplorerBtns.matOptionByText(operator).click();
+    ChartBtns.filterOperatorSelect().eq(index).click({ force: true });
+    ChartBtns.matOptionByText(operator).click();
 
-    DataExplorerBtns.filterValueInput()
+    ChartBtns.filterValueInput()
         .eq(index)
         .clear({ force: true })
         .type(value, { force: true });

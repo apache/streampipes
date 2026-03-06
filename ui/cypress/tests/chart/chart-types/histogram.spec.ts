@@ -16,23 +16,23 @@
  *
  */
 
-import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
-describe('Test Histogram View in Data Explorer', () => {
+describe('Test Histogram View in Charts', () => {
     beforeEach('Setup Test', () => {
-        DataExplorerUtils.initDataLakeTests();
+        ChartUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.addDataViewAndWidget(
+        ChartUtils.addDataViewAndWidget(
             'view',
             PrepareTestDataUtils.dataName,
             'histogram-chart',
         );
 
         // Change field for histogram
-        DataExplorerUtils.openVisualizationConfig();
+        ChartUtils.openVisualizationConfig();
 
         // Check if histogram chart is displayed
         cy.dataCy('histogram-chart').should('be.visible');

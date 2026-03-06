@@ -16,26 +16,26 @@
  *
  */
 
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataExplorerWidget } from '../../support/model/DataExplorerWidget';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
+import { ChartWidget } from '../../support/model/ChartWidget';
 
-describe('Test Time Order in Data Explorer', () => {
+describe('Test Time Order in Charts', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
-        DataExplorerUtils.goToDatalake();
-        DataExplorerUtils.createAndEditDataView();
+        ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
+        ChartUtils.goToDatalake();
+        ChartUtils.createAndEditDataView();
     });
 
     it('Perform Test with ascending and descending order', () => {
         const startDate = new Date('2022-04-01T00:00:00Z');
         const endDate = new Date('2022-07-01T23:59:59Z');
 
-        DataExplorerUtils.clickOrderBy('descending');
+        ChartUtils.clickOrderBy('descending');
 
-        DataExplorerUtils.openVisualizationConfig();
-        DataExplorerUtils.selectVisualizationType(DataExplorerWidget.TABLE);
-        DataExplorerUtils.selectTimeRange(startDate, endDate);
+        ChartUtils.openVisualizationConfig();
+        ChartUtils.selectVisualizationType(ChartWidget.TABLE);
+        ChartUtils.selectTimeRange(startDate, endDate);
         cy.wait(1000);
 
         cy.dataCy('data-explorer-table').then($cells => {
@@ -51,12 +51,12 @@ describe('Test Time Order in Data Explorer', () => {
         });
 
         // Save and leave view, edit view again and check ascending order
-        DataExplorerUtils.saveDataViewConfiguration();
-        DataExplorerUtils.editDataView('New chart');
-        DataExplorerUtils.clickOrderBy('ascending');
-        DataExplorerUtils.openVisualizationConfig();
-        DataExplorerUtils.selectVisualizationType(DataExplorerWidget.TABLE);
-        DataExplorerUtils.selectTimeRange(startDate, endDate);
+        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.editDataView('New chart');
+        ChartUtils.clickOrderBy('ascending');
+        ChartUtils.openVisualizationConfig();
+        ChartUtils.selectVisualizationType(ChartWidget.TABLE);
+        ChartUtils.selectTimeRange(startDate, endDate);
         cy.wait(1000);
 
         cy.dataCy('data-explorer-table').then($cells => {
@@ -72,7 +72,7 @@ describe('Test Time Order in Data Explorer', () => {
         });
 
         // Check if dialog window is showing after applying changes to time settings
-        DataExplorerUtils.goToDatalake();
-        DataExplorerUtils.checkIfConfirmationDialogIsShowing();
+        ChartUtils.goToDatalake();
+        ChartUtils.checkIfConfirmationDialogIsShowing();
     });
 });

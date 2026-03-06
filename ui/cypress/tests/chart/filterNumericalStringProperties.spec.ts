@@ -16,14 +16,14 @@
  *
  */
 
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataExplorerWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
+import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTableUtils';
 import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
-import { DataExplorerWidget } from '../../support/model/DataExplorerWidget';
+import { ChartWidget } from '../../support/model/ChartWidget';
 
 describe('Validate that filter works for numerical dimension property', () => {
     beforeEach('Setup Test', () => {
@@ -46,46 +46,46 @@ describe('Validate that filter works for numerical dimension property', () => {
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.goToDatalake();
-        DataExplorerUtils.createAndEditDataView();
+        ChartUtils.goToDatalake();
+        ChartUtils.createAndEditDataView();
 
         // create table widget and select time range
         const startDate = new Date(1737029442000);
         const endDate = new Date(1742220659000);
 
-        DataExplorerUtils.clickOrderBy('descending');
+        ChartUtils.clickOrderBy('descending');
 
-        DataExplorerUtils.openVisualizationConfig();
-        DataExplorerUtils.selectVisualizationType(DataExplorerWidget.TABLE);
-        DataExplorerUtils.selectTimeRange(startDate, endDate);
+        ChartUtils.openVisualizationConfig();
+        ChartUtils.selectVisualizationType(ChartWidget.TABLE);
+        ChartUtils.selectTimeRange(startDate, endDate);
         cy.wait(1000);
 
         // validate data in table
-        DataExplorerWidgetTableUtils.checkAmountOfRows(2);
+        ChartWidgetTableUtils.checkAmountOfRows(2);
 
         // select filter for tag
-        DataExplorerUtils.selectDataConfig();
+        ChartUtils.selectDataConfig();
         var filterConfig = new DataLakeFilterConfig('dimensionKey', '1', '=');
-        DataExplorerUtils.dataConfigAddFilter(filterConfig);
+        ChartUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered
-        DataExplorerWidgetTableUtils.checkAmountOfRows(1);
+        ChartWidgetTableUtils.checkAmountOfRows(1);
 
         // remove filter
-        DataExplorerUtils.dataConfigRemoveFilter();
+        ChartUtils.dataConfigRemoveFilter();
 
-        DataExplorerUtils.selectDataConfig();
+        ChartUtils.selectDataConfig();
 
         filterConfig = new DataLakeFilterConfig('v1', '20', '=');
-        DataExplorerUtils.dataConfigAddFilter(filterConfig);
+        ChartUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered
-        DataExplorerWidgetTableUtils.checkAmountOfRows(1);
+        ChartWidgetTableUtils.checkAmountOfRows(1);
 
         // remove filter
-        DataExplorerUtils.dataConfigRemoveFilter();
+        ChartUtils.dataConfigRemoveFilter();
 
         // validate data again
-        DataExplorerWidgetTableUtils.checkAmountOfRows(2);
+        ChartWidgetTableUtils.checkAmountOfRows(2);
     });
 });
