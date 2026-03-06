@@ -49,6 +49,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { CONFIGURATION_SECTION_PROVIDERS } from './configuration/configuration-sections.providers';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -93,6 +94,7 @@ export const appConfig: ApplicationConfig = {
             provide: MatPaginatorIntl,
             useClass: PaginatorService,
         },
+        ...CONFIGURATION_SECTION_PROVIDERS,
         provideAnimations(),
     ],
 };
