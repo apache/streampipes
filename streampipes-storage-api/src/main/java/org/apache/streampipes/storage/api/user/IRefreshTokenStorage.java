@@ -15,25 +15,16 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.storage.api.user;
 
-import { Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    CanActivateChild,
-    GuardResult,
-    MaybeAsync,
-    RouterStateSnapshot,
-} from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import org.apache.streampipes.model.client.user.RefreshToken;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
-@Injectable({ providedIn: 'root' })
-export class AuthCanActivateChildrenGuard implements CanActivateChild {
-    constructor(private authService: AuthService) {}
+import java.util.List;
 
-    canActivateChild(
-        childRoute: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): MaybeAsync<GuardResult> {
-        return this.authService.ensureAuthenticated(state.url);
-    }
+public interface IRefreshTokenStorage extends CRUDStorage<RefreshToken> {
+
+  RefreshToken findByHashedToken(String hashedToken);
+
+  List<RefreshToken> findByPrincipalId(String principalId);
 }

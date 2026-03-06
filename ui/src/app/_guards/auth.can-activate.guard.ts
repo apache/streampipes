@@ -23,27 +23,17 @@ import {
     CanActivate,
     GuardResult,
     MaybeAsync,
-    Router,
     RouterStateSnapshot,
 } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthCanActivateGuard implements CanActivate {
     private authService = inject(AuthService);
-    private router = inject(Router);
 
     canActivate(
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
     ): MaybeAsync<GuardResult> {
-        if (this.authService.authenticated()) {
-            return true;
-        }
-        this.authService.logout();
-        this.router.navigate(['/login'], {
-            queryParams: { returnUrl: state.url },
-        });
-
-        return false;
+        return this.authService.ensureAuthenticated(state.url);
     }
 }

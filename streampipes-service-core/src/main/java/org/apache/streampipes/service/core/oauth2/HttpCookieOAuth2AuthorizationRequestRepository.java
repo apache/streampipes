@@ -35,6 +35,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 
   private static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
   public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
+  public static final String REMEMBER_ME_PARAM_COOKIE_NAME = "remember_me";
   private static final int cookieExpireSeconds = 180;
 
   @Override
@@ -67,6 +68,11 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
     if (StringUtils.isNotBlank(redirectUriAfterLogin)) {
       CookieUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds);
     }
+
+    String rememberMe = request.getParameter(REMEMBER_ME_PARAM_COOKIE_NAME);
+    if (StringUtils.isNotBlank(rememberMe)) {
+      CookieUtils.addCookie(response, REMEMBER_ME_PARAM_COOKIE_NAME, rememberMe, cookieExpireSeconds);
+    }
   }
 
   @Override
@@ -79,5 +85,6 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
                                                 HttpServletResponse response) {
     CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
     CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+    CookieUtils.deleteCookie(request, response, REMEMBER_ME_PARAM_COOKIE_NAME);
   }
 }
