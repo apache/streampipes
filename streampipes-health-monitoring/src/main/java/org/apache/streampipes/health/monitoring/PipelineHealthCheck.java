@@ -42,6 +42,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
@@ -85,7 +86,9 @@ public class PipelineHealthCheck {
       pipelinesStats.updatePipelineHealthState(
           p.getElementId(),
           p.getName(),
-          p.getHealthStatus().toString());
+          Objects.nonNull(p.getHealthStatus())
+              ? p.getHealthStatus().toString()
+              : PipelineHealthStatus.REQUIRES_ATTENTION.toString());
 
       pipelinesStats.updatePipelineRunningState(
           p.getElementId(),
