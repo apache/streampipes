@@ -20,11 +20,16 @@ package org.apache.streampipes.service.core.oauth2;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.service.core.oauth2.util.CookieUtils;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
+import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+import org.apache.streampipes.user.management.service.RefreshTokenService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -35,12 +40,17 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Optional;
-
-import static org.apache.streampipes.service.core.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
+  private static final String REFRESH_TOKEN_COOKIE = "sp-refresh-token";
+  private static final String ENCODED_REFRESH_TOKEN_PREFIX = "b64.";
+  private static final long MIN_REFRESH_COOKIE_SECONDS = 1;
 
   private final JwtTokenProvider tokenProvider;
   private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
@@ -73,7 +83,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                       HttpServletResponse response,
                                       Authentication authentication) {
     Optional<String> redirectUri = CookieUtils
-        .getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+        .getCookie(request, HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
         .map(Cookie::getValue);
 
     if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
@@ -83,9 +93,59 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+    boolean rememberMe = CookieUtils
+        .getCookie(request, HttpCookieOAuth2AuthorizationRequestRepository.REMEMBER_ME_PARAM_COOKIE_NAME)
+        .map(Cookie::getValue)
+        .map(Boolean::parseBoolean)
+        .orElse(false);
+
+    Principal principal = ((PrincipalUserDetails<?>) authentication.getPrincipal()).getDetails();
+    var refreshToken = new RefreshTokenService().issueRefreshToken(principal.getPrincipalId(), rememberMe);
+    setRefreshCookie(request, response, refreshToken);
+
     String token = tokenProvider.createToken(authentication);
 
     return targetUrl + "?token=" + token;
+  }
+
+  private void setRefreshCookie(HttpServletRequest request,
+                                HttpServletResponse response,
+                                RefreshTokenService.IssuedRefreshToken issuedRefreshToken) {
+    long maxAgeSeconds = TimeUnit.MILLISECONDS.toSeconds(
+        Math.max(
+            MIN_REFRESH_COOKIE_SECONDS,
+            issuedRefreshToken.expiresAtMillis() - System.currentTimeMillis()
+        )
+    );
+
+    ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie
+        .from(REFRESH_TOKEN_COOKIE, encodeCookieTokenValue(issuedRefreshToken.rawToken()))
+        .httpOnly(true)
+        .secure(isSecureRequest(request))
+        .path(refreshCookiePath(request))
+        .sameSite("Lax");
+
+    if (issuedRefreshToken.rememberMe()) {
+      cookieBuilder.maxAge(maxAgeSeconds);
+    }
+
+    response.addHeader(HttpHeaders.SET_COOKIE, cookieBuilder.build().toString());
+  }
+
+  private String refreshCookiePath(HttpServletRequest request) {
+    var contextPath = request.getContextPath();
+    return (contextPath == null ? "" : contextPath) + "/api/v2/auth";
+  }
+
+  private boolean isSecureRequest(HttpServletRequest request) {
+    String forwardedProto = request.getHeader("X-Forwarded-Proto");
+    return request.isSecure() || "https".equalsIgnoreCase(forwardedProto);
+  }
+
+  private String encodeCookieTokenValue(String rawToken) {
+    return ENCODED_REFRESH_TOKEN_PREFIX + Base64.getUrlEncoder()
+        .withoutPadding()
+        .encodeToString(rawToken.getBytes(StandardCharsets.UTF_8));
   }
 
   protected void clearAuthenticationAttributes(HttpServletRequest request,
