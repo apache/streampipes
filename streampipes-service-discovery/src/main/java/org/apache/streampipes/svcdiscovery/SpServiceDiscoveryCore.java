@@ -120,7 +120,6 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
       if (retryCount < MAX_RETRIES) {
         try {
           retryCount++;
-          LOG.info("Could not find any extensions services, retrying ({}/{})", retryCount, MAX_RETRIES);
           TimeUnit.MILLISECONDS.sleep(1000);
           return findServices(retryCount);
         } catch (InterruptedException e) {
