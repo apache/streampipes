@@ -15,15 +15,16 @@
  * limitations under the License.
  *
  */
-import { AssetBtns } from '../../support/utils/asset/AssetBtns';
+
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
-describe('Test add Assets To Dashboard', () => {
+describe('Creates a new adapter with a linked asset', () => {
     const assetName1 = 'TestAsset1';
     const assetName2 = 'TestAsset2';
     const assetName3 = 'TestAsset3';
+
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         AssetUtils.goToAssets();
@@ -31,56 +32,39 @@ describe('Test add Assets To Dashboard', () => {
         const asset1 = AssetBuilder.create(assetName1).build();
         const asset2 = AssetBuilder.create(assetName2).build();
         const asset3 = AssetBuilder.create(assetName3).build();
-
         AssetUtils.addAndSaveAsset(asset3);
         AssetUtils.addAndSaveAsset(asset2);
         AssetUtils.addAndSaveAsset(asset1);
-        DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
     });
 
-    it('Create Dashboard and add Assets', () => {
-        const dataView = 'TestView';
-
-        const name = 'Dashboard1';
-
-        const assetNameList = [assetName1, assetName2];
-        DataExplorerUtils.createDashboardWithLinkedAssets(
-            dataView,
-            name,
-            assetNameList,
-        );
-
-        //Go Back to Asset
-        AssetUtils.goToAssets();
-        AssetUtils.checkAmountOfAssetsGreaterThan(0);
-
-        AssetUtils.editAsset(assetName1);
-
-        //Check if Link is there
-        AssetUtils.checkAmountOfLinkedResources(1);
-    });
-
-    it('Edit Dashboard and edit Asset Links', () => {
-        const dataView = 'TestView';
-
-        const name = 'Dashboard1';
-
-        const assetNameList = [assetName1, assetName2];
-        DataExplorerUtils.createDashboardWithLinkedAssets(
-            dataView,
-            name,
-            assetNameList,
-        );
-        DataExplorerUtils.editDashboardSettings(name);
-        DataExplorerUtils.renameDashboard('NEW');
-        const assetNameList2 = [assetName2, assetName3];
-        DataExplorerUtils.addToAsset(assetNameList2);
-        DataExplorerUtils.saveDataView();
-
+    it('Add Assets during Chart generation', () => {
+        ChartUtils.createDataViewWithAssets([assetName1, assetName2]);
+        AssetUtils.checkAmountOfAssets(3);
+        //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
-        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+    });
 
-        // Test Renaming
-        AssetUtils.checkResourceNamingByAssetName(assetName1, 'NEW');
+    it('Edit Assets during Chart generation', () => {
+        ChartUtils.createDataViewWithAssets([assetName1, assetName2]);
+        AssetUtils.checkAmountOfAssets(3);
+        //Test
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+
+        // Go To Chart and Edit
+        ChartUtils.goToDatalake();
+        cy.wait(1000);
+        ChartUtils.editDataView('NewWidget');
+        ChartUtils.renameWidget('Rename');
+        ChartUtils.addChartsToAsset([assetName1, assetName3]);
+        ChartUtils.saveDataViewConfiguration();
+        //Neceassary for Background Task to finish
+        cy.wait(500);
+
+        AssetUtils.checkAmountOfAssets(3);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);
+        AssetUtils.checkResourceNamingByAssetName(assetName2, 'Rename');
     });
 });

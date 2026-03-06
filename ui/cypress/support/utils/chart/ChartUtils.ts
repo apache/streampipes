@@ -17,7 +17,7 @@
  */
 
 import { DataLakeFilterConfig } from '../../model/DataLakeFilterConfig';
-import { DataExplorerWidget } from '../../model/DataExplorerWidget';
+import { ChartWidget } from '../../model/ChartWidget';
 import { DataSetUtils } from '../DataSetUtils';
 import { PrepareTestDataUtils } from '../PrepareTestDataUtils';
 import { FileManagementUtils } from '../FileManagementUtils';
@@ -25,10 +25,10 @@ import { ConnectUtils } from '../connect/ConnectUtils';
 import { ConnectBtns } from '../connect/ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { GeneralUtils } from '../GeneralUtils';
-import { DataExplorerBtns } from './DataExplorerBtns';
+import { ChartBtns } from './ChartBtns';
 import { SharedBtns } from '../shared/SharedBtns';
 
-export class DataExplorerUtils {
+export class ChartUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
 
     public static goToDatalake() {
@@ -41,12 +41,12 @@ export class DataExplorerUtils {
     }
 
     public static checkAmountOfCharts(amount: number) {
-        DataExplorerUtils.goToDatalake();
+        ChartUtils.goToDatalake();
         this.checkAmount(amount);
     }
 
     public static checkAmountOfDashboards(amount: number) {
-        DataExplorerUtils.goToDashboard();
+        ChartUtils.goToDashboard();
         this.checkAmount(amount);
     }
 
@@ -63,27 +63,27 @@ export class DataExplorerUtils {
 
     public static checkChartCanBeEdited(chartName: string) {
         GeneralUtils.openMenuForRow(chartName);
-        DataExplorerBtns.editDataViewButton(chartName).should('exist');
+        ChartBtns.editDataViewButton(chartName).should('exist');
     }
 
     public static checkChartCanNotBeEdited(chartName: string) {
         GeneralUtils.openMenuForRow(chartName);
-        DataExplorerBtns.editDataViewButton(chartName).should('not.exist');
+        ChartBtns.editDataViewButton(chartName).should('not.exist');
     }
 
     public static checkDashboardCanBeEdited(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        DataExplorerBtns.editDashboardBtn(dashboardName).should('exist');
+        ChartBtns.editDashboardBtn(dashboardName).should('exist');
     }
 
     public static checkDashboardCanNotBeEdited(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        DataExplorerBtns.editDashboardBtn(dashboardName).should('not.exist');
+        ChartBtns.editDashboardBtn(dashboardName).should('not.exist');
     }
 
     public static initDataLakeTests() {
         cy.initStreamPipesTest();
-        DataExplorerUtils.loadRandomDataSetIntoDataLake();
+        ChartUtils.loadRandomDataSetIntoDataLake();
     }
 
     public static getDataLakeTestSetAdapter(
@@ -125,7 +125,7 @@ export class DataExplorerUtils {
         FileManagementUtils.addFile(dataSet);
 
         const adapter = this.getDataLakeTestSetAdapter(
-            DataExplorerUtils.ADAPTER_NAME,
+            ChartUtils.ADAPTER_NAME,
             true,
             format,
         );
@@ -140,25 +140,25 @@ export class DataExplorerUtils {
         widgetType: string,
         ignoreTimeSelection = false,
     ) {
-        DataExplorerUtils.goToDatalake();
-        DataExplorerUtils.createAndEditDataView();
+        ChartUtils.goToDatalake();
+        ChartUtils.createAndEditDataView();
 
         if (!ignoreTimeSelection) {
-            DataExplorerUtils.selectTimeRange(
+            ChartUtils.selectTimeRange(
                 new Date(2020, 10, 20, 22, 44),
-                DataExplorerUtils.getFutureDate(),
+                ChartUtils.getFutureDate(),
             );
         }
 
-        // DataExplorerUtils.addNewWidget();
-        DataExplorerUtils.selectDataSet(dataSet);
-        DataExplorerUtils.dataConfigSelectAllFields();
+        // ChartUtils.addNewWidget();
+        ChartUtils.selectDataSet(dataSet);
+        ChartUtils.dataConfigSelectAllFields();
 
-        DataExplorerUtils.selectAppearanceConfig();
-        DataExplorerUtils.selectDataViewName(dataViewName);
+        ChartUtils.selectAppearanceConfig();
+        ChartUtils.selectDataViewName(dataViewName);
 
-        DataExplorerUtils.openVisualizationConfig();
-        DataExplorerUtils.selectVisualizationType(widgetType);
+        ChartUtils.openVisualizationConfig();
+        ChartUtils.selectVisualizationType(widgetType);
 
         cy.wait(1000);
     }
@@ -190,23 +190,23 @@ export class DataExplorerUtils {
     }
 
     public static createNewDashboard(name: string) {
-        DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.addNewDashboard(name);
-        DataExplorerUtils.saveDataView();
+        ChartUtils.goToDashboard();
+        ChartUtils.addNewDashboard(name);
+        ChartUtils.saveDataView();
     }
 
     public static createNewDashboardWithAssetLinks(
         name: string,
         assetNameList: string[],
     ) {
-        DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.addNewDashboard(name);
-        DataExplorerUtils.addAssetsToDashboard(assetNameList);
-        DataExplorerUtils.saveDataView();
+        ChartUtils.goToDashboard();
+        ChartUtils.addNewDashboard(name);
+        ChartUtils.addAssetsToDashboard(assetNameList);
+        ChartUtils.saveDataView();
     }
 
     public static addNewDashboard(name: string) {
-        DataExplorerBtns.newDashboardDialogBtn().click();
+        ChartBtns.newDashboardDialogBtn().click();
         cy.dataCy('data-view-name').type(name);
     }
 
@@ -215,29 +215,26 @@ export class DataExplorerUtils {
         name,
         assetNameList,
     ) {
-        DataExplorerUtils.goToDatalake();
+        ChartUtils.goToDatalake();
 
-        DataExplorerUtils.addDataViewAndTableWidget(
-            dataView,
-            DataExplorerUtils.ADAPTER_NAME,
-        );
+        ChartUtils.addDataViewAndTableWidget(dataView, ChartUtils.ADAPTER_NAME);
 
-        DataExplorerUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration();
 
-        DataExplorerUtils.goToDashboard();
+        ChartUtils.goToDashboard();
 
         //ADD Assets
-        DataExplorerUtils.addNewDashboard(name);
-        DataExplorerUtils.addAssetsToDashboard(assetNameList);
-        DataExplorerUtils.saveDataView();
+        ChartUtils.addNewDashboard(name);
+        ChartUtils.addAssetsToDashboard(assetNameList);
+        ChartUtils.saveDataView();
     }
 
     public static saveDataView() {
-        return DataExplorerBtns.saveDataViewBtn().click();
+        return ChartBtns.saveDataViewBtn().click();
     }
 
     public static saveDashboard() {
-        return DataExplorerBtns.saveDashboardBtn().click();
+        return ChartBtns.saveDashboardBtn().click();
     }
 
     public static addDataViewAndTableWidget(
@@ -248,7 +245,7 @@ export class DataExplorerUtils {
         this.addDataViewAndWidget(
             dataViewName,
             dataSet,
-            DataExplorerWidget.TABLE,
+            ChartWidget.TABLE,
             ignoreTimeSelection,
         );
     }
@@ -260,7 +257,7 @@ export class DataExplorerUtils {
         this.addDataViewAndWidget(
             dataViewName,
             dataSet,
-            DataExplorerWidget.TIME_SERIES,
+            ChartWidget.TIME_SERIES,
         );
     }
     public static renameWidget(newName: string) {
@@ -282,11 +279,11 @@ export class DataExplorerUtils {
 
     public static createAndEditDashboard(name: string) {
         // Create new data view
-        DataExplorerBtns.newDashboardDialogBtn().click();
+        ChartBtns.newDashboardDialogBtn().click();
 
         // Configure data view
         cy.dataCy('data-view-name').type(name);
-        DataExplorerBtns.saveDataViewBtn().click();
+        ChartBtns.saveDataViewBtn().click();
 
         this.editDashboard(name);
     }
@@ -301,42 +298,42 @@ export class DataExplorerUtils {
                 this.getFutureDate(),
             );
         }
-        DataExplorerBtns.addDataViewBtn(dataViewName).click();
+        ChartBtns.addDataViewBtn(dataViewName).click();
     }
 
     public static createAndEditDataView() {
         // Create new data view
-        DataExplorerBtns.openNewDataViewBtn().click();
+        ChartBtns.openNewDataViewBtn().click();
     }
 
     public static removeWidget(dataViewName: string) {
-        DataExplorerBtns.removeWidgetBtn(dataViewName).click();
+        ChartBtns.removeWidgetBtn(dataViewName).click();
     }
 
     public static editDashboard(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        DataExplorerBtns.editDashboardBtn(dashboardName).click();
+        ChartBtns.editDashboardBtn(dashboardName).click();
     }
 
     public static viewDashboard(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        DataExplorerBtns.viewDashboardBtn(dashboardName).click();
+        ChartBtns.viewDashboardBtn(dashboardName).click();
     }
 
     public static editDashboardSettings(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        DataExplorerBtns.editDashboardSettingsBtn(dashboardName).click();
+        ChartBtns.editDashboardSettingsBtn(dashboardName).click();
     }
 
     public static editDataView(dataViewName: string) {
         // Click edit button
         // following only works if single view is available
         GeneralUtils.openMenuForRow(dataViewName);
-        DataExplorerBtns.editDataViewButton(dataViewName).click();
+        ChartBtns.editDataViewButton(dataViewName).click();
     }
 
     public static saveDataViewConfiguration(confirmSave: boolean = false) {
-        DataExplorerBtns.saveDataViewButton().click({
+        ChartBtns.saveDataViewButton().click({
             force: true,
         });
         if (confirmSave) {
@@ -345,7 +342,7 @@ export class DataExplorerUtils {
     }
 
     public static saveDashboardConfiguration() {
-        DataExplorerBtns.saveDashboardConfigurationBtn().click();
+        ChartBtns.saveDashboardConfigurationBtn().click();
     }
 
     public static getEmptyDashboardInformation() {
@@ -353,7 +350,7 @@ export class DataExplorerUtils {
     }
 
     public static addChartsToAsset(assetNameList = []) {
-        DataExplorerBtns.saveChartsToAssetBtn();
+        ChartBtns.saveChartsToAssetBtn();
 
         cy.dataCy('sp-show-chart-asset-checkbox').then($checkbox => {
             if (!$checkbox.is(':checked')) {
@@ -361,7 +358,7 @@ export class DataExplorerUtils {
             }
         });
         this.addToAsset(assetNameList);
-        DataExplorerBtns.confirmAssetSelectionBtn();
+        ChartBtns.confirmAssetSelectionBtn();
     }
 
     public static addToAsset(assetNameList = []) {
@@ -377,47 +374,47 @@ export class DataExplorerUtils {
 
     public static deleteDashboard(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        DataExplorerBtns.deleteDashboardBtn(dashboardName).click();
+        ChartBtns.deleteDashboardBtn(dashboardName).click();
         SharedBtns.confirmDialogConfirmBtn().click();
     }
 
     public static deleteDataView(dataViewName: string) {
         GeneralUtils.openMenuForRow(dataViewName);
-        DataExplorerBtns.deleteDataViewBtn(dataViewName).click();
+        ChartBtns.deleteDataViewBtn(dataViewName).click();
         SharedBtns.confirmDialogConfirmBtn().click();
     }
 
     public static cancelDeleteDashboard(dashboardName: string) {
         GeneralUtils.openMenuForRow(dashboardName);
-        DataExplorerBtns.deleteDashboardBtn(dashboardName).click();
+        ChartBtns.deleteDashboardBtn(dashboardName).click();
         SharedBtns.confirmDialogCancelBtn().click();
     }
 
     public static cancelDeleteDataView(dataViewName: string) {
         GeneralUtils.openMenuForRow(dataViewName);
-        DataExplorerBtns.deleteDataViewBtn(dataViewName).click();
+        ChartBtns.deleteDataViewBtn(dataViewName).click();
         SharedBtns.confirmDialogCancelBtn().click();
     }
 
     public static editWidget(widgetName: string) {
-        DataExplorerBtns.editWidget(widgetName).click();
+        ChartBtns.editWidget(widgetName).click();
     }
 
     public static startEditWidget(widgetName: string) {
-        DataExplorerBtns.moreOptionsBtn(widgetName).click();
-        DataExplorerBtns.startEditWidget(widgetName).click();
+        ChartBtns.moreOptionsBtn(widgetName).click();
+        ChartBtns.startEditWidget(widgetName).click();
     }
 
     public static saveAndReEditWidget(dataViewName: string) {
         // Save data view configuration
-        DataExplorerUtils.saveDataViewConfiguration();
-        DataExplorerUtils.editDataView(dataViewName);
+        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.editDataView(dataViewName);
     }
 
     public static saveAndReEditDashboard(dashboardName: string) {
         // Save dashboard configuration
-        DataExplorerUtils.saveDashboardConfiguration();
-        DataExplorerUtils.editDashboard(dashboardName);
+        ChartUtils.saveDashboardConfiguration();
+        ChartUtils.editDashboard(dashboardName);
     }
 
     public static clickTab(tabName: string) {
@@ -426,11 +423,11 @@ export class DataExplorerUtils {
     }
 
     public static goBackToOverview() {
-        DataExplorerBtns.goBackToOverviewBtn().click();
+        ChartBtns.goBackToOverviewBtn().click();
     }
 
     public static addNewWidget() {
-        DataExplorerBtns.addNewWidgetBtn().click();
+        ChartBtns.addNewWidgetBtn().click();
     }
 
     public static selectDataSet(dataSet: string) {
@@ -698,7 +695,7 @@ export class DataExplorerUtils {
     }
 
     public static setTimeInput(field: string, date: Date) {
-        cy.dataCy(field).type(DataExplorerUtils.makeTimeString(date));
+        cy.dataCy(field).type(ChartUtils.makeTimeString(date));
     }
 
     public static makeTimeString(date: Date) {
@@ -746,16 +743,16 @@ export class DataExplorerUtils {
         cy.get('confirmation-dialog').should('be.visible');
     }
     public static createDataViewWithAssets(assetNames) {
-        DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
+        ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
 
         // Create Diagram
-        DataExplorerUtils.addDataViewAndTableWidget(
+        ChartUtils.addDataViewAndTableWidget(
             'NewWidget',
-            DataExplorerUtils.ADAPTER_NAME,
+            ChartUtils.ADAPTER_NAME,
         );
         //Save
-        DataExplorerUtils.addChartsToAsset(assetNames);
-        DataExplorerUtils.saveDataViewConfiguration();
+        ChartUtils.addChartsToAsset(assetNames);
+        ChartUtils.saveDataViewConfiguration();
         //Necessary for the background task to finish otherwise it steps back to charts from the following task
         cy.wait(500);
     }

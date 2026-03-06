@@ -16,24 +16,25 @@
  *
  */
 
-import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataExplorerWidgetTableUtils } from '../../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
-import { DataExplorerWidget } from '../../../support/model/DataExplorerWidget';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
-describe('Test Table View in Data Explorer', () => {
+describe('Test Heatmap View in Charts', () => {
     beforeEach('Setup Test', () => {
-        DataExplorerUtils.initDataLakeTests();
+        ChartUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.addDataViewAndWidget(
+        ChartUtils.addDataViewAndWidget(
             'view',
             PrepareTestDataUtils.dataName,
-            DataExplorerWidget.TABLE,
+            'heatmap',
         );
 
-        // Check if table is displayed correctly
-        DataExplorerWidgetTableUtils.checkAmountOfRows(10);
+        // Check checkbox
+        ChartUtils.openVisualizationConfig();
+
+        // Check if heatmap chart is visible
+        cy.dataCy('heatmap').should('be.visible');
     });
 });

@@ -19,7 +19,7 @@
 import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
-import { DataExplorerUtils } from '../dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../chart/ChartUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { UserUtils } from '../UserUtils';
@@ -500,7 +500,7 @@ export class ConnectUtils {
         // Wait till data is stored
         cy.wait(waitTime);
 
-        DataExplorerUtils.checkResults(
+        ChartUtils.checkResults(
             'Adapter to test rules',
             expectedFile,
             ignoreTime,

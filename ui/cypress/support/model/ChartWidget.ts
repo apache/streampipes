@@ -16,22 +16,7 @@
  *
  */
 
-import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
-import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
-
-describe('Test Scatter View in Data Explorer', () => {
-    beforeEach('Setup Test', () => {
-        DataExplorerUtils.initDataLakeTests();
-    });
-
-    it('Perform Test', () => {
-        DataExplorerUtils.addDataViewAndWidget(
-            'view',
-            PrepareTestDataUtils.dataName,
-            'scatter-chart',
-        );
-
-        // Check if scatter plot is displayed
-        cy.dataCy('scatter-chart').should('be.visible');
-    });
-});
+export class ChartWidget {
+    public static TABLE = 'table';
+    public static TIME_SERIES = 'time-series-chart';
+}

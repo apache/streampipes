@@ -16,25 +16,25 @@
  *
  */
 
-import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
-describe('Test Heatmap View in Data Explorer', () => {
+describe('Test Indicator View in Charts', () => {
     beforeEach('Setup Test', () => {
-        DataExplorerUtils.initDataLakeTests();
+        ChartUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.addDataViewAndWidget(
+        ChartUtils.addDataViewAndWidget(
             'view',
             PrepareTestDataUtils.dataName,
-            'heatmap',
+            'indicator-chart',
         );
 
         // Check checkbox
-        DataExplorerUtils.openVisualizationConfig();
+        ChartUtils.openVisualizationConfig();
+        cy.dataCy('data-explorer-select-delta-checkbox').click();
 
-        // Check if heatmap chart is visible
-        cy.dataCy('heatmap').should('be.visible');
+        cy.dataCy('indicator-chart').should('be.visible');
     });
 });

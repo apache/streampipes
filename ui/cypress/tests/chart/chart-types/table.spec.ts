@@ -16,7 +16,24 @@
  *
  */
 
-export class DataExplorerWidget {
-    public static TABLE = 'table';
-    public static TIME_SERIES = 'time-series-chart';
-}
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
+import { ChartWidgetTableUtils } from '../../../support/utils/chart/ChartWidgetTableUtils';
+import { ChartWidget } from '../../../support/model/ChartWidget';
+import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
+
+describe('Test Table View in Charts', () => {
+    beforeEach('Setup Test', () => {
+        ChartUtils.initDataLakeTests();
+    });
+
+    it('Perform Test', () => {
+        ChartUtils.addDataViewAndWidget(
+            'view',
+            PrepareTestDataUtils.dataName,
+            ChartWidget.TABLE,
+        );
+
+        // Check if table is displayed correctly
+        ChartWidgetTableUtils.checkAmountOfRows(10);
+    });
+});

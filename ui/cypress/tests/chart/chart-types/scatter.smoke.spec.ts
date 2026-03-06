@@ -16,25 +16,22 @@
  *
  */
 
-import { DataExplorerUtils } from '../../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
 
-describe('Test Indicator View in Data Explorer', () => {
+describe('Test Scatter View in Charts', () => {
     beforeEach('Setup Test', () => {
-        DataExplorerUtils.initDataLakeTests();
+        ChartUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.addDataViewAndWidget(
+        ChartUtils.addDataViewAndWidget(
             'view',
             PrepareTestDataUtils.dataName,
-            'indicator-chart',
+            'scatter-chart',
         );
 
-        // Check checkbox
-        DataExplorerUtils.openVisualizationConfig();
-        cy.dataCy('data-explorer-select-delta-checkbox').click();
-
-        cy.dataCy('indicator-chart').should('be.visible');
+        // Check if scatter plot is displayed
+        cy.dataCy('scatter-chart').should('be.visible');
     });
 });

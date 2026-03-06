@@ -16,9 +16,9 @@
  *
  */
 
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
-import { DataExplorerWidgetTableUtils } from '../../support/utils/dataExplorer/DataExplorerWidgetTableUtils';
+import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTableUtils';
 
 describe('Test missing properties in data lake', () => {
     const dataViewName = 'TestView';
@@ -32,18 +32,18 @@ describe('Test missing properties in data lake', () => {
     });
 
     it('Test table with missing properties', () => {
-        DataExplorerUtils.addDataViewAndTableWidget(
+        ChartUtils.addDataViewAndTableWidget(
             dataViewName,
             PrepareTestDataUtils.dataName,
         );
 
-        DataExplorerWidgetTableUtils.checkAmountOfRows(5);
+        ChartWidgetTableUtils.checkAmountOfRows(5);
 
-        DataExplorerUtils.selectDataConfig();
+        ChartUtils.selectDataConfig();
         cy.dataCy('data-explorer-ignore-missing-values-checkbox')
             .children()
             .click();
 
-        DataExplorerWidgetTableUtils.checkAmountOfRows(3);
+        ChartWidgetTableUtils.checkAmountOfRows(3);
     });
 });

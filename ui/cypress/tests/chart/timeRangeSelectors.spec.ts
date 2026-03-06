@@ -16,7 +16,7 @@
  *
  */
 
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import {
     subDays,
     subHours,
@@ -26,7 +26,7 @@ import {
     subYears,
 } from 'date-fns';
 
-describe('Test Time Range Selectors in Data Explorer', () => {
+describe('Test Time Range Selectors in Charts', () => {
     const periods = [
         {
             selector: 'last-15-minutes',
@@ -46,20 +46,20 @@ describe('Test Time Range Selectors in Data Explorer', () => {
 
     before('Setup Tests', () => {
         cy.initStreamPipesTest();
-        DataExplorerUtils.loadDataIntoDataLake('datalake/sample.csv');
+        ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
     });
 
     it('Perform Test', () => {
-        DataExplorerUtils.goToDatalake();
-        DataExplorerUtils.createAndEditDataView();
+        ChartUtils.goToDatalake();
+        ChartUtils.createAndEditDataView();
 
         periods.forEach(period => {
             cy.log('Testing period: ' + period.selector);
-            DataExplorerUtils.openTimeSelectorMenu();
+            ChartUtils.openTimeSelectorMenu();
             // Choosing time period and saving initial start and end dates
             cy.dataCy(`time-selector-quick-${period.selector}`).click();
             const expectedEndDate = new Date();
-            DataExplorerUtils.openTimeSelectorMenu();
+            ChartUtils.openTimeSelectorMenu();
             // check if dates can differ from the selected dates
             const expectedStartDate = getExpectedStartDate(
                 expectedEndDate,
@@ -101,7 +101,7 @@ describe('Test Time Range Selectors in Data Explorer', () => {
                     ).to.be.true;
                 });
 
-            DataExplorerUtils.applyCustomTimeSelection();
+            ChartUtils.applyCustomTimeSelection();
         });
     });
 });

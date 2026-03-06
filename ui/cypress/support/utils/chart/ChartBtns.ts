@@ -16,7 +16,7 @@
  *
  */
 
-export class DataExplorerBtns {
+export class ChartBtns {
     public static refreshDataLakeMeasures() {
         return cy.dataCy('refresh-data-lake-measures');
     }

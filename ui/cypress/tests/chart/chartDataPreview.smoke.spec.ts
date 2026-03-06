@@ -15,34 +15,34 @@
  * limitations under the License.
  */
 
-import { DataExplorerWidget } from '../../support/model/DataExplorerWidget';
+import { ChartWidget } from '../../support/model/ChartWidget';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
-import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartBtns } from '../../support/utils/chart/ChartBtns';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 
-describe('Test Chart Data Preview in Data Explorer', () => {
+describe('Test Chart Data Preview in Charts', () => {
     beforeEach('Setup Test', () => {
-        DataExplorerUtils.initDataLakeTests();
+        ChartUtils.initDataLakeTests();
     });
 
     it('Shows and toggles the chart data preview', () => {
-        DataExplorerUtils.addDataViewAndWidget(
+        ChartUtils.addDataViewAndWidget(
             'preview-view',
             PrepareTestDataUtils.dataName,
-            DataExplorerWidget.TIME_SERIES,
+            ChartWidget.TIME_SERIES,
         );
 
-        DataExplorerBtns.chartDataPreviewHeader().should('be.visible');
-        DataExplorerBtns.chartDataPreviewTable().should('not.exist');
+        ChartBtns.chartDataPreviewHeader().should('be.visible');
+        ChartBtns.chartDataPreviewTable().should('not.exist');
 
-        DataExplorerBtns.chartDataPreviewToggle().click();
+        ChartBtns.chartDataPreviewToggle().click();
 
-        DataExplorerBtns.chartDataPreviewTable().should('be.visible');
-        DataExplorerBtns.chartDataPreviewCell('time')
+        ChartBtns.chartDataPreviewTable().should('be.visible');
+        ChartBtns.chartDataPreviewCell('time')
             .should('exist')
             .and('have.length.at.least', 1);
 
-        DataExplorerBtns.chartDataPreviewToggle().click();
-        DataExplorerBtns.chartDataPreviewTable().should('not.exist');
+        ChartBtns.chartDataPreviewToggle().click();
+        ChartBtns.chartDataPreviewTable().should('not.exist');
     });
 });
