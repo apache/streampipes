@@ -19,12 +19,7 @@
 package org.apache.streampipes.manager.verification;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.assets.AssetManager;
-import org.apache.streampipes.manager.verification.messages.VerificationError;
-import org.apache.streampipes.manager.verification.messages.VerificationResult;
-import org.apache.streampipes.manager.verification.structure.GeneralVerifier;
-import org.apache.streampipes.manager.verification.structure.Verifier;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
@@ -36,9 +31,10 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,96 +42,73 @@ import java.util.List;
 
 public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
-  private String graphData;
-  private Class<T> elementClass;
+  private static final Logger LOG = LoggerFactory.getLogger(ElementVerifier.class);
+
+  private final String graphData;
+  private final Class<T> elementClass;
   private final boolean shouldTransform;
 
   protected T elementDescription;
 
-  protected List<VerificationResult> validationResults;
-  protected List<Verifier> validators;
+  protected final IPipelineElementDescriptionStorage storageApi;
 
-  protected IPipelineElementDescriptionStorage storageApi = StorageDispatcher
-      .INSTANCE
-      .getNoSqlStore()
-      .getPipelineElementDescriptionStorage();
-
-  public ElementVerifier(String graphData, Class<T> elementClass) {
+  public ElementVerifier(
+      String graphData,
+      Class<T> elementClass,
+      IPipelineElementDescriptionStorage storageApi
+  ) {
     this.elementClass = elementClass;
     this.graphData = graphData;
+    this.storageApi = storageApi;
     this.shouldTransform = true;
-    this.validators = new ArrayList<>();
-    this.validationResults = new ArrayList<>();
   }
 
-  public ElementVerifier(T elementDescription) {
+  public ElementVerifier(T elementDescription, IPipelineElementDescriptionStorage storageApi) {
     this.elementDescription = elementDescription;
+    this.storageApi = storageApi;
+    this.graphData = null;
+    this.elementClass = null;
     this.shouldTransform = false;
-    this.validators = new ArrayList<>();
-    this.validationResults = new ArrayList<>();
-  }
-
-  protected void collectValidators() {
-    validators.add(new GeneralVerifier<>(elementDescription));
   }
 
   protected abstract StorageState store();
 
   protected abstract void update();
 
-  protected void verify() {
-    collectValidators();
-    validators.forEach(validator -> validationResults.addAll(validator.validate()));
-  }
-
-  public Message verifyAndAdd(String principalSid, boolean publicElement) throws SepaParseException {
-    if (shouldTransform) {
-      try {
-        this.elementDescription = transform();
-      } catch (IOException e) {
-        return new ErrorMessage(NotificationType.UNKNOWN_ERROR.uiNotification());
-      }
+  public Message verifyAndAdd(String principalSid, boolean publicElement) {
+    var transformError = transformEntity();
+    if (transformError != null) {
+      return transformError;
     }
-    verify();
-    if (isVerifiedSuccessfully()) {
-      StorageState state = store();
-      if (state == StorageState.STORED) {
-        createAndStorePermission(principalSid, publicElement);
-        try {
-          storeAssets();
-        } catch (IOException | NoServiceEndpointsAvailableException e) {
-          e.printStackTrace();
-        }
-        return successMessage();
-      } else if (state == StorageState.ALREADY_STORED) {
-        return addedToUserSuccessMessage();
-      } else {
-        return skippedSuccessMessage();
+
+    StorageState state = store();
+    if (state == StorageState.STORED) {
+      createAndStorePermission(principalSid, publicElement);
+      try {
+        storeAssets();
+      } catch (IOException | NoServiceEndpointsAvailableException e) {
+        LOG.error("Could not store assets for app id '{}'", elementDescription.getAppId(), e);
       }
+      return successMessage();
     } else {
-      return errorMessage();
+      return addedToUserSuccessMessage();
     }
 
   }
 
   public Message verifyAndUpdate() {
+    var transformError = transformEntity();
+    if (transformError != null) {
+      return transformError;
+    }
+
+    update();
     try {
-      this.elementDescription = transform();
-    } catch (JsonProcessingException e) {
-      return new ErrorMessage(NotificationType.UNKNOWN_ERROR.uiNotification());
+      updateAssets();
+    } catch (IOException | NoServiceEndpointsAvailableException e) {
+      LOG.error("Could not update assets for app id '{}'", elementDescription.getAppId(), e);
     }
-    verify();
-    if (isVerifiedSuccessfully()) {
-      update();
-      try {
-        updateAssets();
-      } catch (IOException | NoServiceEndpointsAvailableException e) {
-        e.printStackTrace();
-      }
-      return successMessage();
-    } else {
-      return errorMessage();
-    }
+    return successMessage();
 
   }
 
@@ -148,37 +121,29 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     }
   }
 
-  private Message errorMessage() {
-    return new ErrorMessage(elementDescription.getName(), collectNotifications());
-  }
-
   private Message successMessage() {
-    List<Notification> notifications = collectNotifications();
+    List<Notification> notifications = new ArrayList<>();
     notifications.add(NotificationType.STORAGE_SUCCESS.uiNotification());
     return new SuccessMessage(elementDescription.getName(), notifications);
   }
 
-  private Message skippedSuccessMessage() {
-    List<Notification> notifications = collectNotifications();
-    notifications.add(new Notification("Already exists", "This element is already in your list of elements, skipped."));
-    return new SuccessMessage(elementDescription.getName(), notifications);
-  }
-
   private Message addedToUserSuccessMessage() {
-    List<Notification> notifications = collectNotifications();
+    List<Notification> notifications = new ArrayList<>();
     notifications.add(new Notification("Already stored", "Element description already stored, added element to user"));
     return new SuccessMessage(elementDescription.getName(), notifications);
   }
 
-  private List<Notification> collectNotifications() {
-    List<Notification> notifications = new ArrayList<>();
-    validationResults.forEach(vr -> notifications.add(vr.getNotification()));
-    return notifications;
-  }
+  private Message transformEntity() {
+    if (!shouldTransform) {
+      return null;
+    }
 
-  private boolean isVerifiedSuccessfully() {
-    return validationResults.stream()
-                            .noneMatch(validator -> (validator instanceof VerificationError));
+    try {
+      this.elementDescription = transform();
+      return null;
+    } catch (IOException e) {
+      return new ErrorMessage(NotificationType.UNKNOWN_ERROR.uiNotification());
+    }
   }
 
   protected T transform() throws JsonProcessingException {
