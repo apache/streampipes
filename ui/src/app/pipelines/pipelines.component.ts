@@ -150,9 +150,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     }
 
     applyPipelineFilters(elementIds: Set<string>) {
-        if (this.assetFilterService.hasNoAssetFilterPermission()) {
-            elementIds = new Set<string>();
-        }
         this.currentFilters = elementIds;
         if (elementIds === undefined) {
             this.filteredPipelines = [];

@@ -31,7 +31,6 @@ public enum DefaultRole {
   ROLE_DATA_EXPLORER_ADMIN(Constants.ROLE_DATA_EXPLORER_ADMIN_VALUE),
   ROLE_DATA_EXPLORER_USER(Constants.ROLE_DATA_EXPLORER_USER_VALUE),
   ROLE_CONNECT_ADMIN(Constants.ROLE_CONNECT_ADMIN_VALUE),
-  ROLE_ASSET_USER(Constants.ROLE_ASSET_USER_VALUE),
   ROLE_ASSET_ADMIN(Constants.ROLE_ASSET_ADMIN_VALUE);
 
   DefaultRole(String roleString) {
@@ -47,7 +46,6 @@ public enum DefaultRole {
     public static final String ROLE_DASHBOARD_USER_VALUE = "ROLE_DASHBOARD_USER";
     public static final String ROLE_DATA_EXPLORER_USER_VALUE = "ROLE_DATA_EXPLORER_USER";
     public static final String ROLE_PIPELINE_USER_VALUE = "ROLE_PIPELINE_USER";
-    public static final String ROLE_ASSET_USER_VALUE = "ROLE_ASSET_USER";
     public static final String ROLE_ASSET_ADMIN_VALUE = "ROLE_ASSET_ADMIN";
   }
 }

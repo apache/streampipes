@@ -64,10 +64,8 @@ export class AssetBrowserToolbarComponent implements OnInit, OnDestroy {
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
 
     ngOnInit() {
-        this.showAssetBrowser = this.currentUserService.hasAnyRole([
-            'PRIVILEGE_READ_ASSETS',
-            'PRIVILEGE_WRITE_ASSETS',
-        ]);
+        this.showAssetBrowser =
+            this.currentUserService.getCurrentUser() !== undefined;
         if (this.showAssetBrowser) {
             this.assetBrowserData$ =
                 this.assetBrowserService.assetData$.subscribe(assetData => {

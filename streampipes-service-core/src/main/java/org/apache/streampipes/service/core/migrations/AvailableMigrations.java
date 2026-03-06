@@ -33,6 +33,7 @@ import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermission
 import org.apache.streampipes.service.core.migrations.v099.CreateDatasetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
+import org.apache.streampipes.service.core.migrations.v099.RemoveAssetUserRoleMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveDuplicatedAssetPermissions;
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
@@ -62,7 +63,8 @@ public class AvailableMigrations {
         new ModifyAssetLinkIconMigration(),
         new RemoveDuplicatedAssetPermissions(),
         new AddFunctionStateViewMigration(),
-        new AddRefreshTokenViewsMigration()
+        new AddRefreshTokenViewsMigration(),
+        new RemoveAssetUserRoleMigration()
     );
   }
 }
