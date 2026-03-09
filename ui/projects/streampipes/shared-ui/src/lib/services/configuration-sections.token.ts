@@ -16,19 +16,19 @@
  *
  */
 
-package org.apache.streampipes.storage.api.system;
+import { InjectionToken, Provider } from '@angular/core';
+import { SpConfigurationSection } from '../models/sp-configuration-section.model';
 
-import org.apache.streampipes.model.configuration.SpCoreConfiguration;
+export const SP_CONFIGURATION_SECTIONS = new InjectionToken<
+    SpConfigurationSection[]
+>('SP_CONFIGURATION_SECTIONS');
 
-public interface ISpCoreConfigurationStorage {
-
-  boolean exists();
-
-  void createElement(SpCoreConfiguration element);
-
-  SpCoreConfiguration get();
-
-  SpCoreConfiguration updateElement(SpCoreConfiguration element);
-
-  void deleteElement();
+export function provideConfigurationSection(
+    section: SpConfigurationSection,
+): Provider {
+    return {
+        provide: SP_CONFIGURATION_SECTIONS,
+        useValue: section,
+        multi: true,
+    };
 }

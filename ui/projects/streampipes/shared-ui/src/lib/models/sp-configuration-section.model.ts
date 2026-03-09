@@ -16,19 +16,17 @@
  *
  */
 
-package org.apache.streampipes.storage.api.system;
+import { Type } from '@angular/core';
 
-import org.apache.streampipes.model.configuration.SpCoreConfiguration;
-
-public interface ISpCoreConfigurationStorage {
-
-  boolean exists();
-
-  void createElement(SpCoreConfiguration element);
-
-  SpCoreConfiguration get();
-
-  SpCoreConfiguration updateElement(SpCoreConfiguration element);
-
-  void deleteElement();
+interface SpConfigurationSectionBase {
+    itemId: string;
+    itemTitle: string;
+    roles: string[];
+    order?: number;
 }
+
+export type SpConfigurationSection = SpConfigurationSectionBase &
+    (
+        | { component: Type<unknown> }
+        | { loadComponent: () => Promise<Type<unknown>> }
+    );

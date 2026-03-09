@@ -16,95 +16,43 @@
  *
  */
 
-import { SpNavigationItem } from '@streampipes/shared-ui';
-import { Injectable, inject } from '@angular/core';
-import { AuthService } from '../services/auth.service';
-import { TranslateService } from '@ngx-translate/core';
+import {
+    SpConfigurationSectionsService,
+    SpNavigationItem,
+} from '@streampipes/shared-ui';
+import { Injectable, Type, inject } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class SpConfigurationTabsService {
-    private translateService = inject(TranslateService);
-    allConfigurationTabs: SpNavigationItem[] = [
-        {
-            itemId: 'general',
-            itemTitle: this.translateService.instant('General'),
-            itemLink: ['configuration', 'general'],
-            roles: ['ROLE_ADMIN'],
-        },
-        {
-            itemId: 'export',
-            itemTitle: this.translateService.instant('Export/Import'),
-            itemLink: ['configuration', 'export'],
-            roles: ['ROLE_ADMIN'],
-        },
-        {
-            itemId: 'extensions-installation',
-            itemTitle: this.translateService.instant('Extensions'),
-            itemLink: ['configuration', 'extensions-installation'],
-            roles: ['ROLE_ADMIN'],
-        },
-        {
-            itemId: 'extensions-services',
-            itemTitle: this.translateService.instant('Extension Services'),
-            itemLink: ['configuration', 'extensions-services'],
-            roles: ['ROLE_ADMIN'],
-        },
-        {
-            itemId: 'files',
-            itemTitle: this.translateService.instant('Files'),
-            itemLink: ['configuration', 'files'],
-            roles: ['PRIVILEGE_WRITE_FILES'],
-        },
-        {
-            itemId: 'labels',
-            itemTitle: this.translateService.instant('Labels'),
-            itemLink: ['configuration', 'labels'],
-            roles: ['PRIVILEGE_WRITE_LABELS'],
-        },
-        {
-            itemId: 'email',
-            itemTitle: this.translateService.instant('Mail'),
-            itemLink: ['configuration', 'email'],
-            roles: ['ROLE_ADMIN'],
-        },
-        {
-            itemId: 'messaging',
-            itemTitle: this.translateService.instant('Messaging'),
-            itemLink: ['configuration', 'messaging'],
-            roles: ['ROLE_ADMIN'],
-        },
-        {
-            itemId: 'security',
-            itemTitle: this.translateService.instant('Security'),
-            itemLink: ['configuration', 'security'],
-            roles: ['ROLE_ADMIN'],
-        },
-        {
-            itemId: 'sites',
-            itemTitle: this.translateService.instant('Sites'),
-            itemLink: ['configuration', 'sites'],
-            roles: ['PRIVILEGE_WRITE_ASSETS'],
-        },
-    ];
-
-    constructor(private authService: AuthService) {}
+    private configurationSectionsService = inject(
+        SpConfigurationSectionsService,
+    );
 
     public getTabs(): SpNavigationItem[] {
-        return this.allConfigurationTabs.filter(c =>
-            this.authService.hasAnyRole(c.roles),
-        );
+        return this.configurationSectionsService.getTabs();
     }
 
     public getTabTitle(itemId: string): string {
-        return this.allConfigurationTabs.find(t => t.itemId === itemId)
-            .itemTitle;
+        return this.configurationSectionsService.getTabTitle(itemId);
+    }
+
+    public getSectionComponent(
+        itemId: string,
+    ): Promise<Type<unknown> | undefined> {
+        return this.configurationSectionsService.getSectionComponent(itemId);
+    }
+
+    public getDefaultTab(): SpNavigationItem | undefined {
+        return this.configurationSectionsService.getDefaultTab();
     }
 
     public isTabActive(
         activeTabs: SpNavigationItem[],
         itemId: string,
     ): boolean {
-        const links = activeTabs.map(tab => tab.itemLink[1]);
-        return links.indexOf(itemId) !== -1;
+        return this.configurationSectionsService.isTabActive(
+            activeTabs,
+            itemId,
+        );
     }
 }
