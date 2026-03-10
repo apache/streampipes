@@ -17,7 +17,7 @@
  */
 
 import { UserBuilder } from '../../support/builder/UserBuilder';
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 
 describe('Test User Management', () => {

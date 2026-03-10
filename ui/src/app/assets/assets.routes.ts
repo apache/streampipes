@@ -20,8 +20,8 @@ import { Routes } from '@angular/router';
 import { SpAssetOverviewComponent } from './components/asset-overview/asset-overview.component';
 import { SpViewAssetComponent } from './components/asset-details/view-asset/view-asset.component';
 import { SpAssetDetailsComponent } from './components/asset-details/edit-asset/asset-details.component';
-import { UserPrivilege } from '../_enums/user-privilege.enum';
-import { PageAuthGuard } from '../_guards/page-auth.can-active.guard';
+import { UserPrivilege } from '../core/auth/user-privilege.enum';
+import { PageAuthGuard } from '../core/auth/guards/page-auth.can-activate.guard';
 
 export const ASSET_ROUTES: Routes = [
     {

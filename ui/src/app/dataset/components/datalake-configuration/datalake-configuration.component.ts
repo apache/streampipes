@@ -71,8 +71,8 @@ import { DeleteExportProviderComponent } from '../../dialog/delete-export-provid
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { UserRole } from '../../../_enums/user-role.enum';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
+import { UserRole } from '../../../core/auth/user-role.enum';
 import {
     FlexDirective,
     FlexOrderDirective,

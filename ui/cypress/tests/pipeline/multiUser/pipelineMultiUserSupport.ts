@@ -17,7 +17,7 @@
  */
 
 import { UserUtils } from '../../../support/utils/UserUtils';
-import { UserRole } from '../../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../../src/app/core/auth/user-role.enum';
 import { PipelineUtils } from '../../../support/utils/pipeline/PipelineUtils';
 
 describe('Test Pipeline Multi User support', () => {

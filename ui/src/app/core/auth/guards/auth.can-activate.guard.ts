@@ -16,22 +16,24 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { BaseConfiguredCanActivateGuard } from './base-configured.can-activate.guard';
+import { inject, Injectable } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
+import {
+    ActivatedRouteSnapshot,
+    CanActivate,
+    GuardResult,
+    MaybeAsync,
+    RouterStateSnapshot,
+} from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
-export class AlreadyConfiguredCanActivateGuard extends BaseConfiguredCanActivateGuard {
-    constructor(router: Router, authService: AuthService) {
-        super(router, authService);
-    }
+export class AuthCanActivateGuard implements CanActivate {
+    private authService = inject(AuthService);
 
-    onIsConfigured(): boolean | UrlTree {
-        return this.router.parseUrl('login');
-    }
-
-    onIsUnconfigured(): boolean | UrlTree {
-        return true;
+    canActivate(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot,
+    ): MaybeAsync<GuardResult> {
+        return this.authService.ensureAuthenticated(state.url);
     }
 }

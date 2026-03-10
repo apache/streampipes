@@ -39,7 +39,7 @@ import {
 } from '@angular/material/table';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { AuthService } from '../../../services/auth.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import {
     CurrentUserService,
     DialogRef,

@@ -16,40 +16,31 @@
  *
  */
 
-import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
-    Router,
+    CanActivate,
+    CanActivateChild,
+    GuardResult,
+    MaybeAsync,
     RouterStateSnapshot,
-    UrlTree,
 } from '@angular/router';
-import { LoginService } from '../login/services/login.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { AuthService } from '../../../services/auth.service';
+import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
-export class RestorePasswordAllowedCanActivateGuard {
-    constructor(
-        private router: Router,
-        private loginService: LoginService,
-    ) {}
+export class PageAuthGuard implements CanActivate, CanActivateChild {
+    constructor(private authService: AuthService) {}
 
     canActivate(
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
-    ):
-        | Observable<boolean | UrlTree>
-        | Promise<boolean | UrlTree>
-        | boolean
-        | UrlTree {
-        return this.loginService
-            .fetchLoginSettings()
-            .pipe(
-                map(config =>
-                    config.allowPasswordRecovery
-                        ? true
-                        : this.router.parseUrl('login'),
-                ),
-            );
+    ): MaybeAsync<GuardResult> {
+        return this.canActivateChild(route);
+    }
+
+    canActivateChild(activatedRouteSnapshot: ActivatedRouteSnapshot): boolean {
+        const privileges: string[] = activatedRouteSnapshot.data.privileges;
+
+        return this.authService.isAnyAccessGranted(privileges, true);
     }
 }

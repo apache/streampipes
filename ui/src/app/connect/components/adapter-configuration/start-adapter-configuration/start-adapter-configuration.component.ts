@@ -53,7 +53,7 @@ import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { UserRole } from '../../../../_enums/user-role.enum';
+import { UserRole } from '../../../../core/auth/user-role.enum';
 import {
     FlexDirective,
     LayoutAlignDirective,

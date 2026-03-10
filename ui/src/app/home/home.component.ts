@@ -30,7 +30,7 @@ import {
     SpBreadcrumbService,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import { UserRole } from '../_enums/user-role.enum';
+import { UserRole } from '../core/auth/user-role.enum';
 import { MissingElementsForTutorialComponent } from '../editor/dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
 import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
 import { ShepherdService } from '../services/tour/shepherd.service';
