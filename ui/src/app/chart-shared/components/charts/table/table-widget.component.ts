@@ -17,9 +17,11 @@
  */
 
 import { DatePipe, NgClass, NgStyle } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { TableWidgetModel } from './model/table-widget.model';
 import {
@@ -43,6 +45,40 @@ interface NumericColumnStats {
     max: number;
 }
 
+interface AdvancedFilter {
+    type: string;
+    value: string;
+    value2?: string;
+}
+
+const BLANKS_LABEL = '(Blanks)';
+const DROPDOWN_MAX_WIDTH = 300;
+const DROPDOWN_EDGE_PADDING = 3;
+
+const NO_INPUT_TYPES = new Set(['Top 10', 'Above average', 'Below average']);
+
+const NUMERIC_FILTER_OPTIONS = [
+    'Equals',
+    'Does not equal',
+    'Greater than',
+    'Greater than or equal to',
+    'Less than',
+    'Less than or equal to',
+    'Between',
+    'Top 10',
+    'Above average',
+    'Below average',
+];
+
+const TEXT_FILTER_OPTIONS = [
+    'Equals',
+    'Does not equal',
+    'Begins with',
+    'Ends with',
+    'Contains',
+    'Does not contain',
+];
+
 @Component({
     selector: 'sp-data-explorer-table-widget',
     templateUrl: './table-widget.component.html',
@@ -56,6 +92,8 @@ interface NumericColumnStats {
         TooMuchDataComponent,
         MatPaginator,
         MatIcon,
+        MatCheckbox,
+        FormsModule,
         DatePipe,
         TranslatePipe,
     ],
@@ -77,38 +115,71 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     sortColumn = '';
     sortDirection: SortDirection = '';
 
+    columnFilters: Record<string, Set<string>> = {};
+    columnSearchTerms: Record<string, string> = {};
+    openFilterColumn: string | null = null;
+    advancedFilters: Record<string, AdvancedFilter> = {};
+    showAdvancedPanel: string | null = null;
+    advancedInputValue = '';
+    advancedInputValue2 = '';
+    selectedAdvancedType = '';
+    dropdownStyle: Record<string, string> = {};
+
+    constructor(private elRef: ElementRef) {
+        super();
+    }
+
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: MouseEvent): void {
+        if (!this.openFilterColumn) return;
+        const target = event.target as HTMLElement;
+        const dropdown = this.elRef.nativeElement.querySelector(
+            '.column-filter-dropdown',
+        );
+        const trigger = this.elRef.nativeElement.querySelector(
+            '.column-filter-trigger.filter-open',
+        );
+        if (
+            dropdown &&
+            !dropdown.contains(target) &&
+            (!trigger || !trigger.contains(target))
+        ) {
+            this.closeFilter();
+        }
+    }
+
+    closeFilter(): void {
+        this.openFilterColumn = null;
+        this.showAdvancedPanel = null;
+    }
+
     private numericColumnStats: Record<string, NumericColumnStats> = {};
 
     regenerateColumnNames(): void {
-        this.groupByColumnNames = this.makeGroupByColumns(
-            this.dataExplorerWidget.visualizationConfig.selectedColumns ?? [],
-        );
-
+        const selected =
+            this.dataExplorerWidget.visualizationConfig.selectedColumns ?? [];
+        this.groupByColumnNames = this.makeGroupByColumns(selected);
         this.columnNames = Array.from(
             new Set([
                 'time',
-                ...(
-                    this.dataExplorerWidget.visualizationConfig
-                        .selectedColumns ?? []
-                ).map(column => column.fullDbName),
+                ...selected.map(c => c.fullDbName),
                 ...this.groupByColumnNames,
             ]),
         );
     }
 
     makeGroupByColumns(selectedColumns: DataExplorerField[]): string[] {
-        return this.dataExplorerWidget.dataConfig.sourceConfigs.flatMap(sc => {
-            return (sc.queryConfig.groupBy ?? [])
-                .filter(groupBy => groupBy.selected)
+        return this.dataExplorerWidget.dataConfig.sourceConfigs.flatMap(sc =>
+            (sc.queryConfig.groupBy ?? [])
+                .filter(g => g.selected)
                 .filter(
-                    groupBy =>
-                        selectedColumns.find(
-                            column =>
-                                column.runtimeName === groupBy.runtimeName,
-                        ) === undefined,
+                    g =>
+                        !selectedColumns.find(
+                            c => c.runtimeName === g.runtimeName,
+                        ),
                 )
-                .map(groupBy => groupBy.runtimeName);
-        });
+                .map(g => g.runtimeName),
+        );
     }
 
     transformData(spQueryResult: SpQueryResult, rowOffset: number): TableRow[] {
@@ -139,11 +210,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             { __rowIndex: rowIndex } as TableRow,
         );
 
-        if (tags) {
-            Object.keys(tags).forEach(key => {
-                row[key] = tags[key];
-            });
-        }
+        if (tags) Object.assign(row, tags);
 
         return row;
     }
@@ -161,14 +228,304 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             this.sortDirection = 'asc';
         } else if (this.sortDirection === 'asc') {
             this.sortDirection = 'desc';
-        } else if (this.sortDirection === 'desc') {
+        } else {
             this.sortDirection = '';
             this.sortColumn = '';
-        } else {
-            this.sortDirection = 'asc';
         }
-
         this.applyTableState(false);
+    }
+
+    toggleColumnFilter(column: string, event: MouseEvent): void {
+        event.stopPropagation();
+        if (this.openFilterColumn === column) {
+            this.closeFilter();
+            return;
+        }
+        this.openFilterColumn = column;
+        this.showAdvancedPanel = null;
+        this.columnSearchTerms[column] ??= '';
+        const rect = (
+            event.currentTarget as HTMLElement
+        ).getBoundingClientRect();
+        const root = this.elRef.nativeElement.getBoundingClientRect();
+        const leftRel = rect.left - root.left;
+        const finalLeft =
+            root.right - rect.left >= DROPDOWN_MAX_WIDTH + DROPDOWN_EDGE_PADDING
+                ? leftRel
+                : Math.max(
+                      0,
+                      leftRel -
+                          (DROPDOWN_MAX_WIDTH - rect.width) -
+                          DROPDOWN_EDGE_PADDING,
+                  );
+        this.dropdownStyle = {
+            'position': 'absolute',
+            'top': `${rect.bottom - root.top}px`,
+            'left': `${finalLeft}px`,
+            'z-index': '9999',
+        };
+    }
+
+    isColumnFilterOpen = (column: string): boolean =>
+        this.openFilterColumn === column;
+
+    hasActiveFilter(column: string): boolean {
+        if (this.advancedFilters[column]) return true;
+        const f = this.columnFilters[column];
+        return !!f && f.size < this.getAllUniqueValues(column).length;
+    }
+
+    getAllUniqueValues = (column: string): string[] =>
+        this.extractUniqueValues(this.rows, column);
+
+    getVisibleUniqueValues(column: string): string[] {
+        let baseRows = this.getRowsFilteredByOtherColumns(column);
+        const adv = this.advancedFilters[column];
+        if (adv)
+            baseRows = this.applyAdvancedFilterToRows(baseRows, column, adv);
+        return this.extractUniqueValues(baseRows, column);
+    }
+
+    getLivePreviewValues(column: string): string[] {
+        let baseRows = this.getRowsFilteredByOtherColumns(column);
+        const adv = this.advancedFilters[column];
+        if (adv)
+            baseRows = this.applyAdvancedFilterToRows(baseRows, column, adv);
+        if (
+            this.showAdvancedPanel === column &&
+            this.selectedAdvancedType &&
+            (this.advancedInputValue ||
+                !this.needsInput(this.selectedAdvancedType))
+        ) {
+            baseRows = this.applyAdvancedFilterToRows(baseRows, column, {
+                type: this.selectedAdvancedType,
+                value: this.advancedInputValue,
+                value2: this.advancedInputValue2,
+            });
+        }
+        return this.extractUniqueValues(baseRows, column);
+    }
+
+    getFilteredUniqueValues(column: string): string[] {
+        const term = (this.columnSearchTerms[column] ?? '')
+            .trim()
+            .toLowerCase();
+        const values =
+            this.showAdvancedPanel === column
+                ? this.getLivePreviewValues(column)
+                : this.getVisibleUniqueValues(column);
+        return term
+            ? values.filter(v => v.toLowerCase().includes(term))
+            : values;
+    }
+
+    isValueChecked = (column: string, value: string): boolean =>
+        this.columnFilters[column]?.has(value) ?? true;
+
+    toggleValue(column: string, value: string): void {
+        this.ensureColumnFilter(column);
+        const f = this.columnFilters[column];
+        if (f.has(value)) {
+            f.delete(value);
+        } else {
+            f.add(value);
+        }
+        this.applyTableState(true);
+    }
+
+    areAllValuesSelected(column: string): boolean {
+        const f = this.columnFilters[column];
+        if (!f) return true;
+        return this.getAllUniqueValues(column).every(v => f.has(v));
+    }
+
+    toggleAllValues(column: string): void {
+        this.ensureColumnFilter(column);
+        const f = this.columnFilters[column];
+        const all = this.getAllUniqueValues(column);
+        const allSelected = all.every(v => f.has(v));
+        all.forEach(v => (allSelected ? f.delete(v) : f.add(v)));
+        this.applyTableState(true);
+    }
+
+    hasSearchOrAdvanced = (column: string): boolean =>
+        !!this.columnSearchTerms[column]?.trim() ||
+        this.showAdvancedPanel === column;
+
+    areDisplayedValuesSelected(column: string): boolean {
+        const f = this.columnFilters[column];
+        if (!f) return true;
+        return this.getFilteredUniqueValues(column).every(v => f.has(v));
+    }
+
+    toggleDisplayedValues(column: string): void {
+        this.ensureColumnFilter(column);
+        const f = this.columnFilters[column];
+        const displayed = this.getFilteredUniqueValues(column);
+        displayed.forEach(v => f.add(v));
+        this.applyTableState(true);
+    }
+
+    onColumnSearchChange(column: string, term: string): void {
+        this.columnSearchTerms[column] = term;
+    }
+
+    clearColumnFilter(column: string): void {
+        delete this.columnFilters[column];
+        delete this.advancedFilters[column];
+        this.columnSearchTerms[column] = '';
+        this.showAdvancedPanel = null;
+        this.applyTableState(true);
+    }
+
+    onSearchKeydown(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            this.closeFilter();
+        }
+    }
+
+    onAdvancedInputKeydown(
+        event: KeyboardEvent,
+        column: string,
+        inputIndex: number,
+    ): void {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        if (
+            inputIndex === 1 &&
+            this.needsSecondInput(this.selectedAdvancedType)
+        ) {
+            this.elRef.nativeElement
+                .querySelectorAll('.advanced-input')?.[1]
+                ?.focus();
+        } else {
+            this.applyAdvancedFilter(column);
+        }
+    }
+
+    onFilterDropdownClick = (event: MouseEvent): void =>
+        event.stopPropagation();
+
+    getAdvancedFilterOptions = (column: string): string[] =>
+        this.isNumericColumn(column) || column === 'time'
+            ? NUMERIC_FILTER_OPTIONS
+            : TEXT_FILTER_OPTIONS;
+
+    getAdvancedFilterLabel = (column: string): string =>
+        this.isNumericColumn(column) || column === 'time'
+            ? 'Number Filters'
+            : 'Text Filters';
+
+    toggleAdvancedPanel(column: string, event: MouseEvent): void {
+        event.stopPropagation();
+        if (this.showAdvancedPanel === column) {
+            this.showAdvancedPanel = null;
+            return;
+        }
+        this.showAdvancedPanel = column;
+        const existing = this.advancedFilters[column];
+        this.selectedAdvancedType = existing?.type ?? '';
+        this.advancedInputValue = existing?.value ?? '';
+        this.advancedInputValue2 = existing?.value2 ?? '';
+    }
+
+    selectAdvancedType(type: string): void {
+        this.selectedAdvancedType = type;
+        this.advancedInputValue = '';
+        this.advancedInputValue2 = '';
+    }
+
+    needsInput = (type: string): boolean => !NO_INPUT_TYPES.has(type);
+    needsSecondInput = (type: string): boolean => type === 'Between';
+
+    applyAdvancedFilter(column: string): void {
+        this.advancedFilters[column] = {
+            type: this.selectedAdvancedType,
+            value: this.advancedInputValue,
+            value2: this.advancedInputValue2,
+        };
+        this.showAdvancedPanel = null;
+        this.applyTableState(true);
+    }
+
+    cancelAdvancedPanel(): void {
+        this.showAdvancedPanel = null;
+    }
+
+    clearAdvancedFilter(column: string): void {
+        delete this.advancedFilters[column];
+        this.showAdvancedPanel = null;
+        this.selectedAdvancedType = '';
+        this.advancedInputValue = '';
+        this.advancedInputValue2 = '';
+        this.applyTableState(true);
+    }
+
+    hasAdvancedFilter = (column: string): boolean =>
+        !!this.advancedFilters[column];
+
+    private getRowsFilteredByOtherColumns(excludeColumn: string): TableRow[] {
+        let result = [...this.rows];
+        const search = (
+            this.dataExplorerWidget.visualizationConfig.searchValue ?? ''
+        )
+            .trim()
+            .toLowerCase();
+        if (search) {
+            result = result.filter(row =>
+                this.columnNames.some(c =>
+                    String(this.formatCellValue(c, row[c]))
+                        .toLowerCase()
+                        .includes(search),
+                ),
+            );
+        }
+        for (const col of this.columnNames) {
+            if (col === excludeColumn) continue;
+            const f = this.columnFilters[col];
+            if (f && f.size < this.getAllUniqueValues(col).length) {
+                result = result.filter(row =>
+                    f.has(this.formatForFilter(row, col)),
+                );
+            }
+            const adv = this.advancedFilters[col];
+            if (adv)
+                result = result.filter(row =>
+                    this.passesAdvancedFilter(row, col, adv),
+                );
+        }
+        return result;
+    }
+
+    private ensureColumnFilter(column: string): void {
+        this.columnFilters[column] ??= new Set(this.getAllUniqueValues(column));
+    }
+
+    private initColumnFilters(): void {
+        this.columnFilters = {};
+        this.columnSearchTerms = {};
+        this.advancedFilters = {};
+        this.openFilterColumn = null;
+        this.showAdvancedPanel = null;
+    }
+
+    private extractUniqueValues(rows: TableRow[], column: string): string[] {
+        const seen = new Set(rows.map(r => this.formatForFilter(r, column)));
+        return Array.from(seen).sort((a, b) =>
+            a === BLANKS_LABEL
+                ? 1
+                : b === BLANKS_LABEL
+                  ? -1
+                  : a.localeCompare(b, undefined, { sensitivity: 'base' }),
+        );
+    }
+
+    private formatForFilter(row: TableRow, column: string): string {
+        const val = row[column];
+        return val === null || val === undefined || val === ''
+            ? BLANKS_LABEL
+            : String(this.formatCellValue(column, val));
     }
 
     sortIcon(column: string): string {
@@ -203,6 +560,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             return transformedRows;
         });
 
+        this.initColumnFilters();
         this.applyTableState(true);
         this.setShownComponents(false, true, false, false);
     }
@@ -227,32 +585,21 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
 
         this.dataExplorerWidget.visualizationConfig.highlightedColumns = (
             this.dataExplorerWidget.visualizationConfig.highlightedColumns ?? []
-        ).filter(
-            field =>
-                !removedFields.find(
-                    removedField =>
-                        removedField.fullDbName === field.fullDbName,
-                ),
-        );
+        ).filter(f => !removedFields.find(r => r.fullDbName === f.fullDbName));
 
         this.refreshView();
     }
 
-    isNumericColumn(column: string): boolean {
-        return !!this.fieldProvider.numericFields.find(
-            field => field.fullDbName === column,
-        );
-    }
+    isNumericColumn = (column: string): boolean =>
+        !!this.fieldProvider.numericFields.find(f => f.fullDbName === column);
 
-    isHighlightedColumn(column: string): boolean {
-        return !!(
+    isHighlightedColumn = (column: string): boolean =>
+        !!(
             this.dataExplorerWidget.visualizationConfig.highlightedColumns ?? []
-        ).find(field => field.fullDbName === column);
-    }
+        ).find(f => f.fullDbName === column);
 
-    headerLabel(column: string): string {
-        return column === 'time' ? 'Time' : column;
-    }
+    headerLabel = (column: string): string =>
+        column === 'time' ? 'Time' : column;
 
     formatCellValue(column: string, value: unknown): unknown {
         if (column === 'time') {
@@ -271,19 +618,13 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     }
 
     getCellStyle(row: TableRow, column: string): Record<string, string> {
-        if (!this.isHighlightedColumn(column)) {
-            return {};
-        }
-
+        if (!this.isHighlightedColumn(column)) return {};
         const highlightValue = this.getHighlightStrength(row[column], column);
-        if (highlightValue === undefined) {
-            return {};
-        }
+        if (highlightValue === undefined) return {};
         const intensity = Math.round(8 + highlightValue * 26);
-        const highlightColor = this.getHighlightColor(column);
-
+        const color = this.getHighlightColor(column);
         return {
-            background: `color-mix(in srgb, ${highlightColor} ${intensity}%, var(--color-bg-0))`,
+            background: `color-mix(in srgb, ${color} ${intensity}%, var(--color-bg-0))`,
         };
     }
 
@@ -325,40 +666,134 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     }
 
     private filterRows(rows: TableRow[]): TableRow[] {
-        const searchTerm = (
+        let result = [...rows];
+        const search = (
             this.dataExplorerWidget.visualizationConfig.searchValue ?? ''
         )
             .trim()
             .toLowerCase();
-
-        if (!searchTerm) {
-            return [...rows];
+        if (search) {
+            result = result.filter(row =>
+                this.columnNames.some(c =>
+                    String(this.formatCellValue(c, row[c]))
+                        .toLowerCase()
+                        .includes(search),
+                ),
+            );
         }
+        for (const col of this.columnNames) {
+            const f = this.columnFilters[col];
+            if (f && f.size < this.getAllUniqueValues(col).length) {
+                result = result.filter(row =>
+                    f.has(this.formatForFilter(row, col)),
+                );
+            }
+            const adv = this.advancedFilters[col];
+            if (adv) result = this.applyAdvancedFilterToRows(result, col, adv);
+        }
+        return result;
+    }
 
-        return rows.filter(row =>
-            this.columnNames.some(column =>
-                String(this.formatCellValue(column, row[column]))
-                    .toLowerCase()
-                    .includes(searchTerm),
-            ),
-        );
+    private applyAdvancedFilterToRows(
+        rows: TableRow[],
+        column: string,
+        adv: AdvancedFilter,
+    ): TableRow[] {
+        if (adv.type === 'Top 10') {
+            const top = rows
+                .map(r => ({ r, n: this.toNumber(r[column]) }))
+                .filter(
+                    (e): e is { r: TableRow; n: number } => e.n !== undefined,
+                )
+                .sort((a, b) => b.n - a.n)
+                .slice(0, 10);
+            const set = new Set(top.map(e => e.r));
+            return rows.filter(r => set.has(r));
+        }
+        if (adv.type === 'Above average' || adv.type === 'Below average') {
+            const nums = rows
+                .map(r => this.toNumber(r[column]))
+                .filter((n): n is number => n !== undefined);
+            if (!nums.length) return rows;
+            const avg = nums.reduce((s, n) => s + n, 0) / nums.length;
+            return rows.filter(r => {
+                const n = this.toNumber(r[column]);
+                return (
+                    n !== undefined &&
+                    (adv.type === 'Above average' ? n > avg : n < avg)
+                );
+            });
+        }
+        return rows.filter(r => this.passesAdvancedFilter(r, column, adv));
+    }
+
+    private passesAdvancedFilter(
+        row: TableRow,
+        column: string,
+        adv: AdvancedFilter,
+    ): boolean {
+        const raw = row[column];
+        if (this.isNumericColumn(column) || column === 'time') {
+            const n =
+                column === 'time'
+                    ? new Date(raw as string | number).getTime()
+                    : this.toNumber(raw);
+            const t1 = Number(adv.value);
+            const t2 = Number(adv.value2);
+            switch (adv.type) {
+                case 'Equals':
+                    return n === t1;
+                case 'Does not equal':
+                    return n !== t1;
+                case 'Greater than':
+                    return n !== undefined && n > t1;
+                case 'Greater than or equal to':
+                    return n !== undefined && n >= t1;
+                case 'Less than':
+                    return n !== undefined && n < t1;
+                case 'Less than or equal to':
+                    return n !== undefined && n <= t1;
+                case 'Between':
+                    return (
+                        n !== undefined &&
+                        n >= Math.min(t1, t2) &&
+                        n <= Math.max(t1, t2)
+                    );
+                default:
+                    return true;
+            }
+        }
+        const s = String(this.formatCellValue(column, raw)).toLowerCase();
+        const t = adv.value.toLowerCase();
+        switch (adv.type) {
+            case 'Equals':
+                return s === t;
+            case 'Does not equal':
+                return s !== t;
+            case 'Begins with':
+                return s.startsWith(t);
+            case 'Ends with':
+                return s.endsWith(t);
+            case 'Contains':
+                return s.includes(t);
+            case 'Does not contain':
+                return !s.includes(t);
+            default:
+                return true;
+        }
     }
 
     private sortRows(rows: TableRow[]): TableRow[] {
-        if (!this.sortColumn || this.sortDirection === '') {
-            return [...rows];
-        }
-
-        const directionMultiplier = this.sortDirection === 'asc' ? 1 : -1;
-        return [...rows].sort((rowA, rowB) => {
-            const comparison = this.compareValues(
-                rowA[this.sortColumn],
-                rowB[this.sortColumn],
-                this.sortColumn,
-            );
-
-            return comparison * directionMultiplier;
-        });
+        if (!this.sortColumn || this.sortDirection === '') return [...rows];
+        const dir = this.sortDirection === 'asc' ? 1 : -1;
+        return [...rows].sort(
+            (a, b) =>
+                this.compareValues(
+                    a[this.sortColumn],
+                    b[this.sortColumn],
+                    this.sortColumn,
+                ) * dir,
+        );
     }
 
     private compareValues(
@@ -366,90 +801,60 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         valueB: unknown,
         column: string,
     ): number {
-        const normalizedA = this.normalizeSortValue(valueA, column);
-        const normalizedB = this.normalizeSortValue(valueB, column);
-
-        if (normalizedA === normalizedB) {
-            return 0;
-        }
-
-        if (normalizedA === null) {
-            return 1;
-        }
-
-        if (normalizedB === null) {
-            return -1;
-        }
-
-        return normalizedA > normalizedB ? 1 : -1;
+        const a = this.normalizeSortValue(valueA, column);
+        const b = this.normalizeSortValue(valueB, column);
+        if (a === b) return 0;
+        if (a === null) return 1;
+        if (b === null) return -1;
+        return a > b ? 1 : -1;
     }
 
     private normalizeSortValue(
         value: unknown,
         column: string,
     ): number | string | null {
-        if (value === null || value === undefined || value === '') {
-            return null;
-        }
-
+        if (value === null || value === undefined || value === '') return null;
         if (column === 'time') {
-            const timestamp = new Date(value as string | number).getTime();
-            return Number.isNaN(timestamp) ? null : timestamp;
+            const t = new Date(value as string | number).getTime();
+            return Number.isNaN(t) ? null : t;
         }
-
-        const numericValue = this.toNumber(value);
-        if (numericValue !== undefined) {
-            return numericValue;
-        }
-
-        if (typeof value === 'boolean') {
-            return value ? 1 : 0;
-        }
-
+        const n = this.toNumber(value);
+        if (n !== undefined) return n;
+        if (typeof value === 'boolean') return value ? 1 : 0;
         return String(value).toLowerCase();
     }
 
     private computeNumericStats(
         rows: TableRow[],
     ): Record<string, NumericColumnStats> {
-        return (
+        const columns = (
             this.dataExplorerWidget.visualizationConfig.highlightedColumns ?? []
-        )
-            .map(field => field.fullDbName)
-            .reduce(
-                (stats, column) => {
-                    const values = rows
-                        .map(row => this.toNumber(row[column]))
-                        .filter(
-                            (value): value is number => value !== undefined,
-                        );
-
-                    if (values.length > 0) {
-                        stats[column] = {
-                            min: Math.min(...values),
-                            max: Math.max(...values),
-                        };
-                    }
-
-                    return stats;
-                },
-                {} as Record<string, NumericColumnStats>,
-            );
+        ).map(f => f.fullDbName);
+        return columns.reduce(
+            (stats, col) => {
+                const values = rows
+                    .map(r => this.toNumber(r[col]))
+                    .filter((v): v is number => v !== undefined);
+                if (values.length > 0) {
+                    stats[col] = {
+                        min: Math.min(...values),
+                        max: Math.max(...values),
+                    };
+                }
+                return stats;
+            },
+            {} as Record<string, NumericColumnStats>,
+        );
     }
 
     private getHighlightColor(column: string): string {
         const field = (
             this.dataExplorerWidget.visualizationConfig.highlightedColumns ?? []
-        ).find(highlightedField => highlightedField.fullDbName === column);
-
-        if (!field) {
-            return 'var(--color-primary)';
-        }
-
+        ).find(f => f.fullDbName === column);
         return (
             this.dataExplorerWidget.visualizationConfig
                 .highlightedColumnColors?.[
-                `${field.fullDbName}:${field.sourceIndex}`
+                `${field?.fullDbName}:${field?.sourceIndex}`
             ] ?? 'var(--color-primary)'
         );
     }
@@ -458,50 +863,31 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         value: unknown,
         column: string,
     ): number | undefined {
-        const booleanValue = this.toBoolean(value);
-        if (booleanValue !== undefined) {
-            return booleanValue ? 1 : 0;
-        }
-
-        const numericValue = this.toNumber(value);
+        const bool = this.toBoolean(value);
+        if (bool !== undefined) return bool ? 1 : 0;
+        const n = this.toNumber(value);
         const stats = this.numericColumnStats[column];
-        if (numericValue === undefined || !stats) {
-            return undefined;
-        }
-
+        if (n === undefined || !stats) return undefined;
         return stats.max === stats.min
             ? 0.5
-            : (numericValue - stats.min) / (stats.max - stats.min);
+            : (n - stats.min) / (stats.max - stats.min);
     }
 
     private toNumber(value: unknown): number | undefined {
-        if (typeof value === 'number' && Number.isFinite(value)) {
-            return value;
-        }
-
+        if (typeof value === 'number' && Number.isFinite(value)) return value;
         if (typeof value === 'string' && value.trim() !== '') {
-            const numericValue = Number(value);
-            return Number.isFinite(numericValue) ? numericValue : undefined;
+            const n = Number(value);
+            return Number.isFinite(n) ? n : undefined;
         }
-
         return undefined;
     }
 
     private toBoolean(value: unknown): boolean | undefined {
-        if (typeof value === 'boolean') {
-            return value;
-        }
-
+        if (typeof value === 'boolean') return value;
         if (typeof value === 'string') {
-            const normalizedValue = value.trim().toLowerCase();
-            if (normalizedValue === 'true') {
-                return true;
-            }
-            if (normalizedValue === 'false') {
-                return false;
-            }
+            const v = value.trim().toLowerCase();
+            return v === 'true' ? true : v === 'false' ? false : undefined;
         }
-
         return undefined;
     }
 
@@ -514,10 +900,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     }
 
     private updatePagedRows(): void {
-        const startIndex = this.pageIndex * this.pageSize;
-        this.pagedRows = this.filteredRows.slice(
-            startIndex,
-            startIndex + this.pageSize,
-        );
+        const start = this.pageIndex * this.pageSize;
+        this.pagedRows = this.filteredRows.slice(start, start + this.pageSize);
     }
 }
