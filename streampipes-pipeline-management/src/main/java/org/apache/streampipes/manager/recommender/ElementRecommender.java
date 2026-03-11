@@ -72,7 +72,6 @@ public class ElementRecommender {
   private void validate(SpDataStream offer, List<ConsumableStreamPipesEntity> entities) {
     for (ConsumableStreamPipesEntity sepa : entities) {
       SpDataStream requirement = sepa.getSpDataStreams().get(0);
-      requirement.setEventGrounding(sepa.getSupportedGrounding());
       boolean matches = new StreamMatch().match(offer, requirement, new ArrayList<>());
       if (matches) {
         addPossibleElements(sepa);

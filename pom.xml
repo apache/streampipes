@@ -896,7 +896,6 @@
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
-        <module>streampipes-messaging-jms</module>
         <module>streampipes-messaging-mqtt</module>
         <module>streampipes-messaging-nats</module>
         <module>streampipes-messaging-pulsar</module>

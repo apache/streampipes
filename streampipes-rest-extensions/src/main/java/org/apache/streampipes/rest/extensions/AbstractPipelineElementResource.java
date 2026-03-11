@@ -23,12 +23,8 @@ import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
-import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
-import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import com.google.common.base.Charsets;
 import org.apache.http.HttpStatus;
@@ -40,8 +36,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -133,27 +127,9 @@ public abstract class AbstractPipelineElementResource<
           e.printStackTrace();
         }
       }
-
-      if (desc instanceof ConsumableStreamPipesEntity) {
-        Collection<TransportProtocol> supportedProtocols =
-            DeclarersSingleton.getInstance().getSupportedProtocols();
-
-        if (!supportedProtocols.isEmpty()) {
-          // Overwrite existing grounding from default provided by declarers singleton
-          ((ConsumableStreamPipesEntity) desc)
-              .setSupportedGrounding(makeGrounding(supportedProtocols));
-        }
-      }
     }
 
     return desc;
-  }
-
-  private EventGrounding makeGrounding(Collection<TransportProtocol> supportedProtocols) {
-    EventGrounding grounding = new EventGrounding();
-    grounding.setTransportProtocols(new ArrayList<>(supportedProtocols));
-
-    return grounding;
   }
 
   protected abstract Map<String, T> getElementDeclarers();

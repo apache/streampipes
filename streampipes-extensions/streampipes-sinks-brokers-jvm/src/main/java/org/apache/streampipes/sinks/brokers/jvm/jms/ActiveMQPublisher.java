@@ -16,11 +16,10 @@
  *
  */
 
-package org.apache.streampipes.messaging.jms;
+package org.apache.streampipes.sinks.brokers.jvm.jms;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventProducer;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
@@ -35,7 +34,7 @@ import jakarta.jms.MessageProducer;
 import jakarta.jms.Session;
 
 
-public class ActiveMQPublisher extends ActiveMQConnectionProvider implements EventProducer {
+public class ActiveMQPublisher implements EventProducer {
 
   private static final Logger LOG = LoggerFactory.getLogger(ActiveMQPublisher.class);
 
@@ -43,16 +42,24 @@ public class ActiveMQPublisher extends ActiveMQConnectionProvider implements Eve
   private Session session;
   private MessageProducer producer;
 
+  private final String host;
+  private final int port;
+  private final String topic;
+
   private boolean connected = false;
 
-  public ActiveMQPublisher(JmsTransportProtocol protocol) {
-    super(protocol);
+  public ActiveMQPublisher(String host,
+                           int port,
+                           String topic) {
+    this.host = host;
+    this.port = port;
+    this.topic = topic;
   }
 
   @Override
   public void connect() throws SpRuntimeException {
 
-    String url = ActiveMQUtils.makeActiveMqUrl(protocol);
+    String url = ActiveMQUtils.makeActiveMqUrl(host, port);
     ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
 
     boolean co = false;
@@ -68,15 +75,13 @@ public class ActiveMQPublisher extends ActiveMQConnectionProvider implements Eve
     try {
       this.session = connection
           .createSession(false, Session.AUTO_ACKNOWLEDGE);
-      this.producer = session.createProducer(session.createTopic(protocol
-          .getTopicDefinition()
-          .getActualTopicName()));
+      this.producer = session.createProducer(session.createTopic(topic));
       this.producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
       this.connection.start();
       this.connected = true;
     } catch (JMSException e) {
       throw new SpRuntimeException("could not connect to activemq broker. Broker: '"
-          + protocol.getBrokerHostname() + "' Port: " + protocol.getPort());
+          + host + "' Port: " + port);
     }
   }
 
@@ -107,6 +112,19 @@ public class ActiveMQPublisher extends ActiveMQConnectionProvider implements Eve
   @Override
   public boolean isConnected() {
     return connected;
+  }
+
+  protected Connection startJmsConnection(String url) {
+    try {
+      ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
+      connectionFactory.setAlwaysSyncSend(false);
+      Connection connect = connectionFactory.createConnection();
+
+      connect.start();
+      return connect;
+    } catch (JMSException e) {
+      throw new AssertionError("Failed to establish the JMS-Connection!", e);
+    }
   }
 
 }

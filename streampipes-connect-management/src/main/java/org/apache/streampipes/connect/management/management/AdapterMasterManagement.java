@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
-import org.apache.streampipes.connect.management.util.GroundingUtils;
+import org.apache.streampipes.manager.util.GroundingUtils;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;

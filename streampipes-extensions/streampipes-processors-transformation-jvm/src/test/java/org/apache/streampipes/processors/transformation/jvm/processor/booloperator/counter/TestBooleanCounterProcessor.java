@@ -31,7 +31,6 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
-import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -84,7 +83,6 @@ public class TestBooleanCounterProcessor {
   ) {
     BooleanCounterProcessor booleanCounter = new BooleanCounterProcessor();
     DataProcessorDescription originalGraph = booleanCounter.declareConfig().getDescription();
-    originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
 
     DataProcessorInvocation graph =
             InvocationGraphGenerator.makeEmptyInvocation(originalGraph);

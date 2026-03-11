@@ -27,8 +27,6 @@ import java.util.List;
 
 public class DataProcessorDescription extends ConsumableStreamPipesEntity {
 
-  private static final long serialVersionUID = 3995767921861518597L;
-
   private List<OutputStrategy> outputStrategies;
 
   private List<String> category;

@@ -15,39 +15,15 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.sinks.brokers.jvm.jms;
 
-package org.apache.streampipes.model.grounding;
+public class ActiveMQUtils {
 
-public class JmsTransportProtocol extends TransportProtocol {
+  private static final String TCP_PROTOCOL = "tcp://";
+  private static final String COLON = ":";
 
-  private static final long serialVersionUID = -5650426611208789835L;
-
-  private int port;
-
-  public JmsTransportProtocol(String uri, int port, String topicName) {
-    super(uri, new SimpleTopicDefinition(topicName));
-    this.port = port;
-  }
-
-  public JmsTransportProtocol(JmsTransportProtocol other) {
-    super(other);
-    this.port = other.getPort();
-  }
-
-  public JmsTransportProtocol() {
-    super();
-  }
-
-  public int getPort() {
-    return port;
-  }
-
-  public void setPort(int port) {
-    this.port = port;
-  }
-
-  @Override
-  public String toString() {
-    return getBrokerHostname() + ":" + getPort();
+  public static String makeActiveMqUrl(String host,
+                                       int port) {
+    return TCP_PROTOCOL + host + COLON + port;
   }
 }

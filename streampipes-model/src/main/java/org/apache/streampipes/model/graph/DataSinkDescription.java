@@ -26,8 +26,6 @@ import java.util.List;
 
 public class DataSinkDescription extends ConsumableStreamPipesEntity {
 
-  private static final long serialVersionUID = -6553066396392585731L;
-
   private List<String> category;
 
   public DataSinkDescription(DataSinkDescription other) {

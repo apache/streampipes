@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
-import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 
@@ -39,8 +38,6 @@ public abstract class InvocableStreamPipesEntity
   protected List<StaticProperty> staticProperties;
 
   private String belongsTo;
-
-  private EventGrounding supportedGrounding;
 
   private String correspondingPipeline;
 
@@ -76,9 +73,6 @@ public abstract class InvocableStreamPipesEntity
       this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
     }
     this.dom = other.getDom();
-    if (other.getSupportedGrounding() != null) {
-      this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
-    }
   }
 
   public List<SpDataStream> getInputStreams() {
@@ -103,14 +97,6 @@ public abstract class InvocableStreamPipesEntity
 
   public void setBelongsTo(String belongsTo) {
     this.belongsTo = belongsTo;
-  }
-
-  public EventGrounding getSupportedGrounding() {
-    return supportedGrounding;
-  }
-
-  public void setSupportedGrounding(EventGrounding supportedGrounding) {
-    this.supportedGrounding = supportedGrounding;
   }
 
   @Override

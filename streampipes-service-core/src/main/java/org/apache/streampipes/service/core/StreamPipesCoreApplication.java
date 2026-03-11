@@ -37,7 +37,6 @@ import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
 import org.apache.streampipes.manager.setup.tasks.ApplyDefaultRolesAndPrivilegesTask;
 import org.apache.streampipes.messaging.SpProtocolManager;
-import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
@@ -102,9 +101,11 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
-    application.initialize(() -> List.of(new SpNatsProtocolFactory(), new SpKafkaProtocolFactory(),
-                                         new SpMqttProtocolFactory(), new SpJmsProtocolFactory(),
-                                         new SpPulsarProtocolFactory()),
+    application.initialize(() -> List.of(
+            new SpNatsProtocolFactory(),
+            new SpKafkaProtocolFactory(),
+            new SpMqttProtocolFactory(),
+            new SpPulsarProtocolFactory()),
         List.of(
             GroovyScriptEngine::new,
             GraalJsScriptEngine::new
@@ -159,39 +160,39 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.READY);
 
     executorService.schedule(new PostStartupTask(getPipelineStorage()),
-                             env.getInitialHealthCheckDelayInMillis().getValueOrDefault(),
-                             TimeUnit.MILLISECONDS);
+        env.getInitialHealthCheckDelayInMillis().getValueOrDefault(),
+        TimeUnit.MILLISECONDS);
 
     scheduleHealthChecks(env.getHealthCheckIntervalInMillis().getValueOrDefault(), List
         .of(new ServiceHealthCheck(StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage()),
             new ExtensionHealthCheck(
                 new ResourceProvider(
-                  StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
-                  StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
-                  new AdapterMasterManagement(
-                      StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
-                      new SpResourceManager().manageAdapters(),
-                      new SpResourceManager().manageDataStreams(),
-                      AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-                  )
+                    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
+                    StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                    new AdapterMasterManagement(
+                        StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                        new SpResourceManager().manageAdapters(),
+                        new SpResourceManager().manageDataStreams(),
+                        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+                    )
                 )
             )));
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
     LOG.info("Extensions logs will be fetched every {} milliseconds", logFetchInterval);
     logCheckExecutorService.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(),
-                                                logFetchInterval, logFetchInterval,
-                                                TimeUnit.MILLISECONDS);
+        logFetchInterval, logFetchInterval,
+        TimeUnit.MILLISECONDS);
   }
 
   private void scheduleHealthChecks(int healthCheckIntervalInMillis, List<Runnable> checks) {
     var healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
     checks.forEach(check -> {
       LOG.info("Health check {} configured to run every {} {}", check.getClass().getCanonicalName(),
-               healthCheckIntervalInMillis, TimeUnit.MILLISECONDS);
+          healthCheckIntervalInMillis, TimeUnit.MILLISECONDS);
       healthCheckExecutorService.scheduleAtFixedRate(check, healthCheckIntervalInMillis,
-                                                     healthCheckIntervalInMillis,
-                                                     TimeUnit.MILLISECONDS);
+          healthCheckIntervalInMillis,
+          TimeUnit.MILLISECONDS);
     });
   }
 
@@ -207,7 +208,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     LOG.info("\n\n**********\n\nWelcome to Apache StreamPipes!\n\n**********\n\n");
     LOG.info("We will perform the initial setup, grab some coffee and cross your fingers ;-)...");
     LOG.info("Auto-setup will start in {} milliseconds to make sure all services are running...",
-             initialSleepBeforeInstallation);
+        initialSleepBeforeInstallation);
     try {
       TimeUnit.MILLISECONDS.sleep(initialSleepBeforeInstallation);
       LOG.info("Starting installation procedure");

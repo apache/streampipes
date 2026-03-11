@@ -16,11 +16,11 @@
  *
  */
 
-package org.apache.streampipes.connect.management.util;
+package org.apache.streampipes.manager.util;
 
-import org.apache.streampipes.model.configuration.SpProtocol;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
@@ -36,61 +36,47 @@ public class GroundingUtils {
   private static final String TOPIC_PREFIX = "org.apache.streampipes.connect.";
 
   public static EventGrounding createEventGrounding() {
+    var env = Environments.getEnvironment();
     EventGrounding eventGrounding = new EventGrounding();
-    var messagingSettings = Utils
-        .getCoreConfigStorage()
-        .get()
-        .getMessagingSettings();
-
     String topic = TOPIC_PREFIX + UUID.randomUUID().toString();
-    TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
 
-    SpProtocol prioritizedProtocol =
-        messagingSettings.getPrioritizedProtocols().get(0);
+    var prioritizedProtocol = env.getPrioritizedProtocol().getValueOrDefault();
 
-    if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-      eventGrounding.setTransportProtocol(
-          makeJmsTransportProtocol(
-              messagingSettings.getJmsHost(),
-              messagingSettings.getJmsPort(),
-              topicDefinition));
-    } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
-      eventGrounding.setTransportProtocol(
-          makeKafkaTransportProtocol(
-              messagingSettings.getKafkaHost(),
-              messagingSettings.getKafkaPort(),
-              topicDefinition));
-    } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
-      eventGrounding.setTransportProtocol(
-          makeMqttTransportProtocol(
-              messagingSettings.getMqttHost(),
-              messagingSettings.getMqttPort(),
-              topicDefinition));
-    } else if (isPrioritized(prioritizedProtocol, NatsTransportProtocol.class)) {
-      eventGrounding.setTransportProtocol(
-          makeNatsTransportProtocol(
-              messagingSettings.getNatsHost(),
-              messagingSettings.getNatsPort(),
-              topicDefinition));
-    } else if (isPrioritized(prioritizedProtocol, PulsarTransportProtocol.class)) {
-      eventGrounding.setTransportProtocol(
-          makePulsarTransportProtocol(
-              messagingSettings.getPulsarUrl(),
-              topicDefinition
-          )
-      );
-    }
+    eventGrounding.setTransportProtocol(makeProtocol(env, prioritizedProtocol, topic));
 
     return eventGrounding;
   }
 
-  private static JmsTransportProtocol makeJmsTransportProtocol(String hostname, Integer port,
-                                                               TopicDefinition topicDefinition) {
-    JmsTransportProtocol transportProtocol = new JmsTransportProtocol();
-    transportProtocol.setPort(port);
-    fillTransportProtocol(transportProtocol, hostname, topicDefinition);
-
-    return transportProtocol;
+  public static TransportProtocol makeProtocol(Environment env,
+                                               String prioritizedProtocol,
+                                               String topic) {
+    var topicDefinition = new SimpleTopicDefinition(topic);
+    switch (prioritizedProtocol) {
+      case KafkaTransportProtocol.BROKER_ID -> {
+        return makeKafkaTransportProtocol(
+            env.getKafkaHost().getValueOrDefault(),
+            env.getKafkaPort().getValueOrDefault(),
+            topicDefinition);
+      }
+      case MqttTransportProtocol.BROKER_ID -> {
+        return makeMqttTransportProtocol(
+            env.getMqttHost().getValueOrDefault(),
+            env.getMqttPort().getValueOrDefault(),
+            topicDefinition);
+      }
+      case NatsTransportProtocol.BROKER_ID -> {
+        return makeNatsTransportProtocol(
+            env.getNatsHost().getValueOrDefault(),
+            env.getNatsPort().getValueOrDefault(),
+            topicDefinition);
+      }
+      case PulsarTransportProtocol.BROKER_ID -> {
+        return makePulsarTransportProtocol(
+            env.getPulsarUrl().getValueOrDefault(),
+            topicDefinition);
+      }
+    }
+    return null;
   }
 
   private static MqttTransportProtocol makeMqttTransportProtocol(String hostname, Integer port,
@@ -131,10 +117,5 @@ public class GroundingUtils {
                                             TopicDefinition topicDefinition) {
     protocol.setBrokerHostname(hostname);
     protocol.setTopicDefinition(topicDefinition);
-  }
-
-  public static Boolean isPrioritized(SpProtocol prioritizedProtocol,
-                                      Class<?> protocolClass) {
-    return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
   }
 }
