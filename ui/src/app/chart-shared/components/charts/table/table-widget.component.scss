@@ -265,14 +265,12 @@
     min-height: 28px;
     padding: 2px 0;
     font-size: var(--font-size-xs);
-    overflow: hidden;
 }
 
 .column-filter-list mat-checkbox ::ng-deep .mdc-label,
 .column-filter-controls mat-checkbox ::ng-deep .mdc-label {
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
+    padding-right: 16px;
 }
 
 .advanced-filter-panel {
@@ -317,6 +315,36 @@
     gap: 6px;
     padding-top: var(--space-xs);
     border-top: 1px solid var(--color-border-subtle, var(--color-bg-3));
+}
+
+.ts-mask-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.ts-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding: 6px 8px;
+    font-size: var(--font-size-xs);
+    font-family: inherit;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.ts-faded {
+    color: var(--color-secondary-text, #aaa);
+    opacity: 0.6;
+}
+
+.ts-input {
+    color: transparent !important;
+    caret-color: var(--color-text, currentColor) !important;
 }
 
 .advanced-input {
@@ -377,24 +405,46 @@
     border-color: #d32f2f;
 }
 
+.filter-list-wrapper {
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 24px;
+        background: linear-gradient(
+            to right,
+            transparent,
+            var(--color-bg-0, #fff)
+        );
+        pointer-events: none;
+        z-index: 1;
+        transition: opacity 0.12s ease;
+    }
+
+    &.no-overflow-hint::after {
+        opacity: 0;
+    }
+}
+
 .filter-checkbox {
-    width: 100%;
-    margin-right: 8px;
+    min-width: 100%;
+    width: max-content;
     box-sizing: border-box;
 
     ::ng-deep .mdc-form-field {
-        width: 100%;
-        min-width: 0;
+        min-width: max-content;
         align-items: center;
     }
 
     ::ng-deep .mdc-label {
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex: 1;
-        min-width: 0;
+        overflow: visible;
+        flex: none;
         margin-right: 0;
-        padding-right: 12px;
+        padding-right: 20px;
     }
 }

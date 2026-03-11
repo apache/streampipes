@@ -232,37 +232,137 @@
                     @if (selectedAdvancedType) {
                         <div class="advanced-filter-inputs">
                             @if (needsInput(selectedAdvancedType)) {
-                                <input
-                                    type="text"
-                                    class="advanced-input"
-                                    placeholder="Value..."
-                                    [(ngModel)]="advancedInputValue"
-                                    (click)="$event.stopPropagation()"
-                                    (keydown)="
-                                        onAdvancedInputKeydown(
-                                            $event,
-                                            openFilterColumn,
-                                            1
-                                        )
+                                <div
+                                    [class.ts-mask-wrapper]="
+                                        openFilterColumn === 'time'
                                     "
-                                />
+                                >
+                                    @if (openFilterColumn === 'time') {
+                                        <div
+                                            class="ts-overlay"
+                                            aria-hidden="true"
+                                        >
+                                            <span>{{
+                                                getTimestampTyped(
+                                                    advancedInputValue
+                                                )
+                                            }}</span
+                                            ><span class="ts-faded">{{
+                                                getTimestampTemplate(
+                                                    advancedInputValue
+                                                )
+                                            }}</span>
+                                        </div>
+                                    }
+                                    <input
+                                        type="text"
+                                        [class]="
+                                            openFilterColumn === 'time'
+                                                ? 'advanced-input ts-input'
+                                                : 'advanced-input'
+                                        "
+                                        title="Filter value"
+                                        [placeholder]="
+                                            openFilterColumn === 'time'
+                                                ? ''
+                                                : 'Value...'
+                                        "
+                                        [ngModel]="advancedInputValue"
+                                        (input)="
+                                            openFilterColumn === 'time'
+                                                ? onTimestampInput(
+                                                      'value',
+                                                      $event
+                                                  )
+                                                : null
+                                        "
+                                        (ngModelChange)="
+                                            openFilterColumn !== 'time'
+                                                ? (advancedInputValue = $event)
+                                                : null
+                                        "
+                                        (mousedown)="
+                                            openFilterColumn === 'time'
+                                                ? repositionToEnd($event)
+                                                : null
+                                        "
+                                        (click)="$event.stopPropagation()"
+                                        (keydown)="
+                                            onAdvancedInputKeydown(
+                                                $event,
+                                                openFilterColumn,
+                                                1
+                                            )
+                                        "
+                                    />
+                                </div>
                             }
                             @if (needsSecondInput(selectedAdvancedType)) {
                                 <span class="advanced-and-label">and</span>
-                                <input
-                                    type="text"
-                                    class="advanced-input"
-                                    placeholder="Value..."
-                                    [(ngModel)]="advancedInputValue2"
-                                    (click)="$event.stopPropagation()"
-                                    (keydown)="
-                                        onAdvancedInputKeydown(
-                                            $event,
-                                            openFilterColumn,
-                                            2
-                                        )
+                                <div
+                                    [class.ts-mask-wrapper]="
+                                        openFilterColumn === 'time'
                                     "
-                                />
+                                >
+                                    @if (openFilterColumn === 'time') {
+                                        <div
+                                            class="ts-overlay"
+                                            aria-hidden="true"
+                                        >
+                                            <span>{{
+                                                getTimestampTyped(
+                                                    advancedInputValue2
+                                                )
+                                            }}</span
+                                            ><span class="ts-faded">{{
+                                                getTimestampTemplate(
+                                                    advancedInputValue2
+                                                )
+                                            }}</span>
+                                        </div>
+                                    }
+                                    <input
+                                        type="text"
+                                        [class]="
+                                            openFilterColumn === 'time'
+                                                ? 'advanced-input ts-input'
+                                                : 'advanced-input'
+                                        "
+                                        title="Filter value"
+                                        [placeholder]="
+                                            openFilterColumn === 'time'
+                                                ? ''
+                                                : 'Value...'
+                                        "
+                                        [ngModel]="advancedInputValue2"
+                                        (input)="
+                                            openFilterColumn === 'time'
+                                                ? onTimestampInput(
+                                                      'value2',
+                                                      $event
+                                                  )
+                                                : null
+                                        "
+                                        (ngModelChange)="
+                                            openFilterColumn !== 'time'
+                                                ? (advancedInputValue2 = $event)
+                                                : null
+                                        "
+                                        (mousedown)="
+                                            openFilterColumn === 'time'
+                                                ? repositionToEnd($event)
+                                                : null
+                                        "
+                                        (click)="$event.stopPropagation()"
+                                        (keydown)="
+                                            onAdvancedInputKeydown(
+                                                $event,
+                                                openFilterColumn,
+                                                2
+                                            )
+                                        "
+                                    />
+                                </div>
                             }
                             <div class="advanced-filter-actions">
                                 <button
@@ -299,15 +399,49 @@
                     }
                 </div>
             }
-            <input
-                type="text"
-                class="column-filter-search"
-                placeholder="Search..."
-                [ngModel]="columnSearchTerms[openFilterColumn]"
-                (ngModelChange)="onColumnSearchChange(openFilterColumn, $event)"
-                (click)="$event.stopPropagation()"
-                (keydown)="onSearchKeydown($event)"
-            />
+            <div [class.ts-mask-wrapper]="openFilterColumn === 'time'">
+                @if (openFilterColumn === 'time') {
+                    <div class="ts-overlay" aria-hidden="true">
+                        <span>{{
+                            getTimestampTyped(
+                                columnSearchTerms[openFilterColumn] || ''
+                            )
+                        }}</span
+                        ><span class="ts-faded">{{
+                            getTimestampTemplate(
+                                columnSearchTerms[openFilterColumn] || ''
+                            )
+                        }}</span>
+                    </div>
+                }
+                <input
+                    type="text"
+                    class="column-filter-search"
+                    [class.ts-input]="openFilterColumn === 'time'"
+                    title="Search"
+                    [placeholder]="
+                        openFilterColumn === 'time' ? '' : 'Search...'
+                    "
+                    [ngModel]="columnSearchTerms[openFilterColumn]"
+                    (ngModelChange)="
+                        openFilterColumn !== 'time'
+                            ? onColumnSearchChange(openFilterColumn, $event)
+                            : null
+                    "
+                    (input)="
+                        openFilterColumn === 'time'
+                            ? onTimestampSearchInput($event)
+                            : null
+                    "
+                    (mousedown)="
+                        openFilterColumn === 'time'
+                            ? repositionToEnd($event)
+                            : null
+                    "
+                    (click)="$event.stopPropagation()"
+                    (keydown)="onSearchKeydown($event)"
+                />
+            </div>
             <div class="column-filter-controls">
                 <mat-checkbox
                     [checked]="areAllValuesSelected(openFilterColumn)"
@@ -328,20 +462,28 @@
                     </mat-checkbox>
                 }
             </div>
-            <div class="column-filter-list">
-                @for (
-                    value of getFilteredUniqueValues(openFilterColumn);
-                    track value
-                ) {
-                    <mat-checkbox
-                        class="filter-checkbox"
-                        [title]="value"
-                        [checked]="isValueChecked(openFilterColumn, value)"
-                        (change)="toggleValue(openFilterColumn, value)"
-                    >
-                        {{ value }}
-                    </mat-checkbox>
-                }
+            <div
+                class="filter-list-wrapper"
+                [class.no-overflow-hint]="filterListScrollEnd"
+            >
+                <div
+                    class="column-filter-list"
+                    (scroll)="onFilterListScroll($event)"
+                >
+                    @for (
+                        value of getFilteredUniqueValues(openFilterColumn);
+                        track value
+                    ) {
+                        <mat-checkbox
+                            class="filter-checkbox"
+                            [title]="value"
+                            [checked]="isValueChecked(openFilterColumn, value)"
+                            (change)="toggleValue(openFilterColumn, value)"
+                        >
+                            {{ value }}
+                        </mat-checkbox>
+                    }
+                </div>
             </div>
         </div>
     }

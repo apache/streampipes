@@ -79,6 +79,9 @@ const TEXT_FILTER_OPTIONS = [
     'Does not contain',
 ];
 
+const TIMESTAMP_FILTER_OPTIONS = ['Before', 'After', 'Between'];
+const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
+
 @Component({
     selector: 'sp-data-explorer-table-widget',
     templateUrl: './table-widget.component.html',
@@ -124,6 +127,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     advancedInputValue2 = '';
     selectedAdvancedType = '';
     dropdownStyle: Record<string, string> = {};
+    filterListScrollEnd = true;
 
     constructor(private elRef: ElementRef) {
         super();
@@ -243,7 +247,10 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         }
         this.openFilterColumn = column;
         this.showAdvancedPanel = null;
-        this.columnSearchTerms[column] ??= '';
+        this.columnSearchTerms[column] =
+            column === 'time'
+                ? (this.columnSearchTerms[column] ?? TIMESTAMP_MASK)
+                : (this.columnSearchTerms[column] ?? '');
         const rect = (
             event.currentTarget as HTMLElement
         ).getBoundingClientRect();
@@ -264,6 +271,13 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             'left': `${finalLeft}px`,
             'z-index': '9999',
         };
+        setTimeout(() => {
+            const list = this.elRef.nativeElement.querySelector(
+                '.column-filter-list',
+            );
+            this.filterListScrollEnd =
+                !list || list.scrollWidth <= list.clientWidth;
+        });
     }
 
     isColumnFilterOpen = (column: string): boolean =>
@@ -275,8 +289,13 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         return !!f && f.size < this.getAllUniqueValues(column).length;
     }
 
+    private uniqueValuesCache: Record<string, string[]> = {};
+
     getAllUniqueValues = (column: string): string[] =>
-        this.extractUniqueValues(this.rows, column);
+        (this.uniqueValuesCache[column] ??= this.extractUniqueValues(
+            this.rows,
+            column,
+        ));
 
     getVisibleUniqueValues(column: string): string[] {
         let baseRows = this.getRowsFilteredByOtherColumns(column);
@@ -307,7 +326,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     }
 
     getFilteredUniqueValues(column: string): string[] {
-        const term = (this.columnSearchTerms[column] ?? '')
+        const raw = this.columnSearchTerms[column] ?? '';
+        const term = (column === 'time' ? this.getTimestampTyped(raw) : raw)
             .trim()
             .toLowerCase();
         const values =
@@ -349,7 +369,9 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     }
 
     hasSearchOrAdvanced = (column: string): boolean =>
-        !!this.columnSearchTerms[column]?.trim() ||
+        !!(column === 'time'
+            ? this.getTimestampTyped(this.columnSearchTerms[column] ?? '')
+            : this.columnSearchTerms[column]?.trim()) ||
         this.showAdvancedPanel === column;
 
     areDisplayedValuesSelected(column: string): boolean {
@@ -362,7 +384,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         this.ensureColumnFilter(column);
         const f = this.columnFilters[column];
         const displayed = this.getFilteredUniqueValues(column);
-        displayed.forEach(v => f.add(v));
+        const allDisplayedSelected = displayed.every(v => f.has(v));
+        displayed.forEach(v => (allDisplayedSelected ? f.delete(v) : f.add(v)));
         this.applyTableState(true);
     }
 
@@ -378,7 +401,58 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         this.applyTableState(true);
     }
 
+    getTimestampTyped(val: string): string {
+        let last = -1;
+        for (let i = 0; i < val.length; i++) {
+            if (val[i] !== TIMESTAMP_MASK[i]) last = i;
+        }
+        return val.slice(0, last + 1);
+    }
+
+    getTimestampTemplate(val: string): string {
+        let last = -1;
+        for (let i = 0; i < val.length; i++) {
+            if (val[i] !== TIMESTAMP_MASK[i]) last = i;
+        }
+        return val.slice(last + 1);
+    }
+
+    repositionToEnd(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        setTimeout(() =>
+            input.setSelectionRange(input.value.length, input.value.length),
+        );
+    }
+
+    onTimestampSearchInput(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        const digits = input.value.replace(/\D/g, '').slice(0, 17);
+        const formatted = this.formatTimestampMask(digits);
+        input.value = formatted;
+        this.columnSearchTerms[this.openFilterColumn!] = formatted;
+    }
+
     onSearchKeydown(event: KeyboardEvent): void {
+        if (
+            this.openFilterColumn === 'time' &&
+            ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)
+        ) {
+            event.preventDefault();
+            return;
+        }
+        if (
+            this.openFilterColumn === 'time' &&
+            (event.key === 'Backspace' || event.key === 'Delete')
+        ) {
+            event.preventDefault();
+            const digits = (this.columnSearchTerms[this.openFilterColumn] ?? '')
+                .replace(/[^0-9]/g, '')
+                .slice(0, -1);
+            const formatted = this.formatTimestampMask(digits);
+            this.columnSearchTerms[this.openFilterColumn] = formatted;
+            (event.target as HTMLInputElement).value = formatted;
+            return;
+        }
         if (event.key === 'Enter') {
             event.preventDefault();
             this.closeFilter();
@@ -390,6 +464,29 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         column: string,
         inputIndex: number,
     ): void {
+        if (
+            column === 'time' &&
+            ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)
+        ) {
+            event.preventDefault();
+            return;
+        }
+        if (
+            column === 'time' &&
+            (event.key === 'Backspace' || event.key === 'Delete')
+        ) {
+            event.preventDefault();
+            const current =
+                inputIndex === 1
+                    ? this.advancedInputValue
+                    : this.advancedInputValue2;
+            const digits = current.replace(/[^0-9]/g, '').slice(0, -1);
+            const formatted = this.formatTimestampMask(digits);
+            if (inputIndex === 1) this.advancedInputValue = formatted;
+            else this.advancedInputValue2 = formatted;
+            (event.target as HTMLInputElement).value = formatted;
+            return;
+        }
         if (event.key !== 'Enter') return;
         event.preventDefault();
         if (
@@ -404,18 +501,58 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         }
     }
 
+    onFilterListScroll(event: Event): void {
+        const el = event.target as HTMLElement;
+        this.filterListScrollEnd =
+            el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
+    }
+
     onFilterDropdownClick = (event: MouseEvent): void =>
         event.stopPropagation();
 
+    onTimestampInput(field: 'value' | 'value2', event: Event): void {
+        const input = event.target as HTMLInputElement;
+        const digits = input.value.replace(/\D/g, '').slice(0, 17);
+        const formatted = this.formatTimestampMask(digits);
+        input.value = formatted;
+        if (field === 'value') this.advancedInputValue = formatted;
+        else this.advancedInputValue2 = formatted;
+    }
+
+    private formatTimestampMask(digits: string): string {
+        const positions = [
+            0, 1, 2, 3, 5, 6, 8, 9, 11, 12, 14, 15, 17, 18, 20, 21, 22,
+        ];
+        const result = TIMESTAMP_MASK.split('');
+        positions.forEach((pos, i) => {
+            if (i < digits.length) result[pos] = digits[i];
+        });
+        return result.join('');
+    }
+
+    private parseTimestampInput(s: string): number | undefined {
+        const d = s.replace(/\D/g, '');
+        if (d.length < 14) return undefined;
+        const ms = d.length >= 17 ? d.slice(14, 17) : '000';
+        const dt = new Date(
+            `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}T${d.slice(8, 10)}:${d.slice(10, 12)}:${d.slice(12, 14)}.${ms}`,
+        );
+        return isNaN(dt.getTime()) ? undefined : dt.getTime();
+    }
+
     getAdvancedFilterOptions = (column: string): string[] =>
-        this.isNumericColumn(column) || column === 'time'
-            ? NUMERIC_FILTER_OPTIONS
-            : TEXT_FILTER_OPTIONS;
+        column === 'time'
+            ? TIMESTAMP_FILTER_OPTIONS
+            : this.isNumericColumn(column)
+              ? NUMERIC_FILTER_OPTIONS
+              : TEXT_FILTER_OPTIONS;
 
     getAdvancedFilterLabel = (column: string): string =>
-        this.isNumericColumn(column) || column === 'time'
-            ? 'Number Filters'
-            : 'Text Filters';
+        column === 'time'
+            ? 'Timestamp Filters'
+            : this.isNumericColumn(column)
+              ? 'Number Filters'
+              : 'Text Filters';
 
     toggleAdvancedPanel(column: string, event: MouseEvent): void {
         event.stopPropagation();
@@ -426,20 +563,41 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         this.showAdvancedPanel = column;
         const existing = this.advancedFilters[column];
         this.selectedAdvancedType = existing?.type ?? '';
-        this.advancedInputValue = existing?.value ?? '';
-        this.advancedInputValue2 = existing?.value2 ?? '';
+        this.advancedInputValue =
+            existing?.value ?? (column === 'time' ? TIMESTAMP_MASK : '');
+        this.advancedInputValue2 =
+            existing?.value2 ?? (column === 'time' ? TIMESTAMP_MASK : '');
     }
 
     selectAdvancedType(type: string): void {
         this.selectedAdvancedType = type;
-        this.advancedInputValue = '';
-        this.advancedInputValue2 = '';
+        this.advancedInputValue =
+            this.openFilterColumn === 'time' ? TIMESTAMP_MASK : '';
+        this.advancedInputValue2 =
+            this.openFilterColumn === 'time' ? TIMESTAMP_MASK : '';
     }
 
     needsInput = (type: string): boolean => !NO_INPUT_TYPES.has(type);
     needsSecondInput = (type: string): boolean => type === 'Between';
 
     applyAdvancedFilter(column: string): void {
+        const isTimeCol = column === 'time';
+        const validInput = (v: string): boolean =>
+            isTimeCol ? this.parseTimestampInput(v) !== undefined : !!v.trim();
+        if (
+            this.needsInput(this.selectedAdvancedType) &&
+            !validInput(this.advancedInputValue)
+        ) {
+            this.showAdvancedPanel = null;
+            return;
+        }
+        if (
+            this.needsSecondInput(this.selectedAdvancedType) &&
+            !validInput(this.advancedInputValue2)
+        ) {
+            this.showAdvancedPanel = null;
+            return;
+        }
         this.advancedFilters[column] = {
             type: this.selectedAdvancedType,
             value: this.advancedInputValue,
@@ -506,6 +664,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         this.columnFilters = {};
         this.columnSearchTerms = {};
         this.advancedFilters = {};
+        this.uniqueValuesCache = {};
         this.openFilterColumn = null;
         this.showAdvancedPanel = null;
     }
@@ -603,6 +762,12 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
 
     formatCellValue(column: string, value: unknown): unknown {
         if (column === 'time') {
+            const d = new Date(value as string | number);
+            if (!isNaN(d.getTime())) {
+                const p = (n: number, l = 2): string =>
+                    String(n).padStart(l, '0');
+                return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}.${p(d.getMilliseconds(), 3)}`;
+            }
             return value;
         }
 
@@ -733,11 +898,28 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         adv: AdvancedFilter,
     ): boolean {
         const raw = row[column];
-        if (this.isNumericColumn(column) || column === 'time') {
-            const n =
-                column === 'time'
-                    ? new Date(raw as string | number).getTime()
-                    : this.toNumber(raw);
+        if (column === 'time') {
+            const n = new Date(raw as string | number).getTime();
+            const t1 = this.parseTimestampInput(adv.value);
+            const t2 = this.parseTimestampInput(adv.value2 ?? '');
+            switch (adv.type) {
+                case 'Before':
+                    return t1 !== undefined && n <= t1;
+                case 'After':
+                    return t1 !== undefined && n >= t1;
+                case 'Between':
+                    return (
+                        t1 !== undefined &&
+                        t2 !== undefined &&
+                        n >= Math.min(t1, t2) &&
+                        n <= Math.max(t1, t2)
+                    );
+                default:
+                    return true;
+            }
+        }
+        if (this.isNumericColumn(column)) {
+            const n = this.toNumber(raw);
             const t1 = Number(adv.value);
             const t2 = Number(adv.value2);
             switch (adv.type) {
