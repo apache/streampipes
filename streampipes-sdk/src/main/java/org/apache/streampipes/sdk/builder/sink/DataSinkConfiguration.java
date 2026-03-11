@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.sdk.builder.sink;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -28,16 +29,25 @@ public class DataSinkConfiguration implements IDataSinkConfiguration {
 
   private final Supplier<IStreamPipesDataSink> supplier;
   private final DataSinkDescription dataSinkDescription;
+  private final AssetResolver assetResolver;
 
   public static DataSinkConfiguration create(Supplier<IStreamPipesDataSink> supplier,
                                              DataSinkDescription dataSinkDescription) {
-    return new DataSinkConfiguration(supplier, dataSinkDescription);
+    return new DataSinkConfiguration(supplier, dataSinkDescription, null);
+  }
+
+  public static DataSinkConfiguration create(Supplier<IStreamPipesDataSink> supplier,
+                                             DataSinkDescription dataSinkDescription,
+                                             AssetResolver assetResolver) {
+    return new DataSinkConfiguration(supplier, dataSinkDescription, assetResolver);
   }
 
   private DataSinkConfiguration(Supplier<IStreamPipesDataSink> supplier,
-                               DataSinkDescription dataSinkDescription) {
+                                DataSinkDescription dataSinkDescription,
+                                AssetResolver assetResolver) {
     this.supplier = supplier;
     this.dataSinkDescription = dataSinkDescription;
+    this.assetResolver = assetResolver;
   }
 
   @Override
@@ -48,5 +58,10 @@ public class DataSinkConfiguration implements IDataSinkConfiguration {
   @Override
   public Supplier<IStreamPipesDataSink> getSupplier() {
     return supplier;
+  }
+
+  @Override
+  public AssetResolver getAssetResolver() {
+    return assetResolver == null ? IDataSinkConfiguration.super.getAssetResolver() : assetResolver;
   }
 }

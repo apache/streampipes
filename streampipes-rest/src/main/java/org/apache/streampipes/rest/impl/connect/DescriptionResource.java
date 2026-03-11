@@ -21,6 +21,7 @@ package org.apache.streampipes.rest.impl.connect;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.connect.management.management.DescriptionManagement;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
@@ -84,7 +85,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     }
   }
 
-  @GetMapping(path = "/{id}/assets/icon", produces = "image/png")
+  @GetMapping(path = "/{id}/assets/icon")
   @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getAdapterIconAsset(@PathVariable("id") String id) {
     try {
@@ -103,7 +104,9 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
         LOG.error("Not found adapter with id {}", id);
         return fail();
       } else {
-        return ok(result);
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(result)))
+            .body(result);
       }
     } catch (AdapterException | NoServiceEndpointsAvailableException e) {
       LOG.error("Not found adapter with id {}", id, e);

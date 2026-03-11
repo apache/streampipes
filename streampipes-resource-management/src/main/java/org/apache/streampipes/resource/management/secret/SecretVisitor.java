@@ -36,6 +36,8 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.StaticPropertyVisitor;
 
+import java.util.Objects;
+
 public class SecretVisitor implements StaticPropertyVisitor {
 
   private ISecretHandler secretHandler;
@@ -96,7 +98,7 @@ public class SecretVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(SecretStaticProperty secretStaticProperty) {
-    if (secretHandler.shouldApply(secretStaticProperty.getEncrypted())) {
+    if (Objects.nonNull(secretStaticProperty.getEncrypted()) && secretHandler.shouldApply(secretStaticProperty.getEncrypted())) {
       String newValue = secretHandler.apply(secretStaticProperty.getValue());
       secretStaticProperty.setValue(newValue);
       secretStaticProperty.setEncrypted(!secretStaticProperty.getEncrypted());
