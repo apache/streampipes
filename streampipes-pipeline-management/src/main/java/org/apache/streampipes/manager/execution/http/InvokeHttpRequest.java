@@ -18,26 +18,26 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class InvokeHttpRequest extends PipelineElementHttpRequest {
 
   private static final Logger LOG = LoggerFactory.getLogger(InvokeHttpRequest.class);
 
   @Override
-  protected Request initRequest(EndpointSelectable pipelineElement,
-                             String endpointUrl) throws JsonProcessingException {
+  protected ExtensionServiceOperationResult performRequest(EndpointSelectable pipelineElement,
+                                                           String endpointUrl,
+                                                           String pipelineId) throws IOException {
     LOG.info("Invoking element: " + endpointUrl);
-    return Request
-        .Post(endpointUrl)
-        .bodyString(toJson(pipelineElement), ContentType.APPLICATION_JSON);
+    return requestManager().requestPipelineElementInvocation(endpointUrl, pipelineId, toJson(pipelineElement));
   }
 
   @Override

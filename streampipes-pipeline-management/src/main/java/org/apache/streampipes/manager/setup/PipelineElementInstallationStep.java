@@ -18,6 +18,7 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.extensions.ExtensionItemInstaller;
 import org.apache.streampipes.manager.extensions.ExtensionsResourceUrlProvider;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
@@ -30,12 +31,15 @@ public class PipelineElementInstallationStep extends InstallationStep {
 
   private final ExtensionItemDescription extensionItem;
   private final String principalSid;
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
 
   public PipelineElementInstallationStep(ExtensionItemDescription extensionItem,
-                                         String principalSid) {
+                                         String principalSid,
+                                         ExtensionServiceRequestManager extensionServiceRequestManager) {
     this.extensionItem = extensionItem;
     this.principalSid = principalSid;
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
   }
 
   @Override
@@ -43,7 +47,8 @@ public class PipelineElementInstallationStep extends InstallationStep {
     var installationReq = ExtensionItemInstallationRequest.fromDescription(extensionItem, true);
     var resourceUrlProvider = new ExtensionsResourceUrlProvider(SpServiceDiscovery.getServiceDiscovery());
     try {
-      new ExtensionItemInstaller(resourceUrlProvider).installExtension(installationReq, principalSid);
+      new ExtensionItemInstaller(resourceUrlProvider, extensionServiceRequestManager)
+          .installExtension(installationReq, principalSid);
       logSuccess(getTitle());
     } catch (SepaParseException | IOException e) {
       logFailure(getTitle());

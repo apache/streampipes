@@ -18,7 +18,7 @@
 package org.apache.streampipes.manager.remote;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -27,31 +27,32 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.google.gson.JsonSyntaxException;
-import org.apache.http.client.fluent.Response;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 public class ContainerProvidedOptionsHandler {
 
+  private final ExtensionServiceRequestManager extensionRequestManager;
+
+  public ContainerProvidedOptionsHandler(ExtensionServiceRequestManager extensionRequestManager) {
+    this.extensionRequestManager = extensionRequestManager;
+  }
 
   public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request) {
 
     try {
       var payload = JacksonSerializer.getObjectMapper().writeValueAsString(request);
       var url = getEndpointUrl(request.getAppId());
-      var resp = ExtensionServiceExecutions.extServicePostRequest(url, payload).execute();
-
-      return handleResponse(resp);
+      var response = extensionRequestManager.requestContainerProvidedOptions(url, payload);
+      return handleResponse(response.responseBody());
     } catch (Exception e) {
       e.printStackTrace();
       return new RuntimeOptionsResponse();
     }
   }
 
-  private RuntimeOptionsResponse handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
-    String resp = httpResp.returnContent().asString(StandardCharsets.UTF_8);
-    return JacksonSerializer.getObjectMapper().readValue(resp, RuntimeOptionsResponse.class);
+  private RuntimeOptionsResponse handleResponse(String responseBody) throws JsonSyntaxException, IOException {
+    return JacksonSerializer.getObjectMapper().readValue(responseBody, RuntimeOptionsResponse.class);
   }
 
   private String getEndpointUrl(String appId) throws NoServiceEndpointsAvailableException {

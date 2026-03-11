@@ -39,6 +39,7 @@ public class AdapterMasterManagementTest {
   public void getAdapter_FailNull() {
     var adapterStorage = mock(AdapterInstanceStorageImpl.class);
     var resourceManager = mock(AdapterResourceManager.class);
+    var workerRestClient = mock(WorkerRestClient.class);
     when(adapterStorage.findAll()).thenReturn(null);
 
     var adapterMasterManagement =
@@ -46,7 +47,8 @@ public class AdapterMasterManagementTest {
             adapterStorage,
             resourceManager,
             null,
-            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+            workerRestClient
         );
 
     assertThrows(AdapterException.class, () -> adapterMasterManagement.getAdapter("id2"));
@@ -57,6 +59,7 @@ public class AdapterMasterManagementTest {
     var adapterDescriptions = List.of(new AdapterDescription());
     var adapterStorage = mock(AdapterInstanceStorageImpl.class);
     var resourceManager = mock(AdapterResourceManager.class);
+    var workerRestClient = mock(WorkerRestClient.class);
     when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
     var adapterMasterManagement =
@@ -64,7 +67,8 @@ public class AdapterMasterManagementTest {
             adapterStorage,
             resourceManager,
             null,
-            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+            workerRestClient
         );
 
     assertThrows(AdapterException.class, () -> adapterMasterManagement.getAdapter("id2"));
@@ -75,6 +79,7 @@ public class AdapterMasterManagementTest {
     var adapterDescriptions = List.of(new AdapterDescription());
     var adapterStorage = mock(AdapterInstanceStorageImpl.class);
     var resourceManager = mock(AdapterResourceManager.class);
+    var workerRestClient = mock(WorkerRestClient.class);
     when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
     AdapterMasterManagement adapterMasterManagement =
@@ -82,7 +87,8 @@ public class AdapterMasterManagementTest {
             adapterStorage,
             resourceManager,
             null,
-            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+            workerRestClient
         );
 
     List<AdapterDescription> result = adapterMasterManagement.getAllAdapterInstances();

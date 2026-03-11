@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
@@ -56,7 +57,7 @@ public class ResetManagement {
    *
    * @param username of the user to delte the resources
    */
-  public static void reset(String username) {
+  public static void reset(String username, WorkerRestClient workerRestClient) {
     logger.info("Start resetting the system");
 
     setHideTutorialToFalse(username);
@@ -65,7 +66,7 @@ public class ResetManagement {
 
     stopAndDeleteAllPipelines();
 
-    stopAndDeleteAllAdapters();
+    stopAndDeleteAllAdapters(workerRestClient);
 
     deleteAllFiles();
 
@@ -101,13 +102,14 @@ public class ResetManagement {
     });
   }
 
-  private static void stopAndDeleteAllAdapters() {
+  private static void stopAndDeleteAllAdapters(WorkerRestClient workerRestClient) {
     AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+        workerRestClient
     );
 
     List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();

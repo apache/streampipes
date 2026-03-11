@@ -18,11 +18,12 @@
 package org.apache.streampipes.manager.assets;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import org.apache.http.client.fluent.Request;
-
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -30,22 +31,33 @@ public class AssetFetcher {
 
   private static final String ASSET_ENDPOINT_APPENDIX = "/assets";
 
-  private SpServiceUrlProvider spServiceUrlProvider;
-  private String appId;
+  private final SpServiceUrlProvider spServiceUrlProvider;
+  private final String appId;
+  private final ExtensionServiceRequestManager requestManager;
 
   public AssetFetcher(SpServiceUrlProvider spServiceUrlProvider,
                       String appId) {
+    this(spServiceUrlProvider, appId, new HttpExtensionServiceRequestManager());
+  }
+
+  public AssetFetcher(SpServiceUrlProvider spServiceUrlProvider,
+                      String appId,
+                      ExtensionServiceRequestManager requestManager) {
     this.spServiceUrlProvider = spServiceUrlProvider;
     this.appId = appId;
+    this.requestManager = requestManager;
   }
 
   public InputStream fetchPipelineElementAssets() throws IOException, NoServiceEndpointsAvailableException {
     String endpointUrl = new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(appId, spServiceUrlProvider);
-    return Request
-        .Get(endpointUrl + ASSET_ENDPOINT_APPENDIX)
-        .execute()
-        .returnContent()
-        .asStream();
+    var response = requestManager.requestPipelineElementAssets(endpointUrl + ASSET_ENDPOINT_APPENDIX);
+
+    if (!response.isSuccess()) {
+      throw new IOException("Could not fetch pipeline element assets from " + endpointUrl);
+    }
+
+    var responseBytes = response.responseBytes();
+    return new ByteArrayInputStream(responseBytes == null ? new byte[0] : responseBytes);
 
   }
 }

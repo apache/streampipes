@@ -19,6 +19,7 @@
 package org.apache.streampipes.health.monitoring;
 
 import org.apache.streampipes.health.monitoring.model.HealthCheckData;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
 
 import org.slf4j.Logger;
@@ -31,9 +32,12 @@ public class ExtensionHealthCheck implements Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionHealthCheck.class);
 
   private final ResourceProvider resourceProvider;
+  private final ExtensionServiceRequestManager extensionRequestManager;
 
-  public ExtensionHealthCheck(ResourceProvider resourceProvider) {
+  public ExtensionHealthCheck(ResourceProvider resourceProvider,
+                              ExtensionServiceRequestManager extensionRequestManager) {
     this.resourceProvider = resourceProvider;
+    this.extensionRequestManager = extensionRequestManager;
   }
 
   @Override
@@ -44,7 +48,10 @@ public class ExtensionHealthCheck implements Runnable {
 
       var activeExtensionInstances = new HashMap<String, ExtensionInstanceHealth>();
       activeCoreInstances.keySet().forEach(k -> {
-        activeExtensionInstances.put(k, new ExtensionInstanceAvailabilityCheck(k).checkRunningInstances());
+        activeExtensionInstances.put(
+            k,
+            new ExtensionInstanceAvailabilityCheck(k, extensionRequestManager).checkRunningInstances()
+        );
       });
 
       var healthCheckData = new HealthCheckData(resourceProvider, activeResources, activeCoreInstances, activeExtensionInstances);

@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.migration.AbstractMigrationManager;
 import org.apache.streampipes.manager.migration.IMigrationHandler;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -38,11 +39,16 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
 
   private final IAdapterStorage adapterStorage;
   private final IAdapterStorage adapterDescriptionStorage;
+  private final WorkerRestClient workerRestClient;
 
   public AdapterMigrationManager(IAdapterStorage adapterStorage,
-                                 IAdapterStorage adapterDescriptionStorage) {
+                                 IAdapterStorage adapterDescriptionStorage,
+                                 WorkerRestClient workerRestClient,
+                                 ExtensionServiceRequestManager extensionServiceRequestManager) {
+    super(extensionServiceRequestManager);
     this.adapterStorage = adapterStorage;
     this.adapterDescriptionStorage = adapterDescriptionStorage;
+    this.workerRestClient = workerRestClient;
   }
 
   @Override
@@ -96,7 +102,7 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
                 migrationResult.element().getElementId()
             );
             try {
-              WorkerRestClient.stopStreamAdapter(extensionsServiceConfig.getServiceUrl(), adapterDescription);
+              workerRestClient.stopStreamAdapter(extensionsServiceConfig.getServiceUrl(), adapterDescription);
             } catch (AdapterException e) {
               LOG.error("Stopping adapter failed: {}", StringUtils.join(e.getStackTrace(), "\n"));
             }

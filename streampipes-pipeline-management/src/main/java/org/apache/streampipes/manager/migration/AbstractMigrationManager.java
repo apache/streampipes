@@ -19,7 +19,7 @@
 package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
@@ -45,8 +45,13 @@ import static org.apache.streampipes.manager.migration.MigrationUtils.getRequest
 public abstract class AbstractMigrationManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractMigrationManager.class);
+  private final ExtensionServiceRequestManager extensionRequestManager;
 
   protected static final String MIGRATION_ENDPOINT = "api/v1/migrations";
+
+  protected AbstractMigrationManager(ExtensionServiceRequestManager extensionRequestManager) {
+    this.extensionRequestManager = extensionRequestManager;
+  }
 
   /**
    * Performs the actual migration of a pipeline element.
@@ -71,15 +76,15 @@ public abstract class AbstractMigrationManager {
 
       String serializedRequest = JacksonSerializer.getObjectMapper().writeValueAsString(migrationRequest);
 
-      var migrationResponse = ExtensionServiceExecutions.extServicePostRequest(
+      var migrationResponse = extensionRequestManager.requestMigration(
           url,
           serializedRequest
-      ).execute();
+      );
 
       TypeReference<MigrationResult<T>> typeReference = new TypeReference<>() {
       };
 
-      String migrationResponseString = migrationResponse.returnContent().asString();
+      String migrationResponseString = migrationResponse.responseBody();
       return JacksonSerializer
           .getObjectMapper()
           .readValue(migrationResponseString, typeReference);
@@ -138,10 +143,7 @@ public abstract class AbstractMigrationManager {
   protected void performUpdate(String requestUrl) {
 
     try {
-      var entityPayload = ExtensionServiceExecutions.extServiceGetRequest(requestUrl)
-          .execute()
-          .returnContent()
-          .asString();
+      var entityPayload = extensionRequestManager.requestDescriptionUpdate(requestUrl).responseBody();
       var updateResult = new TypeExtractor(entityPayload).getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {
         LOG.error(

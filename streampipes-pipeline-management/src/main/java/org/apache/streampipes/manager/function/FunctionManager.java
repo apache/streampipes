@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.manager.function;
 
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionState;
 import org.apache.streampipes.model.function.FunctionsShutdownResponse;
@@ -26,19 +26,23 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 public class FunctionManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(FunctionManager.class);
   private static final String FUNCTION_STOP_PATH = "/api/v1/functions/stop";
 
-  public static void stopAllFunctionsAndPersistState(IFunctionStateStorage functionStateStorage) {
+  private final ExtensionServiceRequestManager requestManager;
+
+  public FunctionManager(ExtensionServiceRequestManager requestManager) {
+    this.requestManager = requestManager;
+  }
+
+  public void stopAllFunctionsAndPersistState(IFunctionStateStorage functionStateStorage) {
     var extensions = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage().findAll();
 
     LOG.info("Triggering function stop at {} extension services...", extensions.size());
@@ -50,23 +54,22 @@ public class FunctionManager {
     });
   }
 
-  private static FunctionsShutdownResponse triggerFunctionStop(SpServiceRegistration service) {
+  private FunctionsShutdownResponse triggerFunctionStop(SpServiceRegistration service) {
     var endpoint = service.getServiceUrl() + FUNCTION_STOP_PATH;
 
     try {
       LOG.info("Triggering function stop at {}", endpoint);
-      var response = ExtensionServiceExecutions.extServicePostRequestAsServiceAdmin(endpoint).execute();
-      var httpResponse = response.returnResponse();
-      int statusCode = httpResponse.getStatusLine().getStatusCode();
+      var response = requestManager.requestFunctionStop(endpoint);
+      int statusCode = response.statusCode();
 
       if (statusCode >= 200 && statusCode < 300) {
         LOG.debug("Function stop triggered at {} (HTTP {})", service.getSvcId(), statusCode);
-        if (httpResponse.getEntity() == null) {
+        if (response.responseBody() == null) {
           return null;
         }
 
         return JacksonSerializer.getObjectMapper().readValue(
-            EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8),
+            response.responseBody(),
             FunctionsShutdownResponse.class
         );
       } else {
@@ -80,7 +83,7 @@ public class FunctionManager {
     }
   }
 
-  private static void persistReturnedFunctionStates(IFunctionStateStorage functionStateStorage,
+  private void persistReturnedFunctionStates(IFunctionStateStorage functionStateStorage,
                                                     FunctionsShutdownResponse shutdownResponse) {
     if (shutdownResponse == null || shutdownResponse.getFunctions() == null) {
       return;

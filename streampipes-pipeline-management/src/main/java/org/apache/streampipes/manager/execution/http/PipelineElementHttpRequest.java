@@ -18,46 +18,57 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.apache.streampipes.manager.util.AuthTokenUtils;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.JsonSyntaxException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
 
 import java.io.IOException;
 
 public abstract class PipelineElementHttpRequest {
 
+  private final ExtensionServiceRequestManager requestManager;
+
+  public PipelineElementHttpRequest() {
+    this(new HttpExtensionServiceRequestManager());
+  }
+
+  public PipelineElementHttpRequest(ExtensionServiceRequestManager requestManager) {
+    this.requestManager = requestManager;
+  }
+
   public PipelineElementStatus execute(EndpointSelectable pipelineElement,
                                        String endpointUrl,
                                        String pipelineId) {
     try {
-      Response httpResp = initRequest(pipelineElement, endpointUrl)
-              .addHeader("Authorization", AuthTokenUtils.getAuthToken(pipelineId))
-              .connectTimeout(10000)
-              .execute();
-      return handleResponse(httpResp, pipelineElement, endpointUrl);
+      ExtensionServiceOperationResult response = performRequest(pipelineElement, endpointUrl, pipelineId);
+      return handleResponse(response, pipelineElement, endpointUrl);
     } catch (Exception e) {
       logError(endpointUrl, pipelineElement.getName(), e.getMessage());
       return new PipelineElementStatus(endpointUrl, pipelineElement.getName(), false, e.getMessage());
     }
   }
 
-  protected abstract Request initRequest(EndpointSelectable pipelineElement,
-                                      String endpointUrl) throws JsonProcessingException;
+  protected abstract ExtensionServiceOperationResult performRequest(EndpointSelectable pipelineElement,
+                                                                    String endpointUrl,
+                                                                    String pipelineId) throws IOException;
 
   protected abstract void logError(String endpointUrl,
                                 String pipelineElementName,
                                 String exceptionMessage);
 
-  protected PipelineElementStatus handleResponse(Response httpResp,
+  protected PipelineElementStatus handleResponse(ExtensionServiceOperationResult response,
                                                  EndpointSelectable pipelineElement,
                                                  String endpointUrl) throws JsonSyntaxException, IOException {
-    String resp = httpResp.returnContent().asString();
+    if (!response.isSuccess()) {
+      throw new IOException("Request failed with status code " + response.statusCode());
+    }
+
+    String resp = response.responseBody();
     org.apache.streampipes.model.Response streamPipesResp = JacksonSerializer
         .getObjectMapper()
         .readValue(resp, org.apache.streampipes.model.Response.class);
@@ -69,5 +80,9 @@ public abstract class PipelineElementHttpRequest {
                                         String pipelineElementName) {
     return new PipelineElementStatus(endpointUrl, pipelineElementName, response.isSuccess(),
         response.getOptionalMessage());
+  }
+
+  protected ExtensionServiceRequestManager requestManager() {
+    return requestManager;
   }
 }

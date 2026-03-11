@@ -23,6 +23,7 @@ import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.connect.management.management.CompactAdapterManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Permission;
@@ -69,13 +70,14 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
 
-  public AdapterResource() {
+  public AdapterResource(WorkerRestClient workerRestClient) {
     super(() -> new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
             .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics()));
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+        workerRestClient));
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

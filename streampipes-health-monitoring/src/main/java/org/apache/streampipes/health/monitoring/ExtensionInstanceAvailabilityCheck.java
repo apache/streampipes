@@ -17,17 +17,15 @@
  */
 package org.apache.streampipes.health.monitoring;
 
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 public class ExtensionInstanceAvailabilityCheck {
@@ -36,20 +34,21 @@ public class ExtensionInstanceAvailabilityCheck {
   private static final String InstancePath = "/health";
 
   private final String serviceBaseUrl;
+  private final ExtensionServiceRequestManager extensionRequestManager;
 
-  public ExtensionInstanceAvailabilityCheck(String serviceBaseUrl) {
+  public ExtensionInstanceAvailabilityCheck(String serviceBaseUrl,
+                                            ExtensionServiceRequestManager extensionRequestManager) {
     this.serviceBaseUrl = serviceBaseUrl;
+    this.extensionRequestManager = extensionRequestManager;
   }
 
   public ExtensionInstanceHealth checkRunningInstances() {
     try {
-      var request = ExtensionServiceExecutions.extServiceGetRequest(makeRequestUrl());
-      var response = request.execute().returnResponse();
-      if (response.getStatusLine().getStatusCode() != 200) {
+      var response = extensionRequestManager.requestExtensionInstanceHealth(makeRequestUrl());
+      if (response.statusCode() != 200) {
         return new ExtensionInstanceHealth(Set.of(), Set.of());
       }
-      String body = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-      return deserialize(body);
+      return deserialize(response.responseBody());
 
     } catch (IOException e) {
       LOG.error("Extension service {} is unavailable", serviceBaseUrl);

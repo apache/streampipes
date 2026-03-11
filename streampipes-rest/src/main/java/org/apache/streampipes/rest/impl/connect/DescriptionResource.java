@@ -23,6 +23,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.connect.management.management.DescriptionManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -49,8 +50,8 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   private static final Logger LOG = LoggerFactory.getLogger(DescriptionResource.class);
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
 
-  public DescriptionResource() {
-    super(DescriptionManagement::new);
+  public DescriptionResource(WorkerRestClient workerRestClient) {
+    super(() -> new DescriptionManagement(workerRestClient));
     endpointGenerator = new ExtensionsServiceEndpointGenerator();
   }
 

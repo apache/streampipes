@@ -29,6 +29,12 @@ import java.util.Optional;
 
 public class DescriptionManagement {
 
+  private final WorkerRestClient workerRestClient;
+
+  public DescriptionManagement(WorkerRestClient workerRestClient) {
+    this.workerRestClient = workerRestClient;
+  }
+
   public List<AdapterDescription> getAdapters() {
     IAdapterStorage adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
     return adapterStorage.findAll();
@@ -51,15 +57,15 @@ public class DescriptionManagement {
   }
 
   public String getAssets(String baseUrl) throws AdapterException {
-    return WorkerRestClient.getAssets(baseUrl);
+    return workerRestClient.getAssets(baseUrl);
   }
 
   public byte[] getIconAsset(String baseUrl) throws AdapterException {
-    return WorkerRestClient.getIconAsset(baseUrl);
+    return workerRestClient.getIconAsset(baseUrl);
   }
 
   public String getDocumentationAsset(String baseUrl) throws AdapterException {
-    return WorkerRestClient.getDocumentationAsset(baseUrl);
+    return workerRestClient.getDocumentationAsset(baseUrl);
   }
 
   private boolean isAdapterUsed(AdapterDescription adapter) {

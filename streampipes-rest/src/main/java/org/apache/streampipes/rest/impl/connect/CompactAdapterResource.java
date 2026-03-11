@@ -25,6 +25,10 @@ import org.apache.streampipes.connect.management.compact.PersistPipelineHandler;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.connect.management.management.CompactAdapterManagement;
+import org.apache.streampipes.connect.management.management.GuessManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
@@ -54,15 +58,23 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   private final CompactAdapterManagement compactAdapterManagement;
   private final AdapterUpdateManagement adapterUpdateManagement;
 
-  public CompactAdapterResource() {
+  public CompactAdapterResource(WorkerRestClient workerRestClient,
+                                ExtensionServiceRequestManager extensionServiceRequestManager) {
     super(() -> new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+        workerRestClient
     ));
-    this.compactAdapterManagement = new CompactAdapterManagement(new AdapterGenerationSteps().getGenerators());
+    var guessManagement = new GuessManagement(
+        new ExtensionsServiceEndpointGenerator(),
+        extensionServiceRequestManager
+    );
+    this.compactAdapterManagement = new CompactAdapterManagement(
+        new AdapterGenerationSteps(guessManagement).getGenerators()
+    );
     this.adapterUpdateManagement = new AdapterUpdateManagement(managementService);
   }
 

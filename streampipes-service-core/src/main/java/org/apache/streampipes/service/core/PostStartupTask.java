@@ -21,10 +21,12 @@ package org.apache.streampipes.service.core;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
 import org.apache.streampipes.health.monitoring.PostStartupRecovery;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -56,11 +58,15 @@ public class PostStartupTask implements Runnable {
   private final ScheduledExecutorService executorService;
   private final WorkerAdministrationManagement workerAdministrationManagement;
   private final PostStartupRecovery postStartupRecovery;
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
   private final INoSqlStorage storage = StorageDispatcher.INSTANCE.getNoSqlStore();
 
-  public PostStartupTask(IPipelineStorage pipelineStorage) {
+  public PostStartupTask(IPipelineStorage pipelineStorage,
+                         ExtensionServiceRequestManager extensionServiceRequestManager,
+                         WorkerRestClient workerRestClient) {
     this.pipelineStorage = pipelineStorage;
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.executorService = Executors.newSingleThreadScheduledExecutor();
     var resourceManager = new SpResourceManager();
     this.workerAdministrationManagement = new WorkerAdministrationManagement(
@@ -77,16 +83,18 @@ public class PostStartupTask implements Runnable {
                     StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
                     new SpResourceManager().manageAdapters(),
                     new SpResourceManager().manageDataStreams(),
-                    AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+                    AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+                    workerRestClient
                 )
-            )
+            ),
+            extensionServiceRequestManager
         )
     );
   }
 
   @Override
   public void run() {
-    new ServiceHealthCheck(storage.getExtensionsServiceStorage()).run();
+    new ServiceHealthCheck(storage.getExtensionsServiceStorage(), extensionServiceRequestManager).run();
     performAdapterAssetUpdate();
     startAllPreviouslyStoppedPipelines();
     runHealthCheckOnce();

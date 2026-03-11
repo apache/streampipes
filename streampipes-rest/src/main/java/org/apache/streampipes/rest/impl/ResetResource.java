@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.model.message.Notifications;
@@ -38,10 +39,16 @@ import java.util.ArrayList;
 @RequestMapping("/api/v2/reset")
 public class ResetResource extends AbstractAuthGuardedRestResource {
 
-  @PostMapping(produces =  MediaType.APPLICATION_JSON_VALUE)
+  private final WorkerRestClient workerRestClient;
+
+  public ResetResource(WorkerRestClient workerRestClient) {
+    this.workerRestClient = workerRestClient;
+  }
+
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Resets StreamPipes instance")
   public ResponseEntity<SuccessMessage> reset() {
-    ResetManagement.reset(getAuthenticatedUsername());
+    ResetManagement.reset(getAuthenticatedUsername(), workerRestClient);
     var userStorage = getUserStorage();
 
 
@@ -50,7 +57,7 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
     for (var user : allUsers) {
       if (user.getPrincipalType() == PrincipalType.USER_ACCOUNT
           && !user.getPrincipalId().equals(getAuthenticatedUserSid())) {
-        ResetManagement.reset(user.getUsername());
+        ResetManagement.reset(user.getUsername(), workerRestClient);
         userStorage.deleteUser(user.getPrincipalId());
       }
     }

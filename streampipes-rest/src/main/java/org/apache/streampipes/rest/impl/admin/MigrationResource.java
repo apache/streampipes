@@ -19,7 +19,9 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.connect.management.management.AdapterMigrationManager;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.health.monitoring.ServiceRegistrationManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationManager;
@@ -73,6 +75,14 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   private final CoreServiceStatusManager coreServiceStatusManager = new CoreServiceStatusManager(
       getNoSqlStorage().getSpCoreConfigurationStorage()
   );
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final WorkerRestClient workerRestClient;
+
+  public MigrationResource(ExtensionServiceRequestManager extensionServiceRequestManager,
+                           WorkerRestClient workerRestClient) {
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.workerRestClient = workerRestClient;
+  }
 
   @PostMapping(path = "{serviceId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
@@ -119,12 +129,17 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                 List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
             );
 
-            new AdapterMigrationManager(adapterStorage, adapterDescriptionStorage)
+            new AdapterMigrationManager(
+                adapterStorage,
+                adapterDescriptionStorage,
+                workerRestClient,
+                extensionServiceRequestManager)
               .handleMigrations(extensionsServiceConfig, adapterMigrations);
             new PipelineElementMigrationManager(
                 pipelineStorage,
                 dataProcessorStorage,
-                dataSinkStorage)
+                dataSinkStorage,
+                extensionServiceRequestManager)
                 .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
           }
         }

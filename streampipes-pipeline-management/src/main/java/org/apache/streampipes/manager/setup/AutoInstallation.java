@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.setup;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 
 import org.slf4j.Logger;
@@ -35,19 +36,25 @@ public class AutoInstallation implements BackgroundTaskNotifier {
   private static final Logger LOG = LoggerFactory.getLogger(AutoInstallation.class);
 
   private final Environment env;
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final AtomicInteger errorCount = new AtomicInteger();
   private int numberOfBackgroundSteps = 0;
   private int executedBackgroundSteps = 0;
 
-  public AutoInstallation() {
+  public AutoInstallation(ExtensionServiceRequestManager extensionServiceRequestManager) {
     this.env = Environments.getEnvironment();
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
   }
 
   public void startAutoInstallation() {
     InitialSettings settings = collectInitialSettings();
 
     List<InstallationStep> steps = InstallationConfiguration.getInstallationSteps(settings);
-    List<Runnable> backgroundSteps = InstallationConfiguration.getBackgroundInstallationSteps(settings, this);
+    List<Runnable> backgroundSteps = InstallationConfiguration.getBackgroundInstallationSteps(
+        settings,
+        this,
+        extensionServiceRequestManager
+    );
     numberOfBackgroundSteps = backgroundSteps.size();
 
     steps.forEach(step -> {

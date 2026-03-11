@@ -18,11 +18,13 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.model.api.EndpointSelectable;
 
-import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 
 public class DetachHttpRequest extends PipelineElementHttpRequest {
@@ -30,9 +32,11 @@ public class DetachHttpRequest extends PipelineElementHttpRequest {
   private static final Logger LOG = LoggerFactory.getLogger(DetachHttpRequest.class);
 
   @Override
-  protected Request initRequest(EndpointSelectable pipelineElement, String endpointUrl) {
+  protected ExtensionServiceOperationResult performRequest(EndpointSelectable pipelineElement,
+                                                           String endpointUrl,
+                                                           String pipelineId) throws IOException {
     LOG.info("Detaching element: " + endpointUrl);
-    return Request.Delete(endpointUrl);
+    return requestManager().requestPipelineElementDetach(endpointUrl, pipelineId);
   }
 
   @Override

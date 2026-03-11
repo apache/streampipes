@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -55,7 +56,9 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
 
   public PipelineElementMigrationManager(IPipelineStorage pipelineStorage,
                                          IDataProcessorStorage dataProcessorStorage,
-                                         IDataSinkStorage dataSinkStorage) {
+                                         IDataSinkStorage dataSinkStorage,
+                                         ExtensionServiceRequestManager extensionServiceRequestManager) {
+    super(extensionServiceRequestManager);
     this.pipelineStorage = pipelineStorage;
     this.dataProcessorStorage = dataProcessorStorage;
     this.dataSinkStorage = dataSinkStorage;

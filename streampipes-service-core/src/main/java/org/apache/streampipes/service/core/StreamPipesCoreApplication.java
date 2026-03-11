@@ -20,6 +20,7 @@ package org.apache.streampipes.service.core;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
@@ -29,6 +30,7 @@ import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.function.FunctionManager;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
@@ -82,7 +84,7 @@ import java.util.function.Supplier;
 @EnableScheduling
 @Import({OpenApiConfiguration.class, StreamPipesPasswordEncoder.class,
     StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class,
-    StorageApiConfiguration.class})
+    StorageApiConfiguration.class, ExtensionServiceRequestConfiguration.class})
 @ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.service.core.oauth2",
     "org.apache.streampipes.service.core.scheduler"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
@@ -98,6 +100,12 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   @Autowired
   private IFunctionStateStorage functionStateStorage;
+
+  @Autowired
+  private ExtensionServiceRequestManager extensionServiceRequestManager;
+
+  @Autowired
+  private WorkerRestClient workerRestClient;
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
@@ -159,12 +167,17 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     new ApplyDefaultRolesAndPrivilegesTask().execute();
     coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.READY);
 
-    executorService.schedule(new PostStartupTask(getPipelineStorage()),
+    executorService.schedule(new PostStartupTask(
+            getPipelineStorage(),
+            extensionServiceRequestManager,
+            workerRestClient),
         env.getInitialHealthCheckDelayInMillis().getValueOrDefault(),
         TimeUnit.MILLISECONDS);
 
     scheduleHealthChecks(env.getHealthCheckIntervalInMillis().getValueOrDefault(), List
-        .of(new ServiceHealthCheck(StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage()),
+        .of(new ServiceHealthCheck(
+                StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
+                extensionServiceRequestManager),
             new ExtensionHealthCheck(
                 new ResourceProvider(
                     StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
@@ -173,9 +186,10 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                         StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
                         new SpResourceManager().manageAdapters(),
                         new SpResourceManager().manageDataStreams(),
-                        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-                    )
-                )
+                        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+                        workerRestClient
+                    )),
+                extensionServiceRequestManager
             )));
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
@@ -212,7 +226,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     try {
       TimeUnit.MILLISECONDS.sleep(initialSleepBeforeInstallation);
       LOG.info("Starting installation procedure");
-      new AutoInstallation().startAutoInstallation();
+      new AutoInstallation(extensionServiceRequestManager).startAutoInstallation();
     } catch (InterruptedException e) {
       LOG.error("Ooops, something went wrong during the installation", e);
     }
@@ -242,7 +256,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       }
     });
 
-    FunctionManager.stopAllFunctionsAndPersistState(functionStateStorage);
+    new FunctionManager(extensionServiceRequestManager).stopAllFunctionsAndPersistState(functionStateStorage);
 
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
   }

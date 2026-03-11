@@ -18,8 +18,8 @@
 package org.apache.streampipes.manager.extensions;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.IExtensionsResourceUrlProvider;
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 import org.apache.streampipes.model.message.Message;
@@ -28,9 +28,12 @@ import java.io.IOException;
 
 public class ExtensionItemInstaller {
 
+  private final ExtensionServiceRequestManager extensionRequestManager;
   private final IExtensionsResourceUrlProvider urlProvider;
 
-  public ExtensionItemInstaller(IExtensionsResourceUrlProvider urlProvider) {
+  public ExtensionItemInstaller(IExtensionsResourceUrlProvider urlProvider,
+                                ExtensionServiceRequestManager extensionRequestManager) {
+    this.extensionRequestManager = extensionRequestManager;
     this.urlProvider = urlProvider;
   }
 
@@ -52,6 +55,6 @@ public class ExtensionItemInstaller {
   }
 
   private String fetchDescription(String descriptionUrl) throws IOException {
-    return ExtensionServiceExecutions.extServiceGetRequest(descriptionUrl).execute().returnContent().asString();
+    return extensionRequestManager.requestExtensionDescription(descriptionUrl).responseBody();
   }
 }

@@ -21,7 +21,7 @@ package org.apache.streampipes.health.monitoring;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.loadbalance.LoadManager;
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -37,13 +37,16 @@ import java.util.List;
 public class ServiceHealthCheck implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(ServiceHealthCheck.class);
+  private final ExtensionServiceRequestManager extensionRequestManager;
 
   private final ServiceRegistrationManager serviceRegistrationManager;
   private final int maxUnhealthyDurationBeforeRemovalMs;
 
   private final List<SpServiceRegistration> needDeletedServices = new ArrayList<>();
 
-  public ServiceHealthCheck(IExtensionsServiceStorage storage) {
+  public ServiceHealthCheck(IExtensionsServiceStorage storage,
+                            ExtensionServiceRequestManager extensionRequestManager) {
+    this.extensionRequestManager = extensionRequestManager;
     this.serviceRegistrationManager = new ServiceRegistrationManager(storage);
     this.maxUnhealthyDurationBeforeRemovalMs = Environments.getEnvironment()
         .getUnhealthyTimeBeforeServiceDeletionInMillis().getValueOrDefault();
@@ -71,9 +74,8 @@ public class ServiceHealthCheck implements Runnable {
     String healthCheckUrl = makeHealthCheckUrl(service);
 
     try {
-      var request = ExtensionServiceExecutions.extServiceGetRequest(healthCheckUrl);
-      var response = request.execute();
-      if (response.returnResponse().getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+      var response = extensionRequestManager.requestServiceHealth(healthCheckUrl);
+      if (response.statusCode() != HttpStatus.SC_OK) {
         processUnhealthyService(service);
       } else {
         if (service.getStatus() == SpServiceStatus.UNHEALTHY) {

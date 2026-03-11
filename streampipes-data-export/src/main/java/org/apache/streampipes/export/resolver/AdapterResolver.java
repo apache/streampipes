@@ -22,6 +22,8 @@ package org.apache.streampipes.export.resolver;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
+import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
@@ -89,7 +91,8 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
               getNoSqlStore().getAdapterInstanceStorage(),
               new SpResourceManager().manageAdapters(),
               new SpResourceManager().manageDataStreams(),
-              AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+              AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+              new WorkerRestClient(new HttpExtensionServiceRequestManager())
           ).stopStreamAdapter(resourceId, true);
         } catch (AdapterException e) {
           LOG.warn("Error when stopping adapter with id {} and name {}", resourceId, existingAdapter.getName());

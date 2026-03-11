@@ -53,15 +53,18 @@ public class AdapterMasterManagement {
   private final AdapterResourceManager adapterResourceManager;
 
   private final DataStreamResourceManager dataStreamResourceManager;
+  private final WorkerRestClient workerRestClient;
 
   public AdapterMasterManagement(IAdapterStorage adapterInstanceStorage,
                                  AdapterResourceManager adapterResourceManager,
                                  DataStreamResourceManager dataStreamResourceManager,
-                                 AdapterMetrics adapterMetrics) {
+                                 AdapterMetrics adapterMetrics,
+                                 WorkerRestClient workerRestClient) {
     this.adapterInstanceStorage = adapterInstanceStorage;
     this.adapterMetrics = adapterMetrics;
     this.adapterResourceManager = adapterResourceManager;
     this.dataStreamResourceManager = dataStreamResourceManager;
+    this.workerRestClient = workerRestClient;
   }
 
   public void addAdapter(AdapterDescription adapterDescription, String adapterId,
@@ -142,7 +145,7 @@ public class AdapterMasterManagement {
     AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
     try {
       try {
-        WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
+        workerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
       } catch (AdapterException e) {
         if (!forceStop) {
           throw new AdapterException("Could not stop adapter", e);
@@ -182,7 +185,7 @@ public class AdapterMasterManagement {
         adapterInstanceStorage.updateElement(ad);
 
         // Invoke adapter instance
-        WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
+        workerRestClient.invokeStreamAdapter(baseUrl, elementId);
 
         // register the adapter at the metrics manager so that the AdapterHealthCheck
         // can send metrics

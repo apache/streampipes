@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.manager.extensions.ExtensionItemInstaller;
 import org.apache.streampipes.manager.extensions.ExtensionsResourceUrlProvider;
@@ -49,13 +50,19 @@ import java.io.IOException;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResource {
 
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
+
+  public ExtensionsInstallationResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
+  }
+
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Message> addElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
     var descriptionUrlProvider = new ExtensionsResourceUrlProvider(SpServiceDiscovery.getServiceDiscovery());
     try {
-      return ok(new ExtensionItemInstaller(descriptionUrlProvider)
+      return ok(new ExtensionItemInstaller(descriptionUrlProvider, extensionServiceRequestManager)
           .installExtension(installationReq, getAuthenticatedUserSid()));
     } catch (IOException | SepaParseException e) {
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
@@ -68,7 +75,7 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   public ResponseEntity<Message> updateElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
     var descriptionUrlProvider = new ExtensionsResourceUrlProvider(SpServiceDiscovery.getServiceDiscovery());
     try {
-      return ok(new ExtensionItemInstaller(descriptionUrlProvider)
+      return ok(new ExtensionItemInstaller(descriptionUrlProvider, extensionServiceRequestManager)
           .updateExtension(installationReq));
     } catch (IOException | SepaParseException e) {
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
