@@ -107,22 +107,22 @@ public class HttpExtensionServiceRequestManager implements ExtensionServiceReque
 
   @Override
   public ExtensionServiceOperationResult requestPipelineElementAssets(String url) throws IOException {
-    return get(url, null);
+    return getWithoutAcceptHeader(url, null);
   }
 
   @Override
   public ExtensionServiceOperationResult requestAdapterAssets(String url) throws IOException {
-    return get(url, null);
+    return getWithoutAcceptHeader(url, null);
   }
 
   @Override
   public ExtensionServiceOperationResult requestAdapterIconAsset(String url) throws IOException {
-    return get(url, null);
+    return getWithoutAcceptHeader(url, null);
   }
 
   @Override
   public ExtensionServiceOperationResult requestAdapterDocumentationAsset(String url) throws IOException {
-    return get(url, null);
+    return getWithoutAcceptHeader(url, null);
   }
 
   @Override
@@ -136,6 +136,23 @@ public class HttpExtensionServiceRequestManager implements ExtensionServiceReque
     var request = Request
         .Get(url)
         .addHeader("Accept", "application/json")
+        .connectTimeout(10000)
+        .socketTimeout(10000);
+
+    var response = addAuthorizationHeader(request, token)
+        .execute()
+        .returnResponse();
+
+    return new ExtensionServiceOperationResult(
+        response.getStatusLine().getStatusCode(),
+        response.getEntity() == null ? null : EntityUtils.toByteArray(response.getEntity())
+    );
+  }
+
+  private ExtensionServiceOperationResult getWithoutAcceptHeader(String url,
+                                                                 String token) throws IOException {
+    var request = Request
+        .Get(url)
         .connectTimeout(10000)
         .socketTimeout(10000);
 

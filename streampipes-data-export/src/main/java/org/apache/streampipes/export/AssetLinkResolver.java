@@ -26,6 +26,7 @@ import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
@@ -49,9 +50,12 @@ public class AssetLinkResolver {
 
   private final String assetId;
   private final ObjectMapper mapper;
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
-  public AssetLinkResolver(String assetId) {
+  public AssetLinkResolver(String assetId,
+                           ExtensionServiceRequestManager extensionServiceRequestManager) {
     this.assetId = assetId;
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.mapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
       SerializationFeature.INDENT_OUTPUT, false 
@@ -66,7 +70,8 @@ public class AssetLinkResolver {
       var exportConfig = new AssetExportConfiguration();
       exportConfig.setAssetId(this.assetId);
       exportConfig.setAssetName(asset.getAssetName());
-      exportConfig.setAdapters(new AdapterResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.ADAPTER)));
+      exportConfig.setAdapters(new AdapterResolver(extensionServiceRequestManager)
+          .resolve(getLinks(assetLinks, ResolvableAssetLinks.ADAPTER)));
       exportConfig.setDataViews(new ChartResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.CHART)));
       exportConfig.setDashboards(new DashboardResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
       exportConfig.setDataSources(
