@@ -59,11 +59,6 @@ public class HttpExtensionServiceRequestManager implements ExtensionServiceReque
   }
 
   @Override
-  public ExtensionServiceOperationResult requestRunningAdapters(String url) throws IOException {
-    return get(url, AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()));
-  }
-
-  @Override
   public ExtensionServiceOperationResult requestAdapterStateChange(String url,
                                                                    String elementId,
                                                                    String payload) throws IOException {

@@ -34,8 +34,6 @@ public interface ExtensionServiceRequestManager {
 
   ExtensionServiceOperationResult requestFunctionStop(String endpoint) throws IOException;
 
-  ExtensionServiceOperationResult requestRunningAdapters(String url) throws IOException;
-
   ExtensionServiceOperationResult requestAdapterStateChange(String url,
                                                             String elementId,
                                                             String payload) throws IOException;

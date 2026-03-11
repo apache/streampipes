@@ -73,16 +73,6 @@ public class WorkerRestClient {
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
   }
 
-  public List<AdapterDescription> getAllRunningAdapterInstanceDescriptions(String url) throws AdapterException {
-    try {
-      var responseString = requestManager.requestRunningAdapters(url).responseBody();
-
-      return JacksonSerializer.getObjectMapper().readValue(responseString, List.class);
-    } catch (IOException e) {
-      throw new AdapterException("List of running adapters could not be fetched from: " + url);
-    }
-  }
-
   private void startAdapter(String url,
                             AdapterDescription ad) throws AdapterException {
     LOG.debug("Trying to start adapter on endpoint {} ", url);
