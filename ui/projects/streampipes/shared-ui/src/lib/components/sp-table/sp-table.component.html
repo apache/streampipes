@@ -167,6 +167,63 @@
             </ng-container>
         }
 
+        @if (assetContextConfig) {
+            <ng-container [matColumnDef]="assetContextColumnId">
+                <th mat-header-cell *matHeaderCellDef>
+                    {{ assetContextColumnLabel | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    @if (getAssetContext(element); as assetContext) {
+                        <div
+                            class="asset-context-cell"
+                            fxLayout="row"
+                            fxLayoutAlign="start center"
+                            fxLayoutGap="6px"
+                        >
+                            @for (site of assetContext.sites; track site.id) {
+                                <sp-label
+                                    size="small"
+                                    tone="info"
+                                    variant="soft"
+                                    [labelText]="site.label"
+                                >
+                                </sp-label>
+                            }
+                            @for (
+                                asset of assetContext.assets;
+                                track asset.id
+                            ) {
+                                <sp-label
+                                    size="small"
+                                    tone="neutral"
+                                    variant="soft"
+                                    [labelText]="asset.label"
+                                    [matTooltip]="asset.tooltip"
+                                >
+                                </sp-label>
+                            }
+                            @for (
+                                label of assetContext.labels;
+                                track label._id ?? label.label
+                            ) {
+                                <sp-label
+                                    size="small"
+                                    variant="soft"
+                                    [color]="label.color"
+                                    [labelText]="label.label"
+                                >
+                                </sp-label>
+                            }
+                        </div>
+                    } @else {
+                        <span class="asset-context-empty">{{
+                            'No asset link' | translate
+                        }}</span>
+                    }
+                </td>
+            </ng-container>
+        }
+
         @if (showActionsMenu) {
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef></th>

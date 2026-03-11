@@ -39,6 +39,7 @@ import {
     DialogService,
     PanelType,
     SpAssetBrowserService,
+    SpTableAssetContextConfig,
     SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
     SpTableComponent,
@@ -98,10 +99,16 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
 
     displayedColumns: string[] = [
         'name',
+        'assetContext',
         'lastModified',
         'createdAt',
         'actions',
     ];
+    readonly assetContextConfig: SpTableAssetContextConfig = {
+        resourceLinkType: 'dashboard',
+        resourceIdKey: 'elementId',
+        columnLabel: 'Asset Context',
+    };
     dashboards: Dashboard[] = [];
     filteredDashboards: Dashboard[] = [];
 

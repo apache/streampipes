@@ -45,3 +45,15 @@
 .checkbox-multi-select {
     width: 100px;
 }
+
+.asset-context-cell {
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 220px;
+    padding: 6px 0;
+}
+
+.asset-context-empty {
+    color: var(--color-text-2);
+    font-size: 12px;
+}

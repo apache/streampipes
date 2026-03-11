@@ -23,6 +23,7 @@ import {
     ContentChild,
     ContentChildren,
     EventEmitter,
+    HostListener,
     inject,
     Input,
     OnChanges,
@@ -72,6 +73,10 @@ import { MatFormField } from '@angular/material/form-field';
 import { Subscription } from 'rxjs';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { FormFieldComponent } from '../form-field/form-field.component';
+import { SpAssetBrowserService } from '../asset-browser/asset-browser.service';
+import { AssetBrowserData } from '../asset-browser/asset-browser.model';
+import { SpLabelComponent } from '../sp-label/sp-label.component';
+import { SpAsset, SpLabel } from '@streampipes/platform-services';
 
 export interface SpTableMultiActionOption {
     value: string;
@@ -83,6 +88,27 @@ export interface SpTableMultiActionOption {
 export interface SpTableMultiActionExecuteEvent<T> {
     selectedRows: T[];
     action: string | null;
+}
+
+export interface SpTableAssetContextConfig {
+    resourceLinkType: string;
+    resourceIdKey?: string;
+    columnId?: string;
+    columnLabel?: string;
+    hideBelowWidth?: number;
+}
+
+interface SpTableAssetContextValue {
+    id: string;
+    label: string;
+    tooltip?: string;
+}
+
+interface SpTableAssetContext {
+    assets: SpTableAssetContextValue[];
+    sites: SpTableAssetContextValue[];
+    labels: SpLabel[];
+    sortValue: string;
 }
 
 @Component({
@@ -121,12 +147,14 @@ export interface SpTableMultiActionExecuteEvent<T> {
         TranslatePipe,
         LayoutGapDirective,
         FormFieldComponent,
+        SpLabelComponent,
     ],
 })
 export class SpTableComponent<T>
     implements AfterViewInit, AfterContentInit, OnChanges, OnDestroy
 {
     readonly selectionColumnId = 'spSelection';
+    readonly defaultAssetContextColumnId = 'assetContext';
 
     @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;
     @ContentChildren(MatRowDef) rowDefs: QueryList<MatRowDef<T>>;
@@ -146,6 +174,7 @@ export class SpTableComponent<T>
     @Input() multiActionOptions: SpTableMultiActionOption[] = [];
     @Input() featureCardId: string;
     @Input() resourceIdKey = 'elementId';
+    @Input() assetContextConfig?: SpTableAssetContextConfig;
 
     @Input() dataSource: MatTableDataSource<T>;
 
@@ -171,8 +200,15 @@ export class SpTableComponent<T>
 
     private localStorageService = inject(LocalStorageService);
     private featureCardService = inject(FeatureCardService);
+    private assetBrowserService = inject(SpAssetBrowserService);
     private renderedDataSubscription?: Subscription;
+    private assetDataSubscription?: Subscription;
     private viewInitialized = false;
+    private assetContextIndex = new Map<
+        string,
+        Map<string, SpTableAssetContext>
+    >();
+    private compactLayout = false;
 
     readonly pageSize: Signal<number>;
 
@@ -181,6 +217,12 @@ export class SpTableComponent<T>
             'paginator-page-size',
             10,
         );
+        this.assetDataSubscription =
+            this.assetBrowserService.assetData$.subscribe(assetData => {
+                this.assetContextIndex = this.buildAssetContextIndex(assetData);
+                this.applyAssetContextSortingAccessor();
+            });
+        this.updateCompactLayout();
     }
 
     ngAfterViewInit() {
@@ -221,10 +263,21 @@ export class SpTableComponent<T>
         if (changes['multiActionOptions']) {
             this.ensureValidSelectedMultiAction();
         }
+
+        if (changes['assetContextConfig'] || changes['dataSource']) {
+            this.updateCompactLayout();
+            this.applyAssetContextSortingAccessor();
+        }
     }
 
     ngOnDestroy() {
         this.renderedDataSubscription?.unsubscribe();
+        this.assetDataSubscription?.unsubscribe();
+    }
+
+    @HostListener('window:resize')
+    onResize() {
+        this.updateCompactLayout();
     }
 
     mouseEnter(trigger) {
@@ -257,7 +310,9 @@ export class SpTableComponent<T>
     }
 
     get renderedColumns(): string[] {
-        const baseColumns = this.columns ?? [];
+        const baseColumns = (this.columns ?? []).filter(
+            column => !this.shouldHideColumn(column),
+        );
         if (
             !this.showSelectionCheckboxes ||
             baseColumns.includes(this.selectionColumnId)
@@ -266,6 +321,33 @@ export class SpTableComponent<T>
         }
 
         return [this.selectionColumnId, ...baseColumns];
+    }
+
+    get assetContextColumnId(): string {
+        return (
+            this.assetContextConfig?.columnId ??
+            this.defaultAssetContextColumnId
+        );
+    }
+
+    get assetContextColumnLabel(): string {
+        return this.assetContextConfig?.columnLabel ?? 'Asset Context';
+    }
+
+    getAssetContext(row: T): SpTableAssetContext | undefined {
+        const config = this.assetContextConfig;
+        if (!config) {
+            return undefined;
+        }
+
+        const resourceId = this.getAssetContextResourceId(row, config);
+        if (!resourceId) {
+            return undefined;
+        }
+
+        return this.assetContextIndex
+            .get(config.resourceLinkType)
+            ?.get(resourceId);
     }
 
     get selectedRows(): T[] {
@@ -438,5 +520,195 @@ export class SpTableComponent<T>
 
         this.selectedMultiAction = null;
         this.multiActionSelectionChanged.emit(null);
+    }
+
+    private shouldHideColumn(column: string): boolean {
+        return (
+            !!this.assetContextConfig &&
+            column === this.assetContextColumnId &&
+            this.compactLayout
+        );
+    }
+
+    private updateCompactLayout(): void {
+        const hideBelowWidth = this.assetContextConfig?.hideBelowWidth ?? 1200;
+        this.compactLayout = window.innerWidth < hideBelowWidth;
+    }
+
+    private applyAssetContextSortingAccessor(): void {
+        if (!this.dataSource) {
+            return;
+        }
+
+        const currentAccessor =
+            this.dataSource.sortingDataAccessor?.bind(this.dataSource) ??
+            ((data: T, sortHeaderId: string) =>
+                (data as Record<string, unknown>)?.[sortHeaderId] as
+                    | string
+                    | number);
+
+        this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+            if (
+                this.assetContextConfig &&
+                sortHeaderId === this.assetContextColumnId
+            ) {
+                return this.getAssetContext(data)?.sortValue ?? '';
+            }
+
+            return currentAccessor(data, sortHeaderId);
+        };
+    }
+
+    private buildAssetContextIndex(
+        assetData?: AssetBrowserData,
+    ): Map<string, Map<string, SpTableAssetContext>> {
+        const index = new Map<string, Map<string, SpTableAssetContext>>();
+        if (!assetData) {
+            return index;
+        }
+
+        const sitesById = new Map(
+            assetData.sites.map(site => [site._id, site.label]),
+        );
+        const labelsById = new Map(
+            assetData.labels
+                .filter(
+                    (label): label is SpLabel & { _id: string } => !!label._id,
+                )
+                .map(label => [label._id, label]),
+        );
+
+        assetData.assets.forEach(asset =>
+            this.collectAssetContexts(
+                asset,
+                index,
+                sitesById,
+                labelsById,
+                [],
+                [],
+                null,
+            ),
+        );
+
+        return index;
+    }
+
+    private collectAssetContexts(
+        asset: SpAsset,
+        index: Map<string, Map<string, SpTableAssetContext>>,
+        sitesById: Map<string, string>,
+        labelsById: Map<string, SpLabel>,
+        hierarchy: string[],
+        inheritedLabels: SpLabel[],
+        inheritedSiteLabel: string | null,
+    ): void {
+        const currentHierarchy = [...hierarchy, asset.assetName].filter(
+            Boolean,
+        );
+        const topLevelAsset = currentHierarchy[0] ?? asset.assetName;
+        const currentLabels = this.mergeLabels(
+            inheritedLabels,
+            (asset.labelIds ?? [])
+                .map(labelId => labelsById.get(labelId))
+                .filter((label): label is SpLabel => !!label),
+        );
+        const siteLabel =
+            (asset.assetSite?.siteId &&
+                sitesById.get(asset.assetSite.siteId)) ??
+            asset.assetSite?.area ??
+            inheritedSiteLabel;
+
+        (asset.assetLinks ?? []).forEach(link => {
+            const contextsByResource =
+                index.get(link.linkType) ??
+                new Map<string, SpTableAssetContext>();
+            const currentContext = contextsByResource.get(link.resourceId) ?? {
+                assets: [],
+                sites: [],
+                labels: [],
+                sortValue: '',
+            };
+
+            currentContext.assets = this.uniqueBy(
+                [
+                    ...currentContext.assets,
+                    {
+                        id: asset.assetId,
+                        label: topLevelAsset,
+                        tooltip: currentHierarchy.join(' / '),
+                    },
+                ],
+                item => item.id,
+            );
+            currentContext.sites = this.uniqueBy(
+                siteLabel
+                    ? [
+                          ...currentContext.sites,
+                          {
+                              id: asset.assetSite?.siteId ?? siteLabel,
+                              label: siteLabel,
+                          },
+                      ]
+                    : currentContext.sites,
+                item => item.id,
+            );
+            currentContext.labels = this.uniqueBy(
+                [...currentContext.labels, ...currentLabels],
+                label => label._id ?? label.label,
+            );
+            currentContext.sortValue = [
+                currentContext.sites.map(site => site.label).join(' '),
+                currentContext.assets
+                    .map(assetItem => assetItem.label)
+                    .join(' '),
+                currentContext.labels.map(label => label.label).join(' '),
+            ].join(' ');
+
+            contextsByResource.set(link.resourceId, currentContext);
+            index.set(link.linkType, contextsByResource);
+        });
+
+        (asset.assets ?? []).forEach(child =>
+            this.collectAssetContexts(
+                child,
+                index,
+                sitesById,
+                labelsById,
+                currentHierarchy,
+                currentLabels,
+                siteLabel,
+            ),
+        );
+    }
+
+    private getAssetContextResourceId(
+        row: T,
+        config: SpTableAssetContextConfig,
+    ): string | undefined {
+        const key = config.resourceIdKey ?? this.resourceIdKey;
+        return (row as Record<string, string | undefined>)?.[key];
+    }
+
+    private mergeLabels(base: SpLabel[], additional: SpLabel[]): SpLabel[] {
+        return this.uniqueBy(
+            [...base, ...additional],
+            label => label._id ?? label.label,
+        );
+    }
+
+    private uniqueBy<T>(
+        items: T[],
+        getKey: (item: T) => string | undefined,
+    ): T[] {
+        const seen = new Set<string>();
+        return items.filter(item => {
+            const key = getKey(item);
+            if (!key || seen.has(key)) {
+                return false;
+            }
+
+            seen.add(key);
+            return true;
+        });
     }
 }

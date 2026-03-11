@@ -33,6 +33,7 @@ import {
     ConfirmDialogComponent,
     DateFormatService,
     SpAssetBrowserService,
+    SpTableAssetContextConfig,
     SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
     SpTableComponent,
@@ -88,10 +89,16 @@ export class ChartOverviewTableComponent implements OnInit {
     dataSource = new MatTableDataSource<DataExplorerWidgetModel>();
     displayedColumns: string[] = [
         'name',
+        'assetContext',
         'lastModified',
         'createdAt',
         'actions',
     ];
+    readonly assetContextConfig: SpTableAssetContextConfig = {
+        resourceLinkType: 'chart',
+        resourceIdKey: 'elementId',
+        columnLabel: 'Asset Context',
+    };
     charts: DataExplorerWidgetModel[] = [];
     filteredCharts: DataExplorerWidgetModel[] = [];
 
