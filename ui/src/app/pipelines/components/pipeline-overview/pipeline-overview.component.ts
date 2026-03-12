@@ -116,7 +116,6 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     readonly assetContextConfig: SpTableAssetContextConfig = {
         resourceLinkType: 'pipeline',
         resourceIdKey: 'elementId',
-        columnLabel: 'Asset Context',
     };
     readonly bulkPipelineActionOptions: SpTableMultiActionOption[] = [
         { value: 'start', label: 'Start selected', icon: 'play_arrow' },

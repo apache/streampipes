@@ -107,7 +107,6 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     readonly assetContextConfig: SpTableAssetContextConfig = {
         resourceLinkType: 'dashboard',
         resourceIdKey: 'elementId',
-        columnLabel: 'Asset Context',
     };
     dashboards: Dashboard[] = [];
     filteredDashboards: Dashboard[] = [];

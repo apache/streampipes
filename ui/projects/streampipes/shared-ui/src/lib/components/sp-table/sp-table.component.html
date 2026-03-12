@@ -239,7 +239,9 @@
         @if (assetContextConfig) {
             <ng-container [matColumnDef]="assetContextColumnId">
                 <th mat-header-cell *matHeaderCellDef>
-                    {{ assetContextColumnLabel | translate }}
+                    <span class="font-bold">{{
+                        'Asset Context' | translate
+                    }}</span>
                 </th>
                 <td mat-cell *matCellDef="let element">
                     <ng-container

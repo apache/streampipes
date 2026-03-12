@@ -133,7 +133,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     readonly assetContextConfig: SpTableAssetContextConfig = {
         resourceLinkType: 'adapter',
         resourceIdKey: 'elementId',
-        columnLabel: 'Asset Context',
     };
 
     dataSource: MatTableDataSource<AdapterDescription> =

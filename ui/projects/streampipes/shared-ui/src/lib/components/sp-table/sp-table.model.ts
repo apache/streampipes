@@ -33,8 +33,6 @@ export interface SpTableMultiActionExecuteEvent<T> {
 export interface SpTableAssetContextConfig {
     resourceLinkType: string;
     resourceIdKey?: string;
-    columnId?: string;
-    columnLabel?: string;
     hideBelowWidth?: number;
 }
 

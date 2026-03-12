@@ -151,7 +151,7 @@ export class SpTableComponent<T>
     implements AfterViewInit, AfterContentInit, OnChanges, OnDestroy
 {
     readonly selectionColumnId = 'spSelection';
-    readonly defaultAssetContextColumnId = 'assetContext';
+    readonly assetContextColumnId = 'assetContext';
     readonly groupHeaderColumnId = 'spGroupHeader';
 
     @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;
@@ -337,17 +337,6 @@ export class SpTableComponent<T>
 
     get groupHeaderColumns(): string[] {
         return [this.groupHeaderColumnId];
-    }
-
-    get assetContextColumnId(): string {
-        return (
-            this.assetContextConfig?.columnId ??
-            this.defaultAssetContextColumnId
-        );
-    }
-
-    get assetContextColumnLabel(): string {
-        return this.assetContextConfig?.columnLabel ?? 'Asset Context';
     }
 
     get shouldShowGroupingControls(): boolean {

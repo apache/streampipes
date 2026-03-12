@@ -97,7 +97,6 @@ export class ChartOverviewTableComponent implements OnInit {
     readonly assetContextConfig: SpTableAssetContextConfig = {
         resourceLinkType: 'chart',
         resourceIdKey: 'elementId',
-        columnLabel: 'Asset Context',
     };
     charts: DataExplorerWidgetModel[] = [];
     filteredCharts: DataExplorerWidgetModel[] = [];
