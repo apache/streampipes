@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 
 export class User {
     email: string;

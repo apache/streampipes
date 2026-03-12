@@ -62,7 +62,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../chart-shared/services/resize-echarts.service';
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
-import { UserRole } from '../../../_enums/user-role.enum';
+import { UserRole } from '../../../core/auth/user-role.enum';
 import { ChartFieldProviderService } from '../../../chart-shared/services/chart-field-provider.service';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import {

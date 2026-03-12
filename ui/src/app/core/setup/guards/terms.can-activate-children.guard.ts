@@ -26,7 +26,7 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import { CurrentUserService } from '@streampipes/shared-ui';
-import { LoginService } from '../login/services/login.service';
+import { LoginService } from '../../../login/services/login.service';
 import { of, take } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 

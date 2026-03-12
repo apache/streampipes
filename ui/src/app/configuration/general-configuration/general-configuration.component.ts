@@ -34,7 +34,7 @@ import {
 } from '@streampipes/platform-services';
 import { Observable, zip } from 'rxjs';
 import { AvailableRolesService } from '../../services/available-roles.service';
-import { UserRole } from '../../_enums/user-role.enum';
+import { UserRole } from '../../core/auth/user-role.enum';
 import { AppConstants } from '../../services/app.constants';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {

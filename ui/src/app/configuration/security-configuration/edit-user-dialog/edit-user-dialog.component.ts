@@ -44,7 +44,7 @@ import {
     ValidatorFn,
     Validators,
 } from '@angular/forms';
-import { UserRole } from '../../../_enums/user-role.enum';
+import { UserRole } from '../../../core/auth/user-role.enum';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import { AuthService } from '../../../services/auth.service';

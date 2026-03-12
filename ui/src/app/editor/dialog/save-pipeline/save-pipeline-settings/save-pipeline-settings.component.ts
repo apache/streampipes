@@ -47,7 +47,7 @@ import {
     FormFieldComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import { UserRole } from '../../../../_enums/user-role.enum';
+import { UserRole } from '../../../../core/auth/user-role.enum';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
