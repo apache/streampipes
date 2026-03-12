@@ -77,6 +77,10 @@
                                         <button
                                             type="button"
                                             class="column-filter-trigger"
+                                            [attr.data-cy]="
+                                                'column-filter-trigger-' +
+                                                column
+                                            "
                                             [ngClass]="{
                                                 'filter-active':
                                                     hasActiveFilter(column),
@@ -200,6 +204,7 @@
             <button
                 type="button"
                 class="advanced-filter-btn"
+                data-cy="column-advanced-filter-expand-btn"
                 (click)="toggleAdvancedPanel(openFilterColumn, $event)"
             >
                 {{ getAdvancedFilterLabel(openFilterColumn) }}
@@ -368,6 +373,7 @@
                                 <button
                                     type="button"
                                     class="advanced-apply-btn"
+                                    data-cy="column-advanced-filter-apply-btn"
                                     (click)="
                                         applyAdvancedFilter(openFilterColumn)
                                     "
