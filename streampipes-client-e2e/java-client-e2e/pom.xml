@@ -71,10 +71,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <useModulePath>false</useModulePath>
-          <includes>
-            <include>**/*IT.java</include>
-            <include>**/*Test.java</include>
-          </includes>
         </configuration>
       </plugin>
       <plugin>
