@@ -148,6 +148,12 @@ export class ConnectBtns {
         return cy.dataCy('adapter-settings-next-button');
     }
 
+    public static fileInputSelected() {
+        return cy.dataCy('file-input-selected', {
+            timeout: 10000,
+        });
+    }
+
     // ========================================================================
 
     // =====================  Event Schema buttons  ==========================
