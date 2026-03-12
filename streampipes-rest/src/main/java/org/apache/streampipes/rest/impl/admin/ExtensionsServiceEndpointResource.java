@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
 import org.apache.streampipes.manager.extensions.ExtensionsResourceUrlProvider;
@@ -52,11 +53,13 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     return ok(allExtensions);
   }
 
-  @PostMapping(path = "/icon", produces = "image/png")
+  @PostMapping(path = "/icon")
   public ResponseEntity<byte[]> getExtensionItemIcon(@RequestBody ExtensionItemDescription endpointItem) {
     try {
       byte[] imageBytes = getIconImage(endpointItem);
-      return ok(imageBytes);
+      return ResponseEntity.ok()
+          .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(imageBytes)))
+          .body(imageBytes);
     } catch (IOException e) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
     }

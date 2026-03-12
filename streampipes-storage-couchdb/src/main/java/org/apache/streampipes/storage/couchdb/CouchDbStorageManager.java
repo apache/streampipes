@@ -44,6 +44,7 @@ import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateSt
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
+import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
@@ -74,6 +75,7 @@ import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTe
 import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.RefreshTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserActivationTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
@@ -188,6 +190,11 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IUserActivationTokenStorage getUserActivationTokenStorage() {
     return new UserActivationTokenStorageImpl();
+  }
+
+  @Override
+  public IRefreshTokenStorage getRefreshTokenStorage() {
+    return new RefreshTokenStorageImpl();
   }
 
   @Override

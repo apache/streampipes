@@ -26,7 +26,6 @@ import org.apache.streampipes.connect.management.management.AdapterMasterManagem
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.connect.management.management.CompactAdapterManagement;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -52,7 +51,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CompactAdapterResource extends AbstractAdapterResource<AdapterMasterManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(CompactAdapterResource.class);
-  private final AdapterGenerationSteps adapterGenerationSteps;
+  private final CompactAdapterManagement compactAdapterManagement;
   private final AdapterUpdateManagement adapterUpdateManagement;
 
   public CompactAdapterResource() {
@@ -63,7 +62,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
         new SpResourceManager().manageDataStreams(),
         AdapterMetricsManager.INSTANCE.getAdapterMetrics()
     ));
-    this.adapterGenerationSteps = new AdapterGenerationSteps();
+    this.compactAdapterManagement = new CompactAdapterManagement(new AdapterGenerationSteps().getGenerators());
     this.adapterUpdateManagement = new AdapterUpdateManagement(managementService);
   }
 
@@ -79,7 +78,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       @RequestBody CompactAdapter compactAdapter
   ) throws Exception {
 
-    var adapterDescription = getGeneratedAdapterDescription(compactAdapter);
+    var adapterDescription = compactAdapterManagement.convertToAdapterDescription(compactAdapter);
     var principalSid = getAuthenticatedUserSid();
 
     var adapterId = adapterDescription.getElementId();
@@ -136,7 +135,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
 
     var existingAdapter = managementService.getAdapter(elementId);
     if (existingAdapter != null) {
-      var adapterDescription = getGeneratedAdapterDescription(compactAdapter, existingAdapter);
+      var adapterDescription = compactAdapterManagement.convertToAdapterDescription(compactAdapter, existingAdapter);
 
       try {
         adapterUpdateManagement.updateAdapter(adapterDescription);
@@ -150,18 +149,4 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       throw new BadRequestException(String.format("Adapter with id %s not found", elementId));
     }
   }
-
-  private AdapterDescription getGeneratedAdapterDescription(CompactAdapter compactAdapter) throws Exception {
-    var generators = adapterGenerationSteps.getGenerators();
-    return new CompactAdapterManagement(generators).convertToAdapterDescription(compactAdapter);
-  }
-
-  private AdapterDescription getGeneratedAdapterDescription(
-      CompactAdapter compactAdapter,
-      AdapterDescription existingAdapter
-  ) throws Exception {
-    var generators = adapterGenerationSteps.getGenerators();
-    return new CompactAdapterManagement(generators).convertToAdapterDescription(compactAdapter, existingAdapter);
-  }
-
 }

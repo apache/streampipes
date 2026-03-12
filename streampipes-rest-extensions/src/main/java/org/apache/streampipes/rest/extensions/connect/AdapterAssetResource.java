@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
+import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
 import org.apache.streampipes.extensions.management.connect.ConnectWorkerDescriptionProvider;
 import org.apache.streampipes.model.message.Notifications;
@@ -66,11 +67,14 @@ public class AdapterAssetResource extends AbstractSharedRestInterface {
 
   }
 
-  @GetMapping(path = "/{id}/assets/icon", produces = MediaType.IMAGE_PNG_VALUE)
+  @GetMapping(path = "/{id}/assets/icon")
   public ResponseEntity<byte[]> getIconAsset(@PathVariable("id") String elementId) throws IOException {
     var adapterConfig = this.connectWorkerDescriptionProvider.getAdapterConfiguration(elementId);
     if (adapterConfig.isPresent()) {
-      return ok(adapterConfig.get().getAssetResolver().getAsset(GlobalStreamPipesConstants.STD_ICON_NAME));
+      byte[] icon = adapterConfig.get().getAssetResolver().getAsset(GlobalStreamPipesConstants.STD_ICON_NAME);
+      return ResponseEntity.ok()
+          .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(icon)))
+          .body(icon);
     } else {
       throw new IOException("Could not find adapter");
     }

@@ -20,30 +20,20 @@ import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     CanActivateChild,
-    Router,
+    GuardResult,
+    MaybeAsync,
     RouterStateSnapshot,
 } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthCanActivateChildrenGuard implements CanActivateChild {
-    constructor(
-        private authService: AuthService,
-        private router: Router,
-    ) {}
+    constructor(private authService: AuthService) {}
 
     canActivateChild(
         childRoute: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
-    ): boolean {
-        if (this.authService.authenticated()) {
-            return true;
-        }
-        this.authService.logout();
-        this.router.navigate(['/login'], {
-            queryParams: { returnUrl: state.url },
-        });
-
-        return false;
+    ): MaybeAsync<GuardResult> {
+        return this.authService.ensureAuthenticated(state.url);
     }
 }

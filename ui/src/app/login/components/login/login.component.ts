@@ -41,6 +41,7 @@ import {
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -59,6 +60,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatFormField,
         MatInput,
         MatButton,
+        MatCheckbox,
         MatProgressSpinner,
         SpAlertBannerComponent,
         RouterLink,
@@ -116,15 +118,19 @@ export class LoginComponent extends BaseLoginPageDirective {
             'password',
             new UntypedFormControl('', Validators.required),
         );
+        this.parentForm.addControl('rememberMe', new UntypedFormControl(false));
 
         this.parentForm.valueChanges.subscribe(v => {
             this.credentials.username = v.username;
             this.credentials.password = v.password;
+            this.credentials.rememberMe = v.rememberMe;
         });
+        this.credentials.rememberMe = false;
         this.returnUrl = this.route.snapshot.queryParams.returnUrl || '';
     }
 
     doOAuthLogin(provider: string): void {
-        window.location.href = `/streampipes-backend/oauth2/authorization/${provider}?redirect_uri=${this.loginSettings.oAuthSettings.redirectUri}/%23/login`;
+        const rememberMe = !!this.parentForm?.get('rememberMe')?.value;
+        window.location.href = `/streampipes-backend/oauth2/authorization/${provider}?redirect_uri=${this.loginSettings.oAuthSettings.redirectUri}/%23/login&remember_me=${rememberMe}`;
     }
 }

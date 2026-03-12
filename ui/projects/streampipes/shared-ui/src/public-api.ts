@@ -62,8 +62,11 @@ export * from './lib/components/feature-card-host/feature-card-meta-section/feat
 export * from './lib/components/feature-card-host/feature-card-meta-creation/feature-card-meta-creation.component';
 
 export * from './lib/models/sp-navigation.model';
+export * from './lib/models/sp-configuration-section.model';
 
 export * from './lib/services/breadcrumb.service';
+export * from './lib/services/configuration-sections.service';
+export * from './lib/services/configuration-sections.token';
 export * from './lib/services/jwt-token-storage.service';
 export * from './lib/services/current-user.service';
 export * from './lib/services/echarts-toolbox.service';

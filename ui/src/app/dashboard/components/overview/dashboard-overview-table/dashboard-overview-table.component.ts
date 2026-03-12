@@ -210,9 +210,6 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     }
 
     applyDashboardFilters(elementIds: Set<string>): void {
-        if (this.assetFilterService.hasNoAssetFilterPermission()) {
-            elementIds = new Set<string>();
-        }
         if (elementIds == undefined) {
             this.filteredDashboards = [];
         } else if (elementIds.size == 0) {

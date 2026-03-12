@@ -23,11 +23,8 @@ import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import java.util.List;
-
 public class CoreConfigurationStorageImpl extends AbstractDao<SpCoreConfiguration>
     implements ISpCoreConfigurationStorage {
-
 
   public CoreConfigurationStorageImpl() {
     super(Utils::getCouchDbGeneralConfigStorage, SpCoreConfiguration.class);
@@ -35,12 +32,7 @@ public class CoreConfigurationStorageImpl extends AbstractDao<SpCoreConfiguratio
 
   @Override
   public boolean exists() {
-    return !findAll().isEmpty();
-  }
-
-  @Override
-  public List<SpCoreConfiguration> getAll() {
-    return findAll();
+    return get() != null;
   }
 
   @Override

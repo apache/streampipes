@@ -194,9 +194,6 @@ export class ChartOverviewTableComponent implements OnInit {
     }
 
     applyChartFilters(elementIds: Set<string>): void {
-        if (this.assetFilterService.hasNoAssetFilterPermission()) {
-            elementIds = new Set<string>();
-        }
         if (elementIds === undefined) {
             this.filteredCharts = [];
         } else if (elementIds.size === 0) {

@@ -288,7 +288,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     getIconUrl(adapter: AdapterDescription) {
-        if (adapter.includedAssets.length > 0) {
+        if (adapter.includedAssets?.some(asset => asset.startsWith('icon.'))) {
             return (
                 this.pipelineElementAssetService.getAssetUrl(adapter.appId) +
                 '/icon'
@@ -360,9 +360,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {
-        if (this.assetFilterService.hasNoAssetFilterPermission()) {
-            elementIds = new Set<string>();
-        }
         this.currentFilterIds = elementIds;
         this.filteredAdapters = this.adapterFilter
             .transform(this.existingAdapters, this.currentFilter)

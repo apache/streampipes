@@ -78,12 +78,6 @@ public class RoleManager {
             DefaultPrivilege.Constants.PRIVILEGE_READ_LABELS_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_WRITE_LABELS_VALUE
         )),
-        Role.createDefaultRole(DefaultRole.Constants.ROLE_ASSET_USER_VALUE, "Asset User", List.of(
-            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE,
-            DefaultPrivilege.Constants.PRIVILEGE_READ_ASSETS_VALUE,
-            DefaultPrivilege.Constants.PRIVILEGE_READ_LABELS_VALUE,
-            DefaultPrivilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE
-        )),
         Role.createDefaultRole(DefaultRole.Constants.ROLE_DATA_EXPLORER_ADMIN_VALUE, "Data Explorer Admin", List.of(
             DefaultPrivilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE,
             DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE,

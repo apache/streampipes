@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.all.jvm;
 import org.apache.streampipes.connect.GeneralAdaptersExtensionModuleExport;
 import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
 import org.apache.streampipes.connectors.ros.RosConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.camel.azure.CamelAzureConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.influx.InfluxConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.kafka.KafkaConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.mqtt.MqttConnectorsModuleExport;
@@ -68,6 +69,7 @@ public class AllExtensionsInit extends StreamPipesExtensionsServiceBase {
             new GeneralAdaptersExtensionModuleExport(),
             new IIoTAdaptersExtensionModuleExport(),
 
+            new CamelAzureConnectorsModuleExport(),
             new InfluxConnectorsModuleExport(),
             new KafkaConnectorsModuleExport(),
             new MqttConnectorsModuleExport(),
