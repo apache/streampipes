@@ -132,7 +132,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     private dialogService = inject(DialogService);
 
     ngOnInit() {
-        this.userSub = this.currentUserService.user$.subscribe(user => {
+        this.userSub = this.currentUserService.user$.subscribe(() => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );
