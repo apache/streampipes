@@ -16,24 +16,38 @@
  *
  */
 
-import { inject, Injectable } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
-    CanActivate,
-    GuardResult,
-    MaybeAsync,
+    Router,
     RouterStateSnapshot,
+    UrlTree,
 } from '@angular/router';
+import { LoginService } from '../../../login/services/login.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class AuthCanActivateGuard implements CanActivate {
-    private authService = inject(AuthService);
+export class RegistrationAllowedCanActivateGuard {
+    constructor(
+        private router: Router,
+        private loginService: LoginService,
+    ) {}
 
     canActivate(
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
-    ): MaybeAsync<GuardResult> {
-        return this.authService.ensureAuthenticated(state.url);
+    ):
+        | Observable<boolean | UrlTree>
+        | Promise<boolean | UrlTree>
+        | boolean
+        | UrlTree {
+        return this.loginService.fetchLoginSettings().pipe(
+            map(config => {
+                return config.allowSelfRegistration
+                    ? true
+                    : this.router.parseUrl('register');
+            }),
+        );
     }
 }

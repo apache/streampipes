@@ -36,7 +36,7 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../pipelines/pipelines.breadcrumb';
-import { UserPrivilege } from '../_enums/user-privilege.enum';
+import { UserPrivilege } from '../core/auth/user-privilege.enum';
 import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';

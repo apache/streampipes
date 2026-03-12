@@ -19,21 +19,37 @@
 import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
-    CanActivateChild,
-    GuardResult,
-    MaybeAsync,
+    Router,
     RouterStateSnapshot,
+    UrlTree,
 } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { LoginService } from '../../../login/services/login.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class AuthCanActivateChildrenGuard implements CanActivateChild {
-    constructor(private authService: AuthService) {}
+export class RestorePasswordAllowedCanActivateGuard {
+    constructor(
+        private router: Router,
+        private loginService: LoginService,
+    ) {}
 
-    canActivateChild(
-        childRoute: ActivatedRouteSnapshot,
+    canActivate(
+        route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
-    ): MaybeAsync<GuardResult> {
-        return this.authService.ensureAuthenticated(state.url);
+    ):
+        | Observable<boolean | UrlTree>
+        | Promise<boolean | UrlTree>
+        | boolean
+        | UrlTree {
+        return this.loginService
+            .fetchLoginSettings()
+            .pipe(
+                map(config =>
+                    config.allowPasswordRecovery
+                        ? true
+                        : this.router.parseUrl('login'),
+                ),
+            );
     }
 }
