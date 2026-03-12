@@ -16,30 +16,26 @@
  *
  */
 
-package org.apache.streampipes.manager.migration;
+package org.apache.streampipes.manager.api.extensions.param;
 
-import java.util.ArrayList;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationType;
+
 import java.util.List;
 
-public enum AdapterDescriptionMigration093Provider {
+public class ExtensionInstanceHealthCheckParameters implements ExtensionServiceOperationParameters {
 
-  INSTANCE;
-
-  private final List<String> appIdsToReinstall;
-
-  AdapterDescriptionMigration093Provider() {
-    this.appIdsToReinstall = new ArrayList<>();
+  @Override
+  public String toUrl(String baseUrl) {
+    return String.join("/", List.of(baseUrl, "/health"));
   }
 
-  public void addAppId(String appId) {
-    this.appIdsToReinstall.add(appId);
+  @Override
+  public String toTopic(String topicPrefix) {
+    return "";
   }
 
-  public List<String> getAppIdsToReinstall() {
-    return appIdsToReinstall;
-  }
-
-  public boolean hasAppIdsToReinstall() {
-    return !appIdsToReinstall.isEmpty();
+  @Override
+  public ExtensionServiceOperationType getOperationType() {
+    return ExtensionServiceOperationType.EXTENSION_INSTANCE_HEALTH;
   }
 }

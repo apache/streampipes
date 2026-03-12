@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -56,16 +57,19 @@ public class DescriptionManagement {
     }
   }
 
-  public String getAssets(String baseUrl) throws AdapterException {
-    return workerRestClient.getAssets(baseUrl);
+  public String getAssets(SpServiceRegistration service,
+                          String appId) throws AdapterException {
+    return workerRestClient.getAssets(service, appId);
   }
 
-  public byte[] getIconAsset(String baseUrl) throws AdapterException {
-    return workerRestClient.getIconAsset(baseUrl);
+  public byte[] getIconAsset(SpServiceRegistration service,
+                             String appId) throws AdapterException {
+    return workerRestClient.getIconAsset(service, appId);
   }
 
-  public String getDocumentationAsset(String baseUrl) throws AdapterException {
-    return workerRestClient.getDocumentationAsset(baseUrl);
+  public String getDocumentationAsset(SpServiceRegistration service,
+                                      String appId) throws AdapterException {
+    return workerRestClient.getDocumentationAsset(service, appId);
   }
 
   private boolean isAdapterUsed(AdapterDescription adapter) {

@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.execution;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.util.AuthTokenUtils;
 import org.apache.streampipes.resource.management.SpResourceManager;
 
@@ -32,98 +33,102 @@ import java.io.IOException;
 public class HttpExtensionServiceRequestManager implements ExtensionServiceRequestManager {
 
   @Override
-  public ExtensionServiceOperationResult requestContainerProvidedOptions(String url,
+  public ExtensionServiceOperationResult requestContainerProvidedOptions(ExtensionServiceRequestTarget target,
                                                                          String payload) throws IOException {
-    return post(url, AuthTokenUtils.getAuthTokenForCurrentUser(), payload);
+    return post(
+        makeUrl(target),
+        AuthTokenUtils.getAuthTokenForCurrentUser(),
+        payload
+    );
   }
 
   @Override
-  public ExtensionServiceOperationResult requestMigration(String url,
+  public ExtensionServiceOperationResult requestMigration(ExtensionServiceRequestTarget target,
                                                           String payload) throws IOException {
-    return post(url, AuthTokenUtils.getAuthTokenForCurrentUser(), payload);
+    return post(makeUrl(target), AuthTokenUtils.getAuthTokenForCurrentUser(), payload);
   }
 
   @Override
-  public ExtensionServiceOperationResult requestDescriptionUpdate(String requestUrl) throws IOException {
-    return get(requestUrl, AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()));
+  public ExtensionServiceOperationResult requestDescriptionUpdate(ExtensionServiceRequestTarget target) throws IOException {
+    return get(makeUrl(target), AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()));
   }
 
   @Override
-  public ExtensionServiceOperationResult requestExtensionDescription(String descriptionUrl) throws IOException {
-    return get(descriptionUrl, AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()));
+  public ExtensionServiceOperationResult requestExtensionDescription(ExtensionServiceRequestTarget target) throws IOException {
+    return get(makeUrl(target), AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()));
   }
 
   @Override
-  public ExtensionServiceOperationResult requestFunctionStop(String endpoint) throws IOException {
-    return post(endpoint, AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()), null);
+  public ExtensionServiceOperationResult requestFunctionStop(ExtensionServiceRequestTarget target) throws IOException {
+    return post(makeUrl(target), AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()), null);
   }
 
   @Override
-  public ExtensionServiceOperationResult requestAdapterStateChange(String url,
+  public ExtensionServiceOperationResult requestAdapterStateChange(ExtensionServiceRequestTarget target,
                                                                    String elementId,
                                                                    String payload) throws IOException {
-    return post(url, AuthTokenUtils.getAuthToken(elementId), payload);
+    return post(makeUrl(target), AuthTokenUtils.getAuthToken(elementId), payload);
   }
 
   @Override
-  public ExtensionServiceOperationResult requestRuntimeOptions(String url,
+  public ExtensionServiceOperationResult requestRuntimeOptions(ExtensionServiceRequestTarget target,
                                                                String payload) throws IOException {
-    return post(url, AuthTokenUtils.getAuthTokenForCurrentUser(), payload);
+    return post(makeUrl(target), AuthTokenUtils.getAuthTokenForCurrentUser(), payload);
   }
 
   @Override
-  public ExtensionServiceOperationResult requestSampleData(String workerUrl,
+  public ExtensionServiceOperationResult requestSampleData(ExtensionServiceRequestTarget target,
                                                            String payload) throws IOException {
-    return post(workerUrl, AuthTokenUtils.getAuthTokenForCurrentUser(), payload);
+    return post(makeUrl(target), AuthTokenUtils.getAuthTokenForCurrentUser(), payload);
   }
 
   @Override
-  public ExtensionServiceOperationResult requestExtensionInstanceHealth(String url) throws IOException {
-    return get(url, AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()));
+  public ExtensionServiceOperationResult requestExtensionInstanceHealth(ExtensionServiceRequestTarget target) throws IOException {
+    return get(makeUrl(target), AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()));
   }
 
   @Override
-  public ExtensionServiceOperationResult requestServiceHealth(String url) throws IOException {
-    return get(url, AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()));
+  public ExtensionServiceOperationResult requestServiceHealth(ExtensionServiceRequestTarget target) throws IOException {
+    return get(makeUrl(target), AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()));
   }
 
   @Override
-  public ExtensionServiceOperationResult requestPipelineElementInvocation(String url,
+  public ExtensionServiceOperationResult requestPipelineElementInvocation(ExtensionServiceRequestTarget target,
                                                                           String pipelineId,
                                                                           String payload) throws IOException {
-    return post(url, AuthTokenUtils.getAuthToken(pipelineId), payload);
+    return post(makeUrl(target), AuthTokenUtils.getAuthToken(pipelineId), payload);
   }
 
   @Override
-  public ExtensionServiceOperationResult requestPipelineElementDetach(String url,
+  public ExtensionServiceOperationResult requestPipelineElementDetach(ExtensionServiceRequestTarget target,
                                                                       String pipelineId) throws IOException {
-    return delete(url, AuthTokenUtils.getAuthToken(pipelineId));
+    return delete(makeUrl(target), AuthTokenUtils.getAuthToken(pipelineId));
   }
 
   @Override
-  public ExtensionServiceOperationResult requestPipelineElementAssets(String url) throws IOException {
-    return getWithoutAcceptHeader(url, null);
+  public ExtensionServiceOperationResult requestPipelineElementAssets(ExtensionServiceRequestTarget target) throws IOException {
+    return getWithoutAcceptHeader(makeUrl(target), null);
   }
 
   @Override
-  public ExtensionServiceOperationResult requestAdapterAssets(String url) throws IOException {
-    return getWithoutAcceptHeader(url, null);
+  public ExtensionServiceOperationResult requestAdapterAssets(ExtensionServiceRequestTarget target) throws IOException {
+    return getWithoutAcceptHeader(makeUrl(target), null);
   }
 
   @Override
-  public ExtensionServiceOperationResult requestAdapterIconAsset(String url) throws IOException {
-    return getWithoutAcceptHeader(url, null);
+  public ExtensionServiceOperationResult requestAdapterIconAsset(ExtensionServiceRequestTarget target) throws IOException {
+    return getWithoutAcceptHeader(makeUrl(target), null);
   }
 
   @Override
-  public ExtensionServiceOperationResult requestAdapterDocumentationAsset(String url) throws IOException {
-    return getWithoutAcceptHeader(url, null);
+  public ExtensionServiceOperationResult requestAdapterDocumentationAsset(ExtensionServiceRequestTarget target) throws IOException {
+    return getWithoutAcceptHeader(makeUrl(target), null);
   }
 
   @Override
-  public ExtensionServiceOperationResult requestOutputSchema(String url,
+  public ExtensionServiceOperationResult requestOutputSchema(ExtensionServiceRequestTarget target,
                                                              String payload) throws IOException {
-    return post(url, null, payload);
+    return post(makeUrl(target), null, payload);
   }
 
   private ExtensionServiceOperationResult get(String url,
@@ -205,5 +210,9 @@ public class HttpExtensionServiceRequestManager implements ExtensionServiceReque
 
   private String getServiceAdminSid() {
     return new SpResourceManager().manageUsers().getServiceAdmin().getPrincipalId();
+  }
+
+  private String makeUrl(ExtensionServiceRequestTarget target) {
+    return target.params().toUrl(target.baseUrl());
   }
 }

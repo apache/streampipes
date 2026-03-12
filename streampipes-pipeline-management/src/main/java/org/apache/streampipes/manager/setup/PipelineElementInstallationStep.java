@@ -17,15 +17,17 @@
  */
 package org.apache.streampipes.manager.setup;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.extensions.ExtensionItemInstaller;
-import org.apache.streampipes.manager.extensions.ExtensionsResourceUrlProvider;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class PipelineElementInstallationStep extends InstallationStep {
 
@@ -45,12 +47,16 @@ public class PipelineElementInstallationStep extends InstallationStep {
   @Override
   public void install() {
     var installationReq = ExtensionItemInstallationRequest.fromDescription(extensionItem, true);
-    var resourceUrlProvider = new ExtensionsResourceUrlProvider(SpServiceDiscovery.getServiceDiscovery());
     try {
-      new ExtensionItemInstaller(resourceUrlProvider, extensionServiceRequestManager)
+      var service = new ExtensionsServiceEndpointGenerator().selectService(
+          installationReq.appId(),
+          SpServiceUrlProvider.valueOf(installationReq.serviceTagPrefix().name()),
+          Set.of()
+      );
+      new ExtensionItemInstaller(service, extensionServiceRequestManager)
           .installExtension(installationReq, principalSid);
       logSuccess(getTitle());
-    } catch (SepaParseException | IOException e) {
+    } catch (SepaParseException | IOException | NoServiceEndpointsAvailableException e) {
       logFailure(getTitle());
     }
   }

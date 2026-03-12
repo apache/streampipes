@@ -15,32 +15,34 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api;
 
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+package org.apache.streampipes.manager.api.extensions.param;
+
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationType;
 
 import java.util.List;
-import java.util.Set;
 
-public interface ISpServiceDiscovery {
+public class AdapterAssetParameters implements ExtensionServiceOperationParameters {
 
-  /**
-   * Get custom service tags
-   *
-   * @return set of service tags
-   */
-  Set<SpServiceTag> getCustomServiceTags(boolean restrictToHealthy);
+  private final String appId;
 
-  List<SpServiceRegistration> getService(boolean restrictToHealthy);
+  public AdapterAssetParameters(String appId) {
+    this.appId = appId;
+  }
 
-  List<SpServiceRegistration> getService(String serviceGroup,
-                                         boolean restrictToHealthy,
-                                         List<String> filterByTags);
+  @Override
+  public String toUrl(String baseUrl) {
+    return String.join("/",
+        List.of(baseUrl, "api", "v1", "worker", "adapters", appId, "assets"));
+  }
 
-  /**
-   * Get all service
-   * @return list of services
-   */
-  List<SpServiceRegistration> findAll();
+  @Override
+  public String toTopic(String topicPrefix) {
+    return "";
+  }
+
+  @Override
+  public ExtensionServiceOperationType getOperationType() {
+    return ExtensionServiceOperationType.ADAPTER_ASSETS;
+  }
 }

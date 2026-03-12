@@ -16,15 +16,25 @@
  *
  */
 
-package org.apache.streampipes.manager.api.extensions;
+package org.apache.streampipes.manager.api.extensions.param;
 
-import org.apache.streampipes.model.extensions.ExtensionItemDescription;
-import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationType;
 
-public interface IExtensionsResourceUrlProvider {
+import java.util.List;
 
-  String getDescriptionUrl(ExtensionItemInstallationRequest installationReq);
+public class FunctionStopParameters implements ExtensionServiceOperationParameters {
+  @Override
+  public String toUrl(String baseUrl) {
+    return String.join("/", List.of(baseUrl, "api", "v1", "functions", "stop"));
+  }
 
-  String getIconUrl(ExtensionItemDescription endpointItem);
+  @Override
+  public String toTopic(String topicPrefix) {
+    return "";
+  }
 
+  @Override
+  public ExtensionServiceOperationType getOperationType() {
+    return ExtensionServiceOperationType.FUNCTION_STOP;
+  }
 }

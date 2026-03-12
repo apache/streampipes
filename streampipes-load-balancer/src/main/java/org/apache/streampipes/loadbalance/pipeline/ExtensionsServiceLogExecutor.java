@@ -25,6 +25,7 @@ import org.apache.streampipes.commons.prometheus.pipelines.PipelineFlowStats;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.service.ExtensionServiceExecutions;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
@@ -54,11 +55,12 @@ public class ExtensionsServiceLogExecutor implements Runnable {
   }
 
   public void triggerUpdate() {
-    List<String> serviceEndpoints = getActiveExtensionsEndpoints();
+    List<SpServiceRegistration> serviceEndpoints = getActiveExtensionsEndpoints();
 
     serviceEndpoints.forEach(serviceEndpoint -> {
       try {
-        String response = makeRequest(serviceEndpoint).execute().returnContent().asString();
+        var url = serviceEndpoint.getServiceUrl();
+        String response = makeRequest(url).execute().returnContent().asString();
         SpEndpointMonitoringInfo monitoringInfo = parseLogResponse(response);
         ExtensionsLogProvider.INSTANCE.addMonitoringInfos(monitoringInfo);
       } catch (IOException e) {
@@ -121,8 +123,8 @@ public class ExtensionsServiceLogExecutor implements Runnable {
     return ExtensionServiceExecutions.extServiceGetRequest(makeLogUrl(serviceEndpointUrl));
   }
 
-  private List<String> getActiveExtensionsEndpoints() {
-    return SpServiceDiscovery.getServiceDiscovery().getServiceEndpoints(DefaultSpServiceTypes.EXT,
+  private List<SpServiceRegistration> getActiveExtensionsEndpoints() {
+    return SpServiceDiscovery.getServiceDiscovery().getService(DefaultSpServiceTypes.EXT,
                                                                         true, List.of());
   }
 

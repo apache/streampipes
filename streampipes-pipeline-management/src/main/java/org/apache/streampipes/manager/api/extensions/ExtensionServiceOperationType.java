@@ -18,17 +18,22 @@
 
 package org.apache.streampipes.manager.api.extensions;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
-
-import java.util.Set;
-
-public interface IExtensionsServiceEndpointGenerator {
-
-  SpServiceRegistration selectService(String appId,
-                                      SpServiceUrlProvider spServiceUrlProvider,
-                                      Set<SpServiceTag> customServiceTags)
-      throws NoServiceEndpointsAvailableException;
+public enum ExtensionServiceOperationType {
+  CONTAINER_PROVIDED_OPTIONS,
+  MIGRATION,
+  DESCRIPTION_UPDATE,
+  EXTENSION_DESCRIPTION,
+  FUNCTION_STOP,
+  ADAPTER_STATE_CHANGE,
+  RUNTIME_OPTIONS,
+  SAMPLE_DATA,
+  EXTENSION_INSTANCE_HEALTH,
+  SERVICE_HEALTH,
+  PIPELINE_ELEMENT_INVOCATION,
+  PIPELINE_ELEMENT_DETACH,
+  PIPELINE_ELEMENT_ASSETS,
+  ADAPTER_ASSETS,
+  ADAPTER_ICON_ASSET,
+  ADAPTER_DOCUMENTATION_ASSET,
+  OUTPUT_SCHEMA;
 }

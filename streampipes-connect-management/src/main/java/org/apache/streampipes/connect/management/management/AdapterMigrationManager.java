@@ -52,14 +52,14 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
   }
 
   @Override
-  public void handleMigrations(SpServiceRegistration extensionsServiceConfig,
+  public void handleMigrations(SpServiceRegistration service,
                                List<ModelMigratorConfig> migrationConfigs) {
 
     LOG.info("Received {} migrations from extension service {}.",
         migrationConfigs.size(),
-        extensionsServiceConfig.getServiceUrl());
+        service.getServiceUrl());
     LOG.info("Updating adapter descriptions by replacement...");
-    updateDescriptions(migrationConfigs, extensionsServiceConfig.getServiceUrl());
+    updateDescriptions(migrationConfigs, service);
     LOG.info("Adapter descriptions are up to date.");
 
     LOG.info("Checking migrations for existing adapters in StreamPipes Core ...");
@@ -81,17 +81,14 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
           var migrationResult = performMigration(
               adapterDescription,
               migrationConfig,
-              String.format("%s/%s/adapter",
-                  extensionsServiceConfig.getServiceUrl(),
-                  MIGRATION_ENDPOINT
-              )
-          );
+              service,
+              "adapter");
 
           if (migrationResult.success()) {
             LOG.info("Migration successfully performed by extensions service. Updating adapter description ...");
             LOG.debug(
                 "Migration was performed by extensions service '{}'",
-                extensionsServiceConfig.getServiceUrl());
+                service.getServiceUrl());
 
             adapterStorage.updateElement(migrationResult.element());
             LOG.info("Adapter description is updated - Migration successfully completed at Core.");
@@ -102,14 +99,14 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
                 migrationResult.element().getElementId()
             );
             try {
-              workerRestClient.stopStreamAdapter(extensionsServiceConfig.getServiceUrl(), adapterDescription);
+              workerRestClient.stopStreamAdapter(service, adapterDescription);
             } catch (AdapterException e) {
               LOG.error("Stopping adapter failed: {}", StringUtils.join(e.getStackTrace(), "\n"));
             }
             LOG.info("Adapter successfully stopped.");
           }
         } else {
-          LOG.info(
+          LOG.debug(
               "Migration is not applicable for adapter '{}' because of a version mismatch - "
                   + "adapter version: '{}',  migration starts at: '{}'",
               adapterDescription.getElementId(),

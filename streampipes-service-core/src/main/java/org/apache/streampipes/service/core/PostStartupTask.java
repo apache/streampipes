@@ -87,6 +87,7 @@ public class PostStartupTask implements Runnable {
                     workerRestClient
                 )
             ),
+            StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
             extensionServiceRequestManager
         )
     );

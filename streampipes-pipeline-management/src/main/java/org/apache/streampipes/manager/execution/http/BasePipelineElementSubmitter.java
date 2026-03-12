@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
@@ -63,15 +62,8 @@ public abstract class BasePipelineElementSubmitter {
     }
   }
 
-  protected String getInvocationUrl(InvocableStreamPipesEntity pipelineElement) {
-    return ExtensionsServiceEndpointUtils
-        .getPipelineElementType(pipelineElement)
-        .getInvocationUrl(pipelineElement.getSelectedEndpointUrl(), pipelineElement.getAppId());
-  }
-
   protected PipelineElementStatus performDetach(InvocableStreamPipesEntity pipelineElement) {
-    String endpointUrl = getInvocationUrl(pipelineElement) + pipelineElement.getDetachPath();
-    return new DetachHttpRequest().execute(pipelineElement, endpointUrl, this.pipelineId);
+    return new DetachExtensionRequest().execute(pipelineElement, this.pipelineId);
   }
 
   protected abstract PipelineElementStatus submitElement(InvocableStreamPipesEntity pipelineElement);

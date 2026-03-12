@@ -19,6 +19,8 @@ package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.param.RequestOutputSchemaParameters;
 import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.SpDataStream;
@@ -33,6 +35,7 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<CustomTransformOutputStrategy> {
 
@@ -66,11 +69,20 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   private EventSchema makeRequest() {
     try {
       String httpRequestBody = JacksonSerializer.getObjectMapper().writeValueAsString(dataProcessorInvocation);
-      String endpointUrl = new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(
+      var service = new ExtensionsServiceEndpointGenerator().selectService(
           dataProcessorInvocation.getAppId(),
-          SpServiceUrlProvider.DATA_PROCESSOR
+          SpServiceUrlProvider.DATA_PROCESSOR,
+          Set.of()
       );
-      var response = requestManager.requestOutputSchema(endpointUrl + "/output", httpRequestBody);
+      var requestTarget = new ExtensionServiceRequestTarget(
+          service.getServiceUrl(),
+          service.getSvcId(),
+          new RequestOutputSchemaParameters(
+              SpServiceUrlProvider.DATA_PROCESSOR,
+              dataProcessorInvocation.getAppId()
+              )
+      );
+      var response = requestManager.requestOutputSchema(requestTarget, httpRequestBody);
       return handleResponse(response);
     } catch (Exception e) {
       e.printStackTrace();

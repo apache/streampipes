@@ -21,14 +21,11 @@ package org.apache.streampipes.rest.impl.admin;
 import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
-import org.apache.streampipes.manager.extensions.ExtensionsResourceUrlProvider;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
-import org.apache.http.client.fluent.Request;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -69,10 +66,12 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     if (extensionItemDescription.isInstalled()) {
       return AssetManager.getAssetIcon(extensionItemDescription.getAppId());
     } else {
-      var iconUrl = new ExtensionsResourceUrlProvider(
-          SpServiceDiscovery.getServiceDiscovery()
-      ).getIconUrl(extensionItemDescription);
-      return Request.Get(iconUrl).execute().returnContent().asBytes();
+      return null;
+      // TODO do not load icons from extension service
+//      var iconUrl = new ExtensionsResourceUrlProvider(
+//          SpServiceDiscovery.getServiceDiscovery()
+//      ).getIconUrl(extensionItemDescription);
+//      return Request.Get(iconUrl).execute().returnContent().asBytes();
     }
   }
 }

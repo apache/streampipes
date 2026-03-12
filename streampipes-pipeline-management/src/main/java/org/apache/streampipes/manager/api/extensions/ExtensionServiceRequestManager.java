@@ -22,47 +22,50 @@ import java.io.IOException;
 
 public interface ExtensionServiceRequestManager {
 
-  ExtensionServiceOperationResult requestContainerProvidedOptions(String url,
+
+  ExtensionServiceOperationResult requestContainerProvidedOptions(ExtensionServiceRequestTarget target,
                                                                   String payload) throws IOException;
 
-  ExtensionServiceOperationResult requestMigration(String url,
+  ExtensionServiceOperationResult requestMigration(ExtensionServiceRequestTarget target,
                                                    String payload) throws IOException;
 
-  ExtensionServiceOperationResult requestDescriptionUpdate(String requestUrl) throws IOException;
+  ExtensionServiceOperationResult requestDescriptionUpdate(ExtensionServiceRequestTarget target) throws IOException;
 
-  ExtensionServiceOperationResult requestExtensionDescription(String descriptionUrl) throws IOException;
+  ExtensionServiceOperationResult requestExtensionDescription(ExtensionServiceRequestTarget target) throws IOException;
 
-  ExtensionServiceOperationResult requestFunctionStop(String endpoint) throws IOException;
 
-  ExtensionServiceOperationResult requestAdapterStateChange(String url,
+  ExtensionServiceOperationResult requestFunctionStop(ExtensionServiceRequestTarget target) throws IOException;
+
+  ExtensionServiceOperationResult requestAdapterStateChange(ExtensionServiceRequestTarget target,
                                                             String elementId,
                                                             String payload) throws IOException;
 
-  ExtensionServiceOperationResult requestRuntimeOptions(String url,
+  ExtensionServiceOperationResult requestRuntimeOptions(ExtensionServiceRequestTarget target,
                                                         String payload) throws IOException;
 
-  ExtensionServiceOperationResult requestSampleData(String workerUrl,
+  ExtensionServiceOperationResult requestSampleData(ExtensionServiceRequestTarget target,
                                                     String payload) throws IOException;
 
-  ExtensionServiceOperationResult requestExtensionInstanceHealth(String url) throws IOException;
+  ExtensionServiceOperationResult requestExtensionInstanceHealth(ExtensionServiceRequestTarget target) throws IOException;
 
-  ExtensionServiceOperationResult requestServiceHealth(String url) throws IOException;
+  ExtensionServiceOperationResult requestServiceHealth(ExtensionServiceRequestTarget target) throws IOException;
 
-  ExtensionServiceOperationResult requestPipelineElementInvocation(String url,
+  ExtensionServiceOperationResult requestPipelineElementInvocation(ExtensionServiceRequestTarget target,
                                                                    String pipelineId,
                                                                    String payload) throws IOException;
 
-  ExtensionServiceOperationResult requestPipelineElementDetach(String url,
+  ExtensionServiceOperationResult requestPipelineElementDetach(ExtensionServiceRequestTarget target,
                                                                String pipelineId) throws IOException;
 
-  ExtensionServiceOperationResult requestPipelineElementAssets(String url) throws IOException;
+  ExtensionServiceOperationResult requestPipelineElementAssets(ExtensionServiceRequestTarget target) throws IOException;
 
-  ExtensionServiceOperationResult requestAdapterAssets(String url) throws IOException;
+  ExtensionServiceOperationResult requestAdapterAssets(ExtensionServiceRequestTarget target) throws IOException;
 
-  ExtensionServiceOperationResult requestAdapterIconAsset(String url) throws IOException;
+  ExtensionServiceOperationResult requestAdapterIconAsset(ExtensionServiceRequestTarget target) throws IOException;
 
-  ExtensionServiceOperationResult requestAdapterDocumentationAsset(String url) throws IOException;
 
-  ExtensionServiceOperationResult requestOutputSchema(String url,
+  ExtensionServiceOperationResult requestAdapterDocumentationAsset(ExtensionServiceRequestTarget target) throws IOException;
+
+  ExtensionServiceOperationResult requestOutputSchema(ExtensionServiceRequestTarget target,
                                                       String payload) throws IOException;
 }

@@ -20,9 +20,12 @@ package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.param.MigrationParameters;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.migration.MigrationResult;
@@ -40,14 +43,12 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.manager.migration.MigrationUtils.getRequestUrl;
+import static org.apache.streampipes.manager.migration.MigrationUtils.getRequestTarget;
 
 public abstract class AbstractMigrationManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractMigrationManager.class);
   private final ExtensionServiceRequestManager extensionRequestManager;
-
-  protected static final String MIGRATION_ENDPOINT = "api/v1/migrations";
 
   protected AbstractMigrationManager(ExtensionServiceRequestManager extensionRequestManager) {
     this.extensionRequestManager = extensionRequestManager;
@@ -59,7 +60,7 @@ public abstract class AbstractMigrationManager {
    *
    * @param pipelineElement pipeline element to be migrated
    * @param migrationConfig config of the migration to be performed
-   * @param url             url of the migration endpoint at the extensions service
+   * @param service         url of the migration endpoint at the extensions service
    *                        where the migration should be performed
    * @param <T>             type of the processing element
    * @return result of the migration
@@ -67,7 +68,22 @@ public abstract class AbstractMigrationManager {
   protected <T extends VersionedNamedStreamPipesEntity> MigrationResult<T> performMigration(
       T pipelineElement,
       ModelMigratorConfig migrationConfig,
-      String url
+      SpServiceRegistration service,
+      String type
+  ) {
+    return performMigration(pipelineElement, migrationConfig,
+        new ExtensionServiceRequestTarget(
+            service.getServiceUrl(),
+            service.getSvcId(),
+            new MigrationParameters(type)
+        )
+    );
+  }
+
+  protected <T extends VersionedNamedStreamPipesEntity> MigrationResult<T> performMigration(
+      T pipelineElement,
+      ModelMigratorConfig migrationConfig,
+      ExtensionServiceRequestTarget requestTarget
   ) {
 
     try {
@@ -77,7 +93,7 @@ public abstract class AbstractMigrationManager {
       String serializedRequest = JacksonSerializer.getObjectMapper().writeValueAsString(migrationRequest);
 
       var migrationResponse = extensionRequestManager.requestMigration(
-          url,
+          requestTarget,
           serializedRequest
       );
 
@@ -106,9 +122,9 @@ public abstract class AbstractMigrationManager {
    * Update all descriptions of entities in the Core that are affected by migrations.
    *
    * @param migrationConfigs List of migrations to take in account
-   * @param serviceUrl       Url of the extension service that provides the migrations.
+   * @param service       The extension service that provides the migrations.
    */
-  protected void updateDescriptions(List<ModelMigratorConfig> migrationConfigs, String serviceUrl) {
+  protected void updateDescriptions(List<ModelMigratorConfig> migrationConfigs, SpServiceRegistration service) {
     migrationConfigs
         .stream()
         .collect(
@@ -127,23 +143,20 @@ public abstract class AbstractMigrationManager {
         .values()
         .forEach(config -> {
           if (isInstalled(config.modelType(), config.targetAppId())) {
-            var requestUrl = getRequestUrl(config.modelType(), config.targetAppId(), serviceUrl);
-            performUpdate(requestUrl);
+            var requestTarget = getRequestTarget(config.modelType(), config.targetAppId(), service);
+            performUpdate(requestTarget);
           }
         });
   }
 
   protected abstract boolean isInstalled(SpServiceTagPrefix modelType, String appId);
 
-  /**
-   * Perform the update of the description based on the given requestUrl
-   *
-   * @param requestUrl URl that references the description to be updated at the extensions service.
-   */
-  protected void performUpdate(String requestUrl) {
+  protected void performUpdate(ExtensionServiceRequestTarget requestTarget) {
 
     try {
-      var entityPayload = extensionRequestManager.requestDescriptionUpdate(requestUrl).responseBody();
+      var entityPayload = extensionRequestManager
+          .requestDescriptionUpdate(requestTarget)
+          .responseBody();
       var updateResult = new TypeExtractor(entityPayload).getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {
         LOG.error(

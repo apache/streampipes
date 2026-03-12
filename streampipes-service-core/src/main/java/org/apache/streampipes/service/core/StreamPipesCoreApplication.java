@@ -189,6 +189,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
                         workerRestClient
                     )),
+                StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
                 extensionServiceRequestManager
             )));
 

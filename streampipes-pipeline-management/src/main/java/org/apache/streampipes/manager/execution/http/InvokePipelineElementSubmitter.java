@@ -39,8 +39,7 @@ public class InvokePipelineElementSubmitter extends BasePipelineElementSubmitter
 
   @Override
   protected PipelineElementStatus submitElement(InvocableStreamPipesEntity pipelineElement) {
-    var invocationUrl = getInvocationUrl(pipelineElement);
-    return new InvokeHttpRequest().execute(pipelineElement, invocationUrl, this.pipelineId);
+    return new InvokeExtensionRequest().execute(pipelineElement, this.pipelineId);
   }
 
   @Override

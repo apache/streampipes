@@ -18,8 +18,12 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
-import org.apache.streampipes.model.api.EndpointSelectable;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.param.PipelineElementDetachParameters;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +31,22 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 
-public class DetachHttpRequest extends PipelineElementHttpRequest {
+public class DetachExtensionRequest extends PipelineElementExtensionRequest {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DetachHttpRequest.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DetachExtensionRequest.class);
 
   @Override
-  protected ExtensionServiceOperationResult performRequest(EndpointSelectable pipelineElement,
-                                                           String endpointUrl,
+  protected ExtensionServiceOperationResult performRequest(InvocableStreamPipesEntity pipelineElement,
                                                            String pipelineId) throws IOException {
-    LOG.info("Detaching element: " + endpointUrl);
-    return requestManager().requestPipelineElementDetach(endpointUrl, pipelineId);
+    LOG.info("Detaching element {}", pipelineElement.getName());
+    var provider = ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement);
+    var instanceId = InstanceIdExtractor.extractId(pipelineElement.getElementId());
+    var requestTarget = new ExtensionServiceRequestTarget(
+        pipelineElement.getSelectedEndpointUrl(),
+        pipelineElement.getSelectedServiceId(),
+        new PipelineElementDetachParameters(provider, pipelineElement.getAppId(), instanceId)
+    );
+    return requestManager().requestPipelineElementDetach(requestTarget, pipelineId);
   }
 
   @Override

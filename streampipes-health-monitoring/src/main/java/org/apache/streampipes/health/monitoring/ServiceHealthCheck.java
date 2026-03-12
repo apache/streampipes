@@ -22,6 +22,8 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.param.ServiceHealthCheckParameters;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -71,10 +73,10 @@ public class ServiceHealthCheck implements Runnable {
   }
 
   private void checkServiceHealth(SpServiceRegistration service) {
-    String healthCheckUrl = makeHealthCheckUrl(service);
+    var requestTarget = makeHealthCheckRequestTarget(service);
 
     try {
-      var response = extensionRequestManager.requestServiceHealth(healthCheckUrl);
+      var response = extensionRequestManager.requestServiceHealth(requestTarget);
       if (response.statusCode() != HttpStatus.SC_OK) {
         processUnhealthyService(service);
       } else {
@@ -107,8 +109,12 @@ public class ServiceHealthCheck implements Runnable {
         - service.getFirstTimeSeenUnhealthy() > maxUnhealthyDurationBeforeRemovalMs);
   }
 
-  private String makeHealthCheckUrl(SpServiceRegistration service) {
-    return service.getServiceUrl() + service.getHealthCheckPath();
+  private ExtensionServiceRequestTarget makeHealthCheckRequestTarget(SpServiceRegistration service) {
+    return new ExtensionServiceRequestTarget(
+        service.getServiceUrl(),
+        service.getSvcId(),
+        new ServiceHealthCheckParameters(service.getHealthCheckPath())
+    );
   }
 
   private List<SpServiceRegistration> getRegisteredServices() {

@@ -19,6 +19,8 @@ package org.apache.streampipes.manager.assets;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.param.PipelineElementAssetParameters;
 import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -26,10 +28,9 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 public class AssetFetcher {
-
-  private static final String ASSET_ENDPOINT_APPENDIX = "/assets";
 
   private final SpServiceUrlProvider spServiceUrlProvider;
   private final String appId;
@@ -49,11 +50,16 @@ public class AssetFetcher {
   }
 
   public InputStream fetchPipelineElementAssets() throws IOException, NoServiceEndpointsAvailableException {
-    String endpointUrl = new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(appId, spServiceUrlProvider);
-    var response = requestManager.requestPipelineElementAssets(endpointUrl + ASSET_ENDPOINT_APPENDIX);
+    var service = new ExtensionsServiceEndpointGenerator().selectService(appId, spServiceUrlProvider, Set.of());
+    var requestTarget = new ExtensionServiceRequestTarget(
+        service.getServiceUrl(),
+        service.getSvcId(),
+        new PipelineElementAssetParameters(spServiceUrlProvider, appId)
+    );
+    var response = requestManager.requestPipelineElementAssets(requestTarget);
 
     if (!response.isSuccess()) {
-      throw new IOException("Could not fetch pipeline element assets from " + endpointUrl);
+      throw new IOException("Could not fetch pipeline element assets from " + service.getSvcGroup());
     }
 
     var responseBytes = response.responseBytes();

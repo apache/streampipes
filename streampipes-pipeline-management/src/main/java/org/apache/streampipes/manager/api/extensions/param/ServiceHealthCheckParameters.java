@@ -15,32 +15,31 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api;
 
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+package org.apache.streampipes.manager.api.extensions.param;
 
-import java.util.List;
-import java.util.Set;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationType;
 
-public interface ISpServiceDiscovery {
+public class ServiceHealthCheckParameters implements  ExtensionServiceOperationParameters {
 
-  /**
-   * Get custom service tags
-   *
-   * @return set of service tags
-   */
-  Set<SpServiceTag> getCustomServiceTags(boolean restrictToHealthy);
+  private final String healthCheckPath;
 
-  List<SpServiceRegistration> getService(boolean restrictToHealthy);
+  public ServiceHealthCheckParameters(String healthCheckPath) {
+    this.healthCheckPath = healthCheckPath;
+  }
 
-  List<SpServiceRegistration> getService(String serviceGroup,
-                                         boolean restrictToHealthy,
-                                         List<String> filterByTags);
+  @Override
+  public String toUrl(String baseUrl) {
+    return baseUrl + healthCheckPath;
+  }
 
-  /**
-   * Get all service
-   * @return list of services
-   */
-  List<SpServiceRegistration> findAll();
+  @Override
+  public String toTopic(String topicPrefix) {
+    return "";
+  }
+
+  @Override
+  public ExtensionServiceOperationType getOperationType() {
+    return ExtensionServiceOperationType.SERVICE_HEALTH;
+  }
 }

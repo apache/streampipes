@@ -19,7 +19,11 @@
 package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.param.PipelineElementInvocationParameters;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.api.EndpointSelectable;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,16 +32,21 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class InvokeHttpRequest extends PipelineElementHttpRequest {
+public class InvokeExtensionRequest extends PipelineElementExtensionRequest {
 
-  private static final Logger LOG = LoggerFactory.getLogger(InvokeHttpRequest.class);
+  private static final Logger LOG = LoggerFactory.getLogger(InvokeExtensionRequest.class);
 
   @Override
-  protected ExtensionServiceOperationResult performRequest(EndpointSelectable pipelineElement,
-                                                           String endpointUrl,
+  protected ExtensionServiceOperationResult performRequest(InvocableStreamPipesEntity pipelineElement,
                                                            String pipelineId) throws IOException {
-    LOG.info("Invoking element: " + endpointUrl);
-    return requestManager().requestPipelineElementInvocation(endpointUrl, pipelineId, toJson(pipelineElement));
+    LOG.info("Invoking element: " + pipelineElement.getSelectedServiceId());
+    var provider = ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement);
+    var requestTarget = new ExtensionServiceRequestTarget(
+        pipelineElement.getSelectedEndpointUrl(),
+        pipelineElement.getSelectedServiceId(),
+        new PipelineElementInvocationParameters(provider, pipelineElement.getAppId())
+    );
+    return requestManager().requestPipelineElementInvocation(requestTarget, pipelineId, toJson(pipelineElement));
   }
 
   @Override

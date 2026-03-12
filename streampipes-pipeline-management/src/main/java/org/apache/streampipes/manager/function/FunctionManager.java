@@ -19,6 +19,8 @@
 package org.apache.streampipes.manager.function;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.param.FunctionStopParameters;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionState;
 import org.apache.streampipes.model.function.FunctionsShutdownResponse;
@@ -34,7 +36,6 @@ import java.io.IOException;
 public class FunctionManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(FunctionManager.class);
-  private static final String FUNCTION_STOP_PATH = "/api/v1/functions/stop";
 
   private final ExtensionServiceRequestManager requestManager;
 
@@ -55,11 +56,15 @@ public class FunctionManager {
   }
 
   private FunctionsShutdownResponse triggerFunctionStop(SpServiceRegistration service) {
-    var endpoint = service.getServiceUrl() + FUNCTION_STOP_PATH;
+    var requestTarget = new ExtensionServiceRequestTarget(
+        service.getServiceUrl(),
+        service.getSvcId(),
+        new FunctionStopParameters()
+    );
 
     try {
-      LOG.info("Triggering function stop at {}", endpoint);
-      var response = requestManager.requestFunctionStop(endpoint);
+      LOG.info("Triggering function stop at {}", requestTarget.baseUrl());
+      var response = requestManager.requestFunctionStop(requestTarget);
       int statusCode = response.statusCode();
 
       if (statusCode >= 200 && statusCode < 300) {
@@ -78,7 +83,7 @@ public class FunctionManager {
         return null;
       }
     } catch (IOException e) {
-      LOG.warn("Could not trigger function stop at {}: {}", endpoint, e.getMessage());
+      LOG.warn("Could not trigger function stop at {}: {}", requestTarget.baseUrl(), e.getMessage());
       return null;
     }
   }

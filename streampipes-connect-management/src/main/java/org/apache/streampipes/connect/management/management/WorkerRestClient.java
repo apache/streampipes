@@ -21,10 +21,18 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.param.AdapterAssetDocumentationParameters;
+import org.apache.streampipes.manager.api.extensions.param.AdapterAssetIconParameters;
+import org.apache.streampipes.manager.api.extensions.param.AdapterAssetParameters;
+import org.apache.streampipes.manager.api.extensions.param.AdapterRuntimeOptionsParameters;
+import org.apache.streampipes.manager.api.extensions.param.AdapterStartParameters;
+import org.apache.streampipes.manager.api.extensions.param.AdapterStopParameters;
+import org.apache.streampipes.manager.api.extensions.param.ExtensionServiceOperationParameters;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
@@ -54,47 +62,48 @@ public class WorkerRestClient {
     this.requestManager = requestManager;
   }
 
-  public void invokeStreamAdapter(String baseUrl,
+  public void invokeStreamAdapter(SpServiceRegistration service,
                                   String elementId) throws AdapterException {
     var adapterStreamDescription = getAndDecryptAdapter(elementId);
-    var url = baseUrl + WorkerPaths.getStreamInvokePath();
-
-    startAdapter(url, adapterStreamDescription);
+    var params = new AdapterStartParameters();
+    startAdapter(service, params, adapterStreamDescription);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), true);
   }
 
-  public void stopStreamAdapter(String baseUrl,
+  public void stopStreamAdapter(SpServiceRegistration service,
                                 AdapterDescription adapterStreamDescription) throws AdapterException {
-    String url = baseUrl + WorkerPaths.getStreamStopPath();
-
+    var params = new AdapterStopParameters();
     var ad = getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
 
-    stopAdapter(ad, url);
+    stopAdapter(service, params, ad);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
   }
 
-  private void startAdapter(String url,
+  private void startAdapter(SpServiceRegistration service,
+                            ExtensionServiceOperationParameters params,
                             AdapterDescription ad) throws AdapterException {
-    LOG.debug("Trying to start adapter on endpoint {} ", url);
-    triggerAdapterStateChange(ad, url, "started");
+    LOG.debug("Trying to start adapter on endpoint {} ", service.getSvcId());
+    triggerAdapterStateChange(ad, service, params,"started");
   }
 
 
-  private void stopAdapter(AdapterDescription ad,
-                           String url) throws AdapterException {
+  private void stopAdapter(SpServiceRegistration service,
+                           ExtensionServiceOperationParameters params,
+                           AdapterDescription ad) throws AdapterException {
 
-    LOG.debug("Trying to stop adapter on endpoint {} ", url);
-    triggerAdapterStateChange(ad, url, "stopped");
+    LOG.debug("Trying to stop adapter on endpoint {} ", service.getSvcId());
+    triggerAdapterStateChange(ad, service, params, "stopped");
   }
 
   private void triggerAdapterStateChange(AdapterDescription ad,
-                                         String url,
+                                         SpServiceRegistration service,
+                                         ExtensionServiceOperationParameters params,
                                          String action) throws AdapterException {
     try {
       String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
       var response =
-          triggerPost(url, ad.getCorrespondingDataStreamElementId(), adapterDescription);
+          triggerPost(service, params, ad.getCorrespondingDataStreamElementId(), adapterDescription);
       var responseString = response.responseBody();
 
       if (response.statusCode() != HttpStatus.SC_OK) {
@@ -103,25 +112,38 @@ public class WorkerRestClient {
       }
     } catch (IOException e) {
       LOG.error("Adapter was not {} successfully", action, e);
-      throw new AdapterException("Adapter was not " + action + " successfully with url " + url, e);
+      throw new AdapterException("Adapter was not " + action + " successfully with serviceId " + service.getSvcId(), e);
     }
   }
 
-  private ExtensionServiceOperationResult triggerPost(String url,
+  private ExtensionServiceOperationResult triggerPost(SpServiceRegistration service,
+                                                      ExtensionServiceOperationParameters params,
                                                       String elementId,
                                                       String payload) throws IOException {
-    return requestManager.requestAdapterStateChange(url, elementId, payload);
+    return requestManager.requestAdapterStateChange(
+        new ExtensionServiceRequestTarget(
+            service.getServiceUrl(),
+            service.getSvcId(),
+            params
+        ),
+        elementId,
+        payload
+    );
   }
 
-  public RuntimeOptionsResponse getConfiguration(String baseUrl,
+  public RuntimeOptionsResponse getConfiguration(SpServiceRegistration service,
                                                  String appId,
                                                  RuntimeOptionsRequest runtimeOptionsRequest)
       throws AdapterException, SpConfigurationException {
-    String url = baseUrl + WorkerPaths.getRuntimeResolvablePath(appId);
 
     try {
       String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
-      var response = requestManager.requestRuntimeOptions(url, payload);
+      var requestTarget = new ExtensionServiceRequestTarget(
+          service.getServiceUrl(),
+          service.getSvcId(),
+          new AdapterRuntimeOptionsParameters(appId)
+      );
+      var response = requestManager.requestRuntimeOptions(requestTarget, payload);
       String responseString = response.responseBody();
 
       if (response.statusCode() == HttpStatus.SC_OK) {
@@ -131,55 +153,66 @@ public class WorkerRestClient {
         throw new SpConfigurationException(exception.getMessage(), exception.getCause());
       }
     } catch (IOException e) {
-      throw new AdapterException("Could not resolve runtime configurations from " + url, e);
+      throw new AdapterException("Could not resolve runtime configurations from " + service.getSvcId(), e);
     }
   }
 
-  public String getAssets(String workerPath) throws AdapterException {
-    String url = workerPath + "/assets";
-    LOG.info("Trying to Assets from endpoint: " + url);
-
+  public String getAssets(SpServiceRegistration service,
+                          String appId) throws AdapterException {
     try {
-      var response = requestManager.requestAdapterAssets(url);
+      var requestTarget = new ExtensionServiceRequestTarget(
+          service.getServiceUrl(),
+          service.getSvcId(),
+          new AdapterAssetParameters(appId)
+      );
+      var response = requestManager.requestAdapterAssets(requestTarget);
 
       if (!response.isSuccess()) {
-        throw new AdapterException("Could not get assets endpoint: " + url);
+        throw new AdapterException("Could not get assets endpoint: " + service.getServiceUrl());
       }
       return response.responseBody();
     } catch (IOException e) {
       LOG.error(e.getMessage());
-      throw new AdapterException("Could not get assets endpoint: " + url);
+      throw new AdapterException("Could not get assets endpoint: " + service.getServiceUrl());
     }
 
   }
 
-  public byte[] getIconAsset(String baseUrl) throws AdapterException {
-    String url = baseUrl + "/assets/icon";
-
+  public byte[] getIconAsset(SpServiceRegistration service,
+                             String appId) throws AdapterException {
     try {
-      var response = requestManager.requestAdapterIconAsset(url);
+      var requestTarget = new ExtensionServiceRequestTarget(
+          service.getServiceUrl(),
+          service.getSvcId(),
+          new AdapterAssetIconParameters(appId)
+      );
+      var response = requestManager.requestAdapterIconAsset(requestTarget);
       if (!response.isSuccess()) {
-        throw new AdapterException("Could not get icon endpoint: " + url);
+        throw new AdapterException("Could not get icon endpoint: " + service.getServiceUrl());
       }
       return response.responseBytes();
     } catch (IOException e) {
       LOG.error(e.getMessage());
-      throw new AdapterException("Could not get icon endpoint: " + url);
+      throw new AdapterException("Could not get icon endpoint: " + service.getServiceUrl());
     }
   }
 
-  public String getDocumentationAsset(String baseUrl) throws AdapterException {
-    String url = baseUrl + "/assets/documentation";
-
+  public String getDocumentationAsset(SpServiceRegistration service,
+                                      String appId) throws AdapterException {
     try {
-      var response = requestManager.requestAdapterDocumentationAsset(url);
+      var requestTarget = new ExtensionServiceRequestTarget(
+          service.getServiceUrl(),
+          service.getSvcId(),
+          new AdapterAssetDocumentationParameters(appId)
+      );
+      var response = requestManager.requestAdapterDocumentationAsset(requestTarget);
       if (!response.isSuccess()) {
-        throw new AdapterException("Could not get documentation endpoint: " + url);
+        throw new AdapterException("Could not get documentation endpoint: " + service.getServiceUrl());
       }
       return response.responseBody();
     } catch (IOException e) {
       LOG.error(e.getMessage());
-      throw new AdapterException("Could not get documentation endpoint: " + url);
+      throw new AdapterException("Could not get documentation endpoint: " + service.getServiceUrl());
     }
   }
 

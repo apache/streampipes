@@ -15,37 +15,27 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.management.util;
 
-public class WorkerPaths {
+package org.apache.streampipes.manager.api.extensions.param;
 
-  private static final String WorkerMainPath = "/api/v1/worker";
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationType;
 
-  public static String getStreamInvokePath() {
-    return WorkerMainPath + "/stream/invoke";
+import java.util.List;
+
+public class AdapterSampleDataParameters implements ExtensionServiceOperationParameters {
+
+  @Override
+  public String toUrl(String baseUrl) {
+    return String.join("/", List.of(baseUrl, "api", "v1", "worker", "guess", "sample"));
   }
 
-  public static String getStreamStopPath() {
-    return WorkerMainPath + "/stream/stop";
+  @Override
+  public String toTopic(String topicPrefix) {
+    return "";
   }
 
-  public static String getRunningAdaptersPath() {
-    return WorkerMainPath + "/running";
+  @Override
+  public ExtensionServiceOperationType getOperationType() {
+    return ExtensionServiceOperationType.SAMPLE_DATA;
   }
-
-  public static String getRuntimeResolvablePath(String elementId) {
-    return WorkerMainPath + "/resolvable/" + elementId + "/configurations";
-  }
-
-  public static String getGuessSchemaPath() {
-    return WorkerMainPath + "/guess/schema";
-  }
-
-  // TODO naming
-  public static String getSamplePath() {
-    return WorkerMainPath + "/guess/sample";
-  }
-
-
-
 }

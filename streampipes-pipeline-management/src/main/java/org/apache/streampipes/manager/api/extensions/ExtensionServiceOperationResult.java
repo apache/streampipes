@@ -25,10 +25,6 @@ public class ExtensionServiceOperationResult {
   private final int statusCode;
   private final byte[] responseBody;
 
-  public ExtensionServiceOperationResult(int statusCode, String responseBody) {
-    this(statusCode, responseBody == null ? null : responseBody.getBytes(StandardCharsets.UTF_8));
-  }
-
   public ExtensionServiceOperationResult(int statusCode, byte[] responseBody) {
     this.statusCode = statusCode;
     this.responseBody = responseBody;

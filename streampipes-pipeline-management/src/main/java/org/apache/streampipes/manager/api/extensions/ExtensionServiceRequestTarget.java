@@ -18,17 +18,10 @@
 
 package org.apache.streampipes.manager.api.extensions;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
+import org.apache.streampipes.manager.api.extensions.param.ExtensionServiceOperationParameters;
 
-import java.util.Set;
+public record ExtensionServiceRequestTarget(String baseUrl,
+                                            String serviceId,
+                                            ExtensionServiceOperationParameters params) {
 
-public interface IExtensionsServiceEndpointGenerator {
-
-  SpServiceRegistration selectService(String appId,
-                                      SpServiceUrlProvider spServiceUrlProvider,
-                                      Set<SpServiceTag> customServiceTags)
-      throws NoServiceEndpointsAvailableException;
 }

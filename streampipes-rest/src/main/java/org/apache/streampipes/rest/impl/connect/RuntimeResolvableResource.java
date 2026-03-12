@@ -65,13 +65,13 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<Void> {
                                                @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
     try {
-      String baseUrl = endpointGenerator.getEndpointBaseUrl(
+      var service = endpointGenerator.selectService(
           appId,
           SpServiceUrlProvider.ADAPTER,
           runtimeOptionsRequest.getDeploymentConfiguration().getDesiredServiceTags()
       );
       SecretProvider.getDecryptionService().applyConfig(runtimeOptionsRequest.getStaticProperties());
-      RuntimeOptionsResponse result = workerRestClient.getConfiguration(baseUrl, appId, runtimeOptionsRequest);
+      RuntimeOptionsResponse result = workerRestClient.getConfiguration(service, appId, runtimeOptionsRequest);
 
       return ok(result);
     } catch (AdapterException | NoServiceEndpointsAvailableException e) {

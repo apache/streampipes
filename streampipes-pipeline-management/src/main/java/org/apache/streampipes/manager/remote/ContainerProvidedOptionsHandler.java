@@ -19,6 +19,8 @@ package org.apache.streampipes.manager.remote;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.param.RequestContainerProvidedOptionsParameters;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -29,6 +31,7 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class ContainerProvidedOptionsHandler {
 
@@ -42,8 +45,8 @@ public class ContainerProvidedOptionsHandler {
 
     try {
       var payload = JacksonSerializer.getObjectMapper().writeValueAsString(request);
-      var url = getEndpointUrl(request.getAppId());
-      var response = extensionRequestManager.requestContainerProvidedOptions(url, payload);
+      var requestTarget = getEndpointRequestTarget(request.getAppId());
+      var response = extensionRequestManager.requestContainerProvidedOptions(requestTarget, payload);
       return handleResponse(response.responseBody());
     } catch (Exception e) {
       e.printStackTrace();
@@ -55,8 +58,17 @@ public class ContainerProvidedOptionsHandler {
     return JacksonSerializer.getObjectMapper().readValue(responseBody, RuntimeOptionsResponse.class);
   }
 
-  private String getEndpointUrl(String appId) throws NoServiceEndpointsAvailableException {
+  private ExtensionServiceRequestTarget getEndpointRequestTarget(String appId)
+      throws NoServiceEndpointsAvailableException {
     SpServiceUrlProvider provider = ExtensionsServiceEndpointUtils.getPipelineElementType(appId);
-    return new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(appId, provider) + "/configurations";
+    var service = new ExtensionsServiceEndpointGenerator().selectService(appId, provider, Set.of());
+    return new ExtensionServiceRequestTarget(
+        service.getServiceUrl(),
+        service.getSvcId(),
+        new RequestContainerProvidedOptionsParameters(
+            provider,
+            appId
+        )
+    );
   }
 }

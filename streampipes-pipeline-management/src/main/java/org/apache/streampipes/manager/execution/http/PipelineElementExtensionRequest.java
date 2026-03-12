@@ -22,6 +22,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationRe
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.model.api.EndpointSelectable;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
@@ -29,32 +30,31 @@ import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 
-public abstract class PipelineElementHttpRequest {
+public abstract class PipelineElementExtensionRequest {
 
   private final ExtensionServiceRequestManager requestManager;
 
-  public PipelineElementHttpRequest() {
+  public PipelineElementExtensionRequest() {
     this(new HttpExtensionServiceRequestManager());
   }
 
-  public PipelineElementHttpRequest(ExtensionServiceRequestManager requestManager) {
+  public PipelineElementExtensionRequest(ExtensionServiceRequestManager requestManager) {
     this.requestManager = requestManager;
   }
 
-  public PipelineElementStatus execute(EndpointSelectable pipelineElement,
-                                       String endpointUrl,
+  public PipelineElementStatus execute(InvocableStreamPipesEntity pipelineElement,
                                        String pipelineId) {
+    var serviceId = pipelineElement.getSelectedServiceId();
     try {
-      ExtensionServiceOperationResult response = performRequest(pipelineElement, endpointUrl, pipelineId);
-      return handleResponse(response, pipelineElement, endpointUrl);
+      ExtensionServiceOperationResult response = performRequest(pipelineElement, pipelineId);
+      return handleResponse(response, pipelineElement, pipelineElement.getSelectedServiceId());
     } catch (Exception e) {
-      logError(endpointUrl, pipelineElement.getName(), e.getMessage());
-      return new PipelineElementStatus(endpointUrl, pipelineElement.getName(), false, e.getMessage());
+      logError(serviceId, pipelineElement.getName(), e.getMessage());
+      return new PipelineElementStatus(serviceId, pipelineElement.getName(), false, e.getMessage());
     }
   }
 
-  protected abstract ExtensionServiceOperationResult performRequest(EndpointSelectable pipelineElement,
-                                                                    String endpointUrl,
+  protected abstract ExtensionServiceOperationResult performRequest(InvocableStreamPipesEntity pipelineElement,
                                                                     String pipelineId) throws IOException;
 
   protected abstract void logError(String endpointUrl,

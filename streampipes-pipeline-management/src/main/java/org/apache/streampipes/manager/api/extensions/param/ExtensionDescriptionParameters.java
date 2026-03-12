@@ -16,19 +16,37 @@
  *
  */
 
-package org.apache.streampipes.manager.api.extensions;
+package org.apache.streampipes.manager.api.extensions.param;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationType;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import java.util.Set;
+import java.util.List;
 
-public interface IExtensionsServiceEndpointGenerator {
+public class ExtensionDescriptionParameters implements  ExtensionServiceOperationParameters{
 
-  SpServiceRegistration selectService(String appId,
-                                      SpServiceUrlProvider spServiceUrlProvider,
-                                      Set<SpServiceTag> customServiceTags)
-      throws NoServiceEndpointsAvailableException;
+  public final SpServiceUrlProvider provider;
+  private final String appId;
+
+  public ExtensionDescriptionParameters(SpServiceUrlProvider provider,
+                                                   String appId) {
+    this.provider = provider;
+    this.appId = appId;
+  }
+
+  @Override
+  public String toUrl(String baseUrl) {
+    return String.join("/", List.of(baseUrl, provider.getPrefix(), appId));
+  }
+
+
+  @Override
+  public String toTopic(String topicPrefix) {
+    return "";
+  }
+
+  @Override
+  public ExtensionServiceOperationType getOperationType() {
+    return ExtensionServiceOperationType.DESCRIPTION_UPDATE;
+  }
 }
