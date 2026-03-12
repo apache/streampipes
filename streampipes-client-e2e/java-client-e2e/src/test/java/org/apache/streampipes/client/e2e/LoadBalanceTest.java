@@ -20,6 +20,7 @@ package org.apache.streampipes.client.e2e;
 
 import org.apache.streampipes.client.e2e.utils.ClientTestSupport;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
 import org.junit.jupiter.api.AfterEach;
@@ -32,6 +33,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static org.awaitility.Awaitility.await;
 
 /**
  * E2E test that verifies adapters and pipelines are load-balanced across at least 3 instances.
@@ -52,6 +55,11 @@ class LoadBalanceTest {
     support.cleanupTestResources();
   }
 
+  /** Minimum number of extension instances that must be registered before creating adapters (CI starts them sequentially). */
+  private static final int MIN_EXTENSION_INSTANCES = 3;
+  /** Max time to wait for enough extension instances to register (e.g. in Docker/CI). */
+  private static final Duration EXTENSION_REGISTRATION_TIMEOUT = Duration.ofSeconds(90);
+
   /**
    * Cleans up any leftover resources, creates {@value #RESOURCE_COUNT} adapter+pipeline pairs with
    * unique topics, waits until all have endpoint URLs, then asserts count and that endpoints
@@ -60,6 +68,14 @@ class LoadBalanceTest {
   @Test
   void testLoadBalance() {
     support.cleanupTestResources();
+
+    // In CI, extension containers start sequentially; wait until at least 3 are registered
+    // so that adapter/pipeline assignment can spread across instances.
+    await()
+        .pollInterval(Duration.ofSeconds(2))
+        .atMost(EXTENSION_REGISTRATION_TIMEOUT)
+        .until(() -> support.client().customRequest()
+            .getList("api/v2/extensions-services", SpServiceRegistration.class).size() >= MIN_EXTENSION_INSTANCES);
 
     for (int i = 0; i < RESOURCE_COUNT; i++) {
       String runId = UUID.randomUUID().toString().replace("-", "");
