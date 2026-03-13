@@ -48,16 +48,16 @@ public class AdapterDescriptionResource extends AbstractSharedRestInterface {
     this.adapterDescriptionManagement = adapterDescriptionManagement;
   }
 
-  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<AdapterDescription> getAdapterDescription(@PathVariable("id") String id) {
+  @GetMapping(path = "/{appId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AdapterDescription> getAdapterDescription(@PathVariable("appId") String appId) {
     try {
-      var adapterDescriptionOpt = adapterDescriptionManagement.getAdapterDescription(id);
+      var adapterDescriptionOpt = adapterDescriptionManagement.getAdapterDescription(appId);
       if (adapterDescriptionOpt.isPresent()) {
         return ok(adapterDescriptionOpt.get());
       } else {
         throw new SpMessageException(
             HttpStatus.NOT_FOUND,
-            Notifications.error(String.format("Could not find adapter with id %s", id)));
+            Notifications.error(String.format("Could not find adapter with id %s", appId)));
       }
     } catch (IOException e) {
       throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);

@@ -28,8 +28,8 @@ import java.util.Optional;
 
 public class AdapterDescriptionManagement {
 
-  public Optional<AdapterDescription> getAdapterDescription(String id) throws IOException {
-    var adapterDescriptionOpt = DeclarersSingleton.getInstance().getAdapter(id);
+  public Optional<AdapterDescription> getAdapterDescription(String appId) throws IOException {
+    var adapterDescriptionOpt = DeclarersSingleton.getInstance().getAdapter(appId);
     if (adapterDescriptionOpt.isPresent()) {
       var adapterConfiguration = adapterDescriptionOpt.get().declareConfig();
       return Optional.of(applyLocales(adapterConfiguration));

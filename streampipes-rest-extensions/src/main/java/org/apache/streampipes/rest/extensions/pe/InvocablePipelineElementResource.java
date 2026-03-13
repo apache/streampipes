@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Map;
 
 public abstract class InvocablePipelineElementResource<
     K extends InvocableStreamPipesEntity,
@@ -53,6 +52,7 @@ public abstract class InvocablePipelineElementResource<
 
   public InvocablePipelineElementResource(
       InvocablePipelineElementManagement<K, T, PcT, V, W> pipelineElementManagement) {
+    super(pipelineElementManagement);
     this.pipelineElementManagement = pipelineElementManagement;
   }
 
@@ -108,8 +108,4 @@ public abstract class InvocablePipelineElementResource<
     return ok(pipelineElementManagement.listRunningInstances(elementId));
   }
 
-  @Override
-  protected Map<String, T> getElementDeclarers() {
-    return pipelineElementManagement.getElementDeclarers();
-  }
 }

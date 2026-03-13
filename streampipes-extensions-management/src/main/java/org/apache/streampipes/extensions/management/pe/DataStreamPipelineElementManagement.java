@@ -21,23 +21,22 @@ package org.apache.streampipes.extensions.management.pe;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
 import java.io.IOException;
 import java.util.Map;
 
-public class DataStreamPipelineElementManagement {
+public class DataStreamPipelineElementManagement extends AbstractPipelineElementManagement<IStreamPipesDataStream> {
 
+  @Override
   public byte[] getAssets(String streamId) throws IOException {
-    return new AssetZipGenerator(streamId, getById(streamId).getIncludedAssets()).makeZip();
+    return new AssetZipGenerator(
+        streamId,
+        getDeclarerById(streamId).declareConfig().getDescription().getIncludedAssets()
+    ).makeZip();
   }
 
-  public Map<String, IStreamPipesDataStream> getElementDeclarers() {
+  @Override
+  protected Map<String, IStreamPipesDataStream> getElementDeclarers() {
     return DeclarersSingleton.getInstance().getDataStreams();
   }
-
-  private NamedStreamPipesEntity getById(String appId) {
-    return getElementDeclarers().get(appId).declareConfig().getDescription();
-  }
 }
-

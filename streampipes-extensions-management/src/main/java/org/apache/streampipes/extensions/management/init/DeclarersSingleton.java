@@ -187,11 +187,11 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     adapters.forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
   }
 
-  public Optional<StreamPipesAdapter> getAdapter(String id) {
+  public Optional<StreamPipesAdapter> getAdapter(String appId) {
     return getAdapters().stream()
         .filter(adapter -> adapter.declareConfig()
             .getAdapterDescription()
-            .getAppId().equals(id))
+            .getAppId().equals(appId))
         .findFirst();
   }
 

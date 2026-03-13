@@ -38,7 +38,7 @@ public class DataProcessorPipelineElementManagement extends InvocablePipelineEle
     ProcessingElementParameterExtractor> {
 
   @Override
-  public Map<String, IStreamPipesDataProcessor> getElementDeclarers() {
+  protected Map<String, IStreamPipesDataProcessor> getElementDeclarers() {
     return DeclarersSingleton.getInstance().getDataProcessors();
   }
 
@@ -77,4 +77,3 @@ public class DataProcessorPipelineElementManagement extends InvocablePipelineEle
     return response;
   }
 }
-

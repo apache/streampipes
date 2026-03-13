@@ -49,25 +49,25 @@ public class AdapterAssetResource extends AbstractSharedRestInterface {
   }
 
 
-  @GetMapping(path = "/{id}/assets", produces = "application/zip")
-  public ResponseEntity<byte[]> getAssets(@PathVariable("id") String id) {
+  @GetMapping(path = "/{appId}/assets", produces = "application/zip")
+  public ResponseEntity<byte[]> getAssets(@PathVariable("appId") String appId) {
     try {
-      var assetOpt = adapterAssetManagement.getAssets(id);
+      var assetOpt = adapterAssetManagement.getAssets(appId);
       if (assetOpt.isPresent()) {
         return ok(assetOpt.get());
       } else {
         throw new SpMessageException(
             HttpStatus.NOT_FOUND,
-            Notifications.error(String.format("Could not find adapter with id %s", id)));
+            Notifications.error(String.format("Could not find adapter with id %s", appId)));
       }
     } catch (IOException e) {
       throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
-  @GetMapping(path = "/{id}/assets/icon")
-  public ResponseEntity<byte[]> getIconAsset(@PathVariable("id") String elementId) throws IOException {
-    var iconOpt = adapterAssetManagement.getIconAsset(elementId);
+  @GetMapping(path = "/{appId}/assets/icon")
+  public ResponseEntity<byte[]> getIconAsset(@PathVariable("appId") String appId) throws IOException {
+    var iconOpt = adapterAssetManagement.getIconAsset(appId);
     if (iconOpt.isPresent()) {
       byte[] icon = iconOpt.get();
       return ResponseEntity.ok()
@@ -78,9 +78,9 @@ public class AdapterAssetResource extends AbstractSharedRestInterface {
     }
   }
 
-  @GetMapping(path = "/{id}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
-  public String getDocumentationAsset(@PathVariable("id") String elementId) throws IOException {
-    var documentationOpt = adapterAssetManagement.getDocumentationAsset(elementId);
+  @GetMapping(path = "/{appId}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  public String getDocumentationAsset(@PathVariable("appId") String appId) throws IOException {
+    var documentationOpt = adapterAssetManagement.getDocumentationAsset(appId);
     if (documentationOpt.isPresent()) {
       return documentationOpt.get();
     } else {

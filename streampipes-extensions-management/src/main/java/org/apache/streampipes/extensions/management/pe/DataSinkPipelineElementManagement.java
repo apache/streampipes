@@ -38,7 +38,7 @@ public class DataSinkPipelineElementManagement extends InvocablePipelineElementM
         DataSinkParameterExtractor> {
 
   @Override
-  public Map<String, IStreamPipesDataSink> getElementDeclarers() {
+  protected Map<String, IStreamPipesDataSink> getElementDeclarers() {
     return DeclarersSingleton.getInstance().getDataSinks();
   }
 
@@ -76,4 +76,3 @@ public class DataSinkPipelineElementManagement extends InvocablePipelineElementM
     return response;
   }
 }
-

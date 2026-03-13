@@ -36,8 +36,8 @@ public class AdapterAssetManagement {
     this.connectWorkerDescriptionProvider = connectWorkerDescriptionProvider;
   }
 
-  public Optional<byte[]> getAssets(String id) throws IOException {
-    var adapterConfig = connectWorkerDescriptionProvider.getAdapterConfiguration(id);
+  public Optional<byte[]> getAssets(String appId) throws IOException {
+    var adapterConfig = connectWorkerDescriptionProvider.getAdapterConfiguration(appId);
     if (adapterConfig.isPresent()) {
       return Optional.of(
           new AssetZipGenerator(
@@ -49,8 +49,8 @@ public class AdapterAssetManagement {
     return Optional.empty();
   }
 
-  public Optional<byte[]> getIconAsset(String id) throws IOException {
-    var adapterConfig = connectWorkerDescriptionProvider.getAdapterConfiguration(id);
+  public Optional<byte[]> getIconAsset(String appId) throws IOException {
+    var adapterConfig = connectWorkerDescriptionProvider.getAdapterConfiguration(appId);
     if (adapterConfig.isPresent()) {
       return Optional.of(adapterConfig.get().getAssetResolver().getAsset(GlobalStreamPipesConstants.STD_ICON_NAME));
     }
@@ -58,8 +58,8 @@ public class AdapterAssetManagement {
     return Optional.empty();
   }
 
-  public Optional<String> getDocumentationAsset(String id) throws IOException {
-    var adapterConfig = connectWorkerDescriptionProvider.getAdapterConfiguration(id);
+  public Optional<String> getDocumentationAsset(String appId) throws IOException {
+    var adapterConfig = connectWorkerDescriptionProvider.getAdapterConfiguration(appId);
     if (adapterConfig.isPresent()) {
       return Optional.of(new String(
           adapterConfig.get().getAssetResolver().getAsset(GlobalStreamPipesConstants.STD_DOCUMENTATION_NAME))

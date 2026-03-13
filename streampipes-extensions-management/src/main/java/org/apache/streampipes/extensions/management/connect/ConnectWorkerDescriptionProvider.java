@@ -27,19 +27,19 @@ import java.util.Optional;
 
 public class ConnectWorkerDescriptionProvider {
 
-  public Optional<IAdapterConfiguration> getAdapterConfiguration(String id) {
+  public Optional<IAdapterConfiguration> getAdapterConfiguration(String appId) {
     return getRegisteredAdapters()
         .stream()
-        .filter(ad -> ad.declareConfig().getAdapterDescription().getAppId().equals(id))
+        .filter(ad -> ad.declareConfig().getAdapterDescription().getAppId().equals(appId))
         .map(StreamPipesAdapter::declareConfig)
         .findFirst();
   }
 
-  public Optional<AdapterDescription> getAdapterDescription(String id) {
+  public Optional<AdapterDescription> getAdapterDescription(String appId) {
     return getRegisteredAdapters()
         .stream()
         .map(ac -> ac.declareConfig().getAdapterDescription())
-        .filter(ad -> ad.getAppId().equals(id))
+        .filter(ad -> ad.getAppId().equals(appId))
         .findFirst();
   }
 

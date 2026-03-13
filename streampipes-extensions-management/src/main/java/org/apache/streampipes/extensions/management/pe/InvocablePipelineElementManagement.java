@@ -39,14 +39,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 
 public abstract class InvocablePipelineElementManagement<
     K extends InvocableStreamPipesEntity,
     T extends IStreamPipesPipelineElement<PcT>,
     PcT extends IPipelineElementConfiguration<?, T>,
     V extends IStreamPipesRuntime<T, K>,
-    W extends AbstractParameterExtractor<K>> {
+    W extends AbstractParameterExtractor<K>> extends AbstractPipelineElementManagement<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(InvocablePipelineElementManagement.class);
 
@@ -137,14 +136,8 @@ public abstract class InvocablePipelineElementManagement<
     return runningInstances.getRunningInstanceIdsForElement(elementId);
   }
 
-  public abstract Map<String, T> getElementDeclarers();
-
   protected RunningInstances getRunningInstances() {
     return runningInstances;
-  }
-
-  protected T getDeclarerById(String appId) {
-    return getElementDeclarers().get(appId);
   }
 
   protected abstract String getInstanceId(String uri, String elementId);
@@ -163,4 +156,3 @@ public abstract class InvocablePipelineElementManagement<
     return Environments.getEnvironment().getSpDebug().getValueOrDefault();
   }
 }
-

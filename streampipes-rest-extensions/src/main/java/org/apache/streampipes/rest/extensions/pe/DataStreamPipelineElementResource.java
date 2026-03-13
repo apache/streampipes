@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.Map;
 
 @RestController
 @RequestMapping(SpServicePathPrefix.DATA_STREAM)
@@ -40,16 +39,12 @@ public class DataStreamPipelineElementResource extends AbstractPipelineElementRe
   private final DataStreamPipelineElementManagement pipelineElementManagement;
 
   public DataStreamPipelineElementResource() {
-    this.pipelineElementManagement = new DataStreamPipelineElementManagement();
+    this(new DataStreamPipelineElementManagement());
   }
 
   public DataStreamPipelineElementResource(DataStreamPipelineElementManagement pipelineElementManagement) {
+    super(pipelineElementManagement);
     this.pipelineElementManagement = pipelineElementManagement;
-  }
-
-  @Override
-  protected Map<String, IStreamPipesDataStream> getElementDeclarers() {
-    return pipelineElementManagement.getElementDeclarers();
   }
 
   @GetMapping(path = "{streamId}/assets", produces = "application/zip")
