@@ -36,7 +36,6 @@ import org.apache.streampipes.model.extensions.configuration.SpServiceConfigurat
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
-import org.apache.streampipes.rest.extensions.WelcomePage;
 import org.apache.streampipes.rest.shared.exception.SpRestExceptionHandler;
 import org.apache.streampipes.rest.shared.serializer.JacksonConfiguration;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
@@ -67,7 +66,6 @@ import java.util.stream.Collectors;
 @EnableAutoConfiguration
 @Import({
     WebSecurityConfig.class,
-    WelcomePage.class,
     ServiceHealthResource.class,
     SpRestExceptionHandler.class,
     StreamPipesPrometheusConfig.class,

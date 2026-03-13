@@ -95,10 +95,6 @@ public abstract class AbstractPipelineElementResource<
     return rewrite(config.getDescription(), config.getAssetResolver());
   }
 
-  protected NamedStreamPipesEntity prepareElement(NamedStreamPipesEntity desc) {
-    return rewrite(desc, null);
-  }
-
   protected T getDeclarerById(String appId) {
     return getElementDeclarers().get(appId);
   }
@@ -106,10 +102,6 @@ public abstract class AbstractPipelineElementResource<
   protected NamedStreamPipesEntity getById(String appId) {
     IStreamPipesPipelineElement<?> declarer = getElementDeclarers().get(appId);
     return declarer.declareConfig().getDescription();
-  }
-
-  protected NamedStreamPipesEntity rewrite(NamedStreamPipesEntity desc) {
-    return rewrite(desc, null);
   }
 
   protected NamedStreamPipesEntity rewrite(NamedStreamPipesEntity desc,
