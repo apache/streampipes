@@ -36,6 +36,9 @@ import org.apache.streampipes.model.extensions.configuration.SpServiceConfigurat
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
+import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestReceiver;
 import org.apache.streampipes.rest.shared.exception.SpRestExceptionHandler;
 import org.apache.streampipes.rest.shared.serializer.JacksonConfiguration;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
@@ -75,6 +78,9 @@ import java.util.stream.Collectors;
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesExtensionsServiceBase.class);
+  private final ExtensionBrokerRequestReceiver extensionBrokerRequestReceiver = new ExtensionBrokerRequestReceiver();
+  private ExtensionServiceTransportMode extensionTransportMode = ExtensionServiceTransportMode.HTTP;
+  private boolean natsBrokerReceiverActive = false;
 
   public void init() {
     SpServiceDefinition serviceDef = provideServiceDefinition();
@@ -123,6 +129,17 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
                                      BaseNetworkingConfig networkingConfig) throws UnknownHostException {
+    this.extensionTransportMode = ExtensionServiceTransportMode.from(
+        Environments.getEnvironment().getExtensionTransportMode().getValueOrDefault()
+    );
+    this.natsBrokerReceiverActive = extensionBrokerRequestReceiver.start(
+        serviceId(),
+        extensionTransportMode,
+        Environments.getEnvironment()
+            .getExtensionRequestTopicPrefix()
+            .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX)
+    );
+
     var extensions = new ExtensionItemProvider().getAllItemDescriptions();
     var req = SpServiceRegistration.from(
         DefaultSpServiceTypes.EXT,
@@ -159,7 +176,22 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
           DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup()));
     }
     tags.addAll(getExtensionsServiceTags(extensions));
+    tags.addAll(getTransportServiceTags());
     tags.addAll(new CustomServiceTagResolver(Environments.getEnvironment()).getCustomServiceTags());
+    return tags;
+  }
+
+  private Set<SpServiceTag> getTransportServiceTags() {
+    Set<SpServiceTag> tags = new HashSet<>();
+
+    if (extensionTransportMode.supportsHttp()) {
+      tags.add(SpServiceTag.create(SpServiceTagPrefix.CUSTOM, ExtensionServiceBrokerTopics.TRANSPORT_TAG_HTTP));
+    }
+
+    if (extensionTransportMode.supportsNats() && natsBrokerReceiverActive) {
+      tags.add(SpServiceTag.create(SpServiceTagPrefix.CUSTOM, ExtensionServiceBrokerTopics.TRANSPORT_TAG_NATS));
+    }
+
     return tags;
   }
 
@@ -187,6 +219,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
   @PreDestroy
   public void onExit() {
+    extensionBrokerRequestReceiver.stop();
     new ExtensionsServiceShutdownHandler().onShutdown();
     deregisterService(DeclarersSingleton.getInstance().getServiceId());
   }

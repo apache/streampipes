@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one or more
   ~ contributor license agreements.  See the NOTICE file distributed with
@@ -16,60 +17,37 @@
   ~
   -->
 
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
+        <artifactId>streampipes-parent</artifactId>
         <version>0.99.0-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>streampipes-service-extensions</artifactId>
+    <artifactId>streampipes-nats-extensions</artifactId>
 
     <dependencies>
-        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-service-base</artifactId>
+            <artifactId>streampipes-commons</artifactId>
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-connect-transformer-api</artifactId>
+            <artifactId>streampipes-extensions-management</artifactId>
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-connect-transformer-groovy</artifactId>
+            <artifactId>streampipes-model</artifactId>
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-connect-transformer-js</artifactId>
-            <version>0.99.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-rest-extensions</artifactId>
-            <version>0.99.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-nats-extensions</artifactId>
-            <version>0.99.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>io.nats</groupId>
+            <artifactId>jnats</artifactId>
         </dependency>
 
         <!-- Test dependencies -->
@@ -78,17 +56,18 @@
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <propertyExpansion>
+                        checkstyle.config.base.path=${project.parent.basedir}/tools/maven
+                    </propertyExpansion>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -16,25 +16,32 @@
  *
  */
 
-package org.apache.streampipes.manager.api.extensions;
+package org.apache.streampipes.model.extensions.transport;
 
-public enum ExtensionServiceOperationType {
-  CONTAINER_PROVIDED_OPTIONS,
-  MIGRATION,
-  DESCRIPTION_UPDATE,
-  EXTENSION_DESCRIPTION,
-  FUNCTION_STOP,
-  ADAPTER_STATE_CHANGE,
-  RUNTIME_OPTIONS,
-  SAMPLE_DATA,
-  EXTENSION_INSTANCE_HEALTH,
-  SERVICE_HEALTH,
-  SERVICE_LOAD,
-  PIPELINE_ELEMENT_INVOCATION,
-  PIPELINE_ELEMENT_DETACH,
-  PIPELINE_ELEMENT_ASSETS,
-  ADAPTER_ASSETS,
-  ADAPTER_ICON_ASSET,
-  ADAPTER_DOCUMENTATION_ASSET,
-  OUTPUT_SCHEMA;
+import java.util.Locale;
+
+public enum ExtensionServiceTransportMode {
+  HTTP,
+  NATS,
+  DUAL;
+
+  public boolean supportsHttp() {
+    return this == HTTP || this == DUAL;
+  }
+
+  public boolean supportsNats() {
+    return this == NATS || this == DUAL;
+  }
+
+  public static ExtensionServiceTransportMode from(String value) {
+    if (value == null || value.isBlank()) {
+      return HTTP;
+    }
+
+    try {
+      return ExtensionServiceTransportMode.valueOf(value.trim().toUpperCase(Locale.ROOT));
+    } catch (IllegalArgumentException e) {
+      return HTTP;
+    }
+  }
 }

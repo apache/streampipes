@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.manager.api.extensions;
 
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public record ExtensionServiceRequestTarget(String baseUrl,
                                             String serviceId,
@@ -80,13 +81,7 @@ public record ExtensionServiceRequestTarget(String baseUrl,
         ? List.of(operation.name().toLowerCase(Locale.ROOT))
         : topicSegments;
 
-    return Stream.concat(
-            Stream.of(topicPrefix, serviceId),
-            segments.stream())
-        .filter(Objects::nonNull)
-        .map(ExtensionServiceRequestTarget::toTopicSegment)
-        .filter(part -> !part.isEmpty())
-        .collect(Collectors.joining("."));
+    return ExtensionServiceBrokerTopics.serviceTopic(topicPrefix, serviceId, segments);
   }
 
   private static String trimTrailingSlash(String value) {
@@ -95,9 +90,5 @@ public record ExtensionServiceRequestTarget(String baseUrl,
 
   private static String trimSlashes(String value) {
     return value.replaceAll("^/+", "").replaceAll("/+$", "");
-  }
-
-  private static String toTopicSegment(String value) {
-    return trimSlashes(value).replace("/", ".");
   }
 }

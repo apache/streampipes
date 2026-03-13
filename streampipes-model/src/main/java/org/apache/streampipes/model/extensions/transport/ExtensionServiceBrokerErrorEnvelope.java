@@ -16,25 +16,34 @@
  *
  */
 
-package org.apache.streampipes.manager.api.extensions;
+package org.apache.streampipes.model.extensions.transport;
 
-public enum ExtensionServiceOperationType {
-  CONTAINER_PROVIDED_OPTIONS,
-  MIGRATION,
-  DESCRIPTION_UPDATE,
-  EXTENSION_DESCRIPTION,
-  FUNCTION_STOP,
-  ADAPTER_STATE_CHANGE,
-  RUNTIME_OPTIONS,
-  SAMPLE_DATA,
-  EXTENSION_INSTANCE_HEALTH,
-  SERVICE_HEALTH,
-  SERVICE_LOAD,
-  PIPELINE_ELEMENT_INVOCATION,
-  PIPELINE_ELEMENT_DETACH,
-  PIPELINE_ELEMENT_ASSETS,
-  ADAPTER_ASSETS,
-  ADAPTER_ICON_ASSET,
-  ADAPTER_DOCUMENTATION_ASSET,
-  OUTPUT_SCHEMA;
+public class ExtensionServiceBrokerErrorEnvelope {
+
+  private String errorType;
+  private String message;
+
+  public ExtensionServiceBrokerErrorEnvelope() {
+  }
+
+  public ExtensionServiceBrokerErrorEnvelope(String errorType, String message) {
+    this.errorType = errorType;
+    this.message = message;
+  }
+
+  public String getErrorType() {
+    return errorType;
+  }
+
+  public void setErrorType(String errorType) {
+    this.errorType = errorType;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }

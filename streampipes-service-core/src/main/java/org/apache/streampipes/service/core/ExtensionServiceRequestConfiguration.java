@@ -17,19 +17,52 @@
  */
 package org.apache.streampipes.service.core;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
+import org.apache.streampipes.service.core.extensions.CoreExtensionTransportMode;
+import org.apache.streampipes.service.core.extensions.CoreNatsRequestReplyClient;
+import org.apache.streampipes.service.core.extensions.TransportAwareExtensionServiceRequestManager;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Duration;
+
 @Configuration
 public class ExtensionServiceRequestConfiguration {
 
+  @Bean(destroyMethod = "close")
+  public CoreNatsRequestReplyClient coreNatsRequestReplyClient() {
+    var env = Environments.getEnvironment();
+    return new CoreNatsRequestReplyClient(
+        env.getNatsHost().getValueOrDefault(),
+        env.getNatsPort().getValueOrDefault(),
+        Duration.ofSeconds(2)
+    );
+  }
+
   @Bean
-  public ExtensionServiceRequestManager extensionServiceRequestManager() {
-    return new HttpExtensionServiceRequestManager();
+  public ExtensionServiceRequestManager extensionServiceRequestManager(
+      CoreNatsRequestReplyClient coreNatsRequestReplyClient
+  ) {
+    var env = Environments.getEnvironment();
+
+    var transportMode = CoreExtensionTransportMode.from(
+        env.getCoreExtensionTransportMode().getValueOrDefault()
+    );
+
+    var topicPrefix = env.getExtensionRequestTopicPrefix()
+        .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX);
+
+    return new TransportAwareExtensionServiceRequestManager(
+        new HttpExtensionServiceRequestManager(),
+        coreNatsRequestReplyClient,
+        transportMode,
+        topicPrefix
+    );
   }
 
   @Bean

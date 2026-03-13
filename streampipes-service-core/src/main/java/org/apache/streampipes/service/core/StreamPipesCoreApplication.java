@@ -159,7 +159,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     var env = Environments.getEnvironment();
 
     ExtensionsServiceReportExecutor.setServiceReportFetcher(serviceRegistration -> {
-      var target = ExtensionServiceRequestTargets.serviceHealth(serviceRegistration, "serviceMonitor");
+      var target = ExtensionServiceRequestTargets.serviceLoad(serviceRegistration);
       var response = extensionServiceRequestManager.requestServiceLoad(target);
 
       if (!response.isSuccess()) {

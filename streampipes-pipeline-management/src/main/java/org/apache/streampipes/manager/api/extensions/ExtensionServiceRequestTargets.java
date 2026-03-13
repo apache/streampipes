@@ -134,6 +134,15 @@ public final class ExtensionServiceRequestTargets {
     );
   }
 
+  public static ExtensionServiceRequestTarget serviceLoad(SpServiceRegistration service) {
+    return forService(
+        service,
+        ExtensionServiceOperationType.SERVICE_LOAD,
+        path("serviceMonitor"),
+        topic("monitoring", "service-load")
+    );
+  }
+
   public static ExtensionServiceRequestTarget pipelineInvocation(String baseUrl,
                                                                  String serviceId,
                                                                  SpServiceUrlProvider provider,

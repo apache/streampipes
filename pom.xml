@@ -912,6 +912,7 @@
         <module>streampipes-service-core-minimal</module>
         <module>streampipes-service-discovery</module>
         <module>streampipes-service-discovery-api</module>
+        <module>streampipes-nats-extensions</module>
         <module>streampipes-service-extensions</module>
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-couchdb</module>
