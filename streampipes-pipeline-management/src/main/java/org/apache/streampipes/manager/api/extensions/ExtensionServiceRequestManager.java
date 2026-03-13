@@ -50,6 +50,8 @@ public interface ExtensionServiceRequestManager {
 
   ExtensionServiceOperationResult requestServiceHealth(ExtensionServiceRequestTarget target) throws IOException;
 
+  ExtensionServiceOperationResult requestServiceLoad(ExtensionServiceRequestTarget target) throws IOException;
+
   ExtensionServiceOperationResult requestPipelineElementInvocation(ExtensionServiceRequestTarget target,
                                                                    String pipelineId,
                                                                    String payload) throws IOException;

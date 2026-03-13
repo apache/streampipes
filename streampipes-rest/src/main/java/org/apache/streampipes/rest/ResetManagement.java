@@ -69,7 +69,7 @@ public class ResetManagement {
 
     clearPipelineAssemblyCache(username);
 
-    stopAndDeleteAllPipelines();
+    stopAndDeleteAllPipelines(requestManager);
 
     stopAndDeleteAllAdapters(workerRestClient, extensionsServiceStorage, requestManager);
 

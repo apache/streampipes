@@ -93,6 +93,11 @@ public class HttpExtensionServiceRequestManager implements ExtensionServiceReque
   }
 
   @Override
+  public ExtensionServiceOperationResult requestServiceLoad(ExtensionServiceRequestTarget target) throws IOException {
+    return get(makeUrl(target), AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()));
+  }
+
+  @Override
   public ExtensionServiceOperationResult requestPipelineElementInvocation(ExtensionServiceRequestTarget target,
                                                                           String pipelineId,
                                                                           String payload) throws IOException {

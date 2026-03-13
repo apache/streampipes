@@ -29,11 +29,13 @@ import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.loadbalance.LoadManager;
-import org.apache.streampipes.manager.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.loadbalance.service.ExtensionsServiceReportExecutor;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.function.FunctionManager;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
+import org.apache.streampipes.manager.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
@@ -74,6 +76,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -154,6 +157,19 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
     var env = Environments.getEnvironment();
+
+    ExtensionsServiceReportExecutor.setServiceReportFetcher(serviceRegistration -> {
+      var target = ExtensionServiceRequestTargets.serviceHealth(serviceRegistration, "serviceMonitor");
+      var response = extensionServiceRequestManager.requestServiceLoad(target);
+
+      if (!response.isSuccess()) {
+        throw new IOException("Could not fetch load report from endpoint " + serviceRegistration.getServiceUrl()
+            + " (status " + response.statusCode() + ")");
+      }
+
+      return response.responseBody();
+    });
+
     if (env.getLoadManagerEnable().getValueOrDefault()) {
       LoadManager.initialize();
     }
@@ -254,7 +270,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     });
 
     LOG.info("Gracefully stopping all running pipelines...");
-    List<PipelineOperationStatus> status = PipelineManager.stopAllPipelines(true);
+    List<PipelineOperationStatus> status = PipelineManager.stopAllPipelines(true, extensionServiceRequestManager);
     status.forEach(s -> {
       if (s.isSuccess()) {
         LOG.info("Pipeline {} successfully stopped", s.getPipelineName());
