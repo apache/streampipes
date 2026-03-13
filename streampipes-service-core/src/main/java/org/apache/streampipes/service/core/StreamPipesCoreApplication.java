@@ -29,7 +29,7 @@ import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.loadbalance.LoadManager;
-import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.manager.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.function.FunctionManager;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
@@ -201,7 +201,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
     LOG.info("Extensions logs will be fetched every {} milliseconds", logFetchInterval);
-    logCheckExecutorService.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(),
+    logCheckExecutorService.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(extensionServiceRequestManager),
         logFetchInterval, logFetchInterval,
         TimeUnit.MILLISECONDS);
   }

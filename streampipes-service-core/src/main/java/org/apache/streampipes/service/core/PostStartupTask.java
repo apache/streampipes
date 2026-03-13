@@ -152,7 +152,7 @@ public class PostStartupTask implements Runnable {
   }
 
   private void startPipeline(Pipeline pipeline, boolean restartOnReboot) {
-    PipelineOperationStatus status = new PipelineExecutor(pipeline).startPipeline();
+    PipelineOperationStatus status = new PipelineExecutor(pipeline, extensionServiceRequestManager).startPipeline();
     if (status.isSuccess()) {
       LOG.info("Pipeline {} successfully restarted", status.getPipelineName());
       Pipeline storedPipeline = getPipelineStorage().getElementById(pipeline.getPipelineId());

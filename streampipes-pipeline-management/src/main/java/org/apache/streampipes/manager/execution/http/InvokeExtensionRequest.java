@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.api.EndpointSelectable;
@@ -34,6 +35,10 @@ import java.io.IOException;
 public class InvokeExtensionRequest extends PipelineElementExtensionRequest {
 
   private static final Logger LOG = LoggerFactory.getLogger(InvokeExtensionRequest.class);
+
+  public InvokeExtensionRequest(ExtensionServiceRequestManager requestManager) {
+    super(requestManager);
+  }
 
   @Override
   protected ExtensionServiceOperationResult performRequest(InvocableStreamPipesEntity pipelineElement,

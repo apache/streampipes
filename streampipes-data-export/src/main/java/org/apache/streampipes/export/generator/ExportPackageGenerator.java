@@ -97,7 +97,7 @@ public class ExportPackageGenerator {
 
       config.getPipelines().forEach(item -> addDoc(builder,
           item,
-          new PipelineResolver(),
+          new PipelineResolver(extensionServiceRequestManager),
           manifest::addPipeline));
 
       config.getDashboards().forEach(item -> {

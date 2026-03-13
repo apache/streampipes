@@ -142,7 +142,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<?> start(@PathVariable("pipelineId") String pipelineId) {
     try {
-      PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId);
+      PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId, requestManager);
 
       return ok(status);
     } catch (Exception e) {
@@ -157,7 +157,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<?> stop(@PathVariable("pipelineId") String pipelineId,
                                 @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
     try {
-      PipelineOperationStatus status = PipelineManager.stopPipeline(pipelineId, forceStop);
+      PipelineOperationStatus status = PipelineManager.stopPipeline(pipelineId, forceStop, requestManager);
       return ok(status);
     } catch (Exception e) {
       LOG.error(e.getMessage());

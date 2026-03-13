@@ -286,7 +286,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
           if (isAdmin || namesOfPipelinesNotOwnedByUser.isEmpty()) {
             try {
               for (String pipelineId : pipelinesUsingAdapter) {
-                PipelineManager.stopPipeline(pipelineId, false);
+                PipelineManager.stopPipeline(pipelineId, false, requestManager);
                 PipelineManager.deletePipeline(pipelineId);
               }
               managementService.deleteAdapter(elementId);

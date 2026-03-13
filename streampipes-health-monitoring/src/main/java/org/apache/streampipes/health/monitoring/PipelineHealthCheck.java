@@ -21,6 +21,7 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.health.monitoring.model.HealthCheckData;
 import org.apache.streampipes.health.monitoring.utils.HealthCheckUtils;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.execution.http.InvokeExtensionRequest;
@@ -57,9 +58,12 @@ public class PipelineHealthCheck {
   private static final PipelinesStats pipelinesStats = new PipelinesStats();
 
   private final HealthCheckData healthCheckData;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public PipelineHealthCheck(HealthCheckData healthCheckData) {
+  public PipelineHealthCheck(HealthCheckData healthCheckData,
+                             ExtensionServiceRequestManager requestManager) {
     this.healthCheckData = healthCheckData;
+    this.requestManager = requestManager;
   }
 
   public void runCheck() {
@@ -123,7 +127,7 @@ public class PipelineHealthCheck {
               new SecretService(new SecretDecrypter()).apply(pipelineElement);
               pipelineElement.setSelectedEndpointUrl(service.getServiceUrl());
               pipelineElement.setSelectedServiceId(service.getSvcId());
-              success = new InvokeExtensionRequest()
+              success = new InvokeExtensionRequest(requestManager)
                   .execute(pipelineElement, pipeline.getPipelineId()).isSuccess();
               new SecretService(new SecretEncrypter()).apply(pipelineElement);
             } catch (NoServiceEndpointsAvailableException e) {

@@ -83,7 +83,7 @@ public class AdapterUpdateManagement {
     affectedPipelines.forEach(p -> {
       var shouldRestartPipeline = p.isRunning();
       if (shouldRestartPipeline) {
-        new PipelineExecutor(p).stopPipeline(true);
+        new PipelineExecutor(p, requestManager).stopPipeline(true);
       }
       var storedPipeline = PipelineManager.getPipeline(p.getPipelineId());
       var pipeline = applyUpdatedDataStream(storedPipeline, ad);
@@ -101,7 +101,7 @@ public class AdapterUpdateManagement {
         }
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(modifiedPipeline);
         if (shouldRestartPipeline && canAutoMigrate) {
-          new PipelineExecutor(PipelineManager.getPipeline(p.getPipelineId())).startPipeline();
+          new PipelineExecutor(PipelineManager.getPipeline(p.getPipelineId()), requestManager).startPipeline();
         }
       } catch (Exception e) {
         LOG.error("Could not update pipeline {}", pipeline.getName(), e);

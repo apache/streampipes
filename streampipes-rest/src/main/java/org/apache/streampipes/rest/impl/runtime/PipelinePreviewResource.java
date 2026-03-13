@@ -71,7 +71,7 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
       var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStreams);
       var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(
           runtimeInfoFetcher,
-          () -> new PipelinePreview().deletePreview(previewId)
+          () -> new PipelinePreview().deletePreview(previewId, requestManager)
       );
       return runtimeInfoProvider::streamOutput;
     } catch (IllegalArgumentException e) {

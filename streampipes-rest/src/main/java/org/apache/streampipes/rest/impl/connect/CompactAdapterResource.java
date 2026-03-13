@@ -122,7 +122,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
                   requestManager
               ),
               getAuthenticatedUserSid()
-          ).createAndStartPersistPipeline(storedAdapter);
+          ).createAndStartPersistPipeline(storedAdapter, requestManager);
         }
         if (compactAdapter.createOptions()
                           .start()) {

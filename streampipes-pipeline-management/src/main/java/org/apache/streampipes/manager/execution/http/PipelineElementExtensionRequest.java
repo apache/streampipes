@@ -20,7 +20,6 @@ package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
-import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
@@ -33,10 +32,6 @@ import java.io.IOException;
 public abstract class PipelineElementExtensionRequest {
 
   private final ExtensionServiceRequestManager requestManager;
-
-  public PipelineElementExtensionRequest() {
-    this(new HttpExtensionServiceRequestManager());
-  }
 
   public PipelineElementExtensionRequest(ExtensionServiceRequestManager requestManager) {
     this.requestManager = requestManager;

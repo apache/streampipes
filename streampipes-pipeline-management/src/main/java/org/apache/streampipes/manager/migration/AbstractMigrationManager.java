@@ -48,7 +48,7 @@ import static org.apache.streampipes.manager.migration.MigrationUtils.getRequest
 public abstract class AbstractMigrationManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractMigrationManager.class);
-  private final ExtensionServiceRequestManager requestManager;
+  protected final ExtensionServiceRequestManager requestManager;
 
   protected AbstractMigrationManager(ExtensionServiceRequestManager requestManager) {
     this.requestManager = requestManager;

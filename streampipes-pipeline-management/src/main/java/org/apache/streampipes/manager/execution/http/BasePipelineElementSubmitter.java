@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
@@ -31,11 +32,14 @@ public abstract class BasePipelineElementSubmitter {
   protected final String pipelineName;
 
   protected final PipelineOperationStatus status;
+  protected final ExtensionServiceRequestManager requestManager;
 
-  public BasePipelineElementSubmitter(Pipeline pipeline) {
+  public BasePipelineElementSubmitter(Pipeline pipeline,
+                                      ExtensionServiceRequestManager requestManager) {
     this.pipelineId = pipeline.getPipelineId();
     this.pipelineName = pipeline.getName();
     this.status = new PipelineOperationStatus(pipelineId, pipelineName);
+    this.requestManager = requestManager;
   }
 
   public PipelineOperationStatus submit(List<InvocableStreamPipesEntity> processorsAndSinks) {
@@ -63,7 +67,7 @@ public abstract class BasePipelineElementSubmitter {
   }
 
   protected PipelineElementStatus performDetach(InvocableStreamPipesEntity pipelineElement) {
-    return new DetachExtensionRequest().execute(pipelineElement, this.pipelineId);
+    return new DetachExtensionRequest(requestManager).execute(pipelineElement, this.pipelineId);
   }
 
   protected abstract PipelineElementStatus submitElement(InvocableStreamPipesEntity pipelineElement);

@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -33,6 +34,10 @@ import java.io.IOException;
 public class DetachExtensionRequest extends PipelineElementExtensionRequest {
 
   private static final Logger LOG = LoggerFactory.getLogger(DetachExtensionRequest.class);
+
+  public DetachExtensionRequest(ExtensionServiceRequestManager requestManager) {
+    super(requestManager);
+  }
 
   @Override
   protected ExtensionServiceOperationResult performRequest(InvocableStreamPipesEntity pipelineElement,

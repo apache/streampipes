@@ -129,7 +129,7 @@ public final class ExtensionServiceRequestTargets {
     return forService(
         service,
         ExtensionServiceOperationType.SERVICE_HEALTH,
-        path(splitPath(healthCheckPath)),
+        path(healthCheckPath),
         topic("service-health")
     );
   }

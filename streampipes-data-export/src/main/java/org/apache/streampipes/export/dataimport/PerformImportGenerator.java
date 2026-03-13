@@ -120,7 +120,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handlePipeline(String document, String pipelineId) throws JsonProcessingException {
     if (shouldStore(pipelineId, config.getPipelines())) {
-      writeDocument(document, new PipelineResolver());
+      writeDocument(document, new PipelineResolver(extensionServiceRequestManager));
       permissionsToStore.add(new PermissionInfo(pipelineId, Pipeline.class));
     }
   }

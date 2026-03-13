@@ -99,10 +99,10 @@ public class ResetManagement {
     PipelineCanvasMetadataCacheManager.removeCanvasMetadataFromCache(username);
   }
 
-  private static void stopAndDeleteAllPipelines() {
+  private static void stopAndDeleteAllPipelines(ExtensionServiceRequestManager requestManager) {
     List<Pipeline> allPipelines = PipelineManager.getAllPipelines();
     allPipelines.forEach(pipeline -> {
-      PipelineManager.stopPipeline(pipeline.getPipelineId(), true);
+      PipelineManager.stopPipeline(pipeline.getPipelineId(), true, requestManager);
       PipelineManager.deletePipeline(pipeline.getPipelineId());
     });
   }

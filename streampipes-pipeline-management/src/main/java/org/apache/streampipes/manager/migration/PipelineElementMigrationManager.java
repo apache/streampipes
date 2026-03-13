@@ -130,7 +130,9 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
             LOG.info("Migration for pipeline successfully completed.");
           } else {
             // pass most recent version of pipeline
-            handleFailedMigrations(pipelineStorage.getElementById(pipeline.getPipelineId()), failedMigrations);
+            handleFailedMigrations(
+                pipelineStorage.getElementById(pipeline.getPipelineId()),
+                failedMigrations);
           }
         }
       }
@@ -179,7 +181,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
 
 
   public void stopPipeline(Pipeline pipeline) {
-    var pipelineExecutor = new PipelineExecutor(pipeline);
+    var pipelineExecutor = new PipelineExecutor(pipeline, requestManager);
     var pipelineStopResult = pipelineExecutor.stopPipeline(true);
 
     if (pipelineStopResult.isSuccess()) {

@@ -61,7 +61,7 @@ public class PipelinePreview {
     );
 
     rewriteElementIds(pipelineElements, elementIdMappings);
-    invokeGraphs(filter(pipelineElements));
+    invokeGraphs(filter(pipelineElements), requestManager);
     storeGraphs(previewId, pipelineElements);
 
     LOG.info("Preview pipeline {} started", previewId);
@@ -69,9 +69,10 @@ public class PipelinePreview {
     return makePreviewModel(previewId, elementIdMappings);
   }
 
-  public void deletePreview(String previewId) {
+  public void deletePreview(String previewId,
+                            ExtensionServiceRequestManager requestManager) {
     List<NamedStreamPipesEntity> graphs = ActivePipelinePreviews.INSTANCE.getInvocationGraphs(previewId);
-    detachGraphs(filter(graphs));
+    detachGraphs(filter(graphs), requestManager);
     deleteGraphs(previewId);
     LOG.info("Preview pipeline {} stopped", previewId);
   }
@@ -138,22 +139,24 @@ public class PipelinePreview {
         );
   }
 
-  private void invokeGraphs(List<InvocableStreamPipesEntity> graphs) {
+  private void invokeGraphs(List<InvocableStreamPipesEntity> graphs,
+                            ExtensionServiceRequestManager requestManager) {
     graphs.forEach(g -> {
       try {
         var service = findSelectedService(g);
         g.setSelectedEndpointUrl(service.getServiceUrl());
         g.setSelectedServiceId(service.getSvcId());
-        new InvokeExtensionRequest().execute(g, null);
+        new InvokeExtensionRequest(requestManager).execute(g, null);
       } catch (NoServiceEndpointsAvailableException e) {
         LOG.warn("No endpoint found for pipeline element {}", g.getAppId());
       }
     });
   }
 
-  private void detachGraphs(List<InvocableStreamPipesEntity> graphs) {
+  private void detachGraphs(List<InvocableStreamPipesEntity> graphs,
+                            ExtensionServiceRequestManager requestManager) {
     graphs.forEach(g -> {
-      new DetachExtensionRequest().execute(g, null);
+      new DetachExtensionRequest(requestManager).execute(g, null);
     });
   }
 

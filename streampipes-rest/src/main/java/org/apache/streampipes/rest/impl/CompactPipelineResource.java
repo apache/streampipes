@@ -44,12 +44,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class CompactPipelineResource extends AbstractAuthGuardedRestResource {
 
   private final CompactPipelineManagement compactPipelineManagement;
+  private final ExtensionServiceRequestManager requestManager;
 
   public CompactPipelineResource(ExtensionServiceRequestManager requestManager) {
     this.compactPipelineManagement = new CompactPipelineManagement(
         getPipelineElementStorage(),
         requestManager
     );
+    this.requestManager = requestManager;
   }
 
   @PostMapping(
@@ -69,7 +71,7 @@ public class CompactPipelineResource extends AbstractAuthGuardedRestResource {
       String pipelineId = PipelineManager.addPipeline(getAuthenticatedUserSid(), pipelineGenerationResult.pipeline());
       if (compactPipeline.createOptions().start()) {
         try {
-          PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId);
+          PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId, requestManager);
           return ok(status);
         } catch (Exception e) {
           return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));

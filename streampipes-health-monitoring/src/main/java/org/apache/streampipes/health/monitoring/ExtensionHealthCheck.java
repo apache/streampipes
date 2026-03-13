@@ -59,7 +59,7 @@ public class ExtensionHealthCheck implements Runnable {
       });
 
       var healthCheckData = new HealthCheckData(resourceProvider, activeResources, activeCoreInstances, activeExtensionInstances);
-      new PipelineHealthCheck(healthCheckData).runCheck();
+      new PipelineHealthCheck(healthCheckData, extensionRequestManager).runCheck();
       new AdapterHealthCheck(healthCheckData).runCheck();
     } catch (Exception e) {
       LOG.warn("An unhandled error occurred while running health check.", e);

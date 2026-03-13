@@ -59,14 +59,9 @@ public class MigrationUtils {
    *
    * @param entityType Type of the entity to be updated.
    * @param appId      AppId of the entity to be updated
-   * @param serviceUrl URL of the extensions service to which the entity belongs
+   * @param service    The extensions service to which the entity belongs
    * @return URL of the endpoint that provides the description for the given entity
    */
-  // TODO
-//  public static String getRequestUrl(SpServiceTagPrefix entityType, String appId, String serviceUrl) {
-//    return getRequestTarget(entityType, appId, serviceUrl).asPath();
-//  }
-
   public static ExtensionServiceRequestTarget getRequestTarget(SpServiceTagPrefix entityType,
                                                                String appId,
                                                                SpServiceRegistration service) {
