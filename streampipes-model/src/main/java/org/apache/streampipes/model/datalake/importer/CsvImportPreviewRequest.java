@@ -22,11 +22,20 @@ import java.util.List;
 
 public class CsvImportPreviewRequest {
 
+  private String uploadId;
   private String fileName;
   private CsvImportConfiguration csvConfig;
   private List<String> headers;
   private List<List<String>> rows;
   private CsvImportTarget target;
+
+  public String getUploadId() {
+    return uploadId;
+  }
+
+  public void setUploadId(String uploadId) {
+    this.uploadId = uploadId;
+  }
 
   public String getFileName() {
     return fileName;

@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
 import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
@@ -34,7 +35,9 @@ import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -118,7 +122,102 @@ class CsvDataLakeImportServiceTest {
     assertTrue(result.isCreatedNewMeasurement());
     assertEquals(2, result.getImportedRowCount());
     assertEquals("new-measure", result.getMeasurementName());
-    verify(dataWriter).writeData(any(DataLakeMeasure.class), any());
+    verify(dataWriter).writeData(any(DataLakeMeasure.class), any(SpQueryResult.class));
+  }
+
+  @Test
+  void shouldPreviewOnceAndImportFromStoredUpload() throws Exception {
+    var schemaManagement = mock(IDataExplorerSchemaManagement.class);
+    var dataWriter = mock(DataLakeDataWriter.class);
+    var uploadStorage = new CsvImportUploadStorage();
+    var service = new CsvDataLakeImportService(schemaManagement, dataWriter, uploadStorage);
+
+    when(schemaManagement.getExistingMeasureByName("uploaded-measure"))
+        .thenReturn(Optional.empty());
+    when(schemaManagement.createOrUpdateMeasurement(any(DataLakeMeasure.class), any()))
+        .thenAnswer(invocation -> {
+          var measure = invocation.getArgument(0, DataLakeMeasure.class);
+          measure.setElementId("measure-id");
+          return measure;
+        });
+
+    var previewRequest = new CsvImportPreviewRequest();
+    previewRequest.setCsvConfig(makeCsvConfigWithCommaDelimiter());
+    previewRequest.setTarget(makeTarget(CsvImportTargetMode.NEW, "uploaded-measure"));
+
+    var multipartFile = mock(MultipartFile.class);
+    when(multipartFile.getOriginalFilename()).thenReturn("upload.csv");
+    when(multipartFile.getInputStream()).thenReturn(new ByteArrayInputStream(
+        "timestamp,temperature\n1710000000000,21.3\n1710000060000,22.1\n".getBytes()
+    ));
+
+    var previewResult = service.preview(
+        multipartFile,
+        previewRequest,
+        "sid"
+    );
+
+    assertTrue(previewResult.isValid());
+    assertEquals(2, previewResult.getPreviewRows().size());
+    assertTrue(previewResult.getUploadId() != null && !previewResult.getUploadId().isBlank());
+
+    var importRequest = new CsvImportRequest();
+    importRequest.setUploadId(previewResult.getUploadId());
+    importRequest.setCsvConfig(makeCsvConfigWithCommaDelimiter());
+    importRequest.setTarget(makeTarget(CsvImportTargetMode.NEW, "uploaded-measure"));
+    importRequest.setTimestampColumn("timestamp");
+    importRequest.setColumns(previewResult.getColumns());
+
+    var importResult = service.importData(importRequest, "sid");
+
+    assertTrue(importResult.isCreatedNewMeasurement());
+    assertEquals(2, importResult.getImportedRowCount());
+    verify(dataWriter).writeData(any(DataLakeMeasure.class), anyList(), anyList());
+  }
+
+  @Test
+  void shouldRejectMissingTimestampValuesInUploadedCsv() throws Exception {
+    var schemaManagement = mock(IDataExplorerSchemaManagement.class);
+    var dataWriter = mock(DataLakeDataWriter.class);
+    var uploadStorage = new CsvImportUploadStorage();
+    var service = new CsvDataLakeImportService(schemaManagement, dataWriter, uploadStorage);
+
+    when(schemaManagement.getExistingMeasureByName("uploaded-measure"))
+        .thenReturn(Optional.empty());
+    when(schemaManagement.createOrUpdateMeasurement(any(DataLakeMeasure.class), any()))
+        .thenAnswer(invocation -> {
+          var measure = invocation.getArgument(0, DataLakeMeasure.class);
+          measure.setElementId("measure-id");
+          return measure;
+        });
+
+    var previewRequest = new CsvImportPreviewRequest();
+    previewRequest.setCsvConfig(makeCsvConfigWithCommaDelimiter());
+    previewRequest.setTarget(makeTarget(CsvImportTargetMode.NEW, "uploaded-measure"));
+
+    var multipartFile = mock(MultipartFile.class);
+    when(multipartFile.getOriginalFilename()).thenReturn("upload.csv");
+    when(multipartFile.getInputStream()).thenReturn(new ByteArrayInputStream(
+        "timestamp,temperature\n1710000000000,21.3\n,22.1\n".getBytes()
+    ));
+
+    var previewResult = service.preview(multipartFile, previewRequest, "sid");
+
+    var importRequest = new CsvImportRequest();
+    importRequest.setUploadId(previewResult.getUploadId());
+    importRequest.setCsvConfig(makeCsvConfigWithCommaDelimiter());
+    importRequest.setTarget(makeTarget(CsvImportTargetMode.NEW, "uploaded-measure"));
+    importRequest.setTimestampColumn("timestamp");
+    importRequest.setColumns(previewResult.getColumns());
+
+    var exception = assertThrows(
+        CsvImportValidationException.class,
+        () -> service.importData(importRequest, "sid")
+    );
+
+    assertTrue(exception.getValidationMessages()
+        .stream()
+        .anyMatch(message -> message.getMessage().contains("missing a value for timestamp column")));
   }
 
   @Test
@@ -197,6 +296,14 @@ class CsvDataLakeImportServiceTest {
   private CsvImportConfiguration makeCsvConfig() {
     var config = new CsvImportConfiguration();
     config.setDelimiter(";");
+    config.setDecimalSeparator(".");
+    config.setHasHeader(true);
+    return config;
+  }
+
+  private CsvImportConfiguration makeCsvConfigWithCommaDelimiter() {
+    var config = new CsvImportConfiguration();
+    config.setDelimiter(",");
     config.setDecimalSeparator(".");
     config.setHasHeader(true);
     return config;

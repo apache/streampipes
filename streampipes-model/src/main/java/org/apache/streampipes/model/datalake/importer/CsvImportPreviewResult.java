@@ -25,6 +25,7 @@ import java.util.List;
 
 public class CsvImportPreviewResult {
 
+  private String uploadId;
   private List<String> headers = new ArrayList<>();
   private List<List<String>> previewRows = new ArrayList<>();
   private List<CsvImportColumn> columns = new ArrayList<>();
@@ -32,6 +33,14 @@ public class CsvImportPreviewResult {
   private List<String> timestampCandidates = new ArrayList<>();
   private boolean valid;
   private List<CsvImportValidationMessage> validationMessages = new ArrayList<>();
+
+  public String getUploadId() {
+    return uploadId;
+  }
+
+  public void setUploadId(String uploadId) {
+    this.uploadId = uploadId;
+  }
 
   public List<String> getHeaders() {
     return headers;

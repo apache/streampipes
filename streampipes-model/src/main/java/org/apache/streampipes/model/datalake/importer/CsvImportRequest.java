@@ -23,12 +23,21 @@ import java.util.List;
 
 public class CsvImportRequest {
 
+  private String uploadId;
   private CsvImportConfiguration csvConfig;
   private List<String> headers = new ArrayList<>();
   private List<List<String>> rows = new ArrayList<>();
   private CsvImportTarget target;
   private String timestampColumn;
   private List<CsvImportColumn> columns = new ArrayList<>();
+
+  public String getUploadId() {
+    return uploadId;
+  }
+
+  public void setUploadId(String uploadId) {
+    this.uploadId = uploadId;
+  }
 
   public CsvImportConfiguration getCsvConfig() {
     return csvConfig;

@@ -22,7 +22,6 @@ import org.apache.streampipes.connect.management.util.EventSchemaUtils;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeriesBuilder;
-import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.SpQueryResultBuilder;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
 import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
@@ -44,6 +43,14 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.PushbackReader;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -61,15 +68,19 @@ import java.util.stream.Collectors;
 public class CsvDataLakeImportService {
 
   private static final int MAX_PREVIEW_ROWS = 50;
+  private static final int MAX_ANALYSIS_ROWS = 200;
+  private static final int IMPORT_BATCH_SIZE = 5000;
   private static final String STREAM_PREFIX = "s0::";
 
   private final IDataExplorerSchemaManagement schemaManagement;
   private final DataLakeDataWriter dataWriter;
+  private final CsvImportUploadStorage uploadStorage;
 
   public CsvDataLakeImportService(IDataExplorerSchemaManagement schemaManagement) {
     this(
         schemaManagement,
-        new DataLakeDataWriter(false)
+        new DataLakeDataWriter(false, true),
+        new CsvImportUploadStorage()
     );
   }
 
@@ -77,31 +88,65 @@ public class CsvDataLakeImportService {
       IDataExplorerSchemaManagement schemaManagement,
       DataLakeDataWriter dataWriter
   ) {
+    this(schemaManagement, dataWriter, new CsvImportUploadStorage());
+  }
+
+  CsvDataLakeImportService(
+      IDataExplorerSchemaManagement schemaManagement,
+      DataLakeDataWriter dataWriter,
+      CsvImportUploadStorage uploadStorage
+  ) {
     this.schemaManagement = schemaManagement;
     this.dataWriter = dataWriter;
+    this.uploadStorage = uploadStorage;
   }
 
   public CsvImportPreviewResult preview(CsvImportPreviewRequest request) {
     var validationMessages = validatePreviewRequest(request);
     var headers = sanitizeHeaders(request.getHeaders());
     var rows = Optional.ofNullable(request.getRows()).orElseGet(Collections::emptyList);
+    return buildPreviewResult(request, headers, rows, validationMessages, null);
+  }
 
-    var columns = inferColumns(headers, rows, request.getCsvConfig());
-    var eventSchema = buildEventSchema(columns, rows, request.getCsvConfig(), null);
-    validationMessages.addAll(validatePreviewTarget(request.getTarget()));
+  public CsvImportPreviewResult preview(CsvImportPreviewRequest request, String principalSid) {
+    if (!hasUploadId(request)) {
+      return preview(request);
+    }
 
-    var result = new CsvImportPreviewResult();
-    result.setHeaders(headers);
-    result.setPreviewRows(rows.stream().limit(MAX_PREVIEW_ROWS).collect(Collectors.toList()));
-    result.setColumns(columns);
-    result.setGuessedEventSchema(eventSchema);
-    result.setTimestampCandidates(columns.stream()
-        .filter(CsvImportColumn::isTimestampCandidate)
-        .map(CsvImportColumn::getRuntimeName)
-        .collect(Collectors.toList()));
-    result.setValidationMessages(validationMessages);
-    result.setValid(validationMessages.isEmpty());
-    return result;
+    var validationMessages = validatePreviewConfiguration(request);
+    if (!validationMessages.isEmpty()) {
+      return buildInvalidPreviewResult(validationMessages, request.getUploadId());
+    }
+
+    try {
+      var upload = resolveUpload(request.getUploadId(), principalSid);
+      var csvSample = readCsvSample(upload.path(), request.getCsvConfig(), MAX_ANALYSIS_ROWS);
+      return buildPreviewResult(request, csvSample.headers(), csvSample.rows(), validationMessages, upload.uploadId());
+    } catch (CsvImportValidationException e) {
+      return buildInvalidPreviewResult(e.getValidationMessages(), request.getUploadId());
+    } catch (IOException | UncheckedIOException e) {
+      return buildInvalidPreviewResult(
+          List.of(message("file", "The CSV file could not be parsed with the current settings.")),
+          request.getUploadId()
+      );
+    }
+  }
+
+  public CsvImportPreviewResult preview(MultipartFile file, CsvImportPreviewRequest request, String principalSid)
+      throws IOException {
+    var validationMessages = validatePreviewConfiguration(request);
+    if (!validationMessages.isEmpty()) {
+      return buildInvalidPreviewResult(validationMessages, null);
+    }
+
+    var upload = uploadStorage.store(file, principalSid);
+    try {
+      var csvSample = readCsvSample(upload.path(), request.getCsvConfig(), MAX_ANALYSIS_ROWS);
+      return buildPreviewResult(request, csvSample.headers(), csvSample.rows(), validationMessages, upload.uploadId());
+    } catch (IOException | UncheckedIOException e) {
+      uploadStorage.remove(upload.uploadId());
+      throw e;
+    }
   }
 
   public CsvImportSchemaValidationResult validateSchema(CsvImportSchemaValidationRequest request) {
@@ -127,7 +172,11 @@ public class CsvDataLakeImportService {
   }
 
   public CsvImportResult importData(CsvImportRequest request, String principalSid) {
-    var validationMessages = validateImportRequest(request);
+    if (hasUploadId(request)) {
+      return importUploadedData(request, principalSid);
+    }
+
+    var validationMessages = validateInlineImportRequest(request);
     if (!validationMessages.isEmpty()) {
       throw new CsvImportValidationException(validationMessages);
     }
@@ -158,8 +207,14 @@ public class CsvDataLakeImportService {
       measure = requireExistingMeasurement(request.getTarget().getMeasurementName());
     }
 
-    var queryResult = toQueryResult(request);
-    dataWriter.writeData(measure, queryResult);
+    var queryResult = DataSeriesBuilder.create()
+        .withHeaders(request.getColumns().stream().map(CsvImportColumn::getRuntimeName).collect(Collectors.toList()))
+        .withRows(toImportRows(request))
+        .build();
+    dataWriter.writeData(
+        measure,
+        SpQueryResultBuilder.create(queryResult.getHeaders()).withDataSeries(queryResult).build()
+    );
 
     var result = new CsvImportResult();
     result.setMeasurementId(measure.getElementId());
@@ -170,27 +225,209 @@ public class CsvDataLakeImportService {
     return result;
   }
 
-  private List<CsvImportValidationMessage> validatePreviewRequest(CsvImportPreviewRequest request) {
+  private CsvImportResult importUploadedData(CsvImportRequest request, String principalSid) {
+    var validationMessages = validateStoredImportRequest(request);
+    if (!validationMessages.isEmpty()) {
+      throw new CsvImportValidationException(validationMessages);
+    }
+
+    var upload = resolveUpload(request.getUploadId(), principalSid);
+    var sanitizedColumns = sanitizeImportColumns(request.getColumns());
+    var eventSchema = buildConfiguredEventSchema(sanitizedColumns, request.getTimestampColumn());
+
+    validationMessages.addAll(validateImportTarget(request.getTarget(), eventSchema, request.getTimestampColumn()));
+    if (!validationMessages.isEmpty()) {
+      throw new CsvImportValidationException(validationMessages);
+    }
+
+    var createdNewMeasurement = false;
+    DataLakeMeasure measure;
+
+    if (request.getTarget().getMode() == CsvImportTargetMode.NEW) {
+      measure = new DataLakeMeasure();
+      measure.setMeasureName(request.getTarget().getMeasurementName().trim());
+      measure.setTimestampField(STREAM_PREFIX + request.getTimestampColumn());
+      measure.setEventSchema(eventSchema);
+      measure = schemaManagement.createOrUpdateMeasurement(measure, principalSid);
+      createdNewMeasurement = true;
+    } else {
+      measure = requireExistingMeasurement(request.getTarget().getMeasurementName());
+    }
+
+    try {
+      var importedRowCount = importCsvFile(upload.path(), request, measure);
+      uploadStorage.remove(upload.uploadId());
+
+      var result = new CsvImportResult();
+      result.setMeasurementId(measure.getElementId());
+      result.setMeasurementName(measure.getMeasureName());
+      result.setCreatedNewMeasurement(createdNewMeasurement);
+      result.setImportedRowCount(importedRowCount);
+      result.setValidationMessages(List.of());
+      return result;
+    } catch (IOException | UncheckedIOException e) {
+      throw new CsvImportValidationException(List.of(
+          message("file", "The CSV file could not be parsed with the current settings.")
+      ));
+    }
+  }
+
+  private CsvImportPreviewResult buildPreviewResult(
+      CsvImportPreviewRequest request,
+      List<String> headers,
+      List<List<String>> rows,
+      List<CsvImportValidationMessage> validationMessages,
+      String uploadId
+  ) {
+    var messages = new ArrayList<>(validationMessages);
+    var columns = inferColumns(headers, rows, request.getCsvConfig());
+    var eventSchema = buildEventSchema(columns, rows, request.getCsvConfig(), null);
+    messages.addAll(validatePreviewTarget(request.getTarget()));
+
+    var result = new CsvImportPreviewResult();
+    result.setUploadId(uploadId);
+    result.setHeaders(headers);
+    result.setPreviewRows(rows.stream().limit(MAX_PREVIEW_ROWS).collect(Collectors.toList()));
+    result.setColumns(columns);
+    result.setGuessedEventSchema(eventSchema);
+    result.setTimestampCandidates(columns.stream()
+        .filter(CsvImportColumn::isTimestampCandidate)
+        .map(CsvImportColumn::getRuntimeName)
+        .collect(Collectors.toList()));
+    result.setValidationMessages(messages);
+    result.setValid(messages.isEmpty());
+    return result;
+  }
+
+  private CsvImportPreviewResult buildInvalidPreviewResult(
+      List<CsvImportValidationMessage> validationMessages,
+      String uploadId
+  ) {
+    var result = new CsvImportPreviewResult();
+    result.setUploadId(uploadId);
+    result.setValidationMessages(validationMessages);
+    result.setValid(false);
+    return result;
+  }
+
+  private List<List<Object>> toImportRows(CsvImportRequest request) {
+    var rows = new ArrayList<List<Object>>();
+    for (int rowIndex = 0; rowIndex < request.getRows().size(); rowIndex++) {
+      rows.add(convertRow(request.getRows().get(rowIndex), request, rowIndex + 1));
+    }
+    return rows;
+  }
+
+  private int importCsvFile(Path path, CsvImportRequest request, DataLakeMeasure measure) throws IOException {
+    var runtimeHeaders = request.getColumns().stream()
+        .map(CsvImportColumn::getRuntimeName)
+        .collect(Collectors.toList());
+    var batch = new ArrayList<List<Object>>();
+    var importedRows = new int[]{0};
+
+    parseCsvFile(path, request.getCsvConfig(), new CsvRowConsumer() {
+      private List<String> parsedHeaders;
+
+      @Override
+      public void onHeaders(List<String> headers) {
+        parsedHeaders = headers;
+        validateUploadedHeaders(headers, request.getColumns());
+      }
+
+      @Override
+      public void onRow(int rowNumber, List<String> row) {
+        if (row.size() != parsedHeaders.size()) {
+          throw new CsvImportValidationException(List.of(
+              message("rows", "Row " + rowNumber + " does not match the header size.")
+          ));
+        }
+        batch.add(convertRow(row, request, rowNumber));
+        if (batch.size() >= IMPORT_BATCH_SIZE) {
+          flushImportBatch(measure, runtimeHeaders, batch);
+          importedRows[0] += IMPORT_BATCH_SIZE;
+          batch.clear();
+        }
+      }
+    });
+
+    if (!batch.isEmpty()) {
+      var batchSize = batch.size();
+      flushImportBatch(measure, runtimeHeaders, batch);
+      importedRows[0] += batchSize;
+    }
+
+    return importedRows[0];
+  }
+
+  private void flushImportBatch(DataLakeMeasure measure, List<String> runtimeHeaders, List<List<Object>> batch) {
+    dataWriter.writeData(measure, runtimeHeaders, new ArrayList<>(batch));
+  }
+
+  private List<Object> convertRow(List<String> row, CsvImportRequest request, int rowNumber) {
+    var converted = new ArrayList<Object>();
+    for (int i = 0; i < row.size(); i++) {
+      converted.add(convertValue(
+          row.get(i),
+          request.getColumns().get(i),
+          request.getCsvConfig(),
+          request.getTimestampColumn(),
+          rowNumber
+      ));
+    }
+    return converted;
+  }
+
+  private void validateUploadedHeaders(List<String> headers, List<CsvImportColumn> columns) {
+    if (headers.size() != columns.size()) {
+      throw new CsvImportValidationException(List.of(
+          message("headers", "The uploaded CSV file no longer matches the previewed column count.")
+      ));
+    }
+
+    for (int i = 0; i < headers.size(); i++) {
+      if (!Objects.equals(headers.get(i), columns.get(i).getCsvColumn())) {
+        throw new CsvImportValidationException(List.of(
+            message("headers", "The uploaded CSV file no longer matches the previewed headers.")
+        ));
+      }
+    }
+  }
+
+  private CsvImportUploadStorage.StoredUpload resolveUpload(String uploadId, String principalSid) {
+    var upload = uploadStorage.get(uploadId).orElseThrow(() -> new CsvImportValidationException(List.of(
+        message("uploadId", "The uploaded CSV file was not found. Please upload the file again.")
+    )));
+
+    if (!Objects.equals(upload.ownerSid(), principalSid)) {
+      throw new CsvImportValidationException(List.of(
+          message("uploadId", "The uploaded CSV file is no longer available for this user.")
+      ));
+    }
+
+    return upload;
+  }
+
+  private boolean hasUploadId(CsvImportPreviewRequest request) {
+    return request != null && request.getUploadId() != null && !request.getUploadId().isBlank();
+  }
+
+  private boolean hasUploadId(CsvImportRequest request) {
+    return request != null && request.getUploadId() != null && !request.getUploadId().isBlank();
+  }
+
+  private List<CsvImportValidationMessage> validatePreviewConfiguration(CsvImportPreviewRequest request) {
     var messages = new ArrayList<CsvImportValidationMessage>();
     if (request == null) {
       messages.add(message("request", "Import request must be provided."));
       return messages;
     }
-    if (request.getHeaders() == null || request.getHeaders().isEmpty()) {
-      messages.add(message("headers", "At least one header must be provided."));
-    }
-    if (request.getRows() == null || request.getRows().isEmpty()) {
-      messages.add(message("rows", "At least one row must be provided."));
-    }
-    validateRowsMatchHeaders(request.getHeaders(), request.getRows(), messages);
     validateCsvConfig(request.getCsvConfig(), messages);
     return messages;
   }
 
-  private List<CsvImportValidationMessage> validateImportRequest(CsvImportRequest request) {
-    var messages = new ArrayList<CsvImportValidationMessage>();
+  private List<CsvImportValidationMessage> validatePreviewRequest(CsvImportPreviewRequest request) {
+    var messages = validatePreviewConfiguration(request);
     if (request == null) {
-      messages.add(message("request", "Import request must be provided."));
       return messages;
     }
     if (request.getHeaders() == null || request.getHeaders().isEmpty()) {
@@ -200,6 +437,30 @@ public class CsvDataLakeImportService {
       messages.add(message("rows", "At least one row must be provided."));
     }
     validateRowsMatchHeaders(request.getHeaders(), request.getRows(), messages);
+    return messages;
+  }
+
+  private List<CsvImportValidationMessage> validateInlineImportRequest(CsvImportRequest request) {
+    var messages = validateStoredImportRequest(request);
+    if (request == null) {
+      return messages;
+    }
+    if (request.getHeaders() == null || request.getHeaders().isEmpty()) {
+      messages.add(message("headers", "At least one header must be provided."));
+    }
+    if (request.getRows() == null || request.getRows().isEmpty()) {
+      messages.add(message("rows", "At least one row must be provided."));
+    }
+    validateRowsMatchHeaders(request.getHeaders(), request.getRows(), messages);
+    return messages;
+  }
+
+  private List<CsvImportValidationMessage> validateStoredImportRequest(CsvImportRequest request) {
+    var messages = new ArrayList<CsvImportValidationMessage>();
+    if (request == null) {
+      messages.add(message("request", "Import request must be provided."));
+      return messages;
+    }
     validateCsvConfig(request.getCsvConfig(), messages);
 
     if (request.getTarget() == null || request.getTarget().getMode() == null) {
@@ -210,6 +471,11 @@ public class CsvDataLakeImportService {
     }
     if (request.getColumns() == null || request.getColumns().isEmpty()) {
       messages.add(message("columns", "Column configuration must be provided."));
+    }
+    if (!hasUploadId(request)
+        && (request.getRows() == null || request.getRows().isEmpty())
+        && (request.getHeaders() == null || request.getHeaders().isEmpty())) {
+      messages.add(message("uploadId", "Either an uploadId or inline CSV rows must be provided."));
     }
     return messages;
   }
@@ -397,8 +663,7 @@ public class CsvDataLakeImportService {
         continue;
       }
 
-      if (!Objects.equals(getRuntimeType(entry.getValue()), getRuntimeType(imported))
-      ) {
+      if (!Objects.equals(getRuntimeType(entry.getValue()), getRuntimeType(imported))) {
         issues.add(issue(
             CsvImportSchemaIssueType.COLUMN_TYPE_MISMATCH,
             entry.getKey(),
@@ -425,28 +690,6 @@ public class CsvDataLakeImportService {
         .orElseThrow(() -> new CsvImportValidationException(List.of(
             message("target.measurementName", "The selected measurement does not exist.")
         )));
-  }
-
-  private SpQueryResult toQueryResult(CsvImportRequest request) {
-    var headers = request.getColumns().stream()
-        .map(CsvImportColumn::getRuntimeName)
-        .collect(Collectors.toList());
-    var rows = new ArrayList<List<Object>>();
-    for (var row : request.getRows()) {
-      var converted = new ArrayList<Object>();
-      for (int i = 0; i < row.size(); i++) {
-        converted.add(convertValue(row.get(i), request.getColumns().get(i), request.getCsvConfig(), request.getTimestampColumn()));
-      }
-      rows.add(converted);
-    }
-
-    var dataSeries = DataSeriesBuilder.create()
-        .withHeaders(headers)
-        .withRows(rows)
-        .build();
-    return SpQueryResultBuilder.create(headers)
-        .withDataSeries(dataSeries)
-        .build();
   }
 
   private EventSchema buildEventSchema(
@@ -555,7 +798,6 @@ public class CsvDataLakeImportService {
     var allBoolean = true;
     var allLong = true;
     var allNumber = true;
-    var timestampCandidate = false;
 
     for (var row : rows) {
       var value = row.get(columnIndex);
@@ -573,7 +815,7 @@ public class CsvDataLakeImportService {
       }
     }
 
-    timestampCandidate = isTimestampCandidate(rows, columnIndex, config);
+    var timestampCandidate = isTimestampCandidate(rows, columnIndex, config);
 
     if (timestampCandidate || allLong) {
       return "LONG";
@@ -622,20 +864,52 @@ public class CsvDataLakeImportService {
       CsvImportConfiguration config,
       String timestampColumn
   ) {
+    return convertValue(rawValue, column, config, timestampColumn, null);
+  }
+
+  private Object convertValue(
+      String rawValue,
+      CsvImportColumn column,
+      CsvImportConfiguration config,
+      String timestampColumn,
+      Integer rowNumber
+  ) {
     if (rawValue == null || rawValue.isBlank()) {
+      if (rowNumber != null && Objects.equals(column.getRuntimeName(), timestampColumn)) {
+        throw new CsvImportValidationException(List.of(
+            message(
+                "rows",
+                "Row " + rowNumber + " is missing a value for timestamp column \"" + column.getCsvColumn() + "\"."
+            )
+        ));
+      }
       return null;
     }
-    var trimmed = rawValue.trim();
-    if (Objects.equals(column.getRuntimeName(), timestampColumn)) {
-      return parseTimestamp(trimmed, config);
-    }
 
-    return switch (finalRuntimeType(column, timestampColumn)) {
-      case "BOOLEAN" -> Boolean.parseBoolean(trimmed.toLowerCase(Locale.ENGLISH));
-      case "LONG" -> Long.parseLong(normalizeNumber(trimmed, config));
-      case "FLOAT" -> Double.parseDouble(normalizeNumber(trimmed, config));
-      default -> trimmed;
-    };
+    var trimmed = rawValue.trim();
+    try {
+      if (Objects.equals(column.getRuntimeName(), timestampColumn)) {
+        return parseTimestamp(trimmed, config);
+      }
+
+      return switch (finalRuntimeType(column, timestampColumn)) {
+        case "BOOLEAN" -> Boolean.parseBoolean(trimmed.toLowerCase(Locale.ENGLISH));
+        case "LONG" -> Long.parseLong(normalizeNumber(trimmed, config));
+        case "FLOAT" -> Double.parseDouble(normalizeNumber(trimmed, config));
+        default -> trimmed;
+      };
+    } catch (RuntimeException e) {
+      if (rowNumber == null) {
+        throw e;
+      }
+
+      throw new CsvImportValidationException(List.of(
+          message(
+              "rows",
+              "Row " + rowNumber + " contains an invalid value for column \"" + column.getCsvColumn() + "\"."
+          )
+      ));
+    }
   }
 
   private long parseTimestamp(String value, CsvImportConfiguration config) {
@@ -736,14 +1010,190 @@ public class CsvDataLakeImportService {
     return new CsvImportSchemaIssue(type, columnName, expected, actual);
   }
 
-  private String normalize(String value) {
-    return value == null ? null : value.trim().toLowerCase(Locale.ENGLISH);
-  }
-
   private String getRuntimeType(EventProperty property) {
     if (property instanceof EventPropertyPrimitive primitive) {
       return primitive.getRuntimeType();
     }
     return null;
+  }
+
+  private CsvFileSample readCsvSample(Path path, CsvImportConfiguration config, int maxRows) throws IOException {
+    var headers = new ArrayList<String>();
+    var rows = new ArrayList<List<String>>();
+
+    parseCsvFile(path, config, new CsvRowConsumer() {
+      @Override
+      public void onHeaders(List<String> parsedHeaders) {
+        headers.addAll(parsedHeaders);
+      }
+
+      @Override
+      public void onRow(int rowNumber, List<String> row) {
+        if (row.size() != headers.size()) {
+          throw new CsvImportValidationException(List.of(
+              message("rows", "Row " + rowNumber + " does not match the header size.")
+          ));
+        }
+        if (rows.size() < maxRows) {
+          rows.add(row);
+        }
+      }
+    });
+
+    if (headers.isEmpty()) {
+      throw new CsvImportValidationException(List.of(message("headers", "At least one header must be provided.")));
+    }
+    if (rows.isEmpty()) {
+      throw new CsvImportValidationException(List.of(message("rows", "At least one row must be provided.")));
+    }
+
+    return new CsvFileSample(headers, rows);
+  }
+
+  private void parseCsvFile(Path path, CsvImportConfiguration config, CsvRowConsumer consumer) throws IOException {
+    try (var reader = new PushbackReader(Files.newBufferedReader(path, StandardCharsets.UTF_8), 1)) {
+      var delimiter = normalizeDelimiter(config == null ? null : config.getDelimiter());
+      var hasHeader = config == null || config.isHasHeader();
+      List<String> headers = null;
+      int rowNumber = 0;
+      List<String> row;
+
+      while ((row = readNextRow(reader, delimiter)) != null) {
+        if (isBlankRow(row)) {
+          continue;
+        }
+
+        if (headers == null) {
+          if (hasHeader) {
+            headers = normalizeHeaders(row);
+            consumer.onHeaders(headers);
+          } else {
+            headers = generateHeaders(row.size());
+            consumer.onHeaders(headers);
+            rowNumber += 1;
+            consumer.onRow(rowNumber, row);
+          }
+        } else {
+          rowNumber += 1;
+          consumer.onRow(rowNumber, row);
+        }
+      }
+    }
+  }
+
+  private List<String> readNextRow(PushbackReader reader, char delimiter) throws IOException {
+    var currentRow = new ArrayList<String>();
+    var currentValue = new StringBuilder();
+    var inQuotes = false;
+    var readAny = false;
+
+    while (true) {
+      var nextInt = reader.read();
+      if (nextInt == -1) {
+        if (!readAny && currentValue.length() == 0 && currentRow.isEmpty()) {
+          return null;
+        }
+        currentRow.add(currentValue.toString());
+        return currentRow;
+      }
+
+      readAny = true;
+      var currentChar = (char) nextInt;
+      if (currentChar == '"') {
+        if (inQuotes) {
+          var escapedCandidate = reader.read();
+          if (escapedCandidate == '"') {
+            currentValue.append('"');
+          } else {
+            inQuotes = false;
+            if (escapedCandidate != -1) {
+              reader.unread(escapedCandidate);
+            }
+          }
+        } else {
+          inQuotes = true;
+        }
+      } else if (!inQuotes && currentChar == delimiter) {
+        currentRow.add(currentValue.toString());
+        currentValue = new StringBuilder();
+      } else if (!inQuotes && (currentChar == '\n' || currentChar == '\r')) {
+        if (currentChar == '\r') {
+          var maybeLineFeed = reader.read();
+          if (maybeLineFeed != '\n' && maybeLineFeed != -1) {
+            reader.unread(maybeLineFeed);
+          }
+        }
+        currentRow.add(currentValue.toString());
+        return currentRow;
+      } else {
+        currentValue.append(currentChar);
+      }
+    }
+  }
+
+  private char normalizeDelimiter(String delimiter) {
+    if (delimiter == null || delimiter.isEmpty()) {
+      return ',';
+    }
+    if ("\\t".equals(delimiter)) {
+      return '\t';
+    }
+    return delimiter.charAt(0);
+  }
+
+  private List<String> normalizeHeaders(List<String> headers) {
+    var normalized = new ArrayList<String>();
+    for (int i = 0; i < headers.size(); i++) {
+      var value = headers.get(i);
+      if (i == 0) {
+        value = stripBom(value);
+      }
+      var trimmed = value == null ? "" : value.trim();
+      normalized.add(trimmed.isEmpty() ? "column_" + (i + 1) : trimmed);
+    }
+    return normalized;
+  }
+
+  private String stripBom(String value) {
+    return value == null ? null : value.replace("\uFEFF", "");
+  }
+
+  private List<String> generateHeaders(int size) {
+    var headers = new ArrayList<String>();
+    for (int i = 0; i < size; i++) {
+      headers.add("column_" + (i + 1));
+    }
+    return headers;
+  }
+
+  private boolean isBlankRow(List<String> row) {
+    return row.stream().allMatch(cell -> cell == null || cell.trim().isEmpty());
+  }
+
+  @FunctionalInterface
+  private interface CsvRowConsumer {
+    default void onHeaders(List<String> headers) {
+    }
+
+    void onRow(int rowNumber, List<String> row);
+  }
+
+  private static final class CsvFileSample {
+
+    private final List<String> headers;
+    private final List<List<String>> rows;
+
+    private CsvFileSample(List<String> headers, List<List<String>> rows) {
+      this.headers = headers;
+      this.rows = rows;
+    }
+
+    List<String> headers() {
+      return headers;
+    }
+
+    List<List<String>> rows() {
+      return rows;
+    }
   }
 }

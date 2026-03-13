@@ -33,7 +33,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v4/datalake/import")
@@ -53,13 +57,26 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
   )
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<CsvImportPreviewResult> preview(@RequestBody CsvImportPreviewRequest request) {
-    if (request.getTarget() != null
-        && request.getTarget().getMode() == CsvImportTargetMode.EXISTING
-        && this.dataLakeMeasureManagement.getExistingMeasureByName(request.getTarget().getMeasurementName()).isPresent()
-        && !this.checkPermissionByName(request.getTarget().getMeasurementName(), "WRITE")) {
+    if (!hasWritePermission(request.getTarget())) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-    return ok(importService.preview(request));
+    return ok(importService.preview(request, getAuthenticatedUserSid()));
+  }
+
+  @PostMapping(
+      path = "/preview",
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  @PreAuthorize("this.hasWriteAuthority()")
+  public ResponseEntity<CsvImportPreviewResult> preview(
+      @RequestPart("file") MultipartFile file,
+      @RequestPart("request") CsvImportPreviewRequest request
+  ) throws IOException {
+    if (!hasWritePermission(request.getTarget())) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+    return ok(importService.preview(file, request, getAuthenticatedUserSid()));
   }
 
   @PostMapping(
@@ -71,10 +88,7 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
   public ResponseEntity<CsvImportSchemaValidationResult> validateSchema(
       @RequestBody CsvImportSchemaValidationRequest request
   ) {
-    if (request.getTarget() != null
-        && request.getTarget().getMode() == CsvImportTargetMode.EXISTING
-        && this.dataLakeMeasureManagement.getExistingMeasureByName(request.getTarget().getMeasurementName()).isPresent()
-        && !this.checkPermissionByName(request.getTarget().getMeasurementName(), "WRITE")) {
+    if (!hasWritePermission(request.getTarget())) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
     return ok(importService.validateSchema(request));
@@ -86,10 +100,7 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
   )
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<CsvImportResult> importData(@RequestBody CsvImportRequest request) {
-    if (request.getTarget() != null
-        && request.getTarget().getMode() == CsvImportTargetMode.EXISTING
-        && this.dataLakeMeasureManagement.getExistingMeasureByName(request.getTarget().getMeasurementName()).isPresent()
-        && !this.checkPermissionByName(request.getTarget().getMeasurementName(), "WRITE")) {
+    if (!hasWritePermission(request.getTarget())) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
@@ -100,5 +111,12 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
       result.setValidationMessages(e.getValidationMessages());
       return ResponseEntity.badRequest().body(result);
     }
+  }
+
+  private boolean hasWritePermission(org.apache.streampipes.model.datalake.importer.CsvImportTarget target) {
+    return target == null
+        || target.getMode() != CsvImportTargetMode.EXISTING
+        || this.dataLakeMeasureManagement.getExistingMeasureByName(target.getMeasurementName()).isEmpty()
+        || this.checkPermissionByName(target.getMeasurementName(), "WRITE");
   }
 }
