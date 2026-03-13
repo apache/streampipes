@@ -49,6 +49,10 @@ public class DataLakeDataWriter {
     if (measure == null) {
       throw new SpRuntimeException("Measure \"" + measureName + "\" not found");
     }
+    writeData(measure, queryResult);
+  }
+
+  public void writeData(DataLakeMeasure measure, SpQueryResult queryResult) {
     var dataSeries = getDataSeries(queryResult);
     getTimeSeriesStoreAndPersistQueryResult(dataSeries, measure);
   }
@@ -133,5 +137,4 @@ public class DataLakeDataWriter {
   }
 
 }
-
 

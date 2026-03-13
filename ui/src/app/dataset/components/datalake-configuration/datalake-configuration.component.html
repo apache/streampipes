@@ -29,6 +29,15 @@
             ></sp-basic-header-title-component>
             <span fxFlex></span>
             <button
+                *ngIf="writeAccess"
+                color="accent"
+                mat-flat-button
+                data-cy="open-csv-import-dialog"
+                (click)="openCsvImportDialog()"
+            >
+                {{ 'Import CSV' | translate }}
+            </button>
+            <button
                 color="accent"
                 mat-icon-button
                 [matTooltip]="'Refresh' | translate"

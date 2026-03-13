@@ -1,0 +1,236 @@
+.csv-import-shell {
+    min-height: 0;
+}
+
+.csv-import-content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-height: 78vh;
+    overflow: auto;
+}
+
+.section-disabled {
+    opacity: 0.65;
+}
+
+.section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.section-eyebrow {
+    color: var(--color-text-200, #5a6673);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.upload-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.file-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 16px;
+    border: 1px dashed var(--color-primary, #24176e);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.file-label input {
+    display: none;
+}
+
+.file-name {
+    color: var(--color-text-200, #5a6673);
+    font-size: 14px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.inline-hint {
+    color: var(--color-text-200, #5a6673);
+    font-size: 14px;
+}
+
+.inline-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.preview-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    color: var(--color-text-200, #5a6673);
+    font-size: 13px;
+}
+
+.preview-table-wrapper {
+    overflow: auto;
+    border: 1px solid var(--color-border, #d8dee4);
+    border-radius: 14px;
+}
+
+.preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.preview-table th,
+.preview-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--color-border, #d8dee4);
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+.preview-table th {
+    position: sticky;
+    top: 0;
+    background: #f8fafc;
+    z-index: 1;
+}
+
+.header-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 220px;
+}
+
+.header-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: #111827;
+}
+
+.header-field {
+    width: 100%;
+}
+
+.header-hint {
+    color: var(--color-text-200, #5a6673);
+    font-size: 12px;
+}
+
+.target-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #eef4ff;
+    color: #1849a9;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.message-box {
+    border-radius: 12px;
+    background: #fff4e5;
+    color: #8a4b00;
+    padding: 12px 14px;
+}
+
+.message-line + .message-line {
+    margin-top: 6px;
+}
+
+.schema-mismatch-list {
+    margin: 10px 0 0;
+    padding-left: 20px;
+    color: var(--color-text-200, #5a6673);
+}
+
+.schema-mismatch-item + .schema-mismatch-item {
+    margin-top: 6px;
+}
+
+.empty-state {
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: var(--color-text-200, #5a6673);
+    font-size: 14px;
+}
+
+.result-card {
+    align-items: center;
+    text-align: center;
+}
+
+.upload-state {
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+}
+
+.upload-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.upload-copy {
+    color: var(--color-text-200, #5a6673);
+    max-width: 420px;
+}
+
+.success-icon {
+    color: var(--color-success, #2e7d32);
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+}
+
+.result-name {
+    font-weight: 600;
+}
+
+.result-meta {
+    color: var(--color-text-200, #5a6673);
+}
+
+@media (max-width: 900px) {
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+
+    .inline-actions {
+        justify-content: stretch;
+    }
+
+    .inline-actions button {
+        width: 100%;
+    }
+}

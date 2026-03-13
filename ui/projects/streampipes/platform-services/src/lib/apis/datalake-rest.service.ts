@@ -29,6 +29,14 @@ import { DataLakeMeasure, SpQueryResult } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
+import {
+    CsvImportPreviewRequest,
+    CsvImportPreviewResult,
+    CsvImportRequest,
+    CsvImportResult,
+    CsvImportSchemaValidationRequest,
+    CsvImportSchemaValidationResult,
+} from '../model/datalake/csv-import.model';
 
 @Injectable({
     providedIn: 'root',
@@ -46,6 +54,10 @@ export class DatalakeRestService {
 
     public get dataLakeMeasureUrl() {
         return this.baseUrl + '/api/v4/datalake/measure';
+    }
+
+    public get dataLakeImportUrl() {
+        return this.baseUrl + '/api/v4/datalake/import';
     }
 
     getMeasurementEntryCounts(
@@ -231,6 +243,28 @@ export class DatalakeRestService {
         const url = this.dataLakeUrl + '/measurements/' + index;
 
         return this.http.delete(url);
+    }
+
+    previewImport(
+        request: CsvImportPreviewRequest,
+    ): Observable<CsvImportPreviewResult> {
+        return this.http.post<CsvImportPreviewResult>(
+            `${this.dataLakeImportUrl}/preview`,
+            request,
+        );
+    }
+
+    validateImportSchema(
+        request: CsvImportSchemaValidationRequest,
+    ): Observable<CsvImportSchemaValidationResult> {
+        return this.http.post<CsvImportSchemaValidationResult>(
+            `${this.dataLakeImportUrl}/validate-schema`,
+            request,
+        );
+    }
+
+    importCsvData(request: CsvImportRequest): Observable<CsvImportResult> {
+        return this.http.post<CsvImportResult>(this.dataLakeImportUrl, request);
     }
 
     dropSingleMeasurementSeries(index: string) {
