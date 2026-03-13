@@ -45,6 +45,7 @@ import {
     DialogRef,
     DialogService,
     PanelType,
+    SpTableAssetContextConfig,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
     SpTableActionsDirective,
@@ -101,6 +102,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         'status',
         'start',
         'name',
+        'assetContext',
         'lastModified',
         'actions',
     ];
@@ -111,6 +113,10 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     starting = false;
     stopping = false;
     hasPipelineWritePrivileges = false;
+    readonly assetContextConfig: SpTableAssetContextConfig = {
+        resourceLinkType: 'pipeline',
+        resourceIdKey: 'elementId',
+    };
     readonly bulkPipelineActionOptions: SpTableMultiActionOption[] = [
         { value: 'start', label: 'Start selected', icon: 'play_arrow' },
         { value: 'stop', label: 'Stop selected', icon: 'stop' },
@@ -125,7 +131,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     private dialogService = inject(DialogService);
 
     ngOnInit() {
-        this.userSub = this.currentUserService.user$.subscribe(user => {
+        this.userSub = this.currentUserService.user$.subscribe(() => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );
@@ -159,7 +165,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     }
 
     addPipelinesToTable() {
-        this.dataSource.data = this._pipelines;
+        this.dataSource.data = this._pipelines ?? [];
         this.dataSource.sortingDataAccessor = (pipeline, column) => {
             if (column === 'status') {
                 return pipeline.running;
