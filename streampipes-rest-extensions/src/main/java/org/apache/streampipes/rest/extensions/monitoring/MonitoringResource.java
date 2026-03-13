@@ -19,7 +19,7 @@
 
 package org.apache.streampipes.rest.extensions.monitoring;
 
-import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.management.monitoring.MonitoringManagement;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 
@@ -33,12 +33,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("monitoring")
 public class MonitoringResource extends AbstractExtensionsResource {
 
+  private final MonitoringManagement monitoringManagement;
+
+  public MonitoringResource() {
+    this.monitoringManagement = new MonitoringManagement();
+  }
+
+  public MonitoringResource(MonitoringManagement monitoringManagement) {
+    this.monitoringManagement = monitoringManagement;
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SpEndpointMonitoringInfo> getMonitoringInfos() {
-    try {
-      return ok(SpMonitoringManager.INSTANCE.getMonitoringInfo());
-    } finally {
-      SpMonitoringManager.INSTANCE.clearAllLogs();
-    }
+    return ok(monitoringManagement.getMonitoringInfos());
   }
 }

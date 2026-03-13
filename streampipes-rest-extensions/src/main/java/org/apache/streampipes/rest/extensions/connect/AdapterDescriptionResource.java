@@ -18,9 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.connect;
 
-import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
-import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.extensions.management.locales.LabelGenerator;
+import org.apache.streampipes.extensions.management.connect.AdapterDescriptionManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
@@ -40,31 +38,29 @@ import java.io.IOException;
 @RequestMapping("/api/v1/worker/adapters")
 public class AdapterDescriptionResource extends AbstractSharedRestInterface {
 
-  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<AdapterDescription> getAdapterDescription(@PathVariable("id") String id) {
-    var adapterDescriptionOpt = DeclarersSingleton.getInstance().getAdapter(id);
-    if (adapterDescriptionOpt.isPresent()) {
-      try {
-        var adapterConfiguration = adapterDescriptionOpt.get().declareConfig();
-        var localizedDescription = applyLocales(adapterConfiguration);
-        return ok(localizedDescription);
-      } catch (IOException e) {
-        throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
-      }
-    } else {
-      throw new SpMessageException(
-          HttpStatus.NOT_FOUND,
-          Notifications.error(String.format("Could not find adapter with id %s", id)));
-    }
+  private final AdapterDescriptionManagement adapterDescriptionManagement;
+
+  public AdapterDescriptionResource() {
+    this.adapterDescriptionManagement = new AdapterDescriptionManagement();
   }
 
-  private AdapterDescription applyLocales(IAdapterConfiguration adapterConfiguration) throws IOException {
-    var adapterDescription = adapterConfiguration.getAdapterDescription();
-    if (adapterDescription.isIncludesLocales()) {
-      return new LabelGenerator<>(adapterDescription, true, adapterConfiguration.getAssetResolver())
-          .generateLabels();
-    } else {
-      return adapterDescription;
+  public AdapterDescriptionResource(AdapterDescriptionManagement adapterDescriptionManagement) {
+    this.adapterDescriptionManagement = adapterDescriptionManagement;
+  }
+
+  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AdapterDescription> getAdapterDescription(@PathVariable("id") String id) {
+    try {
+      var adapterDescriptionOpt = adapterDescriptionManagement.getAdapterDescription(id);
+      if (adapterDescriptionOpt.isPresent()) {
+        return ok(adapterDescriptionOpt.get());
+      } else {
+        throw new SpMessageException(
+            HttpStatus.NOT_FOUND,
+            Notifications.error(String.format("Could not find adapter with id %s", id)));
+      }
+    } catch (IOException e) {
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 }

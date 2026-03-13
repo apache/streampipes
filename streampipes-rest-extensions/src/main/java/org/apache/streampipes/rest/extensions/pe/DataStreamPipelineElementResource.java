@@ -19,8 +19,7 @@
 package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
-import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
-import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.pe.DataStreamPipelineElementManagement;
 import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
@@ -38,17 +37,25 @@ import java.util.Map;
 @RequestMapping(SpServicePathPrefix.DATA_STREAM)
 public class DataStreamPipelineElementResource extends AbstractPipelineElementResource<IStreamPipesDataStream> {
 
+  private final DataStreamPipelineElementManagement pipelineElementManagement;
+
+  public DataStreamPipelineElementResource() {
+    this.pipelineElementManagement = new DataStreamPipelineElementManagement();
+  }
+
+  public DataStreamPipelineElementResource(DataStreamPipelineElementManagement pipelineElementManagement) {
+    this.pipelineElementManagement = pipelineElementManagement;
+  }
+
   @Override
   protected Map<String, IStreamPipesDataStream> getElementDeclarers() {
-    return DeclarersSingleton.getInstance().getDataStreams();
+    return pipelineElementManagement.getElementDeclarers();
   }
 
   @GetMapping(path = "{streamId}/assets", produces = "application/zip")
   public ResponseEntity<byte[]> getAssets(@PathVariable("streamId") String streamId) {
     try {
-      return ok(new AssetZipGenerator(streamId,
-          getById(streamId)
-              .getIncludedAssets()).makeZip());
+      return ok(pipelineElementManagement.getAssets(streamId));
     } catch (IOException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
