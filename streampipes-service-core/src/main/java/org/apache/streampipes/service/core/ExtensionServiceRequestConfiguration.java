@@ -24,6 +24,7 @@ import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManag
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
 import org.apache.streampipes.service.core.extensions.CoreExtensionTransportMode;
 import org.apache.streampipes.service.core.extensions.CoreNatsRequestReplyClient;
+import org.apache.streampipes.service.core.extensions.NatsExtensionServiceRequestManager;
 import org.apache.streampipes.service.core.extensions.TransportAwareExtensionServiceRequestManager;
 
 import org.springframework.context.annotation.Bean;
@@ -45,8 +46,22 @@ public class ExtensionServiceRequestConfiguration {
   }
 
   @Bean
-  public ExtensionServiceRequestManager extensionServiceRequestManager(
+  public NatsExtensionServiceRequestManager natsExtensionServiceRequestManager(
       CoreNatsRequestReplyClient coreNatsRequestReplyClient
+  ) {
+    var env = Environments.getEnvironment();
+    var topicPrefix = env.getExtensionRequestTopicPrefix()
+        .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX);
+
+    return new NatsExtensionServiceRequestManager(
+        coreNatsRequestReplyClient,
+        topicPrefix
+    );
+  }
+
+  @Bean
+  public ExtensionServiceRequestManager extensionServiceRequestManager(
+      NatsExtensionServiceRequestManager natsExtensionServiceRequestManager
   ) {
     var env = Environments.getEnvironment();
 
@@ -54,14 +69,10 @@ public class ExtensionServiceRequestConfiguration {
         env.getCoreExtensionTransportMode().getValueOrDefault()
     );
 
-    var topicPrefix = env.getExtensionRequestTopicPrefix()
-        .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX);
-
     return new TransportAwareExtensionServiceRequestManager(
         new HttpExtensionServiceRequestManager(),
-        coreNatsRequestReplyClient,
-        transportMode,
-        topicPrefix
+        natsExtensionServiceRequestManager,
+        transportMode
     );
   }
 

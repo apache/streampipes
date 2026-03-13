@@ -19,15 +19,19 @@
 package org.apache.streampipes.nats.extensions;
 
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerRequestManagement;
 import org.apache.streampipes.extensions.management.monitoring.ServiceMonitorManagement;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
+import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.PipelineElementDetachOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.PipelineElementInvocationOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.ServiceLoadOperationHandler;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,35 +42,47 @@ import io.nats.client.Nats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class ExtensionBrokerRequestReceiver {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionBrokerRequestReceiver.class);
 
-  private static final String ADAPTER_STATE_CHANGE_OPERATION = "ADAPTER_STATE_CHANGE";
-  private static final String SERVICE_LOAD_OPERATION = "SERVICE_LOAD";
-  private static final String STATE_CHANGE_START = "start";
-  private static final String STATE_CHANGE_STOP = "stop";
-  private static final int HTTP_STATUS_OK = 200;
-  private static final int HTTP_STATUS_BAD_REQUEST = 400;
-  private static final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
+  private static final int HTTP_STATUS_INTERNAL_SERVER_ERROR =
+      ExtensionBrokerResponseFactory.HTTP_STATUS_INTERNAL_SERVER_ERROR;
   private static final int HTTP_STATUS_NOT_IMPLEMENTED = 501;
 
   private final ObjectMapper objectMapper;
-  private final ServiceMonitorManagement serviceMonitorManagement;
-  private final AdapterWorkerRequestManagement adapterWorkerRequestManagement;
+  private final Map<String, ExtensionBrokerOperationHandler> operationHandlers;
 
   private Connection natsConnection;
   private Dispatcher dispatcher;
+  private String subscriptionBaseTopic;
 
   public ExtensionBrokerRequestReceiver() {
-    this(new ServiceMonitorManagement(), new AdapterWorkerRequestManagement());
+    this(
+        new ServiceMonitorManagement(),
+        new AdapterWorkerRequestManagement(),
+        new DataProcessorPipelineElementManagement(),
+        new DataSinkPipelineElementManagement()
+    );
   }
 
   public ExtensionBrokerRequestReceiver(ServiceMonitorManagement serviceMonitorManagement,
-                                        AdapterWorkerRequestManagement adapterWorkerRequestManagement) {
+                                        AdapterWorkerRequestManagement adapterWorkerRequestManagement,
+                                        DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
+                                        DataSinkPipelineElementManagement dataSinkPipelineElementManagement) {
     this.objectMapper = JacksonSerializer.getObjectMapper();
-    this.serviceMonitorManagement = serviceMonitorManagement;
-    this.adapterWorkerRequestManagement = adapterWorkerRequestManagement;
+    this.operationHandlers = createOperationHandlers(
+        objectMapper,
+        serviceMonitorManagement,
+        adapterWorkerRequestManagement,
+        dataProcessorPipelineElementManagement,
+        dataSinkPipelineElementManagement
+    );
   }
 
   public synchronized boolean start(String serviceId,
@@ -82,6 +98,11 @@ public class ExtensionBrokerRequestReceiver {
           + ":" + env.getNatsPort().getValueOrDefault();
       this.natsConnection = Nats.connect(natsUrl);
 
+      this.subscriptionBaseTopic = ExtensionServiceBrokerTopics.serviceTopic(
+          topicPrefix,
+          serviceId,
+          List.of()
+      );
       String subscriptionTopic = ExtensionServiceBrokerTopics.serviceWildcard(topicPrefix, serviceId);
       this.dispatcher = natsConnection.createDispatcher(this::onMessage);
       this.dispatcher.subscribe(subscriptionTopic);
@@ -111,6 +132,8 @@ public class ExtensionBrokerRequestReceiver {
         natsConnection = null;
       }
     }
+
+    subscriptionBaseTopic = null;
   }
 
   private void onMessage(Message message) {
@@ -124,7 +147,7 @@ public class ExtensionBrokerRequestReceiver {
       var request = objectMapper.readValue(message.getData(), ExtensionServiceBrokerRequestEnvelope.class);
       response = handleRequest(request, message.getSubject());
     } catch (Exception e) {
-      response = error(null, HTTP_STATUS_INTERNAL_SERVER_ERROR, e);
+      response = ExtensionBrokerResponseFactory.error(null, HTTP_STATUS_INTERNAL_SERVER_ERROR, e);
     }
 
     publishResponse(replyTo, response);
@@ -133,18 +156,9 @@ public class ExtensionBrokerRequestReceiver {
   private ExtensionServiceBrokerResponseEnvelope handleRequest(ExtensionServiceBrokerRequestEnvelope request,
                                                                String topic) {
     try {
-      if (SERVICE_LOAD_OPERATION.equals(request.getOperation())) {
-        var payload = objectMapper.writeValueAsString(serviceMonitorManagement.getCurrentReport());
-        return new ExtensionServiceBrokerResponseEnvelope(
-            request.getRequestId(),
-            HTTP_STATUS_OK,
-            payload,
-            null
-        );
-      }
-
-      if (ADAPTER_STATE_CHANGE_OPERATION.equals(request.getOperation())) {
-        return handleAdapterStateChangeRequest(request, topic);
+      var operationHandler = operationHandlers.get(request.getOperation());
+      if (operationHandler != null) {
+        return operationHandler.handle(request, new ExtensionBrokerRequestContext(topic, subscriptionBaseTopic));
       }
 
       return new ExtensionServiceBrokerResponseEnvelope(
@@ -157,72 +171,8 @@ public class ExtensionBrokerRequestReceiver {
           )
       );
     } catch (Exception e) {
-      return error(request.getRequestId(), HTTP_STATUS_INTERNAL_SERVER_ERROR, e);
+      return ExtensionBrokerResponseFactory.error(request.getRequestId(), HTTP_STATUS_INTERNAL_SERVER_ERROR, e);
     }
-  }
-
-  private ExtensionServiceBrokerResponseEnvelope handleAdapterStateChangeRequest(
-      ExtensionServiceBrokerRequestEnvelope request,
-      String topic
-  ) throws Exception {
-    if (request.getPayload() == null || request.getPayload().isBlank()) {
-      return new ExtensionServiceBrokerResponseEnvelope(
-          request.getRequestId(),
-          HTTP_STATUS_BAD_REQUEST,
-          null,
-          new ExtensionServiceBrokerErrorEnvelope("InvalidPayload", "Missing adapter payload")
-      );
-    }
-
-    var adapterDescription = objectMapper.readValue(request.getPayload(), AdapterDescription.class);
-    var command = extractStateChangeCommand(topic);
-
-    try {
-      if (STATE_CHANGE_START.equals(command)) {
-        var payload = objectMapper.writeValueAsString(adapterWorkerRequestManagement.invokeAdapter(adapterDescription));
-        return new ExtensionServiceBrokerResponseEnvelope(request.getRequestId(), HTTP_STATUS_OK, payload, null);
-      }
-
-      if (STATE_CHANGE_STOP.equals(command)) {
-        var payload = objectMapper.writeValueAsString(adapterWorkerRequestManagement.stopAdapter(adapterDescription));
-        return new ExtensionServiceBrokerResponseEnvelope(request.getRequestId(), HTTP_STATUS_OK, payload, null);
-      }
-
-      return new ExtensionServiceBrokerResponseEnvelope(
-          request.getRequestId(),
-          HTTP_STATUS_BAD_REQUEST,
-          null,
-          new ExtensionServiceBrokerErrorEnvelope(
-              "InvalidCommand",
-              "Unknown adapter state change command in topic " + topic
-          )
-      );
-    } catch (AdapterException e) {
-      return new ExtensionServiceBrokerResponseEnvelope(
-          request.getRequestId(),
-          HTTP_STATUS_INTERNAL_SERVER_ERROR,
-          objectMapper.writeValueAsString(e),
-          new ExtensionServiceBrokerErrorEnvelope(e.getClass().getSimpleName(), e.getMessage())
-      );
-    }
-  }
-
-  private String extractStateChangeCommand(String topic) {
-    int separatorIndex = topic.lastIndexOf('.');
-    if (separatorIndex < 0 || separatorIndex + 1 >= topic.length()) {
-      return "";
-    }
-
-    return topic.substring(separatorIndex + 1);
-  }
-
-  private ExtensionServiceBrokerResponseEnvelope error(String requestId, int statusCode, Exception e) {
-    return new ExtensionServiceBrokerResponseEnvelope(
-        requestId,
-        statusCode,
-        null,
-        new ExtensionServiceBrokerErrorEnvelope(e.getClass().getSimpleName(), e.getMessage())
-    );
   }
 
   private void publishResponse(String replyTo, ExtensionServiceBrokerResponseEnvelope response) {
@@ -235,5 +185,32 @@ public class ExtensionBrokerRequestReceiver {
     } catch (Exception e) {
       LOG.warn("Could not publish broker response to subject {}", replyTo, e);
     }
+  }
+
+  private Map<String, ExtensionBrokerOperationHandler> createOperationHandlers(
+      ObjectMapper objectMapper,
+      ServiceMonitorManagement serviceMonitorManagement,
+      AdapterWorkerRequestManagement adapterWorkerRequestManagement,
+      DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
+      DataSinkPipelineElementManagement dataSinkPipelineElementManagement
+  ) {
+    return Stream.of(
+            new ServiceLoadOperationHandler(objectMapper, serviceMonitorManagement),
+            new AdapterStateChangeOperationHandler(objectMapper, adapterWorkerRequestManagement),
+            new PipelineElementInvocationOperationHandler(
+                objectMapper,
+                dataProcessorPipelineElementManagement,
+                dataSinkPipelineElementManagement
+            ),
+            new PipelineElementDetachOperationHandler(
+                objectMapper,
+                dataProcessorPipelineElementManagement,
+                dataSinkPipelineElementManagement
+            )
+        )
+        .collect(Collectors.toUnmodifiableMap(
+            ExtensionBrokerOperationHandler::operation,
+            handler -> handler
+        ));
   }
 }

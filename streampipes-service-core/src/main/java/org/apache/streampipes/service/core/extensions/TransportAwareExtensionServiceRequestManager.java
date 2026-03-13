@@ -21,45 +21,32 @@ package org.apache.streampipes.service.core.extensions;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.util.AuthTokenUtils;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
-import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
-import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
-import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
 public class TransportAwareExtensionServiceRequestManager implements ExtensionServiceRequestManager {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(TransportAwareExtensionServiceRequestManager.class);
-  private static final int INTERNAL_SERVER_ERROR = 500;
 
-  private final ObjectMapper objectMapper;
   private final ExtensionServiceRequestManager httpRequestManager;
-  private final CoreNatsRequestReplyClient natsRequestReplyClient;
+  private final NatsExtensionServiceRequestManager natsRequestManager;
   private final CoreExtensionTransportMode transportMode;
-  private final String topicPrefix;
 
   public TransportAwareExtensionServiceRequestManager(
       ExtensionServiceRequestManager httpRequestManager,
-      CoreNatsRequestReplyClient natsRequestReplyClient,
-      CoreExtensionTransportMode transportMode,
-      String topicPrefix
+      NatsExtensionServiceRequestManager natsRequestManager,
+      CoreExtensionTransportMode transportMode
   ) {
-    this.objectMapper = new ObjectMapper();
     this.httpRequestManager = httpRequestManager;
-    this.natsRequestReplyClient = natsRequestReplyClient;
+    this.natsRequestManager = natsRequestManager;
     this.transportMode = transportMode;
-    this.topicPrefix = topicPrefix;
   }
 
   @Override
@@ -97,8 +84,7 @@ public class TransportAwareExtensionServiceRequestManager implements ExtensionSe
                                                                    String elementId,
                                                                    String payload) throws IOException {
     if (useNats(target)) {
-      var authToken = AuthTokenUtils.getAuthToken(elementId);
-      return requestViaNats(target, payload, authToken);
+      return natsRequestManager.requestAdapterStateChange(target, elementId, payload);
     }
 
     return httpRequestManager.requestAdapterStateChange(target, elementId, payload);
@@ -132,7 +118,7 @@ public class TransportAwareExtensionServiceRequestManager implements ExtensionSe
   public ExtensionServiceOperationResult requestServiceLoad(ExtensionServiceRequestTarget target) throws IOException {
     if (useNats(target)) {
       try {
-        var response = requestServiceLoadViaNats(target);
+        var response = natsRequestManager.requestServiceLoad(target);
         if (response.isSuccess() || transportMode == CoreExtensionTransportMode.NATS) {
           return response;
         }
@@ -156,12 +142,20 @@ public class TransportAwareExtensionServiceRequestManager implements ExtensionSe
   public ExtensionServiceOperationResult requestPipelineElementInvocation(ExtensionServiceRequestTarget target,
                                                                           String pipelineId,
                                                                           String payload) throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestPipelineElementInvocation(target, pipelineId, payload);
+    }
+
     return httpRequestManager.requestPipelineElementInvocation(target, pipelineId, payload);
   }
 
   @Override
   public ExtensionServiceOperationResult requestPipelineElementDetach(ExtensionServiceRequestTarget target,
                                                                       String pipelineId) throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestPipelineElementDetach(target, pipelineId);
+    }
+
     return httpRequestManager.requestPipelineElementDetach(target, pipelineId);
   }
 
@@ -219,49 +213,4 @@ public class TransportAwareExtensionServiceRequestManager implements ExtensionSe
     );
   }
 
-  private ExtensionServiceOperationResult requestServiceLoadViaNats(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return requestViaNats(target, null, null);
-  }
-
-  private ExtensionServiceOperationResult requestViaNats(ExtensionServiceRequestTarget target,
-                                                         String payload,
-                                                         String authToken) throws IOException {
-    String topic = target.toTopic(topicPrefix);
-
-    var requestEnvelope = new ExtensionServiceBrokerRequestEnvelope(
-        UUID.randomUUID().toString(),
-        target.operation().name(),
-        payload,
-        authToken
-    );
-
-    byte[] responseBytes = natsRequestReplyClient.request(topic, objectMapper.writeValueAsBytes(requestEnvelope));
-    var responseEnvelope = objectMapper.readValue(responseBytes, ExtensionServiceBrokerResponseEnvelope.class);
-
-    return toOperationResult(responseEnvelope);
-  }
-
-  private ExtensionServiceOperationResult toOperationResult(ExtensionServiceBrokerResponseEnvelope responseEnvelope)
-      throws IOException {
-    byte[] body = makeBody(responseEnvelope);
-    int statusCode = responseEnvelope.getStatusCode() == 0
-        ? INTERNAL_SERVER_ERROR
-        : responseEnvelope.getStatusCode();
-
-    return new ExtensionServiceOperationResult(statusCode, body);
-  }
-
-  private byte[] makeBody(ExtensionServiceBrokerResponseEnvelope responseEnvelope) throws IOException {
-    if (responseEnvelope.getPayload() != null) {
-      return responseEnvelope.getPayload().getBytes(StandardCharsets.UTF_8);
-    }
-
-    ExtensionServiceBrokerErrorEnvelope error = responseEnvelope.getError();
-    if (error != null) {
-      return objectMapper.writeValueAsBytes(error);
-    }
-
-    return null;
-  }
 }
