@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
 import org.apache.streampipes.model.message.Notification;
@@ -44,9 +45,10 @@ public class CompactPipelineResource extends AbstractAuthGuardedRestResource {
 
   private final CompactPipelineManagement compactPipelineManagement;
 
-  public CompactPipelineResource() {
+  public CompactPipelineResource(ExtensionServiceRequestManager requestManager) {
     this.compactPipelineManagement = new CompactPipelineManagement(
-        getPipelineElementStorage()
+        getPipelineElementStorage(),
+        requestManager
     );
   }
 

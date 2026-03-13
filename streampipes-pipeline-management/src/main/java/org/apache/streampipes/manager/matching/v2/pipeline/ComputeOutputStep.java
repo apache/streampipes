@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.matching.output.OutputSchemaFactory;
 import org.apache.streampipes.manager.matching.output.OutputSchemaGenerator;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -36,6 +37,12 @@ import java.util.Set;
 
 public class ComputeOutputStep extends AbstractPipelineValidationStep {
 
+  private final ExtensionServiceRequestManager requestManager;
+
+  public ComputeOutputStep(ExtensionServiceRequestManager requestManager) {
+    this.requestManager = requestManager;
+  }
+
   private final Map<String, DataProcessorInvocation> relatedPes = new HashMap<>();
 
   @Override
@@ -47,7 +54,7 @@ public class ComputeOutputStep extends AbstractPipelineValidationStep {
     if (target instanceof DataProcessorInvocation) {
       DataProcessorInvocation pe = (DataProcessorInvocation) target;
       Tuple2<EventSchema, ? extends OutputStrategy> outputSettings;
-      OutputSchemaGenerator<?> schemaGenerator = new OutputSchemaFactory(pe)
+      OutputSchemaGenerator<?> schemaGenerator = new OutputSchemaFactory(pe, requestManager)
           .getOuputSchemaGenerator();
 
       if (target.getInputStreams().size() == 1) {

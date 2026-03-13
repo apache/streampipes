@@ -21,7 +21,6 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationRe
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.param.RequestOutputSchemaParameters;
-import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -39,19 +38,24 @@ import java.util.Set;
 
 public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<CustomTransformOutputStrategy> {
 
-  private DataProcessorInvocation dataProcessorInvocation;
-  private CustomTransformOutputStrategy outputStrategy;
+  private final DataProcessorInvocation dataProcessorInvocation;
   private final ExtensionServiceRequestManager requestManager;
 
-  public static CustomTransformOutputSchemaGenerator from(OutputStrategy strategy, DataProcessorInvocation invocation) {
-    return new CustomTransformOutputSchemaGenerator((CustomTransformOutputStrategy) strategy, invocation);
+  public static CustomTransformOutputSchemaGenerator from(OutputStrategy strategy,
+                                                          DataProcessorInvocation invocation,
+                                                          ExtensionServiceRequestManager requestManager) {
+    return new CustomTransformOutputSchemaGenerator(
+        (CustomTransformOutputStrategy) strategy,
+        invocation,
+        requestManager);
   }
 
   public CustomTransformOutputSchemaGenerator(CustomTransformOutputStrategy strategy,
-                                              DataProcessorInvocation invocation) {
+                                              DataProcessorInvocation invocation,
+                                              ExtensionServiceRequestManager requestManager) {
     super(strategy);
     this.dataProcessorInvocation = invocation;
-    this.requestManager = new HttpExtensionServiceRequestManager();
+    this.requestManager = requestManager;
   }
 
 

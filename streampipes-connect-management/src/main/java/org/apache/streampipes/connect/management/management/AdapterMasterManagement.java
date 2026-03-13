@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.util.GroundingUtils;
 import org.apache.streampipes.manager.verification.TypedElementVerifier;
@@ -56,19 +57,22 @@ public class AdapterMasterManagement {
 
   private final DataStreamResourceManager dataStreamResourceManager;
   private final WorkerRestClient workerRestClient;
+  private final ExtensionServiceRequestManager requestManager;
 
   public AdapterMasterManagement(IAdapterStorage adapterInstanceStorage,
                                  AdapterResourceManager adapterResourceManager,
                                  DataStreamResourceManager dataStreamResourceManager,
                                  AdapterMetrics adapterMetrics,
-                                 WorkerRestClient workerRestClient) {
+                                 WorkerRestClient workerRestClient,
+                                 IExtensionsServiceStorage extensionsServiceStorage,
+                                 ExtensionServiceRequestManager requestManager) {
     this.adapterInstanceStorage = adapterInstanceStorage;
-    // TODO
-    this.extensionsServiceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+    this.extensionsServiceStorage = extensionsServiceStorage;
     this.adapterMetrics = adapterMetrics;
     this.adapterResourceManager = adapterResourceManager;
     this.dataStreamResourceManager = dataStreamResourceManager;
     this.workerRestClient = workerRestClient;
+    this.requestManager = requestManager;
   }
 
   public void addAdapter(AdapterDescription adapterDescription, String adapterId,
@@ -223,7 +227,8 @@ public class AdapterMasterManagement {
         storageApi::exists,
         storageApi::storeDataStream,
         storageApi::update,
-        SpServiceUrlProvider.DATA_STREAM
+        SpServiceUrlProvider.DATA_STREAM,
+        requestManager
     );
     verifier.verifyAndAdd(principalSid, false);
   }

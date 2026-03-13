@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.recommender;
 
 import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.matching.v2.StreamMatch;
 import org.apache.streampipes.model.SpDataStream;
@@ -26,7 +27,6 @@ import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
@@ -50,11 +50,14 @@ public class ElementRecommender {
   private final Pipeline pipeline;
   private final String baseRecDomId;
   private final PipelineElementRecommendationMessage recommendationMessage;
+  private final ExtensionServiceRequestManager requestManager;
 
   public ElementRecommender(Pipeline partialPipeline,
-                            String baseRecDomId) {
+                            String baseRecDomId,
+                            ExtensionServiceRequestManager requestManager) {
     this.pipeline = partialPipeline;
     this.baseRecDomId = baseRecDomId;
+    this.requestManager = requestManager;
     this.recommendationMessage = new PipelineElementRecommendationMessage();
   }
 
@@ -125,7 +128,7 @@ public class ElementRecommender {
     } else {
       Pipeline partialPipeline =
           new PartialPipelineGenerator(this.baseRecDomId, elementsProvider).makePartialPipeline();
-      PipelineModificationMessage modifications = new PipelineVerificationHandlerV2(partialPipeline).verifyPipeline();
+      var modifications = new PipelineVerificationHandlerV2(partialPipeline, requestManager).verifyPipeline();
       return modifications.getPipelineModifications()
           .stream()
           .filter(m -> m.getDomId().equals(this.baseRecDomId))

@@ -24,6 +24,7 @@ import org.apache.streampipes.connect.management.management.AdapterMasterManagem
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.connect.management.management.CompactAdapterManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Permission;
@@ -69,15 +70,20 @@ import java.util.stream.Collectors;
 public class AdapterResource extends AbstractAdapterResource<AdapterMasterManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
+  private final ExtensionServiceRequestManager requestManager;
 
-  public AdapterResource(WorkerRestClient workerRestClient) {
+  public AdapterResource(WorkerRestClient workerRestClient,
+                         ExtensionServiceRequestManager requestManager) {
     super(() -> new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
             .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-        workerRestClient));
+        workerRestClient,
+        StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
+        requestManager));
+    this.requestManager = requestManager;
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -114,7 +120,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#adapterDescription.correspondingDataStreamElementId, 'WRITE')")
   public ResponseEntity<? extends Message> updateAdapter(@RequestBody AdapterDescription adapterDescription) {
-    var updateManager = new AdapterUpdateManagement(managementService);
+    var updateManager = new AdapterUpdateManagement(managementService, requestManager);
     try {
       updateManager.updateAdapter(adapterDescription);
     } catch (AdapterException e) {
@@ -129,7 +135,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
       @RequestBody AdapterDescription adapterDescription) {
-    var updateManager = new AdapterUpdateManagement(managementService);
+    var updateManager = new AdapterUpdateManagement(managementService, requestManager);
     var migrations = updateManager.checkPipelineMigrations(adapterDescription);
 
     return ok(migrations);

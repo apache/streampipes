@@ -31,12 +31,12 @@ import java.io.IOException;
 
 public class ExtensionItemInstaller {
 
-  private final ExtensionServiceRequestManager extensionRequestManager;
+  private final ExtensionServiceRequestManager requestManager;
   private final SpServiceRegistration service;
 
   public ExtensionItemInstaller(SpServiceRegistration service,
-                                ExtensionServiceRequestManager extensionRequestManager) {
-    this.extensionRequestManager = extensionRequestManager;
+                                ExtensionServiceRequestManager requestManager) {
+    this.requestManager = requestManager;
     this.service = service;
   }
 
@@ -44,13 +44,13 @@ public class ExtensionItemInstaller {
                                   String principalSid) throws IOException, SepaParseException {
     var requestTarget = getDescriptionRequestTarget(req);
     var description = fetchDescription(requestTarget);
-    return new TypeExtractor(description).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());
+    return new TypeExtractor(description, requestManager).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());
   }
 
   public Message updateExtension(ExtensionItemInstallationRequest req) throws IOException, SepaParseException {
     var requestTarget = getDescriptionRequestTarget(req);
     var description = fetchDescription(requestTarget);
-    return new TypeExtractor(description).getTypeVerifier().verifyAndUpdate();
+    return new TypeExtractor(description, requestManager).getTypeVerifier().verifyAndUpdate();
   }
 
   private ExtensionServiceRequestTarget getDescriptionRequestTarget(ExtensionItemInstallationRequest req) {
@@ -65,6 +65,6 @@ public class ExtensionItemInstaller {
   }
 
   private String fetchDescription(ExtensionServiceRequestTarget requestTarget) throws IOException {
-    return extensionRequestManager.requestExtensionDescription(requestTarget).responseBody();
+    return requestManager.requestExtensionDescription(requestTarget).responseBody();
   }
 }

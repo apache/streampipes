@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
@@ -81,11 +82,14 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineResource.class);
 
   private final CompactPipelineManagement compactPipelineManagement;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public PipelineResource() {
+  public PipelineResource(ExtensionServiceRequestManager requestManager) {
     this.compactPipelineManagement = new CompactPipelineManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage()
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage(),
+        requestManager
     );
+    this.requestManager = requestManager;
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -195,7 +199,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public PipelineElementRecommendationMessage recommend(@RequestBody Pipeline pipeline,
                                                         @PathVariable("recId") String baseRecElement) {
     try {
-      return new ElementRecommender(pipeline, baseRecElement).findRecommendedElements();
+      return new ElementRecommender(pipeline, baseRecElement, requestManager).findRecommendedElements();
     } catch (JsonSyntaxException e) {
       throw new SpNotificationException(
           HttpStatus.BAD_REQUEST,
@@ -224,7 +228,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
     try {
-      return ok(new PipelineVerificationHandlerV2(pipeline).verifyPipeline());
+      return ok(new PipelineVerificationHandlerV2(pipeline, requestManager).verifyPipeline());
     } catch (JsonSyntaxException e) {
       return badRequest(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
     } catch (Exception e) {

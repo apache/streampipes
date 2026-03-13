@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.verification;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -40,6 +41,7 @@ import static org.mockito.Mockito.verify;
 public class TypeExtractorTest {
 
   private IPipelineElementDescriptionStorage storageApi;
+  private final ExtensionServiceRequestManager requestManager = mock(ExtensionServiceRequestManager.class);
 
   @BeforeEach
   public void setUp() {
@@ -48,7 +50,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateDataStream() throws SepaParseException {
-    var message = new TypeExtractor(payload(SpDataStream.class), storageApi)
+    var message = new TypeExtractor(payload(SpDataStream.class), storageApi, requestManager)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -58,7 +60,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateDataProcessor() throws SepaParseException {
-    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi)
+    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -68,7 +70,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateDataSink() throws SepaParseException {
-    var message = new TypeExtractor(payload(DataSinkDescription.class), storageApi)
+    var message = new TypeExtractor(payload(DataSinkDescription.class), storageApi, requestManager)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -78,7 +80,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateAdapter() throws SepaParseException {
-    var message = new TypeExtractor(payload(AdapterDescription.class), storageApi)
+    var message = new TypeExtractor(payload(AdapterDescription.class), storageApi, requestManager)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -88,7 +90,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateWithoutNameOrIcon_onlyContainsStorageSuccessNotification() throws SepaParseException {
-    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi)
+    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -100,7 +102,8 @@ public class TypeExtractorTest {
   public void missingClassProperty_throwsSepaParseException() {
     assertThrows(
         SepaParseException.class,
-        () -> new TypeExtractor("{\"name\":\"test\"}", storageApi).getTypeVerifier()
+        () -> new TypeExtractor(
+            "{\"name\":\"test\"}", storageApi, requestManager).getTypeVerifier()
     );
   }
 

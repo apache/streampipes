@@ -57,25 +57,29 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   private static final Logger LOG = LoggerFactory.getLogger(CompactAdapterResource.class);
   private final CompactAdapterManagement compactAdapterManagement;
   private final AdapterUpdateManagement adapterUpdateManagement;
+  private final ExtensionServiceRequestManager requestManager;
 
   public CompactAdapterResource(WorkerRestClient workerRestClient,
-                                ExtensionServiceRequestManager extensionServiceRequestManager) {
+                                ExtensionServiceRequestManager requestManager) {
     super(() -> new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-        workerRestClient
+        workerRestClient,
+        StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
+        requestManager
     ));
     var guessManagement = new GuessManagement(
         new ExtensionsServiceEndpointGenerator(),
-        extensionServiceRequestManager
+        requestManager
     );
+    this.requestManager = requestManager;
     this.compactAdapterManagement = new CompactAdapterManagement(
         new AdapterGenerationSteps(guessManagement).getGenerators()
     );
-    this.adapterUpdateManagement = new AdapterUpdateManagement(managementService);
+    this.adapterUpdateManagement = new AdapterUpdateManagement(managementService, requestManager);
   }
 
   @PostMapping(
@@ -111,10 +115,11 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
         if (compactAdapter.createOptions()
                           .persist()) {
           var storedAdapter = managementService.getAdapter(adapterId);
-          var status = new PersistPipelineHandler(
+          new PersistPipelineHandler(
               getNoSqlStorage().getPipelineTemplateStorage(),
               new CompactPipelineManagement(
-                  getNoSqlStorage().getPipelineElementDescriptionStorage()
+                  getNoSqlStorage().getPipelineElementDescriptionStorage(),
+                  requestManager
               ),
               getAuthenticatedUserSid()
           ).createAndStartPersistPipeline(storedAdapter);

@@ -21,7 +21,6 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.param.PipelineElementAssetParameters;
-import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -35,11 +34,6 @@ public class AssetFetcher {
   private final SpServiceUrlProvider spServiceUrlProvider;
   private final String appId;
   private final ExtensionServiceRequestManager requestManager;
-
-  public AssetFetcher(SpServiceUrlProvider spServiceUrlProvider,
-                      String appId) {
-    this(spServiceUrlProvider, appId, new HttpExtensionServiceRequestManager());
-  }
 
   public AssetFetcher(SpServiceUrlProvider spServiceUrlProvider,
                       String appId,

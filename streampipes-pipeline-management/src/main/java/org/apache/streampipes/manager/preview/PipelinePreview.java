@@ -18,6 +18,7 @@
 package org.apache.streampipes.manager.preview;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.execution.http.DetachExtensionRequest;
@@ -48,12 +49,13 @@ public class PipelinePreview {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelinePreview.class);
 
-  public PipelinePreviewModel initiatePreview(Pipeline pipeline) {
+  public PipelinePreviewModel initiatePreview(Pipeline pipeline,
+                                              ExtensionServiceRequestManager requestManager) {
     String previewId = generatePreviewId();
     var elementIdMappings = new HashMap<String, String>();
     pipeline.setActions(new ArrayList<>());
     List<NamedStreamPipesEntity> pipelineElements = new ArrayList<>(
-        new PipelineVerificationHandlerV2(pipeline)
+        new PipelineVerificationHandlerV2(pipeline, requestManager)
             .verifyAndBuildGraphs(true)
             .modifiedPipelineElements()
     );

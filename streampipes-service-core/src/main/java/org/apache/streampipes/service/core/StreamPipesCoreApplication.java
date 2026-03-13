@@ -56,6 +56,7 @@ import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
@@ -106,6 +107,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   @Autowired
   private WorkerRestClient workerRestClient;
+
+  private final IExtensionsServiceStorage extensionsServiceStorage =
+      StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
@@ -176,7 +180,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
     scheduleHealthChecks(env.getHealthCheckIntervalInMillis().getValueOrDefault(), List
         .of(new ServiceHealthCheck(
-                StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
+                extensionsServiceStorage,
                 extensionServiceRequestManager),
             new ExtensionHealthCheck(
                 new ResourceProvider(
@@ -187,7 +191,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                         new SpResourceManager().manageAdapters(),
                         new SpResourceManager().manageDataStreams(),
                         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-                        workerRestClient
+                        workerRestClient,
+                        extensionsServiceStorage,
+                        extensionServiceRequestManager
                     )),
                 StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
                 extensionServiceRequestManager

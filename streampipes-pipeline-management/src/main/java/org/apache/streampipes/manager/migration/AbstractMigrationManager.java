@@ -48,10 +48,10 @@ import static org.apache.streampipes.manager.migration.MigrationUtils.getRequest
 public abstract class AbstractMigrationManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractMigrationManager.class);
-  private final ExtensionServiceRequestManager extensionRequestManager;
+  private final ExtensionServiceRequestManager requestManager;
 
-  protected AbstractMigrationManager(ExtensionServiceRequestManager extensionRequestManager) {
-    this.extensionRequestManager = extensionRequestManager;
+  protected AbstractMigrationManager(ExtensionServiceRequestManager requestManager) {
+    this.requestManager = requestManager;
   }
 
   /**
@@ -92,7 +92,7 @@ public abstract class AbstractMigrationManager {
 
       String serializedRequest = JacksonSerializer.getObjectMapper().writeValueAsString(migrationRequest);
 
-      var migrationResponse = extensionRequestManager.requestMigration(
+      var migrationResponse = requestManager.requestMigration(
           requestTarget,
           serializedRequest
       );
@@ -154,10 +154,10 @@ public abstract class AbstractMigrationManager {
   protected void performUpdate(ExtensionServiceRequestTarget requestTarget) {
 
     try {
-      var entityPayload = extensionRequestManager
+      var entityPayload = requestManager
           .requestDescriptionUpdate(requestTarget)
           .responseBody();
-      var updateResult = new TypeExtractor(entityPayload).getTypeVerifier().verifyAndUpdate();
+      var updateResult = new TypeExtractor(entityPayload, requestManager).getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {
         LOG.error(
             "Updating the pipeline element description failed: {}",

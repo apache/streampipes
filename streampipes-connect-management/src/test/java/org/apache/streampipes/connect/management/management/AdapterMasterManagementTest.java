@@ -20,8 +20,10 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 
 import org.junit.jupiter.api.Assertions;
@@ -40,6 +42,8 @@ public class AdapterMasterManagementTest {
     var adapterStorage = mock(AdapterInstanceStorageImpl.class);
     var resourceManager = mock(AdapterResourceManager.class);
     var workerRestClient = mock(WorkerRestClient.class);
+    var serviceStorage = mock(IExtensionsServiceStorage.class);
+    var requestManager = mock(ExtensionServiceRequestManager.class);
     when(adapterStorage.findAll()).thenReturn(null);
 
     var adapterMasterManagement =
@@ -48,7 +52,9 @@ public class AdapterMasterManagementTest {
             resourceManager,
             null,
             AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-            workerRestClient
+            workerRestClient,
+            serviceStorage,
+            requestManager
         );
 
     assertThrows(AdapterException.class, () -> adapterMasterManagement.getAdapter("id2"));
@@ -60,6 +66,8 @@ public class AdapterMasterManagementTest {
     var adapterStorage = mock(AdapterInstanceStorageImpl.class);
     var resourceManager = mock(AdapterResourceManager.class);
     var workerRestClient = mock(WorkerRestClient.class);
+    var serviceStorage = mock(IExtensionsServiceStorage.class);
+    var requestManager = mock(ExtensionServiceRequestManager.class);
     when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
     var adapterMasterManagement =
@@ -68,7 +76,9 @@ public class AdapterMasterManagementTest {
             resourceManager,
             null,
             AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-            workerRestClient
+            workerRestClient,
+            serviceStorage,
+            requestManager
         );
 
     assertThrows(AdapterException.class, () -> adapterMasterManagement.getAdapter("id2"));
@@ -80,6 +90,8 @@ public class AdapterMasterManagementTest {
     var adapterStorage = mock(AdapterInstanceStorageImpl.class);
     var resourceManager = mock(AdapterResourceManager.class);
     var workerRestClient = mock(WorkerRestClient.class);
+    var serviceStorage = mock(IExtensionsServiceStorage.class);
+    var requestManager = mock(ExtensionServiceRequestManager.class);
     when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
     AdapterMasterManagement adapterMasterManagement =
@@ -88,7 +100,9 @@ public class AdapterMasterManagementTest {
             resourceManager,
             null,
             AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-            workerRestClient
+            workerRestClient,
+            serviceStorage,
+            requestManager
         );
 
     List<AdapterDescription> result = adapterMasterManagement.getAllAdapterInstances();

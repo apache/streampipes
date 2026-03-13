@@ -97,7 +97,9 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
               new SpResourceManager().manageAdapters(),
               new SpResourceManager().manageDataStreams(),
               AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-              new WorkerRestClient(extensionServiceRequestManager)
+              new WorkerRestClient(extensionServiceRequestManager),
+              getNoSqlStore().getExtensionsServiceStorage(),
+              extensionServiceRequestManager
           ).stopStreamAdapter(resourceId, true);
         } catch (AdapterException e) {
           LOG.warn("Error when stopping adapter with id {} and name {}", resourceId, existingAdapter.getName());

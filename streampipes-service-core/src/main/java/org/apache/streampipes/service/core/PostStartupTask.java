@@ -73,7 +73,8 @@ public class PostStartupTask implements Runnable {
         storage.getAdapterDescriptionStorage(),
         storage.getPermissionStorage(),
         resourceManager.manageUsers(),
-        resourceManager.managePermissions());
+        resourceManager.managePermissions(),
+        extensionServiceRequestManager);
     this.postStartupRecovery = new PostStartupRecovery(
         new ExtensionHealthCheck(
             new ResourceProvider(
@@ -84,7 +85,9 @@ public class PostStartupTask implements Runnable {
                     new SpResourceManager().manageAdapters(),
                     new SpResourceManager().manageDataStreams(),
                     AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-                    workerRestClient
+                    workerRestClient,
+                    StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
+                    extensionServiceRequestManager
                 )
             ),
             StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
