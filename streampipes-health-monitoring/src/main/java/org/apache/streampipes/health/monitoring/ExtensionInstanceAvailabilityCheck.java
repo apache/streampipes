@@ -19,7 +19,7 @@ package org.apache.streampipes.health.monitoring;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.ExtensionInstanceHealthCheckParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -75,10 +75,6 @@ public class ExtensionInstanceAvailabilityCheck {
   }
 
   private ExtensionServiceRequestTarget makeRequestTarget(SpServiceRegistration service) {
-    return new ExtensionServiceRequestTarget(
-        service.getServiceUrl(),
-        service.getSvcId(),
-        new ExtensionInstanceHealthCheckParameters()
-    );
+    return ExtensionServiceRequestTargets.extensionInstanceHealth(service);
   }
 }

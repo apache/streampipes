@@ -213,6 +213,6 @@ public class HttpExtensionServiceRequestManager implements ExtensionServiceReque
   }
 
   private String makeUrl(ExtensionServiceRequestTarget target) {
-    return target.params().toUrl(target.baseUrl());
+    return target.toPath();
   }
 }

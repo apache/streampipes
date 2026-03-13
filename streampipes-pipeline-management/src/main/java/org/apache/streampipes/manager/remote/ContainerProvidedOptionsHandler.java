@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.remote;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.RequestContainerProvidedOptionsParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -62,13 +62,6 @@ public class ContainerProvidedOptionsHandler {
       throws NoServiceEndpointsAvailableException {
     SpServiceUrlProvider provider = ExtensionsServiceEndpointUtils.getPipelineElementType(appId);
     var service = new ExtensionsServiceEndpointGenerator().selectService(appId, provider, Set.of());
-    return new ExtensionServiceRequestTarget(
-        service.getServiceUrl(),
-        service.getSvcId(),
-        new RequestContainerProvidedOptionsParameters(
-            provider,
-            appId
-        )
-    );
+    return ExtensionServiceRequestTargets.containerProvidedOptions(service, provider, appId);
   }
 }

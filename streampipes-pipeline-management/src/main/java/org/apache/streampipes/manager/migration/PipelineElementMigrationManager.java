@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.migration;
 import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.MigrationParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -95,11 +95,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
                   return migratePipelineElement(
                       processor,
                       migrationConfigs,
-                      new ExtensionServiceRequestTarget(
-                          extensionsServiceConfig.getServiceUrl(),
-                          extensionsServiceConfig.getSvcId(),
-                          new MigrationParameters("processor")
-                      ),
+                      ExtensionServiceRequestTargets.migration(extensionsServiceConfig, "processor"),
                       failedMigrations
                   );
                 } else {
@@ -117,11 +113,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
                   return migratePipelineElement(
                       sink,
                       migrationConfigs,
-                      new ExtensionServiceRequestTarget(
-                          extensionsServiceConfig.getServiceUrl(),
-                          extensionsServiceConfig.getSvcId(),
-                          new MigrationParameters("sink")
-                      ),
+                      ExtensionServiceRequestTargets.migration(extensionsServiceConfig, "sink"),
                       failedMigrations
                   );
                 } else {

@@ -19,8 +19,7 @@ package org.apache.streampipes.manager.assets;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
-import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.PipelineElementAssetParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -45,11 +44,7 @@ public class AssetFetcher {
 
   public InputStream fetchPipelineElementAssets() throws IOException, NoServiceEndpointsAvailableException {
     var service = new ExtensionsServiceEndpointGenerator().selectService(appId, spServiceUrlProvider, Set.of());
-    var requestTarget = new ExtensionServiceRequestTarget(
-        service.getServiceUrl(),
-        service.getSvcId(),
-        new PipelineElementAssetParameters(spServiceUrlProvider, appId)
-    );
+    var requestTarget = ExtensionServiceRequestTargets.pipelineElementAssets(service, spServiceUrlProvider, appId);
     var response = requestManager.requestPipelineElementAssets(requestTarget);
 
     if (!response.isSuccess()) {

@@ -19,8 +19,7 @@ package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
-import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.RequestOutputSchemaParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -78,13 +77,10 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
           SpServiceUrlProvider.DATA_PROCESSOR,
           Set.of()
       );
-      var requestTarget = new ExtensionServiceRequestTarget(
-          service.getServiceUrl(),
-          service.getSvcId(),
-          new RequestOutputSchemaParameters(
-              SpServiceUrlProvider.DATA_PROCESSOR,
-              dataProcessorInvocation.getAppId()
-              )
+      var requestTarget = ExtensionServiceRequestTargets.outputSchema(
+          service,
+          SpServiceUrlProvider.DATA_PROCESSOR,
+          dataProcessorInvocation.getAppId()
       );
       var response = requestManager.requestOutputSchema(requestTarget, httpRequestBody);
       return handleResponse(response);

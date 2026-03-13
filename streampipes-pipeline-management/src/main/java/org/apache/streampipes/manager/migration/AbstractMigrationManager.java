@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.migration;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.MigrationParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
@@ -72,11 +72,7 @@ public abstract class AbstractMigrationManager {
       String type
   ) {
     return performMigration(pipelineElement, migrationConfig,
-        new ExtensionServiceRequestTarget(
-            service.getServiceUrl(),
-            service.getSvcId(),
-            new MigrationParameters(type)
-        )
+        ExtensionServiceRequestTargets.migration(service, type)
     );
   }
 

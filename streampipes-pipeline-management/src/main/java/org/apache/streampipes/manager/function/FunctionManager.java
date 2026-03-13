@@ -19,8 +19,7 @@
 package org.apache.streampipes.manager.function;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
-import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.FunctionStopParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionState;
 import org.apache.streampipes.model.function.FunctionsShutdownResponse;
@@ -56,11 +55,7 @@ public class FunctionManager {
   }
 
   private FunctionsShutdownResponse triggerFunctionStop(SpServiceRegistration service) {
-    var requestTarget = new ExtensionServiceRequestTarget(
-        service.getServiceUrl(),
-        service.getSvcId(),
-        new FunctionStopParameters()
-    );
+    var requestTarget = ExtensionServiceRequestTargets.functionStop(service);
 
     try {
       LOG.info("Triggering function stop at {}", requestTarget.baseUrl());

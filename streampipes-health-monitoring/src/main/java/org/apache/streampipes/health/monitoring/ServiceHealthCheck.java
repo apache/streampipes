@@ -23,7 +23,7 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.ServiceHealthCheckParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -110,11 +110,7 @@ public class ServiceHealthCheck implements Runnable {
   }
 
   private ExtensionServiceRequestTarget makeHealthCheckRequestTarget(SpServiceRegistration service) {
-    return new ExtensionServiceRequestTarget(
-        service.getServiceUrl(),
-        service.getSvcId(),
-        new ServiceHealthCheckParameters(service.getHealthCheckPath())
-    );
+    return ExtensionServiceRequestTargets.serviceHealth(service, service.getHealthCheckPath());
   }
 
   private List<SpServiceRegistration> getRegisteredServices() {

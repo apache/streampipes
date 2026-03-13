@@ -28,8 +28,8 @@ import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionE
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
-import org.apache.streampipes.manager.api.extensions.param.AdapterSampleDataParameters;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -140,11 +140,7 @@ public class GuessManagement {
                           .getDesiredServiceTags()
     );
 
-    return new ExtensionServiceRequestTarget(
-        selectedService.getServiceUrl(),
-        selectedService.getSvcId(),
-        new AdapterSampleDataParameters()
-    );
+    return ExtensionServiceRequestTargets.adapterSampleData(selectedService);
   }
 
 }

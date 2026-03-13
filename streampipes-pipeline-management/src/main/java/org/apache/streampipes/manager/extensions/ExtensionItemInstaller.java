@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.extensions;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.ExtensionDescriptionParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -54,13 +54,10 @@ public class ExtensionItemInstaller {
   }
 
   private ExtensionServiceRequestTarget getDescriptionRequestTarget(ExtensionItemInstallationRequest req) {
-    return new ExtensionServiceRequestTarget(
-        service.getServiceUrl(),
-        service.getSvcId(),
-        new ExtensionDescriptionParameters(
-            SpServiceUrlProvider.valueOf(req.serviceTagPrefix().name()),
-            req.appId()
-        )
+    return ExtensionServiceRequestTargets.extensionDescription(
+        service,
+        SpServiceUrlProvider.valueOf(req.serviceTagPrefix().name()),
+        req.appId()
     );
   }
 

@@ -19,7 +19,7 @@
 package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.ExtensionDescriptionParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -78,13 +78,6 @@ public class MigrationUtils {
       case DATA_SINK -> urlProvider = SpServiceUrlProvider.DATA_SINK;
       default -> throw new RuntimeException("Unexpected instance type.");
     }
-    return new ExtensionServiceRequestTarget(
-        service.getServiceUrl(),
-        service.getSvcId(),
-        new ExtensionDescriptionParameters(
-            urlProvider,
-            appId
-        )
-    );
+    return ExtensionServiceRequestTargets.descriptionUpdate(service, urlProvider, appId);
   }
 }

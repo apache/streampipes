@@ -18,10 +18,86 @@
 
 package org.apache.streampipes.manager.api.extensions;
 
-import org.apache.streampipes.manager.api.extensions.param.ExtensionServiceOperationParameters;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public record ExtensionServiceRequestTarget(String baseUrl,
                                             String serviceId,
-                                            ExtensionServiceOperationParameters params) {
+                                            ExtensionServiceOperationType operation,
+                                            List<String> pathSegments,
+                                            List<String> topicSegments) {
 
+  public ExtensionServiceRequestTarget {
+    Objects.requireNonNull(baseUrl);
+    Objects.requireNonNull(serviceId);
+    Objects.requireNonNull(operation);
+    Objects.requireNonNull(pathSegments);
+    Objects.requireNonNull(topicSegments);
+    pathSegments = List.copyOf(pathSegments);
+    topicSegments = List.copyOf(topicSegments);
+  }
+
+  public static ExtensionServiceRequestTarget of(String baseUrl,
+                                                 String serviceId,
+                                                 ExtensionServiceOperationType operation,
+                                                 String... pathSegments) {
+    return new ExtensionServiceRequestTarget(
+        baseUrl,
+        serviceId,
+        operation,
+        Arrays.asList(pathSegments),
+        List.of(operation.name().toLowerCase(Locale.ROOT))
+    );
+  }
+
+  public static ExtensionServiceRequestTarget of(String baseUrl,
+                                                 String serviceId,
+                                                 ExtensionServiceOperationType operation,
+                                                 List<String> pathSegments,
+                                                 List<String> topicSegments) {
+    return new ExtensionServiceRequestTarget(baseUrl, serviceId, operation, pathSegments, topicSegments);
+  }
+
+  public String toPath() {
+    var suffix = pathSegments.stream()
+        .filter(Objects::nonNull)
+        .map(ExtensionServiceRequestTarget::trimSlashes)
+        .filter(part -> !part.isEmpty())
+        .collect(Collectors.joining("/"));
+
+    if (suffix.isEmpty()) {
+      return trimTrailingSlash(baseUrl);
+    }
+    return trimTrailingSlash(baseUrl) + "/" + suffix;
+  }
+
+  public String toTopic(String topicPrefix) {
+    var segments = topicSegments.isEmpty()
+        ? List.of(operation.name().toLowerCase(Locale.ROOT))
+        : topicSegments;
+
+    return Stream.concat(
+            Stream.of(topicPrefix, serviceId),
+            segments.stream())
+        .filter(Objects::nonNull)
+        .map(ExtensionServiceRequestTarget::toTopicSegment)
+        .filter(part -> !part.isEmpty())
+        .collect(Collectors.joining("."));
+  }
+
+  private static String trimTrailingSlash(String value) {
+    return value.replaceAll("/+$", "");
+  }
+
+  private static String trimSlashes(String value) {
+    return value.replaceAll("^/+", "").replaceAll("/+$", "");
+  }
+
+  private static String toTopicSegment(String value) {
+    return trimSlashes(value).replace("/", ".");
+  }
 }

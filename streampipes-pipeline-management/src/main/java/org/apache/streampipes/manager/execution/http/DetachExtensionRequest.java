@@ -20,8 +20,7 @@ package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
-import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.PipelineElementDetachParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
@@ -41,10 +40,12 @@ public class DetachExtensionRequest extends PipelineElementExtensionRequest {
     LOG.info("Detaching element {}", pipelineElement.getName());
     var provider = ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement);
     var instanceId = InstanceIdExtractor.extractId(pipelineElement.getElementId());
-    var requestTarget = new ExtensionServiceRequestTarget(
+    var requestTarget = ExtensionServiceRequestTargets.pipelineDetach(
         pipelineElement.getSelectedEndpointUrl(),
         pipelineElement.getSelectedServiceId(),
-        new PipelineElementDetachParameters(provider, pipelineElement.getAppId(), instanceId)
+        provider,
+        pipelineElement.getAppId(),
+        instanceId
     );
     return requestManager().requestPipelineElementDetach(requestTarget, pipelineId);
   }

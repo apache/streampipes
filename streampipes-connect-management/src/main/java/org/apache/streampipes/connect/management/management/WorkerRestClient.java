@@ -24,13 +24,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.api.extensions.param.AdapterAssetDocumentationParameters;
-import org.apache.streampipes.manager.api.extensions.param.AdapterAssetIconParameters;
-import org.apache.streampipes.manager.api.extensions.param.AdapterAssetParameters;
-import org.apache.streampipes.manager.api.extensions.param.AdapterRuntimeOptionsParameters;
-import org.apache.streampipes.manager.api.extensions.param.AdapterStartParameters;
-import org.apache.streampipes.manager.api.extensions.param.AdapterStopParameters;
-import org.apache.streampipes.manager.api.extensions.param.ExtensionServiceOperationParameters;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -65,45 +59,42 @@ public class WorkerRestClient {
   public void invokeStreamAdapter(SpServiceRegistration service,
                                   String elementId) throws AdapterException {
     var adapterStreamDescription = getAndDecryptAdapter(elementId);
-    var params = new AdapterStartParameters();
-    startAdapter(service, params, adapterStreamDescription);
+    var requestTarget = ExtensionServiceRequestTargets.adapterStart(service);
+    startAdapter(requestTarget, adapterStreamDescription);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), true);
   }
 
   public void stopStreamAdapter(SpServiceRegistration service,
                                 AdapterDescription adapterStreamDescription) throws AdapterException {
-    var params = new AdapterStopParameters();
+    var requestTarget = ExtensionServiceRequestTargets.adapterStop(service);
     var ad = getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
 
-    stopAdapter(service, params, ad);
+    stopAdapter(requestTarget, ad);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
   }
 
-  private void startAdapter(SpServiceRegistration service,
-                            ExtensionServiceOperationParameters params,
+  private void startAdapter(ExtensionServiceRequestTarget requestTarget,
                             AdapterDescription ad) throws AdapterException {
-    LOG.debug("Trying to start adapter on endpoint {} ", service.getSvcId());
-    triggerAdapterStateChange(ad, service, params,"started");
+    LOG.debug("Trying to start adapter on endpoint {} ", requestTarget.serviceId());
+    triggerAdapterStateChange(ad, requestTarget, "started");
   }
 
 
-  private void stopAdapter(SpServiceRegistration service,
-                           ExtensionServiceOperationParameters params,
+  private void stopAdapter(ExtensionServiceRequestTarget requestTarget,
                            AdapterDescription ad) throws AdapterException {
 
-    LOG.debug("Trying to stop adapter on endpoint {} ", service.getSvcId());
-    triggerAdapterStateChange(ad, service, params, "stopped");
+    LOG.debug("Trying to stop adapter on endpoint {} ", requestTarget.serviceId());
+    triggerAdapterStateChange(ad, requestTarget, "stopped");
   }
 
   private void triggerAdapterStateChange(AdapterDescription ad,
-                                         SpServiceRegistration service,
-                                         ExtensionServiceOperationParameters params,
+                                         ExtensionServiceRequestTarget requestTarget,
                                          String action) throws AdapterException {
     try {
       String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
       var response =
-          triggerPost(service, params, ad.getCorrespondingDataStreamElementId(), adapterDescription);
+          triggerPost(requestTarget, ad.getCorrespondingDataStreamElementId(), adapterDescription);
       var responseString = response.responseBody();
 
       if (response.statusCode() != HttpStatus.SC_OK) {
@@ -112,20 +103,15 @@ public class WorkerRestClient {
       }
     } catch (IOException e) {
       LOG.error("Adapter was not {} successfully", action, e);
-      throw new AdapterException("Adapter was not " + action + " successfully with serviceId " + service.getSvcId(), e);
+      throw new AdapterException("Adapter was not " + action + " successfully with serviceId " + requestTarget.serviceId(), e);
     }
   }
 
-  private ExtensionServiceOperationResult triggerPost(SpServiceRegistration service,
-                                                      ExtensionServiceOperationParameters params,
+  private ExtensionServiceOperationResult triggerPost(ExtensionServiceRequestTarget requestTarget,
                                                       String elementId,
                                                       String payload) throws IOException {
     return requestManager.requestAdapterStateChange(
-        new ExtensionServiceRequestTarget(
-            service.getServiceUrl(),
-            service.getSvcId(),
-            params
-        ),
+        requestTarget,
         elementId,
         payload
     );
@@ -138,11 +124,7 @@ public class WorkerRestClient {
 
     try {
       String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
-      var requestTarget = new ExtensionServiceRequestTarget(
-          service.getServiceUrl(),
-          service.getSvcId(),
-          new AdapterRuntimeOptionsParameters(appId)
-      );
+      var requestTarget = ExtensionServiceRequestTargets.adapterRuntimeOptions(service, appId);
       var response = requestManager.requestRuntimeOptions(requestTarget, payload);
       String responseString = response.responseBody();
 
@@ -160,11 +142,7 @@ public class WorkerRestClient {
   public String getAssets(SpServiceRegistration service,
                           String appId) throws AdapterException {
     try {
-      var requestTarget = new ExtensionServiceRequestTarget(
-          service.getServiceUrl(),
-          service.getSvcId(),
-          new AdapterAssetParameters(appId)
-      );
+      var requestTarget = ExtensionServiceRequestTargets.adapterAssets(service, appId);
       var response = requestManager.requestAdapterAssets(requestTarget);
 
       if (!response.isSuccess()) {
@@ -181,11 +159,7 @@ public class WorkerRestClient {
   public byte[] getIconAsset(SpServiceRegistration service,
                              String appId) throws AdapterException {
     try {
-      var requestTarget = new ExtensionServiceRequestTarget(
-          service.getServiceUrl(),
-          service.getSvcId(),
-          new AdapterAssetIconParameters(appId)
-      );
+      var requestTarget = ExtensionServiceRequestTargets.adapterIconAsset(service, appId);
       var response = requestManager.requestAdapterIconAsset(requestTarget);
       if (!response.isSuccess()) {
         throw new AdapterException("Could not get icon endpoint: " + service.getServiceUrl());
@@ -200,11 +174,7 @@ public class WorkerRestClient {
   public String getDocumentationAsset(SpServiceRegistration service,
                                       String appId) throws AdapterException {
     try {
-      var requestTarget = new ExtensionServiceRequestTarget(
-          service.getServiceUrl(),
-          service.getSvcId(),
-          new AdapterAssetDocumentationParameters(appId)
-      );
+      var requestTarget = ExtensionServiceRequestTargets.adapterDocumentationAsset(service, appId);
       var response = requestManager.requestAdapterDocumentationAsset(requestTarget);
       if (!response.isSuccess()) {
         throw new AdapterException("Could not get documentation endpoint: " + service.getServiceUrl());
