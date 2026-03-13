@@ -102,11 +102,10 @@ export class CsvImportDialogComponent {
     private previewReloadTimeout?: ReturnType<typeof setTimeout>;
     private schemaValidationTimeout?: ReturnType<typeof setTimeout>;
 
+    selectedFile?: File;
+    uploadId?: string;
     fileName = '';
-    rawFileContent = '';
     timestampFormat = '';
-    parsedHeaders: string[] = [];
-    parsedRows: string[][] = [];
     previewResult?: CsvImportPreviewResult;
     schemaValidationResult?: CsvImportSchemaValidationResult;
     importResult?: CsvImportResult;
@@ -116,8 +115,8 @@ export class CsvImportDialogComponent {
     localMessages: CsvImportValidationMessage[] = [];
 
     parseForm = this.fb.group({
-        delimiter: [';', Validators.required],
-        decimalSeparator: [',' as ',' | '.', Validators.required],
+        delimiter: [',' as ',' | ';' | '|' | '\\t', Validators.required],
+        decimalSeparator: ['.' as ',' | '.', Validators.required],
         hasHeader: [true, Validators.required],
     });
 
@@ -180,8 +179,16 @@ export class CsvImportDialogComponent {
         return !!this.importResult?.measurementName;
     }
 
-    get previewColumns(): string[] {
-        return this.previewResult?.headers ?? [];
+    get uploadErrorMessages(): CsvImportValidationMessage[] {
+        if (this.importLoading || this.hasImportResult) {
+            return [];
+        }
+
+        return this.importResult?.validationMessages ?? [];
+    }
+
+    get hasUploadError(): boolean {
+        return this.uploadErrorMessages.length > 0;
     }
 
     get previewRows(): string[][] {
@@ -198,16 +205,8 @@ export class CsvImportDialogComponent {
         )?.column.runtimeName;
     }
 
-    get canConfigureColumns(): boolean {
-        return this.hasPreview;
-    }
-
-    get canConfigureParse(): boolean {
-        return this.isTargetValid;
-    }
-
     get canProceedToConfiguration(): boolean {
-        return this.isTargetValid && !!this.rawFileContent;
+        return this.isTargetValid && !!this.selectedFile;
     }
 
     get canImport(): boolean {
@@ -218,6 +217,10 @@ export class CsvImportDialogComponent {
             (this.targetMode !== 'EXISTING' ||
                 this.schemaValidationResult?.valid === true)
         );
+    }
+
+    get showTimestampSelectionWarning(): boolean {
+        return this.hasPreview && !this.selectedTimestampColumn;
     }
 
     get selectedTimestampColumnModel(): CsvImportColumnModel | undefined {
@@ -263,13 +266,6 @@ export class CsvImportDialogComponent {
         );
     }
 
-    get currentTargetLabel(): string {
-        if (!this.currentTarget) {
-            return '-';
-        }
-        return this.currentTarget.measurementName;
-    }
-
     onFileSelected(event: Event): void {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
@@ -278,20 +274,17 @@ export class CsvImportDialogComponent {
         }
 
         this.fileName = file.name;
+        this.selectedFile = file;
+        this.uploadId = undefined;
         this.timestampFormat = '';
-        const reader = new FileReader();
-        reader.onload = () => {
-            this.rawFileContent = `${reader.result ?? ''}`;
-            this.invalidatePreview();
-        };
-        reader.readAsText(file);
+        this.invalidatePreview();
     }
 
     nextStep(): void {
         if (this.csvImportStepper.selectedIndex === 0) {
             if (!this.canProceedToConfiguration) {
                 this.localMessages = this.validateLocalTarget();
-                if (!this.rawFileContent) {
+                if (!this.selectedFile) {
                     this.localMessages.push({
                         field: 'file',
                         message: 'Please select a CSV file first.',
@@ -339,34 +332,24 @@ export class CsvImportDialogComponent {
             return;
         }
 
-        if (!this.rawFileContent) {
+        if (!this.selectedFile && !this.uploadId) {
             this.localMessages = [
                 { field: 'file', message: 'Please select a CSV file first.' },
             ];
             return;
         }
 
-        try {
-            const { headers, rows } = this.parseCsv();
-            this.parsedHeaders = headers;
-            this.parsedRows = rows;
-        } catch (error) {
-            this.localMessages = [
-                {
-                    field: 'file',
-                    message:
-                        'The CSV file could not be parsed with the current settings.',
-                },
-            ];
-            return;
-        }
-
         this.previewLoading = true;
+        const useMultipartUpload = !!this.selectedFile && !this.uploadId;
         this.datalakeRestService
-            .previewImport(this.buildPreviewRequest(this.currentTarget))
+            .previewImport(
+                this.buildPreviewRequest(this.currentTarget),
+                useMultipartUpload ? this.selectedFile : undefined,
+            )
             .subscribe({
                 next: preview => {
                     this.previewResult = preview;
+                    this.uploadId = preview.uploadId ?? this.uploadId;
                     this.columnModels = preview.columns.map(column =>
                         this.toColumnModel(column),
                     );
@@ -469,9 +452,23 @@ export class CsvImportDialogComponent {
                 },
                 error: error => {
                     this.importLoading = false;
-                    this.importResult = error?.error as CsvImportResult;
-                    if (!this.hasImportResult) {
-                        this.csvImportStepper.previous();
+                    this.importResult = (error?.error as CsvImportResult) ?? {
+                        measurementId: '',
+                        measurementName: '',
+                        createdNewMeasurement: false,
+                        importedRowCount: 0,
+                        validationMessages: [],
+                    };
+
+                    if (!this.importResult.validationMessages?.length) {
+                        this.importResult.validationMessages = [
+                            {
+                                field: 'upload',
+                                message:
+                                    error?.error?.message ??
+                                    'The CSV import failed. Please review the import configuration and try again.',
+                            },
+                        ];
                     }
                 },
             });
@@ -481,106 +478,21 @@ export class CsvImportDialogComponent {
         this.dialogRef.close(refresh);
     }
 
-    private parseCsv(): { headers: string[]; rows: string[][] } {
-        const delimiter = this.normalizeDelimiter(
-            this.parseForm.get('delimiter')?.value ?? ';',
-        );
-        const parsed = this.parseCsvContent(this.rawFileContent, delimiter);
-        const rows = parsed.filter(row =>
-            row.some(cell => `${cell}`.trim() !== ''),
-        );
-        if (rows.length === 0) {
-            throw new Error('CSV contains no rows');
-        }
-
-        const hasHeader = this.parseForm.get('hasHeader')?.value ?? true;
-        let headers: string[];
-        let contentRows: string[][];
-
-        if (hasHeader) {
-            headers = rows[0].map((header, index) =>
-                this.normalizeHeader(
-                    index === 0 ? this.stripBom(header) : header,
-                    index,
-                ),
-            );
-            contentRows = rows.slice(1);
-        } else {
-            headers = rows[0].map((_, index) => `column_${index + 1}`);
-            contentRows = rows;
-        }
-
-        return { headers, rows: contentRows };
-    }
-
-    private normalizeDelimiter(value: string): string {
-        return value === '\\t' ? '\t' : value;
-    }
-
-    private stripBom(value: string): string {
-        return value.replace(/^\uFEFF/, '');
-    }
-
-    private normalizeHeader(value: string, index: number): string {
-        const trimmed = value?.trim();
-        return trimmed ? trimmed : `column_${index + 1}`;
-    }
-
-    private parseCsvContent(content: string, delimiter: string): string[][] {
-        const rows: string[][] = [];
-        let currentRow: string[] = [];
-        let currentValue = '';
-        let inQuotes = false;
-
-        for (let i = 0; i < content.length; i++) {
-            const char = content[i];
-            const nextChar = content[i + 1];
-
-            if (char === '"') {
-                if (inQuotes && nextChar === '"') {
-                    currentValue += '"';
-                    i += 1;
-                } else {
-                    inQuotes = !inQuotes;
-                }
-            } else if (!inQuotes && char === delimiter) {
-                currentRow.push(currentValue);
-                currentValue = '';
-            } else if (!inQuotes && (char === '\n' || char === '\r')) {
-                if (char === '\r' && nextChar === '\n') {
-                    i += 1;
-                }
-                currentRow.push(currentValue);
-                rows.push(currentRow);
-                currentRow = [];
-                currentValue = '';
-            } else {
-                currentValue += char;
-            }
-        }
-
-        currentRow.push(currentValue);
-        rows.push(currentRow);
-        return rows;
-    }
-
     private buildPreviewRequest(
         target?: CsvImportTarget,
     ): CsvImportPreviewRequest {
         return {
+            uploadId: this.uploadId,
             fileName: this.fileName,
             csvConfig: this.currentCsvConfig,
-            headers: this.parsedHeaders,
-            rows: this.parsedRows,
             target,
         };
     }
 
     private buildImportRequest(): CsvImportRequest {
         return {
+            uploadId: this.uploadId,
             csvConfig: this.currentCsvConfig,
-            headers: this.parsedHeaders,
-            rows: this.parsedRows,
             target: this.currentTarget!,
             timestampColumn: this.selectedTimestampColumn!,
             columns: this.columnModels.map(model => model.column),
@@ -629,10 +541,10 @@ export class CsvImportDialogComponent {
 
     private get currentCsvConfig(): CsvImportConfiguration {
         return {
-            delimiter: this.parseForm.get('delimiter')?.value ?? ';',
+            delimiter: this.parseForm.get('delimiter')?.value ?? ',',
             decimalSeparator:
                 (this.parseForm.get('decimalSeparator')?.value as ',' | '.') ??
-                ',',
+                '.',
             hasHeader: this.parseForm.get('hasHeader')?.value ?? true,
             timestampFormat: this.timestampFormat.trim() || undefined,
         };

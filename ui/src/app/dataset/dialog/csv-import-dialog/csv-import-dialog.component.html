@@ -227,12 +227,6 @@
                     [level]="3"
                     [title]="'Live preview' | translate"
                 >
-                    @if (currentTarget) {
-                        <div section-actions class="target-pill">
-                            {{ currentTargetLabel }}
-                        </div>
-                    }
-
                     @if (hasSchemaMismatch) {
                         <sp-alert-banner
                             type="error"
@@ -259,6 +253,18 @@
                                 }
                             </ul>
                         }
+                    }
+
+                    @if (showTimestampSelectionWarning) {
+                        <sp-alert-banner
+                            type="warning"
+                            data-cy="csv-import-timestamp-warning"
+                            [title]="'Warning' | translate"
+                            [description]="
+                                'Please select exactly one timestamp column before uploading the CSV.'
+                                    | translate
+                            "
+                        ></sp-alert-banner>
                     }
 
                     @if (hasPreview) {
@@ -300,50 +306,46 @@
                                                                 data-cy="csv-import-timestamp-format"
                                                             />
                                                         </mat-form-field>
-                                                    }
-                                                    <mat-form-field
-                                                        appearance="outline"
-                                                        class="w-100"
-                                                    >
-                                                        <mat-select
-                                                            [value]="
-                                                                model.column
-                                                                    .runtimeType ||
-                                                                model.column
-                                                                    .inferredType ||
-                                                                'STRING'
-                                                            "
-                                                            [disabled]="
-                                                                isTimestampColumn(
-                                                                    model
-                                                                )
-                                                            "
-                                                            (selectionChange)="
-                                                                setColumnType(
-                                                                    model,
-                                                                    $event.value
-                                                                )
-                                                            "
-                                                            data-cy="csv-import-column-type"
+                                                    } @else {
+                                                        <mat-form-field
+                                                            appearance="outline"
+                                                            class="w-100"
                                                         >
-                                                            <mat-option
-                                                                value="STRING"
-                                                                >STRING</mat-option
+                                                            <mat-select
+                                                                [value]="
+                                                                    model.column
+                                                                        .runtimeType ||
+                                                                    model.column
+                                                                        .inferredType ||
+                                                                    'STRING'
+                                                                "
+                                                                (selectionChange)="
+                                                                    setColumnType(
+                                                                        model,
+                                                                        $event.value
+                                                                    )
+                                                                "
+                                                                data-cy="csv-import-column-type"
                                                             >
-                                                            <mat-option
-                                                                value="BOOLEAN"
-                                                                >BOOLEAN</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="LONG"
-                                                                >LONG</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="FLOAT"
-                                                                >FLOAT</mat-option
-                                                            >
-                                                        </mat-select>
-                                                    </mat-form-field>
+                                                                <mat-option
+                                                                    value="STRING"
+                                                                    >STRING</mat-option
+                                                                >
+                                                                <mat-option
+                                                                    value="BOOLEAN"
+                                                                    >BOOLEAN</mat-option
+                                                                >
+                                                                <mat-option
+                                                                    value="LONG"
+                                                                    >LONG</mat-option
+                                                                >
+                                                                <mat-option
+                                                                    value="FLOAT"
+                                                                    >FLOAT</mat-option
+                                                                >
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    }
                                                     <mat-form-field
                                                         appearance="outline"
                                                         class="w-100"
@@ -458,6 +460,32 @@
                                 {{ importResult?.importedRowCount }}
                                 {{ 'rows imported' | translate }}
                             </div>
+                        } @else if (hasUploadError) {
+                            <sp-alert-banner
+                                type="error"
+                                data-cy="csv-import-upload-error"
+                                [title]="'Import failed' | translate"
+                                [description]="uploadErrorMessages[0].message"
+                            ></sp-alert-banner>
+
+                            @if (uploadErrorMessages.length > 1) {
+                                <ul
+                                    class="schema-mismatch-list"
+                                    data-cy="csv-import-upload-error-list"
+                                >
+                                    @for (
+                                        message of uploadErrorMessages.slice(1);
+                                        track message.message
+                                    ) {
+                                        <li
+                                            class="schema-mismatch-item"
+                                            data-cy="csv-import-upload-error-item"
+                                        >
+                                            {{ message.message }}
+                                        </li>
+                                    }
+                                </ul>
+                            }
                         }
                     </div>
                 </sp-split-section>
@@ -471,7 +499,7 @@
 
     <mat-divider></mat-divider>
 
-    <div class="sp-dialog-actions actions-align-right">
+    <div class="sp-dialog-actions actions-align-left">
         <button
             mat-button
             mat-flat-button

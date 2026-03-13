@@ -22,6 +22,7 @@ describe('CSV import happy path', () => {
     const datasetName = 'csv_machine_data_import';
     const stringTimestampDatasetName = 'csv_machine_data_import_string_ts';
     const existingDatasetName = 'csv_machine_data_existing_import';
+    const missingValuesDatasetName = 'csv_machine_data_missing_values';
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
@@ -53,6 +54,22 @@ describe('CSV import happy path', () => {
         DatasetUtils.uploadCsvImport();
         DatasetUtils.expectDatasetTotalEventCount(
             stringTimestampDatasetName,
+            '7',
+        );
+    });
+
+    it('Uploads a CSV file with missing values and still imports all rows', () => {
+        DatasetUtils.openCsvImportDialog();
+        DatasetUtils.uploadCsvImportFile(
+            'datalake/machine-data-simulator-import-missing-values.csv',
+        );
+        DatasetUtils.createNewDatasetFromCsv(missingValuesDatasetName);
+        DatasetUtils.continueCsvImportToPreview();
+        DatasetUtils.selectCsvImportDelimiterComma();
+        DatasetUtils.selectCsvImportTimestampColumn(0);
+        DatasetUtils.uploadCsvImport();
+        DatasetUtils.expectDatasetTotalEventCount(
+            missingValuesDatasetName,
             '7',
         );
     });

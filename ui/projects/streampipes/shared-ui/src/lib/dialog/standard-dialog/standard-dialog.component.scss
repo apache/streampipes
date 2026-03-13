@@ -47,7 +47,8 @@ standard-dialog-container {
 
 .dialog-panel-content {
     height: 100%;
-    overflow-y: auto;
+    overflow: auto;
+    min-width: 0;
 }
 
 .dialog-title {

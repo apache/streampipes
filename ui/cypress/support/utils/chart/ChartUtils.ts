@@ -20,13 +20,11 @@ import { DataLakeFilterConfig } from '../../model/DataLakeFilterConfig';
 import { ChartWidget } from '../../model/ChartWidget';
 import { DataSetUtils } from '../DataSetUtils';
 import { PrepareTestDataUtils } from '../PrepareTestDataUtils';
-import { FileManagementUtils } from '../FileManagementUtils';
-import { ConnectUtils } from '../connect/ConnectUtils';
-import { ConnectBtns } from '../connect/ConnectBtns';
-import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { GeneralUtils } from '../GeneralUtils';
 import { ChartBtns } from './ChartBtns';
 import { SharedBtns } from '../shared/SharedBtns';
+import { DataLakeSeedUtils } from '../dataset/DataLakeSeedUtils';
+import { ConnectBtns } from '../connect/ConnectBtns';
 
 export class ChartUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
@@ -86,52 +84,29 @@ export class ChartUtils {
         ChartUtils.loadRandomDataSetIntoDataLake();
     }
 
-    public static getDataLakeTestSetAdapter(
-        name: string,
-        storeInDataLake: boolean = true,
-        format: 'csv' | 'json_array',
-    ) {
-        const adapterBuilder = AdapterBuilder.create('File_Stream')
-            .setName(name)
-            .setTimestampProperty('timestamp')
-            .addDimensionProperty('randomtext')
-            .addProtocolInput(
-                'radio',
-                'speed',
-                'fastest_\\(ignore_original_time\\)',
-            )
-            .setStartAdapter(true);
-
-        if (format === 'csv') {
-            adapterBuilder
-                .setFormat('csv')
-                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
-        } else {
-            adapterBuilder.setFormat('json_array');
-        }
-
-        if (storeInDataLake) {
-            adapterBuilder.setStoreInDataLake();
-        }
-        return adapterBuilder.build();
-    }
-
     public static loadDataIntoDataLake(
         dataSet: string,
         format: 'csv' | 'json_array' = 'csv',
     ) {
-        // Create adapter with dataset
-        FileManagementUtils.addFile(dataSet);
-
-        const adapter = this.getDataLakeTestSetAdapter(
-            ChartUtils.ADAPTER_NAME,
-            true,
-            format,
-        );
-
-        ConnectUtils.addAdapter(adapter);
-        ConnectUtils.startAdapter(adapter);
+        if (format === 'csv') {
+            return DataLakeSeedUtils.importCsvFixture({
+                fixture: dataSet,
+                measurementName: ChartUtils.ADAPTER_NAME,
+                delimiter: ';',
+                timestampColumn: 'timestamp',
+                columnOverrides: {
+                    randomtext: {
+                        propertyScope: 'DIMENSION_PROPERTY',
+                    },
+                },
+            });
+        } else {
+            return DataLakeSeedUtils.importJsonArrayFixture({
+                fixture: dataSet,
+                measurementName: ChartUtils.ADAPTER_NAME,
+                timestampColumn: 'timestamp',
+            });
+        }
     }
 
     public static addDataViewAndWidget(
@@ -304,6 +279,8 @@ export class ChartUtils {
     public static createAndEditDataView() {
         // Create new data view
         ChartBtns.openNewDataViewBtn().click();
+        cy.location('hash').should('include', '/chart/create');
+        cy.location('hash').should('include', 'editMode=true');
     }
 
     public static removeWidget(dataViewName: string) {
@@ -431,11 +408,17 @@ export class ChartUtils {
     }
 
     public static selectDataSet(dataSet: string) {
-        cy.dataCy('data-explorer-select-data-set')
-            .click()
-            .get('mat-option')
-            .contains(dataSet)
-            .click();
+        cy.get('body').then($body => {
+            if (
+                $body.find('[data-cy="data-explorer-select-data-set"]').length
+            ) {
+                cy.dataCy('data-explorer-select-data-set')
+                    .click()
+                    .get('mat-option')
+                    .contains(dataSet)
+                    .click();
+            }
+        });
     }
 
     public static assertSelectDataSet(dataSet: string) {

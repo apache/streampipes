@@ -51,14 +51,16 @@ export interface CsvImportValidationMessage {
 }
 
 export interface CsvImportPreviewRequest {
+    uploadId?: string;
     fileName?: string;
     csvConfig: CsvImportConfiguration;
-    headers: string[];
-    rows: string[][];
+    headers?: string[];
+    rows?: string[][];
     target?: CsvImportTarget;
 }
 
 export interface CsvImportPreviewResult {
+    uploadId?: string;
     headers: string[];
     previewRows: string[][];
     columns: CsvImportColumn[];
@@ -94,9 +96,10 @@ export interface CsvImportSchemaValidationResult {
 }
 
 export interface CsvImportRequest {
+    uploadId?: string;
     csvConfig: CsvImportConfiguration;
-    headers: string[];
-    rows: string[][];
+    headers?: string[];
+    rows?: string[][];
     target: CsvImportTarget;
     timestampColumn: string;
     columns: CsvImportColumn[];
