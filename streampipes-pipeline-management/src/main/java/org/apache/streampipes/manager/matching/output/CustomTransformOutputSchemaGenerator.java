@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.manager.matching.output;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -28,26 +31,30 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.google.gson.JsonSyntaxException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.ContentType;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<CustomTransformOutputStrategy> {
 
-  private DataProcessorInvocation dataProcessorInvocation;
-  private CustomTransformOutputStrategy outputStrategy;
+  private final DataProcessorInvocation dataProcessorInvocation;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public static CustomTransformOutputSchemaGenerator from(OutputStrategy strategy, DataProcessorInvocation invocation) {
-    return new CustomTransformOutputSchemaGenerator((CustomTransformOutputStrategy) strategy, invocation);
+  public static CustomTransformOutputSchemaGenerator from(OutputStrategy strategy,
+                                                          DataProcessorInvocation invocation,
+                                                          ExtensionServiceRequestManager requestManager) {
+    return new CustomTransformOutputSchemaGenerator(
+        (CustomTransformOutputStrategy) strategy,
+        invocation,
+        requestManager);
   }
 
   public CustomTransformOutputSchemaGenerator(CustomTransformOutputStrategy strategy,
-                                              DataProcessorInvocation invocation) {
+                                              DataProcessorInvocation invocation,
+                                              ExtensionServiceRequestManager requestManager) {
     super(strategy);
     this.dataProcessorInvocation = invocation;
+    this.requestManager = requestManager;
   }
 
 
@@ -65,22 +72,30 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   private EventSchema makeRequest() {
     try {
       String httpRequestBody = JacksonSerializer.getObjectMapper().writeValueAsString(dataProcessorInvocation);
-      String endpointUrl = new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(
+      var service = new ExtensionsServiceEndpointGenerator().selectService(
           dataProcessorInvocation.getAppId(),
-          SpServiceUrlProvider.DATA_PROCESSOR
+          SpServiceUrlProvider.DATA_PROCESSOR,
+          Set.of()
       );
-      Response httpResp = Request.Post(endpointUrl + "/output").bodyString(httpRequestBody,
-          ContentType
-              .APPLICATION_JSON).execute();
-      return handleResponse(httpResp);
+      var requestTarget = ExtensionServiceRequestTargets.outputSchema(
+          service,
+          SpServiceUrlProvider.DATA_PROCESSOR,
+          dataProcessorInvocation.getAppId()
+      );
+      var response = requestManager.requestOutputSchema(requestTarget, httpRequestBody);
+      return handleResponse(response);
     } catch (Exception e) {
       e.printStackTrace();
       return new EventSchema();
     }
   }
 
-  private EventSchema handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
-    String resp = httpResp.returnContent().asString(StandardCharsets.UTF_8);
+  private EventSchema handleResponse(ExtensionServiceOperationResult response) throws JsonSyntaxException, IOException {
+    if (!response.isSuccess()) {
+      throw new IOException("Could not compute output schema, status code: " + response.statusCode());
+    }
+
+    String resp = response.responseBody();
 
     return JacksonSerializer
         .getObjectMapper()

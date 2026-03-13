@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.commons.random.UUIDGenerator;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.permission.PermissionManager;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
@@ -92,9 +93,10 @@ public class PipelineManager {
    * @param pipelineId of pipeline to be started
    * @return pipeline status of the start operation
    */
-  public static PipelineOperationStatus startPipeline(String pipelineId) {
+  public static PipelineOperationStatus startPipeline(String pipelineId,
+                                                      ExtensionServiceRequestManager requestManager) {
     Pipeline pipeline = getPipeline(pipelineId);
-    return new PipelineExecutor(pipeline).startPipeline();
+    return new PipelineExecutor(pipeline, requestManager).startPipeline();
   }
 
   /**
@@ -108,11 +110,12 @@ public class PipelineManager {
    */
   public static PipelineOperationStatus stopPipeline(
       String pipelineId,
-      boolean forceStop
+      boolean forceStop,
+      ExtensionServiceRequestManager requestManager
   ) {
     Pipeline pipeline = getPipeline(pipelineId);
 
-    return new PipelineExecutor(pipeline).stopPipeline(forceStop);
+    return new PipelineExecutor(pipeline, requestManager).stopPipeline(forceStop);
   }
 
   /**
@@ -130,7 +133,8 @@ public class PipelineManager {
     }
   }
 
-  public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop) {
+  public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop,
+                                                               ExtensionServiceRequestManager requestManager) {
     List<PipelineOperationStatus> status = new ArrayList<>();
     List<Pipeline> pipelines = StorageDispatcher.INSTANCE.getNoSqlStore()
                                                          .getPipelineStorageAPI()
@@ -138,7 +142,7 @@ public class PipelineManager {
 
     pipelines.forEach(p -> {
       if (p.isRunning()) {
-        status.add(new PipelineExecutor(p).stopPipeline(forceStop));
+        status.add(new PipelineExecutor(p, requestManager).stopPipeline(forceStop));
       }
     });
     return status;

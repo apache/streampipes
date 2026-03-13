@@ -21,7 +21,9 @@ package org.apache.streampipes.health.monitoring;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.loadbalance.LoadManager;
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -37,13 +39,16 @@ import java.util.List;
 public class ServiceHealthCheck implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(ServiceHealthCheck.class);
+  private final ExtensionServiceRequestManager extensionRequestManager;
 
   private final ServiceRegistrationManager serviceRegistrationManager;
   private final int maxUnhealthyDurationBeforeRemovalMs;
 
   private final List<SpServiceRegistration> needDeletedServices = new ArrayList<>();
 
-  public ServiceHealthCheck(IExtensionsServiceStorage storage) {
+  public ServiceHealthCheck(IExtensionsServiceStorage storage,
+                            ExtensionServiceRequestManager extensionRequestManager) {
+    this.extensionRequestManager = extensionRequestManager;
     this.serviceRegistrationManager = new ServiceRegistrationManager(storage);
     this.maxUnhealthyDurationBeforeRemovalMs = Environments.getEnvironment()
         .getUnhealthyTimeBeforeServiceDeletionInMillis().getValueOrDefault();
@@ -68,12 +73,11 @@ public class ServiceHealthCheck implements Runnable {
   }
 
   private void checkServiceHealth(SpServiceRegistration service) {
-    String healthCheckUrl = makeHealthCheckUrl(service);
+    var requestTarget = makeHealthCheckRequestTarget(service);
 
     try {
-      var request = ExtensionServiceExecutions.extServiceGetRequest(healthCheckUrl);
-      var response = request.execute();
-      if (response.returnResponse().getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+      var response = extensionRequestManager.requestServiceHealth(requestTarget);
+      if (response.statusCode() != HttpStatus.SC_OK) {
         processUnhealthyService(service);
       } else {
         if (service.getStatus() == SpServiceStatus.UNHEALTHY) {
@@ -105,8 +109,8 @@ public class ServiceHealthCheck implements Runnable {
         - service.getFirstTimeSeenUnhealthy() > maxUnhealthyDurationBeforeRemovalMs);
   }
 
-  private String makeHealthCheckUrl(SpServiceRegistration service) {
-    return service.getServiceUrl() + service.getHealthCheckPath();
+  private ExtensionServiceRequestTarget makeHealthCheckRequestTarget(SpServiceRegistration service) {
+    return ExtensionServiceRequestTargets.serviceHealth(service, service.getHealthCheckPath());
   }
 
   private List<SpServiceRegistration> getRegisteredServices() {

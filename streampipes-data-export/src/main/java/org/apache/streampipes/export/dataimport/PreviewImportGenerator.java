@@ -26,6 +26,7 @@ import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 
@@ -41,10 +42,12 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
 
   private static final Logger LOG = LoggerFactory.getLogger(PreviewImportGenerator.class);
   private final AssetExportConfiguration importConfig;
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
-  public PreviewImportGenerator() {
+  public PreviewImportGenerator(ExtensionServiceRequestManager extensionServiceRequestManager) {
     super();
     this.importConfig = new AssetExportConfiguration();
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
 
   }
 
@@ -68,7 +71,11 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   protected void handleAdapter(String document,
                                String adapterId) throws JsonProcessingException {
     try {
-      addExportItem(adapterId, new AdapterResolver().readDocument(document).getName(), importConfig::addAdapter);
+      addExportItem(
+          adapterId,
+          new AdapterResolver(extensionServiceRequestManager).readDocument(document).getName(),
+          importConfig::addAdapter
+      );
     } catch (IllegalArgumentException e) {
       LOG.warn("Skipping import of data set adapter {}", adapterId);
     }
@@ -95,7 +102,8 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
 
   @Override
   protected void handlePipeline(String document, String pipelineId) throws JsonProcessingException {
-    addExportItem(pipelineId, new PipelineResolver().readDocument(document).getName(), importConfig::addPipeline);
+    addExportItem(pipelineId, new PipelineResolver(extensionServiceRequestManager)
+        .readDocument(document).getName(), importConfig::addPipeline);
   }
 
   @Override

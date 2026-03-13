@@ -44,6 +44,10 @@ public interface EndpointSelectable {
    */
   void setSelectedEndpointUrl(String selectedEndpointUrl);
 
+  String getSelectedServiceId();
+
+  void setSelectedServiceId(String selectedServiceId);
+
   /**
    * Gets the corresponding pipeline ID for the endpoint.
    *

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.execution;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.task.PipelineExecutionTask;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
@@ -27,17 +28,20 @@ import java.util.List;
 public class PipelineExecutor {
 
   private final Pipeline pipeline;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public PipelineExecutor(Pipeline pipeline) {
+  public PipelineExecutor(Pipeline pipeline,
+                          ExtensionServiceRequestManager requestManager) {
     this.pipeline = pipeline;
+    this.requestManager = requestManager;
   }
 
   public PipelineOperationStatus startPipeline() {
-    return executeOperation(PipelineExecutionTaskFactory.makeStartPipelineTasks(pipeline));
+    return executeOperation(PipelineExecutionTaskFactory.makeStartPipelineTasks(pipeline, requestManager));
   }
 
   public PipelineOperationStatus stopPipeline(boolean forceStop) {
-    return executeOperation(PipelineExecutionTaskFactory.makeStopPipelineTasks(pipeline, forceStop));
+    return executeOperation(PipelineExecutionTaskFactory.makeStopPipelineTasks(pipeline, forceStop, requestManager));
   }
 
   private PipelineOperationStatus executeOperation(List<PipelineExecutionTask> executionTasks) {

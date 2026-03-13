@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
@@ -33,11 +34,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/pe/options")
 public class ContainerProvidedOptions extends AbstractRestResource {
 
+  private final ContainerProvidedOptionsHandler containerProvidedOptionsHandler;
+
+  public ContainerProvidedOptions(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    this.containerProvidedOptionsHandler = new ContainerProvidedOptionsHandler(extensionServiceRequestManager);
+  }
+
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<RuntimeOptionsResponse> fetchRemoteOptions(@RequestBody RuntimeOptionsRequest request) {
-    return ok(new ContainerProvidedOptionsHandler().fetchRemoteOptions(request));
+    return ok(containerProvidedOptionsHandler.fetchRemoteOptions(request));
   }
 }

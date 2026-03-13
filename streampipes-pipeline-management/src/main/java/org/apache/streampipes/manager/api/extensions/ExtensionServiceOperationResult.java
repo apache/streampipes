@@ -16,27 +16,33 @@
  *
  */
 
-package org.apache.streampipes.manager.execution.http;
+package org.apache.streampipes.manager.api.extensions;
 
-import org.apache.streampipes.model.api.EndpointSelectable;
+import java.nio.charset.StandardCharsets;
 
-import org.apache.http.client.fluent.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class ExtensionServiceOperationResult {
 
+  private final int statusCode;
+  private final byte[] responseBody;
 
-public class DetachHttpRequest extends PipelineElementHttpRequest {
-
-  private static final Logger LOG = LoggerFactory.getLogger(DetachHttpRequest.class);
-
-  @Override
-  protected Request initRequest(EndpointSelectable pipelineElement, String endpointUrl) {
-    LOG.info("Detaching element: " + endpointUrl);
-    return Request.Delete(endpointUrl);
+  public ExtensionServiceOperationResult(int statusCode, byte[] responseBody) {
+    this.statusCode = statusCode;
+    this.responseBody = responseBody;
   }
 
-  @Override
-  protected void logError(String endpointUrl, String pipelineElementName, String exceptionMessage) {
-    LOG.error("Could not stop pipeline element {} at {}: {}", endpointUrl, pipelineElementName, exceptionMessage);
+  public int statusCode() {
+    return statusCode;
+  }
+
+  public String responseBody() {
+    return responseBody == null ? null : new String(responseBody, StandardCharsets.UTF_8);
+  }
+
+  public byte[] responseBytes() {
+    return responseBody;
+  }
+
+  public boolean isSuccess() {
+    return statusCode >= 200 && statusCode < 300;
   }
 }

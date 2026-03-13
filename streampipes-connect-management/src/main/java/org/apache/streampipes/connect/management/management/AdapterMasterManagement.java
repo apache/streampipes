@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.util.GroundingUtils;
 import org.apache.streampipes.manager.verification.TypedElementVerifier;
@@ -31,6 +32,7 @@ import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -49,19 +51,28 @@ public class AdapterMasterManagement {
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
   private final IAdapterStorage adapterInstanceStorage;
+  private final IExtensionsServiceStorage extensionsServiceStorage;
   private final AdapterMetrics adapterMetrics;
   private final AdapterResourceManager adapterResourceManager;
 
   private final DataStreamResourceManager dataStreamResourceManager;
+  private final WorkerRestClient workerRestClient;
+  private final ExtensionServiceRequestManager requestManager;
 
   public AdapterMasterManagement(IAdapterStorage adapterInstanceStorage,
                                  AdapterResourceManager adapterResourceManager,
                                  DataStreamResourceManager dataStreamResourceManager,
-                                 AdapterMetrics adapterMetrics) {
+                                 AdapterMetrics adapterMetrics,
+                                 WorkerRestClient workerRestClient,
+                                 IExtensionsServiceStorage extensionsServiceStorage,
+                                 ExtensionServiceRequestManager requestManager) {
     this.adapterInstanceStorage = adapterInstanceStorage;
+    this.extensionsServiceStorage = extensionsServiceStorage;
     this.adapterMetrics = adapterMetrics;
     this.adapterResourceManager = adapterResourceManager;
     this.dataStreamResourceManager = dataStreamResourceManager;
+    this.workerRestClient = workerRestClient;
+    this.requestManager = requestManager;
   }
 
   public void addAdapter(AdapterDescription adapterDescription, String adapterId,
@@ -142,7 +153,16 @@ public class AdapterMasterManagement {
     AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
     try {
       try {
-        WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
+        var service = extensionsServiceStorage.findAll().stream()
+            .filter(svc -> {
+              if (ad.getSelectedServiceId() != null) {
+                return svc.getSvcId().equals(ad.getSelectedServiceId());
+              } else {
+               return svc.getServiceUrl().equals(ad.getSelectedEndpointUrl());
+              }
+            })
+            .findFirst().orElseThrow(AdapterException::new);
+          workerRestClient.stopStreamAdapter(service, ad);
       } catch (AdapterException e) {
         if (!forceStop) {
           throw new AdapterException("Could not stop adapter", e);
@@ -173,22 +193,23 @@ public class AdapterMasterManagement {
 
       try {
         // Find endpoint to start adapter on
-        var baseUrl = new ExtensionsServiceEndpointGenerator()
-            .getEndpointBaseUrl(ad.getAppId(), SpServiceUrlProvider.ADAPTER,
+        var service = new ExtensionsServiceEndpointGenerator()
+            .selectService(ad.getAppId(), SpServiceUrlProvider.ADAPTER,
                                 ad.getDeploymentConfiguration().getDesiredServiceTags());
 
         // Update selected endpoint URL of adapter
-        ad.setSelectedEndpointUrl(baseUrl);
+        ad.setSelectedEndpointUrl(service.getServiceUrl());
+        ad.setSelectedServiceId(service.getSvcId());
         adapterInstanceStorage.updateElement(ad);
 
         // Invoke adapter instance
-        WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
+        workerRestClient.invokeStreamAdapter(service, elementId);
 
         // register the adapter at the metrics manager so that the AdapterHealthCheck
         // can send metrics
         adapterMetrics.register(ad.getElementId(), ad.getName());
 
-        LOG.info("Started adapter " + elementId + " on: " + baseUrl);
+        LOG.info("Started adapter " + elementId + " on: " + ad.getSelectedServiceId());
       } catch (NoServiceEndpointsAvailableException e) {
         throw new AdapterException("Could not start adapter due to unavailable service endpoint",
             e);
@@ -206,7 +227,8 @@ public class AdapterMasterManagement {
         storageApi::exists,
         storageApi::storeDataStream,
         storageApi::update,
-        SpServiceUrlProvider.DATA_STREAM
+        SpServiceUrlProvider.DATA_STREAM,
+        requestManager
     );
     verifier.verifyAndAdd(principalSid, false);
   }

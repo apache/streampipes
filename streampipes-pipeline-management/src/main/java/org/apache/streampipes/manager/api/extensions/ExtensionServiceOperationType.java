@@ -16,30 +16,24 @@
  *
  */
 
-package org.apache.streampipes.manager.migration;
+package org.apache.streampipes.manager.api.extensions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public enum AdapterDescriptionMigration093Provider {
-
-  INSTANCE;
-
-  private final List<String> appIdsToReinstall;
-
-  AdapterDescriptionMigration093Provider() {
-    this.appIdsToReinstall = new ArrayList<>();
-  }
-
-  public void addAppId(String appId) {
-    this.appIdsToReinstall.add(appId);
-  }
-
-  public List<String> getAppIdsToReinstall() {
-    return appIdsToReinstall;
-  }
-
-  public boolean hasAppIdsToReinstall() {
-    return !appIdsToReinstall.isEmpty();
-  }
+public enum ExtensionServiceOperationType {
+  CONTAINER_PROVIDED_OPTIONS,
+  MIGRATION,
+  DESCRIPTION_UPDATE,
+  EXTENSION_DESCRIPTION,
+  FUNCTION_STOP,
+  ADAPTER_STATE_CHANGE,
+  RUNTIME_OPTIONS,
+  SAMPLE_DATA,
+  EXTENSION_INSTANCE_HEALTH,
+  SERVICE_HEALTH,
+  PIPELINE_ELEMENT_INVOCATION,
+  PIPELINE_ELEMENT_DETACH,
+  PIPELINE_ELEMENT_ASSETS,
+  ADAPTER_ASSETS,
+  ADAPTER_ICON_ASSET,
+  ADAPTER_DOCUMENTATION_ASSET,
+  OUTPUT_SCHEMA;
 }

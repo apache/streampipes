@@ -50,6 +50,7 @@ public abstract class InvocableStreamPipesEntity
   private boolean uncompleted;
 
   private String selectedEndpointUrl;
+  private String selectedServiceId;
   protected SpServiceTagPrefix serviceTagPrefix;
 
   public InvocableStreamPipesEntity() {
@@ -148,6 +149,14 @@ public abstract class InvocableStreamPipesEntity
   @Override
   public String getSelectedEndpointUrl() {
     return selectedEndpointUrl;
+  }
+
+  public String getSelectedServiceId() {
+    return selectedServiceId;
+  }
+
+  public void setSelectedServiceId(String selectedServiceId) {
+    this.selectedServiceId = selectedServiceId;
   }
 
   @Override

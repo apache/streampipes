@@ -70,10 +70,10 @@ public abstract class InvocablePipelineElementResource<
   protected abstract String getInstanceId(String uri, String elementId);
 
   @PostMapping(
-      path = "{elementId}",
+      path = "{appId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Response> invokeRuntime(@PathVariable("elementId") String elementId,
+  public ResponseEntity<Response> invokeRuntime(@PathVariable("appId") String appId,
                                          @RequestBody K graph) {
 
     if (isDebug()) {
@@ -81,10 +81,10 @@ public abstract class InvocablePipelineElementResource<
       graph = createGroundingDebugInformation(graph);
     }
 
-    T declarer = getDeclarerById(elementId).declareConfig().getSupplier().get();
+    T declarer = getDeclarerById(appId).declareConfig().getSupplier().get();
 
     if (declarer != null) {
-      String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
+      String runningInstanceId = getInstanceId(graph.getElementId(), appId);
       if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
         Response resp = invokeRuntime(runningInstanceId, declarer, graph);
         if (!resp.isSuccess()) {
@@ -103,7 +103,7 @@ public abstract class InvocablePipelineElementResource<
 
     }
 
-    return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
+    return ok(new Response(appId, false, "Could not find the element with id: " + appId));
   }
 
   @PostMapping(

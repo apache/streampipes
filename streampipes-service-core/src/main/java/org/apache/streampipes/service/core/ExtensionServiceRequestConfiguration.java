@@ -15,37 +15,25 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.management.util;
+package org.apache.streampipes.service.core;
 
-public class WorkerPaths {
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 
-  private static final String WorkerMainPath = "/api/v1/worker";
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-  public static String getStreamInvokePath() {
-    return WorkerMainPath + "/stream/invoke";
+@Configuration
+public class ExtensionServiceRequestConfiguration {
+
+  @Bean
+  public ExtensionServiceRequestManager extensionServiceRequestManager() {
+    return new HttpExtensionServiceRequestManager();
   }
 
-  public static String getStreamStopPath() {
-    return WorkerMainPath + "/stream/stop";
+  @Bean
+  public WorkerRestClient workerRestClient(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    return new WorkerRestClient(extensionServiceRequestManager);
   }
-
-  public static String getRunningAdaptersPath() {
-    return WorkerMainPath + "/running";
-  }
-
-  public static String getRuntimeResolvablePath(String elementId) {
-    return WorkerMainPath + "/resolvable/" + elementId + "/configurations";
-  }
-
-  public static String getGuessSchemaPath() {
-    return WorkerMainPath + "/guess/schema";
-  }
-
-  // TODO naming
-  public static String getSamplePath() {
-    return WorkerMainPath + "/guess/sample";
-  }
-
-
-
 }

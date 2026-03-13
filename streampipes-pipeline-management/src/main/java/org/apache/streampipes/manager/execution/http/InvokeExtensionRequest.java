@@ -18,26 +18,40 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.api.EndpointSelectable;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InvokeHttpRequest extends PipelineElementHttpRequest {
+import java.io.IOException;
 
-  private static final Logger LOG = LoggerFactory.getLogger(InvokeHttpRequest.class);
+public class InvokeExtensionRequest extends PipelineElementExtensionRequest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(InvokeExtensionRequest.class);
+
+  public InvokeExtensionRequest(ExtensionServiceRequestManager requestManager) {
+    super(requestManager);
+  }
 
   @Override
-  protected Request initRequest(EndpointSelectable pipelineElement,
-                             String endpointUrl) throws JsonProcessingException {
-    LOG.info("Invoking element: " + endpointUrl);
-    return Request
-        .Post(endpointUrl)
-        .bodyString(toJson(pipelineElement), ContentType.APPLICATION_JSON);
+  protected ExtensionServiceOperationResult performRequest(InvocableStreamPipesEntity pipelineElement,
+                                                           String pipelineId) throws IOException {
+    LOG.info("Invoking element: " + pipelineElement.getSelectedServiceId());
+    var provider = ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement);
+    var requestTarget = ExtensionServiceRequestTargets.pipelineInvocation(
+        pipelineElement.getSelectedEndpointUrl(),
+        pipelineElement.getSelectedServiceId(),
+        provider,
+        pipelineElement.getAppId()
+    );
+    return requestManager().requestPipelineElementInvocation(requestTarget, pipelineId, toJson(pipelineElement));
   }
 
   @Override

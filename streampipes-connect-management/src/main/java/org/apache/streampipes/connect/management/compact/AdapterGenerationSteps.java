@@ -28,13 +28,19 @@ import java.util.List;
 
 public class AdapterGenerationSteps {
 
+  private final GuessManagement guessManagement;
+
+  public AdapterGenerationSteps(GuessManagement guessManagement) {
+    this.guessManagement = guessManagement;
+  }
+
   public List<AdapterModelGenerator> getGenerators() {
     return List.of(
         new AdapterBasicsGenerator(),
         new AdapterConfigGenerator(),
         new AdapterSchemaGenerator(
             new SchemaMetadataEnricher(),
-            new GuessManagement()
+            guessManagement
         )
     );
   }
