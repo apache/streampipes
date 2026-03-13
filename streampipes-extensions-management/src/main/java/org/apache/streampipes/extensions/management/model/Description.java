@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.extensions.html.model;
+package org.apache.streampipes.extensions.management.model;
 
 public class Description {
 

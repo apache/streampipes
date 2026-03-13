@@ -18,15 +18,11 @@
 
 package org.apache.streampipes.rest.extensions;
 
-import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
-import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
-import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
-import org.apache.streampipes.extensions.management.locales.LabelGenerator;
+import org.apache.streampipes.extensions.management.pe.AbstractPipelineElementManagement;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
-import com.google.common.base.Charsets;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,26 +32,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 public abstract class AbstractPipelineElementResource<
     T extends IStreamPipesPipelineElement<?>>
     extends AbstractExtensionsResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractPipelineElementResource.class);
+  private final AbstractPipelineElementManagement<T> pipelineElementManagement;
+
+  protected AbstractPipelineElementResource(AbstractPipelineElementManagement<T> pipelineElementManagement) {
+    this.pipelineElementManagement = pipelineElementManagement;
+  }
 
   @GetMapping(path = "{appId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public NamedStreamPipesEntity getDescription(@PathVariable("appId") String appId) {
-    return prepareElement(appId);
+    return pipelineElementManagement.getDescription(appId);
   }
 
   @GetMapping(path = "{appId}/assets", produces = "application/zip")
   public ResponseEntity<?> getAssets(@PathVariable("appId") String appId) {
-    var config = getDeclarerById(appId).declareConfig();
-    List<String> includedAssets = config.getDescription().getIncludedAssets();
     try {
-      return ok(new AssetZipGenerator(includedAssets, config.getAssetResolver()).makeZip());
+      return ok(pipelineElementManagement.getAssets(appId));
     } catch (IOException e) {
       e.printStackTrace();
       return serverError();
@@ -65,8 +62,7 @@ public abstract class AbstractPipelineElementResource<
   @GetMapping(path = "{appId}/assets/icon")
   public ResponseEntity<byte[]> getIconAsset(@PathVariable("appId") String appId) throws IOException {
     try {
-      byte[] icon = getDeclarerById(appId).declareConfig().getAssetResolver().getAsset(GlobalStreamPipesConstants
-          .STD_ICON_NAME);
+      byte[] icon = pipelineElementManagement.getIconAsset(appId);
       return ResponseEntity.ok()
           .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(icon)))
           .body(icon);
@@ -76,61 +72,13 @@ public abstract class AbstractPipelineElementResource<
     }
   }
 
-  @GetMapping(path = "{id}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
-  public ResponseEntity<String> getDocumentationAsset(@PathVariable("id") String elementId) throws IOException {
+  @GetMapping(path = "{appId}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  public ResponseEntity<String> getDocumentationAsset(@PathVariable("appId") String appId) throws IOException {
     try {
-      return ok(new String(
-          getDeclarerById(elementId).declareConfig().getAssetResolver().getAsset(
-              GlobalStreamPipesConstants.STD_DOCUMENTATION_NAME),
-          Charsets.UTF_8
-      ));
+      return ok(pipelineElementManagement.getDocumentationAsset(appId));
     } catch (IOException e) {
-      LOG.warn("No documentation resource found for pipeline element {}", elementId);
+      LOG.warn("No documentation resource found for pipeline element {}", appId);
       return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).build();
     }
   }
-
-  protected NamedStreamPipesEntity prepareElement(String appId) {
-    var config = getDeclarerById(appId).declareConfig();
-    return rewrite(config.getDescription(), config.getAssetResolver());
-  }
-
-  protected NamedStreamPipesEntity prepareElement(NamedStreamPipesEntity desc) {
-    return rewrite(desc, null);
-  }
-
-  protected T getDeclarerById(String appId) {
-    return getElementDeclarers().get(appId);
-  }
-
-  protected NamedStreamPipesEntity getById(String appId) {
-    IStreamPipesPipelineElement<?> declarer = getElementDeclarers().get(appId);
-    return declarer.declareConfig().getDescription();
-  }
-
-  protected NamedStreamPipesEntity rewrite(NamedStreamPipesEntity desc) {
-    return rewrite(desc, null);
-  }
-
-  protected NamedStreamPipesEntity rewrite(NamedStreamPipesEntity desc,
-                                           AssetResolver assetResolver) {
-
-    //TODO remove this and find a better solution
-    if (desc != null) {
-      // TODO remove after full internationalization support has been implemented
-      if (desc.isIncludesLocales()) {
-        try {
-          desc = assetResolver == null
-              ? new LabelGenerator<>(desc).generateLabels()
-              : new LabelGenerator<>(desc, true, assetResolver).generateLabels();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-
-    return desc;
-  }
-
-  protected abstract Map<String, T> getElementDeclarers();
 }

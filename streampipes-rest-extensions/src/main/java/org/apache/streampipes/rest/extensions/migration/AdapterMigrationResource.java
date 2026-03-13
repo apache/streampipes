@@ -18,12 +18,11 @@
 
 package org.apache.streampipes.rest.extensions.migration;
 
-import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
-import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
+import org.apache.streampipes.extensions.management.migration.AdapterMigrationHandler;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.migration.MigrationResult;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,11 +39,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/migrations/adapter")
-public class AdapterMigrationResource extends MigrateExtensionsResource<
-    AdapterDescription,
-    IStaticPropertyExtractor,
-        IAdapterMigrator
-    > {
+public class AdapterMigrationResource extends AbstractExtensionsResource {
+
+  private final AdapterMigrationHandler migrationHandler;
+
+  public AdapterMigrationResource() {
+    this.migrationHandler = new AdapterMigrationHandler();
+  }
+
+  public AdapterMigrationResource(AdapterMigrationHandler migrationHandler) {
+    this.migrationHandler = migrationHandler;
+  }
 
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -75,11 +80,6 @@ public class AdapterMigrationResource extends MigrateExtensionsResource<
           required = true
       )
       @RequestBody MigrationRequest<AdapterDescription> adapterMigrationRequest) {
-    return ok(handleMigration(adapterMigrationRequest));
-  }
-
-  @Override
-  protected IStaticPropertyExtractor getPropertyExtractor(AdapterDescription pipelineElementDescription) {
-    return StaticPropertyExtractor.from(pipelineElementDescription.getConfig());
+    return ok(migrationHandler.handleMigration(adapterMigrationRequest));
   }
 }

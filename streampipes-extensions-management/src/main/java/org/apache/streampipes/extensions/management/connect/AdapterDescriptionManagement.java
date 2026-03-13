@@ -15,39 +15,36 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
-import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-import java.util.Collection;
+import java.io.IOException;
 import java.util.Optional;
 
-public class ConnectWorkerDescriptionProvider {
+public class AdapterDescriptionManagement {
 
-  public Optional<IAdapterConfiguration> getAdapterConfiguration(String appId) {
-    return getRegisteredAdapters()
-        .stream()
-        .filter(ad -> ad.declareConfig().getAdapterDescription().getAppId().equals(appId))
-        .map(StreamPipesAdapter::declareConfig)
-        .findFirst();
+  public Optional<AdapterDescription> getAdapterDescription(String appId) throws IOException {
+    var adapterDescriptionOpt = DeclarersSingleton.getInstance().getAdapter(appId);
+    if (adapterDescriptionOpt.isPresent()) {
+      var adapterConfiguration = adapterDescriptionOpt.get().declareConfig();
+      return Optional.of(applyLocales(adapterConfiguration));
+    }
+
+    return Optional.empty();
   }
 
-  public Optional<AdapterDescription> getAdapterDescription(String appId) {
-    return getRegisteredAdapters()
-        .stream()
-        .map(ac -> ac.declareConfig().getAdapterDescription())
-        .filter(ad -> ad.getAppId().equals(appId))
-        .findFirst();
-  }
-
-  /**
-   * This is a helper method to mock the Declarer Singleton in unit tests
-   * @return the registered adapters from the DeclarerSingleton
-   */
-  public Collection<StreamPipesAdapter> getRegisteredAdapters() {
-    return DeclarersSingleton.getInstance().getAdapters();
+  private AdapterDescription applyLocales(IAdapterConfiguration adapterConfiguration) throws IOException {
+    var adapterDescription = adapterConfiguration.getAdapterDescription();
+    if (adapterDescription.isIncludesLocales()) {
+      return new LabelGenerator<>(adapterDescription, true, adapterConfiguration.getAssetResolver())
+          .generateLabels();
+    } else {
+      return adapterDescription;
+    }
   }
 }
