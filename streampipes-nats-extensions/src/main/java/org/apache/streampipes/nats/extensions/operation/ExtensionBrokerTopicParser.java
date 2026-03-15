@@ -19,6 +19,7 @@
 package org.apache.streampipes.nats.extensions.operation;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class ExtensionBrokerTopicParser {
 
@@ -45,7 +46,20 @@ public final class ExtensionBrokerTopicParser {
     return segments.get(1);
   }
 
-  private static List<String> extractOperationSegments(String topic, String subscriptionBaseTopic) {
+  public static String extractTail(String topic,
+                                   String subscriptionBaseTopic,
+                                   int fromIndex) {
+    var segments = extractOperationSegments(topic, subscriptionBaseTopic);
+    if (fromIndex < 0 || segments.size() <= fromIndex) {
+      return "";
+    }
+
+    return segments.stream()
+        .skip(fromIndex)
+        .collect(Collectors.joining("."));
+  }
+
+  public static List<String> extractOperationSegments(String topic, String subscriptionBaseTopic) {
     if (ExtensionBrokerResponseFactory.isBlank(topic)
         || ExtensionBrokerResponseFactory.isBlank(subscriptionBaseTopic)) {
       return List.of();

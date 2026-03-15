@@ -52,30 +52,50 @@ public class TransportAwareExtensionServiceRequestManager implements ExtensionSe
   @Override
   public ExtensionServiceOperationResult requestContainerProvidedOptions(ExtensionServiceRequestTarget target,
                                                                          String payload) throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestContainerProvidedOptions(target, payload);
+    }
+
     return httpRequestManager.requestContainerProvidedOptions(target, payload);
   }
 
   @Override
   public ExtensionServiceOperationResult requestMigration(ExtensionServiceRequestTarget target,
                                                           String payload) throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestMigration(target, payload);
+    }
+
     return httpRequestManager.requestMigration(target, payload);
   }
 
   @Override
   public ExtensionServiceOperationResult requestDescriptionUpdate(ExtensionServiceRequestTarget target)
       throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestDescriptionUpdate(target);
+    }
+
     return httpRequestManager.requestDescriptionUpdate(target);
   }
 
   @Override
   public ExtensionServiceOperationResult requestExtensionDescription(ExtensionServiceRequestTarget target)
       throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestExtensionDescription(target);
+    }
+
     return httpRequestManager.requestExtensionDescription(target);
   }
 
   @Override
   public ExtensionServiceOperationResult requestFunctionStop(ExtensionServiceRequestTarget target)
       throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestFunctionStop(target);
+    }
+
     return httpRequestManager.requestFunctionStop(target);
   }
 
@@ -93,24 +113,40 @@ public class TransportAwareExtensionServiceRequestManager implements ExtensionSe
   @Override
   public ExtensionServiceOperationResult requestRuntimeOptions(ExtensionServiceRequestTarget target,
                                                                String payload) throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestRuntimeOptions(target, payload);
+    }
+
     return httpRequestManager.requestRuntimeOptions(target, payload);
   }
 
   @Override
   public ExtensionServiceOperationResult requestSampleData(ExtensionServiceRequestTarget target,
                                                            String payload) throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestSampleData(target, payload);
+    }
+
     return httpRequestManager.requestSampleData(target, payload);
   }
 
   @Override
   public ExtensionServiceOperationResult requestExtensionInstanceHealth(ExtensionServiceRequestTarget target)
       throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestExtensionInstanceHealth(target);
+    }
+
     return httpRequestManager.requestExtensionInstanceHealth(target);
   }
 
   @Override
   public ExtensionServiceOperationResult requestServiceHealth(ExtensionServiceRequestTarget target)
       throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestServiceHealth(target);
+    }
+
     return httpRequestManager.requestServiceHealth(target);
   }
 
@@ -162,30 +198,50 @@ public class TransportAwareExtensionServiceRequestManager implements ExtensionSe
   @Override
   public ExtensionServiceOperationResult requestPipelineElementAssets(ExtensionServiceRequestTarget target)
       throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestPipelineElementAssets(target);
+    }
+
     return httpRequestManager.requestPipelineElementAssets(target);
   }
 
   @Override
   public ExtensionServiceOperationResult requestAdapterAssets(ExtensionServiceRequestTarget target)
       throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestAdapterAssets(target);
+    }
+
     return httpRequestManager.requestAdapterAssets(target);
   }
 
   @Override
   public ExtensionServiceOperationResult requestAdapterIconAsset(ExtensionServiceRequestTarget target)
       throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestAdapterIconAsset(target);
+    }
+
     return httpRequestManager.requestAdapterIconAsset(target);
   }
 
   @Override
   public ExtensionServiceOperationResult requestAdapterDocumentationAsset(ExtensionServiceRequestTarget target)
       throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestAdapterDocumentationAsset(target);
+    }
+
     return httpRequestManager.requestAdapterDocumentationAsset(target);
   }
 
   @Override
   public ExtensionServiceOperationResult requestOutputSchema(ExtensionServiceRequestTarget target,
                                                              String payload) throws IOException {
+    if (useNats(target)) {
+      return natsRequestManager.requestOutputSchema(target, payload);
+    }
+
     return httpRequestManager.requestOutputSchema(target, payload);
   }
 

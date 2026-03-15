@@ -53,6 +53,31 @@ public class NatsExtensionServiceRequestManager {
     return request(target, null, null);
   }
 
+  public ExtensionServiceOperationResult requestMigration(ExtensionServiceRequestTarget target,
+                                                          String payload) throws IOException {
+    return request(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
+  }
+
+  public ExtensionServiceOperationResult requestDescriptionUpdate(ExtensionServiceRequestTarget target)
+      throws IOException {
+    return request(target, null, null);
+  }
+
+  public ExtensionServiceOperationResult requestExtensionDescription(ExtensionServiceRequestTarget target)
+      throws IOException {
+    return request(target, null, null);
+  }
+
+  public ExtensionServiceOperationResult requestFunctionStop(ExtensionServiceRequestTarget target)
+      throws IOException {
+    return request(target, null, null);
+  }
+
+  public ExtensionServiceOperationResult requestContainerProvidedOptions(ExtensionServiceRequestTarget target,
+                                                                         String payload) throws IOException {
+    return request(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
+  }
+
   public ExtensionServiceOperationResult requestAdapterStateChange(ExtensionServiceRequestTarget target,
                                                                    String elementId,
                                                                    String payload) throws IOException {
@@ -69,6 +94,51 @@ public class NatsExtensionServiceRequestManager {
                                                                       String pipelineId) throws IOException {
     var payload = makeDetachPayload(target);
     return request(target, payload, AuthTokenUtils.getAuthToken(pipelineId));
+  }
+
+  public ExtensionServiceOperationResult requestPipelineElementAssets(ExtensionServiceRequestTarget target)
+      throws IOException {
+    return request(target, null, null);
+  }
+
+  public ExtensionServiceOperationResult requestAdapterAssets(ExtensionServiceRequestTarget target)
+      throws IOException {
+    return request(target, null, null);
+  }
+
+  public ExtensionServiceOperationResult requestAdapterIconAsset(ExtensionServiceRequestTarget target)
+      throws IOException {
+    return request(target, null, null);
+  }
+
+  public ExtensionServiceOperationResult requestAdapterDocumentationAsset(ExtensionServiceRequestTarget target)
+      throws IOException {
+    return request(target, null, null);
+  }
+
+  public ExtensionServiceOperationResult requestRuntimeOptions(ExtensionServiceRequestTarget target,
+                                                               String payload) throws IOException {
+    return request(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
+  }
+
+  public ExtensionServiceOperationResult requestSampleData(ExtensionServiceRequestTarget target,
+                                                           String payload) throws IOException {
+    return request(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
+  }
+
+  public ExtensionServiceOperationResult requestExtensionInstanceHealth(ExtensionServiceRequestTarget target)
+      throws IOException {
+    return request(target, null, null);
+  }
+
+  public ExtensionServiceOperationResult requestServiceHealth(ExtensionServiceRequestTarget target)
+      throws IOException {
+    return request(target, null, null);
+  }
+
+  public ExtensionServiceOperationResult requestOutputSchema(ExtensionServiceRequestTarget target,
+                                                             String payload) throws IOException {
+    return request(target, payload, null);
   }
 
   private ExtensionServiceOperationResult request(ExtensionServiceRequestTarget target,
@@ -116,6 +186,10 @@ public class NatsExtensionServiceRequestManager {
   }
 
   private byte[] makeBody(ExtensionServiceBrokerResponseEnvelope responseEnvelope) throws IOException {
+    if (responseEnvelope.getPayloadBytes() != null) {
+      return responseEnvelope.getPayloadBytes();
+    }
+
     if (responseEnvelope.getPayload() != null) {
       return responseEnvelope.getPayload().getBytes(StandardCharsets.UTF_8);
     }

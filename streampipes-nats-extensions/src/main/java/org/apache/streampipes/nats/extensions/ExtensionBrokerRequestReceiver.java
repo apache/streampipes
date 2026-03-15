@@ -19,18 +19,42 @@
 package org.apache.streampipes.nats.extensions;
 
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.extensions.management.connect.AdapterAssetManagement;
+import org.apache.streampipes.extensions.management.connect.AdapterDescriptionManagement;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerRequestManagement;
+import org.apache.streampipes.extensions.management.connect.AdapterWorkerSampleDataRequestManagement;
+import org.apache.streampipes.extensions.management.connect.RuntimeResolvableManagement;
+import org.apache.streampipes.extensions.management.migration.AdapterMigrationHandler;
+import org.apache.streampipes.extensions.management.migration.DataProcessorMigrationHandler;
+import org.apache.streampipes.extensions.management.migration.DataSinkMigrationHandler;
+import org.apache.streampipes.extensions.management.monitoring.HealthCheckManagement;
+import org.apache.streampipes.extensions.management.monitoring.MonitoringManagement;
 import org.apache.streampipes.extensions.management.monitoring.ServiceMonitorManagement;
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
+import org.apache.streampipes.extensions.management.pe.DataStreamPipelineElementManagement;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
+import org.apache.streampipes.nats.extensions.operation.AdapterAssetsOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.AdapterDocumentationAssetOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.AdapterIconAssetOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.ContainerProvidedOptionsOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.DescriptionUpdateOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionDescriptionOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.ExtensionInstanceHealthOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.FunctionStopOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.MigrationOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.OutputSchemaOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.PipelineElementAssetsOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.PipelineElementDetachOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.PipelineElementInvocationOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.RuntimeOptionsOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.SampleDataOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.ServiceHealthOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.ServiceLoadOperationHandler;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
@@ -66,22 +90,28 @@ public class ExtensionBrokerRequestReceiver {
     this(
         new ServiceMonitorManagement(),
         new AdapterWorkerRequestManagement(),
+        new AdapterAssetManagement(),
         new DataProcessorPipelineElementManagement(),
-        new DataSinkPipelineElementManagement()
+        new DataSinkPipelineElementManagement(),
+        new DataStreamPipelineElementManagement()
     );
   }
 
   public ExtensionBrokerRequestReceiver(ServiceMonitorManagement serviceMonitorManagement,
                                         AdapterWorkerRequestManagement adapterWorkerRequestManagement,
+                                        AdapterAssetManagement adapterAssetManagement,
                                         DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
-                                        DataSinkPipelineElementManagement dataSinkPipelineElementManagement) {
+                                        DataSinkPipelineElementManagement dataSinkPipelineElementManagement,
+                                        DataStreamPipelineElementManagement dataStreamPipelineElementManagement) {
     this.objectMapper = JacksonSerializer.getObjectMapper();
     this.operationHandlers = createOperationHandlers(
         objectMapper,
         serviceMonitorManagement,
         adapterWorkerRequestManagement,
+        adapterAssetManagement,
         dataProcessorPipelineElementManagement,
-        dataSinkPipelineElementManagement
+        dataSinkPipelineElementManagement,
+        dataStreamPipelineElementManagement
     );
   }
 
@@ -191,12 +221,61 @@ public class ExtensionBrokerRequestReceiver {
       ObjectMapper objectMapper,
       ServiceMonitorManagement serviceMonitorManagement,
       AdapterWorkerRequestManagement adapterWorkerRequestManagement,
+      AdapterAssetManagement adapterAssetManagement,
       DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
-      DataSinkPipelineElementManagement dataSinkPipelineElementManagement
+      DataSinkPipelineElementManagement dataSinkPipelineElementManagement,
+      DataStreamPipelineElementManagement dataStreamPipelineElementManagement
   ) {
+    var adapterDescriptionManagement = new AdapterDescriptionManagement();
+    var healthCheckManagement = new HealthCheckManagement();
+    var monitoringManagement = new MonitoringManagement();
+    var runtimeResolvableManagement = new RuntimeResolvableManagement();
+    var sampleDataRequestManagement = new AdapterWorkerSampleDataRequestManagement();
+
     return Stream.of(
             new ServiceLoadOperationHandler(objectMapper, serviceMonitorManagement),
+            new FunctionStopOperationHandler(objectMapper),
+            new ExtensionInstanceHealthOperationHandler(objectMapper, healthCheckManagement),
+            new ServiceHealthOperationHandler(objectMapper, monitoringManagement),
+            new ContainerProvidedOptionsOperationHandler(
+                objectMapper,
+                dataProcessorPipelineElementManagement,
+                dataSinkPipelineElementManagement
+            ),
+            new RuntimeOptionsOperationHandler(objectMapper, runtimeResolvableManagement),
+            new SampleDataOperationHandler(objectMapper, sampleDataRequestManagement),
+            new OutputSchemaOperationHandler(
+                objectMapper,
+                dataProcessorPipelineElementManagement,
+                dataSinkPipelineElementManagement
+            ),
+            new MigrationOperationHandler(
+                objectMapper,
+                new AdapterMigrationHandler(),
+                new DataProcessorMigrationHandler(),
+                new DataSinkMigrationHandler()
+            ),
+            new DescriptionUpdateOperationHandler(
+                objectMapper,
+                adapterDescriptionManagement,
+                dataProcessorPipelineElementManagement,
+                dataSinkPipelineElementManagement,
+                dataStreamPipelineElementManagement
+            ),
+            new ExtensionDescriptionOperationHandler(
+                objectMapper,
+                adapterDescriptionManagement,
+                dataProcessorPipelineElementManagement,
+                dataSinkPipelineElementManagement,
+                dataStreamPipelineElementManagement
+            ),
             new AdapterStateChangeOperationHandler(objectMapper, adapterWorkerRequestManagement),
+            new PipelineElementAssetsOperationHandler(
+                dataProcessorPipelineElementManagement,
+                dataSinkPipelineElementManagement,
+                dataStreamPipelineElementManagement,
+                adapterAssetManagement
+            ),
             new PipelineElementInvocationOperationHandler(
                 objectMapper,
                 dataProcessorPipelineElementManagement,
@@ -206,7 +285,10 @@ public class ExtensionBrokerRequestReceiver {
                 objectMapper,
                 dataProcessorPipelineElementManagement,
                 dataSinkPipelineElementManagement
-            )
+            ),
+            new AdapterAssetsOperationHandler(adapterAssetManagement),
+            new AdapterIconAssetOperationHandler(adapterAssetManagement),
+            new AdapterDocumentationAssetOperationHandler(adapterAssetManagement)
         )
         .collect(Collectors.toUnmodifiableMap(
             ExtensionBrokerOperationHandler::operation,

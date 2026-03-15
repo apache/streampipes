@@ -23,6 +23,7 @@ public class ExtensionServiceBrokerResponseEnvelope {
   private String requestId;
   private int statusCode;
   private String payload;
+  private byte[] payloadBytes;
   private ExtensionServiceBrokerErrorEnvelope error;
 
   public ExtensionServiceBrokerResponseEnvelope() {
@@ -32,9 +33,18 @@ public class ExtensionServiceBrokerResponseEnvelope {
                                                 int statusCode,
                                                 String payload,
                                                 ExtensionServiceBrokerErrorEnvelope error) {
+    this(requestId, statusCode, payload, null, error);
+  }
+
+  public ExtensionServiceBrokerResponseEnvelope(String requestId,
+                                                int statusCode,
+                                                String payload,
+                                                byte[] payloadBytes,
+                                                ExtensionServiceBrokerErrorEnvelope error) {
     this.requestId = requestId;
     this.statusCode = statusCode;
     this.payload = payload;
+    this.payloadBytes = payloadBytes;
     this.error = error;
   }
 
@@ -60,6 +70,14 @@ public class ExtensionServiceBrokerResponseEnvelope {
 
   public void setPayload(String payload) {
     this.payload = payload;
+  }
+
+  public byte[] getPayloadBytes() {
+    return payloadBytes;
+  }
+
+  public void setPayloadBytes(byte[] payloadBytes) {
+    this.payloadBytes = payloadBytes;
   }
 
   public ExtensionServiceBrokerErrorEnvelope getError() {

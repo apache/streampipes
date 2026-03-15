@@ -25,6 +25,7 @@ public final class ExtensionBrokerResponseFactory {
 
   public static final int HTTP_STATUS_OK = 200;
   public static final int HTTP_STATUS_BAD_REQUEST = 400;
+  public static final int HTTP_STATUS_NOT_FOUND = 404;
   public static final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
   private ExtensionBrokerResponseFactory() {
@@ -34,12 +35,27 @@ public final class ExtensionBrokerResponseFactory {
     return new ExtensionServiceBrokerResponseEnvelope(requestId, HTTP_STATUS_OK, payload, null);
   }
 
+  public static ExtensionServiceBrokerResponseEnvelope okBytes(String requestId, byte[] payloadBytes) {
+    return new ExtensionServiceBrokerResponseEnvelope(requestId, HTTP_STATUS_OK, null, payloadBytes, null);
+  }
+
   public static ExtensionServiceBrokerResponseEnvelope badRequest(String requestId,
                                                            String type,
                                                            String message) {
     return new ExtensionServiceBrokerResponseEnvelope(
         requestId,
         HTTP_STATUS_BAD_REQUEST,
+        null,
+        new ExtensionServiceBrokerErrorEnvelope(type, message)
+    );
+  }
+
+  public static ExtensionServiceBrokerResponseEnvelope notFound(String requestId,
+                                                                String type,
+                                                                String message) {
+    return new ExtensionServiceBrokerResponseEnvelope(
+        requestId,
+        HTTP_STATUS_NOT_FOUND,
         null,
         new ExtensionServiceBrokerErrorEnvelope(type, message)
     );
