@@ -33,18 +33,14 @@ import org.apache.streampipes.extensions.management.monitoring.ServiceMonitorMan
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataStreamPipelineElementManagement;
-import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
-import org.apache.streampipes.nats.extensions.operation.AdapterAssetsOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.AdapterDocumentationAssetOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.AdapterIconAssetOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.AdapterAssetOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.ContainerProvidedOptionsOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.DescriptionUpdateOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.DescriptionOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
-import org.apache.streampipes.nats.extensions.operation.ExtensionDescriptionOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.ExtensionInstanceHealthOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.FunctionStopOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.MigrationOperationHandler;
@@ -77,7 +73,6 @@ public class ExtensionBrokerRequestReceiver {
 
   private static final int HTTP_STATUS_INTERNAL_SERVER_ERROR =
       ExtensionBrokerResponseFactory.HTTP_STATUS_INTERNAL_SERVER_ERROR;
-  private static final int HTTP_STATUS_NOT_IMPLEMENTED = 501;
 
   private final ObjectMapper objectMapper;
   private final Map<String, ExtensionBrokerOperationHandler> operationHandlers;
@@ -191,14 +186,9 @@ public class ExtensionBrokerRequestReceiver {
         return operationHandler.handle(request, new ExtensionBrokerRequestContext(topic, subscriptionBaseTopic));
       }
 
-      return new ExtensionServiceBrokerResponseEnvelope(
+      return ExtensionBrokerResponseFactory.unsupportedOperation(
           request.getRequestId(),
-          HTTP_STATUS_NOT_IMPLEMENTED,
-          null,
-          new ExtensionServiceBrokerErrorEnvelope(
-              "UnsupportedOperation",
-              "No broker handler available for operation " + request.getOperation()
-          )
+          "No broker handler available for operation " + request.getOperation()
       );
     } catch (Exception e) {
       return ExtensionBrokerResponseFactory.error(request.getRequestId(), HTTP_STATUS_INTERNAL_SERVER_ERROR, e);
@@ -255,14 +245,20 @@ public class ExtensionBrokerRequestReceiver {
                 new DataProcessorMigrationHandler(),
                 new DataSinkMigrationHandler()
             ),
-            new DescriptionUpdateOperationHandler(
+            new DescriptionOperationHandler(
+                "DESCRIPTION_UPDATE",
+                "description-update",
+                "description update",
                 objectMapper,
                 adapterDescriptionManagement,
                 dataProcessorPipelineElementManagement,
                 dataSinkPipelineElementManagement,
                 dataStreamPipelineElementManagement
             ),
-            new ExtensionDescriptionOperationHandler(
+            new DescriptionOperationHandler(
+                "EXTENSION_DESCRIPTION",
+                "extension-description",
+                "extension description",
                 objectMapper,
                 adapterDescriptionManagement,
                 dataProcessorPipelineElementManagement,
@@ -286,9 +282,27 @@ public class ExtensionBrokerRequestReceiver {
                 dataProcessorPipelineElementManagement,
                 dataSinkPipelineElementManagement
             ),
-            new AdapterAssetsOperationHandler(adapterAssetManagement),
-            new AdapterIconAssetOperationHandler(adapterAssetManagement),
-            new AdapterDocumentationAssetOperationHandler(adapterAssetManagement)
+            new AdapterAssetOperationHandler<>(
+                "ADAPTER_ASSETS",
+                "adapter-assets",
+                "adapter asset request",
+                adapterAssetManagement::getAssets,
+                ExtensionBrokerResponseFactory::okBytes
+            ),
+            new AdapterAssetOperationHandler<>(
+                "ADAPTER_ICON_ASSET",
+                "adapter-icon-asset",
+                "adapter icon request",
+                adapterAssetManagement::getIconAsset,
+                ExtensionBrokerResponseFactory::okBytes
+            ),
+            new AdapterAssetOperationHandler<>(
+                "ADAPTER_DOCUMENTATION_ASSET",
+                "adapter-documentation-asset",
+                "adapter documentation request",
+                adapterAssetManagement::getDocumentationAsset,
+                ExtensionBrokerResponseFactory::ok
+            )
         )
         .collect(Collectors.toUnmodifiableMap(
             ExtensionBrokerOperationHandler::operation,

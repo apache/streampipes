@@ -55,9 +55,8 @@ public class RuntimeOptionsOperationHandler implements ExtensionBrokerOperationH
   public ExtensionServiceBrokerResponseEnvelope handle(ExtensionServiceBrokerRequestEnvelope request,
                                                        ExtensionBrokerRequestContext context) throws Exception {
     if (ExtensionBrokerResponseFactory.isBlank(request.getPayload())) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Missing runtime options request payload"
       );
     }
@@ -67,18 +66,16 @@ public class RuntimeOptionsOperationHandler implements ExtensionBrokerOperationH
         context.subscriptionBaseTopic()
     );
     if (operationSegments.isEmpty() || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Could not resolve appId from topic " + context.topic()
       );
     }
 
     var appId = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 1);
     if (ExtensionBrokerResponseFactory.isBlank(appId)) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Missing appId in topic " + context.topic()
       );
     }
@@ -87,9 +84,8 @@ public class RuntimeOptionsOperationHandler implements ExtensionBrokerOperationH
     try {
       runtimeOptionsRequest = objectMapper.readValue(request.getPayload(), RuntimeOptionsRequest.class);
     } catch (IOException e) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Invalid runtime options request payload"
       );
     }

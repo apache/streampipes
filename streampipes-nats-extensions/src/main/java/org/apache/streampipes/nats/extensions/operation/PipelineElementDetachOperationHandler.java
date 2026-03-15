@@ -35,8 +35,8 @@ public class PipelineElementDetachOperationHandler implements ExtensionBrokerOpe
 
   private static final String OPERATION = "PIPELINE_ELEMENT_DETACH";
   private static final String TOPIC_OPERATION_SEGMENT = "pipeline-detach";
-  private static final String PROVIDER_DATA_PROCESSOR = "DATA_PROCESSOR";
-  private static final String PROVIDER_DATA_SINK = "DATA_SINK";
+  private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
+  private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
 
   private final ObjectMapper objectMapper;
   private final DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement;
@@ -61,9 +61,8 @@ public class PipelineElementDetachOperationHandler implements ExtensionBrokerOpe
   public ExtensionServiceBrokerResponseEnvelope handle(ExtensionServiceBrokerRequestEnvelope request,
                                                        ExtensionBrokerRequestContext context) throws Exception {
     if (ExtensionBrokerResponseFactory.isBlank(request.getPayload())) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Missing detach payload"
       );
     }
@@ -72,18 +71,16 @@ public class PipelineElementDetachOperationHandler implements ExtensionBrokerOpe
     try {
       detachRequest = objectMapper.readValue(request.getPayload(), ExtensionServicePipelineDetachRequest.class);
     } catch (IOException e) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Invalid detach payload"
       );
     }
 
     if (ExtensionBrokerResponseFactory.isBlank(detachRequest.getElementId())
         || ExtensionBrokerResponseFactory.isBlank(detachRequest.getRunningInstanceId())) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Detach payload is missing elementId or runningInstanceId"
       );
     }
@@ -106,9 +103,8 @@ public class PipelineElementDetachOperationHandler implements ExtensionBrokerOpe
           detachRequest.getRunningInstanceId()
       );
     } else {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Unsupported provider for pipeline detach: " + provider
       );
     }

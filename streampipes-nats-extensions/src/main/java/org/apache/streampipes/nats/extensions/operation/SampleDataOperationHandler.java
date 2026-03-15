@@ -58,9 +58,8 @@ public class SampleDataOperationHandler implements ExtensionBrokerOperationHandl
   public ExtensionServiceBrokerResponseEnvelope handle(ExtensionServiceBrokerRequestEnvelope request,
                                                        ExtensionBrokerRequestContext context) throws Exception {
     if (ExtensionBrokerResponseFactory.isBlank(request.getPayload())) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Missing adapter description payload"
       );
     }
@@ -70,9 +69,8 @@ public class SampleDataOperationHandler implements ExtensionBrokerOperationHandl
         context.subscriptionBaseTopic()
     );
     if (operationSegments.isEmpty() || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Invalid topic for sample data operation: " + context.topic()
       );
     }
@@ -81,9 +79,8 @@ public class SampleDataOperationHandler implements ExtensionBrokerOperationHandl
     try {
       adapterDescription = objectMapper.readValue(request.getPayload(), AdapterDescription.class);
     } catch (IOException e) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Invalid adapter description payload"
       );
     }

@@ -65,9 +65,8 @@ public class MigrationOperationHandler implements ExtensionBrokerOperationHandle
   public ExtensionServiceBrokerResponseEnvelope handle(ExtensionServiceBrokerRequestEnvelope request,
                                                        ExtensionBrokerRequestContext context) throws Exception {
     if (ExtensionBrokerResponseFactory.isBlank(request.getPayload())) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Missing migration payload"
       );
     }
@@ -77,9 +76,8 @@ public class MigrationOperationHandler implements ExtensionBrokerOperationHandle
         context.subscriptionBaseTopic()
     );
     if (operationSegments.isEmpty() || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Could not resolve migration type from topic " + context.topic()
       );
     }
@@ -87,9 +85,8 @@ public class MigrationOperationHandler implements ExtensionBrokerOperationHandle
     var migrationType = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 1)
         .toLowerCase(Locale.ROOT);
     if (ExtensionBrokerResponseFactory.isBlank(migrationType)) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Missing migration type in topic " + context.topic()
       );
     }
@@ -121,17 +118,15 @@ public class MigrationOperationHandler implements ExtensionBrokerOperationHandle
         default -> null;
       };
     } catch (IOException e) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Invalid migration payload"
       );
     }
 
     if (migrationResult == null) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Unsupported migration type in topic " + context.topic()
       );
     }

@@ -31,10 +31,10 @@ public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOpe
 
   private static final String OPERATION = "PIPELINE_ELEMENT_ASSETS";
   private static final String TOPIC_OPERATION_SEGMENT = "pipeline-element-assets";
-  private static final String PROVIDER_DATA_PROCESSOR = "DATA_PROCESSOR";
-  private static final String PROVIDER_DATA_SINK = "DATA_SINK";
-  private static final String PROVIDER_DATA_STREAM = "DATA_STREAM";
-  private static final String PROVIDER_ADAPTER = "ADAPTER";
+  private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
+  private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
+  private static final String PROVIDER_DATA_STREAM = ExtensionBrokerConstants.Provider.DATA_STREAM;
+  private static final String PROVIDER_ADAPTER = ExtensionBrokerConstants.Provider.ADAPTER;
 
   private final DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement;
   private final DataSinkPipelineElementManagement dataSinkPipelineElementManagement;
@@ -66,9 +66,8 @@ public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOpe
         context.subscriptionBaseTopic()
     );
     if (operationSegments.size() < 3 || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Could not resolve provider and appId from topic " + context.topic()
       );
     }
@@ -76,9 +75,8 @@ public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOpe
     var provider = operationSegments.get(1);
     var appId = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 2);
     if (ExtensionBrokerResponseFactory.isBlank(appId)) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Missing appId in topic " + context.topic()
       );
     }
@@ -91,11 +89,18 @@ public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOpe
     } else if (PROVIDER_DATA_STREAM.equals(provider)) {
       assetBytes = dataStreamPipelineElementManagement.getAssets(appId);
     } else if (PROVIDER_ADAPTER.equals(provider)) {
-      assetBytes = adapterAssetManagement.getAssets(appId).get();
+      var adapterAssets = adapterAssetManagement.getAssets(appId);
+      if (adapterAssets.isEmpty()) {
+        return ExtensionBrokerResponseFactory.notFound(
+            request.getRequestId(),
+            "Could not find adapter with id " + appId
+        );
+      }
+
+      assetBytes = adapterAssets.get();
     } else {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Unsupported provider for pipeline asset request: " + provider
       );
     }

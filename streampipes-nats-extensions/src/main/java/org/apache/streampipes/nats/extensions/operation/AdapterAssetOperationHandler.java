@@ -18,26 +18,39 @@
 
 package org.apache.streampipes.nats.extensions.operation;
 
-import org.apache.streampipes.extensions.management.connect.AdapterAssetManagement;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
 
-public class AdapterIconAssetOperationHandler implements ExtensionBrokerOperationHandler {
+import java.util.Optional;
+import java.util.function.BiFunction;
 
-  private static final String OPERATION = "ADAPTER_ICON_ASSET";
-  private static final String TOPIC_OPERATION_SEGMENT = "adapter-icon-asset";
+public class AdapterAssetOperationHandler<T> implements ExtensionBrokerOperationHandler {
 
-  private final AdapterAssetManagement adapterAssetManagement;
+  private final String operation;
+  private final String topicOperationSegment;
+  private final String requestLabel;
+  private final AssetProvider<T> assetProvider;
+  private final BiFunction<String, T, ExtensionServiceBrokerResponseEnvelope> successResponseFactory;
 
-  public AdapterIconAssetOperationHandler(AdapterAssetManagement adapterAssetManagement) {
-    this.adapterAssetManagement = adapterAssetManagement;
+  public AdapterAssetOperationHandler(
+      String operation,
+      String topicOperationSegment,
+      String requestLabel,
+      AssetProvider<T> assetProvider,
+      BiFunction<String, T, ExtensionServiceBrokerResponseEnvelope> successResponseFactory
+  ) {
+    this.operation = operation;
+    this.topicOperationSegment = topicOperationSegment;
+    this.requestLabel = requestLabel;
+    this.assetProvider = assetProvider;
+    this.successResponseFactory = successResponseFactory;
   }
 
   @Override
   public String operation() {
-    return OPERATION;
+    return operation;
   }
 
   @Override
@@ -47,32 +60,35 @@ public class AdapterIconAssetOperationHandler implements ExtensionBrokerOperatio
         context.topic(),
         context.subscriptionBaseTopic()
     );
-    if (operationSegments.isEmpty() || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
-      return ExtensionBrokerResponseFactory.badRequest(
+    if (operationSegments.isEmpty() || !topicOperationSegment.equals(operationSegments.get(0))) {
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
-          "Could not resolve adapter icon request from topic " + context.topic()
+          "Could not resolve " + requestLabel + " from topic " + context.topic()
       );
     }
 
     var appId = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 1);
     if (ExtensionBrokerResponseFactory.isBlank(appId)) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Missing appId in topic " + context.topic()
       );
     }
 
-    var iconOpt = adapterAssetManagement.getIconAsset(appId);
-    if (iconOpt.isEmpty()) {
+    var asset = assetProvider.get(appId);
+    if (asset.isEmpty()) {
       return ExtensionBrokerResponseFactory.notFound(
           request.getRequestId(),
-          "NotFound",
           "Could not find adapter with id " + appId
       );
     }
 
-    return ExtensionBrokerResponseFactory.okBytes(request.getRequestId(), iconOpt.get());
+    return successResponseFactory.apply(request.getRequestId(), asset.get());
+  }
+
+  @FunctionalInterface
+  public interface AssetProvider<T> {
+
+    Optional<T> get(String appId) throws Exception;
   }
 }

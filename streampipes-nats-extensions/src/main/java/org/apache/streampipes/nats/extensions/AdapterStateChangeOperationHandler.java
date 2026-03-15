@@ -53,9 +53,8 @@ public class AdapterStateChangeOperationHandler implements ExtensionBrokerOperat
   public ExtensionServiceBrokerResponseEnvelope handle(ExtensionServiceBrokerRequestEnvelope request,
                                                        ExtensionBrokerRequestContext context) throws Exception {
     if (ExtensionBrokerResponseFactory.isBlank(request.getPayload())) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Missing adapter payload"
       );
     }
@@ -74,9 +73,8 @@ public class AdapterStateChangeOperationHandler implements ExtensionBrokerOperat
         return ExtensionBrokerResponseFactory.ok(request.getRequestId(), payload);
       }
 
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidCommand(
           request.getRequestId(),
-          "InvalidCommand",
           "Unknown adapter state change command in topic " + context.topic()
       );
     } catch (AdapterException e) {

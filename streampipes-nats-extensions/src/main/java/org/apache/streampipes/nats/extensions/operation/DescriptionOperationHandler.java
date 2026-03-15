@@ -29,28 +29,35 @@ import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DescriptionUpdateOperationHandler implements ExtensionBrokerOperationHandler {
+public class DescriptionOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "DESCRIPTION_UPDATE";
-  private static final String TOPIC_OPERATION_SEGMENT = "description-update";
-  private static final String PROVIDER_ADAPTER = "ADAPTER";
-  private static final String PROVIDER_DATA_PROCESSOR = "DATA_PROCESSOR";
-  private static final String PROVIDER_DATA_SINK = "DATA_SINK";
-  private static final String PROVIDER_DATA_STREAM = "DATA_STREAM";
+  private static final String PROVIDER_ADAPTER = ExtensionBrokerConstants.Provider.ADAPTER;
+  private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
+  private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
+  private static final String PROVIDER_DATA_STREAM = ExtensionBrokerConstants.Provider.DATA_STREAM;
 
+  private final String operation;
+  private final String topicOperationSegment;
+  private final String operationLabel;
   private final ObjectMapper objectMapper;
   private final AdapterDescriptionManagement adapterDescriptionManagement;
   private final DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement;
   private final DataSinkPipelineElementManagement dataSinkPipelineElementManagement;
   private final DataStreamPipelineElementManagement dataStreamPipelineElementManagement;
 
-  public DescriptionUpdateOperationHandler(
+  public DescriptionOperationHandler(
+      String operation,
+      String topicOperationSegment,
+      String operationLabel,
       ObjectMapper objectMapper,
       AdapterDescriptionManagement adapterDescriptionManagement,
       DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
       DataSinkPipelineElementManagement dataSinkPipelineElementManagement,
       DataStreamPipelineElementManagement dataStreamPipelineElementManagement
   ) {
+    this.operation = operation;
+    this.topicOperationSegment = topicOperationSegment;
+    this.operationLabel = operationLabel;
     this.objectMapper = objectMapper;
     this.adapterDescriptionManagement = adapterDescriptionManagement;
     this.dataProcessorPipelineElementManagement = dataProcessorPipelineElementManagement;
@@ -60,7 +67,7 @@ public class DescriptionUpdateOperationHandler implements ExtensionBrokerOperati
 
   @Override
   public String operation() {
-    return OPERATION;
+    return operation;
   }
 
   @Override
@@ -70,10 +77,9 @@ public class DescriptionUpdateOperationHandler implements ExtensionBrokerOperati
         context.topic(),
         context.subscriptionBaseTopic()
     );
-    if (operationSegments.size() < 3 || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
-      return ExtensionBrokerResponseFactory.badRequest(
+    if (operationSegments.size() < 3 || !topicOperationSegment.equals(operationSegments.get(0))) {
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Could not resolve provider and appId from topic " + context.topic()
       );
     }
@@ -81,9 +87,8 @@ public class DescriptionUpdateOperationHandler implements ExtensionBrokerOperati
     var provider = operationSegments.get(1);
     var appId = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 2);
     if (ExtensionBrokerResponseFactory.isBlank(appId)) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Missing appId in topic " + context.topic()
       );
     }
@@ -94,7 +99,6 @@ public class DescriptionUpdateOperationHandler implements ExtensionBrokerOperati
       if (adapterDescriptionOpt.isEmpty()) {
         return ExtensionBrokerResponseFactory.notFound(
             request.getRequestId(),
-            "NotFound",
             "Could not find adapter with id " + appId
         );
       }
@@ -107,10 +111,9 @@ public class DescriptionUpdateOperationHandler implements ExtensionBrokerOperati
     } else if (PROVIDER_DATA_STREAM.equals(provider)) {
       description = dataStreamPipelineElementManagement.getDescription(appId);
     } else {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
-          "Unsupported provider for description update: " + provider
+          "Unsupported provider for " + operationLabel + ": " + provider
       );
     }
 

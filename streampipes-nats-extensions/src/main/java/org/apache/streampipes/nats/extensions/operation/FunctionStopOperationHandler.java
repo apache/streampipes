@@ -50,9 +50,8 @@ public class FunctionStopOperationHandler implements ExtensionBrokerOperationHan
         context.subscriptionBaseTopic()
     );
     if (operationSegments.isEmpty() || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Invalid topic for function stop operation: " + context.topic()
       );
     }

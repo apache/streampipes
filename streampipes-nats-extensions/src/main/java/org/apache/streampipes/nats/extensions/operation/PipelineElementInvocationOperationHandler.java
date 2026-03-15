@@ -36,8 +36,8 @@ public class PipelineElementInvocationOperationHandler implements ExtensionBroke
 
   private static final String OPERATION = "PIPELINE_ELEMENT_INVOCATION";
   private static final String TOPIC_OPERATION_SEGMENT = "pipeline-invocation";
-  private static final String PROVIDER_DATA_PROCESSOR = "DATA_PROCESSOR";
-  private static final String PROVIDER_DATA_SINK = "DATA_SINK";
+  private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
+  private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
 
   private final ObjectMapper objectMapper;
   private final DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement;
@@ -62,9 +62,8 @@ public class PipelineElementInvocationOperationHandler implements ExtensionBroke
   public ExtensionServiceBrokerResponseEnvelope handle(ExtensionServiceBrokerRequestEnvelope request,
                                                        ExtensionBrokerRequestContext context) throws Exception {
     if (ExtensionBrokerResponseFactory.isBlank(request.getPayload())) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Missing invocation payload"
       );
     }
@@ -80,9 +79,8 @@ public class PipelineElementInvocationOperationHandler implements ExtensionBroke
       if (PROVIDER_DATA_PROCESSOR.equals(provider)) {
         var invocation = objectMapper.readValue(request.getPayload(), DataProcessorInvocation.class);
         if (ExtensionBrokerResponseFactory.isBlank(invocation.getAppId())) {
-          return ExtensionBrokerResponseFactory.badRequest(
+          return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
               request.getRequestId(),
-              "InvalidPayload",
               "Missing appId in invocation payload"
           );
         }
@@ -91,25 +89,22 @@ public class PipelineElementInvocationOperationHandler implements ExtensionBroke
       } else if (PROVIDER_DATA_SINK.equals(provider)) {
         var invocation = objectMapper.readValue(request.getPayload(), DataSinkInvocation.class);
         if (ExtensionBrokerResponseFactory.isBlank(invocation.getAppId())) {
-          return ExtensionBrokerResponseFactory.badRequest(
+          return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
               request.getRequestId(),
-              "InvalidPayload",
               "Missing appId in invocation payload"
           );
         }
 
         response = dataSinkPipelineElementManagement.invokeRuntime(invocation.getAppId(), invocation);
       } else {
-        return ExtensionBrokerResponseFactory.badRequest(
+        return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
             request.getRequestId(),
-            "InvalidPayload",
             "Unsupported provider for pipeline invocation: " + provider
         );
       }
     } catch (IOException e) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Invalid invocation payload"
       );
     }

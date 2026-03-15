@@ -37,8 +37,8 @@ public class ContainerProvidedOptionsOperationHandler implements ExtensionBroker
 
   private static final String OPERATION = "CONTAINER_PROVIDED_OPTIONS";
   private static final String TOPIC_OPERATION_SEGMENT = "container-provided-options";
-  private static final String PROVIDER_DATA_PROCESSOR = "DATA_PROCESSOR";
-  private static final String PROVIDER_DATA_SINK = "DATA_SINK";
+  private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
+  private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
 
   private final ObjectMapper objectMapper;
   private final DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement;
@@ -63,9 +63,8 @@ public class ContainerProvidedOptionsOperationHandler implements ExtensionBroker
   public ExtensionServiceBrokerResponseEnvelope handle(ExtensionServiceBrokerRequestEnvelope request,
                                                        ExtensionBrokerRequestContext context) throws Exception {
     if (ExtensionBrokerResponseFactory.isBlank(request.getPayload())) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Missing runtime options request payload"
       );
     }
@@ -75,9 +74,8 @@ public class ContainerProvidedOptionsOperationHandler implements ExtensionBroker
         context.subscriptionBaseTopic()
     );
     if (operationSegments.size() < 3 || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Could not resolve provider and appId from topic " + context.topic()
       );
     }
@@ -85,9 +83,8 @@ public class ContainerProvidedOptionsOperationHandler implements ExtensionBroker
     var provider = operationSegments.get(1);
     var appId = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 2);
     if (ExtensionBrokerResponseFactory.isBlank(appId)) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Missing appId in topic " + context.topic()
       );
     }
@@ -96,9 +93,8 @@ public class ContainerProvidedOptionsOperationHandler implements ExtensionBroker
     try {
       runtimeOptionsRequest = objectMapper.readValue(request.getPayload(), RuntimeOptionsRequest.class);
     } catch (IOException e) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "InvalidPayload",
           "Invalid runtime options request payload"
       );
     }
@@ -110,9 +106,8 @@ public class ContainerProvidedOptionsOperationHandler implements ExtensionBroker
       } else if (PROVIDER_DATA_SINK.equals(provider)) {
         response = dataSinkPipelineElementManagement.fetchConfigurations(appId, runtimeOptionsRequest);
       } else {
-        return ExtensionBrokerResponseFactory.badRequest(
+        return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
             request.getRequestId(),
-            "InvalidTopic",
             "Unsupported provider for container-provided-options: " + provider
         );
       }

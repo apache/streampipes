@@ -53,9 +53,8 @@ public class ServiceHealthOperationHandler implements ExtensionBrokerOperationHa
         context.subscriptionBaseTopic()
     );
     if (operationSegments.isEmpty() || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
-      return ExtensionBrokerResponseFactory.badRequest(
+      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "InvalidTopic",
           "Invalid topic for service health operation: " + context.topic()
       );
     }
