@@ -22,6 +22,7 @@ import org.apache.streampipes.extensions.management.connect.AdapterDescriptionMa
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataStreamPipelineElementManagement;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperation;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
@@ -46,8 +47,7 @@ public class DescriptionOperationHandler implements ExtensionBrokerOperationHand
   private final DataStreamPipelineElementManagement dataStreamPipelineElementManagement;
 
   public DescriptionOperationHandler(
-      String operation,
-      String topicOperationSegment,
+      ExtensionServiceBrokerOperation brokerOperation,
       String operationLabel,
       ObjectMapper objectMapper,
       AdapterDescriptionManagement adapterDescriptionManagement,
@@ -55,8 +55,8 @@ public class DescriptionOperationHandler implements ExtensionBrokerOperationHand
       DataSinkPipelineElementManagement dataSinkPipelineElementManagement,
       DataStreamPipelineElementManagement dataStreamPipelineElementManagement
   ) {
-    this.operation = operation;
-    this.topicOperationSegment = topicOperationSegment;
+    this.operation = brokerOperation.operationId();
+    this.topicOperationSegment = brokerOperation.firstTopicSegment();
     this.operationLabel = operationLabel;
     this.objectMapper = objectMapper;
     this.adapterDescriptionManagement = adapterDescriptionManagement;

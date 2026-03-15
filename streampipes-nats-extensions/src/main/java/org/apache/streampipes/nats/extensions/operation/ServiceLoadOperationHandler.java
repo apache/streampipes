@@ -19,6 +19,7 @@
 package org.apache.streampipes.nats.extensions.operation;
 
 import org.apache.streampipes.extensions.management.monitoring.ServiceMonitorManagement;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
@@ -28,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ServiceLoadOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "SERVICE_LOAD";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.SERVICE_LOAD.operationId();
 
   private final ObjectMapper objectMapper;
   private final ServiceMonitorManagement serviceMonitorManagement;

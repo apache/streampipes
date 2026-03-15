@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.nats.extensions.operation;
 
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
@@ -28,8 +29,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FunctionStopOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "FUNCTION_STOP";
-  private static final String TOPIC_OPERATION_SEGMENT = "function-stop";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.FUNCTION_STOP.operationId();
+  private static final String TOPIC_OPERATION_SEGMENT =
+      ExtensionServiceBrokerOperations.FUNCTION_STOP.firstTopicSegment();
 
   private final ObjectMapper objectMapper;
 

@@ -21,6 +21,7 @@ package org.apache.streampipes.nats.extensions.operation;
 import org.apache.streampipes.extensions.management.migration.AdapterMigrationHandler;
 import org.apache.streampipes.extensions.management.migration.DataProcessorMigrationHandler;
 import org.apache.streampipes.extensions.management.migration.DataSinkMigrationHandler;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.migration.MigrationResult;
@@ -35,8 +36,9 @@ import java.util.Locale;
 
 public class MigrationOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "MIGRATION";
-  private static final String TOPIC_OPERATION_SEGMENT = "migration";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.MIGRATION.operationId();
+  private static final String TOPIC_OPERATION_SEGMENT =
+      ExtensionServiceBrokerOperations.MIGRATION.firstTopicSegment();
   private static final String TYPE_ADAPTER = "adapter";
   private static final String TYPE_PROCESSOR = "processor";
   private static final String TYPE_SINK = "sink";

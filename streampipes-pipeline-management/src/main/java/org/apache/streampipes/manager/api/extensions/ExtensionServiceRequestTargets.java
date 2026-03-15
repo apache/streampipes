@@ -19,10 +19,13 @@
 package org.apache.streampipes.manager.api.extensions;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperation;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public final class ExtensionServiceRequestTargets {
 
@@ -36,7 +39,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.CONTAINER_PROVIDED_OPTIONS,
         path(provider.getPrefix(), appId, "configurations"),
-        topic("container-provided-options", provider.name(), appId)
+        topic(ExtensionServiceBrokerOperations.CONTAINER_PROVIDED_OPTIONS, provider.name(), appId)
     );
   }
 
@@ -46,7 +49,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.MIGRATION,
         path("api", "v1", "migrations", type),
-        topic("migration", type)
+        topic(ExtensionServiceBrokerOperations.MIGRATION, type)
     );
   }
 
@@ -57,7 +60,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.DESCRIPTION_UPDATE,
         path(provider.getPrefix(), appId),
-        topic("description-update", provider.name(), appId)
+        topic(ExtensionServiceBrokerOperations.DESCRIPTION_UPDATE, provider.name(), appId)
     );
   }
 
@@ -68,7 +71,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.EXTENSION_DESCRIPTION,
         path(provider.getPrefix(), appId),
-        topic("extension-description", provider.name(), appId)
+        topic(ExtensionServiceBrokerOperations.EXTENSION_DESCRIPTION, provider.name(), appId)
     );
   }
 
@@ -77,7 +80,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.FUNCTION_STOP,
         path("api", "v1", "functions", "stop"),
-        topic("function-stop")
+        topic(ExtensionServiceBrokerOperations.FUNCTION_STOP)
     );
   }
 
@@ -86,7 +89,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.ADAPTER_STATE_CHANGE,
         path("api", "v1", "worker", "stream", "invoke"),
-        topic("adapter-state-change", "start")
+        topic(ExtensionServiceBrokerOperations.ADAPTER_STATE_CHANGE, "start")
     );
   }
 
@@ -95,7 +98,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.ADAPTER_STATE_CHANGE,
         path("api", "v1", "worker", "stream", "stop"),
-        topic("adapter-state-change", "stop")
+        topic(ExtensionServiceBrokerOperations.ADAPTER_STATE_CHANGE, "stop")
     );
   }
 
@@ -103,7 +106,7 @@ public final class ExtensionServiceRequestTargets {
                                                                     String appId) {
     return forService(service, ExtensionServiceOperationType.RUNTIME_OPTIONS,
         path("api", "v1", "worker", "resolvable", appId, "configurations"),
-        topic("adapter-runtime-options", appId));
+        topic(ExtensionServiceBrokerOperations.RUNTIME_OPTIONS, appId));
   }
 
   public static ExtensionServiceRequestTarget adapterSampleData(SpServiceRegistration service) {
@@ -111,7 +114,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.SAMPLE_DATA,
         path("api", "v1", "worker", "guess", "sample"),
-        topic("adapter-sample-data")
+        topic(ExtensionServiceBrokerOperations.SAMPLE_DATA)
     );
   }
 
@@ -120,7 +123,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.EXTENSION_INSTANCE_HEALTH,
         path("health"),
-        topic("extension-instance-health")
+        topic(ExtensionServiceBrokerOperations.EXTENSION_INSTANCE_HEALTH)
     );
   }
 
@@ -130,7 +133,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.SERVICE_HEALTH,
         path(healthCheckPath),
-        topic("service-health")
+        topic(ExtensionServiceBrokerOperations.SERVICE_HEALTH)
     );
   }
 
@@ -139,7 +142,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.SERVICE_LOAD,
         path("serviceMonitor"),
-        topic("monitoring", "service-load")
+        topic(ExtensionServiceBrokerOperations.SERVICE_LOAD)
     );
   }
 
@@ -149,7 +152,7 @@ public final class ExtensionServiceRequestTargets {
                                                                  String appId) {
     return ExtensionServiceRequestTarget.of(baseUrl, serviceId, ExtensionServiceOperationType.PIPELINE_ELEMENT_INVOCATION,
         path(provider.getPrefix(), appId),
-        topic("pipeline-invocation", provider.name(), appId));
+        topic(ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_INVOCATION, provider.name(), appId));
   }
 
   public static ExtensionServiceRequestTarget pipelineDetach(String baseUrl,
@@ -159,7 +162,7 @@ public final class ExtensionServiceRequestTargets {
                                                              String instanceId) {
     return ExtensionServiceRequestTarget.of(baseUrl, serviceId, ExtensionServiceOperationType.PIPELINE_ELEMENT_DETACH,
         path(provider.getPrefix(), appId, instanceId),
-        topic("pipeline-detach", provider.name(), appId, instanceId));
+        topic(ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_DETACH, provider.name(), appId, instanceId));
   }
 
   public static ExtensionServiceRequestTarget pipelineElementAssets(SpServiceRegistration service,
@@ -169,7 +172,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.PIPELINE_ELEMENT_ASSETS,
         path(provider.getPrefix(), appId, "assets"),
-        topic("pipeline-element-assets", provider.name(), appId)
+        topic(ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ASSETS, provider.name(), appId)
     );
   }
 
@@ -177,21 +180,21 @@ public final class ExtensionServiceRequestTargets {
                                                             String appId) {
     return forService(service, ExtensionServiceOperationType.ADAPTER_ASSETS,
         path("api", "v1", "worker", "adapters", appId, "assets"),
-        topic("adapter-assets", appId));
+        topic(ExtensionServiceBrokerOperations.ADAPTER_ASSETS, appId));
   }
 
   public static ExtensionServiceRequestTarget adapterIconAsset(SpServiceRegistration service,
                                                                String appId) {
     return forService(service, ExtensionServiceOperationType.ADAPTER_ICON_ASSET,
         path("api", "v1", "worker", "adapters", appId, "assets", "icon"),
-        topic("adapter-icon-asset", appId));
+        topic(ExtensionServiceBrokerOperations.ADAPTER_ICON_ASSET, appId));
   }
 
   public static ExtensionServiceRequestTarget adapterDocumentationAsset(SpServiceRegistration service,
                                                                         String appId) {
     return forService(service, ExtensionServiceOperationType.ADAPTER_DOCUMENTATION_ASSET,
         path("api", "v1", "worker", "adapters", appId, "assets", "documentation"),
-        topic("adapter-documentation-asset", appId));
+        topic(ExtensionServiceBrokerOperations.ADAPTER_DOCUMENTATION_ASSET, appId));
   }
 
   public static ExtensionServiceRequestTarget outputSchema(SpServiceRegistration service,
@@ -201,7 +204,7 @@ public final class ExtensionServiceRequestTargets {
         service,
         ExtensionServiceOperationType.OUTPUT_SCHEMA,
         path(provider.getPrefix(), appId, "output"),
-        topic("output-schema", provider.name(), appId)
+        topic(ExtensionServiceBrokerOperations.OUTPUT_SCHEMA, provider.name(), appId)
     );
   }
 
@@ -232,8 +235,11 @@ public final class ExtensionServiceRequestTargets {
     return Arrays.asList(pathSegments);
   }
 
-  private static List<String> topic(String... topicSegments) {
-    return Arrays.stream(topicSegments)
+  private static List<String> topic(ExtensionServiceBrokerOperation operation, String... dynamicTopicSegments) {
+    return Stream.concat(
+            operation.topicPrefixSegments().stream(),
+            Arrays.stream(dynamicTopicSegments)
+        )
         .filter(segment -> segment != null && !segment.isBlank())
         .toList();
   }

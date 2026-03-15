@@ -21,6 +21,7 @@ package org.apache.streampipes.nats.extensions.operation;
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
 import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServicePipelineDetachRequest;
@@ -33,8 +34,9 @@ import java.io.IOException;
 
 public class PipelineElementDetachOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "PIPELINE_ELEMENT_DETACH";
-  private static final String TOPIC_OPERATION_SEGMENT = "pipeline-detach";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_DETACH.operationId();
+  private static final String TOPIC_OPERATION_SEGMENT =
+      ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_DETACH.firstTopicSegment();
   private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
   private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
 

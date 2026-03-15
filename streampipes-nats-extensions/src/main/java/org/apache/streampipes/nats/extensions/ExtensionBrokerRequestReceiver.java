@@ -33,6 +33,7 @@ import org.apache.streampipes.extensions.management.monitoring.ServiceMonitorMan
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataStreamPipelineElementManagement;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
@@ -246,8 +247,7 @@ public class ExtensionBrokerRequestReceiver {
                 new DataSinkMigrationHandler()
             ),
             new DescriptionOperationHandler(
-                "DESCRIPTION_UPDATE",
-                "description-update",
+                ExtensionServiceBrokerOperations.DESCRIPTION_UPDATE,
                 "description update",
                 objectMapper,
                 adapterDescriptionManagement,
@@ -256,8 +256,7 @@ public class ExtensionBrokerRequestReceiver {
                 dataStreamPipelineElementManagement
             ),
             new DescriptionOperationHandler(
-                "EXTENSION_DESCRIPTION",
-                "extension-description",
+                ExtensionServiceBrokerOperations.EXTENSION_DESCRIPTION,
                 "extension description",
                 objectMapper,
                 adapterDescriptionManagement,
@@ -283,22 +282,19 @@ public class ExtensionBrokerRequestReceiver {
                 dataSinkPipelineElementManagement
             ),
             new AdapterAssetOperationHandler<>(
-                "ADAPTER_ASSETS",
-                "adapter-assets",
+                ExtensionServiceBrokerOperations.ADAPTER_ASSETS,
                 "adapter asset request",
                 adapterAssetManagement::getAssets,
                 ExtensionBrokerResponseFactory::okBytes
             ),
             new AdapterAssetOperationHandler<>(
-                "ADAPTER_ICON_ASSET",
-                "adapter-icon-asset",
+                ExtensionServiceBrokerOperations.ADAPTER_ICON_ASSET,
                 "adapter icon request",
                 adapterAssetManagement::getIconAsset,
                 ExtensionBrokerResponseFactory::okBytes
             ),
             new AdapterAssetOperationHandler<>(
-                "ADAPTER_DOCUMENTATION_ASSET",
-                "adapter-documentation-asset",
+                ExtensionServiceBrokerOperations.ADAPTER_DOCUMENTATION_ASSET,
                 "adapter documentation request",
                 adapterAssetManagement::getDocumentationAsset,
                 ExtensionBrokerResponseFactory::ok

@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.management.connect.RuntimeResolvableManagement;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -34,8 +35,9 @@ import java.io.IOException;
 
 public class RuntimeOptionsOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "RUNTIME_OPTIONS";
-  private static final String TOPIC_OPERATION_SEGMENT = "adapter-runtime-options";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.RUNTIME_OPTIONS.operationId();
+  private static final String TOPIC_OPERATION_SEGMENT =
+      ExtensionServiceBrokerOperations.RUNTIME_OPTIONS.firstTopicSegment();
 
   private final ObjectMapper objectMapper;
   private final RuntimeResolvableManagement runtimeResolvableManagement;

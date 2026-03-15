@@ -22,6 +22,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationRe
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.util.AuthTokenUtils;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServicePipelineDetachRequest;
@@ -148,7 +149,7 @@ public class NatsExtensionServiceRequestManager {
 
     var requestEnvelope = new ExtensionServiceBrokerRequestEnvelope(
         UUID.randomUUID().toString(),
-        target.operation().name(),
+        ExtensionServiceBrokerOperations.byOperationId(target.operation().name()).operationId(),
         payload,
         authToken
     );

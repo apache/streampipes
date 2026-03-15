@@ -23,6 +23,7 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerSampleDataRequestManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -35,8 +36,9 @@ import java.io.IOException;
 
 public class SampleDataOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "SAMPLE_DATA";
-  private static final String TOPIC_OPERATION_SEGMENT = "adapter-sample-data";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.SAMPLE_DATA.operationId();
+  private static final String TOPIC_OPERATION_SEGMENT =
+      ExtensionServiceBrokerOperations.SAMPLE_DATA.firstTopicSegment();
 
   private final ObjectMapper objectMapper;
   private final AdapterWorkerSampleDataRequestManagement adapterWorkerSampleDataRequestManagement;

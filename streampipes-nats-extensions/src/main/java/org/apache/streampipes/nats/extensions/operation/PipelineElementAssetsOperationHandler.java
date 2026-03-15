@@ -22,6 +22,7 @@ import org.apache.streampipes.extensions.management.connect.AdapterAssetManageme
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataStreamPipelineElementManagement;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
@@ -29,8 +30,9 @@ import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
 
 public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "PIPELINE_ELEMENT_ASSETS";
-  private static final String TOPIC_OPERATION_SEGMENT = "pipeline-element-assets";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ASSETS.operationId();
+  private static final String TOPIC_OPERATION_SEGMENT =
+      ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ASSETS.firstTopicSegment();
   private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
   private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
   private static final String PROVIDER_DATA_STREAM = ExtensionBrokerConstants.Provider.DATA_STREAM;

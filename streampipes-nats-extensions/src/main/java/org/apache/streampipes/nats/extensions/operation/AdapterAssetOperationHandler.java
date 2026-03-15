@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.nats.extensions.operation;
 
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperation;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
@@ -35,14 +36,13 @@ public class AdapterAssetOperationHandler<T> implements ExtensionBrokerOperation
   private final BiFunction<String, T, ExtensionServiceBrokerResponseEnvelope> successResponseFactory;
 
   public AdapterAssetOperationHandler(
-      String operation,
-      String topicOperationSegment,
+      ExtensionServiceBrokerOperation brokerOperation,
       String requestLabel,
       AssetProvider<T> assetProvider,
       BiFunction<String, T, ExtensionServiceBrokerResponseEnvelope> successResponseFactory
   ) {
-    this.operation = operation;
-    this.topicOperationSegment = topicOperationSegment;
+    this.operation = brokerOperation.operationId();
+    this.topicOperationSegment = brokerOperation.firstTopicSegment();
     this.requestLabel = requestLabel;
     this.assetProvider = assetProvider;
     this.successResponseFactory = successResponseFactory;

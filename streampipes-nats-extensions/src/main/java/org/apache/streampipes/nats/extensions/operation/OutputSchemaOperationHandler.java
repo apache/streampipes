@@ -23,6 +23,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
 import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -36,8 +37,9 @@ import java.io.IOException;
 
 public class OutputSchemaOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "OUTPUT_SCHEMA";
-  private static final String TOPIC_OPERATION_SEGMENT = "output-schema";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.OUTPUT_SCHEMA.operationId();
+  private static final String TOPIC_OPERATION_SEGMENT =
+      ExtensionServiceBrokerOperations.OUTPUT_SCHEMA.firstTopicSegment();
   private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
   private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
 

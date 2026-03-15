@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerRequestManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
@@ -31,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AdapterStateChangeOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "ADAPTER_STATE_CHANGE";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.ADAPTER_STATE_CHANGE.operationId();
   private static final String COMMAND_START = "start";
   private static final String COMMAND_STOP = "stop";
 

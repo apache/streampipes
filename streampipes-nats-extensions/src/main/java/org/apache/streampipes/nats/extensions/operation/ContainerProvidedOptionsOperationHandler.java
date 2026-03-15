@@ -23,6 +23,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -35,8 +36,9 @@ import java.io.IOException;
 
 public class ContainerProvidedOptionsOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "CONTAINER_PROVIDED_OPTIONS";
-  private static final String TOPIC_OPERATION_SEGMENT = "container-provided-options";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.CONTAINER_PROVIDED_OPTIONS.operationId();
+  private static final String TOPIC_OPERATION_SEGMENT =
+      ExtensionServiceBrokerOperations.CONTAINER_PROVIDED_OPTIONS.firstTopicSegment();
   private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
   private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
 

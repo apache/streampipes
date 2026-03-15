@@ -19,6 +19,7 @@
 package org.apache.streampipes.nats.extensions.operation;
 
 import org.apache.streampipes.extensions.management.monitoring.MonitoringManagement;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
@@ -28,8 +29,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ServiceHealthOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = "SERVICE_HEALTH";
-  private static final String TOPIC_OPERATION_SEGMENT = "service-health";
+  private static final String OPERATION = ExtensionServiceBrokerOperations.SERVICE_HEALTH.operationId();
+  private static final String TOPIC_OPERATION_SEGMENT =
+      ExtensionServiceBrokerOperations.SERVICE_HEALTH.firstTopicSegment();
 
   private final ObjectMapper objectMapper;
   private final MonitoringManagement monitoringManagement;
