@@ -16,13 +16,15 @@
  *
  */
 
-package org.apache.streampipes.nats.extensions.operation;
+package org.apache.streampipes.nats.extensions.operation.connect;
 
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperation;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -67,7 +69,7 @@ public class AdapterAssetOperationHandler<T> implements ExtensionBrokerOperation
       );
     }
 
-    var appId = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 1);
+    var appId = ExtensionBrokerTopicParser.extractTail(operationSegments, 1);
     if (ExtensionBrokerResponseFactory.isBlank(appId)) {
       return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),

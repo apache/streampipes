@@ -41,7 +41,7 @@ public enum ExtensionServiceTransportMode {
     try {
       return ExtensionServiceTransportMode.valueOf(value.trim().toUpperCase(Locale.ROOT));
     } catch (IllegalArgumentException e) {
-      return HTTP;
+      throw new IllegalArgumentException("Unknown extension transport mode: " + value, e);
     }
   }
 }

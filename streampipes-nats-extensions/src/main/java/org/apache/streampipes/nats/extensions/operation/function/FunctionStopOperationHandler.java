@@ -16,30 +16,29 @@
  *
  */
 
-package org.apache.streampipes.nats.extensions.operation;
+package org.apache.streampipes.nats.extensions.operation.function;
 
-import org.apache.streampipes.extensions.management.monitoring.HealthCheckManagement;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
+import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ExtensionInstanceHealthOperationHandler implements ExtensionBrokerOperationHandler {
+public class FunctionStopOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = ExtensionServiceBrokerOperations.EXTENSION_INSTANCE_HEALTH.operationId();
+  private static final String OPERATION = ExtensionServiceBrokerOperations.FUNCTION_STOP.operationId();
   private static final String TOPIC_OPERATION_SEGMENT =
-      ExtensionServiceBrokerOperations.EXTENSION_INSTANCE_HEALTH.firstTopicSegment();
+      ExtensionServiceBrokerOperations.FUNCTION_STOP.firstTopicSegment();
 
   private final ObjectMapper objectMapper;
-  private final HealthCheckManagement healthCheckManagement;
 
-  public ExtensionInstanceHealthOperationHandler(ObjectMapper objectMapper,
-                                                 HealthCheckManagement healthCheckManagement) {
+  public FunctionStopOperationHandler(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
-    this.healthCheckManagement = healthCheckManagement;
   }
 
   @Override
@@ -57,11 +56,12 @@ public class ExtensionInstanceHealthOperationHandler implements ExtensionBrokerO
     if (operationSegments.isEmpty() || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
       return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "Invalid topic for extension instance health operation: " + context.topic()
+          "Invalid topic for function stop operation: " + context.topic()
       );
     }
 
-    var payload = objectMapper.writeValueAsString(healthCheckManagement.getExtensionInstanceHealth());
+    var shutdownResponse = StreamPipesFunctionHandler.INSTANCE.shutdownFunctionsAndGetState();
+    var payload = objectMapper.writeValueAsString(shutdownResponse);
     return ExtensionBrokerResponseFactory.ok(request.getRequestId(), payload);
   }
 }

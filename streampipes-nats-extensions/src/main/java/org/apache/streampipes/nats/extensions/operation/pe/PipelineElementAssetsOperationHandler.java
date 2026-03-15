@@ -16,58 +16,51 @@
  *
  */
 
-package org.apache.streampipes.nats.extensions.operation;
+package org.apache.streampipes.nats.extensions.operation.pe;
 
-import org.apache.streampipes.extensions.management.connect.AdapterDescriptionManagement;
+import org.apache.streampipes.extensions.management.connect.AdapterAssetManagement;
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataStreamPipelineElementManagement;
-import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperation;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.apache.streampipes.nats.extensions.operation.ExtensionBrokerConstants.ADAPTER;
+import static org.apache.streampipes.nats.extensions.operation.ExtensionBrokerConstants.DATA_PROCESSOR;
+import static org.apache.streampipes.nats.extensions.operation.ExtensionBrokerConstants.DATA_SINK;
+import static org.apache.streampipes.nats.extensions.operation.ExtensionBrokerConstants.DATA_STREAM;
 
-public class DescriptionOperationHandler implements ExtensionBrokerOperationHandler {
+public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String PROVIDER_ADAPTER = ExtensionBrokerConstants.Provider.ADAPTER;
-  private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
-  private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
-  private static final String PROVIDER_DATA_STREAM = ExtensionBrokerConstants.Provider.DATA_STREAM;
+  private static final String OPERATION = ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ASSETS.operationId();
+  private static final String TOPIC_OPERATION_SEGMENT =
+      ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ASSETS.firstTopicSegment();
 
-  private final String operation;
-  private final String topicOperationSegment;
-  private final String operationLabel;
-  private final ObjectMapper objectMapper;
-  private final AdapterDescriptionManagement adapterDescriptionManagement;
   private final DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement;
   private final DataSinkPipelineElementManagement dataSinkPipelineElementManagement;
   private final DataStreamPipelineElementManagement dataStreamPipelineElementManagement;
+  private final AdapterAssetManagement adapterAssetManagement;
 
-  public DescriptionOperationHandler(
-      ExtensionServiceBrokerOperation brokerOperation,
-      String operationLabel,
-      ObjectMapper objectMapper,
-      AdapterDescriptionManagement adapterDescriptionManagement,
+  public PipelineElementAssetsOperationHandler(
       DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
       DataSinkPipelineElementManagement dataSinkPipelineElementManagement,
-      DataStreamPipelineElementManagement dataStreamPipelineElementManagement
+      DataStreamPipelineElementManagement dataStreamPipelineElementManagement,
+      AdapterAssetManagement adapterAssetManagement
   ) {
-    this.operation = brokerOperation.operationId();
-    this.topicOperationSegment = brokerOperation.firstTopicSegment();
-    this.operationLabel = operationLabel;
-    this.objectMapper = objectMapper;
-    this.adapterDescriptionManagement = adapterDescriptionManagement;
     this.dataProcessorPipelineElementManagement = dataProcessorPipelineElementManagement;
     this.dataSinkPipelineElementManagement = dataSinkPipelineElementManagement;
     this.dataStreamPipelineElementManagement = dataStreamPipelineElementManagement;
+    this.adapterAssetManagement = adapterAssetManagement;
   }
 
   @Override
   public String operation() {
-    return operation;
+    return OPERATION;
   }
 
   @Override
@@ -77,7 +70,7 @@ public class DescriptionOperationHandler implements ExtensionBrokerOperationHand
         context.topic(),
         context.subscriptionBaseTopic()
     );
-    if (operationSegments.size() < 3 || !topicOperationSegment.equals(operationSegments.get(0))) {
+    if (operationSegments.size() < 3 || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
       return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
           "Could not resolve provider and appId from topic " + context.topic()
@@ -85,7 +78,7 @@ public class DescriptionOperationHandler implements ExtensionBrokerOperationHand
     }
 
     var provider = operationSegments.get(1);
-    var appId = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 2);
+    var appId = ExtensionBrokerTopicParser.extractTail(operationSegments, 2);
     if (ExtensionBrokerResponseFactory.isBlank(appId)) {
       return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
@@ -93,31 +86,30 @@ public class DescriptionOperationHandler implements ExtensionBrokerOperationHand
       );
     }
 
-    Object description;
-    if (PROVIDER_ADAPTER.equals(provider)) {
-      var adapterDescriptionOpt = adapterDescriptionManagement.getAdapterDescription(appId);
-      if (adapterDescriptionOpt.isEmpty()) {
+    byte[] assetBytes;
+    if (DATA_PROCESSOR.equals(provider)) {
+      assetBytes = dataProcessorPipelineElementManagement.getAssets(appId);
+    } else if (DATA_SINK.equals(provider)) {
+      assetBytes = dataSinkPipelineElementManagement.getAssets(appId);
+    } else if (DATA_STREAM.equals(provider)) {
+      assetBytes = dataStreamPipelineElementManagement.getAssets(appId);
+    } else if (ADAPTER.equals(provider)) {
+      var adapterAssets = adapterAssetManagement.getAssets(appId);
+      if (adapterAssets.isEmpty()) {
         return ExtensionBrokerResponseFactory.notFound(
             request.getRequestId(),
             "Could not find adapter with id " + appId
         );
       }
 
-      description = adapterDescriptionOpt.get();
-    } else if (PROVIDER_DATA_PROCESSOR.equals(provider)) {
-      description = dataProcessorPipelineElementManagement.getDescription(appId);
-    } else if (PROVIDER_DATA_SINK.equals(provider)) {
-      description = dataSinkPipelineElementManagement.getDescription(appId);
-    } else if (PROVIDER_DATA_STREAM.equals(provider)) {
-      description = dataStreamPipelineElementManagement.getDescription(appId);
+      assetBytes = adapterAssets.get();
     } else {
       return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "Unsupported provider for " + operationLabel + ": " + provider
+          "Unsupported provider for pipeline asset request: " + provider
       );
     }
 
-    var payload = objectMapper.writeValueAsString(description);
-    return ExtensionBrokerResponseFactory.ok(request.getRequestId(), payload);
+    return ExtensionBrokerResponseFactory.okBytes(request.getRequestId(), assetBytes);
   }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.nats.extensions.operation;
+package org.apache.streampipes.nats.extensions.operation.pe;
 
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
@@ -27,6 +27,9 @@ import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerR
 import org.apache.streampipes.model.extensions.transport.ExtensionServicePipelineDetachRequest;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerConstants;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,8 +40,8 @@ public class PipelineElementDetachOperationHandler implements ExtensionBrokerOpe
   private static final String OPERATION = ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_DETACH.operationId();
   private static final String TOPIC_OPERATION_SEGMENT =
       ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_DETACH.firstTopicSegment();
-  private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
-  private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
+  private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.DATA_PROCESSOR;
+  private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.DATA_SINK;
 
   private final ObjectMapper objectMapper;
   private final DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement;

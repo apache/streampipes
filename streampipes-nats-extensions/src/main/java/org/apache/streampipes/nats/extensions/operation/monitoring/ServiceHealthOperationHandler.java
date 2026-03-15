@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.nats.extensions.operation;
+package org.apache.streampipes.nats.extensions.operation.monitoring;
 
 import org.apache.streampipes.extensions.management.monitoring.MonitoringManagement;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
@@ -24,6 +24,8 @@ import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerR
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

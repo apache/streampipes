@@ -20,29 +20,14 @@ package org.apache.streampipes.nats.extensions.operation;
 
 public final class ExtensionBrokerConstants {
 
-  private ExtensionBrokerConstants() {
-  }
+  public static final String ADAPTER = "ADAPTER";
+  public static final String DATA_PROCESSOR = "DATA_PROCESSOR";
+  public static final String DATA_SINK = "DATA_SINK";
+  public static final String DATA_STREAM = "DATA_STREAM";
 
-  public static final class Provider {
-
-    public static final String ADAPTER = "ADAPTER";
-    public static final String DATA_PROCESSOR = "DATA_PROCESSOR";
-    public static final String DATA_SINK = "DATA_SINK";
-    public static final String DATA_STREAM = "DATA_STREAM";
-
-    private Provider() {
-    }
-  }
-
-  public static final class ErrorType {
-
-    public static final String INVALID_COMMAND = "InvalidCommand";
-    public static final String INVALID_PAYLOAD = "InvalidPayload";
-    public static final String INVALID_TOPIC = "InvalidTopic";
-    public static final String NOT_FOUND = "NotFound";
-    public static final String UNSUPPORTED_OPERATION = "UnsupportedOperation";
-
-    private ErrorType() {
-    }
-  }
+  public static final String INVALID_COMMAND = "InvalidCommand";
+  public static final String INVALID_PAYLOAD = "InvalidPayload";
+  public static final String INVALID_TOPIC = "InvalidTopic";
+  public static final String NOT_FOUND = "NotFound";
+  public static final String UNSUPPORTED_OPERATION = "UnsupportedOperation";
 }

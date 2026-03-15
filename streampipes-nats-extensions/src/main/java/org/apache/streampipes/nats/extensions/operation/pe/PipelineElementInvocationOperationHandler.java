@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.nats.extensions.operation;
+package org.apache.streampipes.nats.extensions.operation.pe;
 
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
@@ -28,18 +28,21 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+
+import static org.apache.streampipes.nats.extensions.operation.ExtensionBrokerConstants.DATA_PROCESSOR;
+import static org.apache.streampipes.nats.extensions.operation.ExtensionBrokerConstants.DATA_SINK;
 
 public class PipelineElementInvocationOperationHandler implements ExtensionBrokerOperationHandler {
 
   private static final String OPERATION = ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_INVOCATION.operationId();
   private static final String TOPIC_OPERATION_SEGMENT =
       ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_INVOCATION.firstTopicSegment();
-  private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
-  private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
 
   private final ObjectMapper objectMapper;
   private final DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement;
@@ -78,7 +81,7 @@ public class PipelineElementInvocationOperationHandler implements ExtensionBroke
 
     Response response;
     try {
-      if (PROVIDER_DATA_PROCESSOR.equals(provider)) {
+      if (DATA_PROCESSOR.equals(provider)) {
         var invocation = objectMapper.readValue(request.getPayload(), DataProcessorInvocation.class);
         if (ExtensionBrokerResponseFactory.isBlank(invocation.getAppId())) {
           return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
@@ -88,7 +91,7 @@ public class PipelineElementInvocationOperationHandler implements ExtensionBroke
         }
 
         response = dataProcessorPipelineElementManagement.invokeRuntime(invocation.getAppId(), invocation);
-      } else if (PROVIDER_DATA_SINK.equals(provider)) {
+      } else if (DATA_SINK.equals(provider)) {
         var invocation = objectMapper.readValue(request.getPayload(), DataSinkInvocation.class);
         if (ExtensionBrokerResponseFactory.isBlank(invocation.getAppId())) {
           return ExtensionBrokerResponseFactory.badRequestInvalidPayload(

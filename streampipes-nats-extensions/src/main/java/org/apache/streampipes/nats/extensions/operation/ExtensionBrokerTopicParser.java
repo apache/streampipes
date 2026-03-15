@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.nats.extensions.operation;
 
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,36 +35,35 @@ public final class ExtensionBrokerTopicParser {
       return "";
     }
 
-    return topic.substring(separatorIndex + 1);
+    return ExtensionServiceBrokerTopics.decodeTopicSegment(topic.substring(separatorIndex + 1));
   }
 
   public static String extractProvider(String topic,
-                                String subscriptionBaseTopic,
-                                String operationSegment) {
-    var segments = extractOperationSegments(topic, subscriptionBaseTopic);
-    if (segments.size() < 2 || !operationSegment.equals(segments.get(0))) {
-      return "";
-    }
-
-    return segments.get(1);
+                                       String subscriptionBaseTopic,
+                                       String operationSegment) {
+    return extractProvider(extractOperationSegments(topic, subscriptionBaseTopic), operationSegment);
   }
 
-  public static String extractTail(String topic,
-                                   String subscriptionBaseTopic,
-                                   int fromIndex) {
-    var segments = extractOperationSegments(topic, subscriptionBaseTopic);
-    if (fromIndex < 0 || segments.size() <= fromIndex) {
+  public static String extractProvider(List<String> operationSegments, String operationSegment) {
+    if (operationSegments.size() < 2 || !operationSegment.equals(operationSegments.get(0))) {
       return "";
     }
 
-    return segments.stream()
+    return operationSegments.get(1);
+  }
+
+  public static String extractTail(List<String> operationSegments, int fromIndex) {
+    if (fromIndex < 0 || operationSegments.size() <= fromIndex) {
+      return "";
+    }
+
+    return operationSegments.stream()
         .skip(fromIndex)
         .collect(Collectors.joining("."));
   }
 
   public static List<String> extractOperationSegments(String topic, String subscriptionBaseTopic) {
-    if (ExtensionBrokerResponseFactory.isBlank(topic)
-        || ExtensionBrokerResponseFactory.isBlank(subscriptionBaseTopic)) {
+    if (isBlank(topic) || isBlank(subscriptionBaseTopic)) {
       return List.of();
     }
 
@@ -75,10 +77,16 @@ public final class ExtensionBrokerTopicParser {
     }
 
     var suffix = topic.substring(prefix.length());
-    if (ExtensionBrokerResponseFactory.isBlank(suffix)) {
+    if (isBlank(suffix)) {
       return List.of();
     }
 
-    return List.of(suffix.split("\\."));
+    return Arrays.stream(suffix.split("\\."))
+        .map(ExtensionServiceBrokerTopics::decodeTopicSegment)
+        .toList();
+  }
+
+  private static boolean isBlank(String value) {
+    return value == null || value.isBlank();
   }
 }

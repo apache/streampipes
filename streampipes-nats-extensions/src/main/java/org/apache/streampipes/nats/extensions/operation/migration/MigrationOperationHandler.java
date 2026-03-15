@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.nats.extensions.operation;
+package org.apache.streampipes.nats.extensions.operation.migration;
 
 import org.apache.streampipes.extensions.management.migration.AdapterMigrationHandler;
 import org.apache.streampipes.extensions.management.migration.DataProcessorMigrationHandler;
@@ -27,6 +27,8 @@ import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerR
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -84,7 +86,7 @@ public class MigrationOperationHandler implements ExtensionBrokerOperationHandle
       );
     }
 
-    var migrationType = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 1)
+    var migrationType = ExtensionBrokerTopicParser.extractTail(operationSegments, 1)
         .toLowerCase(Locale.ROOT);
     if (ExtensionBrokerResponseFactory.isBlank(migrationType)) {
       return ExtensionBrokerResponseFactory.badRequestInvalidTopic(

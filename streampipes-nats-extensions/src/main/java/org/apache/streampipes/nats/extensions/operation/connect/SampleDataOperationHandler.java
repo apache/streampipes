@@ -16,36 +16,41 @@
  *
  */
 
-package org.apache.streampipes.nats.extensions.operation;
+package org.apache.streampipes.nats.extensions.operation.connect;
 
-import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.management.connect.RuntimeResolvableManagement;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.management.connect.AdapterWorkerSampleDataRequestManagement;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
-import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-public class RuntimeOptionsOperationHandler implements ExtensionBrokerOperationHandler {
+public class SampleDataOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = ExtensionServiceBrokerOperations.RUNTIME_OPTIONS.operationId();
+  private static final String OPERATION = ExtensionServiceBrokerOperations.SAMPLE_DATA.operationId();
   private static final String TOPIC_OPERATION_SEGMENT =
-      ExtensionServiceBrokerOperations.RUNTIME_OPTIONS.firstTopicSegment();
+      ExtensionServiceBrokerOperations.SAMPLE_DATA.firstTopicSegment();
 
   private final ObjectMapper objectMapper;
-  private final RuntimeResolvableManagement runtimeResolvableManagement;
+  private final AdapterWorkerSampleDataRequestManagement adapterWorkerSampleDataRequestManagement;
 
-  public RuntimeOptionsOperationHandler(ObjectMapper objectMapper,
-                                        RuntimeResolvableManagement runtimeResolvableManagement) {
+  public SampleDataOperationHandler(
+      ObjectMapper objectMapper,
+      AdapterWorkerSampleDataRequestManagement adapterWorkerSampleDataRequestManagement
+  ) {
     this.objectMapper = objectMapper;
-    this.runtimeResolvableManagement = runtimeResolvableManagement;
+    this.adapterWorkerSampleDataRequestManagement = adapterWorkerSampleDataRequestManagement;
   }
 
   @Override
@@ -59,7 +64,7 @@ public class RuntimeOptionsOperationHandler implements ExtensionBrokerOperationH
     if (ExtensionBrokerResponseFactory.isBlank(request.getPayload())) {
       return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "Missing runtime options request payload"
+          "Missing adapter description payload"
       );
     }
 
@@ -70,43 +75,29 @@ public class RuntimeOptionsOperationHandler implements ExtensionBrokerOperationH
     if (operationSegments.isEmpty() || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
       return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "Could not resolve appId from topic " + context.topic()
+          "Invalid topic for sample data operation: " + context.topic()
       );
     }
 
-    var appId = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 1);
-    if (ExtensionBrokerResponseFactory.isBlank(appId)) {
-      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
-          request.getRequestId(),
-          "Missing appId in topic " + context.topic()
-      );
-    }
-
-    RuntimeOptionsRequest runtimeOptionsRequest;
+    AdapterDescription adapterDescription;
     try {
-      runtimeOptionsRequest = objectMapper.readValue(request.getPayload(), RuntimeOptionsRequest.class);
+      adapterDescription = objectMapper.readValue(request.getPayload(), AdapterDescription.class);
     } catch (IOException e) {
       return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "Invalid runtime options request payload"
+          "Invalid adapter description payload"
       );
     }
 
     try {
-      var response = runtimeResolvableManagement.fetchConfigurations(appId, runtimeOptionsRequest);
-      return ExtensionBrokerResponseFactory.ok(request.getRequestId(), objectMapper.writeValueAsString(response));
-    } catch (SpConfigurationException e) {
+      var sampleData = adapterWorkerSampleDataRequestManagement.getSampleData(adapterDescription);
+      return ExtensionBrokerResponseFactory.ok(request.getRequestId(), objectMapper.writeValueAsString(sampleData));
+    } catch (AdapterException | ParseException e) {
       return new ExtensionServiceBrokerResponseEnvelope(
           request.getRequestId(),
-          ExtensionBrokerResponseFactory.HTTP_STATUS_BAD_REQUEST,
-          objectMapper.writeValueAsString(e),
-          new ExtensionServiceBrokerErrorEnvelope(e.getClass().getSimpleName(), e.getMessage())
-      );
-    } catch (SpRuntimeException e) {
-      return ExtensionBrokerResponseFactory.error(
-          request.getRequestId(),
           ExtensionBrokerResponseFactory.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-          e
+          objectMapper.writeValueAsString(SpLogMessage.from(e)),
+          new ExtensionServiceBrokerErrorEnvelope(e.getClass().getSimpleName(), e.getMessage())
       );
     }
   }

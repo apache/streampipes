@@ -64,22 +64,22 @@ public final class ExtensionBrokerResponseFactory {
 
   public static ExtensionServiceBrokerResponseEnvelope badRequestInvalidPayload(String requestId,
                                                                                 String message) {
-    return badRequest(requestId, ExtensionBrokerConstants.ErrorType.INVALID_PAYLOAD, message);
+    return badRequest(requestId, ExtensionBrokerConstants.INVALID_PAYLOAD, message);
   }
 
   public static ExtensionServiceBrokerResponseEnvelope badRequestInvalidTopic(String requestId,
                                                                               String message) {
-    return badRequest(requestId, ExtensionBrokerConstants.ErrorType.INVALID_TOPIC, message);
+    return badRequest(requestId, ExtensionBrokerConstants.INVALID_TOPIC, message);
   }
 
   public static ExtensionServiceBrokerResponseEnvelope badRequestInvalidCommand(String requestId,
                                                                                 String message) {
-    return badRequest(requestId, ExtensionBrokerConstants.ErrorType.INVALID_COMMAND, message);
+    return badRequest(requestId, ExtensionBrokerConstants.INVALID_COMMAND, message);
   }
 
   public static ExtensionServiceBrokerResponseEnvelope notFound(String requestId,
                                                                 String message) {
-    return notFound(requestId, ExtensionBrokerConstants.ErrorType.NOT_FOUND, message);
+    return notFound(requestId, ExtensionBrokerConstants.NOT_FOUND, message);
   }
 
   public static ExtensionServiceBrokerResponseEnvelope unsupportedOperation(String requestId,
@@ -89,7 +89,7 @@ public final class ExtensionBrokerResponseFactory {
         HTTP_STATUS_NOT_IMPLEMENTED,
         null,
         new ExtensionServiceBrokerErrorEnvelope(
-            ExtensionBrokerConstants.ErrorType.UNSUPPORTED_OPERATION,
+            ExtensionBrokerConstants.UNSUPPORTED_OPERATION,
             message
         )
     );

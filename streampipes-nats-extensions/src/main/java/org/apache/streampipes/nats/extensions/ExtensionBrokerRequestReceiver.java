@@ -38,21 +38,22 @@ import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerR
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
-import org.apache.streampipes.nats.extensions.operation.AdapterAssetOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.ContainerProvidedOptionsOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.DescriptionOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
-import org.apache.streampipes.nats.extensions.operation.ExtensionInstanceHealthOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.FunctionStopOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.MigrationOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.OutputSchemaOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.PipelineElementAssetsOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.PipelineElementDetachOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.PipelineElementInvocationOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.RuntimeOptionsOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.SampleDataOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.ServiceHealthOperationHandler;
-import org.apache.streampipes.nats.extensions.operation.ServiceLoadOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.connect.AdapterAssetOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.connect.AdapterStateChangeOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.connect.RuntimeOptionsOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.connect.SampleDataOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.function.FunctionStopOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.migration.MigrationOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.monitoring.ExtensionInstanceHealthOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.monitoring.ServiceHealthOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.monitoring.ServiceLoadOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.pe.ContainerProvidedOptionsOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.pe.DescriptionOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.pe.OutputSchemaOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.pe.PipelineElementAssetsOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.pe.PipelineElementDetachOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.pe.PipelineElementInvocationOperationHandler;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,12 +69,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory.HTTP_STATUS_INTERNAL_SERVER_ERROR;
+
 public class ExtensionBrokerRequestReceiver {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionBrokerRequestReceiver.class);
-
-  private static final int HTTP_STATUS_INTERNAL_SERVER_ERROR =
-      ExtensionBrokerResponseFactory.HTTP_STATUS_INTERNAL_SERVER_ERROR;
 
   private final ObjectMapper objectMapper;
   private final Map<String, ExtensionBrokerOperationHandler> operationHandlers;

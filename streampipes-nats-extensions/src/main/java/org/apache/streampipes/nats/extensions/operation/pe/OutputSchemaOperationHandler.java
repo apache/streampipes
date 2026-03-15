@@ -16,37 +16,41 @@
  *
  */
 
-package org.apache.streampipes.nats.extensions.operation;
+package org.apache.streampipes.nats.extensions.operation.pe;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
-import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
+import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
-import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-public class ContainerProvidedOptionsOperationHandler implements ExtensionBrokerOperationHandler {
+import static org.apache.streampipes.nats.extensions.operation.ExtensionBrokerConstants.DATA_PROCESSOR;
+import static org.apache.streampipes.nats.extensions.operation.ExtensionBrokerConstants.DATA_SINK;
 
-  private static final String OPERATION = ExtensionServiceBrokerOperations.CONTAINER_PROVIDED_OPTIONS.operationId();
+public class OutputSchemaOperationHandler implements ExtensionBrokerOperationHandler {
+
+  private static final String OPERATION = ExtensionServiceBrokerOperations.OUTPUT_SCHEMA.operationId();
   private static final String TOPIC_OPERATION_SEGMENT =
-      ExtensionServiceBrokerOperations.CONTAINER_PROVIDED_OPTIONS.firstTopicSegment();
-  private static final String PROVIDER_DATA_PROCESSOR = ExtensionBrokerConstants.Provider.DATA_PROCESSOR;
-  private static final String PROVIDER_DATA_SINK = ExtensionBrokerConstants.Provider.DATA_SINK;
+      ExtensionServiceBrokerOperations.OUTPUT_SCHEMA.firstTopicSegment();
 
   private final ObjectMapper objectMapper;
   private final DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement;
   private final DataSinkPipelineElementManagement dataSinkPipelineElementManagement;
 
-  public ContainerProvidedOptionsOperationHandler(
+  public OutputSchemaOperationHandler(
       ObjectMapper objectMapper,
       DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
       DataSinkPipelineElementManagement dataSinkPipelineElementManagement
@@ -67,7 +71,7 @@ public class ContainerProvidedOptionsOperationHandler implements ExtensionBroker
     if (ExtensionBrokerResponseFactory.isBlank(request.getPayload())) {
       return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "Missing runtime options request payload"
+          "Missing output schema request payload"
       );
     }
 
@@ -83,7 +87,7 @@ public class ContainerProvidedOptionsOperationHandler implements ExtensionBroker
     }
 
     var provider = operationSegments.get(1);
-    var appId = ExtensionBrokerTopicParser.extractTail(context.topic(), context.subscriptionBaseTopic(), 2);
+    var appId = ExtensionBrokerTopicParser.extractTail(operationSegments, 2);
     if (ExtensionBrokerResponseFactory.isBlank(appId)) {
       return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
@@ -91,43 +95,56 @@ public class ContainerProvidedOptionsOperationHandler implements ExtensionBroker
       );
     }
 
-    RuntimeOptionsRequest runtimeOptionsRequest;
-    try {
-      runtimeOptionsRequest = objectMapper.readValue(request.getPayload(), RuntimeOptionsRequest.class);
-    } catch (IOException e) {
-      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
-          request.getRequestId(),
-          "Invalid runtime options request payload"
-      );
-    }
-
     try {
       Object response;
-      if (PROVIDER_DATA_PROCESSOR.equals(provider)) {
-        response = dataProcessorPipelineElementManagement.fetchConfigurations(appId, runtimeOptionsRequest);
-      } else if (PROVIDER_DATA_SINK.equals(provider)) {
-        response = dataSinkPipelineElementManagement.fetchConfigurations(appId, runtimeOptionsRequest);
+      if (DATA_PROCESSOR.equals(provider)) {
+        var invocation = parseProcessorInvocation(request.getPayload());
+        if (invocation == null) {
+          return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
+              request.getRequestId(),
+              "Invalid data processor invocation payload"
+          );
+        }
+        response = dataProcessorPipelineElementManagement.fetchOutputStrategy(appId, invocation);
+      } else if (DATA_SINK.equals(provider)) {
+        var invocation = parseSinkInvocation(request.getPayload());
+        if (invocation == null) {
+          return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
+              request.getRequestId(),
+              "Invalid data sink invocation payload"
+          );
+        }
+        response = dataSinkPipelineElementManagement.fetchOutputStrategy(appId, invocation);
       } else {
         return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
             request.getRequestId(),
-            "Unsupported provider for container-provided-options: " + provider
+            "Unsupported provider for output schema operation: " + provider
         );
       }
 
       return ExtensionBrokerResponseFactory.ok(request.getRequestId(), objectMapper.writeValueAsString(response));
-    } catch (SpConfigurationException e) {
-      return new ExtensionServiceBrokerResponseEnvelope(
+    } catch (SpRuntimeException | SpConfigurationException e) {
+      var fallbackResponse = new Response(appId, false);
+      return ExtensionBrokerResponseFactory.ok(
           request.getRequestId(),
-          ExtensionBrokerResponseFactory.HTTP_STATUS_BAD_REQUEST,
-          objectMapper.writeValueAsString(e),
-          new ExtensionServiceBrokerErrorEnvelope(e.getClass().getSimpleName(), e.getMessage())
+          objectMapper.writeValueAsString(fallbackResponse)
       );
-    } catch (SpRuntimeException e) {
-      return ExtensionBrokerResponseFactory.error(
-          request.getRequestId(),
-          ExtensionBrokerResponseFactory.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-          e
-      );
+    }
+  }
+
+  private DataProcessorInvocation parseProcessorInvocation(String payload) {
+    try {
+      return objectMapper.readValue(payload, DataProcessorInvocation.class);
+    } catch (IOException e) {
+      return null;
+    }
+  }
+
+  private DataSinkInvocation parseSinkInvocation(String payload) {
+    try {
+      return objectMapper.readValue(payload, DataSinkInvocation.class);
+    } catch (IOException e) {
+      return null;
     }
   }
 }

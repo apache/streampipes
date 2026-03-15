@@ -16,39 +16,35 @@
  *
  */
 
-package org.apache.streampipes.nats.extensions.operation;
+package org.apache.streampipes.nats.extensions.operation.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.AdapterWorkerSampleDataRequestManagement;
+import org.apache.streampipes.extensions.management.connect.AdapterWorkerRequestManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
-import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestContext;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
+import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
+public class AdapterStateChangeOperationHandler implements ExtensionBrokerOperationHandler {
 
-public class SampleDataOperationHandler implements ExtensionBrokerOperationHandler {
-
-  private static final String OPERATION = ExtensionServiceBrokerOperations.SAMPLE_DATA.operationId();
-  private static final String TOPIC_OPERATION_SEGMENT =
-      ExtensionServiceBrokerOperations.SAMPLE_DATA.firstTopicSegment();
+  private static final String OPERATION = ExtensionServiceBrokerOperations.ADAPTER_STATE_CHANGE.operationId();
+  private static final String COMMAND_START = "start";
+  private static final String COMMAND_STOP = "stop";
 
   private final ObjectMapper objectMapper;
-  private final AdapterWorkerSampleDataRequestManagement adapterWorkerSampleDataRequestManagement;
+  private final AdapterWorkerRequestManagement adapterWorkerRequestManagement;
 
-  public SampleDataOperationHandler(
-      ObjectMapper objectMapper,
-      AdapterWorkerSampleDataRequestManagement adapterWorkerSampleDataRequestManagement
-  ) {
+  public AdapterStateChangeOperationHandler(ObjectMapper objectMapper,
+                                     AdapterWorkerRequestManagement adapterWorkerRequestManagement) {
     this.objectMapper = objectMapper;
-    this.adapterWorkerSampleDataRequestManagement = adapterWorkerSampleDataRequestManagement;
+    this.adapterWorkerRequestManagement = adapterWorkerRequestManagement;
   }
 
   @Override
@@ -62,39 +58,33 @@ public class SampleDataOperationHandler implements ExtensionBrokerOperationHandl
     if (ExtensionBrokerResponseFactory.isBlank(request.getPayload())) {
       return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
           request.getRequestId(),
-          "Missing adapter description payload"
+          "Missing adapter payload"
       );
     }
 
-    var operationSegments = ExtensionBrokerTopicParser.extractOperationSegments(
-        context.topic(),
-        context.subscriptionBaseTopic()
-    );
-    if (operationSegments.isEmpty() || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
-      return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
-          request.getRequestId(),
-          "Invalid topic for sample data operation: " + context.topic()
-      );
-    }
-
-    AdapterDescription adapterDescription;
-    try {
-      adapterDescription = objectMapper.readValue(request.getPayload(), AdapterDescription.class);
-    } catch (IOException e) {
-      return ExtensionBrokerResponseFactory.badRequestInvalidPayload(
-          request.getRequestId(),
-          "Invalid adapter description payload"
-      );
-    }
+    var adapterDescription = objectMapper.readValue(request.getPayload(), AdapterDescription.class);
+    var command = ExtensionBrokerTopicParser.extractLastSegment(context.topic());
 
     try {
-      var sampleData = adapterWorkerSampleDataRequestManagement.getSampleData(adapterDescription);
-      return ExtensionBrokerResponseFactory.ok(request.getRequestId(), objectMapper.writeValueAsString(sampleData));
-    } catch (AdapterException | ParseException e) {
+      if (COMMAND_START.equals(command)) {
+        var payload = objectMapper.writeValueAsString(adapterWorkerRequestManagement.invokeAdapter(adapterDescription));
+        return ExtensionBrokerResponseFactory.ok(request.getRequestId(), payload);
+      }
+
+      if (COMMAND_STOP.equals(command)) {
+        var payload = objectMapper.writeValueAsString(adapterWorkerRequestManagement.stopAdapter(adapterDescription));
+        return ExtensionBrokerResponseFactory.ok(request.getRequestId(), payload);
+      }
+
+      return ExtensionBrokerResponseFactory.badRequestInvalidCommand(
+          request.getRequestId(),
+          "Unknown adapter state change command in topic " + context.topic()
+      );
+    } catch (AdapterException e) {
       return new ExtensionServiceBrokerResponseEnvelope(
           request.getRequestId(),
           ExtensionBrokerResponseFactory.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-          objectMapper.writeValueAsString(SpLogMessage.from(e)),
+          objectMapper.writeValueAsString(e),
           new ExtensionServiceBrokerErrorEnvelope(e.getClass().getSimpleName(), e.getMessage())
       );
     }

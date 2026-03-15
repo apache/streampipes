@@ -23,9 +23,6 @@ public class ExtensionServicePipelineDetachRequest {
   private String elementId;
   private String runningInstanceId;
 
-  public ExtensionServicePipelineDetachRequest() {
-  }
-
   public ExtensionServicePipelineDetachRequest(String elementId, String runningInstanceId) {
     this.elementId = elementId;
     this.runningInstanceId = runningInstanceId;
