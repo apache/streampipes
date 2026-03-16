@@ -78,7 +78,7 @@ import java.util.stream.Collectors;
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesExtensionsServiceBase.class);
-  private final ExtensionBrokerRequestReceiver extensionBrokerRequestReceiver = new ExtensionBrokerRequestReceiver();
+  private ExtensionBrokerRequestReceiver extensionBrokerRequestReceiver;
   private ExtensionServiceTransportMode extensionTransportMode = ExtensionServiceTransportMode.HTTP;
   private boolean natsBrokerReceiverActive = false;
 
@@ -132,13 +132,18 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     this.extensionTransportMode = ExtensionServiceTransportMode.from(
         Environments.getEnvironment().getExtensionTransportMode().getValueOrDefault()
     );
-    this.natsBrokerReceiverActive = extensionBrokerRequestReceiver.start(
-        serviceId(),
-        extensionTransportMode,
-        Environments.getEnvironment()
-            .getExtensionRequestTopicPrefix()
-            .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX)
-    );
+    if (extensionTransportMode.supportsNats()) {
+      this.extensionBrokerRequestReceiver = new ExtensionBrokerRequestReceiver();
+      this.natsBrokerReceiverActive = extensionBrokerRequestReceiver.start(
+          serviceId(),
+          extensionTransportMode,
+          Environments.getEnvironment()
+              .getExtensionRequestTopicPrefix()
+              .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX)
+      );
+    } else {
+      this.natsBrokerReceiverActive = false;
+    }
 
     var extensions = new ExtensionItemProvider().getAllItemDescriptions();
     var req = SpServiceRegistration.from(
@@ -219,7 +224,9 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
   @PreDestroy
   public void onExit() {
-    extensionBrokerRequestReceiver.stop();
+    if (extensionBrokerRequestReceiver != null) {
+      extensionBrokerRequestReceiver.stop();
+    }
     new ExtensionsServiceShutdownHandler().onShutdown();
     deregisterService(DeclarersSingleton.getInstance().getServiceId());
   }
