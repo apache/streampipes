@@ -16,7 +16,13 @@
  *
  */
 
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    Input,
+    OnDestroy,
+    ViewChild,
+} from '@angular/core';
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
 import { PipelineValidationService } from '../../services/pipeline-validation.service';
@@ -27,7 +33,9 @@ import {
 import { ObjectProvider } from '../../services/object-provider.service';
 import {
     DialogService,
+    KeyboardShortcutService,
     PanelType,
+    ShortcutRegistration,
     SpBasicViewComponent,
 } from '@streampipes/shared-ui';
 import { SavePipelineComponent } from '../../dialog/save-pipeline/save-pipeline.component';
@@ -56,7 +64,7 @@ import { FlexDirective } from '@ngbracket/ngx-layout/flex';
         PipelineAssemblyDrawingAreaComponent,
     ],
 })
-export class PipelineAssemblyComponent implements AfterViewInit {
+export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     @Input()
     rawPipelineModel: PipelineElementConfig[];
 
@@ -76,6 +84,7 @@ export class PipelineAssemblyComponent implements AfterViewInit {
     readonly: boolean;
 
     jsplumbBridge: JsplumbBridge;
+    private shortcutReg: ShortcutRegistration;
 
     @ViewChild('assemblyOptionsComponent')
     assemblyOptionsComponent: PipelineAssemblyOptionsComponent;
@@ -92,12 +101,26 @@ export class PipelineAssemblyComponent implements AfterViewInit {
         private router: Router,
         private jsplumbService: JsplumbService,
         private translateService: TranslateService,
+        private shortcutService: KeyboardShortcutService,
     ) {}
 
     ngAfterViewInit() {
+        this.shortcutReg = this.shortcutService.register('pipeline-assembly', [
+            { key: 's', ctrl: true, action: () => this.onShortcutSave() },
+        ]);
         this.jsplumbBridge = this.jsPlumbFactoryService.getJsplumbBridge(
             this.readonly,
         );
+    }
+
+    ngOnDestroy(): void {
+        this.shortcutReg?.unregister();
+    }
+
+    private onShortcutSave(): void {
+        if (!this.readonly && this.rawPipelineModel?.length) {
+            this.submit();
+        }
     }
 
     /**

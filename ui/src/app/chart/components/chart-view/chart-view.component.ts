@@ -46,7 +46,9 @@ import {
     ConfirmDialogComponent,
     CurrentUserService,
     DialogService,
+    KeyboardShortcutService,
     PanelType,
+    ShortcutRegistration,
     SidebarResizeComponent,
     SpBasicViewComponent,
     TimeSelectionService,
@@ -117,7 +119,9 @@ export class ChartViewComponent
     originalAssets = [];
 
     resizeEchartsService = inject(ResizeEchartsService);
+    private shortcutReg: ShortcutRegistration;
 
+    private shortcutService = inject(KeyboardShortcutService);
     private dataExplorerSharedService = inject(ChartSharedService);
     private detectChangesService = inject(ChartDetectChangesService);
     private route = inject(ActivatedRoute);
@@ -145,6 +149,10 @@ export class ChartViewComponent
     @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
     ngOnInit() {
+        this.shortcutReg = this.shortcutService.register('chart-view', [
+            { key: 's', ctrl: true, action: () => this.onShortcutSave() },
+        ]);
+
         const dataViewId = this.route.snapshot.params.id;
 
         this.currentUser$ = this.currentUserService.user$.subscribe(user => {
@@ -523,7 +531,14 @@ export class ChartViewComponent
         ];
     }
 
+    private onShortcutSave(): void {
+        if (this.editMode) {
+            this.saveDataView();
+        }
+    }
+
     ngOnDestroy() {
+        this.shortcutReg?.unregister();
         this.currentUser$?.unsubscribe();
         this.queryParams$?.unsubscribe();
     }

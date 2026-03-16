@@ -298,6 +298,14 @@ export class SpTableComponent<T>
         return this.selection.isSelected(row);
     }
 
+    onRowCheckboxClick(event: MouseEvent): void {
+        if (event.ctrlKey || event.metaKey) {
+            event.preventDefault();
+            this.toggleSelectAllVisibleRows(true);
+        }
+        event.stopPropagation();
+    }
+
     toggleRowSelection(row: T, checked: boolean) {
         if (checked) {
             this.selection.select(row);

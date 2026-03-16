@@ -160,7 +160,7 @@
                         data-cy="sp-table-row-checkbox"
                         [checked]="isRowSelected(element)"
                         (change)="toggleRowSelection(element, $event.checked)"
-                        (click)="$event.stopPropagation()"
+                        (click)="onRowCheckboxClick($event)"
                     >
                     </mat-checkbox>
                 </td>

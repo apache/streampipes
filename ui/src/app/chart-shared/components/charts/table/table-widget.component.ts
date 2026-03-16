@@ -105,6 +105,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     private static readonly DEFAULT_PAGE_SIZE = 20;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild('filterSearchInput')
+    filterSearchInput: ElementRef<HTMLInputElement>;
 
     readonly pageSizeOptions = [10, 20, 50, 100, 250, 500];
 
@@ -149,6 +151,25 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             (!trigger || !trigger.contains(target))
         ) {
             this.closeFilter();
+        }
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    onDocumentKeydown(event: KeyboardEvent): void {
+        if (event.key === 'Escape' && this.openFilterColumn) {
+            event.preventDefault();
+            this.closeFilter();
+            return;
+        }
+
+        if (
+            (event.ctrlKey || event.metaKey) &&
+            event.key.toLowerCase() === 'f' &&
+            this.openFilterColumn
+        ) {
+            event.preventDefault();
+            this.filterSearchInput?.nativeElement?.focus();
+            this.filterSearchInput?.nativeElement?.select();
         }
     }
 

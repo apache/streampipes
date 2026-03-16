@@ -40,6 +40,8 @@ import { DashboardSlideViewComponent } from '../../../dashboard-shared/component
 import {
     ConfirmDialogComponent,
     CurrentUserService,
+    KeyboardShortcutService,
+    ShortcutRegistration,
     SpBasicViewComponent,
     SpBreadcrumbService,
     TimeSelectionService,
@@ -113,7 +115,9 @@ export class DashboardPanelComponent
     dataLakeMeasure: DataLakeMeasure;
     auth$: Subscription;
     refresh$: Subscription;
+    private shortcutReg: ShortcutRegistration;
 
+    private shortcutService = inject(KeyboardShortcutService);
     private detectChangesService = inject(ChartDetectChangesService);
     private dialog = inject(MatDialog);
     private timeSelectionService = inject(TimeSelectionService);
@@ -131,6 +135,11 @@ export class DashboardPanelComponent
         this.dataExplorerSharedService.defaultObservableGenerator();
 
     public ngOnInit() {
+        this.shortcutReg = this.shortcutService.register('dashboard-panel', [
+            { key: 'e', action: () => this.onShortcutEdit() },
+            { key: 's', ctrl: true, action: () => this.onShortcutSave() },
+        ]);
+
         const params = this.route.snapshot.params;
         const queryParams = this.route.snapshot.queryParams;
 
@@ -150,8 +159,21 @@ export class DashboardPanelComponent
     }
 
     ngOnDestroy() {
+        this.shortcutReg?.unregister();
         this.auth$?.unsubscribe();
         this.refresh$?.unsubscribe();
+    }
+
+    private onShortcutEdit(): void {
+        if (!this.editMode && this.hasDashboardWritePrivileges) {
+            this.triggerEditMode();
+        }
+    }
+
+    private onShortcutSave(): void {
+        if (this.editMode) {
+            this.persistDashboardChanges();
+        }
     }
 
     addChartToDashboard(dataViewElementId: string) {

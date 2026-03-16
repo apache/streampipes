@@ -54,7 +54,9 @@ import { CustomizeComponent } from '../../dialog/customize/customize.component';
 import {
     ConfirmDialogComponent,
     DialogService,
+    KeyboardShortcutService,
     PanelType,
+    ShortcutRegistration,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import { MatchingErrorComponent } from '../../dialog/matching-error/matching-error.component';
@@ -132,6 +134,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     pipelinePreview: PipelinePreviewModel;
 
     shouldOpenCustomizeSettings = false;
+    private shortcutReg: ShortcutRegistration;
 
     constructor(
         private jsplumbService: JsplumbService,
@@ -146,6 +149,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         private dialogService: DialogService,
         private dialog: MatDialog,
         private ngZone: NgZone,
+        private shortcutService: KeyboardShortcutService,
     ) {
         this.currentPipelineModel = new Pipeline();
         this.idCounter = 0;
@@ -158,6 +162,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
             this.readonly,
         );
         if (!this.readonly) {
+            this.shortcutReg = this.shortcutService.register('pipeline', [
+                {
+                    key: 'Delete',
+                    action: () => this.deleteSelectedElement(),
+                },
+                {
+                    key: 'Backspace',
+                    action: () => this.deleteSelectedElement(),
+                },
+            ]);
             this.initAssembly();
             this.initPlumb();
         }
@@ -191,8 +205,21 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.shortcutReg?.unregister();
         this.deletePreviewEmitter.emit(false);
         this.jsplumbFactoryService.destroy();
+    }
+
+    private deleteSelectedElement(): void {
+        if (!this.currentMouseOverElement) {
+            return;
+        }
+        const el = this.rawPipelineModel.find(
+            pe => pe.payload.dom === this.currentMouseOverElement,
+        );
+        if (el) {
+            this.handleDeleteOption(el);
+        }
     }
 
     @HostListener('window:beforeunload')
