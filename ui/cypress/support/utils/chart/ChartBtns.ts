@@ -229,4 +229,20 @@ export class ChartBtns {
     public static matOptionByText(text: string | RegExp) {
         return cy.get('mat-option').contains(text);
     }
+
+    public static columnFilterTrigger(column: string) {
+        return cy.get(`[data-cy="column-filter-trigger-${column}"]`);
+    }
+
+    public static columnAdvancedFilterExpandBtn() {
+        return cy.get('[data-cy="column-advanced-filter-expand-btn"]');
+    }
+
+    public static columnAdvancedFilterOptionByText(text: string) {
+        return cy.get('.advanced-filter-options').contains(text);
+    }
+
+    public static columnAdvancedFilterApplyBtn() {
+        return cy.dataCy('column-advanced-filter-apply-btn');
+    }
 }
