@@ -16,59 +16,43 @@
  *
  */
 
-.csv-import-shell {
-    min-height: 0;
-}
-
-.csv-import-content {
+.upload-state {
+    min-height: 280px;
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    max-height: 78vh;
-    overflow: auto;
-}
-
-.upload-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.file-label {
-    display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 48px;
-    padding: 0 16px;
-    border: 1px dashed var(--color-primary, #24176e);
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
+    gap: 14px;
+    text-align: center;
 }
 
-.file-label input {
-    display: none;
+.upload-title {
+    font-size: 20px;
+    font-weight: 600;
 }
 
-.file-name {
+.upload-copy,
+.result-meta {
     color: var(--color-text-200, #5a6673);
-    font-size: 14px;
+    max-width: 420px;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
+.success-icon {
+    color: var(--color-success, #2e7d32);
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
 }
 
-.message-box {
-    border-radius: 12px;
-    background: #fff4e5;
-    color: #8a4b00;
-    padding: 12px 14px;
+.result-name {
+    font-weight: 600;
 }
 
-.message-line + .message-line {
+.upload-errors {
+    max-width: 520px;
+    color: var(--color-text-200, #5a6673);
+}
+
+.upload-error-line + .upload-error-line {
     margin-top: 6px;
 }

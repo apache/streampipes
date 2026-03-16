@@ -16,22 +16,28 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+import {
+    CsvImportColumn,
+    CsvRuntimeType,
+    EventPropertyPrimitive,
+} from '@streampipes/platform-services';
 
-import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
+export type CsvImportColumnRole =
+    | 'TIMESTAMP'
+    | 'DIMENSION_PROPERTY'
+    | 'MEASUREMENT_PROPERTY';
 
-import java.util.List;
+export interface CsvImportColumnModel {
+    column: CsvImportColumn;
+    eventProperty: EventPropertyPrimitive;
+}
 
-public class CsvImportValidationException extends RuntimeException {
+export interface CsvImportColumnTypeChange {
+    model: CsvImportColumnModel;
+    type: CsvRuntimeType;
+}
 
-  private final List<CsvImportValidationMessage> validationMessages;
-
-  public CsvImportValidationException(List<CsvImportValidationMessage> validationMessages) {
-    super(validationMessages.isEmpty() ? "CSV import validation failed" : validationMessages.get(0).getMessage());
-    this.validationMessages = validationMessages;
-  }
-
-  public List<CsvImportValidationMessage> getValidationMessages() {
-    return validationMessages;
-  }
+export interface CsvImportColumnRoleChange {
+    model: CsvImportColumnModel;
+    role: CsvImportColumnRole;
 }

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.datalake.importer;
 
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewResult;
@@ -25,6 +25,7 @@ import org.apache.streampipes.model.datalake.importer.CsvImportResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
+import org.apache.streampipes.rest.impl.datalake.AbstractDataLakeResource;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,9 +48,16 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
 
   public DataLakeImportResource() {
     super();
-    this.importService = new CsvDataLakeImportService(this.dataLakeMeasureManagement);
+    this.importService = new CsvDataLakeImportService(getDataLakeMeasureManagement());
   }
 
+  /**
+   * Generates a CSV preview from inline JSON content or reuses a previously uploaded file via {@code uploadId}.
+   * <p>
+   * This endpoint supports the second step of the single-upload workflow: the UI uploads the file once through the
+   * multipart preview endpoint, receives an {@code uploadId}, and can then call this JSON endpoint again when preview
+   * settings change without re-uploading the CSV.
+   */
   @PostMapping(
       path = "/preview",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -63,6 +71,12 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
     return ok(importService.preview(request, getAuthenticatedUserSid()));
   }
 
+  /**
+   * Uploads a CSV file, stores it temporarily on the server, and returns a preview together with an {@code uploadId}.
+   * <p>
+   * The returned {@code uploadId} is later used by the final import call so large files only need to be transferred
+   * once.
+   */
   @PostMapping(
       path = "/preview",
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -79,6 +93,9 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
     return ok(importService.preview(file, request, getAuthenticatedUserSid()));
   }
 
+  /**
+   * Validates the configured CSV column mapping against an existing target measurement schema.
+   */
   @PostMapping(
       path = "/validate-schema",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -94,6 +111,12 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
     return ok(importService.validateSchema(request));
   }
 
+  /**
+   * Imports CSV data either from inline JSON rows or from a previously uploaded file referenced by {@code uploadId}.
+   * <p>
+   * In the single-upload workflow, clients first call the multipart preview endpoint, keep the returned
+   * {@code uploadId}, and then call this endpoint with that identifier and the final import configuration.
+   */
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE
@@ -116,7 +139,7 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
   private boolean hasWritePermission(org.apache.streampipes.model.datalake.importer.CsvImportTarget target) {
     return target == null
         || target.getMode() != CsvImportTargetMode.EXISTING
-        || this.dataLakeMeasureManagement.getExistingMeasureByName(target.getMeasurementName()).isEmpty()
+        || getDataLakeMeasureManagement().getExistingMeasureByName(target.getMeasurementName()).isEmpty()
         || this.checkPermissionByName(target.getMeasurementName(), "WRITE");
   }
 }

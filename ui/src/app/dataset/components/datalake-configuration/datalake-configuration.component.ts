@@ -459,7 +459,8 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
 
         dialogRef.afterClosed().subscribe(refresh => {
             const importCompleted =
-                dialogRef.componentInstance?.instance?.hasImportResult === true;
+                dialogRef.componentInstance?.instance?.hasImportResult?.() ===
+                true;
             if (refresh || importCompleted) {
                 this.loadAvailableMeasurements();
             }

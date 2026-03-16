@@ -16,13 +16,31 @@
  *
  */
 
-import { Component, inject, Input, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+    Component,
+    computed,
+    inject,
+    Input,
+    signal,
+    viewChild,
+} from '@angular/core';
+import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     FormBuilder,
     FormsModule,
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatDivider } from '@angular/material/divider';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
     CsvImportColumn,
     CsvImportConfiguration,
@@ -35,6 +53,7 @@ import {
     CsvImportSchemaValidationResult,
     CsvImportTarget,
     CsvImportValidationMessage,
+    CsvRuntimeType,
     DataType,
     DatalakeRestService,
     EventPropertyPrimitive,
@@ -43,25 +62,12 @@ import {
 import {
     DialogRef,
     FormFieldComponent,
-    SpAlertBannerComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import { CommonModule } from '@angular/common';
-import { MatButton } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatOption, MatSelect } from '@angular/material/select';
-import { MatDivider } from '@angular/material/divider';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatIcon } from '@angular/material/icon';
-import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
-import { TranslatePipe } from '@ngx-translate/core';
-
-interface CsvImportColumnModel {
-    column: CsvImportColumn;
-    eventProperty: EventPropertyPrimitive;
-}
+import { startWith } from 'rxjs';
+import { CsvImportColumnModel, CsvImportColumnRole } from './csv-import.model';
+import { CsvImportPreviewTableComponent } from './csv-import-preview-table/csv-import-preview-table.component';
+import { CsvImportUploadStateComponent } from './csv-import-upload-state/csv-import-upload-state.component';
 
 @Component({
     selector: 'sp-csv-import-dialog',
@@ -74,7 +80,6 @@ interface CsvImportColumnModel {
         MatButton,
         MatCheckbox,
         FormFieldComponent,
-        SpAlertBannerComponent,
         SplitSectionComponent,
         MatFormField,
         MatInput,
@@ -82,192 +87,206 @@ interface CsvImportColumnModel {
         MatOption,
         MatDivider,
         MatProgressSpinner,
-        MatIcon,
         MatStepper,
         MatStep,
         MatStepLabel,
         TranslatePipe,
+        CsvImportPreviewTableComponent,
+        CsvImportUploadStateComponent,
     ],
 })
 export class CsvImportDialogComponent {
     @Input()
     measurementNames: string[] = [];
 
-    @ViewChild('csvImportStepper', { static: true })
-    csvImportStepper: MatStepper;
+    readonly stepper = viewChild<MatStepper>('csvImportStepper');
 
-    private fb = inject(FormBuilder);
-    private dialogRef = inject(DialogRef<CsvImportDialogComponent>);
-    private datalakeRestService = inject(DatalakeRestService);
+    private readonly fb = inject(FormBuilder);
+    private readonly dialogRef = inject(DialogRef<CsvImportDialogComponent>);
+    private readonly datalakeRestService = inject(DatalakeRestService);
+
     private previewReloadTimeout?: ReturnType<typeof setTimeout>;
     private schemaValidationTimeout?: ReturnType<typeof setTimeout>;
 
-    fileName = '';
-    rawFileContent = '';
-    timestampFormat = '';
-    parsedHeaders: string[] = [];
-    parsedRows: string[][] = [];
-    previewResult?: CsvImportPreviewResult;
-    schemaValidationResult?: CsvImportSchemaValidationResult;
-    importResult?: CsvImportResult;
-    columnModels: CsvImportColumnModel[] = [];
-    previewLoading = false;
-    importLoading = false;
-    localMessages: CsvImportValidationMessage[] = [];
+    readonly fileName = signal('');
+    readonly rawFileContent = signal('');
+    readonly timestampFormat = signal('');
+    readonly parsedHeaders = signal<string[]>([]);
+    readonly parsedRows = signal<string[][]>([]);
+    readonly previewResult = signal<CsvImportPreviewResult | undefined>(
+        undefined,
+    );
+    readonly schemaValidationResult = signal<
+        CsvImportSchemaValidationResult | undefined
+    >(undefined);
+    readonly importResult = signal<CsvImportResult | undefined>(undefined);
+    readonly columnModels = signal<CsvImportColumnModel[]>([]);
+    readonly previewLoading = signal(false);
+    readonly importLoading = signal(false);
+    readonly localMessages = signal<CsvImportValidationMessage[]>([]);
+    readonly uploadMessages = signal<CsvImportValidationMessage[]>([]);
 
-    parseForm = this.fb.group({
-        delimiter: [';', Validators.required],
-        decimalSeparator: [',' as ',' | '.', Validators.required],
+    readonly parseForm = this.fb.group({
+        delimiter: [',' as string, Validators.required],
+        decimalSeparator: ['.' as ',' | '.', Validators.required],
         hasHeader: [true, Validators.required],
     });
 
-    targetForm = this.fb.group({
+    readonly targetForm = this.fb.group({
         mode: ['NEW', Validators.required],
         newMeasurementName: [''],
         existingMeasurementName: [''],
     });
 
+    private readonly parseFormValue = toSignal(
+        this.parseForm.valueChanges.pipe(
+            startWith(this.parseForm.getRawValue()),
+        ),
+        { initialValue: this.parseForm.getRawValue() },
+    );
+
+    private readonly targetFormValue = toSignal(
+        this.targetForm.valueChanges.pipe(
+            startWith(this.targetForm.getRawValue()),
+        ),
+        { initialValue: this.targetForm.getRawValue() },
+    );
+
+    readonly topMessages = computed(() => [
+        ...(this.previewResult()?.validationMessages?.filter(
+            message =>
+                message.field !== 'columns' &&
+                message.field !== 'timestampColumn' &&
+                message.field !== 'schemaDetails',
+        ) ?? []),
+        ...this.localMessages(),
+    ]);
+
+    readonly hasPreview = computed(() => !!this.previewResult());
+
+    readonly hasImportResult = computed(
+        () => !!this.importResult()?.measurementName,
+    );
+
+    readonly previewRows = computed(
+        () => this.previewResult()?.previewRows ?? [],
+    );
+
+    readonly targetMode = computed(
+        () => this.targetFormValue().mode as 'NEW' | 'EXISTING',
+    );
+
+    readonly selectedTimestampColumn = computed(
+        () =>
+            this.columnModels().find(model =>
+                SemanticType.isTimestamp(model.eventProperty),
+            )?.column.runtimeName,
+    );
+
+    readonly canProceedToConfiguration = computed(
+        () => this.isTargetValid() && !!this.rawFileContent(),
+    );
+
+    readonly currentTarget = computed<CsvImportTarget | undefined>(() => {
+        const formValue = this.targetFormValue();
+
+        if (this.targetMode() === 'NEW') {
+            const measurementName = formValue.newMeasurementName?.trim();
+            return measurementName
+                ? { mode: 'NEW', measurementName }
+                : undefined;
+        }
+
+        const measurementName = formValue.existingMeasurementName?.trim();
+        return measurementName
+            ? { mode: 'EXISTING', measurementName }
+            : undefined;
+    });
+
+    readonly canImport = computed(
+        () =>
+            this.previewResult()?.valid === true &&
+            !!this.currentTarget() &&
+            !!this.selectedTimestampColumn() &&
+            (this.targetMode() !== 'EXISTING' ||
+                this.schemaValidationResult()?.valid === true),
+    );
+
+    readonly showTimestampWarning = computed(
+        () => this.hasPreview() && !this.selectedTimestampColumn(),
+    );
+
+    readonly isTargetValid = computed(
+        () => this.validateLocalTarget().length === 0,
+    );
+
+    readonly hasSchemaMismatch = computed(
+        () =>
+            this.targetMode() === 'EXISTING' &&
+            !!this.schemaValidationResult()?.issues?.length,
+    );
+
+    readonly schemaMismatchSummary = computed(
+        () =>
+            'Imported columns must exactly match the existing measurement schema.',
+    );
+
+    readonly schemaMismatchDetails = computed(() =>
+        (this.schemaValidationResult()?.issues ?? []).map(issue =>
+            this.toSchemaIssueText(issue),
+        ),
+    );
+
+    private readonly currentCsvConfig = computed<CsvImportConfiguration>(() => {
+        const formValue = this.parseFormValue();
+
+        return {
+            delimiter: formValue.delimiter ?? ',',
+            decimalSeparator: (formValue.decimalSeparator as ',' | '.') ?? '.',
+            hasHeader: formValue.hasHeader ?? true,
+            timestampFormat: this.timestampFormat().trim() || undefined,
+        };
+    });
+
     constructor() {
-        this.parseForm.valueChanges.subscribe(() => {
+        this.parseForm.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
             this.invalidatePreview();
-            if (this.csvImportStepper?.selectedIndex === 1) {
+            if (this.stepper()?.selectedIndex === 1) {
                 this.schedulePreviewReload();
             }
         });
-        this.targetForm.controls.mode.valueChanges.subscribe(mode => {
-            if (mode === 'NEW') {
-                this.targetForm.controls.existingMeasurementName.setValue('');
-            } else {
-                this.targetForm.controls.newMeasurementName.setValue('');
-            }
-            this.invalidatePreview();
-        });
-        this.targetForm.controls.newMeasurementName.valueChanges.subscribe(
-            () => {
+
+        this.targetForm.controls.mode.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(mode => {
+                if (mode === 'NEW') {
+                    this.targetForm.controls.existingMeasurementName.setValue(
+                        '',
+                    );
+                } else {
+                    this.targetForm.controls.newMeasurementName.setValue('');
+                }
+
                 this.invalidatePreview();
-            },
-        );
-        this.targetForm.controls.existingMeasurementName.valueChanges.subscribe(
-            () => {
+            });
+
+        this.targetForm.controls.newMeasurementName.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => {
                 this.invalidatePreview();
-            },
-        );
-    }
+                if (this.stepper()?.selectedIndex === 1) {
+                    this.schedulePreviewReload();
+                }
+            });
 
-    get topMessages(): CsvImportValidationMessage[] {
-        return [
-            ...(this.previewResult?.validationMessages?.filter(
-                message =>
-                    message.field !== 'columns' &&
-                    message.field !== 'timestampColumn' &&
-                    message.field !== 'schemaDetails',
-            ) ?? []),
-            ...this.localMessages,
-            ...(this.importResult?.validationMessages?.filter(
-                message =>
-                    message.field !== 'columns' &&
-                    message.field !== 'timestampColumn' &&
-                    message.field !== 'schemaDetails',
-            ) ?? []),
-        ];
-    }
-
-    get hasPreview(): boolean {
-        return !!this.previewResult;
-    }
-
-    get hasImportResult(): boolean {
-        return !!this.importResult?.measurementName;
-    }
-
-    get previewColumns(): string[] {
-        return this.previewResult?.headers ?? [];
-    }
-
-    get previewRows(): string[][] {
-        return this.previewResult?.previewRows ?? [];
-    }
-
-    get targetMode(): 'NEW' | 'EXISTING' {
-        return this.targetForm.get('mode')?.value as 'NEW' | 'EXISTING';
-    }
-
-    get selectedTimestampColumn(): string | undefined {
-        return this.columnModels.find(model =>
-            SemanticType.isTimestamp(model.eventProperty),
-        )?.column.runtimeName;
-    }
-
-    get canConfigureColumns(): boolean {
-        return this.hasPreview;
-    }
-
-    get canConfigureParse(): boolean {
-        return this.isTargetValid;
-    }
-
-    get canProceedToConfiguration(): boolean {
-        return this.isTargetValid && !!this.rawFileContent;
-    }
-
-    get canImport(): boolean {
-        return (
-            this.previewResult?.valid === true &&
-            !!this.currentTarget &&
-            !!this.selectedTimestampColumn &&
-            (this.targetMode !== 'EXISTING' ||
-                this.schemaValidationResult?.valid === true)
-        );
-    }
-
-    get selectedTimestampColumnModel(): CsvImportColumnModel | undefined {
-        return this.columnModels.find(model => this.isTimestampColumn(model));
-    }
-
-    isTimestampSelectionDisabled(model: CsvImportColumnModel): boolean {
-        return (
-            !!this.selectedTimestampColumnModel &&
-            !this.isTimestampColumn(model)
-        );
-    }
-
-    getColumnRole(
-        model: CsvImportColumnModel,
-    ): 'TIMESTAMP' | 'DIMENSION_PROPERTY' | 'MEASUREMENT_PROPERTY' {
-        if (this.isTimestampColumn(model)) {
-            return 'TIMESTAMP';
-        } else if (model.column.propertyScope === 'DIMENSION_PROPERTY') {
-            return 'DIMENSION_PROPERTY';
-        }
-        return 'MEASUREMENT_PROPERTY';
-    }
-
-    get isTargetValid(): boolean {
-        return this.validateLocalTarget().length === 0;
-    }
-
-    get hasSchemaMismatch(): boolean {
-        return (
-            this.targetMode === 'EXISTING' &&
-            !!this.schemaValidationResult?.issues?.length
-        );
-    }
-
-    get schemaMismatchSummary(): string {
-        return 'Imported columns must exactly match the existing measurement schema.';
-    }
-
-    get schemaMismatchDetails(): string[] {
-        return (this.schemaValidationResult?.issues ?? []).map(issue =>
-            this.toSchemaIssueText(issue),
-        );
-    }
-
-    get currentTargetLabel(): string {
-        if (!this.currentTarget) {
-            return '-';
-        }
-        return this.currentTarget.measurementName;
+        this.targetForm.controls.existingMeasurementName.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => {
+                this.invalidatePreview();
+                if (this.stepper()?.selectedIndex === 1) {
+                    this.schedulePreviewReload();
+                }
+            });
     }
 
     onFileSelected(event: Event): void {
@@ -277,139 +296,153 @@ export class CsvImportDialogComponent {
             return;
         }
 
-        this.fileName = file.name;
-        this.timestampFormat = '';
+        this.fileName.set(file.name);
+        this.timestampFormat.set('');
+
         const reader = new FileReader();
         reader.onload = () => {
-            this.rawFileContent = `${reader.result ?? ''}`;
+            this.rawFileContent.set(`${reader.result ?? ''}`);
             this.invalidatePreview();
         };
         reader.readAsText(file);
     }
 
     nextStep(): void {
-        if (this.csvImportStepper.selectedIndex === 0) {
-            if (!this.canProceedToConfiguration) {
-                this.localMessages = this.validateLocalTarget();
-                if (!this.rawFileContent) {
-                    this.localMessages.push({
-                        field: 'file',
-                        message: 'Please select a CSV file first.',
-                    });
-                }
-                return;
-            }
-            this.csvImportStepper.next();
-            this.loadPreview();
+        if (this.stepper()?.selectedIndex !== 0) {
+            return;
         }
+
+        if (!this.canProceedToConfiguration()) {
+            const messages = this.validateLocalTarget();
+            if (!this.rawFileContent()) {
+                messages.push({
+                    field: 'file',
+                    message: 'Please select a CSV file first.',
+                });
+            }
+            this.localMessages.set(messages);
+            return;
+        }
+
+        this.stepper()?.next();
+        this.loadPreview();
     }
 
     previousStep(): void {
-        this.csvImportStepper.previous();
+        this.stepper()?.previous();
     }
 
     startUpload(): void {
-        this.localMessages = this.validateLocalTarget();
-        if (!this.selectedTimestampColumn) {
-            this.localMessages.push({
+        this.uploadMessages.set([]);
+
+        const messages = this.validateLocalTarget();
+        if (!this.selectedTimestampColumn()) {
+            messages.push({
                 field: 'timestampColumn',
                 message: 'Please select exactly one timestamp column.',
             });
         }
-        if (this.localMessages.length > 0 || !this.canImport) {
+
+        this.localMessages.set(messages);
+        if (messages.length > 0 || !this.canImport()) {
             return;
         }
 
-        this.csvImportStepper.next();
+        this.stepper()?.next();
         this.importData();
     }
 
     loadPreview(): void {
-        this.localMessages = [];
+        this.localMessages.set([]);
         this.clearImportResult();
 
-        if (!this.isTargetValid || !this.currentTarget) {
-            this.localMessages = [
+        if (!this.isTargetValid() || !this.currentTarget()) {
+            this.localMessages.set([
                 {
                     field: 'target.measurementName',
                     message:
                         'Please complete the target dataset selection first.',
                 },
-            ];
+            ]);
             return;
         }
 
-        if (!this.rawFileContent) {
-            this.localMessages = [
-                { field: 'file', message: 'Please select a CSV file first.' },
-            ];
+        if (!this.rawFileContent()) {
+            this.localMessages.set([
+                {
+                    field: 'file',
+                    message: 'Please select a CSV file first.',
+                },
+            ]);
             return;
         }
 
         try {
             const { headers, rows } = this.parseCsv();
-            this.parsedHeaders = headers;
-            this.parsedRows = rows;
-        } catch (error) {
-            this.localMessages = [
+            this.parsedHeaders.set(headers);
+            this.parsedRows.set(rows);
+        } catch {
+            this.localMessages.set([
                 {
                     field: 'file',
                     message:
                         'The CSV file could not be parsed with the current settings.',
                 },
-            ];
+            ]);
             return;
         }
 
-        this.previewLoading = true;
+        this.previewLoading.set(true);
         this.datalakeRestService
-            .previewImport(this.buildPreviewRequest(this.currentTarget))
+            .previewImport(this.buildPreviewRequest(this.currentTarget()))
             .subscribe({
                 next: preview => {
-                    this.previewResult = preview;
-                    this.columnModels = preview.columns.map(column =>
-                        this.toColumnModel(column),
+                    this.previewResult.set(preview);
+                    this.columnModels.set(
+                        preview.columns.map(column =>
+                            this.toColumnModel(column),
+                        ),
                     );
-                    this.schemaValidationResult = undefined;
-                    this.previewLoading = false;
+                    this.schemaValidationResult.set(undefined);
+                    this.previewLoading.set(false);
                     this.validateSchema();
                 },
                 error: error => {
-                    this.previewLoading = false;
-                    this.previewResult = undefined;
-                    this.schemaValidationResult = undefined;
-                    this.localMessages = [
+                    this.previewLoading.set(false);
+                    this.previewResult.set(undefined);
+                    this.schemaValidationResult.set(undefined);
+                    this.localMessages.set([
                         {
                             field: 'preview',
                             message:
                                 error?.error?.message ??
                                 'Preview could not be generated.',
                         },
-                    ];
+                    ]);
                 },
             });
     }
 
-    setColumnType(
-        model: CsvImportColumnModel,
-        type: 'STRING' | 'BOOLEAN' | 'LONG' | 'FLOAT',
-    ): void {
+    setColumnType(model: CsvImportColumnModel, type: CsvRuntimeType): void {
         model.eventProperty.runtimeType = this.toRuntimeType(type);
         model.column.runtimeType = type;
+
         if (this.isTimestampColumn(model)) {
             model.eventProperty.runtimeType = DataType.LONG;
             model.column.runtimeType = 'LONG';
         }
+
         this.syncColumn(model);
+        this.columnModels.update(models => [...models]);
         this.scheduleSchemaValidation();
     }
 
     setColumnRole(
         model: CsvImportColumnModel,
-        role: 'TIMESTAMP' | 'DIMENSION_PROPERTY' | 'MEASUREMENT_PROPERTY',
+        role: CsvImportColumnRole,
     ): void {
         if (role === 'TIMESTAMP') {
-            this.columnModels.forEach(other => {
+            this.columnModels().forEach(other => {
                 if (SemanticType.isTimestamp(other.eventProperty)) {
                     other.eventProperty.semanticType = undefined;
                     if (
@@ -426,6 +459,7 @@ export class CsvImportDialogComponent {
                     this.syncColumn(other);
                 }
             });
+
             model.eventProperty.semanticType = SemanticType.TIMESTAMP;
             model.eventProperty.propertyScope = 'HEADER_PROPERTY';
             model.eventProperty.runtimeType = DataType.LONG;
@@ -439,40 +473,57 @@ export class CsvImportDialogComponent {
                     'STRING',
             );
         }
+
         this.syncColumn(model);
+        this.columnModels.update(models => [...models]);
         this.scheduleSchemaValidation();
     }
 
-    isTimestampColumn(model: CsvImportColumnModel): boolean {
-        return SemanticType.isTimestamp(model.eventProperty);
+    updateTimestampFormat(timestampFormat: string): void {
+        this.timestampFormat.set(timestampFormat);
+        this.scheduleSchemaValidation();
     }
 
     importData(): void {
-        this.localMessages = this.validateLocalTarget();
-        if (!this.selectedTimestampColumn) {
-            this.localMessages.push({
+        const messages = this.validateLocalTarget();
+        this.uploadMessages.set([]);
+
+        if (!this.selectedTimestampColumn()) {
+            messages.push({
                 field: 'timestampColumn',
                 message: 'Please select exactly one timestamp column.',
             });
         }
-        if (this.localMessages.length > 0) {
+
+        this.localMessages.set(messages);
+        if (messages.length > 0) {
             return;
         }
 
-        this.importLoading = true;
+        this.importLoading.set(true);
         this.datalakeRestService
             .importCsvData(this.buildImportRequest())
             .subscribe({
                 next: result => {
-                    this.importResult = result;
-                    this.importLoading = false;
+                    this.importResult.set(result);
+                    this.importLoading.set(false);
                 },
                 error: error => {
-                    this.importLoading = false;
-                    this.importResult = error?.error as CsvImportResult;
-                    if (!this.hasImportResult) {
-                        this.csvImportStepper.previous();
-                    }
+                    this.importLoading.set(false);
+                    const result = error?.error as CsvImportResult | undefined;
+                    this.importResult.set(result);
+                    this.uploadMessages.set(
+                        result?.validationMessages?.length
+                            ? result.validationMessages
+                            : [
+                                  {
+                                      field: 'import',
+                                      message:
+                                          error?.error?.message ??
+                                          'CSV import failed.',
+                                  },
+                              ],
+                    );
                 },
             });
     }
@@ -483,17 +534,18 @@ export class CsvImportDialogComponent {
 
     private parseCsv(): { headers: string[]; rows: string[][] } {
         const delimiter = this.normalizeDelimiter(
-            this.parseForm.get('delimiter')?.value ?? ';',
+            this.parseFormValue().delimiter ?? ',',
         );
-        const parsed = this.parseCsvContent(this.rawFileContent, delimiter);
+        const parsed = this.parseCsvContent(this.rawFileContent(), delimiter);
         const rows = parsed.filter(row =>
             row.some(cell => `${cell}`.trim() !== ''),
         );
+
         if (rows.length === 0) {
             throw new Error('CSV contains no rows');
         }
 
-        const hasHeader = this.parseForm.get('hasHeader')?.value ?? true;
+        const hasHeader = this.parseFormValue().hasHeader ?? true;
         let headers: string[];
         let contentRows: string[][];
 
@@ -568,45 +620,46 @@ export class CsvImportDialogComponent {
         target?: CsvImportTarget,
     ): CsvImportPreviewRequest {
         return {
-            fileName: this.fileName,
-            csvConfig: this.currentCsvConfig,
-            headers: this.parsedHeaders,
-            rows: this.parsedRows,
+            fileName: this.fileName(),
+            csvConfig: this.currentCsvConfig(),
+            headers: this.parsedHeaders(),
+            rows: this.parsedRows(),
             target,
         };
     }
 
     private buildImportRequest(): CsvImportRequest {
         return {
-            csvConfig: this.currentCsvConfig,
-            headers: this.parsedHeaders,
-            rows: this.parsedRows,
-            target: this.currentTarget!,
-            timestampColumn: this.selectedTimestampColumn!,
-            columns: this.columnModels.map(model => model.column),
+            csvConfig: this.currentCsvConfig(),
+            headers: this.parsedHeaders(),
+            rows: this.parsedRows(),
+            target: this.currentTarget()!,
+            timestampColumn: this.selectedTimestampColumn()!,
+            columns: this.columnModels().map(model => model.column),
         };
     }
 
     private buildSchemaValidationRequest():
         | CsvImportSchemaValidationRequest
         | undefined {
-        if (!this.currentTarget || !this.selectedTimestampColumn) {
+        if (!this.currentTarget() || !this.selectedTimestampColumn()) {
             return undefined;
         }
 
         return {
-            target: this.currentTarget,
-            timestampColumn: this.selectedTimestampColumn,
-            columns: this.columnModels.map(model => model.column),
+            target: this.currentTarget()!,
+            timestampColumn: this.selectedTimestampColumn()!,
+            columns: this.columnModels().map(model => model.column),
         };
     }
 
     private validateLocalTarget(): CsvImportValidationMessage[] {
         const messages: CsvImportValidationMessage[] = [];
-        if (this.targetMode === 'NEW') {
-            const name = this.targetForm
-                .get('newMeasurementName')
-                ?.value?.trim();
+        const targetFormValue = this.targetFormValue();
+
+        if (this.targetMode() === 'NEW') {
+            const name = targetFormValue.newMeasurementName?.trim();
+
             if (!name) {
                 messages.push({
                     field: 'target.measurementName',
@@ -618,41 +671,14 @@ export class CsvImportDialogComponent {
                     message: 'A dataset with this name already exists.',
                 });
             }
-        } else if (!this.targetForm.get('existingMeasurementName')?.value) {
+        } else if (!targetFormValue.existingMeasurementName) {
             messages.push({
                 field: 'target.measurementName',
                 message: 'Please select an existing dataset.',
             });
         }
+
         return messages;
-    }
-
-    private get currentCsvConfig(): CsvImportConfiguration {
-        return {
-            delimiter: this.parseForm.get('delimiter')?.value ?? ';',
-            decimalSeparator:
-                (this.parseForm.get('decimalSeparator')?.value as ',' | '.') ??
-                ',',
-            hasHeader: this.parseForm.get('hasHeader')?.value ?? true,
-            timestampFormat: this.timestampFormat.trim() || undefined,
-        };
-    }
-
-    get currentTarget(): CsvImportTarget | undefined {
-        if (this.targetMode === 'NEW') {
-            const measurementName = this.targetForm
-                .get('newMeasurementName')
-                ?.value?.trim();
-            return measurementName
-                ? { mode: 'NEW', measurementName }
-                : undefined;
-        }
-
-        const measurementName = this.targetForm.get('existingMeasurementName')
-            ?.value as string;
-        return measurementName
-            ? { mode: 'EXISTING', measurementName }
-            : undefined;
     }
 
     private toColumnModel(column: CsvImportColumn): CsvImportColumnModel {
@@ -669,6 +695,7 @@ export class CsvImportDialogComponent {
         property.label = column.label || '';
         property.description = column.description || '';
         property.additionalMetadata = {};
+
         return {
             column: {
                 ...column,
@@ -689,6 +716,10 @@ export class CsvImportDialogComponent {
         model.column.semanticType = model.eventProperty.semanticType;
         model.column.label = model.eventProperty.label;
         model.column.description = model.eventProperty.description;
+    }
+
+    private isTimestampColumn(model: CsvImportColumnModel): boolean {
+        return SemanticType.isTimestamp(model.eventProperty);
     }
 
     private toRuntimeType(type: string): string {
@@ -732,21 +763,24 @@ export class CsvImportDialogComponent {
         if (this.previewReloadTimeout) {
             clearTimeout(this.previewReloadTimeout);
         }
+
         if (this.schemaValidationTimeout) {
             clearTimeout(this.schemaValidationTimeout);
         }
-        this.previewResult = undefined;
-        this.schemaValidationResult = undefined;
-        this.columnModels = [];
+
+        this.previewResult.set(undefined);
+        this.schemaValidationResult.set(undefined);
+        this.columnModels.set([]);
         this.clearImportResult();
     }
 
     private clearImportResult(): void {
-        this.importResult = undefined;
+        this.importResult.set(undefined);
+        this.uploadMessages.set([]);
     }
 
     private schedulePreviewReload(): void {
-        if (!this.canProceedToConfiguration || this.previewLoading) {
+        if (!this.canProceedToConfiguration() || this.previewLoading()) {
             return;
         }
 
@@ -762,22 +796,26 @@ export class CsvImportDialogComponent {
     private validateSchema(): void {
         const request = this.buildSchemaValidationRequest();
         if (!request) {
-            this.schemaValidationResult = undefined;
+            this.schemaValidationResult.set(undefined);
             return;
         }
 
         this.datalakeRestService.validateImportSchema(request).subscribe({
             next: result => {
-                this.schemaValidationResult = result;
+                this.schemaValidationResult.set(result);
             },
             error: error => {
-                this.schemaValidationResult =
-                    error?.error as CsvImportSchemaValidationResult;
+                const result = error?.error as
+                    | CsvImportSchemaValidationResult
+                    | undefined;
+
                 if (
-                    !this.schemaValidationResult?.validationMessages?.length &&
-                    !this.schemaValidationResult?.issues?.length
+                    result?.validationMessages?.length ||
+                    result?.issues?.length
                 ) {
-                    this.schemaValidationResult = {
+                    this.schemaValidationResult.set(result);
+                } else {
+                    this.schemaValidationResult.set({
                         valid: false,
                         validationMessages: [
                             {
@@ -787,7 +825,7 @@ export class CsvImportDialogComponent {
                             },
                         ],
                         issues: [],
-                    };
+                    });
                 }
             },
         });
@@ -795,11 +833,11 @@ export class CsvImportDialogComponent {
 
     private scheduleSchemaValidation(): void {
         if (
-            !this.hasPreview ||
-            this.targetMode !== 'EXISTING' ||
-            !this.selectedTimestampColumn
+            !this.hasPreview() ||
+            this.targetMode() !== 'EXISTING' ||
+            !this.selectedTimestampColumn()
         ) {
-            this.schemaValidationResult = undefined;
+            this.schemaValidationResult.set(undefined);
             return;
         }
 

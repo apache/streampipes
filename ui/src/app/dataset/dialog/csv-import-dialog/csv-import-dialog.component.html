@@ -18,9 +18,9 @@
 
 <div class="sp-dialog-container csv-import-shell">
     <div class="sp-dialog-content p-15 csv-import-content">
-        @if (topMessages.length > 0) {
+        @if (topMessages().length > 0) {
             <div class="message-box" data-cy="csv-import-messages">
-                @for (message of topMessages; track message.message) {
+                @for (message of topMessages(); track message.message) {
                     <div class="message-line">{{ message.message }}</div>
                 }
             </div>
@@ -38,7 +38,7 @@
                             data-cy="csv-import-file-label"
                         >
                             <span>{{
-                                fileName || ('Select CSV file' | translate)
+                                fileName() || ('Select CSV file' | translate)
                             }}</span>
                             <input
                                 type="file"
@@ -47,8 +47,8 @@
                                 data-cy="csv-import-file-input"
                             />
                         </label>
-                        @if (fileName) {
-                            <div class="file-name">{{ fileName }}</div>
+                        @if (fileName()) {
+                            <div class="file-name">{{ fileName() }}</div>
                         }
                     </div>
                 </sp-split-section>
@@ -83,7 +83,7 @@
                             </mat-form-field>
                         </sp-form-field>
 
-                        @if (targetMode === 'NEW') {
+                        @if (targetMode() === 'NEW') {
                             <sp-form-field
                                 [level]="3"
                                 [label]="'Dataset name' | translate"
@@ -149,7 +149,7 @@
                     [level]="3"
                     [title]="'CSV configuration' | translate"
                 >
-                    @if (previewLoading) {
+                    @if (previewLoading()) {
                         <div section-actions>
                             <mat-spinner [diameter]="24"></mat-spinner>
                         </div>
@@ -227,199 +227,23 @@
                     [level]="3"
                     [title]="'Live preview' | translate"
                 >
-                    @if (currentTarget) {
-                        <div section-actions class="target-pill">
-                            {{ currentTargetLabel }}
-                        </div>
-                    }
-
-                    @if (hasSchemaMismatch) {
-                        <sp-alert-banner
-                            type="error"
-                            data-cy="csv-import-schema-mismatch"
-                            [title]="'Error' | translate"
-                            [description]="schemaMismatchSummary"
-                        ></sp-alert-banner>
-
-                        @if (schemaMismatchDetails.length > 0) {
-                            <ul
-                                class="schema-mismatch-list"
-                                data-cy="csv-import-schema-mismatch-list"
-                            >
-                                @for (
-                                    detail of schemaMismatchDetails;
-                                    track detail
-                                ) {
-                                    <li
-                                        class="schema-mismatch-item"
-                                        data-cy="csv-import-schema-mismatch-item"
-                                    >
-                                        {{ detail }}
-                                    </li>
-                                }
-                            </ul>
-                        }
-                    }
-
-                    @if (hasPreview) {
-                        <div
-                            class="preview-table-wrapper"
-                            data-cy="csv-import-preview"
-                        >
-                            <table class="preview-table preview-config-table">
-                                <thead>
-                                    <tr>
-                                        @for (
-                                            model of columnModels;
-                                            track model.column.csvColumn
-                                        ) {
-                                            <th>
-                                                <div class="header-cell">
-                                                    <div class="header-title">
-                                                        {{
-                                                            model.column
-                                                                .csvColumn
-                                                        }}
-                                                    </div>
-                                                    @if (
-                                                        isTimestampColumn(model)
-                                                    ) {
-                                                        <mat-form-field
-                                                            appearance="outline"
-                                                            class="w-100"
-                                                        >
-                                                            <input
-                                                                matInput
-                                                                [(ngModel)]="
-                                                                    timestampFormat
-                                                                "
-                                                                [ngModelOptions]="{
-                                                                    standalone: true,
-                                                                }"
-                                                                placeholder="yyyy-MM-dd HH:mm:ss"
-                                                                data-cy="csv-import-timestamp-format"
-                                                            />
-                                                        </mat-form-field>
-                                                    }
-                                                    <mat-form-field
-                                                        appearance="outline"
-                                                        class="w-100"
-                                                    >
-                                                        <mat-select
-                                                            [value]="
-                                                                model.column
-                                                                    .runtimeType ||
-                                                                model.column
-                                                                    .inferredType ||
-                                                                'STRING'
-                                                            "
-                                                            [disabled]="
-                                                                isTimestampColumn(
-                                                                    model
-                                                                )
-                                                            "
-                                                            (selectionChange)="
-                                                                setColumnType(
-                                                                    model,
-                                                                    $event.value
-                                                                )
-                                                            "
-                                                            data-cy="csv-import-column-type"
-                                                        >
-                                                            <mat-option
-                                                                value="STRING"
-                                                                >STRING</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="BOOLEAN"
-                                                                >BOOLEAN</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="LONG"
-                                                                >LONG</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="FLOAT"
-                                                                >FLOAT</mat-option
-                                                            >
-                                                        </mat-select>
-                                                    </mat-form-field>
-                                                    <mat-form-field
-                                                        appearance="outline"
-                                                        class="w-100"
-                                                    >
-                                                        <mat-select
-                                                            [value]="
-                                                                getColumnRole(
-                                                                    model
-                                                                )
-                                                            "
-                                                            (selectionChange)="
-                                                                setColumnRole(
-                                                                    model,
-                                                                    $event.value
-                                                                )
-                                                            "
-                                                            data-cy="csv-import-column-scope"
-                                                        >
-                                                            <mat-option
-                                                                value="TIMESTAMP"
-                                                                [disabled]="
-                                                                    isTimestampSelectionDisabled(
-                                                                        model
-                                                                    )
-                                                                "
-                                                                data-cy="csv-import-column-scope-timestamp"
-                                                            >
-                                                                {{
-                                                                    'Timestamp'
-                                                                        | translate
-                                                                }}
-                                                            </mat-option>
-                                                            <mat-option
-                                                                value="DIMENSION_PROPERTY"
-                                                                data-cy="csv-import-column-scope-dimension"
-                                                            >
-                                                                {{
-                                                                    'Dimension'
-                                                                        | translate
-                                                                }}
-                                                            </mat-option>
-                                                            <mat-option
-                                                                value="MEASUREMENT_PROPERTY"
-                                                                data-cy="csv-import-column-scope-measurement"
-                                                            >
-                                                                {{
-                                                                    'Measurement'
-                                                                        | translate
-                                                                }}
-                                                            </mat-option>
-                                                        </mat-select>
-                                                    </mat-form-field>
-                                                </div>
-                                            </th>
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (row of previewRows; track $index) {
-                                        <tr>
-                                            @for (cell of row; track $index) {
-                                                <td>{{ cell }}</td>
-                                            }
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    } @else {
-                        <div class="empty-state">
-                            {{
-                                'Preview is being prepared from the current CSV configuration.'
-                                    | translate
-                            }}
-                        </div>
-                    }
+                    <sp-csv-import-preview-table
+                        [hasPreview]="hasPreview()"
+                        [previewRows]="previewRows()"
+                        [columnModels]="columnModels()"
+                        [timestampFormat]="timestampFormat()"
+                        [hasSchemaMismatch]="hasSchemaMismatch()"
+                        [schemaMismatchSummary]="schemaMismatchSummary()"
+                        [schemaMismatchDetails]="schemaMismatchDetails()"
+                        [showTimestampWarning]="showTimestampWarning()"
+                        (columnTypeChange)="
+                            setColumnType($event.model, $event.type)
+                        "
+                        (columnRoleChange)="
+                            setColumnRole($event.model, $event.role)
+                        "
+                        (timestampFormatChange)="updateTimestampFormat($event)"
+                    ></sp-csv-import-preview-table>
                 </sp-split-section>
 
                 <ng-template matStepLabel>{{
@@ -429,37 +253,12 @@
 
             <mat-step>
                 <sp-split-section [level]="3" [title]="'Upload' | translate">
-                    <div class="upload-state">
-                        @if (importLoading) {
-                            <mat-spinner [diameter]="56"></mat-spinner>
-                            <div class="upload-title">
-                                {{ 'Uploading CSV data' | translate }}
-                            </div>
-                            <div class="upload-copy">
-                                {{
-                                    'The data is currently being written to the data lake.'
-                                        | translate
-                                }}
-                            </div>
-                        } @else if (hasImportResult) {
-                            <mat-icon class="success-icon"
-                                >check_circle</mat-icon
-                            >
-                            <div
-                                class="upload-title"
-                                data-cy="csv-import-success-title"
-                            >
-                                {{ 'Import completed' | translate }}
-                            </div>
-                            <div class="result-name">
-                                {{ importResult?.measurementName }}
-                            </div>
-                            <div class="result-meta">
-                                {{ importResult?.importedRowCount }}
-                                {{ 'rows imported' | translate }}
-                            </div>
-                        }
-                    </div>
+                    <sp-csv-import-upload-state
+                        [importLoading]="importLoading()"
+                        [hasImportResult]="hasImportResult()"
+                        [importResult]="importResult()"
+                        [uploadErrors]="uploadMessages()"
+                    ></sp-csv-import-upload-state>
                 </sp-split-section>
 
                 <ng-template matStepLabel>{{
@@ -477,14 +276,16 @@
             mat-flat-button
             class="mat-basic"
             style="margin-right: 10px"
-            (click)="close(hasImportResult)"
+            (click)="close(hasImportResult())"
             data-cy="csv-import-close-btn"
         >
             {{
-                hasImportResult ? ('Close' | translate) : ('Cancel' | translate)
+                hasImportResult()
+                    ? ('Close' | translate)
+                    : ('Cancel' | translate)
             }}
         </button>
-        @if (csvImportStepper.selectedIndex === 1 && !importLoading) {
+        @if (csvImportStepper.selectedIndex === 1 && !importLoading()) {
             <button
                 mat-button
                 mat-flat-button
@@ -501,7 +302,7 @@
                 mat-flat-button
                 color="accent"
                 (click)="nextStep()"
-                [disabled]="!canProceedToConfiguration"
+                [disabled]="!canProceedToConfiguration()"
                 data-cy="csv-import-next-btn"
             >
                 {{ 'Next' | translate }}
@@ -513,7 +314,7 @@
                 mat-flat-button
                 color="accent"
                 (click)="startUpload()"
-                [disabled]="!canImport || importLoading"
+                [disabled]="!canImport() || importLoading()"
                 data-cy="csv-import-upload-btn"
             >
                 {{ 'Upload' | translate }}
