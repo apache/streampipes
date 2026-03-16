@@ -1,3 +1,21 @@
+/*!
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 .csv-import-shell {
     min-height: 0;
 }
@@ -29,29 +47,6 @@
     width: 100%;
     min-width: 0;
     max-width: 100%;
-}
-
-.section-disabled {
-    opacity: 0.65;
-}
-
-.section-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-}
-
-.section-eyebrow {
-    color: var(--color-text-200, #5a6673);
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.section-title {
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1.2;
 }
 
 .upload-row {
@@ -88,84 +83,6 @@
     gap: 16px;
 }
 
-.inline-hint {
-    color: var(--color-text-200, #5a6673);
-    font-size: 14px;
-}
-
-.inline-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.preview-meta {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    color: var(--color-text-200, #5a6673);
-    font-size: 13px;
-}
-
-.preview-table-wrapper {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: auto;
-    border: 1px solid var(--color-border, #d8dee4);
-    border-radius: 14px;
-    padding-bottom: 4px;
-    -webkit-overflow-scrolling: touch;
-    box-sizing: border-box;
-}
-
-.preview-table {
-    width: max-content;
-    min-width: 100%;
-    border-collapse: collapse;
-    table-layout: auto;
-}
-
-.preview-table th,
-.preview-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--color-border, #d8dee4);
-    text-align: left;
-    vertical-align: top;
-    white-space: nowrap;
-    font-size: 13px;
-}
-
-.preview-table th {
-    position: sticky;
-    top: 0;
-    background: #f8fafc;
-    z-index: 1;
-}
-
-.header-cell {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-width: 240px;
-    width: 240px;
-}
-
-.header-title {
-    font-weight: 700;
-    font-size: 14px;
-    color: #111827;
-}
-
-.header-field {
-    width: 100%;
-}
-
-.header-hint {
-    color: var(--color-text-200, #5a6673);
-    font-size: 12px;
-}
-
 .message-box {
     border-radius: 12px;
     background: #fff4e5;
@@ -175,81 +92,4 @@
 
 .message-line + .message-line {
     margin-top: 6px;
-}
-
-.schema-mismatch-list {
-    margin: 10px 0 0;
-    padding-left: 20px;
-    color: var(--color-text-200, #5a6673);
-}
-
-.schema-mismatch-item + .schema-mismatch-item {
-    margin-top: 6px;
-}
-
-.empty-state {
-    padding: 20px;
-    border-radius: 12px;
-    background: #f8fafc;
-    color: var(--color-text-200, #5a6673);
-    font-size: 14px;
-}
-
-.result-card {
-    align-items: center;
-    text-align: center;
-}
-
-.upload-state {
-    min-height: 280px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    text-align: center;
-}
-
-.upload-title {
-    font-size: 20px;
-    font-weight: 600;
-}
-
-.upload-copy {
-    color: var(--color-text-200, #5a6673);
-    max-width: 420px;
-}
-
-.success-icon {
-    color: var(--color-success, #2e7d32);
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-}
-
-.result-name {
-    font-weight: 600;
-}
-
-.result-meta {
-    color: var(--color-text-200, #5a6673);
-}
-
-@media (max-width: 900px) {
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .section-title {
-        font-size: 20px;
-    }
-
-    .inline-actions {
-        justify-content: stretch;
-    }
-
-    .inline-actions button {
-        width: 100%;
-    }
 }

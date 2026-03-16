@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.datalake.importer;
 
 import org.springframework.web.multipart.MultipartFile;
 

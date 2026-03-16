@@ -16,11 +16,10 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.datalake.importer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
 import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
@@ -31,6 +30,7 @@ import org.apache.streampipes.model.datalake.importer.CsvImportTarget;
 import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.rest.impl.datalake.DataLakeDataWriter;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
@@ -122,7 +122,7 @@ class CsvDataLakeImportServiceTest {
     assertTrue(result.isCreatedNewMeasurement());
     assertEquals(2, result.getImportedRowCount());
     assertEquals("new-measure", result.getMeasurementName());
-    verify(dataWriter).writeData(any(DataLakeMeasure.class), any(SpQueryResult.class));
+    verify(dataWriter).writeData(any(DataLakeMeasure.class), anyList(), anyList());
   }
 
   @Test

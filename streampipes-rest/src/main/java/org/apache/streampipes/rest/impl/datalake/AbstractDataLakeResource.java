@@ -56,6 +56,10 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATASET_VALUE);
   }
 
+  protected IDataExplorerSchemaManagement getDataLakeMeasureManagement() {
+    return dataLakeMeasureManagement;
+  }
+
   /**
    * required by Spring expression, do not delete if IDE shows this as unused
    * @param measurementName the name of the data lake measure
