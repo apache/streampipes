@@ -29,6 +29,7 @@ import org.apache.streampipes.service.core.extensions.TransportAwareExtensionSer
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.time.Duration;
 
@@ -60,6 +61,7 @@ public class ExtensionServiceRequestConfiguration {
   }
 
   @Bean
+  @Primary
   public ExtensionServiceRequestManager extensionServiceRequestManager(
       NatsExtensionServiceRequestManager natsExtensionServiceRequestManager
   ) {

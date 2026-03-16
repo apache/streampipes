@@ -24,19 +24,46 @@ import org.apache.streampipes.extensions.management.context.AdapterContextGenera
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.SampleData;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+
 public class AdapterWorkerSampleDataRequestManagement {
 
-  private final AdapterWorkerSampleDataManagement sampleDataManagement;
+  private final Supplier<AdapterWorkerSampleDataManagement> sampleDataManagementSupplier;
+  private volatile AdapterWorkerSampleDataManagement sampleDataManagement;
 
   public AdapterWorkerSampleDataRequestManagement() {
-    this(new AdapterWorkerSampleDataManagement(new AdapterContextGenerator().makeGuessSchemaContext()));
+    this(() -> new AdapterWorkerSampleDataManagement(new AdapterContextGenerator().makeGuessSchemaContext()));
   }
 
   public AdapterWorkerSampleDataRequestManagement(AdapterWorkerSampleDataManagement sampleDataManagement) {
-    this.sampleDataManagement = sampleDataManagement;
+    this(() -> sampleDataManagement);
+  }
+
+  public AdapterWorkerSampleDataRequestManagement(
+      Supplier<AdapterWorkerSampleDataManagement> sampleDataManagementSupplier
+  ) {
+    this.sampleDataManagementSupplier = sampleDataManagementSupplier;
   }
 
   public SampleData getSampleData(AdapterDescription adapterDescription) throws AdapterException, ParseException {
-    return sampleDataManagement.getSampleData(adapterDescription);
+    return getOrCreateSampleDataManagement().getSampleData(adapterDescription);
+  }
+
+  private AdapterWorkerSampleDataManagement getOrCreateSampleDataManagement() {
+    var localReference = sampleDataManagement;
+    if (localReference == null) {
+      synchronized (this) {
+        localReference = sampleDataManagement;
+        if (localReference == null) {
+          localReference = Objects.requireNonNull(
+              sampleDataManagementSupplier.get(),
+              "Adapter sample data management supplier must not return null"
+          );
+          sampleDataManagement = localReference;
+        }
+      }
+    }
+    return localReference;
   }
 }

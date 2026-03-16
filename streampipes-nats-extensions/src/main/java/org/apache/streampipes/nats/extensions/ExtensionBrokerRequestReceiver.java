@@ -83,10 +83,6 @@ public class ExtensionBrokerRequestReceiver {
   private Dispatcher dispatcher;
   private String subscriptionBaseTopic;
 
-  public ExtensionBrokerRequestReceiver() {
-    this(List.of());
-  }
-
   public ExtensionBrokerRequestReceiver(List<ExtensionBrokerOperationHandler> additionalOperationHandlers) {
     this(
         new ServiceMonitorManagement(),
@@ -128,7 +124,14 @@ public class ExtensionBrokerRequestReceiver {
 
     try {
       var env = Environments.getEnvironment();
-      String natsUrl = "nats://" + env.getNatsHost().getValueOrDefault()
+      var natsHost = env.getNatsHost().getValueOrResolve(() -> {
+        if (env.getSpDebug().getValueOrDefault()) {
+          return "localhost";
+        } else {
+          return env.getNatsHost().getDefault();
+        }
+      });
+      String natsUrl = "nats://" + natsHost
           + ":" + env.getNatsPort().getValueOrDefault();
       this.natsConnection = Nats.connect(natsUrl);
 
