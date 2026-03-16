@@ -103,6 +103,12 @@ export class DialogService {
             }
         });
 
+        overlayRef.keydownEvents().subscribe(e => {
+            if (e.key === 'Escape' && !config.disableClose) {
+                panelDialogComponentRef.instance.close();
+            }
+        });
+
         if (!config.disableClose) {
             overlayRef.backdropClick().subscribe(() => {
                 panelDialogComponentRef.instance.close();
