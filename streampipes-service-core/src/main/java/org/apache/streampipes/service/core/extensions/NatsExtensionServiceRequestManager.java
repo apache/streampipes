@@ -19,10 +19,10 @@
 package org.apache.streampipes.service.core.extensions;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequest;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
-import org.apache.streampipes.manager.util.AuthTokenUtils;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerErrorEnvelope;
-import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServicePipelineDetachRequest;
@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-public class NatsExtensionServiceRequestManager {
+public class NatsExtensionServiceRequestManager implements ExtensionServiceRequestManager {
 
   private static final int INTERNAL_SERVER_ERROR = 500;
 
@@ -49,109 +49,20 @@ public class NatsExtensionServiceRequestManager {
     this.topicPrefix = topicPrefix;
   }
 
-  public ExtensionServiceOperationResult requestServiceLoad(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return request(target, null, null);
-  }
-
-  public ExtensionServiceOperationResult requestMigration(ExtensionServiceRequestTarget target,
-                                                          String payload) throws IOException {
-    return request(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
-  }
-
-  public ExtensionServiceOperationResult requestDescriptionUpdate(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return request(target, null, null);
-  }
-
-  public ExtensionServiceOperationResult requestExtensionDescription(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return request(target, null, null);
-  }
-
-  public ExtensionServiceOperationResult requestFunctionStop(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return request(target, null, null);
-  }
-
-  public ExtensionServiceOperationResult requestContainerProvidedOptions(ExtensionServiceRequestTarget target,
-                                                                         String payload) throws IOException {
-    return request(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
-  }
-
-  public ExtensionServiceOperationResult requestAdapterStateChange(ExtensionServiceRequestTarget target,
-                                                                   String elementId,
-                                                                   String payload) throws IOException {
-    return request(target, payload, AuthTokenUtils.getAuthToken(elementId));
-  }
-
-  public ExtensionServiceOperationResult requestPipelineElementInvocation(ExtensionServiceRequestTarget target,
-                                                                          String pipelineId,
-                                                                          String payload) throws IOException {
-    return request(target, payload, AuthTokenUtils.getAuthToken(pipelineId));
-  }
-
-  public ExtensionServiceOperationResult requestPipelineElementDetach(ExtensionServiceRequestTarget target,
-                                                                      String pipelineId) throws IOException {
-    var payload = makeDetachPayload(target);
-    return request(target, payload, AuthTokenUtils.getAuthToken(pipelineId));
-  }
-
-  public ExtensionServiceOperationResult requestPipelineElementAssets(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return request(target, null, null);
-  }
-
-  public ExtensionServiceOperationResult requestAdapterAssets(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return request(target, null, null);
-  }
-
-  public ExtensionServiceOperationResult requestAdapterIconAsset(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return request(target, null, null);
-  }
-
-  public ExtensionServiceOperationResult requestAdapterDocumentationAsset(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return request(target, null, null);
-  }
-
-  public ExtensionServiceOperationResult requestRuntimeOptions(ExtensionServiceRequestTarget target,
-                                                               String payload) throws IOException {
-    return request(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
-  }
-
-  public ExtensionServiceOperationResult requestSampleData(ExtensionServiceRequestTarget target,
-                                                           String payload) throws IOException {
-    return request(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
-  }
-
-  public ExtensionServiceOperationResult requestExtensionInstanceHealth(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return request(target, null, null);
-  }
-
-  public ExtensionServiceOperationResult requestServiceHealth(ExtensionServiceRequestTarget target)
-      throws IOException {
-    return request(target, null, null);
-  }
-
-  public ExtensionServiceOperationResult requestOutputSchema(ExtensionServiceRequestTarget target,
-                                                             String payload) throws IOException {
-    return request(target, payload, null);
-  }
-
-  private ExtensionServiceOperationResult request(ExtensionServiceRequestTarget target,
-                                                  String payload,
-                                                  String authToken) throws IOException {
+  @Override
+  public ExtensionServiceOperationResult request(ExtensionServiceRequest request) throws IOException {
+    var target = request.target();
     String topic = target.toTopic(topicPrefix);
+    String payload = request.payload();
+    if (payload == null && isPipelineDetach(target)) {
+      payload = makeDetachPayload(target);
+    }
 
     var requestEnvelope = new ExtensionServiceBrokerRequestEnvelope(
         UUID.randomUUID().toString(),
-        ExtensionServiceBrokerOperations.byOperationId(target.operation().name()).operationId(),
+        target.operation(),
         payload,
-        authToken
+        request.authToken()
     );
 
     byte[] responseBytes = natsRequestReplyClient.request(topic, objectMapper.writeValueAsBytes(requestEnvelope));
@@ -205,5 +116,9 @@ public class NatsExtensionServiceRequestManager {
 
   private boolean isBlank(String value) {
     return value == null || value.isBlank();
+  }
+
+  private boolean isPipelineDetach(ExtensionServiceRequestTarget target) {
+    return "PIPELINE_ELEMENT_DETACH".equals(target.operation());
   }
 }

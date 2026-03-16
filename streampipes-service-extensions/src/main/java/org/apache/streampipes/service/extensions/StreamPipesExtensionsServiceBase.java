@@ -38,6 +38,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
+import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestReceiver;
 import org.apache.streampipes.rest.shared.exception.SpRestExceptionHandler;
 import org.apache.streampipes.rest.shared.serializer.JacksonConfiguration;
@@ -133,7 +134,9 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         Environments.getEnvironment().getExtensionTransportMode().getValueOrDefault()
     );
     if (extensionTransportMode.supportsNats()) {
-      this.extensionBrokerRequestReceiver = new ExtensionBrokerRequestReceiver();
+      this.extensionBrokerRequestReceiver = new ExtensionBrokerRequestReceiver(
+          getAdditionalBrokerOperationHandlers()
+      );
       this.natsBrokerReceiverActive = extensionBrokerRequestReceiver.start(
           serviceId(),
           extensionTransportMode,
@@ -233,6 +236,10 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
   public String serviceId() {
     return DeclarersSingleton.getInstance().getServiceId();
+  }
+
+  protected List<ExtensionBrokerOperationHandler> getAdditionalBrokerOperationHandlers() {
+    return List.of();
   }
 
   public abstract SpServiceDefinition provideServiceDefinition();

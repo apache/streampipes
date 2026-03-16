@@ -29,6 +29,7 @@ import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterExce
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.SampleData;
@@ -85,7 +86,9 @@ public class GuessManagement {
 
     LOG.debug("Calling get sample data at service: {}", requestTarget.serviceId());
 
-    var response = extensionRequestManager.requestSampleData(requestTarget, adapterDescriptionString);
+    var response = extensionRequestManager.request(
+        ExtensionServiceRequests.sampleData(requestTarget, adapterDescriptionString)
+    );
     var responseString = response.responseBody();
 
     if (response.statusCode() == HttpStatus.SC_OK) {

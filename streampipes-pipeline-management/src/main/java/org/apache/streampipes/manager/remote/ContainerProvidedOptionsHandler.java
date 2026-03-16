@@ -21,6 +21,7 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -46,7 +47,9 @@ public class ContainerProvidedOptionsHandler {
     try {
       var payload = JacksonSerializer.getObjectMapper().writeValueAsString(request);
       var requestTarget = getEndpointRequestTarget(request.getAppId());
-      var response = extensionRequestManager.requestContainerProvidedOptions(requestTarget, payload);
+      var response = extensionRequestManager.request(
+          ExtensionServiceRequests.containerProvidedOptions(requestTarget, payload)
+      );
       return handleResponse(response.responseBody());
     } catch (Exception e) {
       e.printStackTrace();

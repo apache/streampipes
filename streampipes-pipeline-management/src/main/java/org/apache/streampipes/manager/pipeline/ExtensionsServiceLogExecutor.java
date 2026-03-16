@@ -25,6 +25,7 @@ import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -67,7 +68,7 @@ public class ExtensionsServiceLogExecutor implements Runnable {
     serviceEndpoints.forEach(serviceEndpoint -> {
       try {
         var target = ExtensionServiceRequestTargets.serviceHealth(serviceEndpoint, LOG_PATH);
-        var response = extensionRequestManager.requestServiceHealth(target);
+        var response = extensionRequestManager.request(ExtensionServiceRequests.serviceHealth(target));
 
         if (!response.isSuccess()) {
           LOG.info("Could not fetch log info from endpoint {} (status {})",

@@ -24,6 +24,7 @@ import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -76,7 +77,7 @@ public class ServiceHealthCheck implements Runnable {
     var requestTarget = makeHealthCheckRequestTarget(service);
 
     try {
-      var response = extensionRequestManager.requestServiceHealth(requestTarget);
+      var response = extensionRequestManager.request(ExtensionServiceRequests.serviceHealth(requestTarget));
       if (response.statusCode() != HttpStatus.SC_OK) {
         processUnhealthyService(service);
       } else {

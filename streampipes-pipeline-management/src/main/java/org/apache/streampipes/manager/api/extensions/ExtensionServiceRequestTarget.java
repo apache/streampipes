@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public record ExtensionServiceRequestTarget(String baseUrl,
                                             String serviceId,
-                                            ExtensionServiceOperationType operation,
+                                            String operation,
                                             List<String> pathSegments,
                                             List<String> topicSegments) {
 
@@ -44,20 +44,20 @@ public record ExtensionServiceRequestTarget(String baseUrl,
 
   public static ExtensionServiceRequestTarget of(String baseUrl,
                                                  String serviceId,
-                                                 ExtensionServiceOperationType operation,
+                                                 String operation,
                                                  String... pathSegments) {
     return new ExtensionServiceRequestTarget(
         baseUrl,
         serviceId,
         operation,
         Arrays.asList(pathSegments),
-        List.of(operation.name().toLowerCase(Locale.ROOT))
+        List.of(operation.toLowerCase(Locale.ROOT))
     );
   }
 
   public static ExtensionServiceRequestTarget of(String baseUrl,
                                                  String serviceId,
-                                                 ExtensionServiceOperationType operation,
+                                                 String operation,
                                                  List<String> pathSegments,
                                                  List<String> topicSegments) {
     return new ExtensionServiceRequestTarget(baseUrl, serviceId, operation, pathSegments, topicSegments);
@@ -78,7 +78,7 @@ public record ExtensionServiceRequestTarget(String baseUrl,
 
   public String toTopic(String topicPrefix) {
     var segments = topicSegments.isEmpty()
-        ? List.of(operation.name().toLowerCase(Locale.ROOT))
+        ? List.of(operation.toLowerCase(Locale.ROOT))
         : topicSegments;
 
     return ExtensionServiceBrokerTopics.serviceTopic(topicPrefix, serviceId, segments);

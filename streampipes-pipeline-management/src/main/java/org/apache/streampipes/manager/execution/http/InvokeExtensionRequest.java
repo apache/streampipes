@@ -21,6 +21,7 @@ package org.apache.streampipes.manager.execution.http;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -51,7 +52,9 @@ public class InvokeExtensionRequest extends PipelineElementExtensionRequest {
         provider,
         pipelineElement.getAppId()
     );
-    return requestManager().requestPipelineElementInvocation(requestTarget, pipelineId, toJson(pipelineElement));
+    return requestManager().request(
+        ExtensionServiceRequests.pipelineElementInvocation(requestTarget, pipelineId, toJson(pipelineElement))
+    );
   }
 
   @Override

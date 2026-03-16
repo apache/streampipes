@@ -32,6 +32,7 @@ import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.service.ExtensionsServiceReportExecutor;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.function.FunctionManager;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
@@ -160,7 +161,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
     ExtensionsServiceReportExecutor.setServiceReportFetcher(serviceRegistration -> {
       var target = ExtensionServiceRequestTargets.serviceLoad(serviceRegistration);
-      var response = extensionServiceRequestManager.requestServiceLoad(target);
+      var response = extensionServiceRequestManager.request(ExtensionServiceRequests.serviceLoad(target));
 
       if (!response.isSuccess()) {
         throw new IOException("Could not fetch load report from endpoint " + serviceRegistration.getServiceUrl()

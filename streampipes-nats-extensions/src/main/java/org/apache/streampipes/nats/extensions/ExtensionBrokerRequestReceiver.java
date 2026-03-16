@@ -66,6 +66,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -83,13 +84,18 @@ public class ExtensionBrokerRequestReceiver {
   private String subscriptionBaseTopic;
 
   public ExtensionBrokerRequestReceiver() {
+    this(List.of());
+  }
+
+  public ExtensionBrokerRequestReceiver(List<ExtensionBrokerOperationHandler> additionalOperationHandlers) {
     this(
         new ServiceMonitorManagement(),
         new AdapterWorkerRequestManagement(),
         new AdapterAssetManagement(),
         new DataProcessorPipelineElementManagement(),
         new DataSinkPipelineElementManagement(),
-        new DataStreamPipelineElementManagement()
+        new DataStreamPipelineElementManagement(),
+        additionalOperationHandlers
     );
   }
 
@@ -98,7 +104,8 @@ public class ExtensionBrokerRequestReceiver {
                                         AdapterAssetManagement adapterAssetManagement,
                                         DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
                                         DataSinkPipelineElementManagement dataSinkPipelineElementManagement,
-                                        DataStreamPipelineElementManagement dataStreamPipelineElementManagement) {
+                                        DataStreamPipelineElementManagement dataStreamPipelineElementManagement,
+                                        List<ExtensionBrokerOperationHandler> additionalOperationHandlers) {
     this.objectMapper = JacksonSerializer.getObjectMapper();
     this.operationHandlers = createOperationHandlers(
         objectMapper,
@@ -107,7 +114,8 @@ public class ExtensionBrokerRequestReceiver {
         adapterAssetManagement,
         dataProcessorPipelineElementManagement,
         dataSinkPipelineElementManagement,
-        dataStreamPipelineElementManagement
+        dataStreamPipelineElementManagement,
+        additionalOperationHandlers
     );
   }
 
@@ -215,15 +223,19 @@ public class ExtensionBrokerRequestReceiver {
       AdapterAssetManagement adapterAssetManagement,
       DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
       DataSinkPipelineElementManagement dataSinkPipelineElementManagement,
-      DataStreamPipelineElementManagement dataStreamPipelineElementManagement
+      DataStreamPipelineElementManagement dataStreamPipelineElementManagement,
+      List<ExtensionBrokerOperationHandler> additionalOperationHandlers
   ) {
     var adapterDescriptionManagement = new AdapterDescriptionManagement();
     var healthCheckManagement = new HealthCheckManagement();
     var monitoringManagement = new MonitoringManagement();
     var runtimeResolvableManagement = new RuntimeResolvableManagement();
     var sampleDataRequestManagement = new AdapterWorkerSampleDataRequestManagement();
+    var extensions = additionalOperationHandlers == null ? List.<ExtensionBrokerOperationHandler>of()
+        : additionalOperationHandlers;
 
-    return Stream.of(
+    return Stream.concat(
+            Stream.of(
             new ServiceLoadOperationHandler(objectMapper, serviceMonitorManagement),
             new FunctionStopOperationHandler(objectMapper),
             new ExtensionInstanceHealthOperationHandler(objectMapper, healthCheckManagement),
@@ -299,10 +311,18 @@ public class ExtensionBrokerRequestReceiver {
                 adapterAssetManagement::getDocumentationAsset,
                 ExtensionBrokerResponseFactory::ok
             )
+        ),
+            extensions.stream()
         )
+        .filter(Objects::nonNull)
         .collect(Collectors.toUnmodifiableMap(
             ExtensionBrokerOperationHandler::operation,
-            handler -> handler
+            handler -> handler,
+            (left, right) -> {
+              throw new IllegalStateException(
+                  "Duplicate extension broker operation handler for operation " + left.operation()
+              );
+            }
         ));
   }
 }

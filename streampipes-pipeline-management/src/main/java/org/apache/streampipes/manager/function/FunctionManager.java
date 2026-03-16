@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.function;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionState;
 import org.apache.streampipes.model.function.FunctionsShutdownResponse;
@@ -59,7 +60,7 @@ public class FunctionManager {
 
     try {
       LOG.info("Triggering function stop at {}", requestTarget.baseUrl());
-      var response = requestManager.requestFunctionStop(requestTarget);
+      var response = requestManager.request(ExtensionServiceRequests.functionStop(requestTarget));
       int statusCode = response.statusCode();
 
       if (statusCode >= 200 && statusCode < 300) {

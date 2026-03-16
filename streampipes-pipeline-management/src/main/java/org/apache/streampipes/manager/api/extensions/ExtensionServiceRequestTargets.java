@@ -37,7 +37,7 @@ public final class ExtensionServiceRequestTargets {
                                                                        String appId) {
     return forService(
         service,
-        ExtensionServiceOperationType.CONTAINER_PROVIDED_OPTIONS,
+        ExtensionServiceBrokerOperations.CONTAINER_PROVIDED_OPTIONS,
         path(provider.getPrefix(), appId, "configurations"),
         topic(ExtensionServiceBrokerOperations.CONTAINER_PROVIDED_OPTIONS, provider.name(), appId)
     );
@@ -47,7 +47,7 @@ public final class ExtensionServiceRequestTargets {
                                                         String type) {
     return forService(
         service,
-        ExtensionServiceOperationType.MIGRATION,
+        ExtensionServiceBrokerOperations.MIGRATION,
         path("api", "v1", "migrations", type),
         topic(ExtensionServiceBrokerOperations.MIGRATION, type)
     );
@@ -58,7 +58,7 @@ public final class ExtensionServiceRequestTargets {
                                                                 String appId) {
     return forService(
         service,
-        ExtensionServiceOperationType.DESCRIPTION_UPDATE,
+        ExtensionServiceBrokerOperations.DESCRIPTION_UPDATE,
         path(provider.getPrefix(), appId),
         topic(ExtensionServiceBrokerOperations.DESCRIPTION_UPDATE, provider.name(), appId)
     );
@@ -69,7 +69,7 @@ public final class ExtensionServiceRequestTargets {
                                                                    String appId) {
     return forService(
         service,
-        ExtensionServiceOperationType.EXTENSION_DESCRIPTION,
+        ExtensionServiceBrokerOperations.EXTENSION_DESCRIPTION,
         path(provider.getPrefix(), appId),
         topic(ExtensionServiceBrokerOperations.EXTENSION_DESCRIPTION, provider.name(), appId)
     );
@@ -78,7 +78,7 @@ public final class ExtensionServiceRequestTargets {
   public static ExtensionServiceRequestTarget functionStop(SpServiceRegistration service) {
     return forService(
         service,
-        ExtensionServiceOperationType.FUNCTION_STOP,
+        ExtensionServiceBrokerOperations.FUNCTION_STOP,
         path("api", "v1", "functions", "stop"),
         topic(ExtensionServiceBrokerOperations.FUNCTION_STOP)
     );
@@ -87,7 +87,7 @@ public final class ExtensionServiceRequestTargets {
   public static ExtensionServiceRequestTarget adapterStart(SpServiceRegistration service) {
     return forService(
         service,
-        ExtensionServiceOperationType.ADAPTER_STATE_CHANGE,
+        ExtensionServiceBrokerOperations.ADAPTER_STATE_CHANGE,
         path("api", "v1", "worker", "stream", "invoke"),
         topic(ExtensionServiceBrokerOperations.ADAPTER_STATE_CHANGE, "start")
     );
@@ -96,7 +96,7 @@ public final class ExtensionServiceRequestTargets {
   public static ExtensionServiceRequestTarget adapterStop(SpServiceRegistration service) {
     return forService(
         service,
-        ExtensionServiceOperationType.ADAPTER_STATE_CHANGE,
+        ExtensionServiceBrokerOperations.ADAPTER_STATE_CHANGE,
         path("api", "v1", "worker", "stream", "stop"),
         topic(ExtensionServiceBrokerOperations.ADAPTER_STATE_CHANGE, "stop")
     );
@@ -104,7 +104,7 @@ public final class ExtensionServiceRequestTargets {
 
   public static ExtensionServiceRequestTarget adapterRuntimeOptions(SpServiceRegistration service,
                                                                     String appId) {
-    return forService(service, ExtensionServiceOperationType.RUNTIME_OPTIONS,
+    return forService(service, ExtensionServiceBrokerOperations.RUNTIME_OPTIONS,
         path("api", "v1", "worker", "resolvable", appId, "configurations"),
         topic(ExtensionServiceBrokerOperations.RUNTIME_OPTIONS, appId));
   }
@@ -112,7 +112,7 @@ public final class ExtensionServiceRequestTargets {
   public static ExtensionServiceRequestTarget adapterSampleData(SpServiceRegistration service) {
     return forService(
         service,
-        ExtensionServiceOperationType.SAMPLE_DATA,
+        ExtensionServiceBrokerOperations.SAMPLE_DATA,
         path("api", "v1", "worker", "guess", "sample"),
         topic(ExtensionServiceBrokerOperations.SAMPLE_DATA)
     );
@@ -121,7 +121,7 @@ public final class ExtensionServiceRequestTargets {
   public static ExtensionServiceRequestTarget extensionInstanceHealth(SpServiceRegistration service) {
     return forService(
         service,
-        ExtensionServiceOperationType.EXTENSION_INSTANCE_HEALTH,
+        ExtensionServiceBrokerOperations.EXTENSION_INSTANCE_HEALTH,
         path("health"),
         topic(ExtensionServiceBrokerOperations.EXTENSION_INSTANCE_HEALTH)
     );
@@ -131,7 +131,7 @@ public final class ExtensionServiceRequestTargets {
                                                             String healthCheckPath) {
     return forService(
         service,
-        ExtensionServiceOperationType.SERVICE_HEALTH,
+        ExtensionServiceBrokerOperations.SERVICE_HEALTH,
         path(healthCheckPath),
         topic(ExtensionServiceBrokerOperations.SERVICE_HEALTH)
     );
@@ -140,7 +140,7 @@ public final class ExtensionServiceRequestTargets {
   public static ExtensionServiceRequestTarget serviceLoad(SpServiceRegistration service) {
     return forService(
         service,
-        ExtensionServiceOperationType.SERVICE_LOAD,
+        ExtensionServiceBrokerOperations.SERVICE_LOAD,
         path("serviceMonitor"),
         topic(ExtensionServiceBrokerOperations.SERVICE_LOAD)
     );
@@ -150,7 +150,7 @@ public final class ExtensionServiceRequestTargets {
                                                                  String serviceId,
                                                                  SpServiceUrlProvider provider,
                                                                  String appId) {
-    return ExtensionServiceRequestTarget.of(baseUrl, serviceId, ExtensionServiceOperationType.PIPELINE_ELEMENT_INVOCATION,
+    return ExtensionServiceRequestTarget.of(baseUrl, serviceId, ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_INVOCATION.operationId(),
         path(provider.getPrefix(), appId),
         topic(ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_INVOCATION, provider.name(), appId));
   }
@@ -160,7 +160,7 @@ public final class ExtensionServiceRequestTargets {
                                                              SpServiceUrlProvider provider,
                                                              String appId,
                                                              String instanceId) {
-    return ExtensionServiceRequestTarget.of(baseUrl, serviceId, ExtensionServiceOperationType.PIPELINE_ELEMENT_DETACH,
+    return ExtensionServiceRequestTarget.of(baseUrl, serviceId, ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_DETACH.operationId(),
         path(provider.getPrefix(), appId, instanceId),
         topic(ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_DETACH, provider.name(), appId, instanceId));
   }
@@ -170,7 +170,7 @@ public final class ExtensionServiceRequestTargets {
                                                                     String appId) {
     return forService(
         service,
-        ExtensionServiceOperationType.PIPELINE_ELEMENT_ASSETS,
+        ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ASSETS,
         path(provider.getPrefix(), appId, "assets"),
         topic(ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ASSETS, provider.name(), appId)
     );
@@ -178,21 +178,21 @@ public final class ExtensionServiceRequestTargets {
 
   public static ExtensionServiceRequestTarget adapterAssets(SpServiceRegistration service,
                                                             String appId) {
-    return forService(service, ExtensionServiceOperationType.ADAPTER_ASSETS,
+    return forService(service, ExtensionServiceBrokerOperations.ADAPTER_ASSETS,
         path("api", "v1", "worker", "adapters", appId, "assets"),
         topic(ExtensionServiceBrokerOperations.ADAPTER_ASSETS, appId));
   }
 
   public static ExtensionServiceRequestTarget adapterIconAsset(SpServiceRegistration service,
                                                                String appId) {
-    return forService(service, ExtensionServiceOperationType.ADAPTER_ICON_ASSET,
+    return forService(service, ExtensionServiceBrokerOperations.ADAPTER_ICON_ASSET,
         path("api", "v1", "worker", "adapters", appId, "assets", "icon"),
         topic(ExtensionServiceBrokerOperations.ADAPTER_ICON_ASSET, appId));
   }
 
   public static ExtensionServiceRequestTarget adapterDocumentationAsset(SpServiceRegistration service,
                                                                         String appId) {
-    return forService(service, ExtensionServiceOperationType.ADAPTER_DOCUMENTATION_ASSET,
+    return forService(service, ExtensionServiceBrokerOperations.ADAPTER_DOCUMENTATION_ASSET,
         path("api", "v1", "worker", "adapters", appId, "assets", "documentation"),
         topic(ExtensionServiceBrokerOperations.ADAPTER_DOCUMENTATION_ASSET, appId));
   }
@@ -202,20 +202,20 @@ public final class ExtensionServiceRequestTargets {
                                                            String appId) {
     return forService(
         service,
-        ExtensionServiceOperationType.OUTPUT_SCHEMA,
+        ExtensionServiceBrokerOperations.OUTPUT_SCHEMA,
         path(provider.getPrefix(), appId, "output"),
         topic(ExtensionServiceBrokerOperations.OUTPUT_SCHEMA, provider.name(), appId)
     );
   }
 
   private static ExtensionServiceRequestTarget forService(SpServiceRegistration service,
-                                                          ExtensionServiceOperationType operation,
+                                                          ExtensionServiceBrokerOperation operation,
                                                           List<String> pathSegments,
                                                           List<String> topicSegments) {
     return ExtensionServiceRequestTarget.of(
         service.getServiceUrl(),
         service.getSvcId(),
-        operation,
+        operation.operationId(),
         pathSegments,
         topicSegments
     );
