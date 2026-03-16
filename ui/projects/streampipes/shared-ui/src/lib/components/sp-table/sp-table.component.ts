@@ -23,6 +23,7 @@ import {
     ContentChild,
     ContentChildren,
     EventEmitter,
+    HostListener,
     inject,
     Input,
     OnChanges,
@@ -50,9 +51,9 @@ import {
     MatTableDataSource,
 } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { SpTableActionsDirective } from './sp-table-actions.directive';
+import { SpTableActionsDirective } from './sp-actions/sp-table-actions.directive';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
-import { SpTableMultiActionsDirective } from './sp-table-multi-actions.directive';
+import { SpTableMultiActionsDirective } from './sp-actions/sp-table-multi-actions.directive';
 import { LocalStorageService } from '../../services/local-storage-settings.service';
 import { FeatureCardService } from '../feature-card-host/feature-card.service';
 import {
@@ -71,19 +72,40 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatFormField } from '@angular/material/form-field';
 import { Subscription } from 'rxjs';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { FormFieldComponent } from '../form-field/form-field.component';
+import { SpAssetBrowserService } from '../asset-browser/asset-browser.service';
+import { SpLabelComponent } from '../sp-label/sp-label.component';
+import {
+    MatButtonToggle,
+    MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import {
+    SpTableAssetContextConfig,
+    SpTableMultiActionExecuteEvent,
+    SpTableMultiActionOption,
+    SpTableResolvedAssetContext,
+} from './sp-table.model';
+import { SpTableAssetContextService } from './sp-asset-context/sp-table-asset-context.service';
 
-export interface SpTableMultiActionOption {
-    value: string;
-    label: string;
-    icon?: string;
-    disabled?: boolean;
+type SpTableGroupViewMode = 'list' | 'grouped';
+type SpTableGroupingMode = 'label' | 'site' | 'asset';
+
+interface SpTableGroupedSection<T> {
+    id: string;
+    title: string;
+    color?: string;
+    count: number;
+    rows: T[];
 }
 
-export interface SpTableMultiActionExecuteEvent<T> {
-    selectedRows: T[];
-    action: string | null;
+interface SpTableGroupHeaderRow {
+    __spGroupHeader: true;
+    id: string;
+    title: string;
+    color?: string;
+    count: number;
 }
+
+type SpTableRenderedRow<T> = T | SpTableGroupHeaderRow;
 
 @Component({
     selector: 'sp-table',
@@ -108,6 +130,8 @@ export interface SpTableMultiActionExecuteEvent<T> {
         MatMenu,
         MatSelect,
         MatOption,
+        MatButtonToggleGroup,
+        MatButtonToggle,
         NgTemplateOutlet,
         MatHeaderRowDef,
         MatHeaderRow,
@@ -120,20 +144,24 @@ export interface SpTableMultiActionExecuteEvent<T> {
         MatPaginator,
         TranslatePipe,
         LayoutGapDirective,
-        FormFieldComponent,
+        SpLabelComponent,
     ],
 })
 export class SpTableComponent<T>
     implements AfterViewInit, AfterContentInit, OnChanges, OnDestroy
 {
     readonly selectionColumnId = 'spSelection';
+    readonly assetContextColumnId = 'assetContext';
+    readonly groupHeaderColumnId = 'spGroupHeader';
 
     @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;
     @ContentChildren(MatRowDef) rowDefs: QueryList<MatRowDef<T>>;
     @ContentChildren(MatColumnDef) columnDefs: QueryList<MatColumnDef>;
     @ContentChild(MatNoDataRow) noDataRow: MatNoDataRow;
 
-    @ViewChild(MatTable, { static: true }) table: MatTable<T>;
+    @ViewChild(MatTable, { static: true }) table: MatTable<
+        SpTableRenderedRow<T>
+    >;
 
     @Input() columns: string[];
     @Input() rowsClickable = false;
@@ -146,6 +174,7 @@ export class SpTableComponent<T>
     @Input() multiActionOptions: SpTableMultiActionOption[] = [];
     @Input() featureCardId: string;
     @Input() resourceIdKey = 'elementId';
+    @Input() assetContextConfig?: SpTableAssetContextConfig;
 
     @Input() dataSource: MatTableDataSource<T>;
 
@@ -166,13 +195,24 @@ export class SpTableComponent<T>
     trigger: MatMenuTrigger | undefined = undefined;
     visiblePageRows: T[] = [];
     selectedMultiAction: string | null = null;
+    viewMode: SpTableGroupViewMode = 'list';
+    groupBy: SpTableGroupingMode = 'asset';
+    groupedSections: SpTableGroupedSection<T>[] = [];
 
     readonly selection = new SelectionModel<T>(true, []);
 
     private localStorageService = inject(LocalStorageService);
     private featureCardService = inject(FeatureCardService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+    private assetContextService = inject(SpTableAssetContextService);
     private renderedDataSubscription?: Subscription;
+    private assetDataSubscription?: Subscription;
     private viewInitialized = false;
+    private assetContextIndex = new Map<
+        string,
+        Map<string, SpTableResolvedAssetContext>
+    >();
+    private compactLayout = false;
 
     readonly pageSize: Signal<number>;
 
@@ -181,6 +221,14 @@ export class SpTableComponent<T>
             'paginator-page-size',
             10,
         );
+        this.assetDataSubscription =
+            this.assetBrowserService.assetData$.subscribe(assetData => {
+                this.assetContextIndex =
+                    this.assetContextService.buildAssetContextIndex(assetData);
+                this.applyAssetContextSortingAccessor();
+                this.refreshRenderedRows();
+            });
+        this.updateCompactLayout();
     }
 
     ngAfterViewInit() {
@@ -196,7 +244,9 @@ export class SpTableComponent<T>
         this.headerRowDefs.forEach(headerRowDef =>
             this.table.addHeaderRowDef(headerRowDef),
         );
-        this.table.setNoDataRow(this.noDataRow);
+        if (this.noDataRow) {
+            this.table.setNoDataRow(this.noDataRow);
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -221,10 +271,22 @@ export class SpTableComponent<T>
         if (changes['multiActionOptions']) {
             this.ensureValidSelectedMultiAction();
         }
+
+        if (changes['assetContextConfig']) {
+            this.updateCompactLayout();
+            this.applyAssetContextSortingAccessor();
+            this.refreshRenderedRows();
+        }
     }
 
     ngOnDestroy() {
         this.renderedDataSubscription?.unsubscribe();
+        this.assetDataSubscription?.unsubscribe();
+    }
+
+    @HostListener('window:resize')
+    onResize() {
+        this.updateCompactLayout();
     }
 
     mouseEnter(trigger) {
@@ -247,6 +309,9 @@ export class SpTableComponent<T>
 
     onPage(event: PageEvent) {
         this.localStorageService.set('paginator-page-size', event.pageSize);
+        if (this.viewMode === 'grouped') {
+            this.refreshRenderedRows();
+        }
     }
 
     openFeatureCard(element: T) {
@@ -257,7 +322,9 @@ export class SpTableComponent<T>
     }
 
     get renderedColumns(): string[] {
-        const baseColumns = this.columns ?? [];
+        const baseColumns = (this.columns ?? []).filter(
+            column => !this.shouldHideColumn(column),
+        );
         if (
             !this.showSelectionCheckboxes ||
             baseColumns.includes(this.selectionColumnId)
@@ -266,6 +333,57 @@ export class SpTableComponent<T>
         }
 
         return [this.selectionColumnId, ...baseColumns];
+    }
+
+    get groupHeaderColumns(): string[] {
+        return [this.groupHeaderColumnId];
+    }
+
+    get shouldShowGroupingControls(): boolean {
+        return !!this.assetContextConfig;
+    }
+
+    get renderedDataSource(): MatTableDataSource<T> | SpTableRenderedRow<T>[] {
+        return this.viewMode === 'grouped'
+            ? this.groupedSections.flatMap(section => [
+                  {
+                      __spGroupHeader: true as const,
+                      id: section.id,
+                      title: section.title,
+                      color: section.color,
+                      count: section.count,
+                  },
+                  ...section.rows,
+              ])
+            : this.dataSource;
+    }
+
+    get showGroupedLabelsInAssetContext(): boolean {
+        return this.viewMode !== 'grouped' || this.groupBy !== 'label';
+    }
+
+    get showGroupedSitesInAssetContext(): boolean {
+        return this.viewMode !== 'grouped' || this.groupBy !== 'site';
+    }
+
+    get showGroupedAssetsInAssetContext(): boolean {
+        return this.viewMode !== 'grouped' || this.groupBy !== 'asset';
+    }
+
+    getAssetContext(row: T): SpTableResolvedAssetContext | undefined {
+        const config = this.assetContextConfig;
+        if (!config) {
+            return undefined;
+        }
+
+        const resourceId = this.getAssetContextResourceId(row, config);
+        if (!resourceId) {
+            return undefined;
+        }
+
+        return this.assetContextIndex
+            .get(config.resourceLinkType)
+            ?.get(resourceId);
     }
 
     get selectedRows(): T[] {
@@ -354,8 +472,38 @@ export class SpTableComponent<T>
         );
     }
 
+    setViewMode(mode: SpTableGroupViewMode) {
+        if (mode === 'grouped') {
+            this.groupBy = 'asset';
+        }
+
+        if (this.viewMode === mode) {
+            this.refreshRenderedRows();
+            return;
+        }
+
+        this.viewMode = mode;
+        this.bindDataSource();
+        this.refreshRenderedRows();
+    }
+
+    setGrouping(mode: SpTableGroupingMode) {
+        if (this.groupBy === mode) {
+            return;
+        }
+
+        this.groupBy = mode;
+        this.refreshRenderedRows();
+    }
+
+    isGroupHeaderRow = (_: number, row: SpTableRenderedRow<T>) =>
+        this.hasGroupHeaderMarker(row);
+
+    isDataRow = (_: number, row: SpTableRenderedRow<T>) =>
+        !this.hasGroupHeaderMarker(row);
+
     private bindDataSource() {
-        if (!this.dataSource || !this.paginator) {
+        if (!this.dataSource) {
             return;
         }
 
@@ -363,11 +511,37 @@ export class SpTableComponent<T>
 
         this.renderedDataSubscription?.unsubscribe();
         this.renderedDataSubscription = this.dataSource.connect().subscribe({
-            next: rows => {
-                this.visiblePageRows = rows ?? [];
-                this.pruneSelection();
-            },
+            next: rows => this.updateRenderedState(rows ?? []),
         });
+    }
+
+    private refreshRenderedRows() {
+        this.updateRenderedState(this.getCurrentPageRows(), false);
+    }
+
+    private getCurrentPageRows(): T[] {
+        const rows =
+            this.dataSource?.filteredData ?? this.dataSource?.data ?? [];
+        if (!this.paginator) {
+            return rows;
+        }
+
+        const pageSize = this.paginator.pageSize || this.pageSize();
+        const startIndex = this.paginator.pageIndex * pageSize;
+        return rows.slice(startIndex, startIndex + pageSize);
+    }
+
+    private updateRenderedState(rows: T[], pruneSelection = true) {
+        this.visiblePageRows = rows;
+        this.rebuildGroupedSections(rows);
+
+        if (pruneSelection) {
+            this.pruneSelection();
+        }
+
+        if (this.viewInitialized) {
+            this.table.renderRows();
+        }
     }
 
     private pruneSelection() {
@@ -438,5 +612,144 @@ export class SpTableComponent<T>
 
         this.selectedMultiAction = null;
         this.multiActionSelectionChanged.emit(null);
+    }
+
+    private shouldHideColumn(column: string): boolean {
+        return (
+            !!this.assetContextConfig &&
+            column === this.assetContextColumnId &&
+            this.compactLayout
+        );
+    }
+
+    private updateCompactLayout(): void {
+        const hideBelowWidth = this.assetContextConfig?.hideBelowWidth ?? 1200;
+        this.compactLayout = window.innerWidth < hideBelowWidth;
+    }
+
+    private applyAssetContextSortingAccessor(): void {
+        if (!this.dataSource) {
+            return;
+        }
+
+        const currentAccessor =
+            this.dataSource.sortingDataAccessor?.bind(this.dataSource) ??
+            ((data: T, sortHeaderId: string) =>
+                (data as Record<string, unknown>)?.[sortHeaderId] as
+                    | string
+                    | number);
+
+        this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+            if (
+                this.assetContextConfig &&
+                sortHeaderId === this.assetContextColumnId
+            ) {
+                return this.getAssetContext(data)?.sortValue ?? '';
+            }
+
+            return currentAccessor(data, sortHeaderId);
+        };
+    }
+
+    private rebuildGroupedSections(rows: T[]) {
+        if (!this.assetContextConfig || this.viewMode !== 'grouped') {
+            this.groupedSections = [];
+            return;
+        }
+
+        const grouped = new Map<string, SpTableGroupedSection<T>>();
+
+        rows.forEach(row => {
+            this.resolveGroups(row).forEach(group => {
+                const current = grouped.get(group.id) ?? {
+                    id: group.id,
+                    title: group.title,
+                    color: group.color,
+                    count: 0,
+                    rows: [],
+                };
+                current.rows.push(row);
+                current.count += 1;
+                grouped.set(group.id, current);
+            });
+        });
+
+        this.groupedSections = Array.from(grouped.values())
+            .sort((left, right) => left.title.localeCompare(right.title))
+            .map(group => ({
+                ...group,
+                rows: [...group.rows],
+            }));
+    }
+
+    private resolveGroups(
+        row: T,
+    ): { id: string; title: string; color?: string }[] {
+        const assetContext = this.getAssetContext(row);
+
+        if (this.groupBy === 'label') {
+            return this.resolveLabelGroups(assetContext);
+        }
+
+        if (this.groupBy === 'site') {
+            return this.resolveSiteGroups(assetContext);
+        }
+
+        return this.resolveAssetGroups(assetContext);
+    }
+
+    private resolveLabelGroups(
+        assetContext?: SpTableResolvedAssetContext,
+    ): { id: string; title: string; color?: string }[] {
+        const labels = assetContext?.labels ?? [];
+        return labels.length
+            ? labels.map(label => ({
+                  id: `label:${label._id ?? label.label}`,
+                  title: label.label,
+                  color: label.color,
+              }))
+            : [this.createUnassignedGroup()];
+    }
+
+    private resolveSiteGroups(
+        assetContext?: SpTableResolvedAssetContext,
+    ): { id: string; title: string; color?: string }[] {
+        const sites = assetContext?.sites ?? [];
+        return sites.length
+            ? sites.map(site => ({
+                  id: `site:${site.id}`,
+                  title: site.label,
+              }))
+            : [this.createUnassignedGroup()];
+    }
+
+    private resolveAssetGroups(
+        assetContext?: SpTableResolvedAssetContext,
+    ): { id: string; title: string; color?: string }[] {
+        const assets = assetContext?.assets ?? [];
+        return assets.length
+            ? assets.map(asset => ({
+                  id: `asset:${asset.id}`,
+                  title: asset.label,
+              }))
+            : [this.createUnassignedGroup()];
+    }
+
+    private createUnassignedGroup(): { id: string; title: string } {
+        return { id: 'unassigned', title: 'Unassigned' };
+    }
+
+    private getAssetContextResourceId(
+        row: T,
+        config: SpTableAssetContextConfig,
+    ): string | undefined {
+        const key = config.resourceIdKey ?? this.resourceIdKey;
+        return (row as Record<string, string | undefined>)?.[key];
+    }
+
+    private hasGroupHeaderMarker(
+        row: SpTableRenderedRow<T>,
+    ): row is SpTableGroupHeaderRow {
+        return !!(row as SpTableGroupHeaderRow).__spGroupHeader;
     }
 }

@@ -22,6 +22,56 @@
 
 .selection-toolbar {
     border-bottom: 1px solid var(--color-bg-3);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-xs);
+}
+
+.selection-toolbar__left {
+    flex: 1 1 auto;
+}
+
+.grouping-toolbar__select {
+    width: 180px;
+}
+
+.grouping-toolbar {
+    padding: var(--space-sm) 0 var(--space-lg);
+}
+
+.grouping-toolbar--standalone {
+    margin-left: auto;
+}
+
+.grouping-toolbar__controls {
+    margin-left: auto;
+}
+
+.selection-toolbar__actions-inline {
+    margin-left: var(--space-xs);
+    align-items: center;
+}
+
+.selection-toolbar__right {
+    margin-left: auto;
+    align-self: center;
+}
+
+.view-mode-toggle {
+    align-self: center;
+}
+
+.selection-toolbar__actions-inline .mat-mdc-form-field,
+.grouping-toolbar__controls .mat-mdc-form-field {
+    margin-bottom: 0;
+}
+
+.selection-toolbar__actions-inline button[mat-flat-button],
+.grouping-toolbar__controls .view-mode-toggle {
+    align-self: center;
+}
+
+.selection-toolbar__actions {
+    margin-left: auto;
 }
 
 .mat-mdc-row:hover {
@@ -38,10 +88,46 @@
 }
 
 .right-column {
-    text-align: right; /* align contents inside cell */
-    margin-left: auto; /* push this column to the far right */
+    text-align: right;
+    margin-left: auto;
 }
 
 .checkbox-multi-select {
     width: 100px;
+}
+
+.asset-context-cell {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    min-width: 220px;
+    padding: var(--space-2xs) 0;
+    gap: var(--space-sm);
+}
+
+.asset-context-empty {
+    color: var(--color-text-2);
+    font-size: var(--font-size-xs);
+}
+
+.grouped-table-row--header {
+    height: auto;
+}
+
+.grouped-table-cell {
+    padding: 0;
+    border-bottom: none;
+}
+
+.grouped-table-header {
+    padding: var(--space-md) var(--space-lg);
+    border-top: 1px solid var(--color-bg-3);
+    border-bottom: 1px solid var(--color-bg-3);
+    background: var(--color-bg-1);
+}
+
+.grouped-table-title {
+    margin: 0;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
 }

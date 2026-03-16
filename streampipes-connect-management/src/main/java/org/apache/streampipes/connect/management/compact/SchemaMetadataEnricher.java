@@ -22,7 +22,6 @@ import org.apache.streampipes.model.connect.adapter.compact.CompactEventProperty
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.vocabulary.XSD;
 
 import java.net.URI;
 import java.util.Map;
@@ -68,24 +67,17 @@ public class SchemaMetadataEnricher {
   }
 
   private PropertyScope convertScope(String scope) {
-    if (scope.equalsIgnoreCase("header")) {
-      return PropertyScope.HEADER_PROPERTY;
-    } else if (scope.equalsIgnoreCase("dimension")) {
-      return PropertyScope.DIMENSION_PROPERTY;
-    } else if (scope.equalsIgnoreCase("measurement")) {
+    if (scope == null || scope.isBlank()) {
       return PropertyScope.MEASUREMENT_PROPERTY;
-    } else {
-      return PropertyScope.NONE;
     }
-  }
 
-  private String convertType(String shortRuntimeType) {
-    return switch (shortRuntimeType) {
-      case "integer" -> XSD.INTEGER.toString();
-      case "boolean" -> XSD.BOOLEAN.toString();
-      case "float" -> XSD.FLOAT.toString();
-      case "double" -> XSD.DOUBLE.toString();
-      default -> XSD.STRING.toString();
+    return switch (scope.trim().toUpperCase()) {
+      case "HEADER", "HEADER_PROPERTY" -> PropertyScope.HEADER_PROPERTY;
+      case "DIMENSION", "DIMENSION_PROPERTY" -> PropertyScope.DIMENSION_PROPERTY;
+      case "MEASUREMENT", "MEASUREMENT_PROPERTY" -> PropertyScope.MEASUREMENT_PROPERTY;
+      case "NONE" -> PropertyScope.NONE;
+      default -> PropertyScope.MEASUREMENT_PROPERTY;
     };
   }
+
 }
