@@ -80,4 +80,37 @@ public class NumericalFilterProcessorTest {
     testExecutor.run(inputEvents, outputEvents);
   }
 
+  @Test
+  public void numericalFilter1() {
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(NumericalFilterProcessor.NUMBER_MAPPING, "randomnumber")
+        .config(NumericalFilterProcessor.VALUE, 50.0d)
+        .config(NumericalFilterProcessor.OPERATION, ">")
+        .build();
+
+    List<Map<String, Object>> inputEvents = List.of(
+        Map.of("timestamp", 1623871499055L, "randomnumber", 62.0d),
+        Map.of("timestamp", 1623871500059L, "randomnumber", 46.0d),
+        Map.of("timestamp", 1623871501064L, "randomnumber", 41.0d),
+        Map.of("timestamp", 1623871502070L, "randomnumber", 41.0d),
+        Map.of("timestamp", 1623871503078L, "randomnumber", 22.0d),
+        Map.of("timestamp", 1623871504082L, "randomnumber", 56.0d),
+        Map.of("timestamp", 1623871505084L, "randomnumber", 95.0d),
+        Map.of("timestamp", 1623871506086L, "randomnumber", 77.0d),
+        Map.of("timestamp", 1623871507091L, "randomnumber", 85.0d),
+        Map.of("timestamp", 1623871508093L, "randomnumber", 22.0d)
+    );
+
+    List<Map<String, Object>> outputEvents = List.of(
+        Map.of("timestamp", 1623871499055L, "randomnumber", 62.0d),
+        Map.of("timestamp", 1623871504082L, "randomnumber", 56.0d),
+        Map.of("timestamp", 1623871505084L, "randomnumber", 95.0d),
+        Map.of("timestamp", 1623871506086L, "randomnumber", 77.0d),
+        Map.of("timestamp", 1623871507091L, "randomnumber", 85.0d)
+    );
+
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+    testExecutor.run(inputEvents, outputEvents);
+  }
+
 }

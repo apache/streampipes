@@ -118,4 +118,64 @@ public class MathOpProcessorTest{
 
     testExecutor.run(inputEvents, outputEvents);
   }
+
+  @Test
+  public void math1() {
+    executeFixtureTest(
+        "+",
+        List.of(
+            Map.of("timestamp", 1623871499055L, "temperature1", 2.0d, "temperature2", 3.0d),
+            Map.of("timestamp", 1623871500059L, "temperature1", 3.0d, "temperature2", 4.0d)
+        ),
+        List.of(
+            Map.of("timestamp", 1623871499055L, "temperature1", 2.0d, "temperature2", 3.0d, "calculationResult", 5.0d),
+            Map.of("timestamp", 1623871500059L, "temperature1", 3.0d, "temperature2", 4.0d, "calculationResult", 7.0d)
+        )
+    );
+  }
+
+  @Test
+  public void math2() {
+    executeFixtureTest(
+        "/",
+        List.of(
+            Map.of("timestamp", 1623871499055L, "temperature1", 4.0d, "temperature2", 4.0d),
+            Map.of("timestamp", 1623871500059L, "temperature1", 100.0d, "temperature2", 5.0d)
+        ),
+        List.of(
+            Map.of("timestamp", 1623871499055L, "temperature1", 4.0d, "temperature2", 4.0d, "calculationResult", 1.0d),
+            Map.of("timestamp", 1623871500059L, "temperature1", 100.0d, "temperature2", 5.0d, "calculationResult", 20.0d)
+        )
+    );
+  }
+
+  @Test
+  public void math3() {
+    executeFixtureTest(
+        "*",
+        List.of(
+            Map.of("timestamp", 1623871499055L, "temperature1", 4.0d, "temperature2", 2.0d),
+            Map.of("timestamp", 1623871500059L, "temperature1", 3.5d, "temperature2", 5.0d)
+        ),
+        List.of(
+            Map.of("timestamp", 1623871499055L, "temperature1", 4.0d, "temperature2", 2.0d, "calculationResult", 8.0d),
+            Map.of("timestamp", 1623871500059L, "temperature1", 3.5d, "temperature2", 5.0d, "calculationResult", 17.5d)
+        )
+    );
+  }
+
+  private void executeFixtureTest(
+      String operation,
+      List<Map<String, Object>> inputEvents,
+      List<Map<String, Object>> outputEvents
+  ) {
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(MathOpProcessor.LEFT_OPERAND, "temperature1")
+        .configWithDefaultPrefix(MathOpProcessor.RIGHT_OPERAND, "temperature2")
+        .config(MathOpProcessor.OPERATION, operation)
+        .build();
+
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+    testExecutor.run(inputEvents, outputEvents);
+  }
 }

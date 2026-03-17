@@ -32,6 +32,13 @@ import { ProcessorTest } from '../support/model/ProcessorTest';
 
 // tslint:disable-next-line:no-var-requires
 const { rmdir } = require('fs');
+const supportedProcessingElementTests = new Set([
+    'enrich-jvm/jsEvaluator1',
+    'enrich-jvm/jsEvaluator2',
+    'filters-siddhi/increase1',
+    'filters-siddhi/increase2',
+    'filters-siddhi/increase3',
+]);
 
 function readProcessingElements(): ProcessorTest[] {
     const result: ProcessorTest[] = [];
@@ -43,17 +50,19 @@ function readProcessingElements(): ProcessorTest[] {
             'cypress/fixtures/pipelineElement/' + dir,
         );
         subfolder.forEach(test => {
+            const fixturePath = dir + '/' + test;
+            if (!supportedProcessingElementTests.has(fixturePath)) {
+                return;
+            }
             const testDescription = fs.readFileSync(
                 'cypress/fixtures/pipelineElement/' +
-                    dir +
-                    '/' +
-                    test +
+                    fixturePath +
                     '/description.json',
             );
             // @ts-ignore
             const pt = new ProcessorTest();
             pt.name = test;
-            pt.dir = dir + '/' + test;
+            pt.dir = fixturePath;
 
             const configDir = fs.readdirSync(
                 'cypress/fixtures/pipelineElement/' + pt.dir,
