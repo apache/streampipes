@@ -61,7 +61,6 @@ class RateLimitProcessorTest {
 
     testExecutor.run(inputEvents, expectedEvents);
   }
-
   @Test
   void forwardsFirstEventOfEachLengthWindow() {
     TestConfiguration configuration = TestConfiguration.builder()

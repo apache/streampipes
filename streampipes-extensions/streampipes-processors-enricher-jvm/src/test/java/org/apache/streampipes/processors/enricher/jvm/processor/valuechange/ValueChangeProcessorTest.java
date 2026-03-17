@@ -66,7 +66,6 @@ class ValueChangeProcessorTest {
 
     testExecutor.run(inputEvents, expectedEvents);
   }
-
   @Test
   void detectsDifferentTransitionConfiguration() {
     TestConfiguration configuration = TestConfiguration.builder()
