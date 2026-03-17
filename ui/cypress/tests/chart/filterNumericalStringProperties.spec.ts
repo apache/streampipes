@@ -19,30 +19,24 @@
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTableUtils';
 import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
-import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
-import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 import { ChartWidget } from '../../support/model/ChartWidget';
+import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
 
 describe('Validate that filter works for numerical dimension property', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-
-        FileManagementUtils.addFile(
-            'datalake/filterNumericalStringProperties.csv',
-        );
-        const adapterInput = AdapterBuilder.create('File_Stream')
-            .setName('Test Adapter')
-            .setTimestampProperty('timestamp')
-            .addDataTypeChange('dimensionKey', 'Integer')
-            .addDimensionProperty('dimensionKey')
-            .setStoreInDataLake()
-            .setFormat('csv')
-            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
-            .build();
-        ConnectUtils.testAdapter(adapterInput);
+        DataLakeSeedUtils.importCsvFixture({
+            fixture: 'datalake/filterNumericalStringProperties.csv',
+            measurementName: 'Test Adapter',
+            delimiter: ';',
+            timestampColumn: 'timestamp',
+            columnOverrides: {
+                dimensionKey: {
+                    runtimeType: 'LONG',
+                    propertyScope: 'DIMENSION_PROPERTY',
+                },
+            },
+        });
     });
 
     it('Perform Test', () => {

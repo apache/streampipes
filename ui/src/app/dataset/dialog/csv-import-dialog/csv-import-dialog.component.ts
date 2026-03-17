@@ -108,11 +108,10 @@ export class CsvImportDialogComponent {
     private previewReloadTimeout?: ReturnType<typeof setTimeout>;
     private schemaValidationTimeout?: ReturnType<typeof setTimeout>;
 
+    readonly selectedFile = signal<File | undefined>(undefined);
+    readonly uploadId = signal<string | undefined>(undefined);
     readonly fileName = signal('');
-    readonly rawFileContent = signal('');
     readonly timestampFormat = signal('');
-    readonly parsedHeaders = signal<string[]>([]);
-    readonly parsedRows = signal<string[][]>([]);
     readonly previewResult = signal<CsvImportPreviewResult | undefined>(
         undefined,
     );
@@ -127,7 +126,7 @@ export class CsvImportDialogComponent {
     readonly uploadMessages = signal<CsvImportValidationMessage[]>([]);
 
     readonly parseForm = this.fb.group({
-        delimiter: [',' as string, Validators.required],
+        delimiter: [',' as ',' | ';' | '|' | '\\t', Validators.required],
         decimalSeparator: ['.' as ',' | '.', Validators.required],
         hasHeader: [true, Validators.required],
     });
@@ -163,30 +162,24 @@ export class CsvImportDialogComponent {
     ]);
 
     readonly hasPreview = computed(() => !!this.previewResult());
-
     readonly hasImportResult = computed(
         () => !!this.importResult()?.measurementName,
     );
-
     readonly previewRows = computed(
         () => this.previewResult()?.previewRows ?? [],
     );
-
     readonly targetMode = computed(
         () => this.targetFormValue().mode as 'NEW' | 'EXISTING',
     );
-
     readonly selectedTimestampColumn = computed(
         () =>
             this.columnModels().find(model =>
                 SemanticType.isTimestamp(model.eventProperty),
             )?.column.runtimeName,
     );
-
     readonly canProceedToConfiguration = computed(
-        () => this.isTargetValid() && !!this.rawFileContent(),
+        () => this.isTargetValid() && !!this.selectedFile(),
     );
-
     readonly currentTarget = computed<CsvImportTarget | undefined>(() => {
         const formValue = this.targetFormValue();
 
@@ -215,22 +208,18 @@ export class CsvImportDialogComponent {
     readonly showTimestampWarning = computed(
         () => this.hasPreview() && !this.selectedTimestampColumn(),
     );
-
     readonly isTargetValid = computed(
         () => this.validateLocalTarget().length === 0,
     );
-
     readonly hasSchemaMismatch = computed(
         () =>
             this.targetMode() === 'EXISTING' &&
             !!this.schemaValidationResult()?.issues?.length,
     );
-
     readonly schemaMismatchSummary = computed(
         () =>
             'Imported columns must exactly match the existing measurement schema.',
     );
-
     readonly schemaMismatchDetails = computed(() =>
         (this.schemaValidationResult()?.issues ?? []).map(issue =>
             this.toSchemaIssueText(issue),
@@ -297,14 +286,10 @@ export class CsvImportDialogComponent {
         }
 
         this.fileName.set(file.name);
+        this.selectedFile.set(file);
+        this.uploadId.set(undefined);
         this.timestampFormat.set('');
-
-        const reader = new FileReader();
-        reader.onload = () => {
-            this.rawFileContent.set(`${reader.result ?? ''}`);
-            this.invalidatePreview();
-        };
-        reader.readAsText(file);
+        this.invalidatePreview();
     }
 
     nextStep(): void {
@@ -314,7 +299,7 @@ export class CsvImportDialogComponent {
 
         if (!this.canProceedToConfiguration()) {
             const messages = this.validateLocalTarget();
-            if (!this.rawFileContent()) {
+            if (!this.selectedFile()) {
                 messages.push({
                     field: 'file',
                     message: 'Please select a CSV file first.',
@@ -367,7 +352,7 @@ export class CsvImportDialogComponent {
             return;
         }
 
-        if (!this.rawFileContent()) {
+        if (!this.selectedFile() && !this.uploadId()) {
             this.localMessages.set([
                 {
                     field: 'file',
@@ -377,27 +362,18 @@ export class CsvImportDialogComponent {
             return;
         }
 
-        try {
-            const { headers, rows } = this.parseCsv();
-            this.parsedHeaders.set(headers);
-            this.parsedRows.set(rows);
-        } catch {
-            this.localMessages.set([
-                {
-                    field: 'file',
-                    message:
-                        'The CSV file could not be parsed with the current settings.',
-                },
-            ]);
-            return;
-        }
-
         this.previewLoading.set(true);
+        const useMultipartUpload = !!this.selectedFile() && !this.uploadId();
+
         this.datalakeRestService
-            .previewImport(this.buildPreviewRequest(this.currentTarget()))
+            .previewImport(
+                this.buildPreviewRequest(this.currentTarget()),
+                useMultipartUpload ? this.selectedFile() : undefined,
+            )
             .subscribe({
                 next: preview => {
                     this.previewResult.set(preview);
+                    this.uploadId.set(preview.uploadId ?? this.uploadId());
                     this.columnModels.set(
                         preview.columns.map(column =>
                             this.toColumnModel(column),
@@ -532,107 +508,21 @@ export class CsvImportDialogComponent {
         this.dialogRef.close(refresh);
     }
 
-    private parseCsv(): { headers: string[]; rows: string[][] } {
-        const delimiter = this.normalizeDelimiter(
-            this.parseFormValue().delimiter ?? ',',
-        );
-        const parsed = this.parseCsvContent(this.rawFileContent(), delimiter);
-        const rows = parsed.filter(row =>
-            row.some(cell => `${cell}`.trim() !== ''),
-        );
-
-        if (rows.length === 0) {
-            throw new Error('CSV contains no rows');
-        }
-
-        const hasHeader = this.parseFormValue().hasHeader ?? true;
-        let headers: string[];
-        let contentRows: string[][];
-
-        if (hasHeader) {
-            headers = rows[0].map((header, index) =>
-                this.normalizeHeader(
-                    index === 0 ? this.stripBom(header) : header,
-                    index,
-                ),
-            );
-            contentRows = rows.slice(1);
-        } else {
-            headers = rows[0].map((_, index) => `column_${index + 1}`);
-            contentRows = rows;
-        }
-
-        return { headers, rows: contentRows };
-    }
-
-    private normalizeDelimiter(value: string): string {
-        return value === '\\t' ? '\t' : value;
-    }
-
-    private stripBom(value: string): string {
-        return value.replace(/^\uFEFF/, '');
-    }
-
-    private normalizeHeader(value: string, index: number): string {
-        const trimmed = value?.trim();
-        return trimmed ? trimmed : `column_${index + 1}`;
-    }
-
-    private parseCsvContent(content: string, delimiter: string): string[][] {
-        const rows: string[][] = [];
-        let currentRow: string[] = [];
-        let currentValue = '';
-        let inQuotes = false;
-
-        for (let i = 0; i < content.length; i++) {
-            const char = content[i];
-            const nextChar = content[i + 1];
-
-            if (char === '"') {
-                if (inQuotes && nextChar === '"') {
-                    currentValue += '"';
-                    i += 1;
-                } else {
-                    inQuotes = !inQuotes;
-                }
-            } else if (!inQuotes && char === delimiter) {
-                currentRow.push(currentValue);
-                currentValue = '';
-            } else if (!inQuotes && (char === '\n' || char === '\r')) {
-                if (char === '\r' && nextChar === '\n') {
-                    i += 1;
-                }
-                currentRow.push(currentValue);
-                rows.push(currentRow);
-                currentRow = [];
-                currentValue = '';
-            } else {
-                currentValue += char;
-            }
-        }
-
-        currentRow.push(currentValue);
-        rows.push(currentRow);
-        return rows;
-    }
-
     private buildPreviewRequest(
         target?: CsvImportTarget,
     ): CsvImportPreviewRequest {
         return {
+            uploadId: this.uploadId(),
             fileName: this.fileName(),
             csvConfig: this.currentCsvConfig(),
-            headers: this.parsedHeaders(),
-            rows: this.parsedRows(),
             target,
         };
     }
 
     private buildImportRequest(): CsvImportRequest {
         return {
+            uploadId: this.uploadId(),
             csvConfig: this.currentCsvConfig(),
-            headers: this.parsedHeaders(),
-            rows: this.parsedRows(),
             target: this.currentTarget()!,
             timestampColumn: this.selectedTimestampColumn()!,
             columns: this.columnModels().map(model => model.column),
@@ -780,7 +670,11 @@ export class CsvImportDialogComponent {
     }
 
     private schedulePreviewReload(): void {
-        if (!this.canProceedToConfiguration() || this.previewLoading()) {
+        if (!this.currentTarget() || this.previewLoading()) {
+            return;
+        }
+
+        if (!this.selectedFile() && !this.uploadId()) {
             return;
         }
 

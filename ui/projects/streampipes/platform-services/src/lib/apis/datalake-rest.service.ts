@@ -247,7 +247,24 @@ export class DatalakeRestService {
 
     previewImport(
         request: CsvImportPreviewRequest,
+        file?: File,
     ): Observable<CsvImportPreviewResult> {
+        if (file) {
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+            formData.append(
+                'request',
+                new Blob([JSON.stringify(request)], {
+                    type: 'application/json',
+                }),
+            );
+
+            return this.http.post<CsvImportPreviewResult>(
+                `${this.dataLakeImportUrl}/preview`,
+                formData,
+            );
+        }
+
         return this.http.post<CsvImportPreviewResult>(
             `${this.dataLakeImportUrl}/preview`,
             request,
