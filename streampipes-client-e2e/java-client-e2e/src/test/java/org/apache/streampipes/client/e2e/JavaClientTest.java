@@ -20,6 +20,7 @@ package org.apache.streampipes.client.e2e;
 
 import org.apache.streampipes.client.e2e.utils.ClientTestSupport;
 import org.apache.streampipes.client.e2e.utils.ClientTestSupport.SensorEvent;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -37,8 +38,10 @@ import java.util.UUID;
  */
 class JavaClientTest {
 
-  /** Name prefix for created adapters and pipelines (used for filtering and cleanup). */
   private static final String TEST_PREFIX = "sp-e2e-java-semantic-";
+  private static final String TOPIC_PREFIX = "sp.e2e.java.semantic.topic.";
+  private static final int EXPECTED_RESOURCE_COUNT = 1;
+  private static final Duration ENDPOINT_READY_TIMEOUT = Duration.ofSeconds(20);
 
   private final ClientTestSupport support = new ClientTestSupport(TEST_PREFIX);
 
@@ -54,22 +57,37 @@ class JavaClientTest {
    */
   @Test
   void testJavaClient() {
+    // Ensure clean state before starting the test
     support.cleanupTestResources();
 
-    var runId = UUID.randomUUID().toString().replace("-", "");
-    var topicIn = "sp.e2e.java.semantic.topic.in." + runId;
-    var topicOut = "sp.e2e.java.semantic.topic.out." + runId;
+    String runId = UUID.randomUUID().toString().replace("-", "");
+    String topicIn = TOPIC_PREFIX + "in." + runId;
+    String topicOut = TOPIC_PREFIX + "out." + runId;
 
-    var adapter = support.createAndStartAdapter(topicIn);
+    // 1. Setup Resources
+    AdapterDescription adapter = support.createAndStartAdapter(topicIn);
     support.createAndStartPipeline(adapter, topicIn, topicOut);
-    support.waitUntilEndpointsReady(1, 1, Duration.ofSeconds(20));
 
+    // 2. Wait for background synchronization (Endpoint assignment)
+    support.waitUntilEndpointsReady(
+            EXPECTED_RESOURCE_COUNT,
+            EXPECTED_RESOURCE_COUNT,
+            ENDPOINT_READY_TIMEOUT
+    );
+
+    // 3. Prepare Test Data
     List<SensorEvent> inputEvents = support.buildBooleanEvents();
     Set<String> expectedEventIds = support.expectedPassedEventIds(inputEvents);
 
+    // 4. Execution: Publish to input and consume from output via NATS
     List<Map<String, Object>> consumed = support.publishAndConsumeNats(
-        topicIn, topicOut, inputEvents, expectedEventIds.size());
+            topicIn,
+            topicOut,
+            inputEvents,
+            (long) expectedEventIds.size()
+    );
+
+    // 5. Verification
     support.assertFilteredEvents(consumed, expectedEventIds);
   }
 }
-

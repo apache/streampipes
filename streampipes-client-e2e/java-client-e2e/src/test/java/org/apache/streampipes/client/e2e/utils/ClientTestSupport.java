@@ -48,6 +48,11 @@ import static org.awaitility.Awaitility.await;
  */
 public final class ClientTestSupport {
 
+  private static final String DEFAULT_NATS_URL = "nats://127.0.0.1:4222";
+  private static final int DEFAULT_NATS_PORT = 4222;
+  private static final String DEFAULT_NATS_HOST = "127.0.0.1";
+  private static final int WAIT_TIMEOUT_SECONDS = 20;
+
   private final String testPrefix;
   private final StreamPipesClient client;
 
@@ -60,9 +65,9 @@ public final class ClientTestSupport {
     try {
       AdapterDescription adapter = PipelineTemplateHelper.buildAdapter(testPrefix, topicIn);
       client.adapters().create(adapter);
-      return TestResourceHelper.waitForAdapter(client, adapter.getName(), Duration.ofSeconds(20));
+      return TestResourceHelper.waitForAdapter(client, adapter.getName(), Duration.ofSeconds(WAIT_TIMEOUT_SECONDS));
     } catch (Exception e) {
-      throw new IllegalStateException("Failed to create adapter", e);
+      throw new IllegalStateException("Failed to create adapter for topic: " + topicIn, e);
     }
   }
 
@@ -90,7 +95,7 @@ public final class ClientTestSupport {
     try {
       Pipeline pipeline = PipelineTemplateHelper.buildPipeline(testPrefix, adapter, topicIn, topicOut);
       client.pipelines().create(pipeline);
-      return TestResourceHelper.waitForPipeline(client, pipeline.getName(), Duration.ofSeconds(20));
+      return TestResourceHelper.waitForPipeline(client, pipeline.getName(), Duration.ofSeconds(WAIT_TIMEOUT_SECONDS));
     } catch (Exception e) {
       throw new IllegalStateException("[pipeline.create] Failed to create pipeline", e);
     }
@@ -111,7 +116,7 @@ public final class ClientTestSupport {
   }
 
   /**
-   * Starts the pipeline with retries so that extension service discovery can complete (e.g. in Docker).
+   * Starts the pipeline with retries so that extension service discovery can complete.
    *
    * @param pipeline   the pipeline to start
    * @param maxAttempts number of start attempts
@@ -133,8 +138,9 @@ public final class ClientTestSupport {
         }
       }
     }
+    String errorMsg = (status != null) ? status.getTitle() : "unknown";
     Assertions.fail("[pipeline.start] Pipeline start failed after " + maxAttempts + " attempts: "
-        + pipeline.getPipelineId() + " - " + (status != null ? status.getTitle() : "unknown"));
+            + pipeline.getPipelineId() + " - " + errorMsg);
   }
 
   /**
@@ -145,7 +151,7 @@ public final class ClientTestSupport {
   public void assertAdapterStarted(AdapterDescription adapter) {
     SuccessMessage startStatus = client.adapters().start(adapter.getElementId());
     Assertions.assertTrue(startStatus.isSuccess(),
-        "[adapter.start] Adapter start failed: " + adapter.getElementId());
+            "[adapter.start] Adapter start failed: " + adapter.getElementId());
   }
 
   /**
@@ -156,7 +162,7 @@ public final class ClientTestSupport {
   public void assertPipelineStarted(Pipeline pipeline) {
     PipelineOperationStatus status = client.pipelines().start(pipeline.getPipelineId());
     Assertions.assertTrue(status.isSuccess(),
-        "[pipeline.start] Pipeline start failed: " + pipeline.getPipelineId() + " - " + status.getTitle());
+            "[pipeline.start] Pipeline start failed: " + pipeline.getPipelineId() + " - " + status.getTitle());
   }
 
   /**
@@ -176,48 +182,47 @@ public final class ClientTestSupport {
   }
 
   /**
-   * Returns event IDs that are expected to pass the Boolean Filter (where {@code sensor_fault_flags} is true).
+   * Returns event IDs that are expected to pass the Boolean Filter.
    *
    * @param inputEvents events sent into the pipeline
    * @return set of event IDs that should appear in the output
    */
   public Set<String> expectedPassedEventIds(List<SensorEvent> inputEvents) {
     return inputEvents.stream()
-        .filter(SensorEvent::sensorFaultFlags)
-        .map(SensorEvent::eventId)
-        .collect(Collectors.toSet());
+            .filter(SensorEvent::sensorFaultFlags)
+            .map(SensorEvent::eventId)
+            .collect(Collectors.toSet());
   }
 
   /**
-   * Publishes events to {@code topicIn} via the client producer and consumes from {@code topicOut}
-   * until at least {@code expectedEventCount} events are received (or timeout).
+   * Publishes events to {@code topicIn} and consumes from {@code topicOut}.
    *
    * @param topicIn            NATS topic to publish to
    * @param topicOut           NATS topic to subscribe to
    * @param inputEvents        events to publish
    * @param expectedEventCount minimum number of events to wait for
-   * @return list of consumed events (as raw maps)
+   * @return list of consumed events
    */
   public List<Map<String, Object>> publishAndConsumeNats(
-      String topicIn,
-      String topicOut,
-      List<SensorEvent> inputEvents,
-      long expectedEventCount) {
+          String topicIn,
+          String topicOut,
+          List<SensorEvent> inputEvents,
+          long expectedEventCount) {
     NatsTransportProtocol protocolIn = natsProtocolForTopic(topicIn);
     NatsTransportProtocol protocolOut = natsProtocolForTopic(topicOut);
 
     List<Map<String, Object>> consumed = new ArrayList<>();
     var subscription = client.streams().subscribe(
-        streamForTopic(protocolOut),
-        event -> consumed.add(event.getRaw()));
+            streamForTopic(protocolOut),
+            event -> consumed.add(event.getRaw()));
 
     var producer = client.streams().getProducer(streamForTopic(protocolIn));
     try {
       for (SensorEvent event : inputEvents) {
         producer.publish(event.toMap());
       }
-      await().atMost(Duration.ofSeconds(20))
-          .until(() -> consumed.size() >= expectedEventCount);
+      await().atMost(Duration.ofSeconds(WAIT_TIMEOUT_SECONDS))
+              .until(() -> consumed.size() >= expectedEventCount);
     } finally {
       producer.close();
       subscription.unsubscribe();
@@ -232,9 +237,10 @@ public final class ClientTestSupport {
   }
 
   private static NatsTransportProtocol natsProtocolForTopic(String topic) {
-    String natsUrl = System.getProperty("test.nats.url", "nats://127.0.0.1:4222");
-    String host = "127.0.0.1";
-    int port = 4222;
+    String natsUrl = System.getProperty("test.nats.url", DEFAULT_NATS_URL);
+    String host = DEFAULT_NATS_HOST;
+    int port = DEFAULT_NATS_PORT;
+
     if (natsUrl.startsWith("nats://")) {
       String rest = natsUrl.substring(7);
       int colon = rest.indexOf(':');
@@ -247,54 +253,40 @@ public final class ClientTestSupport {
   }
 
   /**
-   * Asserts that consumed events contain at least the expected set of event IDs (our test events).
-   * The adapter (Machine Simulator) also publishes to the same input topic, so the total
-   * consumed count may exceed expectedEventIds.size(). Duplicate deliveries of our events
-   * can occur (e.g. NATS or pipeline semantics), so we only assert that each of our
-   * event IDs appears at least once.
+   * Asserts that consumed events contain at least the expected set of event IDs.
    *
-   * @param consumed          events received from the output topic (may include adapter traffic)
-   * @param expectedEventIds  expected set of event IDs from our published events
+   * @param consumed          events received from the output topic
+   * @param expectedEventIds  expected set of event IDs
    */
   public void assertFilteredEvents(List<Map<String, Object>> consumed, Set<String> expectedEventIds) {
     Set<String> ourEventIdsInOutput = consumed.stream()
-        .map(event -> String.valueOf(event.get("eventId")))
-        .filter(expectedEventIds::contains)
-        .collect(Collectors.toSet());
+            .map(event -> String.valueOf(event.get("eventId")))
+            .filter(expectedEventIds::contains)
+            .collect(Collectors.toSet());
 
     Assertions.assertTrue(ourEventIdsInOutput.containsAll(expectedEventIds),
-        "[nats.consume] Output must contain at least our expected event IDs: expected " + expectedEventIds + ", found " + ourEventIdsInOutput + ".");
+            "[nats.consume] Output missing expected event IDs. Expected: " + expectedEventIds
+                    + ", Found: " + ourEventIdsInOutput);
   }
 
   /**
-   * Waits until all adapters and pipelines with the test prefix have non-blank endpoint URLs assigned.
-   *
-   * @param expectedAdapterCount  minimum number of adapters to wait for
-   * @param expectedPipelineCount minimum number of pipelines to wait for
-   * @param timeout               maximum wait duration
+   * Waits until all resources are ready.
    */
   public void waitUntilEndpointsReady(int expectedAdapterCount,
                                       int expectedPipelineCount,
                                       Duration timeout) {
-    TestResourceHelper.waitUntilEndpointsReady(client, testPrefix, expectedAdapterCount, expectedPipelineCount, timeout);
+    TestResourceHelper.waitUntilEndpointsReady(client, testPrefix, expectedAdapterCount,
+            expectedPipelineCount, timeout);
   }
 
-  /** Stops and deletes all adapters and pipelines whose names start with the test prefix. */
   public void cleanupTestResources() {
     TestResourceHelper.cleanup(client, testPrefix);
   }
 
-  /** Returns the StreamPipes client instance used by this support. */
   public StreamPipesClient client() {
     return client;
   }
 
-  /**
-   * Returns the selected endpoint URL of the first processor (SEPA) in the pipeline.
-   *
-   * @param pipeline the pipeline to inspect
-   * @return endpoint URL or null if no processors
-   */
   public static String extractProcessorEndpoint(Pipeline pipeline) {
     if (pipeline.getSepas() == null || pipeline.getSepas().isEmpty()) {
       return null;
@@ -308,9 +300,11 @@ public final class ClientTestSupport {
     int port = Integer.parseInt(requiredProperty("test.port"));
     String user = requiredProperty("test.username");
     String apiKey = requiredProperty("test.apikey");
-    var client = StreamPipesClient.create(host, port, StreamPipesCredentials.withApiKey(user, apiKey), true);
-    client.registerProtocol(new SpNatsProtocolFactory());
-    return client;
+
+    var streamPipesClient = StreamPipesClient.create(host, port,
+            StreamPipesCredentials.withApiKey(user, apiKey), true);
+    streamPipesClient.registerProtocol(new SpNatsProtocolFactory());
+    return streamPipesClient;
   }
 
   private static String requiredProperty(String key) {
@@ -322,13 +316,14 @@ public final class ClientTestSupport {
   }
 
   /**
-   * Test event payload matching the Machine Simulator schema; used for publishing and assertion.
+   * Test event payload matching the Machine Simulator schema.
    */
   public record SensorEvent(String eventId,
                             double density,
                             double massFlow,
                             String sensorId,
                             boolean sensorFaultFlags) {
+
     public Map<String, Object> toMap() {
       Map<String, Object> event = new HashMap<>();
       event.put("eventId", eventId);

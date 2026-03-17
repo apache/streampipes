@@ -876,6 +876,7 @@
         <module>archetypes/streampipes-archetype-extensions-jvm</module>
         <module>streampipes-client</module>
         <module>streampipes-client-api</module>
+        <module>streampipes-client-e2e/java-client-e2e</module>
         <module>streampipes-commons</module>
         <module>streampipes-connect-management</module>
         <module>streampipes-connect-shared</module>

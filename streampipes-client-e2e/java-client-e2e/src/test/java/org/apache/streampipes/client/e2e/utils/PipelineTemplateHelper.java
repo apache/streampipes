@@ -45,24 +45,23 @@ import java.util.UUID;
 
 /**
  * Builds adapter and pipeline models for E2E tests: Machine Simulator adapter, Boolean Filter processor,
- * and NATS sink, using the StreamPipes model API (no JSON templates).
+ * and NATS sink, using the StreamPipes model API.
  */
 final class PipelineTemplateHelper {
 
-  // Adapter: Machine Simulator
   private static final String MACHINE_SIMULATOR_APP_ID =
-      "org.apache.streampipes.connect.iiot.adapters.simulator.machine";
+          "org.apache.streampipes.connect.iiot.adapters.simulator.machine";
 
-  // Processor: Boolean Filter
   private static final String BOOLEAN_FILTER_APP_ID =
-      "org.apache.streampipes.processors.filters.jvm.processor.booleanfilter";
+          "org.apache.streampipes.processors.filters.jvm.processor.booleanfilter";
   private static final String BOOLEAN_FILTER_BELONGS_TO = "sp:" + BOOLEAN_FILTER_APP_ID;
 
-  // Sink: NATS
   private static final String NATS_SINK_APP_ID = "org.apache.streampipes.sinks.brokers.jvm.nats";
   private static final String NATS_SINK_BELONGS_TO = "sp:" + NATS_SINK_APP_ID;
 
-  // XSD data types (schema)
+  private static final String NATS_HOST = "nats";
+  private static final int NATS_PORT = 4222;
+
   private static final URI XSD_INTEGER = XSD.INTEGER;
   private static final String XSD_STRING = XSD.STRING.toString();
   private static final String XSD_FLOAT = XSD.FLOAT.toString();
@@ -73,11 +72,7 @@ final class PipelineTemplateHelper {
   }
 
   /**
-   * Builds a Machine Simulator adapter description with NATS grounding for the given input topic.
-   *
-   * @param testPrefix prefix for the adapter name
-   * @param topicIn    NATS topic the adapter will produce to
-   * @return adapter description ready for {@code client.adapters().create(adapter)}
+   * Builds a Machine Simulator adapter description.
    */
   static AdapterDescription buildAdapter(String testPrefix, String topicIn) {
     AdapterDescription adapter = new AdapterDescription();
@@ -90,25 +85,18 @@ final class PipelineTemplateHelper {
     adapter.setSelectedEndpointUrl(null);
     adapter.setVersion(0);
 
-    adapter.setEventGrounding(new EventGrounding(new NatsTransportProtocol("nats", 4222, topicIn)));
+    adapter.setEventGrounding(new EventGrounding(new NatsTransportProtocol(NATS_HOST, NATS_PORT, topicIn)));
     adapter.setConfig(buildAdapterConfig());
     adapter.setDataStream(buildMachineSimulatorDataStream(topicIn));
     return adapter;
   }
 
   /**
-   * Builds a pipeline that consumes from the adapter stream, applies Boolean Filter (sensor_fault_flags == true),
-   * and publishes to the given NATS output topic.
-   *
-   * @param testPrefix prefix for the pipeline name
-   * @param adapter    adapter whose data stream is the pipeline input
-   * @param topicIn    NATS topic for pipeline input (must match adapter)
-   * @param topicOut   NATS topic for pipeline output
-   * @return pipeline ready for {@code client.pipelines().create(pipeline)}
+   * Builds a pipeline with Boolean Filter and NATS Sink.
    */
   static Pipeline buildPipeline(String testPrefix, AdapterDescription adapter, String topicIn, String topicOut) {
     SpDataStream stream = new Cloner().stream(adapter.getDataStream());
-    stream.getEventGrounding().setTransportProtocol(new NatsTransportProtocol("nats", 4222, topicIn));
+    stream.getEventGrounding().setTransportProtocol(new NatsTransportProtocol(NATS_HOST, NATS_PORT, topicIn));
     stream.setDom("s0");
     if (stream.getConnectedTo() == null) {
       stream.setConnectedTo(new ArrayList<>());
@@ -117,14 +105,13 @@ final class PipelineTemplateHelper {
     DataProcessorInvocation processor = buildBooleanFilterProcessor(stream, topicOut);
     processor.setDom("p0");
     processor.setConnectedTo(List.of("s0"));
-    // Must contain ":" so InstanceIdExtractor.extractId() returns a unique id; else extension skips as "already running"
-    processor.setElementId("sp:processor:" + UUID.randomUUID().toString().replace("-", "").substring(0, 8));
+    processor.setElementId("sp:processor:" + generateShortUuid());
     processor.getOutputStream().setDom("p0-out");
 
     DataSinkInvocation sink = buildNatsSink(processor.getOutputStream(), topicOut);
     sink.setDom("sink0");
     sink.setConnectedTo(List.of("p0"));
-    sink.setElementId("sp:sink:" + UUID.randomUUID().toString().replace("-", "").substring(0, 8));
+    sink.setElementId("sp:sink:" + generateShortUuid());
 
     Pipeline pipeline = new Pipeline();
     pipeline.setName(testPrefix + "pipeline-" + UUID.randomUUID());
@@ -137,7 +124,6 @@ final class PipelineTemplateHelper {
     return pipeline;
   }
 
-  /** Static properties for the Machine Simulator adapter (wait time, sensor count, simulator type). */
   private static List<StaticProperty> buildAdapterConfig() {
     List<StaticProperty> config = new ArrayList<>();
     FreeTextStaticProperty waitTime = new FreeTextStaticProperty("wait-time-ms", "", "", XSD_INTEGER);
@@ -147,7 +133,7 @@ final class PipelineTemplateHelper {
     numSensors.setValue("1");
     config.add(numSensors);
     OneOfStaticProperty simulatorOption = new OneOfStaticProperty(
-        "selected-simulator-option", "Simulator", "Select simulator type");
+            "selected-simulator-option", "Simulator", "Select simulator type");
     simulatorOption.addOption(new Option("flowrate", true));
     simulatorOption.addOption(new Option("pressure", false));
     simulatorOption.addOption(new Option("waterlevel", false));
@@ -156,15 +142,13 @@ final class PipelineTemplateHelper {
     return config;
   }
 
-  /** Data stream definition for the Machine Simulator (NATS grounding + flow simulator event schema). */
   private static SpDataStream buildMachineSimulatorDataStream(String topicIn) {
     SpDataStream stream = new SpDataStream();
-    stream.setEventGrounding(new EventGrounding(new NatsTransportProtocol("nats", 4222, topicIn)));
+    stream.setEventGrounding(new EventGrounding(new NatsTransportProtocol(NATS_HOST, NATS_PORT, topicIn)));
     stream.setEventSchema(buildFlowSimulatorEventSchema());
     return stream;
   }
 
-  /** Event schema matching the Machine Simulator output (eventId, timestamp, sensorId, mass_flow, etc.). */
   private static EventSchema buildFlowSimulatorEventSchema() {
     EventSchema schema = new EventSchema();
     schema.addEventProperty(primitive("eventId", XSD_STRING, "DIMENSION_PROPERTY"));
@@ -178,14 +162,12 @@ final class PipelineTemplateHelper {
     return schema;
   }
 
-  /** Creates a primitive event property with the given runtime name, XSD type, and scope. */
   private static EventPropertyPrimitive primitive(String runtimeName, String runtimeType, String scope) {
     EventPropertyPrimitive p = new EventPropertyPrimitive(runtimeType, runtimeName, null, null);
     p.setPropertyScope(scope);
     return p;
   }
 
-  /** Boolean Filter processor: filters on sensor_fault_flags == true, output to the given NATS topic. */
   private static DataProcessorInvocation buildBooleanFilterProcessor(SpDataStream inputStream, String outputTopic) {
     DataProcessorInvocation proc = new DataProcessorInvocation();
     proc.setAppId(BOOLEAN_FILTER_APP_ID);
@@ -199,15 +181,15 @@ final class PipelineTemplateHelper {
     proc.setOutputStrategies(List.of(new KeepOutputStrategy()));
 
     SpDataStream outputStream = new Cloner().stream(inputStream);
-    outputStream.getEventGrounding().setTransportProtocol(new NatsTransportProtocol("nats", 4222, outputTopic));
+    outputStream.getEventGrounding().setTransportProtocol(new NatsTransportProtocol(NATS_HOST, NATS_PORT, outputTopic));
     proc.setOutputStream(outputStream);
     return proc;
   }
 
-  /** Static properties for Boolean Filter: mapping sensor_fault_flags and value True. */
   private static List<StaticProperty> buildBooleanFilterStaticProperties() {
     List<StaticProperty> props = new ArrayList<>();
-    MappingPropertyUnary mapping = new MappingPropertyUnary("boolean-mapping", "Boolean Field", "The field to filter on");
+    MappingPropertyUnary mapping = new MappingPropertyUnary("boolean-mapping",
+            "Boolean Field", "The field to filter on");
     mapping.setRequirementSelector("r0::boolean-mapping");
     mapping.setSelectedProperty("s0::sensor_fault_flags");
     mapping.setMapsFromOptions(List.of("s0::sensor_fault_flags"));
@@ -221,7 +203,6 @@ final class PipelineTemplateHelper {
     return props;
   }
 
-  /** NATS sink invocation that publishes the processor output to the given subject. */
   private static DataSinkInvocation buildNatsSink(SpDataStream inputStream, String outputTopic) {
     DataSinkInvocation sink = new DataSinkInvocation();
     sink.setName("NATS Sink");
@@ -235,21 +216,19 @@ final class PipelineTemplateHelper {
     return sink;
   }
 
-  /** Static properties for NATS sink: subject, natsUrls, access mode, connection properties. */
   private static List<StaticProperty> buildNatsSinkStaticProperties(String outputTopic) {
     List<StaticProperty> props = new ArrayList<>();
     props.add(FreeTextStaticProperty.of("subject", outputTopic));
     props.add(FreeTextStaticProperty.of("natsUrls", "nats://nats:4222"));
     props.add(alternativesProperty("access-mode", "anonymous-alternative", "username-alternative"));
     props.add(alternativesProperty("connection-properties", "none-properties-alternative",
-        "custom-properties-alternative"));
+            "custom-properties-alternative"));
     return props;
   }
 
-  /** Builds a static property alternatives with two options (selectedId and unselectedId). */
   private static StaticPropertyAlternatives alternativesProperty(String internalName,
-                                                                  String selectedId,
-                                                                  String unselectedId) {
+                                                                 String selectedId,
+                                                                 String unselectedId) {
     StaticPropertyAlternatives p = new StaticPropertyAlternatives(internalName, internalName, internalName);
     List<StaticPropertyAlternative> alts = new ArrayList<>();
     alts.add(alternative(selectedId, true));
@@ -258,10 +237,13 @@ final class PipelineTemplateHelper {
     return p;
   }
 
-  /** Builds a single static property alternative. */
   private static StaticPropertyAlternative alternative(String internalName, boolean selected) {
     StaticPropertyAlternative a = new StaticPropertyAlternative(internalName, internalName, internalName);
     a.setSelected(selected);
     return a;
+  }
+
+  private static String generateShortUuid() {
+    return UUID.randomUUID().toString().replace("-", "").substring(0, 8);
   }
 }

@@ -41,10 +41,14 @@ import static org.awaitility.Awaitility.await;
  */
 class LoadBalanceTest {
 
-  /** Number of adapter+pipeline pairs to create. */
   private static final int RESOURCE_COUNT = 7;
-  /** Name prefix for created adapters and pipelines (used for filtering and cleanup). */
+  private static final int MIN_EXTENSION_INSTANCES = 2;
   private static final String TEST_PREFIX = "sp-e2e-java-lb-";
+  private static final String EXTENSIONS_SERVICES_PATH = "api/v2/extensions-services";
+
+  private static final Duration EXTENSION_REGISTRATION_TIMEOUT = Duration.ofSeconds(90);
+  private static final Duration ENDPOINT_READY_TIMEOUT = Duration.ofSeconds(30);
+  private static final Duration POLL_INTERVAL = Duration.ofSeconds(2);
 
   private final ClientTestSupport support = new ClientTestSupport(TEST_PREFIX);
 
@@ -53,14 +57,10 @@ class LoadBalanceTest {
     support.cleanupTestResources();
   }
 
-  /** Minimum number of extension instances that must be registered before creating adapters (CI starts them sequentially). */
-  private static final int MIN_EXTENSION_INSTANCES = 3;
-  /** Max time to wait for enough extension instances to register (e.g. in Docker/CI). */
-  private static final Duration EXTENSION_REGISTRATION_TIMEOUT = Duration.ofSeconds(90);
-
   /**
-   * Cleans up any leftover resources, creates {@value #RESOURCE_COUNT} adapter+pipeline pairs,
-   * waits until endpoints are assigned, then asserts load balancing succeeded.
+   * Cleans up any leftover resources, creates {@value #RESOURCE_COUNT} adapter+pipeline pairs with
+   * unique topics, waits until all have endpoint URLs, then asserts count and that endpoints
+   * are spread across at least {@value #MIN_EXTENSION_INSTANCES} instances.
    */
   @Test
   void testLoadBalance() {
@@ -69,10 +69,10 @@ class LoadBalanceTest {
     // In CI, extension containers start sequentially; wait until at least 3 are registered
     // so that adapter/pipeline assignment can spread across instances.
     await()
-        .pollInterval(Duration.ofSeconds(2))
-        .atMost(EXTENSION_REGISTRATION_TIMEOUT)
-        .until(() -> support.client().customRequest()
-            .getList("api/v2/extensions-services", SpServiceRegistration.class).size() >= MIN_EXTENSION_INSTANCES);
+            .pollInterval(POLL_INTERVAL)
+            .atMost(EXTENSION_REGISTRATION_TIMEOUT)
+            .until(() -> support.client().customRequest()
+                    .getList(EXTENSIONS_SERVICES_PATH, SpServiceRegistration.class).size() >= MIN_EXTENSION_INSTANCES);
 
     for (int i = 0; i < RESOURCE_COUNT; i++) {
       String runId = UUID.randomUUID().toString().replace("-", "");
@@ -83,35 +83,38 @@ class LoadBalanceTest {
       support.createAndStartPipeline(adapter, topicIn, topicOut);
     }
 
-    support.waitUntilEndpointsReady(RESOURCE_COUNT, RESOURCE_COUNT, Duration.ofSeconds(30));
+    support.waitUntilEndpointsReady(RESOURCE_COUNT, RESOURCE_COUNT, ENDPOINT_READY_TIMEOUT);
 
     List<AdapterDescription> createdAdapters = support.client().adapters().all().stream()
-        .filter(a -> a.getName() != null && a.getName().startsWith(TEST_PREFIX))
-        .collect(Collectors.toList());
+            .filter(a -> a.getName() != null && a.getName().startsWith(TEST_PREFIX))
+            .toList();
+
     List<Pipeline> createdPipelines = support.client().pipelines().all().stream()
-        .filter(p -> p.getName() != null && p.getName().startsWith(TEST_PREFIX))
-        .collect(Collectors.toList());
+            .filter(p -> p.getName() != null && p.getName().startsWith(TEST_PREFIX))
+            .toList();
 
     Assertions.assertEquals(RESOURCE_COUNT, createdAdapters.size(),
-        "Expected " + RESOURCE_COUNT + " adapters, but found " + createdAdapters.size() + ".");
+            String.format("Expected %d adapters, but found %d.", RESOURCE_COUNT, createdAdapters.size()));
     Assertions.assertEquals(RESOURCE_COUNT, createdPipelines.size(),
-        "Expected " + RESOURCE_COUNT + " pipelines, but found " + createdPipelines.size() + ".");
+            String.format("Expected %d pipelines, but found %d.", RESOURCE_COUNT, createdPipelines.size()));
 
-    // Verify load balancing succeeded.
+    // Distinct endpoint URLs: each unique URL implies a different instance
     Set<String> adapterEndpoints = createdAdapters.stream()
-        .map(AdapterDescription::getSelectedEndpointUrl)
-        .filter(endpoint -> endpoint != null && !endpoint.isBlank())
-        .collect(Collectors.toCollection(HashSet::new));
+            .map(AdapterDescription::getSelectedEndpointUrl)
+            .filter(endpoint -> endpoint != null && !endpoint.isBlank())
+            .collect(Collectors.toCollection(HashSet::new));
 
     Set<String> pipelineEndpoints = createdPipelines.stream()
-        .map(ClientTestSupport::extractProcessorEndpoint)
-        .filter(endpoint -> endpoint != null && !endpoint.isBlank())
-        .collect(Collectors.toCollection(HashSet::new));
+            .map(ClientTestSupport::extractProcessorEndpoint)
+            .filter(endpoint -> endpoint != null && !endpoint.isBlank())
+            .collect(Collectors.toCollection(HashSet::new));
 
-    Assertions.assertTrue(adapterEndpoints.size() >= 2,
-        "Load balancing for adapters did not spread across at least 2 instances.");
-    Assertions.assertTrue(pipelineEndpoints.size() >= 2,
-        "Load balancing for pipelines did not spread across at least 2 instances.");
+    Assertions.assertTrue(adapterEndpoints.size() >= MIN_EXTENSION_INSTANCES,
+            String.format("Adapter load balancing failed: expected >= %d instances, but found %d. Endpoints: %s",
+                    MIN_EXTENSION_INSTANCES, adapterEndpoints.size(), adapterEndpoints));
+
+    Assertions.assertTrue(pipelineEndpoints.size() >= MIN_EXTENSION_INSTANCES,
+            String.format("Pipeline load balancing failed: expected >= %d instances, but found %d. Endpoints: %s",
+                    MIN_EXTENSION_INSTANCES, pipelineEndpoints.size(), pipelineEndpoints));
   }
 }
-

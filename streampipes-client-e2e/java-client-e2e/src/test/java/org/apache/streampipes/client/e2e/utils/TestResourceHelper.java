@@ -40,6 +40,9 @@ import static org.awaitility.Awaitility.await;
  */
 final class TestResourceHelper {
 
+  private static final long POLL_INTERVAL_MS = 500L;
+  private static final long DEFAULT_POLL_INTERVAL_SEC = 1L;
+
   private TestResourceHelper() {
   }
 
@@ -52,14 +55,16 @@ final class TestResourceHelper {
    * @return the adapter description
    * @throws IllegalStateException if not found within the timeout
    */
-  static AdapterDescription waitForAdapter(StreamPipesClient client, String adapterName, Duration timeout) {
+  static AdapterDescription waitForAdapter(StreamPipesClient client,
+                                          String adapterName,
+                                          Duration timeout) {
     return waitFor(
-        () -> client.adapters().all().stream()
-            .filter(a -> adapterName.equals(a.getName()))
-            .findFirst()
-            .orElse(null),
-        timeout,
-        "Adapter not found after creation: " + adapterName
+            () -> client.adapters().all().stream()
+                    .filter(a -> adapterName.equals(a.getName()))
+                    .findFirst()
+                    .orElse(null),
+            timeout,
+            "Adapter not found after creation: " + adapterName
     );
   }
 
@@ -72,14 +77,16 @@ final class TestResourceHelper {
    * @return the pipeline
    * @throws IllegalStateException if not found within the timeout
    */
-  static Pipeline waitForPipeline(StreamPipesClient client, String pipelineName, Duration timeout) {
+  static Pipeline waitForPipeline(StreamPipesClient client,
+                                  String pipelineName,
+                                  Duration timeout) {
     return waitFor(
-        () -> client.pipelines().all().stream()
-            .filter(p -> pipelineName.equals(p.getName()))
-            .findFirst()
-            .orElse(null),
-        timeout,
-        "Pipeline not found after creation: " + pipelineName
+            () -> client.pipelines().all().stream()
+                    .filter(p -> pipelineName.equals(p.getName()))
+                    .findFirst()
+                    .orElse(null),
+            timeout,
+            "Pipeline not found after creation: " + pipelineName
     );
   }
 
@@ -99,34 +106,35 @@ final class TestResourceHelper {
                                       Duration timeout) {
     try {
       await()
-          .pollInterval(Duration.ofSeconds(1))
-          .atMost(timeout)
-          .until(() -> {
-            List<AdapterDescription> adapters = client.adapters().all().stream()
-                .filter(a -> a.getName() != null && a.getName().startsWith(testPrefix))
-                .toList();
-            List<Pipeline> pipelines = client.pipelines().all().stream()
-                .filter(p -> p.getName() != null && p.getName().startsWith(testPrefix))
-                .toList();
+              .pollInterval(Duration.ofSeconds(DEFAULT_POLL_INTERVAL_SEC))
+              .atMost(timeout)
+              .until(() -> {
+                List<AdapterDescription> adapters = client.adapters().all().stream()
+                        .filter(a -> a.getName() != null && a.getName().startsWith(testPrefix))
+                        .toList();
+                List<Pipeline> pipelines = client.pipelines().all().stream()
+                        .filter(p -> p.getName() != null && p.getName().startsWith(testPrefix))
+                        .toList();
 
-            boolean adaptersReady = adapters.size() >= expectedAdapterCount
-                && adapters.stream().allMatch(a -> a.getSelectedEndpointUrl() != null && !a.getSelectedEndpointUrl().isBlank());
-            boolean pipelinesReady = pipelines.size() >= expectedPipelineCount
-                && pipelines.stream().allMatch(p -> {
+                boolean adaptersReady = adapters.size() >= expectedAdapterCount
+                        && adapters.stream().allMatch(a -> a.getSelectedEndpointUrl() != null
+                        && !a.getSelectedEndpointUrl().isBlank());
+
+                boolean pipelinesReady = pipelines.size() >= expectedPipelineCount
+                        && pipelines.stream().allMatch(p -> {
                   String endpoint = ClientTestSupport.extractProcessorEndpoint(p);
                   return endpoint != null && !endpoint.isBlank();
                 });
 
-            return adaptersReady && pipelinesReady;
-          });
+                return adaptersReady && pipelinesReady;
+              });
     } catch (ConditionTimeoutException e) {
-      Assertions.fail("Endpoint assignment did not finish in " + timeout.getSeconds() + " seconds");
+      Assertions.fail("Endpoint assignment did not finish in " + timeout.toSeconds() + " seconds");
     }
   }
 
   /**
    * Stops and deletes all pipelines and adapters whose names start with {@code testPrefix}.
-   * Failures are collected and reported via {@link org.junit.jupiter.api.Assertions#fail(String)}.
    *
    * @param client     StreamPipes client
    * @param testPrefix name prefix to filter resources
@@ -134,32 +142,33 @@ final class TestResourceHelper {
   static void cleanup(StreamPipesClient client, String testPrefix) {
     List<String> errors = new ArrayList<>();
 
-    // Stop and delete pipelines first, then adapters
+    // Stop and delete pipelines first
     try {
       List<Pipeline> pipelines = client.pipelines().all().stream()
-          .filter(p -> p.getName() != null && p.getName().startsWith(testPrefix))
-          .sorted(Comparator.comparing(Pipeline::getName))
-          .toList();
+              .filter(p -> p.getName() != null && p.getName().startsWith(testPrefix))
+              .sorted(Comparator.comparing(Pipeline::getName))
+              .toList();
       for (Pipeline pipeline : pipelines) {
         capture(errors, "stop pipeline " + pipeline.getPipelineId(),
-            () -> client.pipelines().stop(pipeline.getPipelineId()));
+                () -> client.pipelines().stop(pipeline.getPipelineId()));
         capture(errors, "delete pipeline " + pipeline.getPipelineId(),
-            () -> client.pipelines().delete(pipeline.getPipelineId()));
+                () -> client.pipelines().delete(pipeline.getPipelineId()));
       }
     } catch (Exception e) {
       errors.add("scan pipelines failed: " + e.getMessage());
     }
 
+    // Stop and delete adapters
     try {
       List<AdapterDescription> adapters = client.adapters().all().stream()
-          .filter(a -> a.getName() != null && a.getName().startsWith(testPrefix))
-          .sorted(Comparator.comparing(AdapterDescription::getName))
-          .toList();
+              .filter(a -> a.getName() != null && a.getName().startsWith(testPrefix))
+              .sorted(Comparator.comparing(AdapterDescription::getName))
+              .toList();
       for (AdapterDescription adapter : adapters) {
         capture(errors, "stop adapter " + adapter.getElementId(),
-            () -> client.adapters().stop(adapter.getElementId()));
+                () -> client.adapters().stop(adapter.getElementId()));
         capture(errors, "delete adapter " + adapter.getElementId(),
-            () -> client.adapters().delete(adapter.getElementId()));
+                () -> client.adapters().delete(adapter.getElementId()));
       }
     } catch (Exception e) {
       errors.add("scan adapters failed: " + e.getMessage());
@@ -170,20 +179,12 @@ final class TestResourceHelper {
     }
   }
 
-  /**
-   * Polls until {@code poll.get()} returns non-null or the timeout is reached.
-   *
-   * @param poll         supplier to poll (e.g. list lookup)
-   * @param timeout      maximum wait duration
-   * @param errorMessage message for the exception if timeout
-   * @return the first non-null value from {@code poll.get()}
-   */
   private static <T> T waitFor(Supplier<T> poll, Duration timeout, String errorMessage) {
     try {
       await()
-          .pollInterval(Duration.ofMillis(500))
-          .atMost(timeout)
-          .until(() -> poll.get() != null);
+              .pollInterval(Duration.ofMillis(POLL_INTERVAL_MS))
+              .atMost(timeout)
+              .until(() -> poll.get() != null);
     } catch (ConditionTimeoutException e) {
       throw new IllegalStateException(errorMessage, e);
     }
@@ -194,10 +195,6 @@ final class TestResourceHelper {
     return value;
   }
 
-  /**
-   * Runs the action and on failure appends an error message to the list, unless it is a known
-   * delete-response deserialization issue (then ignored). Delete pipeline runs with stderr suppressed.
-   */
   private static void capture(List<String> errors, String operation, ThrowingRunnable action) {
     try {
       if (operation.startsWith("delete pipeline ")) {
@@ -206,16 +203,16 @@ final class TestResourceHelper {
         action.run();
       }
     } catch (Exception e) {
+      // Handle known deserialization issue in client response during deletion
       if (operation.startsWith("delete ")
-          && e.getMessage() != null
-          && e.getMessage().contains("Cannot construct instance of `org.apache.streampipes.model.message.Message`")) {
+              && e.getMessage() != null
+              && e.getMessage().contains("Cannot construct instance of `org.apache.streampipes.model.message.Message`")) {
         return;
       }
       errors.add(operation + " failed: " + e.getMessage());
     }
   }
 
-  /** Temporarily redirects stderr to a null stream while running the action. */
   private static void runWithSuppressedStderr(ThrowingRunnable action) throws Exception {
     PrintStream originalErr = System.err;
     try (PrintStream suppressedErr = new PrintStream(OutputStream.nullOutputStream())) {
@@ -226,7 +223,6 @@ final class TestResourceHelper {
     }
   }
 
-  /** Runnable that may throw a checked exception. */
   @FunctionalInterface
   private interface ThrowingRunnable {
     void run() throws Exception;
