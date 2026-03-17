@@ -1,0 +1,324 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container csv-import-shell">
+    <div class="sp-dialog-content p-15 csv-import-content">
+        @if (topMessages().length > 0) {
+            <div class="message-box" data-cy="csv-import-messages">
+                @for (message of topMessages(); track message.message) {
+                    <div class="message-line">{{ message.message }}</div>
+                }
+            </div>
+        }
+
+        <mat-horizontal-stepper #csvImportStepper>
+            <mat-step>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Upload CSV file' | translate"
+                >
+                    <div class="upload-row">
+                        <label
+                            class="file-label"
+                            data-cy="csv-import-file-label"
+                        >
+                            <span>{{
+                                fileName() || ('Select CSV file' | translate)
+                            }}</span>
+                            <input
+                                type="file"
+                                accept=".csv,text/csv"
+                                (change)="onFileSelected($event)"
+                                data-cy="csv-import-file-input"
+                            />
+                        </label>
+                        @if (fileName()) {
+                            <div class="file-name">{{ fileName() }}</div>
+                        }
+                    </div>
+                </sp-split-section>
+
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Choose target dataset' | translate"
+                >
+                    <div class="grid">
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Import target' | translate"
+                        >
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-select
+                                    [formControl]="targetForm.controls.mode"
+                                    data-cy="csv-import-target-mode"
+                                >
+                                    <mat-option
+                                        value="NEW"
+                                        data-cy="csv-import-target-mode-new"
+                                    >
+                                        {{ 'Create new dataset' | translate }}
+                                    </mat-option>
+                                    <mat-option
+                                        value="EXISTING"
+                                        data-cy="csv-import-target-mode-existing"
+                                    >
+                                        {{ 'Use existing dataset' | translate }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </sp-form-field>
+
+                        @if (targetMode() === 'NEW') {
+                            <sp-form-field
+                                [level]="3"
+                                [label]="'Dataset name' | translate"
+                            >
+                                <mat-form-field
+                                    appearance="outline"
+                                    class="w-100"
+                                >
+                                    <input
+                                        matInput
+                                        [formControl]="
+                                            targetForm.controls
+                                                .newMeasurementName
+                                        "
+                                        data-cy="csv-import-new-measurement"
+                                    />
+                                </mat-form-field>
+                            </sp-form-field>
+                        } @else {
+                            <sp-form-field
+                                [level]="3"
+                                [label]="'Existing dataset' | translate"
+                            >
+                                <mat-form-field
+                                    appearance="outline"
+                                    class="w-100"
+                                >
+                                    <mat-select
+                                        [formControl]="
+                                            targetForm.controls
+                                                .existingMeasurementName
+                                        "
+                                        data-cy="csv-import-existing-measurement"
+                                    >
+                                        @for (
+                                            measurementName of measurementNames;
+                                            track measurementName
+                                        ) {
+                                            <mat-option
+                                                [value]="measurementName"
+                                                [attr.data-cy]="
+                                                    'csv-import-existing-measurement-option-' +
+                                                    measurementName
+                                                "
+                                            >
+                                                {{ measurementName }}
+                                            </mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </sp-form-field>
+                        }
+                    </div>
+                </sp-split-section>
+
+                <ng-template matStepLabel>{{
+                    'Input' | translate
+                }}</ng-template>
+            </mat-step>
+
+            <mat-step>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'CSV configuration' | translate"
+                >
+                    @if (previewLoading()) {
+                        <div section-actions>
+                            <mat-spinner [diameter]="24"></mat-spinner>
+                        </div>
+                    }
+
+                    <div class="grid">
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Delimiter' | translate"
+                        >
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-select
+                                    [formControl]="parseForm.controls.delimiter"
+                                    data-cy="csv-import-delimiter"
+                                >
+                                    <mat-option
+                                        value=";"
+                                        data-cy="csv-import-delimiter-semicolon"
+                                        >;</mat-option
+                                    >
+                                    <mat-option
+                                        value=","
+                                        data-cy="csv-import-delimiter-comma"
+                                        >,</mat-option
+                                    >
+                                    <mat-option
+                                        value="|"
+                                        data-cy="csv-import-delimiter-pipe"
+                                        >|</mat-option
+                                    >
+                                    <mat-option
+                                        value="\t"
+                                        data-cy="csv-import-delimiter-tab"
+                                        >Tab</mat-option
+                                    >
+                                </mat-select>
+                            </mat-form-field>
+                        </sp-form-field>
+
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Decimal separator' | translate"
+                        >
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-select
+                                    [formControl]="
+                                        parseForm.controls.decimalSeparator
+                                    "
+                                    data-cy="csv-import-decimal-separator"
+                                >
+                                    <mat-option
+                                        value=","
+                                        data-cy="csv-import-decimal-separator-comma"
+                                        >,</mat-option
+                                    >
+                                    <mat-option
+                                        value="."
+                                        data-cy="csv-import-decimal-separator-dot"
+                                        >.</mat-option
+                                    >
+                                </mat-select>
+                            </mat-form-field>
+                        </sp-form-field>
+                    </div>
+
+                    <mat-checkbox
+                        [formControl]="parseForm.controls.hasHeader"
+                        data-cy="csv-import-has-header"
+                    >
+                        {{ 'First row contains headers' | translate }}
+                    </mat-checkbox>
+                </sp-split-section>
+
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Live preview' | translate"
+                >
+                    <sp-csv-import-preview-table
+                        [hasPreview]="hasPreview()"
+                        [previewRows]="previewRows()"
+                        [columnModels]="columnModels()"
+                        [timestampFormat]="timestampFormat()"
+                        [hasSchemaMismatch]="hasSchemaMismatch()"
+                        [schemaMismatchSummary]="schemaMismatchSummary()"
+                        [schemaMismatchDetails]="schemaMismatchDetails()"
+                        [showTimestampWarning]="showTimestampWarning()"
+                        (columnTypeChange)="
+                            setColumnType($event.model, $event.type)
+                        "
+                        (columnRoleChange)="
+                            setColumnRole($event.model, $event.role)
+                        "
+                        (timestampFormatChange)="updateTimestampFormat($event)"
+                    ></sp-csv-import-preview-table>
+                </sp-split-section>
+
+                <ng-template matStepLabel>{{
+                    'Preview' | translate
+                }}</ng-template>
+            </mat-step>
+
+            <mat-step>
+                <sp-split-section [level]="3" [title]="'Upload' | translate">
+                    <sp-csv-import-upload-state
+                        [importLoading]="importLoading()"
+                        [hasImportResult]="hasImportResult()"
+                        [importResult]="importResult()"
+                        [uploadErrors]="uploadMessages()"
+                    ></sp-csv-import-upload-state>
+                </sp-split-section>
+
+                <ng-template matStepLabel>{{
+                    'Upload' | translate
+                }}</ng-template>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="sp-dialog-actions actions-align-left">
+        <button
+            mat-button
+            mat-flat-button
+            class="mat-basic"
+            style="margin-right: 10px"
+            (click)="close(hasImportResult())"
+            data-cy="csv-import-close-btn"
+        >
+            {{
+                hasImportResult()
+                    ? ('Close' | translate)
+                    : ('Cancel' | translate)
+            }}
+        </button>
+        @if (csvImportStepper.selectedIndex === 1 && !importLoading()) {
+            <button
+                mat-button
+                mat-flat-button
+                class="mat-basic"
+                style="margin-right: 10px"
+                (click)="previousStep()"
+            >
+                {{ 'Previous' | translate }}
+            </button>
+        }
+        @if (csvImportStepper.selectedIndex === 0) {
+            <button
+                mat-button
+                mat-flat-button
+                color="accent"
+                (click)="nextStep()"
+                [disabled]="!canProceedToConfiguration()"
+                data-cy="csv-import-next-btn"
+            >
+                {{ 'Next' | translate }}
+            </button>
+        }
+        @if (csvImportStepper.selectedIndex === 1) {
+            <button
+                mat-button
+                mat-flat-button
+                color="accent"
+                (click)="startUpload()"
+                [disabled]="!canImport() || importLoading()"
+                data-cy="csv-import-upload-btn"
+            >
+                {{ 'Upload' | translate }}
+            </button>
+        }
+    </div>
+</div>

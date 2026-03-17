@@ -1,4 +1,4 @@
-/*
+/*!
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements.  See the NOTICE file distributed with
  *  this work for additional information regarding copyright ownership.
@@ -16,23 +16,43 @@
  *
  */
 
-export class ChartWidgetTableUtils {
-    public static chartTableRows() {
-        return cy
-            .dataCy('data-explorer-table', {
-                timeout: 10000,
-            })
-            .filter(':visible')
-            .first()
-            .find('tbody tr')
-            .not(':has(.table-empty-row)');
-    }
+.upload-state {
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+}
 
-    /**
-     * Checks how many rows are visible within the table widget in charts
-     * @param amount of expected rows
-     */
-    public static checkAmountOfRows(amount: number) {
-        this.chartTableRows().should('have.length', amount);
-    }
+.upload-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.upload-copy,
+.result-meta {
+    color: var(--color-text-200, #5a6673);
+    max-width: 420px;
+}
+
+.success-icon {
+    color: var(--color-success, #2e7d32);
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+}
+
+.result-name {
+    font-weight: 600;
+}
+
+.upload-errors {
+    max-width: 520px;
+    color: var(--color-text-200, #5a6673);
+}
+
+.upload-error-line + .upload-error-line {
+    margin-top: 6px;
 }

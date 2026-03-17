@@ -73,6 +73,7 @@ import { ExportProviderConnectionTestComponent } from '../../dialog/export-provi
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { UserRole } from '../../../core/auth/user-role.enum';
+import { CsvImportDialogComponent } from '../../dialog/csv-import-dialog/csv-import-dialog.component';
 import {
     FlexDirective,
     FlexOrderDirective,
@@ -440,6 +441,29 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
                         'Manage permissions for dataset ',
                     ) + element.measureName,
             },
+        });
+    }
+
+    openCsvImportDialog() {
+        const dialogRef: DialogRef<CsvImportDialogComponent> =
+            this.dialogService.open(CsvImportDialogComponent, {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Import CSV'),
+                width: '60vw',
+                data: {
+                    measurementNames: this.availableMeasurements.map(
+                        measurement => measurement.name,
+                    ),
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(refresh => {
+            const importCompleted =
+                dialogRef.componentInstance?.instance?.hasImportResult?.() ===
+                true;
+            if (refresh || importCompleted) {
+                this.loadAvailableMeasurements();
+            }
         });
     }
 

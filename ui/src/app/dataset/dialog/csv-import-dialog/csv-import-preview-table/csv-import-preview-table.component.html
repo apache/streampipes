@@ -1,0 +1,186 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+@if (hasSchemaMismatch()) {
+    <sp-alert-banner
+        type="error"
+        data-cy="csv-import-schema-mismatch"
+        [title]="'Error' | translate"
+        [description]="schemaMismatchSummary()"
+    ></sp-alert-banner>
+
+    @if (schemaMismatchDetails().length > 0) {
+        <ul
+            class="schema-mismatch-list"
+            data-cy="csv-import-schema-mismatch-list"
+        >
+            @for (detail of schemaMismatchDetails(); track detail) {
+                <li
+                    class="schema-mismatch-item"
+                    data-cy="csv-import-schema-mismatch-item"
+                >
+                    {{ detail }}
+                </li>
+            }
+        </ul>
+    }
+}
+
+@if (showTimestampWarning()) {
+    <sp-alert-banner
+        type="warning"
+        data-cy="csv-import-timestamp-warning"
+        [title]="'Warning' | translate"
+        [description]="
+            'Please select exactly one timestamp column before uploading the CSV.'
+                | translate
+        "
+    ></sp-alert-banner>
+}
+
+@if (hasPreview()) {
+    <div class="preview-table-wrapper" data-cy="csv-import-preview">
+        <table class="preview-table preview-config-table">
+            <thead>
+                <tr>
+                    @for (
+                        model of columnModels();
+                        track model.column.csvColumn
+                    ) {
+                        <th>
+                            <div class="header-cell">
+                                <div class="header-title">
+                                    {{ model.column.csvColumn }}
+                                </div>
+                                @if (isTimestampColumn(model)) {
+                                    <mat-form-field
+                                        appearance="outline"
+                                        class="w-100"
+                                    >
+                                        <input
+                                            matInput
+                                            [ngModel]="timestampFormat()"
+                                            [ngModelOptions]="{
+                                                standalone: true,
+                                            }"
+                                            (ngModelChange)="
+                                                timestampFormatChange.emit(
+                                                    $event
+                                                )
+                                            "
+                                            placeholder="yyyy-MM-dd HH:mm:ss"
+                                            data-cy="csv-import-timestamp-format"
+                                        />
+                                    </mat-form-field>
+                                } @else {
+                                    <mat-form-field
+                                        appearance="outline"
+                                        class="w-100"
+                                    >
+                                        <mat-select
+                                            [value]="
+                                                model.column.runtimeType ||
+                                                model.column.inferredType ||
+                                                'STRING'
+                                            "
+                                            (selectionChange)="
+                                                onColumnTypeChange(
+                                                    model,
+                                                    $event.value
+                                                )
+                                            "
+                                            data-cy="csv-import-column-type"
+                                        >
+                                            <mat-option value="STRING">
+                                                STRING
+                                            </mat-option>
+                                            <mat-option value="BOOLEAN">
+                                                BOOLEAN
+                                            </mat-option>
+                                            <mat-option value="LONG">
+                                                LONG
+                                            </mat-option>
+                                            <mat-option value="FLOAT">
+                                                FLOAT
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                }
+                                <mat-form-field
+                                    appearance="outline"
+                                    class="w-100"
+                                >
+                                    <mat-select
+                                        [value]="getColumnRole(model)"
+                                        (selectionChange)="
+                                            onColumnRoleChange(
+                                                model,
+                                                $event.value
+                                            )
+                                        "
+                                        data-cy="csv-import-column-scope"
+                                    >
+                                        <mat-option
+                                            value="TIMESTAMP"
+                                            [disabled]="
+                                                isTimestampSelectionDisabled(
+                                                    model
+                                                )
+                                            "
+                                            data-cy="csv-import-column-scope-timestamp"
+                                        >
+                                            {{ 'Timestamp' | translate }}
+                                        </mat-option>
+                                        <mat-option
+                                            value="DIMENSION_PROPERTY"
+                                            data-cy="csv-import-column-scope-dimension"
+                                        >
+                                            {{ 'Dimension' | translate }}
+                                        </mat-option>
+                                        <mat-option
+                                            value="MEASUREMENT_PROPERTY"
+                                            data-cy="csv-import-column-scope-measurement"
+                                        >
+                                            {{ 'Measurement' | translate }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for (row of previewRows(); track $index) {
+                    <tr>
+                        @for (cell of row; track $index) {
+                            <td>{{ cell }}</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+} @else {
+    <div class="empty-state">
+        {{
+            'Preview is being prepared from the current CSV configuration.'
+                | translate
+        }}
+    </div>
+}

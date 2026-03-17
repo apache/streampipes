@@ -31,17 +31,24 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class DataLakeDataWriter {
 
   private final boolean ignoreSchemaMismatch;
+  private final boolean allowMissingFields;
 
   public DataLakeDataWriter(boolean ignoreSchemaMismatch) {
+    this(ignoreSchemaMismatch, false);
+  }
+
+  public DataLakeDataWriter(boolean ignoreSchemaMismatch, boolean allowMissingFields) {
     this.ignoreSchemaMismatch = ignoreSchemaMismatch;
+    this.allowMissingFields = allowMissingFields;
   }
 
   public void writeData(String measureName, SpQueryResult queryResult) {
@@ -49,7 +56,19 @@ public class DataLakeDataWriter {
     if (measure == null) {
       throw new SpRuntimeException("Measure \"" + measureName + "\" not found");
     }
+    writeData(measure, queryResult);
+  }
+
+  public void writeData(DataLakeMeasure measure, SpQueryResult queryResult) {
     var dataSeries = getDataSeries(queryResult);
+    getTimeSeriesStoreAndPersistQueryResult(dataSeries, measure);
+  }
+
+  public void writeData(DataLakeMeasure measure, List<String> headers, List<List<Object>> rows) {
+    var dataSeries = new DataSeries();
+    dataSeries.setHeaders(headers);
+    dataSeries.setRows(rows);
+    dataSeries.setTotal(rows.size());
     getTimeSeriesStoreAndPersistQueryResult(dataSeries, measure);
   }
 
@@ -95,11 +114,22 @@ public class DataLakeDataWriter {
           .collect(Collectors.toSet());
       var runtimeNameSet = new HashSet<>(runtimeNames);
 
-      if (!runtimeNameSet.equals(strippedEventKeys)){
+      if (!matchesRuntimeNames(runtimeNameSet, strippedEventKeys, allowMissingFields)) {
         throw new SpRuntimeException("The fields of the event do not match. Use \"ignoreSchemaMismatch\" to "
             + "ignore this error. Fields of the event: " + strippedEventKeys);
       }
     }
+  }
+
+  static boolean matchesRuntimeNames(
+      Set<String> expectedRuntimeNames,
+      Set<String> actualRuntimeNames,
+      boolean allowMissingFields
+  ) {
+    if (allowMissingFields) {
+      return expectedRuntimeNames.containsAll(actualRuntimeNames);
+    }
+    return expectedRuntimeNames.equals(actualRuntimeNames);
   }
 
   private List<String> getRuntimeNames(DataLakeMeasure measure) {
@@ -120,10 +150,18 @@ public class DataLakeDataWriter {
   }
 
   private Event rowToEvent(List<Object> row, List<String> headers){
-    Map<String, Object> eventMap = IntStream.range(0, headers.size())
-        .boxed()
-        .collect(Collectors.toMap(headers::get, row::get));
-    return EventFactory.fromMap(eventMap);
+    return EventFactory.fromMap(toEventMap(row, headers));
+  }
+
+  static Map<String, Object> toEventMap(List<Object> row, List<String> headers) {
+    var eventMap = new LinkedHashMap<String, Object>();
+    for (int i = 0; i < headers.size(); i++) {
+      var value = row.get(i);
+      if (value != null) {
+        eventMap.put(headers.get(i), value);
+      }
+    }
+    return eventMap;
   }
 
   private void renameTimestampField(Event event, String timestampField){
@@ -133,5 +171,3 @@ public class DataLakeDataWriter {
   }
 
 }
-
-
