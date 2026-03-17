@@ -22,6 +22,7 @@ import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -112,5 +113,75 @@ public class TestTextFilterProcessor {
             List.of()
         )
     );
+  }
+
+  @Test
+  public void textFilter1() {
+    executeFixtureTest(
+        "randomchar",
+        StringOperator.MATCHES,
+        "c",
+        List.of(
+            Map.of("timestamp", 1623871499055L, "randomchar", "a"),
+            Map.of("timestamp", 1623871500059L, "randomchar", "b"),
+            Map.of("timestamp", 1623871501064L, "randomchar", "c"),
+            Map.of("timestamp", 1623871502070L, "randomchar", "a"),
+            Map.of("timestamp", 1623871503078L, "randomchar", "b"),
+            Map.of("timestamp", 1623871504082L, "randomchar", "c"),
+            Map.of("timestamp", 1623871505084L, "randomchar", "a"),
+            Map.of("timestamp", 1623871506086L, "randomchar", "b"),
+            Map.of("timestamp", 1623871507091L, "randomchar", "c"),
+            Map.of("timestamp", 1623871508093L, "randomchar", "a")
+        ),
+        List.of(
+            Map.of("timestamp", 1623871501064L, "randomchar", "c"),
+            Map.of("timestamp", 1623871504082L, "randomchar", "c"),
+            Map.of("timestamp", 1623871507091L, "randomchar", "c")
+        )
+    );
+  }
+
+  @Test
+  public void textFilter2() {
+    executeFixtureTest(
+        "randomchar",
+        StringOperator.CONTAINS,
+        "app",
+        List.of(
+            Map.of("timestamp", 1623871499055L, "randomchar", "apple"),
+            Map.of("timestamp", 1623871500059L, "randomchar", "banana"),
+            Map.of("timestamp", 1623871501064L, "randomchar", "computer"),
+            Map.of("timestamp", 1623871502070L, "randomchar", "apple"),
+            Map.of("timestamp", 1623871503078L, "randomchar", "banana"),
+            Map.of("timestamp", 1623871504082L, "randomchar", "computer"),
+            Map.of("timestamp", 1623871505084L, "randomchar", "apple"),
+            Map.of("timestamp", 1623871506086L, "randomchar", "banana"),
+            Map.of("timestamp", 1623871507091L, "randomchar", "computer"),
+            Map.of("timestamp", 1623871508093L, "randomchar", "apple")
+        ),
+        List.of(
+            Map.of("timestamp", 1623871499055L, "randomchar", "apple"),
+            Map.of("timestamp", 1623871502070L, "randomchar", "apple"),
+            Map.of("timestamp", 1623871505084L, "randomchar", "apple"),
+            Map.of("timestamp", 1623871508093L, "randomchar", "apple")
+        )
+    );
+  }
+
+  private void executeFixtureTest(
+      String fieldName,
+      StringOperator operation,
+      String keyword,
+      List<Map<String, Object>> inputEvents,
+      List<Map<String, Object>> outputEvents
+  ) {
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(TextFilterProcessor.MAPPING_PROPERTY_ID, fieldName)
+        .config(TextFilterProcessor.OPERATION_ID, operation)
+        .config(TextFilterProcessor.KEYWORD_ID, keyword)
+        .build();
+
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+    testExecutor.run(inputEvents, outputEvents);
   }
 }
