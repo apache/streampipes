@@ -101,7 +101,7 @@
         <swagger.version>2.2.42</swagger.version>
         <tsfile.version>1.1.0</tsfile.version>
         <type-parser.version>0.8.1</type-parser.version>
-        <xz.version>1.10</xz.version>
+        <xz.version>1.12</xz.version>
 
         <!-- streampipes-maven-plugin -->
         <file-management.version>3.1.0</file-management.version>
