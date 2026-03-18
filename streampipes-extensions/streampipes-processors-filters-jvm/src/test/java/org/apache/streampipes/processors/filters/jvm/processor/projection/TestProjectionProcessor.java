@@ -29,32 +29,59 @@ class TestProjectionProcessor {
 
 
   @Test
-  public void test() {
+  public void projection1() {
     var configuration = TestConfiguration
         .builder()
-        .customOutputStrategy(List.of("field1", "field2"))
+        .customOutputStrategy(List.of("timestamp", "a"))
         .build();
     List<Map<String, Object>> events = List.of(
         Map.of(
-            "field1", "value1",
-            "field2", "value2",
-            "field3", "ignoredValue"
+            "timestamp", 1623871499055L,
+            "remove", 62.0d,
+            "a", "a"
         ),
         Map.of(
-            "field1", "value3",
-            "field2", "value4",
-            "field3", "ignoredValue"
+            "timestamp", 1623871504082L,
+            "remove", 56.0d,
+            "a", "a"
+        ),
+        Map.of(
+            "timestamp", 1623871505084L,
+            "remove", 95.0d,
+            "a", "a"
+        ),
+        Map.of(
+            "timestamp", 1623871506086L,
+            "remove", 77.0d,
+            "a", "a"
+        ),
+        Map.of(
+            "timestamp", 1623871507091L,
+            "remove", 85.0d,
+            "a", "a"
         )
     );
 
     List<Map<String, Object>> outputEvents = List.of(
         Map.of(
-            "field1", "value1",
-            "field2", "value2"
+            "timestamp", 1623871499055L,
+            "a", "a"
         ),
         Map.of(
-            "field1", "value3",
-            "field2", "value4"
+            "timestamp", 1623871504082L,
+            "a", "a"
+        ),
+        Map.of(
+            "timestamp", 1623871505084L,
+            "a", "a"
+        ),
+        Map.of(
+            "timestamp", 1623871506086L,
+            "a", "a"
+        ),
+        Map.of(
+            "timestamp", 1623871507091L,
+            "a", "a"
         )
     );
 

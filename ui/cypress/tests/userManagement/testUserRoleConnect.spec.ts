@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';

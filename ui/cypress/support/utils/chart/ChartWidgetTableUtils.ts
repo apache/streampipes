@@ -17,10 +17,15 @@
  */
 
 export class ChartWidgetTableUtils {
-    public static chartTableRowTimestamp() {
-        return cy.dataCy('data-explorer-table-row-timestamp', {
-            timeout: 10000,
-        });
+    public static chartTableRows() {
+        return cy
+            .dataCy('data-explorer-table', {
+                timeout: 10000,
+            })
+            .filter(':visible')
+            .first()
+            .find('tbody tr')
+            .not(':has(.table-empty-row)');
     }
 
     /**
@@ -28,6 +33,6 @@ export class ChartWidgetTableUtils {
      * @param amount of expected rows
      */
     public static checkAmountOfRows(amount: number) {
-        this.chartTableRowTimestamp().should('have.length', amount);
+        this.chartTableRows().should('have.length', amount);
     }
 }

@@ -30,7 +30,7 @@ import {
     TimeSettings,
 } from '@streampipes/platform-services';
 import { AuthService } from '../../../services/auth.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import {
     ActivatedRoute,
     ActivatedRouteSnapshot,

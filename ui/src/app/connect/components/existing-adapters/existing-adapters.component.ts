@@ -45,6 +45,7 @@ import {
     SpBreadcrumbService,
     SpExceptionDetailsDialogComponent,
     SpLabelComponent,
+    SpTableAssetContextConfig,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
     SpTableActionsDirective,
@@ -122,12 +123,17 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         'status',
         'start',
         'name',
+        'assetContext',
         'adapterBase',
         'lastModified',
         'messagesSent',
         'lastMessage',
         'actions',
     ];
+    readonly assetContextConfig: SpTableAssetContextConfig = {
+        resourceLinkType: 'adapter',
+        resourceIdKey: 'elementId',
+    };
 
     dataSource: MatTableDataSource<AdapterDescription> =
         new MatTableDataSource();

@@ -18,12 +18,12 @@
 
 
 import { NavigationEnd, Router } from '@angular/router';
-import { PageName } from '../../_enums/page-name.enum';
+import { PageName } from '../navigation/page-name.enum';
 import { AuthService } from '../../services/auth.service';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { AppConstants } from '../../services/app.constants';
-import { UserPrivilege } from '../../_enums/user-privilege.enum';
-import { UserRole } from '../../_enums/user-role.enum';
+import { UserPrivilege } from '../auth/user-privilege.enum';
+import { UserRole } from '../auth/user-role.enum';
 import { inject } from '@angular/core';
 import { CollapseService } from '../collapse.service';
 

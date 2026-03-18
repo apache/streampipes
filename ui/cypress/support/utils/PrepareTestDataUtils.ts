@@ -16,10 +16,7 @@
  *
  */
 
-import { FileManagementUtils } from './FileManagementUtils';
-import { ConnectUtils } from './connect/ConnectUtils';
-import { AdapterBuilder } from '../builder/AdapterBuilder';
-import { ConnectBtns } from './connect/ConnectBtns';
+import { DataLakeSeedUtils } from './dataset/DataLakeSeedUtils';
 
 export class PrepareTestDataUtils {
     public static dataName = 'prepared_data';
@@ -29,52 +26,25 @@ export class PrepareTestDataUtils {
         format: 'csv' | 'json_array' = 'csv',
         storeInDataLake: boolean = true,
     ) {
-        // Create adapter with dataset
-        FileManagementUtils.addFile(dataSet);
-
-        const adapter = this.getDataLakeTestAdapter(
-            PrepareTestDataUtils.dataName,
-            format,
-            storeInDataLake,
-        );
-
-        ConnectUtils.addAdapter(adapter);
-
-        ConnectUtils.startAdapter(adapter, true);
-    }
-
-    private static getDataLakeTestAdapter(
-        name: string,
-        format: 'csv' | 'json_array',
-        storeInDataLake: boolean = true,
-    ) {
-        const adapterBuilder = AdapterBuilder.create('File_Stream')
-            .setName(name)
-            .setTimestampProperty('timestamp')
-            .addProtocolInput(
-                'radio',
-                'speed',
-                'fastest_\\(ignore_original_time\\)',
-            )
-            .addProtocolInput('radio', 'replayonce', 'yes');
+        if (!storeInDataLake) {
+            throw new Error(
+                'Direct datalake test seeding only supports persisted datasets.',
+            );
+        }
 
         if (format === 'csv') {
-            adapterBuilder
-                .setFormat('csv')
-                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
+            return DataLakeSeedUtils.importCsvFixture({
+                fixture: dataSet,
+                measurementName: PrepareTestDataUtils.dataName,
+                delimiter: ';',
+                timestampColumn: 'timestamp',
+            });
         } else {
-            adapterBuilder
-                .setFormat('json')
-                .addFormatInput('radio', 'json_options-array', '');
+            return DataLakeSeedUtils.importJsonArrayFixture({
+                fixture: dataSet,
+                measurementName: PrepareTestDataUtils.dataName,
+                timestampColumn: 'timestamp',
+            });
         }
-
-        adapterBuilder.setStartAdapter(true);
-
-        if (storeInDataLake) {
-            adapterBuilder.setStoreInDataLake();
-        }
-
-        return adapterBuilder.build();
     }
 }

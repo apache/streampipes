@@ -36,6 +36,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +84,7 @@ public class ProcessingElementTestExecutor {
       List<Map<String, Object>> inputEvents,
       List<Map<String, Object>> expectedOutputEvents
   ) {
-
+    var mockCollector = mock(SpOutputCollector.class);
 
     // initialize the extractor with the provided configuration of the user input
     var dataProcessorInvocation = getProcessorInvocation();
@@ -101,10 +102,9 @@ public class ProcessingElementTestExecutor {
     when(mockParams.extractor()).thenReturn(extractor);
 
     // calls the onPipelineStarted method of the processor to initialize it
-    processor.onPipelineStarted(mockParams, null, null);
+    processor.onPipelineStarted(mockParams, mockCollector, null);
 
     // mock the output collector to capture the output events and validate the results later
-    var mockCollector = mock(SpOutputCollector.class);
     var spOutputCollectorCaptor = ArgumentCaptor.forClass(Event.class);
 
 
@@ -190,24 +190,8 @@ public class ProcessingElementTestExecutor {
   }
 
   private PipelineElementTemplate getPipelineElementTemplate() {
-    var staticProperties = processor
-        .declareConfig()
-        .getDescription()
-        .getStaticProperties();
-
-
     var configs = new ArrayList<Map<String, Object>>();
-
-    staticProperties.forEach(staticProperty -> {
-      var value = testConfiguration.getFieldConfiguration()
-                                   .get(staticProperty.getInternalName());
-      configs.add(
-          Map.of(
-              staticProperty.getInternalName(),
-              value
-          )
-      );
-    });
+    configs.add(new HashMap<>(testConfiguration.getFieldConfiguration()));
 
     return new PipelineElementTemplate("name", "description", configs);
   }

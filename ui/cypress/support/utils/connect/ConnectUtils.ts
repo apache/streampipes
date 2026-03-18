@@ -194,6 +194,11 @@ export class ConnectUtils {
 
             StaticPropertyUtils.input(adapterInput.formatConfiguration);
         }
+
+        // For file adapters, wait until the file selection state is rendered to reduce test flakiness.
+        if (adapterInput?.adapterType === 'File_Stream') {
+            ConnectBtns.fileInputSelected().should('be.visible');
+        }
     }
 
     public static finishEventSchemaConfiguration() {

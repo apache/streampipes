@@ -33,7 +33,7 @@ import {
     CurrentUserService,
     TimeRangeSelectorComponent,
 } from '@streampipes/shared-ui';
-import { UserRole } from '../../../../_enums/user-role.enum';
+import { UserRole } from '../../../../core/auth/user-role.enum';
 import {
     FlexDirective,
     LayoutAlignDirective,

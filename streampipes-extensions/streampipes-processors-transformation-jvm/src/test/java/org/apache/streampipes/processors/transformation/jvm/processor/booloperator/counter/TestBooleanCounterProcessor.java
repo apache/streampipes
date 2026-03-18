@@ -15,156 +15,91 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.messaging.InternalEventProcessor;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.runtime.EventFactory;
-import org.apache.streampipes.model.runtime.SchemaInfo;
-import org.apache.streampipes.model.runtime.SourceInfo;
-import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.test.generator.EventStreamGenerator;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
+import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.TestConfiguration;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+class TestBooleanCounterProcessor {
 
-public class TestBooleanCounterProcessor {
-  private static final Logger LOG = LoggerFactory.getLogger(TestBooleanCounterProcessor.class);
+  private BooleanCounterProcessor processor;
 
-  static Stream<Arguments> data() {
-    return Stream.of(
-        Arguments.of("Test", "BOTH", Arrays.asList(false, true), 1),
-        Arguments.of("Test", "BOTH", Arrays.asList(false, true, false), 2),
-        Arguments.of("Test", "BOTH", Arrays.asList(false), 0),
-        Arguments.of("Test", "TRUE -> FALSE", Arrays.asList(false, true, false, false, true), 2),
-        Arguments.of("Test", "TRUE -> FALSE", Arrays.asList(true, false), 1),
-        Arguments.of("Test", "TRUE -> FALSE", Arrays.asList(false), 1),
-        Arguments.of("Test", "FALSE -> TRUE", Arrays.asList(false), 0),
-        Arguments.of("Test", "FALSE -> TRUE", Arrays.asList(false, false, true), 1),
-        Arguments.of("Test", "FALSE -> TRUE", Arrays.asList(false, false, true), 1),
-        Arguments.of("Test", "FALSE -> TRUE", Arrays.asList(false, true, true, false), 1)
+  @BeforeEach
+  void setUp() {
+    processor = new BooleanCounterProcessor();
+  }
+
+  @Test
+  void booleanCounter1() {
+    executeFixtureTest(
+        "booleanToCount",
+        List.of(
+            Map.of("timestamp", 1623871499055L, "booleanToCount", true),
+            Map.of("timestamp", 1623871500059L, "booleanToCount", true),
+            Map.of("timestamp", 1623871501064L, "booleanToCount", true),
+            Map.of("timestamp", 1623871502070L, "booleanToCount", false),
+            Map.of("timestamp", 1623871503078L, "booleanToCount", false),
+            Map.of("timestamp", 1623871504082L, "booleanToCount", false),
+            Map.of("timestamp", 1623871505084L, "booleanToCount", true),
+            Map.of("timestamp", 1623871506086L, "booleanToCount", true),
+            Map.of("timestamp", 1623871507091L, "booleanToCount", false),
+            Map.of("timestamp", 1623871508093L, "booleanToCount", true)
+        ),
+        List.of(
+            Map.of("timestamp", 1623871499055L, "booleanToCount", true, "counter", 1),
+            Map.of("timestamp", 1623871502070L, "booleanToCount", false, "counter", 2),
+            Map.of("timestamp", 1623871505084L, "booleanToCount", true, "counter", 3),
+            Map.of("timestamp", 1623871507091L, "booleanToCount", false, "counter", 4),
+            Map.of("timestamp", 1623871508093L, "booleanToCount", true, "counter", 5)
+        )
     );
   }
 
-  //  /**
-//   * flankUp defines which boolean changes should be counted
-//   * 0: BOTH
-//   * 1: TRUE -> FALSE
-//   * 2: FALSE -> TRUE
-//   */
-  @ParameterizedTest
-  @MethodSource("data")
-  public void testBooleanCounter(
-      String invertFieldName,
-      String flankUp,
-      List<Boolean> eventBooleans,
-      Integer expectedBooleanCount
+  @Test
+  void booleanCounter2() {
+    executeFixtureTest(
+        "randomboolean",
+        List.of(
+            Map.of("timestamp", 1623871499055L, "randomboolean", false),
+            Map.of("timestamp", 1623871500059L, "randomboolean", false),
+            Map.of("timestamp", 1623871501064L, "randomboolean", true),
+            Map.of("timestamp", 1623871502070L, "randomboolean", false),
+            Map.of("timestamp", 1623871503078L, "randomboolean", true),
+            Map.of("timestamp", 1623871504082L, "randomboolean", false),
+            Map.of("timestamp", 1623871505084L, "randomboolean", true),
+            Map.of("timestamp", 1623871506086L, "randomboolean", false),
+            Map.of("timestamp", 1623871507091L, "randomboolean", true),
+            Map.of("timestamp", 1623871508093L, "randomboolean", true)
+        ),
+        List.of(
+            Map.of("timestamp", 1623871501064L, "randomboolean", true, "counter", 1),
+            Map.of("timestamp", 1623871502070L, "randomboolean", false, "counter", 2),
+            Map.of("timestamp", 1623871503078L, "randomboolean", true, "counter", 3),
+            Map.of("timestamp", 1623871504082L, "randomboolean", false, "counter", 4),
+            Map.of("timestamp", 1623871505084L, "randomboolean", true, "counter", 5),
+            Map.of("timestamp", 1623871506086L, "randomboolean", false, "counter", 6),
+            Map.of("timestamp", 1623871507091L, "randomboolean", true, "counter", 7)
+        )
+    );
+  }
+
+  private void executeFixtureTest(
+      String fieldName,
+      List<Map<String, Object>> inputEvents,
+      List<Map<String, Object>> expectedEvents
   ) {
-    BooleanCounterProcessor booleanCounter = new BooleanCounterProcessor();
-    DataProcessorDescription originalGraph = booleanCounter.declareConfig().getDescription();
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(BooleanCounterProcessor.FIELD_ID, fieldName)
+        .config(BooleanCounterProcessor.FLANK_ID, "BOTH")
+        .build();
 
-    DataProcessorInvocation graph =
-            InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
-
-    graph.setInputStreams(Collections
-            .singletonList(EventStreamGenerator
-                    .makeStreamWithProperties(Collections.singletonList(invertFieldName))));
-
-    graph.setOutputStream(EventStreamGenerator.makeStreamWithProperties(Collections.singletonList(invertFieldName)));
-
-    graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
-            .setActualTopicName("output-topic");
-
-    graph.getStaticProperties().stream()
-            .filter(p -> p instanceof MappingPropertyUnary)
-            .map((p -> (MappingPropertyUnary) p))
-            .filter(p -> p.getInternalName().equals(BooleanCounterProcessor.FIELD_ID))
-            .findFirst().get().setSelectedProperty("s0::" + invertFieldName);
-    ProcessorParams params = new ProcessorParams(graph);
-    params.extractor().getStaticPropertyByName("flank", OneOfStaticProperty.class).getOptions()
-            .stream().filter(ot -> ot.getName().equals(flankUp)).findFirst()
-            .get().setSelected(true);
-
-
-    SpOutputCollector spOut = new SpOutputCollector() {
-      @Override
-      public void collect(Event event) {}
-      @Override
-      public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {}
-      @Override
-      public void unregisterConsumer(String routeId) {}
-      @Override
-      public void connect() throws SpRuntimeException {}
-      @Override
-      public void disconnect() throws SpRuntimeException {}
-    };
-
-    booleanCounter.onPipelineStarted(params, spOut, null);
-    Integer counter = sendEvents(booleanCounter, spOut, eventBooleans, invertFieldName);
-    LOG.info("Expected match count is {}", expectedBooleanCount);
-    LOG.info("Actual match count is {}", counter);
-    assertEquals(expectedBooleanCount, counter);
-  }
-
-  private Integer sendEvents(BooleanCounterProcessor booleanCounter, SpOutputCollector spOut,
-                             List<Boolean> eventBooleans, String invertFieldName) {
-    int counter = 0;
-    List<Event> events = makeEvents(eventBooleans, invertFieldName);
-    for (Event event : events) {
-      LOG.info("Sending event with value "
-          + event.getFieldBySelector("s0::" + invertFieldName).getAsPrimitive().getAsBoolean());
-      booleanCounter.onEvent(event, spOut);
-      try {
-        Thread.sleep(100);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-      try {
-        counter = event.getFieldBySelector(BooleanCounterProcessor.COUNT_FIELD_RUNTIME_NAME)
-                .getAsPrimitive()
-                .getAsInt();
-      } catch (IllegalArgumentException e) {
-
-      }
-    }
-
-    return counter;
-  }
-
-  private List<Event> makeEvents(List<Boolean> eventBooleans, String invertFieldName) {
-    List<Event> events = new ArrayList<>();
-    for (Boolean eventSetting : eventBooleans) {
-      events.add(makeEvent(eventSetting, invertFieldName));
-    }
-    return events;
-  }
-
-  private Event makeEvent(Boolean value, String invertFieldName) {
-    Map<String, Object> map = new HashMap<>();
-    map.put(invertFieldName, value);
-    return EventFactory.fromMap(map,
-            new SourceInfo("test" + "-topic", "s0"),
-            new SchemaInfo(null, new ArrayList<>()));
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+    testExecutor.run(inputEvents, expectedEvents);
   }
 }

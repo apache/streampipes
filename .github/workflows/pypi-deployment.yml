@@ -65,7 +65,7 @@ jobs:
           git reset --hard  # undo local changes that delete generated doc files
 
       - name: Publish Python docs as artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: streampipes-python-docs
           path: streampipes-client-python/docs-tmp/**/*

@@ -18,25 +18,25 @@
 
 import {LoginComponent} from "./login/components/login/login.component";
 import {StreampipesComponent} from "./core/components/streampipes/streampipes.component";
-import {AuthCanActivateChildrenGuard} from "./_guards/auth.can-activate-children.guard";
-import {ConfiguredCanActivateGuard} from "./_guards/configured.can-activate.guard";
+import {AuthCanActivateChildrenGuard} from "./core/auth/guards/auth.can-activate-children.guard";
+import {ConfiguredCanActivateGuard} from "./core/setup/guards/configured.can-activate.guard";
 import {StartupComponent} from "./login/components/startup/startup.component";
 import {InfoComponent} from "./info/info.component";
 import {NotificationsComponent} from "./notifications/notifications.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {ApidocsComponent} from "./apidocs/apidocs.component";
-import { PageName } from './_enums/page-name.enum';
-import { PageAuthGuard } from './_guards/page-auth.can-active.guard';
+import { PageName } from './core/navigation/page-name.enum';
+import { PageAuthGuard } from './core/auth/guards/page-auth.can-activate.guard';
 import { RegisterComponent } from './login/components/register/register.component';
 import { RestorePasswordComponent } from './login/components/restore-password/restore-password.component';
-import { RegistrationAllowedCanActivateGuard } from './_guards/registration-allowed.can-activate.guard';
-import { RestorePasswordAllowedCanActivateGuard } from './_guards/restore-password-allowed.can-activate.guard';
+import { RegistrationAllowedCanActivateGuard } from './core/setup/guards/registration-allowed.can-activate.guard';
+import { RestorePasswordAllowedCanActivateGuard } from './core/setup/guards/restore-password-allowed.can-activate.guard';
 import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
 import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
-import { UserPrivilege } from './_enums/user-privilege.enum';
+import { UserPrivilege } from './core/auth/user-privilege.enum';
 import { TermsComponent } from './login/components/terms/terms.component';
-import { AuthCanActivateGuard } from './_guards/auth.can-activate.guard';
-import { TermsCanActivateChildrenGuard } from './_guards/terms.can-activate-children.guard';
+import { AuthCanActivateGuard } from './core/auth/guards/auth.can-activate.guard';
+import { TermsCanActivateChildrenGuard } from './core/setup/guards/terms.can-activate-children.guard';
 import { Routes } from '@angular/router';
 
 

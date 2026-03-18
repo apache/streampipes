@@ -16,7 +16,6 @@
  *
  */
 
-import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
@@ -56,7 +55,6 @@ describe('Delete data in datalake', () => {
     before('Setup Test', () => {
         cy.initStreamPipesTest();
         ChartUtils.loadRandomDataSetIntoDataLake();
-        PipelineUtils.deletePipeline('Persist prepared_data');
     });
 
     it('Perform Test', () => {
