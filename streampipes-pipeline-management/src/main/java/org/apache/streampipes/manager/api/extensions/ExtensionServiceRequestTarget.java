@@ -18,16 +18,17 @@
 
 package org.apache.streampipes.manager.api.extensions;
 
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public record ExtensionServiceRequestTarget(String baseUrl,
                                             String serviceId,
-                                            ExtensionServiceOperationType operation,
+                                            String operation,
                                             List<String> pathSegments,
                                             List<String> topicSegments) {
 
@@ -43,20 +44,20 @@ public record ExtensionServiceRequestTarget(String baseUrl,
 
   public static ExtensionServiceRequestTarget of(String baseUrl,
                                                  String serviceId,
-                                                 ExtensionServiceOperationType operation,
+                                                 String operation,
                                                  String... pathSegments) {
     return new ExtensionServiceRequestTarget(
         baseUrl,
         serviceId,
         operation,
         Arrays.asList(pathSegments),
-        List.of(operation.name().toLowerCase(Locale.ROOT))
+        List.of(operation.toLowerCase(Locale.ROOT))
     );
   }
 
   public static ExtensionServiceRequestTarget of(String baseUrl,
                                                  String serviceId,
-                                                 ExtensionServiceOperationType operation,
+                                                 String operation,
                                                  List<String> pathSegments,
                                                  List<String> topicSegments) {
     return new ExtensionServiceRequestTarget(baseUrl, serviceId, operation, pathSegments, topicSegments);
@@ -77,16 +78,10 @@ public record ExtensionServiceRequestTarget(String baseUrl,
 
   public String toTopic(String topicPrefix) {
     var segments = topicSegments.isEmpty()
-        ? List.of(operation.name().toLowerCase(Locale.ROOT))
+        ? List.of(operation.toLowerCase(Locale.ROOT))
         : topicSegments;
 
-    return Stream.concat(
-            Stream.of(topicPrefix, serviceId),
-            segments.stream())
-        .filter(Objects::nonNull)
-        .map(ExtensionServiceRequestTarget::toTopicSegment)
-        .filter(part -> !part.isEmpty())
-        .collect(Collectors.joining("."));
+    return ExtensionServiceBrokerTopics.serviceTopic(topicPrefix, serviceId, segments);
   }
 
   private static String trimTrailingSlash(String value) {
@@ -95,9 +90,5 @@ public record ExtensionServiceRequestTarget(String baseUrl,
 
   private static String trimSlashes(String value) {
     return value.replaceAll("^/+", "").replaceAll("/+$", "");
-  }
-
-  private static String toTopicSegment(String value) {
-    return trimSlashes(value).replace("/", ".");
   }
 }

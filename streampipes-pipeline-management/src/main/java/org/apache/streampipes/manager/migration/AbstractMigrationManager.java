@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
@@ -88,9 +89,8 @@ public abstract class AbstractMigrationManager {
 
       String serializedRequest = JacksonSerializer.getObjectMapper().writeValueAsString(migrationRequest);
 
-      var migrationResponse = requestManager.requestMigration(
-          requestTarget,
-          serializedRequest
+      var migrationResponse = requestManager.request(
+          ExtensionServiceRequests.migration(requestTarget, serializedRequest)
       );
 
       TypeReference<MigrationResult<T>> typeReference = new TypeReference<>() {
@@ -151,7 +151,7 @@ public abstract class AbstractMigrationManager {
 
     try {
       var entityPayload = requestManager
-          .requestDescriptionUpdate(requestTarget)
+          .request(ExtensionServiceRequests.descriptionUpdate(requestTarget))
           .responseBody();
       var updateResult = new TypeExtractor(entityPayload, requestManager).getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {

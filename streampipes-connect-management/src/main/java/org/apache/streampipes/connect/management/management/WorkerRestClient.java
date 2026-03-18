@@ -25,6 +25,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationRe
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -110,10 +111,8 @@ public class WorkerRestClient {
   private ExtensionServiceOperationResult triggerPost(ExtensionServiceRequestTarget requestTarget,
                                                       String elementId,
                                                       String payload) throws IOException {
-    return requestManager.requestAdapterStateChange(
-        requestTarget,
-        elementId,
-        payload
+    return requestManager.request(
+        ExtensionServiceRequests.adapterStateChange(requestTarget, elementId, payload)
     );
   }
 
@@ -125,7 +124,7 @@ public class WorkerRestClient {
     try {
       String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
       var requestTarget = ExtensionServiceRequestTargets.adapterRuntimeOptions(service, appId);
-      var response = requestManager.requestRuntimeOptions(requestTarget, payload);
+      var response = requestManager.request(ExtensionServiceRequests.runtimeOptions(requestTarget, payload));
       String responseString = response.responseBody();
 
       if (response.statusCode() == HttpStatus.SC_OK) {
@@ -143,7 +142,7 @@ public class WorkerRestClient {
                           String appId) throws AdapterException {
     try {
       var requestTarget = ExtensionServiceRequestTargets.adapterAssets(service, appId);
-      var response = requestManager.requestAdapterAssets(requestTarget);
+      var response = requestManager.request(ExtensionServiceRequests.adapterAssets(requestTarget));
 
       if (!response.isSuccess()) {
         throw new AdapterException("Could not get assets endpoint: " + service.getServiceUrl());
@@ -160,7 +159,7 @@ public class WorkerRestClient {
                              String appId) throws AdapterException {
     try {
       var requestTarget = ExtensionServiceRequestTargets.adapterIconAsset(service, appId);
-      var response = requestManager.requestAdapterIconAsset(requestTarget);
+      var response = requestManager.request(ExtensionServiceRequests.adapterIconAsset(requestTarget));
       if (!response.isSuccess()) {
         throw new AdapterException("Could not get icon endpoint: " + service.getServiceUrl());
       }
@@ -175,7 +174,7 @@ public class WorkerRestClient {
                                       String appId) throws AdapterException {
     try {
       var requestTarget = ExtensionServiceRequestTargets.adapterDocumentationAsset(service, appId);
-      var response = requestManager.requestAdapterDocumentationAsset(requestTarget);
+      var response = requestManager.request(ExtensionServiceRequests.adapterDocumentationAsset(requestTarget));
       if (!response.isSuccess()) {
         throw new AdapterException("Could not get documentation endpoint: " + service.getServiceUrl());
       }

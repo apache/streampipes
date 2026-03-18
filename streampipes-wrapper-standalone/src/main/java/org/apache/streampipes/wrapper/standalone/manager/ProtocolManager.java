@@ -47,7 +47,7 @@ public class ProtocolManager {
       return consumers.get(topicName(protocol));
     } else {
       consumers.put(topicName(protocol), makeInputCollector(protocol, singletonEngine));
-      LOG.info("Adding new consumer to consumer map (size=" + consumers.size() + "): " + topicName(protocol));
+      LOG.debug("Adding new consumer to consumer map (size=" + consumers.size() + "): " + topicName(protocol));
       return consumers.get(topicName(protocol));
     }
 

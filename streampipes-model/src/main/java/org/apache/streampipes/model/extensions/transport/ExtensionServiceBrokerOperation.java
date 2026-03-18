@@ -16,24 +16,29 @@
  *
  */
 
-package org.apache.streampipes.manager.api.extensions;
+package org.apache.streampipes.model.extensions.transport;
 
-public enum ExtensionServiceOperationType {
-  CONTAINER_PROVIDED_OPTIONS,
-  MIGRATION,
-  DESCRIPTION_UPDATE,
-  EXTENSION_DESCRIPTION,
-  FUNCTION_STOP,
-  ADAPTER_STATE_CHANGE,
-  RUNTIME_OPTIONS,
-  SAMPLE_DATA,
-  EXTENSION_INSTANCE_HEALTH,
-  SERVICE_HEALTH,
-  PIPELINE_ELEMENT_INVOCATION,
-  PIPELINE_ELEMENT_DETACH,
-  PIPELINE_ELEMENT_ASSETS,
-  ADAPTER_ASSETS,
-  ADAPTER_ICON_ASSET,
-  ADAPTER_DOCUMENTATION_ASSET,
-  OUTPUT_SCHEMA;
+import java.util.List;
+import java.util.Objects;
+
+public record ExtensionServiceBrokerOperation(String operationId,
+                                              List<String> topicPrefixSegments) {
+
+  public ExtensionServiceBrokerOperation {
+    Objects.requireNonNull(operationId);
+    Objects.requireNonNull(topicPrefixSegments);
+    topicPrefixSegments = List.copyOf(topicPrefixSegments);
+  }
+
+  public String firstTopicSegment() {
+    return topicSegment(0);
+  }
+
+  public String topicSegment(int index) {
+    if (index < 0 || index >= topicPrefixSegments.size()) {
+      throw new IllegalArgumentException("Invalid topic segment index " + index + " for operation " + operationId);
+    }
+
+    return topicPrefixSegments.get(index);
+  }
 }

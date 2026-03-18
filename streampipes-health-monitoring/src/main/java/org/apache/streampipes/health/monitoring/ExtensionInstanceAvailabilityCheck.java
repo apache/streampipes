@@ -20,6 +20,7 @@ package org.apache.streampipes.health.monitoring;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -57,7 +58,9 @@ public class ExtensionInstanceAvailabilityCheck {
       if (service.isEmpty()) {
         return new ExtensionInstanceHealth(Set.of(), Set.of());
       } else {
-        var response = extensionRequestManager.requestExtensionInstanceHealth(makeRequestTarget(service.get()));
+        var response = extensionRequestManager.request(
+            ExtensionServiceRequests.extensionInstanceHealth(makeRequestTarget(service.get()))
+        );
         if (response.statusCode() != 200) {
           return new ExtensionInstanceHealth(Set.of(), Set.of());
         }

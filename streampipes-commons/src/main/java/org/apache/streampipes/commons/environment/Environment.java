@@ -156,6 +156,12 @@ public interface Environment {
 
   StringEnvironmentVariable getPulsarUrl();
 
+  StringEnvironmentVariable getCoreExtensionTransportMode();
+
+  StringEnvironmentVariable getExtensionTransportMode();
+
+  StringEnvironmentVariable getExtensionRequestTopicPrefix();
+
   StringEnvironmentVariable getCustomServiceTags();
 
   StringEnvironmentVariable getAllowedUploadFiletypes();

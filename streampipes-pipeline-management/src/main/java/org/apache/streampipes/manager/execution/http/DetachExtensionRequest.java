@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
@@ -52,7 +53,9 @@ public class DetachExtensionRequest extends PipelineElementExtensionRequest {
         pipelineElement.getAppId(),
         instanceId
     );
-    return requestManager().requestPipelineElementDetach(requestTarget, pipelineId);
+    return requestManager().request(
+        ExtensionServiceRequests.pipelineElementDetach(requestTarget, pipelineId)
+    );
   }
 
   @Override
