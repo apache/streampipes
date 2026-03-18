@@ -134,6 +134,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         Environments.getEnvironment().getExtensionTransportMode().getValueOrDefault()
     );
     if (extensionTransportMode.supportsNats()) {
+      LOG.info("Starting Extension Service on Nats Mode");
       this.extensionBrokerRequestReceiver = new ExtensionBrokerRequestReceiver(
           getAdditionalBrokerOperationHandlers()
       );
@@ -145,6 +146,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
               .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX)
       );
     } else {
+      LOG.info("Starting Extension Service on HTTP Mode");
       this.natsBrokerReceiverActive = false;
     }
 

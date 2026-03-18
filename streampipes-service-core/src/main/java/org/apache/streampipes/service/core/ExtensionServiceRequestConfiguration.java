@@ -27,6 +27,8 @@ import org.apache.streampipes.service.core.extensions.CoreNatsRequestReplyClient
 import org.apache.streampipes.service.core.extensions.NatsExtensionServiceRequestManager;
 import org.apache.streampipes.service.core.extensions.TransportAwareExtensionServiceRequestManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -36,13 +38,15 @@ import java.time.Duration;
 @Configuration
 public class ExtensionServiceRequestConfiguration {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ExtensionServiceRequestConfiguration.class);
+
   @Bean(destroyMethod = "close")
   public CoreNatsRequestReplyClient coreNatsRequestReplyClient() {
     var env = Environments.getEnvironment();
     return new CoreNatsRequestReplyClient(
         env.getNatsHost().getValueOrDefault(),
         env.getNatsPort().getValueOrDefault(),
-        Duration.ofSeconds(2)
+        Duration.ofSeconds(10)
     );
   }
 
@@ -70,6 +74,8 @@ public class ExtensionServiceRequestConfiguration {
     var transportMode = CoreExtensionTransportMode.from(
         env.getCoreExtensionTransportMode().getValueOrDefault()
     );
+
+    LOG.info("Configuring core for transport mode: {}", transportMode);
 
     return new TransportAwareExtensionServiceRequestManager(
         new HttpExtensionServiceRequestManager(),
